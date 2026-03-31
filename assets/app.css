@@ -41,7 +41,19 @@
 
 /* Safelist icons used by consumers of go-daisy (not directly in this repo's source files) */
 @source inline("{lucide--activity,lucide--alert-circle,lucide--app-window,lucide--arrow-left,lucide--arrow-right,lucide--bar-chart-2,lucide--bell,lucide--briefcase,lucide--check,lucide--chevron-down,lucide--chevron-right,lucide--chevron-up,lucide--circle-check,lucide--clock,lucide--copy,lucide--ellipsis-vertical,lucide--eye,lucide--folder,lucide--form-input,lucide--git-pull-request,lucide--globe,lucide--info,lucide--layout-dashboard,lucide--layout-grid,lucide--lock,lucide--log-out,lucide--menu,lucide--message-square,lucide--monitor-dot,lucide--moon,lucide--mouse-pointer-click,lucide--navigation,lucide--panel-left-close,lucide--pencil,lucide--play,lucide--plus,lucide--plus-circle,lucide--refresh-cw,lucide--search,lucide--settings,lucide--square,lucide--sun,lucide--table,lucide--terminal,lucide--trash-2,lucide--user,lucide--x,lucide--x-circle,lucide--zap}");
-@source inline("border-base-content/10 border-base-content/20");
+@source inline("border-base-content/{10,20}");
+@source inline("border-primary/{10,20,30}");
+@source inline("bg-primary/{5,10,20}");
+@source inline("bg-secondary/{5,10,20}");
+@source inline("bg-success/{5,10,20}");
+@source inline("bg-warning/{5,10,20}");
+@source inline("bg-error/{5,10,20}");
+@source inline("bg-base-100/{50,80}");
+@source inline("bg-base-200/{40,60,80}");
+@source inline("text-base-content/{5,10,20,30,40,50,60,70,80,90}");
+@source inline("bg-base-content/{20,30}");
+@source inline("size-{1,2,3,4}");
+@source inline("animate-pulse");
 
 @theme {
   --font-sans: ui-sans-serif, system-ui, sans-serif;
