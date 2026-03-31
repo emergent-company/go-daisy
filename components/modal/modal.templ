@@ -49,7 +49,7 @@ templ Modal(title string, size ModalSize) {
 					onclick="this.closest('dialog').remove()"
 					aria-label="Close"
 				>
-					<span class="iconify lucide--x size-5"></span>
+					<span class="iconify size-5" data-icon="lucide:x"></span>
 				</button>
 			</div>
 			{ children... }
@@ -78,7 +78,7 @@ templ FormModal(props FormModalProps) {
 					onclick={ closeModal(props.ID) }
 					aria-label="Close"
 				>
-					<span class="iconify lucide--x size-5"></span>
+					<span class="iconify size-5" data-icon="lucide:x"></span>
 				</button>
 			</div>
 			<form

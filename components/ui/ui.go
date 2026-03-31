@@ -11,3 +11,10 @@ import (
 func StaticHandlerFS(prefix string, fsys fs.FS) http.Handler {
 	return http.StripPrefix(prefix, http.FileServer(http.FS(fsys)))
 }
+
+func IconifyIcon(lucideClass string) string {
+	if len(lucideClass) > 8 && lucideClass[:8] == "lucide--" {
+		return "lucide:" + lucideClass[8:]
+	}
+	return lucideClass
+}

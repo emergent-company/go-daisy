@@ -46,7 +46,7 @@ templ Avatar(name string, src string, size AvatarSize) {
 templ PlaceholderAvatar(icon string, size AvatarSize) {
 	<div class={ "avatar", string(size) }>
 		<div class="avatar-placeholder rounded-full bg-base-300 flex items-center justify-center text-base-content/60">
-			<span class={ "iconify size-[55%]", icon }></span>
+			<span class="iconify size-[55%]" data-icon={ IconifyIcon(icon) }></span>
 		</div>
 	</div>
 }

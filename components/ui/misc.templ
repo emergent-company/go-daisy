@@ -6,7 +6,7 @@ templ Tag(label string, removeHref string) {
 		{ label }
 		if removeHref != "" {
 			<a href={ templ.URL(removeHref) } class="opacity-60 hover:opacity-100" aria-label={ "Remove " + label }>
-				<span class="iconify lucide--x size-3"></span>
+				<span class="iconify size-3" data-icon="lucide:x"></span>
 			</a>
 		}
 	</span>

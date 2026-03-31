@@ -140,7 +140,7 @@ func Pagination(currentPage int, totalPages int, baseURL string, targetID string
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " aria-label=\"Previous page\"><span class=\"iconify lucide--arrow-left size-4\"></span></a> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " aria-label=\"Previous page\"><span class=\"iconify size-4\" data-icon=\"lucide:arrow-left\"></span></a> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -289,7 +289,7 @@ func Pagination(currentPage int, totalPages int, baseURL string, targetID string
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, " aria-label=\"Next page\"><span class=\"iconify lucide--arrow-right size-4\"></span></a></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, " aria-label=\"Next page\"><span class=\"iconify size-4\" data-icon=\"lucide:arrow-right\"></span></a></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

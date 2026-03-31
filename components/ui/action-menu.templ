@@ -16,7 +16,7 @@ type ActionMenuItem struct {
 templ ActionMenu(items []ActionMenuItem) {
 	<div class="dropdown dropdown-end">
 		<button tabindex="0" type="button" class="btn btn-ghost btn-sm btn-square">
-			<span class="iconify lucide--ellipsis-vertical size-5"></span>
+			<span class="iconify size-5" data-icon="lucide:ellipsis-vertical"></span>
 		</button>
 		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-200 z-50 w-44 p-1 mt-1">
 			for _, item := range items {
@@ -32,7 +32,7 @@ templ ActionMenu(items []ActionMenuItem) {
 							}
 						>
 							if item.Icon != "" {
-								<span class={ "iconify size-4", item.Icon }></span>
+								<span class="iconify size-4" data-icon={ IconifyIcon(item.Icon) }></span>
 							}
 							{ item.Label }
 						</button>
@@ -47,7 +47,7 @@ templ ActionMenu(items []ActionMenuItem) {
 							}
 						>
 							if item.Icon != "" {
-								<span class={ "iconify size-4", item.Icon }></span>
+								<span class="iconify size-4" data-icon={ IconifyIcon(item.Icon) }></span>
 							}
 							{ item.Label }
 						</button>
@@ -62,7 +62,7 @@ templ ActionMenu(items []ActionMenuItem) {
 							}
 						>
 							if item.Icon != "" {
-								<span class={ "iconify size-4", item.Icon }></span>
+								<span class="iconify size-4" data-icon={ IconifyIcon(item.Icon) }></span>
 							}
 							{ item.Label }
 						</button>
@@ -73,7 +73,7 @@ templ ActionMenu(items []ActionMenuItem) {
 								templ.KV("text-error", item.Danger) }
 						>
 							if item.Icon != "" {
-								<span class={ "iconify size-4", item.Icon }></span>
+								<span class="iconify size-4" data-icon={ IconifyIcon(item.Icon) }></span>
 							}
 							{ item.Label }
 						</a>

@@ -53,7 +53,7 @@ templ Pagination(currentPage int, totalPages int, baseURL string, targetID strin
 				}
 				aria-label="Previous page"
 			>
-				<span class="iconify lucide--arrow-left size-4"></span>
+				<span class="iconify size-4" data-icon="lucide:arrow-left"></span>
 			</a>
 			for p := 1; p <= totalPages; p++ {
 				<a
@@ -80,7 +80,7 @@ templ Pagination(currentPage int, totalPages int, baseURL string, targetID strin
 				}
 				aria-label="Next page"
 			>
-				<span class="iconify lucide--arrow-right size-4"></span>
+				<span class="iconify size-4" data-icon="lucide:arrow-right"></span>
 			</a>
 		</div>
 	}

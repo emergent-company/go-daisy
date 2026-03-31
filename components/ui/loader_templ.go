@@ -257,7 +257,7 @@ func NoPermissions() templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"flex flex-col items-center justify-center py-16 text-center\"><span class=\"iconify lucide--lock size-10 text-base-content/20 mb-3\"></span><p class=\"text-base-content/50 text-sm\">You don't have permission to view this.</p></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"flex flex-col items-center justify-center py-16 text-center\"><span class=\"iconify size-10 text-base-content/20 mb-3\" data-icon=\"lucide:lock\"></span><p class=\"text-base-content/50 text-sm\">You don't have permission to view this.</p></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

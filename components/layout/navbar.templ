@@ -16,8 +16,8 @@ templ Navbar(appName string) {
 				class="btn btn-square btn-ghost btn-sm"
 				aria-label="Toggle sidebar"
 			>
-				<span id="topbar-menu-icon" class="iconify lucide--menu size-5"></span>
-				<span id="topbar-close-icon" class="iconify lucide--panel-left-close size-5"></span>
+				<span id="topbar-menu-icon" class="iconify size-5" data-icon="lucide:menu"></span>
+				<span id="topbar-close-icon" class="iconify size-5" data-icon="lucide:panel-left-close"></span>
 			</label>
 			<span class="font-semibold text-base-content/80 text-sm hidden md:block">{ appName }</span>
 		</div>
@@ -36,8 +36,8 @@ templ ThemeToggle(lightTheme string, darkTheme string) {
 		aria-label="Toggle theme"
 		onclick={ toggleTheme(lightTheme, darkTheme) }
 	>
-		<span id="theme-icon-sun" class="iconify lucide--sun size-4.5"></span>
-		<span id="theme-icon-moon" class="iconify lucide--moon size-4.5" style="display:none"></span>
+		<span id="theme-icon-sun" class="iconify size-4.5" data-icon="lucide:sun"></span>
+		<span id="theme-icon-moon" class="iconify size-4.5" data-icon="lucide:moon" style="display:none"></span>
 	</button>
 }
 

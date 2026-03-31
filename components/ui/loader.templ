@@ -41,7 +41,7 @@ templ SectionHeader(title string) {
 // NoPermissions renders a permission-denied placeholder.
 templ NoPermissions() {
 	<div class="flex flex-col items-center justify-center py-16 text-center">
-		<span class="iconify lucide--lock size-10 text-base-content/20 mb-3"></span>
+		<span class="iconify size-10 text-base-content/20 mb-3" data-icon="lucide:lock"></span>
 		<p class="text-base-content/50 text-sm">You don't have permission to view this.</p>
 	</div>
 }

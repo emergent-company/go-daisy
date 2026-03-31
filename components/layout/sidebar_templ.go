@@ -60,7 +60,7 @@ func Sidebar(appName string, groups []SidebarGroup) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</span> <label for=\"layout-sidebar-toggle-trigger\" title=\"Toggle sidebar\" class=\"btn btn-circle btn-ghost btn-sm text-base-content/50 max-lg:hidden\"><span class=\"iconify lucide--panel-left-close size-4.5\"></span></label></div><!-- Nav menu --><div class=\"sidebar-menu grow overflow-y-auto\"><div class=\"mb-3 space-y-0.5 px-2.5 pt-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</span> <label for=\"layout-sidebar-toggle-trigger\" title=\"Toggle sidebar\" class=\"btn btn-circle btn-ghost btn-sm text-base-content/50 max-lg:hidden\"><span class=\"iconify size-4.5\" data-icon=\"lucide:panel-left-close\"></span></label></div><!-- Nav menu --><div class=\"sidebar-menu grow overflow-y-auto\"><div class=\"mb-3 space-y-0.5 px-2.5 pt-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -188,21 +188,16 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if item.Icon != "" {
-			var templ_7745c5c3_Var11 = []any{"iconify size-4", item.Icon}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var11...)
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"iconify size-4\" data-icon=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"")
+			var templ_7745c5c3_Var11 string
+			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(iconifyIcon(item.Icon))
 			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 99, Col: 66}
 			}
-			var templ_7745c5c3_Var12 string
-			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var11).String())
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 1, Col: 0}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -215,12 +210,12 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var13 string
-		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
+		var templ_7745c5c3_Var12 string
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 101, Col: 33}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -230,6 +225,13 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 		}
 		return nil
 	})
+}
+
+func iconifyIcon(lucideClass string) string {
+	if len(lucideClass) > 8 && lucideClass[:8] == "lucide--" {
+		return "lucide:" + lucideClass[8:]
+	}
+	return lucideClass
 }
 
 // ActiveSidebarGroups returns a copy of groups with Active=true for the item

@@ -21,7 +21,7 @@ templ InlineAlert(typ AlertType, message string) {
 templ InlineAlertWithIcon(typ AlertType, icon string, message string) {
 	<div role="alert" class={ "alert", string(typ) }>
 		if icon != "" {
-			<span class={ "iconify size-5", icon }></span>
+			<span class="iconify size-5" data-icon={ IconifyIcon(icon) }></span>
 		}
 		<span>{ message }</span>
 	</div>
