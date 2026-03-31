@@ -41,6 +41,7 @@
 
 /* Safelist icons used by consumers of go-daisy (not directly in this repo's source files) */
 @source inline("{lucide--activity,lucide--alert-circle,lucide--app-window,lucide--arrow-left,lucide--arrow-right,lucide--bar-chart-2,lucide--bell,lucide--briefcase,lucide--check,lucide--chevron-down,lucide--chevron-right,lucide--chevron-up,lucide--circle-check,lucide--clock,lucide--copy,lucide--ellipsis-vertical,lucide--eye,lucide--folder,lucide--form-input,lucide--git-pull-request,lucide--globe,lucide--info,lucide--layout-dashboard,lucide--layout-grid,lucide--lock,lucide--log-out,lucide--menu,lucide--message-square,lucide--monitor-dot,lucide--moon,lucide--mouse-pointer-click,lucide--navigation,lucide--panel-left-close,lucide--pencil,lucide--play,lucide--plus,lucide--plus-circle,lucide--refresh-cw,lucide--search,lucide--settings,lucide--square,lucide--sun,lucide--table,lucide--terminal,lucide--trash-2,lucide--user,lucide--x,lucide--x-circle,lucide--zap}");
+@source inline("border-base-content/10 border-base-content/20");
 
 @theme {
   --font-sans: ui-sans-serif, system-ui, sans-serif;
