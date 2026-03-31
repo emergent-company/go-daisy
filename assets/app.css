@@ -1,5 +1,38 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: nord --default, dark, flow;
+}
+
+@plugin "daisyui/theme" {
+  name: "flow";
+  default: false;
+  prefersdark: false;
+
+  --color-primary: oklch(56.4% 0.148 187.6);      /* teal #0d9488 */
+  --color-primary-content: oklch(98% 0 0);
+  --color-secondary: oklch(64% 0.12 220);
+  --color-secondary-content: oklch(98% 0 0);
+  --color-accent: oklch(72% 0.15 150);
+  --color-accent-content: oklch(10% 0 0);
+  --color-neutral: oklch(32% 0.02 250);
+  --color-neutral-content: oklch(95% 0 0);
+  --color-base-100: oklch(98% 0 0);
+  --color-base-200: oklch(95% 0.005 230);
+  --color-base-300: oklch(90% 0.01 230);
+  --color-base-content: oklch(20% 0.02 250);
+  --color-info: oklch(65% 0.14 230);
+  --color-info-content: oklch(98% 0 0);
+  --color-success: oklch(62% 0.17 145);
+  --color-success-content: oklch(98% 0 0);
+  --color-warning: oklch(80% 0.17 75);
+  --color-warning-content: oklch(20% 0 0);
+  --color-error: oklch(60% 0.22 25);
+  --color-error-content: oklch(98% 0 0);
+  --radius-selector: 0.375rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.5rem;
+  --border: 1px;
+}
 
 /* Iconify (Lucide icons via utility classes) */
 @plugin "@iconify/tailwind4" {
