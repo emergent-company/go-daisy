@@ -1,0 +1,39 @@
+package pages
+
+import (
+	"github.com/emergent-company/go-daisy/components/ui"
+)
+
+templ FeedbackContent() {
+	<div class="p-6 space-y-8">
+		<h1 class="text-2xl font-bold">Feedback</h1>
+
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Alerts</h2>
+			<div class="space-y-3 max-w-lg">
+				@ui.InlineAlert(ui.AlertInfo, "This is an informational alert.")
+				@ui.InlineAlert(ui.AlertSuccess, "Operation completed successfully.")
+				@ui.InlineAlert(ui.AlertWarning, "Please review before proceeding.")
+				@ui.InlineAlert(ui.AlertError, "Something went wrong. Please try again.")
+			</div>
+		</section>
+
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Loaders</h2>
+			<div class="flex flex-wrap gap-6 items-center">
+				@ui.Loader()
+				@ui.InlineLoader()
+				@ui.Skeleton("w-32 h-32")
+			</div>
+		</section>
+
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Empty State</h2>
+			<div class="max-w-sm border border-dashed border-base-300 rounded-box">
+				@ui.Empty("lucide--plus-circle", "No items", "Get started by creating your first item.") {
+					@ui.Button(ui.ButtonPrimary, ui.ButtonSM, false) { Create Item }
+				}
+			</div>
+		</section>
+	</div>
+}

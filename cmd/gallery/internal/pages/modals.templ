@@ -1,0 +1,32 @@
+package pages
+
+import (
+	"github.com/emergent-company/go-daisy/components/modal"
+	"github.com/emergent-company/go-daisy/components/ui"
+)
+
+templ ModalsContent() {
+	<div class="p-6 space-y-8">
+		<h1 class="text-2xl font-bold">Modals</h1>
+
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Open Modal Button</h2>
+			<p class="text-base-content/60 text-sm">Modals are loaded via HTMX into #modal-container.</p>
+			@ui.Button(ui.ButtonPrimary, ui.ButtonSM, false) { Open Modal (demo) }
+		</section>
+
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Inline Modal Demo</h2>
+			@modal.Modal("demo-modal", "Example Modal") {
+				<p class="text-base-content/70">This is the modal body. Modals support any content.</p>
+				<div class="modal-action">
+					<button class="btn btn-ghost" onclick="document.getElementById('demo-modal').close()">Close</button>
+					@ui.Button(ui.ButtonPrimary, ui.ButtonMD, false) { Confirm }
+				</div>
+			}
+			<div class="flex gap-2">
+				<button class="btn btn-primary btn-sm" onclick="document.getElementById('demo-modal').showModal()">Show Modal</button>
+			</div>
+		</section>
+	</div>
+}

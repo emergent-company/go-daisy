@@ -1,0 +1,28 @@
+package ui
+
+// AlertType maps to a DaisyUI alert modifier class.
+type AlertType string
+
+const (
+	AlertSuccess AlertType = "alert-success"
+	AlertError   AlertType = "alert-error"
+	AlertWarning AlertType = "alert-warning"
+	AlertInfo    AlertType = "alert-info"
+)
+
+// InlineAlert renders a DaisyUI alert banner with a message.
+templ InlineAlert(typ AlertType, message string) {
+	<div role="alert" class={ "alert", string(typ) }>
+		<span>{ message }</span>
+	</div>
+}
+
+// InlineAlertWithIcon renders a DaisyUI alert with an icon and message.
+templ InlineAlertWithIcon(typ AlertType, icon string, message string) {
+	<div role="alert" class={ "alert", string(typ) }>
+		if icon != "" {
+			<span class={ "iconify size-5", icon }></span>
+		}
+		<span>{ message }</span>
+	</div>
+}

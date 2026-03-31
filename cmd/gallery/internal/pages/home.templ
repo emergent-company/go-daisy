@@ -1,0 +1,40 @@
+package pages
+
+// HomeContent renders the component index cards.
+templ HomeContent() {
+	<div class="p-6">
+		<div class="mb-6">
+			<h1 class="text-2xl font-bold text-base-content">go-daisy Components</h1>
+			<p class="text-base-content/60 mt-1">Generic Templ + DaisyUI + HTMX component library</p>
+		</div>
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+			@homeCard("Buttons & Badges", "Button, Badge, Tag, Steps", "/components/buttons", "lucide--mouse-pointer-click")
+			@homeCard("Cards", "Card, StatCard, ProgressCard", "/components/cards", "lucide--square")
+			@homeCard("Forms", "Input, Select, Textarea, Toggle", "/components/forms", "lucide--form-input")
+			@homeCard("Tables", "Table, ListArea, Pagination", "/components/tables", "lucide--table")
+			@homeCard("Modals", "Modal, FormModal, ConfirmPopup", "/components/modals", "lucide--app-window")
+			@homeCard("Feedback", "Alert, Toast, Empty, Loader", "/components/feedback", "lucide--bell")
+			@homeCard("Nav", "PageHeader, TabMenu, TopBar", "/components/nav", "lucide--navigation")
+			@homeCard("Layout", "AppShell full demo", "/components/layout", "lucide--layout-dashboard")
+		</div>
+	</div>
+}
+
+templ homeCard(title, description, href, icon string) {
+	<a
+		href={ templ.URL(href) }
+		hx-get={ href }
+		hx-target="#main-content"
+		hx-swap="innerHTML"
+		hx-push-url="true"
+		class="card bg-base-100 shadow-sm border border-base-200 hover:border-primary transition-colors cursor-pointer"
+	>
+		<div class="card-body">
+			<div class="flex items-center gap-3 mb-2">
+				<span class={ "iconify size-6 text-primary", icon }></span>
+				<h2 class="card-title text-base">{ title }</h2>
+			</div>
+			<p class="text-base-content/60 text-sm">{ description }</p>
+		</div>
+	</a>
+}

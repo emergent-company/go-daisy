@@ -1,0 +1,52 @@
+package ui
+
+import "strings"
+
+// AvatarSize maps to a DaisyUI avatar size modifier.
+type AvatarSize string
+
+const (
+	AvatarXS AvatarSize = "avatar-xs"
+	AvatarSM AvatarSize = "avatar-sm"
+	AvatarMD AvatarSize = "avatar-md"
+	AvatarLG AvatarSize = "avatar-lg"
+)
+
+// avatarInitials returns up to 2 uppercase initials from a name string.
+func avatarInitials(name string) string {
+	parts := strings.Fields(name)
+	if len(parts) == 0 {
+		return "?"
+	}
+	if len(parts) == 1 {
+		if len(parts[0]) == 0 {
+			return "?"
+		}
+		return strings.ToUpper(string(parts[0][0]))
+	}
+	return strings.ToUpper(string(parts[0][0])) + strings.ToUpper(string(parts[len(parts)-1][0]))
+}
+
+// Avatar renders a circular avatar: image if src is set, otherwise initials.
+templ Avatar(name string, src string, size AvatarSize) {
+	<div class={ "avatar", string(size) }>
+		if src != "" {
+			<div class="rounded-full overflow-hidden">
+				<img src={ src } alt={ name } class="object-cover w-full h-full"/>
+			</div>
+		} else {
+			<div class="avatar-placeholder rounded-full bg-primary flex items-center justify-center font-semibold text-primary-content">
+				{ avatarInitials(name) }
+			</div>
+		}
+	</div>
+}
+
+// PlaceholderAvatar renders a circular avatar with an icon placeholder.
+templ PlaceholderAvatar(icon string, size AvatarSize) {
+	<div class={ "avatar", string(size) }>
+		<div class="avatar-placeholder rounded-full bg-base-300 flex items-center justify-center text-base-content/60">
+			<span class={ "iconify size-[55%]", icon }></span>
+		</div>
+	</div>
+}

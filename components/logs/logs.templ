@@ -1,0 +1,43 @@
+package logs
+
+import (
+	"time"
+
+	ui "github.com/emergent-company/go-daisy/components/ui"
+	tablecomp "github.com/emergent-company/go-daisy/components/table"
+)
+
+// LogsTable renders a table of log entries.
+templ LogsTable(entries []LogEntry) {
+	if len(entries) == 0 {
+		<p class="text-base-content/60">No logs found</p>
+	} else {
+		@tablecomp.Table() {
+			<thead>
+				<tr>
+					@tablecomp.TableHeader("Status", "", "", "", "")
+					@tablecomp.TableHeader("Date/Time", "", "", "", "")
+					@tablecomp.TableHeader("Event", "", "", "", "")
+				</tr>
+			</thead>
+			<tbody>
+				for _, entry := range entries {
+					<tr>
+						<td>
+							@ui.LogStatusDot(entry.Type)
+						</td>
+						<td class="text-sm text-base-content">{ formatTime(entry.CreatedAt) }</td>
+						<td class="text-sm text-base-content">{ entry.Message }</td>
+					</tr>
+				}
+			</tbody>
+		}
+	}
+}
+
+func formatTime(t time.Time) string {
+	if t.IsZero() {
+		return "N/A"
+	}
+	return t.Format("2006-01-02 15:04:05")
+}

@@ -1,0 +1,65 @@
+package ui
+
+// FilterCardProps configures a FilterCard or CompactFilterBar form wrapper.
+type FilterCardProps struct {
+	Action string
+	Method string // defaults to "get"
+	Target string // hx-target selector
+	Swap   string // hx-swap strategy
+}
+
+func (p FilterCardProps) method() string {
+	if p.Method == "" {
+		return "get"
+	}
+	return p.Method
+}
+
+// FilterCard renders a card-styled filter form.
+templ FilterCard(props FilterCardProps) {
+	<div class="card bg-base-100 shadow-sm border border-base-200 mb-4">
+		<div class="card-body p-4">
+			<form
+				method={ props.method() }
+				action={ templ.URL(props.Action) }
+				if props.Target != "" {
+					hx-get={ props.Action }
+					hx-target={ props.Target }
+					if props.Swap != "" {
+						hx-swap={ props.Swap }
+					}
+				}
+			>
+				<div class="flex flex-wrap gap-3 items-end">
+					{ children... }
+					<div class="flex gap-2">
+						<button type="submit" class="btn btn-primary btn-sm">Filter</button>
+						<a href={ templ.URL(props.Action) } class="btn btn-ghost btn-sm">Clear</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+}
+
+// CompactFilterBar renders a horizontal flex filter form.
+templ CompactFilterBar(props FilterCardProps) {
+	<form
+		class="flex flex-wrap gap-3 items-end mb-4"
+		method={ props.method() }
+		action={ templ.URL(props.Action) }
+		if props.Target != "" {
+			hx-get={ props.Action }
+			hx-target={ props.Target }
+			if props.Swap != "" {
+				hx-swap={ props.Swap }
+			}
+		}
+	>
+		{ children... }
+		<div class="flex gap-2">
+			<button type="submit" class="btn btn-primary btn-sm">Filter</button>
+			<a href={ templ.URL(props.Action) } class="btn btn-ghost btn-sm">Clear</a>
+		</div>
+	</form>
+}

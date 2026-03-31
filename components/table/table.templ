@@ -1,0 +1,158 @@
+package table
+
+// SortDir indicates the current sort direction.
+type SortDir string
+
+const (
+	SortAsc  SortDir = "asc"
+	SortDesc SortDir = "desc"
+	SortNone SortDir = ""
+)
+
+// TableProps configures the appearance of a TableWithProps component.
+type TableProps struct {
+	// Size controls the DaisyUI size modifier: "sm" adds table-sm, "" uses default size.
+	Size string
+	// Striped adds table-zebra for alternating row colours.
+	Striped bool
+}
+
+// tableClasses builds the DaisyUI class string from TableProps.
+func tableClasses(props TableProps) string {
+	cls := "table w-full"
+	if props.Size == "sm" {
+		cls += " table-sm"
+	}
+	if props.Striped {
+		cls += " table-zebra"
+	}
+	return cls
+}
+
+// Table renders a DaisyUI table wrapper with zebra striping.
+templ Table() {
+	<div class="overflow-x-auto rounded-md bg-base-100">
+		<table class="table table-zebra w-full">
+			{ children... }
+		</table>
+	</div>
+}
+
+// TableWithProps renders a DaisyUI table with a canonical wrapper.
+templ TableWithProps(props TableProps) {
+	<div class="overflow-x-auto">
+		<table class={ tableClasses(props) }>
+			{ children... }
+		</table>
+	</div>
+}
+
+// TableEmpty renders a full-width empty-state row inside a <tbody>.
+templ TableEmpty(colspan int, message string) {
+	<tr>
+		<td colspan={ intToStr(colspan) } class="text-center text-base-content/60 py-8">{ message }</td>
+	</tr>
+}
+
+// TableRow renders a <tr> with an optional id and hover highlight.
+templ TableRow(id string, hover bool) {
+	<tr
+		if id != "" {
+			id={ id }
+		}
+		class={ templ.KV("hover", hover) }
+	>
+		{ children... }
+	</tr>
+}
+
+// TableCell renders a <td> with an optional extra CSS class.
+templ TableCell(class string) {
+	<td class={ class }>
+		{ children... }
+	</td>
+}
+
+// TableActionCell renders a right-aligned <td> for action menus.
+templ TableActionCell() {
+	<td class="text-right">
+		{ children... }
+	</td>
+}
+
+// intToStr converts an int to string for use in HTML attributes.
+func intToStr(n int) string {
+	if n <= 0 {
+		return "1"
+	}
+	s := ""
+	for n > 0 {
+		s = string(rune('0'+n%10)) + s
+		n /= 10
+	}
+	return s
+}
+
+// TableHeader renders a <th> cell that is optionally sortable.
+templ TableHeader(label string, sortKey string, currentSortKey string, currentDir SortDir, baseURL string) {
+	if sortKey == "" {
+		<th class="text-xs font-semibold text-base-content/60 uppercase">{ label }</th>
+	} else {
+		<th class="text-xs font-semibold text-base-content/60 uppercase">
+			<a
+				class="flex items-center gap-1 hover:text-base-content cursor-pointer"
+				href={ templ.URL(sortURL(baseURL, sortKey, currentSortKey, currentDir)) }
+				hx-get={ sortURL(baseURL, sortKey, currentSortKey, currentDir) }
+				hx-target="closest table"
+				hx-swap="outerHTML"
+			>
+				{ label }
+				if currentSortKey == sortKey {
+					if currentDir == SortAsc {
+						<span class="iconify lucide--chevron-up size-3" aria-hidden="true"></span>
+					} else {
+						<span class="iconify lucide--chevron-down size-3" aria-hidden="true"></span>
+					}
+				}
+			</a>
+		</th>
+	}
+}
+
+// sortURL builds a URL for toggling sort direction.
+func sortURL(base string, key string, currentKey string, currentDir SortDir) string {
+	dir := "asc"
+	if currentKey == key && currentDir == SortAsc {
+		dir = "desc"
+	}
+	return base + "&sort=" + key + "&dir=" + dir
+}
+
+// FilterText renders a text filter input that triggers HTMX on input.
+templ FilterText(name string, value string, placeholder string, hxTarget string, hxGet string) {
+	<input
+		type="search"
+		name={ name }
+		value={ value }
+		placeholder={ placeholder }
+		class="input input-bordered input-sm w-full max-w-xs"
+		hx-get={ hxGet }
+		hx-target={ hxTarget }
+		hx-trigger="input delay:300ms, search"
+		hx-include="closest form"
+	/>
+}
+
+// FilterSelect renders a select filter that triggers HTMX on change.
+templ FilterSelect(name string, hxTarget string, hxGet string) {
+	<select
+		name={ name }
+		class="select select-bordered select-sm w-full max-w-xs"
+		hx-get={ hxGet }
+		hx-target={ hxTarget }
+		hx-trigger="change"
+		hx-include="closest form"
+	>
+		{ children... }
+	</select>
+}

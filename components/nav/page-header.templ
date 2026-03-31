@@ -1,0 +1,35 @@
+package nav
+
+// PageHeader renders the standard page header with a breadcrumb trail on the
+// left and an optional action slot on the right.
+//
+// Use nav.Crumbs() to build the steps slice cleanly:
+//
+//	@nav.PageHeader(nav.Crumbs("Sessions")) { ... }
+//	@nav.PageHeader(nav.Crumbs("Sessions", "/dashboard/sessions", "Detail")) { ... }
+templ PageHeader(steps []BreadcrumbStep) {
+	<div class="flex items-center justify-between px-6 py-0 h-16 bg-base-100 border-b border-base-200 shrink-0">
+		<!-- Breadcrumb -->
+		<nav class="flex items-center gap-2 text-xl font-semibold overflow-x-hidden min-w-0" aria-label="Breadcrumb">
+			for i, step := range steps {
+				if i > 0 {
+					<svg class="w-4 h-4 shrink-0 text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+					</svg>
+				}
+				if step.URL != "" {
+					<a
+						href={ templ.SafeURL(step.URL) }
+						class="text-base-content hover:text-primary transition-colors truncate"
+					>{ step.Label }</a>
+				} else {
+					<span class="text-base-content/50 truncate">{ step.Label }</span>
+				}
+			}
+		</nav>
+		<!-- Actions -->
+		<div class="flex items-center gap-2 shrink-0 ml-4">
+			{ children... }
+		</div>
+	</div>
+}

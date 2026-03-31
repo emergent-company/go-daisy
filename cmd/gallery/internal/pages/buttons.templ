@@ -1,0 +1,69 @@
+package pages
+
+import (
+	"github.com/emergent-company/go-daisy/components/ui"
+)
+
+templ ButtonsContent() {
+	<div class="p-6 space-y-8">
+		<h1 class="text-2xl font-bold">Buttons & Badges</h1>
+
+		<!-- Buttons -->
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Buttons</h2>
+			<div class="flex flex-wrap gap-3">
+				@ui.Button(ui.ButtonPrimary, ui.ButtonMD, false) { Primary }
+				@ui.Button(ui.ButtonSecondary, ui.ButtonMD, false) { Secondary }
+				@ui.Button(ui.ButtonOutline, ui.ButtonMD, false) { Outline }
+				@ui.Button(ui.ButtonError, ui.ButtonMD, false) { Danger }
+			</div>
+			<div class="flex flex-wrap gap-3">
+				@ui.Button(ui.ButtonPrimary, ui.ButtonSM, false) { Small }
+				@ui.Button(ui.ButtonPrimary, ui.ButtonMD, false) { Medium }
+				@ui.Button(ui.ButtonPrimary, ui.ButtonLG, false) { Large }
+				@ui.Button(ui.ButtonPrimary, ui.ButtonMD, true) { Loading }
+			</div>
+		</section>
+
+		<!-- Badges -->
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Badges</h2>
+			<div class="flex flex-wrap gap-3 items-center">
+				@ui.Badge(ui.BadgeProps{Label: "Success", Variant: ui.BadgeSuccess})
+				@ui.Badge(ui.BadgeProps{Label: "Error", Variant: ui.BadgeError})
+				@ui.Badge(ui.BadgeProps{Label: "Warning", Variant: ui.BadgeWarning})
+				@ui.Badge(ui.BadgeProps{Label: "Info", Variant: ui.BadgeInfo})
+				@ui.Badge(ui.BadgeProps{Label: "Neutral", Variant: ui.BadgeNeutral})
+				@ui.Badge(ui.BadgeProps{Label: "Ghost", Variant: ui.BadgeGhost})
+			</div>
+			<div class="flex flex-wrap gap-3 items-center">
+				@ui.StatusBadge("active")
+				@ui.StatusBadge("closed")
+				@ui.StatusBadge("pending")
+				@ui.StatusBadge("draft")
+			</div>
+		</section>
+
+		<!-- Tags -->
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Tags</h2>
+			<div class="flex flex-wrap gap-2">
+				@ui.Tag("Go", "")
+				@ui.Tag("DaisyUI", "")
+				@ui.Tag("HTMX", "")
+				@ui.Tag("Templ", "")
+			</div>
+		</section>
+
+		<!-- Steps -->
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Steps</h2>
+			@ui.Steps() {
+				@ui.Step("Register", true)
+				@ui.Step("Choose plan", true)
+				@ui.Step("Purchase", false)
+				@ui.Step("Receive Product", false)
+			}
+		</section>
+	</div>
+}

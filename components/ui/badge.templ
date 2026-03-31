@@ -1,0 +1,90 @@
+package ui
+
+import "strings"
+
+// BadgeIntent maps a semantic intent to a DaisyUI badge class.
+type BadgeIntent string
+
+const (
+	BadgeSuccess BadgeIntent = "badge-success"
+	BadgeError   BadgeIntent = "badge-error"
+	BadgeWarning BadgeIntent = "badge-warning"
+	BadgeInfo    BadgeIntent = "badge-info"
+	BadgeNeutral BadgeIntent = "badge-neutral"
+	BadgeGhost   BadgeIntent = "badge-ghost"
+)
+
+// BadgeStyle controls the visual style variant of a badge.
+type BadgeStyle string
+
+const (
+	BadgeStyleDefault BadgeStyle = ""
+	BadgeStyleOutline BadgeStyle = "badge-outline"
+	BadgeStyleSoft    BadgeStyle = "badge-soft"
+	BadgeStyleDash    BadgeStyle = "badge-dash"
+)
+
+// BadgeSize controls the size of a badge.
+type BadgeSize string
+
+const (
+	BadgeSizeSM BadgeSize = "badge-sm"
+	BadgeSizeMD BadgeSize = "badge-md"
+	BadgeSizeLG BadgeSize = "badge-lg"
+)
+
+// BadgeProps configures a Badge component.
+type BadgeProps struct {
+	Label   string
+	Variant BadgeIntent
+	Style   BadgeStyle
+	Size    BadgeSize
+	Icon    string // Lucide icon suffix, e.g. "lucide--circle-check"
+}
+
+// Badge renders a DaisyUI badge.
+templ Badge(props BadgeProps) {
+	<span class={ "badge", string(props.Variant), string(props.Style), string(props.Size) }>
+		if props.Icon != "" {
+			<span class={ "iconify size-3", props.Icon }></span>
+		}
+		{ props.Label }
+	</span>
+}
+
+// BadgePill renders a small pill badge with children slot.
+templ BadgePill(intent BadgeIntent) {
+	<span class={ "badge badge-sm", string(intent) }>
+		{ children... }
+	</span>
+}
+
+// StatusBadge maps a string status value to an appropriate intent badge.
+templ StatusBadge(status string) {
+	switch status {
+	case "active", "open", "completed", "approved":
+		@BadgePill(BadgeSuccess) { { status } }
+	case "closed", "rejected", "cancelled", "deleted":
+		@BadgePill(BadgeError) { { status } }
+	case "pending", "in_progress", "review":
+		@BadgePill(BadgeWarning) { { status } }
+	case "draft":
+		@BadgePill(BadgeGhost) { { status } }
+	default:
+		@BadgePill(BadgeNeutral) { { status } }
+	}
+}
+
+// LogStatusDot renders a DaisyUI status dot for a log entry type.
+templ LogStatusDot(logType string) {
+	{{ lowerType := strings.ToLower(logType) }}
+	if strings.Contains(lowerType, "error") || strings.Contains(lowerType, "fail") {
+		<span class="status status-error status-sm" aria-label="error"></span>
+	} else if strings.Contains(lowerType, "success") || strings.Contains(lowerType, "complete") {
+		<span class="status status-success status-sm" aria-label="success"></span>
+	} else if strings.Contains(lowerType, "pending") || strings.Contains(lowerType, "start") {
+		<span class="status status-warning status-sm" aria-label="pending"></span>
+	} else {
+		<span class="status status-neutral status-sm" aria-label="info"></span>
+	}
+}

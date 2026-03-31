@@ -1,0 +1,30 @@
+version: "3"
+
+vars:
+  CSS_IN:   ./assets/app.css
+  CSS_OUT:  ./staticfs/static/css/app.css
+  TAILWIND: npx @tailwindcss/cli
+
+tasks:
+  build:ui:
+    desc: "Generate templ files and compile Tailwind CSS"
+    cmds:
+      - ~/go/bin/templ generate ./...
+      - "{{.TAILWIND}} -i {{.CSS_IN}} -o {{.CSS_OUT}} --minify"
+
+  build:
+    desc: "Build:ui then go build"
+    cmds:
+      - task: build:ui
+      - go build ./...
+
+  gallery:
+    desc: "Run the gallery app on :4100"
+    cmds:
+      - task: build:ui
+      - go run ./cmd/gallery
+
+  dev:ui:
+    desc: "Watch and recompile CSS"
+    cmds:
+      - "{{.TAILWIND}} -i {{.CSS_IN}} -o {{.CSS_OUT}} --watch"

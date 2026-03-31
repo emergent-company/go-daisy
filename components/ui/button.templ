@@ -1,0 +1,65 @@
+package ui
+
+// ButtonVariant controls the visual style of a button.
+type ButtonVariant string
+
+const (
+	ButtonPrimary   ButtonVariant = "btn-primary"
+	ButtonSecondary ButtonVariant = "btn-ghost"
+	ButtonError     ButtonVariant = "btn-error"
+	ButtonOutline   ButtonVariant = "btn-outline"
+	ButtonNeutral   ButtonVariant = "btn-neutral"
+)
+
+// ButtonSize controls the size of a button.
+type ButtonSize string
+
+const (
+	ButtonXS ButtonSize = "btn-xs"
+	ButtonSM ButtonSize = "btn-sm"
+	ButtonMD ButtonSize = ""
+	ButtonLG ButtonSize = "btn-lg"
+)
+
+// Button renders a DaisyUI button element.
+templ Button(variant ButtonVariant, size ButtonSize, loading bool) {
+	<button
+		class={ "btn", string(variant), string(size),
+			templ.KV("loading loading-spinner", loading) }
+		disabled?={ loading }
+	>
+		{ children... }
+	</button>
+}
+
+// SubmitButton renders a submit button (type=submit) with loading state.
+templ SubmitButton(variant ButtonVariant, size ButtonSize, loading bool) {
+	<button
+		type="submit"
+		class={ "btn", string(variant), string(size),
+			templ.KV("loading loading-spinner", loading) }
+		disabled?={ loading }
+	>
+		{ children... }
+	</button>
+}
+
+// LinkButton renders an anchor styled as a button.
+templ LinkButton(href string, variant ButtonVariant, size ButtonSize) {
+	<a
+		href={ templ.URL(href) }
+		class={ "btn", string(variant), string(size) }
+	>
+		{ children... }
+	</a>
+}
+
+// IconButton renders a square icon button.
+templ IconButton(variant ButtonVariant, size ButtonSize, icon string, label string) {
+	<button
+		class={ "btn btn-square", string(variant), string(size) }
+		aria-label={ label }
+	>
+		<span class={ "iconify size-4", icon }></span>
+	</button>
+}

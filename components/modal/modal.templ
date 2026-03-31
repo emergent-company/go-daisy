@@ -1,0 +1,195 @@
+package modal
+
+// ModalSize controls the max-width of the modal dialog.
+type ModalSize string
+
+const (
+	ModalSM ModalSize = "modal-sm"
+	ModalMD ModalSize = ""
+	ModalLG ModalSize = "modal-lg"
+	ModalXL ModalSize = "modal-xl"
+)
+
+script openModal(id string) {
+	document.getElementById(id).showModal()
+}
+
+script closeModal(id string) {
+	document.getElementById(id).close()
+}
+
+// FormModalProps configures a FormModal component.
+type FormModalProps struct {
+	ID          string
+	Title       string
+	Size        ModalSize
+	SubmitText  string
+	CancelText  string
+	Action      string
+	Method      string // "post", "put", "patch"
+	Target      string
+	Swap        string
+	IndicatorID string
+	Variant     string // "error" for destructive modals
+}
+
+// Modal renders a DaisyUI dialog modal with backdrop close.
+templ Modal(title string, size ModalSize) {
+	<dialog
+		id="modal"
+		class="modal modal-open"
+		onclick="if(event.target===this){this.remove()}"
+	>
+		<div class={ "modal-box", string(size) }>
+			<div class="flex items-center justify-between mb-4">
+				<h3 class="font-semibold text-lg text-base-content">{ title }</h3>
+				<button
+					type="button"
+					class="btn btn-ghost btn-sm btn-square"
+					onclick="this.closest('dialog').remove()"
+					aria-label="Close"
+				>
+					<span class="iconify lucide--x size-5"></span>
+				</button>
+			</div>
+			{ children... }
+		</div>
+		<form method="dialog" class="modal-backdrop" onclick="document.getElementById('modal').remove()">
+			<button>close</button>
+		</form>
+	</dialog>
+}
+
+// FormModal renders a modal containing a form that submits via HTMX.
+templ FormModal(props FormModalProps) {
+	{{ submitText := props.SubmitText }}
+	{{ if submitText == "" { submitText = "Save" } }}
+	{{ cancelText := props.CancelText }}
+	{{ if cancelText == "" { cancelText = "Cancel" } }}
+	{{ size := props.Size }}
+	{{ if size == "" { size = ModalSM } }}
+	<dialog id={ props.ID } class="modal">
+		<div class={ "modal-box", string(size) }>
+			<div class="flex items-center justify-between mb-4">
+				<h3 class="font-semibold text-lg">{ props.Title }</h3>
+				<button
+					type="button"
+					class="btn btn-ghost btn-sm btn-square"
+					onclick={ closeModal(props.ID) }
+					aria-label="Close"
+				>
+					<span class="iconify lucide--x size-5"></span>
+				</button>
+			</div>
+			<form
+				if props.Method == "put" {
+					hx-put={ props.Action }
+				} else if props.Method == "patch" {
+					hx-patch={ props.Action }
+				} else {
+					hx-post={ props.Action }
+				}
+				if props.Target != "" {
+					hx-target={ props.Target }
+				}
+				if props.Swap != "" {
+					hx-swap={ props.Swap }
+				}
+				if props.IndicatorID != "" {
+					hx-indicator={ "#" + props.IndicatorID }
+				}
+			>
+				{ children... }
+				<div class="flex justify-end gap-2 mt-4">
+					<button
+						type="button"
+						class="btn btn-ghost btn-sm"
+						onclick={ closeModal(props.ID) }
+					>{ cancelText }</button>
+					<button
+						type="submit"
+						class={ "btn btn-sm",
+							templ.KV("btn-primary", props.Variant != "error"),
+							templ.KV("btn-error", props.Variant == "error") }
+					>{ submitText }</button>
+				</div>
+			</form>
+		</div>
+		<form method="dialog" class="modal-backdrop">
+			<button>close</button>
+		</form>
+	</dialog>
+}
+
+// OpenModalButton renders a primary button that opens a modal by id.
+templ OpenModalButton(modalID string, label string) {
+	<button type="button" class="btn btn-primary btn-sm" onclick={ openModal(modalID) }>
+		{ label }
+	</button>
+}
+
+// DeleteButton renders an error-styled button that sends hx-delete with confirmation.
+templ DeleteButton(url string, confirm string, target string, swap string, label string) {
+	{{ if label == "" { label = "Delete" } }}
+	<button
+		type="button"
+		class="btn btn-error btn-sm"
+		hx-delete={ url }
+		if confirm != "" {
+			hx-confirm={ confirm }
+		}
+		if target != "" {
+			hx-target={ target }
+		}
+		if swap != "" {
+			hx-swap={ swap }
+		}
+	>{ label }</button>
+}
+
+// LoaderModal renders a modal containing only a loading spinner.
+templ LoaderModal() {
+	<dialog id="modal" class="modal modal-open">
+		<div class="modal-box flex items-center justify-center py-12">
+			<span class="loading loading-spinner loading-lg text-primary"></span>
+		</div>
+	</dialog>
+}
+
+// ConfirmPopup renders a small confirmation modal with confirm/cancel buttons.
+templ ConfirmPopup(title string, message string, confirmLabel string, confirmURL string, confirmHXMethod string) {
+	<dialog id="modal" class="modal modal-open">
+		<div class="modal-box max-w-sm">
+			<h3 class="font-semibold text-lg mb-2">{ title }</h3>
+			<p class="text-sm text-base-content/60 mb-6">{ message }</p>
+			<div class="flex justify-end gap-2">
+				<button
+					type="button"
+					class="btn btn-ghost btn-sm"
+					onclick="document.getElementById('modal').remove()"
+				>
+					Cancel
+				</button>
+				<button
+					type="button"
+					class="btn btn-error btn-sm"
+					if confirmHXMethod == "delete" {
+						hx-delete={ confirmURL }
+					} else if confirmHXMethod == "patch" {
+						hx-patch={ confirmURL }
+					} else {
+						hx-post={ confirmURL }
+					}
+					hx-target="#modal-container"
+					hx-swap="innerHTML"
+					onclick="document.getElementById('modal').remove()"
+				>
+					{ confirmLabel }
+				</button>
+			</div>
+		</div>
+		<form method="dialog" class="modal-backdrop" onclick="document.getElementById('modal').remove()">
+			<button>close</button>
+		</form>
+	</dialog>
+}

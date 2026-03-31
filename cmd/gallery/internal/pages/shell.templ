@@ -1,0 +1,41 @@
+package pages
+
+import (
+	"github.com/emergent-company/go-daisy/components/layout"
+)
+
+var gallerySidebarGroups = []layout.SidebarGroup{
+	{
+		Label: "Components",
+		Items: []layout.SidebarItem{
+			{Label: "Home", Href: "/components", Icon: "lucide--layout-grid"},
+			{Label: "Buttons & Badges", Href: "/components/buttons", Icon: "lucide--mouse-pointer-click"},
+			{Label: "Cards", Href: "/components/cards", Icon: "lucide--square"},
+			{Label: "Forms", Href: "/components/forms", Icon: "lucide--form-input"},
+			{Label: "Tables", Href: "/components/tables", Icon: "lucide--table"},
+			{Label: "Modals", Href: "/components/modals", Icon: "lucide--app-window"},
+			{Label: "Feedback", Href: "/components/feedback", Icon: "lucide--bell"},
+			{Label: "Nav", Href: "/components/nav", Icon: "lucide--navigation"},
+			{Label: "Layout", Href: "/components/layout", Icon: "lucide--layout-dashboard"},
+		},
+	},
+}
+
+// GalleryPage renders the full gallery shell with server-rendered initial content.
+templ GalleryPage(title string, content templ.Component) {
+	@layout.Page("go-daisy · "+title, "nord") {
+		<div id="app-shell" class="flex h-screen overflow-hidden">
+			<input type="checkbox" id="layout-sidebar-toggle-trigger" class="hidden" aria-label="Toggle layout sidebar"/>
+			<label for="layout-sidebar-toggle-trigger" id="layout-sidebar-backdrop"></label>
+			@layout.Sidebar("go-daisy", layout.ActiveSidebarGroups(gallerySidebarGroups, "/components/"+title))
+			<div class="flex min-w-0 grow flex-col overflow-hidden">
+				@layout.Navbar("go-daisy") {
+					@layout.ThemeToggle("nord", "dark")
+				}
+				<main id="main-content" class="grow overflow-auto bg-base-200">
+					@content
+				</main>
+			</div>
+		</div>
+	}
+}

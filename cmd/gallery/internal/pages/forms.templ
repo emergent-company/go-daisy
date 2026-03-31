@@ -1,0 +1,38 @@
+package pages
+
+import (
+	"github.com/emergent-company/go-daisy/components/form"
+)
+
+templ FormsContent() {
+	<div class="p-6 space-y-8">
+		<h1 class="text-2xl font-bold">Forms</h1>
+
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Form Fields</h2>
+			<div class="max-w-md space-y-4">
+				@form.FormField(form.FormFieldProps{Label: "Name", Name: "name", Type: form.FieldText, Placeholder: "Enter your name"})
+				@form.FormField(form.FormFieldProps{Label: "Email", Name: "email", Type: form.FieldEmail, Placeholder: "you@example.com"})
+				@form.FormField(form.FormFieldProps{Label: "With Error", Name: "errfield", Type: form.FieldText, Placeholder: "Something wrong", Error: "This field is required"})
+			</div>
+		</section>
+
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Inputs</h2>
+			<div class="max-w-md space-y-4">
+				@form.TextInput("text1", "Label", "", "", false)
+				@form.TextareaInput("ta1", "Description", "", "", 3, false)
+				@form.SearchInput("search1", "", "Search...", "#results", "/search")
+			</div>
+		</section>
+
+		<section class="space-y-4">
+			<h2 class="text-lg font-semibold border-b border-base-200 pb-2">Toggles & Checkboxes</h2>
+			<div class="space-y-3">
+				@form.Toggle("toggle1", true, "Enable notifications")
+				@form.Toggle("toggle2", false, "Dark mode")
+				@form.Checkbox("cb1", false, "I agree to the terms")
+			</div>
+		</section>
+	</div>
+}
