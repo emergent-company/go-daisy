@@ -75,7 +75,7 @@ templ FormActionsWithLoading(submitText string, indicatorID string) {
 // SearchInput renders a text input with HTMX search debounce.
 templ SearchInput(name string, value string, placeholder string, hxTarget string, hxGet string) {
 	<label class="input input-sm w-full flex items-center gap-2">
-		<span class="iconify size-4 opacity-50 shrink-0" data-icon="lucide:search"></span>
+		<span class="iconify lucide--search size-4 opacity-50 shrink-0"></span>
 		<input
 			type="search"
 			name={ name }

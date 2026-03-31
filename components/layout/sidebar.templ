@@ -28,7 +28,7 @@ templ Sidebar(appName string, groups []SidebarGroup) {
 				title="Toggle sidebar"
 				class="btn btn-circle btn-ghost btn-sm text-base-content/50 max-lg:hidden"
 			>
-				<span class="iconify size-4.5" data-icon="lucide:panel-left-close"></span>
+				<span class="iconify lucide--panel-left-close size-4.5"></span>
 			</label>
 		</div>
 		<!-- Nav menu -->
@@ -96,17 +96,10 @@ templ sidebarNavItem(item SidebarItem) {
 		class={ "menu-item", templ.KV("active", item.Active) }
 	>
 		if item.Icon != "" {
-			<span class="iconify size-4" data-icon={ iconifyIcon(item.Icon) }></span>
+			<span class={ "iconify size-4 " + item.Icon }></span>
 		}
 		<span class="grow">{ item.Label }</span>
 	</a>
-}
-
-func iconifyIcon(lucideClass string) string {
-	if len(lucideClass) > 8 && lucideClass[:8] == "lucide--" {
-		return "lucide:" + lucideClass[8:]
-	}
-	return lucideClass
 }
 
 // ActiveSidebarGroups returns a copy of groups with Active=true for the item

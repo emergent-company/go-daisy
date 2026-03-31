@@ -109,9 +109,9 @@ templ TableHeader(label string, sortKey string, currentSortKey string, currentDi
 				{ label }
 				if currentSortKey == sortKey {
 					if currentDir == SortAsc {
-						<span class="iconify size-3" data-icon="lucide:chevron-up" aria-hidden="true"></span>
-					} else {
-						<span class="iconify size-3" data-icon="lucide:chevron-down" aria-hidden="true"></span>
+					<span class="iconify lucide--chevron-up size-3" aria-hidden="true"></span>
+				} else {
+						<span class="iconify lucide--chevron-down size-3" aria-hidden="true"></span>
 					}
 				}
 			</a>

@@ -31,7 +31,7 @@ func Navbar(appName string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div role=\"navigation\" aria-label=\"Navbar\" class=\"flex items-center justify-between px-4 bg-base-100\" id=\"layout-topbar\"><!-- LEFT: sidebar toggle + app name --><div class=\"flex items-center gap-3\"><label for=\"layout-sidebar-toggle-trigger\" class=\"btn btn-square btn-ghost btn-sm\" aria-label=\"Toggle sidebar\"><span id=\"topbar-menu-icon\" class=\"iconify size-5\" data-icon=\"lucide:menu\"></span> <span id=\"topbar-close-icon\" class=\"iconify size-5\" data-icon=\"lucide:panel-left-close\"></span></label> <span class=\"font-semibold text-base-content/80 text-sm hidden md:block\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div role=\"navigation\" aria-label=\"Navbar\" class=\"flex items-center justify-between px-4 bg-base-100\" id=\"layout-topbar\"><!-- LEFT: sidebar toggle + app name --><div class=\"flex items-center gap-3\"><label for=\"layout-sidebar-toggle-trigger\" class=\"btn btn-square btn-ghost btn-sm\" aria-label=\"Toggle sidebar\"><span id=\"topbar-menu-icon\" class=\"iconify lucide--menu size-5\"></span> <span id=\"topbar-close-icon\" class=\"iconify lucide--panel-left-close size-5\"></span></label> <span class=\"font-semibold text-base-content/80 text-sm hidden md:block\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -96,7 +96,7 @@ func ThemeToggle(lightTheme string, darkTheme string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\"><span id=\"theme-icon-sun\" class=\"iconify size-4.5\" data-icon=\"lucide:sun\"></span> <span id=\"theme-icon-moon\" class=\"iconify size-4.5\" data-icon=\"lucide:moon\" style=\"display:none\"></span></button>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\"><span id=\"theme-icon-sun\" class=\"iconify lucide--sun size-4.5\"></span> <span id=\"theme-icon-moon\" class=\"iconify lucide--moon size-4.5\" style=\"display:none\"></span></button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

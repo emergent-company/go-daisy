@@ -43,14 +43,14 @@ templ Modal(title string, size ModalSize) {
 		<div class={ "modal-box", string(size) }>
 			<div class="flex items-center justify-between mb-4">
 				<h3 class="font-semibold text-lg text-base-content">{ title }</h3>
-				<button
-					type="button"
-					class="btn btn-ghost btn-sm btn-square"
-					onclick="this.closest('dialog').remove()"
-					aria-label="Close"
-				>
-					<span class="iconify size-5" data-icon="lucide:x"></span>
-				</button>
+			<button
+				type="button"
+				class="btn btn-ghost btn-sm btn-square"
+				onclick="this.closest('dialog').remove()"
+				aria-label="Close"
+			>
+				<span class="iconify lucide--x size-5"></span>
+			</button>
 			</div>
 			{ children... }
 		</div>
@@ -72,14 +72,14 @@ templ FormModal(props FormModalProps) {
 		<div class={ "modal-box", string(size) }>
 			<div class="flex items-center justify-between mb-4">
 				<h3 class="font-semibold text-lg">{ props.Title }</h3>
-				<button
-					type="button"
-					class="btn btn-ghost btn-sm btn-square"
-					onclick={ closeModal(props.ID) }
-					aria-label="Close"
-				>
-					<span class="iconify size-5" data-icon="lucide:x"></span>
-				</button>
+			<button
+				type="button"
+				class="btn btn-ghost btn-sm btn-square"
+				onclick={ closeModal(props.ID) }
+				aria-label="Close"
+			>
+				<span class="iconify lucide--x size-5"></span>
+			</button>
 			</div>
 			<form
 				if props.Method == "put" {

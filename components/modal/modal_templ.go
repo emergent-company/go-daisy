@@ -110,7 +110,7 @@ func Modal(title string, size ModalSize) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h3><button type=\"button\" class=\"btn btn-ghost btn-sm btn-square\" onclick=\"this.closest('dialog').remove()\" aria-label=\"Close\"><span class=\"iconify size-5\" data-icon=\"lucide:x\"></span></button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h3><button type=\"button\" class=\"btn btn-ghost btn-sm btn-square\" onclick=\"this.closest('dialog').remove()\" aria-label=\"Close\"><span class=\"iconify lucide--x size-5\"></span></button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -225,7 +225,7 @@ func FormModal(props FormModalProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" aria-label=\"Close\"><span class=\"iconify size-5\" data-icon=\"lucide:x\"></span></button></div><form")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" aria-label=\"Close\"><span class=\"iconify lucide--x size-5\"></span></button></div><form")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

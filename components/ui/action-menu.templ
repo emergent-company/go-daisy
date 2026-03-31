@@ -16,7 +16,7 @@ type ActionMenuItem struct {
 templ ActionMenu(items []ActionMenuItem) {
 	<div class="dropdown dropdown-end">
 		<button tabindex="0" type="button" class="btn btn-ghost btn-sm btn-square">
-			<span class="iconify size-5" data-icon="lucide:ellipsis-vertical"></span>
+			<span class="iconify lucide--ellipsis-vertical size-5"></span>
 		</button>
 		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-200 z-50 w-44 p-1 mt-1">
 			for _, item := range items {
@@ -31,50 +31,50 @@ templ ActionMenu(items []ActionMenuItem) {
 								hx-confirm={ item.Confirm }
 							}
 						>
-							if item.Icon != "" {
-								<span class="iconify size-4" data-icon={ IconifyIcon(item.Icon) }></span>
-							}
-							{ item.Label }
-						</button>
-					} else if item.HXPatch != "" {
-						<button
-							type="button"
-							class={ "flex items-center gap-2 text-sm",
-								templ.KV("text-error", item.Danger) }
-							hx-patch={ item.HXPatch }
-							if item.Confirm != "" {
-								hx-confirm={ item.Confirm }
-							}
-						>
-							if item.Icon != "" {
-								<span class="iconify size-4" data-icon={ IconifyIcon(item.Icon) }></span>
-							}
-							{ item.Label }
-						</button>
-					} else if item.HXDelete != "" {
-						<button
-							type="button"
-							class={ "flex items-center gap-2 text-sm",
-								templ.KV("text-error", item.Danger) }
-							hx-delete={ item.HXDelete }
-							if item.Confirm != "" {
-								hx-confirm={ item.Confirm }
-							}
-						>
-							if item.Icon != "" {
-								<span class="iconify size-4" data-icon={ IconifyIcon(item.Icon) }></span>
-							}
-							{ item.Label }
-						</button>
-					} else {
-						<a
-							href={ templ.URL(item.Href) }
-							class={ "flex items-center gap-2 text-sm",
-								templ.KV("text-error", item.Danger) }
-						>
-							if item.Icon != "" {
-								<span class="iconify size-4" data-icon={ IconifyIcon(item.Icon) }></span>
-							}
+					if item.Icon != "" {
+							<span class={ "iconify size-4 " + item.Icon }></span>
+						}
+						{ item.Label }
+					</button>
+				} else if item.HXPatch != "" {
+					<button
+						type="button"
+						class={ "flex items-center gap-2 text-sm",
+							templ.KV("text-error", item.Danger) }
+						hx-patch={ item.HXPatch }
+						if item.Confirm != "" {
+							hx-confirm={ item.Confirm }
+						}
+					>
+						if item.Icon != "" {
+							<span class={ "iconify size-4 " + item.Icon }></span>
+						}
+						{ item.Label }
+					</button>
+				} else if item.HXDelete != "" {
+					<button
+						type="button"
+						class={ "flex items-center gap-2 text-sm",
+							templ.KV("text-error", item.Danger) }
+						hx-delete={ item.HXDelete }
+						if item.Confirm != "" {
+							hx-confirm={ item.Confirm }
+						}
+					>
+						if item.Icon != "" {
+							<span class={ "iconify size-4 " + item.Icon }></span>
+						}
+						{ item.Label }
+					</button>
+				} else {
+					<a
+						href={ templ.URL(item.Href) }
+						class={ "flex items-center gap-2 text-sm",
+							templ.KV("text-error", item.Danger) }
+					>
+						if item.Icon != "" {
+							<span class={ "iconify size-4 " + item.Icon }></span>
+						}
 							{ item.Label }
 						</a>
 					}

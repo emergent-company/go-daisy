@@ -499,7 +499,7 @@ func SearchInput(name string, value string, placeholder string, hxTarget string,
 			templ_7745c5c3_Var26 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<label class=\"input input-sm w-full flex items-center gap-2\"><span class=\"iconify size-4 opacity-50 shrink-0\" data-icon=\"lucide:search\"></span> <input type=\"search\" name=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<label class=\"input input-sm w-full flex items-center gap-2\"><span class=\"iconify lucide--search size-4 opacity-50 shrink-0\"></span> <input type=\"search\" name=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

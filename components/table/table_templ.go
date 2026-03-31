@@ -463,12 +463,12 @@ func TableHeader(label string, sortKey string, currentSortKey string, currentDir
 			}
 			if currentSortKey == sortKey {
 				if currentDir == SortAsc {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<span class=\"iconify size-3\" data-icon=\"lucide:chevron-up\" aria-hidden=\"true\"></span>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<span class=\"iconify lucide--chevron-up size-3\" aria-hidden=\"true\"></span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<span class=\"iconify size-3\" data-icon=\"lucide:chevron-down\" aria-hidden=\"true\"></span>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<span class=\"iconify lucide--chevron-down size-3\" aria-hidden=\"true\"></span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}

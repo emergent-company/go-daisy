@@ -46,7 +46,7 @@ type BadgeProps struct {
 templ Badge(props BadgeProps) {
 	<span class={ "badge", string(props.Variant), string(props.Style), string(props.Size) }>
 		if props.Icon != "" {
-			<span class="iconify size-3" data-icon={ IconifyIcon(props.Icon) }></span>
+			<span class={ "iconify size-3 " + props.Icon }></span>
 		}
 		{ props.Label }
 	</span>

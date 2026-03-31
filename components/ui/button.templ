@@ -60,6 +60,6 @@ templ IconButton(variant ButtonVariant, size ButtonSize, icon string, label stri
 		class={ "btn btn-square", string(variant), string(size) }
 		aria-label={ label }
 	>
-		<span class="iconify size-4" data-icon={ IconifyIcon(icon) }></span>
+		<span class={ "iconify size-4 " + icon }></span>
 	</button>
 }
