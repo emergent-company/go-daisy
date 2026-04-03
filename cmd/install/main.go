@@ -12,13 +12,86 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 )
+
+//go:embed skills
+var skillsFS embed.FS
+
+// installSkills copies the embedded gallery skills into .opencode/skills/
+// in the current working directory.
+func installSkills() {
+	cwd, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("warning: could not determine working directory for skill install: %v\n", err)
+		return
+	}
+	targetDir := filepath.Join(cwd, ".opencode", "skills")
+	if err := os.MkdirAll(targetDir, 0o755); err != nil {
+		fmt.Printf("warning: could not create .opencode/skills: %v\n", err)
+		return
+	}
+
+	skillEntries, err := fs.ReadDir(skillsFS, "skills")
+	if err != nil {
+		fmt.Printf("warning: could not read embedded skills: %v\n", err)
+		return
+	}
+
+	for _, entry := range skillEntries {
+		if !entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		destDir := filepath.Join(targetDir, name)
+
+		sub, err := fs.Sub(skillsFS, "skills/"+name)
+		if err != nil {
+			fmt.Printf("warning: could not access embedded skill %s: %v\n", name, err)
+			continue
+		}
+
+		// Skip if already up to date.
+		if _, err := os.Stat(destDir); err == nil {
+			fmt.Printf("✓ skill up to date: %s\n", name)
+			continue
+		}
+
+		if err := copyFSTree(sub, destDir); err != nil {
+			fmt.Printf("warning: could not install skill %s: %v\n", name, err)
+			continue
+		}
+		fmt.Printf("✓ installed skill: %s\n", name)
+	}
+}
+
+// copyFSTree copies all files from srcFS into dstDir on disk.
+func copyFSTree(srcFS fs.FS, dstDir string) error {
+	return fs.WalkDir(srcFS, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		target := filepath.Join(dstDir, filepath.FromSlash(path))
+		if d.IsDir() {
+			return os.MkdirAll(target, 0o755)
+		}
+		data, err := fs.ReadFile(srcFS, path)
+		if err != nil {
+			return err
+		}
+		if err := os.MkdirAll(filepath.Dir(target), 0o755); err != nil {
+			return err
+		}
+		return os.WriteFile(target, data, 0o644)
+	})
+}
 
 func main() {
 	dir := flag.String("dir", "gallery", "directory to create the gallery binary in")
@@ -73,6 +146,9 @@ func main() {
 	if err := cmd.Run(); err != nil {
 		fmt.Printf("warning: go mod tidy failed: %v\n", err)
 	}
+
+	// Install gallery skills into .opencode/skills/.
+	installSkills()
 
 	fmt.Printf(`
 ✓ Gallery installed!
