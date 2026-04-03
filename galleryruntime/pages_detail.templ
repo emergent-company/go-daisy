@@ -1,0 +1,1062 @@
+package galleryruntime
+
+import (
+	"encoding/json"
+	"fmt"
+	"strconv"
+)
+
+// isTemplPage returns true when the component uses a templ.Component for rendering.
+func isTemplPage(c GalleryComponent) bool { return c.Templ != nil }
+
+func effectiveFrameHeight(c GalleryComponent) string {
+	if len(c.EffectiveVariants()) > 0 && c.EffectiveVariants()[0].FrameHeight != "" {
+		return c.EffectiveVariants()[0].FrameHeight
+	}
+	if c.FrameHeight != "" {
+		return c.FrameHeight
+	}
+	return "200px"
+}
+
+// ComponentDetail renders the detail view for a single gallery component.
+// Includes the component name, description, category badge, and a sandboxed iframe preview.
+// feedbackCount is the pre-loaded count of feedback items for the badge.
+// githubEnabled controls whether the "Create GitHub Issue" button is shown.
+templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool) {
+	<div class="flex flex-col p-4 gap-3">
+		<!-- Header -->
+		<div class="flex items-start justify-between gap-3">
+			<div>
+				<div class="flex items-center gap-3 mb-1">
+					<h1 class="text-xl font-bold text-base-content">{ c.Name }</h1>
+					<span class="badge badge-neutral badge-sm">{ string(c.Category) }</span>
+				</div>
+				<p class="text-sm text-base-content/50">{ c.Description }</p>
+			</div>
+		</div>
+
+		<!-- Variant tab strip (only shown when component has multiple variants) -->
+		if len(c.EffectiveVariants()) > 1 {
+			<div class="flex gap-1 border-b border-base-200 mb-1" id="variant-tabs" role="tablist">
+				for i, v := range c.EffectiveVariants() {
+					<button
+						role="tab"
+						class={ "btn btn-xs btn-ghost rounded-b-none border-b-2 border-transparent px-3",
+							templ.KV("border-primary text-primary font-semibold", i == 0) }
+						data-variant-slug={ SlugifyStoryName(v.Name) }
+						data-slug={ c.Slug }
+						onclick="switchVariant(this)"
+					>{ v.Name }</button>
+				}
+			</div>
+			<script>
+			window.switchVariant = function(btn) {
+				var slug = btn.getAttribute('data-slug');
+				var variant = btn.getAttribute('data-variant-slug');
+				// Update iframe src
+				var frame = document.getElementById('preview-frame');
+				if (frame) frame.src = '/gallery/render/' + slug + '/' + variant;
+				var fsFrame = document.getElementById('fullscreen-preview-frame');
+				if (fsFrame) fsFrame.src = '/gallery/render/' + slug + '/' + variant;
+				// Update tab active state
+				var tabs = btn.closest('[role="tablist"]').querySelectorAll('[role="tab"]');
+				tabs.forEach(function(t) {
+					t.classList.remove('border-primary', 'text-primary', 'font-semibold');
+					t.classList.add('border-transparent');
+				});
+				btn.classList.remove('border-transparent');
+				btn.classList.add('border-primary', 'text-primary', 'font-semibold');
+			};
+			</script>
+		}
+
+		<!-- Two-column body: left = preview + source, right = token sidebar -->
+		<div class="flex gap-4 items-start">
+
+			<!-- Left column: preview + HTML source -->
+			<div class="flex flex-col gap-3 flex-1 min-w-0">
+
+				<!-- Preview section -->
+				<div class="flex flex-col">
+					<!-- Preview toolbar -->
+					<div class="flex items-center justify-between mb-2 gap-3 flex-wrap">
+						<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Preview</span>
+						<div class="flex items-center gap-2">
+							<!-- Responsive breakpoint buttons -->
+							<div class="join">
+								<button class="join-item btn btn-xs btn-ghost border border-base-200" onclick="setPreviewWidth('375px')" title="Mobile (375px)">
+									<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+								</button>
+								<button class="join-item btn btn-xs btn-ghost border border-base-200" onclick="setPreviewWidth('768px')" title="Tablet (768px)">
+									<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+								</button>
+								<button class="join-item btn btn-xs btn-ghost border border-base-200" onclick="setPreviewWidth('100%')" title="Desktop (full width)">
+									<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><line x1="8" y1="22" x2="16" y2="22"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
+								</button>
+							</div>
+							<!-- Fullscreen button -->
+							<button
+								class="btn btn-xs btn-ghost border border-base-200 gap-1"
+								onclick="openFullscreenPreview()"
+								title="Fullscreen preview"
+							>
+								<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+								Fullscreen
+							</button>
+						<a href={ templ.URL("/gallery/render/" + c.Slug) } target="_blank" class="btn btn-xs btn-ghost border border-base-200 gap-1" title="Open in new tab">
+							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+							Open
+						</a>
+							<span class="text-xs text-base-content/40">Theme:</span>
+							<button
+								id="preview-theme-toggle"
+								class="btn btn-xs btn-ghost border border-base-200"
+								onclick="toggleGalleryTheme()"
+							>
+								&#9728; Light
+							</button>
+						<!-- Feedback button with count badge -->
+						<button
+							id="feedback-mode-btn"
+							class="btn btn-xs btn-ghost border border-base-200 gap-1"
+							onclick="toggleFeedbackMode()"
+							title="Toggle feedback mode (or press Alt) — click any element in the preview to annotate it"
+						>
+							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+							Feedback
+							<span
+								id={ "feedback-count-" + c.Slug }
+								class="badge badge-xs badge-primary"
+								hx-get={ "/gallery/" + c.Slug + "/feedback/count" }
+								hx-trigger="load"
+								hx-swap="outerHTML"
+							>{ strconv.FormatInt(feedbackCount, 10) }</span>
+							</button>
+						</div>
+					</div>
+
+				<!-- Preview iframe -->
+				<div class="rounded-xl border border-base-200 overflow-hidden bg-base-100 shadow-sm relative">
+					<!-- Feedback mode banner (shown when feedback mode is active) -->
+					<div id="feedback-mode-banner" class="hidden absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-2 bg-pink-500 text-white text-xs font-semibold px-3 py-1.5 pointer-events-none select-none">
+						<span>Feedback mode active — click any element to annotate</span>
+						<kbd class="bg-white/20 rounded px-1.5 py-0.5 font-mono text-xs">Alt</kbd>
+					</div>
+					<iframe
+						id="preview-frame"
+						class="block w-full"
+						style={ "height:" + effectiveFrameHeight(c) + "; border:none; transition:width 0.2s, height 0.15s;" }
+						src={ func() string { if len(c.EffectiveVariants()) > 1 { return "/gallery/render/" + c.Slug + "/" + SlugifyStoryName(c.EffectiveVariants()[0].Name) }; return "/gallery/render/" + c.Slug }() }
+						title={ fmt.Sprintf("Preview: %s", c.Name) }
+					></iframe>
+				</div>
+				</div>
+
+			<!-- HTML Source panel (only for HTML snippet components) -->
+				if !isTemplPage(c) {
+					<div class="flex flex-col">
+						<div class="flex items-center justify-between mb-2">
+							<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">HTML Source</span>
+							<button
+								id="copy-html-btn"
+								class="btn btn-xs btn-ghost border border-base-200 gap-1"
+								onclick="copyGalleryHTML()"
+							>
+								<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+								Copy
+							</button>
+						</div>
+						<div class="rounded-xl border border-base-200 overflow-hidden shadow-sm">
+							<pre
+								id="gallery-html-source"
+								class="language-html"
+								style="margin:0; border-radius:0; font-size:0.78rem; line-height:1.6;"
+							><code class="language-html">{ c.HTML }</code></pre>
+						</div>
+					</div>
+				}
+
+			</div><!-- end left column -->
+
+		<!-- Right column: design token sidebar + feedback panel (~30%) -->
+		<!-- Hidden by default when no tokens; JS shows it when feedback mode is active -->
+		<div id="right-column" class={ "w-[30%] shrink-0 flex flex-col gap-3 sticky top-4", templ.KV("hidden", len(c.Tokens) == 0) }>
+
+			<!-- Token sidebar (only when tokens exist) -->
+			if len(c.Tokens) > 0 {
+				<div id="token-panel" class="flex flex-col gap-2">
+					<!-- Sidebar header -->
+					<div class="flex items-center justify-between">
+						<div class="flex items-center gap-2">
+							<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Design Tokens</span>
+							<span class="badge badge-xs badge-neutral">{ fmt.Sprintf("%d", len(c.Tokens)) }</span>
+						</div>
+						<button
+							class="btn btn-xs btn-ghost border border-base-200 gap-1"
+							onclick="resetTokens()"
+						>
+							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+							Reset
+						</button>
+					</div>
+
+					<!-- Token controls -->
+					<div id="token-panel-body" class="rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden">
+						<div class="p-4 space-y-5">
+							for _, grp := range TokenGroups(c.Tokens) {
+								<div class="token-group">
+									<p class="text-xs font-semibold text-base-content/40 uppercase tracking-wide mb-3">{ grp.Name }</p>
+									<div class="space-y-3">
+										for _, tok := range grp.Tokens {
+											<div class="flex flex-col gap-1.5" data-css-var={ tok.CSSVar } data-default={ tok.Default } data-unit={ tok.Unit } data-selector={ func() string { if tok.Selector != "" { return tok.Selector }; return ":root" }() }>
+												<div class="flex items-center justify-between">
+													<label class="text-xs text-base-content/70">{ tok.Label }</label>
+													if tok.Type == TokenTypeRange {
+														<span class="text-xs text-base-content/50 font-mono" id={ "tok-val-" + SanitizeID(tok.CSSVar) }>{ tok.Default }</span>
+													} else if tok.Type == TokenTypeColor {
+														<span class="text-xs text-base-content/50 font-mono" id={ "tok-val-" + SanitizeID(tok.CSSVar) }>{ tok.Default }</span>
+													}
+												</div>
+												if tok.Type == TokenTypeRange {
+													<input
+														type="range"
+														class="range range-xs range-primary w-full"
+														min={ fmt.Sprintf("%g", tok.Min) }
+														max={ fmt.Sprintf("%g", tok.Max) }
+														step={ fmt.Sprintf("%g", tok.Step) }
+														value={ RangeDefaultValue(tok) }
+														oninput="handleTokenChange(this)"
+													/>
+												} else if tok.Type == TokenTypeColor {
+													<input
+														type="color"
+														class="w-full h-8 rounded cursor-pointer border border-base-200"
+														value={ tok.Default }
+														oninput="handleTokenChange(this)"
+													/>
+												} else if tok.Type == TokenTypeSelect {
+													<select
+														class="select select-xs select-bordered w-full"
+														onchange="handleTokenChange(this)"
+													>
+														for _, opt := range tok.Options {
+															if opt.Value == tok.Default {
+																<option value={ opt.Value } selected>{ opt.Label }</option>
+															} else {
+																<option value={ opt.Value }>{ opt.Label }</option>
+															}
+														}
+													</select>
+												}
+											</div>
+										}
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+				</div>
+			}
+
+			<!-- Feedback panel (hidden by default, toggled by toolbar Feedback button) -->
+			<div id="feedback-panel" class="hidden flex flex-col gap-2">
+				<div class="flex items-center justify-between">
+					<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Feedback</span>
+					<button
+						class="btn btn-xs btn-ghost"
+						onclick="toggleFeedbackPanel()"
+					>✕</button>
+				</div>
+				<div
+					id={ "feedback-list-" + c.Slug }
+					class="rounded-xl border border-base-200 bg-base-100 shadow-sm overflow-hidden"
+					hx-get={ "/gallery/" + c.Slug + "/feedback" }
+					hx-trigger="load, feedbackCreated from:body"
+					hx-swap="innerHTML"
+				>
+					<p class="p-4 text-xs text-base-content/40">Loading...</p>
+				</div>
+				if githubEnabled {
+					<div class="flex justify-end">
+						<button
+							id="export-issue-btn"
+							class="btn btn-xs btn-outline gap-1"
+							data-slug={ c.Slug }
+							onclick="exportGitHubIssue(this.dataset.slug)"
+						>
+							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+							Create GitHub Issue
+						</button>
+					</div>
+				}
+			</div>
+
+		</div>
+
+		</div><!-- end two-column body -->
+	</div>
+
+	<!-- Fullscreen preview overlay -->
+	<div id="fullscreen-preview-overlay" class="fixed inset-0 z-50 hidden bg-base-100 flex flex-col">
+		<!-- Fullscreen title bar -->
+		<div class="flex items-center justify-between px-4 py-3 border-b border-base-200 shrink-0 bg-base-100">
+			<div class="flex items-center gap-3">
+				<h2 class="text-lg font-bold text-base-content">{ c.Name }</h2>
+				<span class="badge badge-neutral badge-sm">{ string(c.Category) }</span>
+			</div>
+			<div class="flex items-center gap-2">
+				<!-- Responsive breakpoint buttons -->
+				<div class="join">
+					<button class="join-item btn btn-xs btn-ghost border border-base-200" onclick="setFullscreenPreviewWidth('375px')" title="Mobile (375px)">
+						<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+					</button>
+					<button class="join-item btn btn-xs btn-ghost border border-base-200" onclick="setFullscreenPreviewWidth('768px')" title="Tablet (768px)">
+						<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+					</button>
+					<button class="join-item btn btn-xs btn-ghost border border-base-200" onclick="setFullscreenPreviewWidth('100%')" title="Desktop (full width)">
+						<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><line x1="8" y1="22" x2="16" y2="22"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
+					</button>
+				</div>
+				<!-- Theme toggle -->
+				<span class="text-xs text-base-content/40">Theme:</span>
+				<button
+					id="fullscreen-theme-toggle"
+					class="btn btn-xs btn-ghost border border-base-200"
+					onclick="toggleFullscreenTheme()"
+				>
+					&#9728; Light
+				</button>
+				<!-- Exit button -->
+				<button
+					class="btn btn-sm btn-ghost gap-1"
+					onclick="closeFullscreenPreview()"
+					title="Exit fullscreen"
+				>
+					<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+					Exit
+				</button>
+			</div>
+		</div>
+		<!-- Fullscreen iframe -->
+		<div id="fullscreen-preview-container" class="grow overflow-hidden p-4 flex justify-center">
+			<iframe
+				id="fullscreen-preview-frame"
+				class="h-full block rounded-lg border border-base-200"
+				style="width:100%; border:none; transition:width 0.2s;"
+				src={ func() string { if len(c.EffectiveVariants()) > 1 { return "/gallery/render/" + c.Slug + "/" + SlugifyStoryName(c.EffectiveVariants()[0].Name) }; return "/gallery/render/" + c.Slug }() }
+				title={ fmt.Sprintf("Fullscreen preview: %s", c.Name) }
+			></iframe>
+		</div>
+	</div>
+
+	<!-- Feedback submission dialog -->
+	<dialog id="feedback-dialog" class="modal">
+		<div class="modal-box w-full max-w-md">
+			<h3 class="font-bold text-lg mb-3">Add Feedback</h3>
+			<!-- Read-only element context -->
+			<div class="mb-3 space-y-1">
+				<p class="text-xs text-base-content/50">
+					<span class="font-semibold">Element:</span>
+					<span id="fb-tag-display" class="font-mono"></span>
+				</p>
+				<p class="text-xs text-base-content/50">
+					<span class="font-semibold">Selector:</span>
+					<span id="fb-selector-display" class="font-mono break-all"></span>
+				</p>
+				<p class="text-xs text-base-content/50 hidden" id="fb-text-row">
+					<span class="font-semibold">Text:</span>
+					<span id="fb-text-display" class="italic"></span>
+				</p>
+			</div>
+			<!-- Hidden context inputs -->
+			<input type="hidden" id="fb-slug" value={ c.Slug }/>
+			<input type="hidden" id="fb-tag"/>
+			<input type="hidden" id="fb-selector"/>
+			<input type="hidden" id="fb-innertext"/>
+			<!-- Comment textarea -->
+			<textarea
+				id="fb-comment"
+				class="textarea textarea-bordered w-full text-sm"
+				rows="3"
+				placeholder="Describe the issue or suggestion..."
+			></textarea>
+			<div class="modal-action mt-3">
+				<button class="btn btn-sm btn-ghost" onclick="closeFeedbackDialog()">Cancel</button>
+				<button class="btn btn-sm btn-primary" onclick="submitFeedback()">Submit</button>
+			</div>
+		</div>
+		<form method="dialog" class="modal-backdrop"><button>close</button></form>
+	</dialog>
+
+	<!-- Prism.js syntax highlighting (dev tool only) -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"/>
+	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+
+	<!-- Theme toggle + copy + fullscreen script -->
+	<script>
+		(function() {
+			var STORAGE_KEY = 'gallery-preview-theme';
+
+			function getSavedTheme() {
+				try { return localStorage.getItem(STORAGE_KEY) || 'light'; } catch(e) { return 'light'; }
+			}
+			function saveTheme(theme) {
+				try { localStorage.setItem(STORAGE_KEY, theme); } catch(e) {}
+			}
+
+			function applyThemeToFrame(frameId, theme) {
+				var frame = document.getElementById(frameId);
+				if (!frame) return;
+				try {
+					var doc = frame.contentDocument || frame.contentWindow.document;
+					if (doc && doc.documentElement) {
+						doc.documentElement.setAttribute('data-theme', theme);
+					}
+				} catch(e) {}
+			}
+
+			function updateThemeButton(btnId, theme) {
+				var btn = document.getElementById(btnId);
+				if (btn) btn.textContent = theme === 'dark' ? '\uD83C\uDF19 Dark' : '\u2600 Light';
+			}
+
+			function applyStoredTheme() {
+				var theme = getSavedTheme();
+				applyThemeToFrame('preview-frame', theme);
+				applyThemeToFrame('fullscreen-preview-frame', theme);
+				updateThemeButton('preview-theme-toggle', theme);
+				updateThemeButton('fullscreen-theme-toggle', theme);
+			}
+
+			function resizePreviewFrame() {
+				var frame = document.getElementById('preview-frame');
+				if (!frame) return;
+				try {
+					var doc = frame.contentDocument || frame.contentWindow.document;
+					if (doc && doc.body) {
+						var h = doc.body.scrollHeight;
+						if (h > 0) frame.style.height = h + 'px';
+					}
+				} catch(e) {}
+			}
+
+			function applyThemeOnLoad(frameId) {
+				var frame = document.getElementById(frameId);
+				if (!frame) return;
+				var theme = getSavedTheme();
+				applyThemeToFrame(frameId, theme);
+				frame.addEventListener('load', function() {
+					applyThemeToFrame(frameId, theme);
+					if (frameId === 'preview-frame') {
+						setTimeout(resizePreviewFrame, 100);
+					}
+				});
+			}
+
+			function attachPreviewResizeObserver() {
+				var frame = document.getElementById('preview-frame');
+				if (!frame) return;
+				function observe() {
+					try {
+						var doc = frame.contentDocument || frame.contentWindow.document;
+						if (!doc || !doc.body) return;
+						function measure() {
+							return Math.max(doc.body.scrollHeight, 40);
+						}
+						var ro = new ResizeObserver(function() {
+							frame.style.height = measure() + 'px';
+						});
+						ro.observe(doc.body);
+						frame.style.height = measure() + 'px';
+					} catch(e) {}
+				}
+				if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
+					observe();
+				} else {
+					frame.addEventListener('load', observe);
+				}
+			}
+
+			window.toggleGalleryTheme = function() {
+				var theme = getSavedTheme() === 'dark' ? 'light' : 'dark';
+				saveTheme(theme);
+				applyThemeToFrame('preview-frame', theme);
+				updateThemeButton('preview-theme-toggle', theme);
+				applyThemeToFrame('fullscreen-preview-frame', theme);
+				updateThemeButton('fullscreen-theme-toggle', theme);
+				setTimeout(resizePreviewFrame, 50);
+			};
+
+			window.setPreviewWidth = function(w) {
+				var frame = document.getElementById('preview-frame');
+				if (!frame) return;
+				var container = frame.parentElement;
+				if (w === '100%') {
+					frame.style.width = '100%';
+					if (container) container.style.justifyContent = '';
+				} else {
+					frame.style.width = w;
+					if (container) container.style.justifyContent = 'center';
+				}
+				setTimeout(resizePreviewFrame, 200);
+			};
+
+			window.copyGalleryHTML = function() {
+				var pre = document.getElementById('gallery-html-source');
+				if (!pre) return;
+				var text = pre.innerText || pre.textContent;
+				navigator.clipboard.writeText(text).then(function() {
+					var btn = document.getElementById('copy-html-btn');
+					if (btn) {
+						btn.textContent = '\u2713 Copied!';
+						setTimeout(function() { btn.innerHTML = '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy'; }, 2000);
+					}
+				});
+			};
+
+			window.openFullscreenPreview = function() {
+				var overlay = document.getElementById('fullscreen-preview-overlay');
+				if (overlay) {
+					overlay.classList.remove('hidden');
+					document.body.style.overflow = 'hidden';
+				}
+				var theme = getSavedTheme();
+				applyThemeToFrame('fullscreen-preview-frame', theme);
+				updateThemeButton('fullscreen-theme-toggle', theme);
+			};
+
+			window.closeFullscreenPreview = function() {
+				var overlay = document.getElementById('fullscreen-preview-overlay');
+				if (overlay) {
+					overlay.classList.add('hidden');
+					document.body.style.overflow = '';
+				}
+				var frame = document.getElementById('fullscreen-preview-frame');
+				if (frame) frame.style.width = '100%';
+			};
+
+			window.toggleFullscreenTheme = function() {
+				var theme = getSavedTheme() === 'dark' ? 'light' : 'dark';
+				saveTheme(theme);
+				applyThemeToFrame('fullscreen-preview-frame', theme);
+				updateThemeButton('fullscreen-theme-toggle', theme);
+				applyThemeToFrame('preview-frame', theme);
+				updateThemeButton('preview-theme-toggle', theme);
+			};
+
+			window.setFullscreenPreviewWidth = function(w) {
+				var frame = document.getElementById('fullscreen-preview-frame');
+				if (!frame) return;
+				frame.style.width = w;
+			};
+
+			document.addEventListener('keydown', function(e) {
+				if (e.key === 'Escape') { closeFullscreenPreview(); }
+			});
+
+			document.addEventListener('htmx:afterSwap', function() {
+				setTimeout(function() {
+					// After HTMX swaps innerHTML, iframes with src= don't auto-load.
+					// Reassign src to force the browser to navigate the iframe.
+					var frame = document.getElementById('preview-frame');
+					if (frame && frame.src && !frame.srcdoc) {
+						var src = frame.src;
+						frame.src = '';
+						frame.src = src;
+					}
+					var fsFrame = document.getElementById('fullscreen-preview-frame');
+					if (fsFrame && fsFrame.src && !fsFrame.srcdoc) {
+						var fsSrc = fsFrame.src;
+						fsFrame.src = '';
+						fsFrame.src = fsSrc;
+					}
+					applyStoredTheme();
+					applyThemeOnLoad('preview-frame');
+					applyThemeOnLoad('fullscreen-preview-frame');
+					attachPreviewResizeObserver();
+				}, 0);
+				if (window.Prism) Prism.highlightAll();
+			});
+
+			document.addEventListener('DOMContentLoaded', function() {
+				applyStoredTheme();
+				applyThemeOnLoad('preview-frame');
+				applyThemeOnLoad('fullscreen-preview-frame');
+				attachPreviewResizeObserver();
+				if (window.Prism) Prism.highlightAll();
+			});
+			if (document.readyState !== 'loading') {
+				applyStoredTheme();
+				applyThemeOnLoad('preview-frame');
+				applyThemeOnLoad('fullscreen-preview-frame');
+				attachPreviewResizeObserver();
+				if (window.Prism) Prism.highlightAll();
+			}
+		})();
+	</script>
+
+	<!-- Design Token panel JS -->
+	<script>
+		(function() {
+			function collectTokens() {
+				var bySelector = {};
+				var rows = document.querySelectorAll('#token-panel-body [data-css-var]');
+				rows.forEach(function(row) {
+					var cssVar = row.getAttribute('data-css-var');
+					var unit = row.getAttribute('data-unit') || '';
+					var selector = row.getAttribute('data-selector') || ':root';
+					var input = row.querySelector('input, select');
+					if (!input || !cssVar) return;
+					var value = input.value;
+					if (input.type === 'range') { value = value + unit; }
+					if (!bySelector[selector]) bySelector[selector] = {};
+					bySelector[selector][cssVar] = value;
+				});
+				return bySelector;
+			}
+
+			function buildCSS(bySelector) {
+				var blocks = [];
+				Object.keys(bySelector).forEach(function(selector) {
+					var lines = [selector + ' {'];
+					Object.keys(bySelector[selector]).forEach(function(k) {
+						lines.push('  ' + k + ': ' + bySelector[selector][k] + ';');
+					});
+					lines.push('}');
+					blocks.push(lines.join('\n'));
+				});
+				return blocks.join('\n');
+			}
+
+			function applyTokensToFrame(frameId) {
+				var frame = document.getElementById(frameId);
+				if (!frame) return;
+				var bySelector = collectTokens();
+				var css = buildCSS(bySelector);
+
+				if (frame.hasAttribute('srcdoc')) {
+					var originalSrcdoc = frame.getAttribute('data-original-srcdoc') || frame.getAttribute('srcdoc');
+					if (!frame.getAttribute('data-original-srcdoc')) {
+						frame.setAttribute('data-original-srcdoc', originalSrcdoc);
+					}
+					var injected = originalSrcdoc.replace('</head>', '<style id="token-overrides">\n' + css + '\n</style>\n</head>');
+					frame.setAttribute('srcdoc', injected);
+				} else {
+					try {
+						var doc = frame.contentDocument || frame.contentWindow.document;
+						if (!doc) return;
+						var styleEl = doc.getElementById('token-overrides');
+						if (!styleEl) {
+							styleEl = doc.createElement('style');
+							styleEl.id = 'token-overrides';
+							(doc.head || doc.documentElement).appendChild(styleEl);
+						}
+						styleEl.textContent = css;
+					} catch(e) {}
+				}
+			}
+
+			window.handleTokenChange = function(input) {
+				var row = input.closest('[data-css-var]');
+				if (!row) return;
+				var unit = row.getAttribute('data-unit') || '';
+				if (input.type === 'range') {
+					var labelEl = document.getElementById('tok-val-' + row.getAttribute('data-css-var').replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
+					if (labelEl) labelEl.textContent = input.value + unit;
+				} else if (input.type === 'color') {
+					var labelEl2 = document.getElementById('tok-val-' + row.getAttribute('data-css-var').replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
+					if (labelEl2) labelEl2.textContent = input.value;
+				}
+				applyTokensToFrame('preview-frame');
+			};
+
+			window.resetTokens = function() {
+				var rows = document.querySelectorAll('#token-panel-body [data-css-var]');
+				rows.forEach(function(row) {
+					var def = row.getAttribute('data-default');
+					var unit = row.getAttribute('data-unit') || '';
+					var cssVar = row.getAttribute('data-css-var');
+					var input = row.querySelector('input, select');
+					if (!input || !def) return;
+					if (input.type === 'range') {
+						input.value = parseFloat(def) || 0;
+						var labelEl = document.getElementById('tok-val-' + cssVar.replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
+						if (labelEl) labelEl.textContent = def;
+					} else {
+						input.value = def;
+						if (input.type === 'color') {
+							var labelEl2 = document.getElementById('tok-val-' + cssVar.replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
+							if (labelEl2) labelEl2.textContent = def;
+						}
+					}
+				});
+				var frame = document.getElementById('preview-frame');
+				if (frame && frame.getAttribute('data-original-srcdoc')) {
+					frame.setAttribute('srcdoc', frame.getAttribute('data-original-srcdoc'));
+					frame.removeAttribute('data-original-srcdoc');
+				} else if (frame && !frame.hasAttribute('srcdoc')) {
+					try {
+						var doc = frame.contentDocument || frame.contentWindow.document;
+						var styleEl = doc && doc.getElementById('token-overrides');
+						if (styleEl) styleEl.remove();
+					} catch(e) {}
+				}
+			};
+		})();
+	</script>
+
+	<!-- Crosshair feedback tool JS (press Alt or click Feedback button to toggle) -->
+	<script>
+		(function() {
+			var feedbackModeActive = false;
+			var hoveredEl = null;
+			var HIGHLIGHT_OUTLINE = '2px solid #f472b6';
+
+			// ── Toggle helpers ────────────────────────────────────────────────────
+
+			window.toggleFeedbackMode = function() {
+				var col = document.getElementById('right-column');
+				if (feedbackModeActive) {
+					deactivateFeedbackMode();
+					// Hide the feedback panel when turning off feedback mode
+					var panel = document.getElementById('feedback-panel');
+					if (panel) panel.classList.add('hidden');
+					// Hide the right column entirely if there are no tokens
+					if (col && !col.querySelector('#token-panel')) col.classList.add('hidden');
+					// Force flex reflow then re-measure iframe height
+					setTimeout(function() {
+						var twoCol = col && col.parentElement;
+						if (twoCol) { twoCol.style.display = 'none'; void twoCol.offsetHeight; twoCol.style.display = ''; }
+						resizePreviewFrame();
+					}, 0);
+				} else {
+					activateFeedbackMode();
+					// Show the right column + feedback panel
+					if (col) col.classList.remove('hidden');
+					var panel = document.getElementById('feedback-panel');
+					if (panel) panel.classList.remove('hidden');
+					// Re-measure iframe after reflow
+					setTimeout(resizePreviewFrame, 50);
+				}
+			};
+
+			// Keep legacy toggleFeedbackPanel working (opens the list panel)
+			window.toggleFeedbackPanel = function() {
+				var panel = document.getElementById('feedback-panel');
+				if (!panel) return;
+				panel.classList.toggle('hidden');
+			};
+
+			function activateFeedbackMode() {
+				if (feedbackModeActive) return;
+				feedbackModeActive = true;
+
+				// Cursor
+				document.body.style.cursor = 'crosshair';
+				var frame = document.getElementById('preview-frame');
+				if (frame) {
+					try {
+						var fdoc = frame.contentDocument || frame.contentWindow.document;
+						if (fdoc && fdoc.body) fdoc.body.style.cursor = 'crosshair';
+					} catch(err) {}
+				}
+
+				// Banner
+				var banner = document.getElementById('feedback-mode-banner');
+				if (banner) banner.classList.remove('hidden');
+
+				// Button active state
+				var btn = document.getElementById('feedback-mode-btn');
+				if (btn) btn.classList.add('btn-primary', 'text-primary-content');
+			}
+
+			function deactivateFeedbackMode() {
+				if (!feedbackModeActive) return;
+				feedbackModeActive = false;
+
+				// Cursor
+				document.body.style.cursor = '';
+				if (hoveredEl) {
+					try { hoveredEl.style.outline = ''; } catch(err) {}
+					hoveredEl = null;
+				}
+				var frame = document.getElementById('preview-frame');
+				if (frame) {
+					try {
+						var fdoc = frame.contentDocument || frame.contentWindow.document;
+						if (fdoc && fdoc.body) fdoc.body.style.cursor = '';
+					} catch(err) {}
+				}
+
+				// Banner
+				var banner = document.getElementById('feedback-mode-banner');
+				if (banner) banner.classList.add('hidden');
+
+				// Button active state
+				var btn = document.getElementById('feedback-mode-btn');
+				if (btn) btn.classList.remove('btn-primary', 'text-primary-content');
+			}
+
+			// ── Keyboard: Alt toggles mode ────────────────────────────────────────
+			document.addEventListener('keyup', function(e) {
+				if (e.key === 'Alt' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+					e.preventDefault();
+					window.toggleFeedbackMode();
+				}
+				if (e.key === 'Escape') {
+					deactivateFeedbackMode();
+					var dialog = document.getElementById('feedback-dialog');
+					if (dialog && dialog.open) dialog.close();
+				}
+			});
+
+			// ── Selector utilities ────────────────────────────────────────────────
+
+			function selectorSegment(el) {
+				if (!el || el.nodeType !== 1) return '';
+				var seg = el.tagName.toLowerCase();
+				if (el.id) {
+					seg += '#' + el.id;
+				} else if (el.className && typeof el.className === 'string') {
+					var cls = el.className.trim().split(/\s+/).slice(0, 2).join('.');
+					if (cls) seg += '.' + cls;
+				}
+				return seg;
+			}
+
+			function computeSelectorPath(el) {
+				var parts = [];
+				var cur = el;
+				for (var i = 0; i < 4 && cur && cur.nodeType === 1 && cur.tagName !== 'BODY' && cur.tagName !== 'HTML'; i++) {
+					parts.unshift(selectorSegment(cur));
+					cur = cur.parentElement;
+				}
+				return parts.join(' > ');
+			}
+
+			var LAYOUT_TAGS = {
+				div: 1, section: 1, article: 1, main: 1, aside: 1,
+				header: 1, footer: 1, nav: 1, ul: 1, ol: 1, li: 1,
+				figure: 1, figcaption: 1, fieldset: 1, form: 1,
+				dl: 1, dt: 1, dd: 1, template: 1
+			};
+
+			function isMeaningful(el) {
+				if (!el || el.nodeType !== 1) return false;
+				var tag = el.tagName.toLowerCase();
+				if (!LAYOUT_TAGS[tag]) return true;
+				if (el.id) return true;
+				var attrs = el.attributes;
+				for (var i = 0; i < attrs.length; i++) {
+					if (attrs[i].name.indexOf('data-') === 0) return true;
+				}
+				if (!el.firstElementChild) return true;
+				return false;
+			}
+
+			function pickTarget(el, body) {
+				var cur = el;
+				while (cur && cur !== body) {
+					if (isMeaningful(cur)) return cur;
+					cur = cur.parentElement;
+				}
+				return body;
+			}
+
+			// ── Iframe listeners ──────────────────────────────────────────────────
+
+			function attachIframeListeners() {
+				var frame = document.getElementById('preview-frame');
+				if (!frame) return;
+				function tryAttach() {
+					try {
+						var fdoc = frame.contentDocument || frame.contentWindow.document;
+						if (!fdoc || !fdoc.body) return;
+
+						fdoc.addEventListener('mousemove', function(e) {
+							if (!feedbackModeActive) return;
+							var raw = fdoc.elementFromPoint(e.clientX, e.clientY);
+							var el = raw ? pickTarget(raw, fdoc.body) : null;
+							if (el === hoveredEl) return;
+							if (hoveredEl) { try { hoveredEl.style.outline = ''; } catch(err) {} }
+							hoveredEl = el;
+							if (el && el !== fdoc.body) { try { el.style.outline = HIGHLIGHT_OUTLINE; } catch(err) {} }
+						});
+
+						fdoc.addEventListener('mouseleave', function() {
+							if (hoveredEl) { try { hoveredEl.style.outline = ''; } catch(err) {} hoveredEl = null; }
+						});
+
+						fdoc.addEventListener('click', function(e) {
+							if (!feedbackModeActive) return;
+							e.preventDefault();
+							e.stopPropagation();
+							var raw = e.target;
+							var el = raw ? pickTarget(raw, fdoc.body) : null;
+							if (!el || el === fdoc.body) return;
+
+							var tag = el.tagName.toLowerCase();
+							var selector = computeSelectorPath(el);
+							var innerText = (el.innerText || el.textContent || '').trim().slice(0, 100);
+
+							var tagIn = document.getElementById('fb-tag');
+							var selIn = document.getElementById('fb-selector');
+							var textIn = document.getElementById('fb-innertext');
+							var tagDisp = document.getElementById('fb-tag-display');
+							var selDisp = document.getElementById('fb-selector-display');
+							var textDisp = document.getElementById('fb-text-display');
+							var textRow = document.getElementById('fb-text-row');
+							var commentEl = document.getElementById('fb-comment');
+
+							if (tagIn) tagIn.value = tag;
+							if (selIn) selIn.value = selector;
+							if (textIn) textIn.value = innerText;
+							if (tagDisp) tagDisp.textContent = '<' + tag + '>';
+							if (selDisp) selDisp.textContent = selector;
+							if (textDisp) textDisp.textContent = innerText;
+							if (textRow) textRow.classList.toggle('hidden', !innerText);
+							if (commentEl) { commentEl.value = ''; commentEl.focus(); }
+
+							var dialog = document.getElementById('feedback-dialog');
+							if (dialog) dialog.showModal();
+						}, true);
+					} catch(err) {}
+				}
+				if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
+					tryAttach();
+				} else {
+					frame.addEventListener('load', tryAttach);
+				}
+			}
+
+			// ── Feedback submission ───────────────────────────────────────────────
+
+			window.submitFeedback = function() {
+				var slug = document.getElementById('fb-slug');
+				var tag = document.getElementById('fb-tag');
+				var sel = document.getElementById('fb-selector');
+				var text = document.getElementById('fb-innertext');
+				var comment = document.getElementById('fb-comment');
+				if (!slug || !comment || !comment.value.trim()) return;
+
+				var contextJson = {
+					tagName: tag ? tag.value : '',
+					selectorPath: sel ? sel.value : '',
+					innerText: text ? text.value : '',
+					componentSlug: slug.value,
+					pageURL: window.location.href
+				};
+
+				fetch('/gallery/' + slug.value + '/feedback', {
+					method: 'POST',
+					headers: {'Content-Type': 'application/json'},
+					body: JSON.stringify({ comment: comment.value.trim(), context_json: contextJson })
+				}).then(function(resp) {
+					if (!resp.ok) { console.error('feedback submit failed', resp.status); return; }
+				var dialog = document.getElementById('feedback-dialog');
+				if (dialog) dialog.close();
+				// Auto-open feedback panel and refresh list
+				var col = document.getElementById('right-column');
+				if (col) col.classList.remove('hidden');
+				var panel = document.getElementById('feedback-panel');
+				if (panel) panel.classList.remove('hidden');
+					htmx.trigger(document.body, 'feedbackCreated');
+					var badge = document.getElementById('feedback-count-' + slug.value);
+					if (badge) htmx.trigger(badge, 'load');
+				}).catch(function(err) { console.error('feedback submit error', err); });
+			};
+
+			window.closeFeedbackDialog = function() {
+				var dialog = document.getElementById('feedback-dialog');
+				if (dialog) dialog.close();
+			};
+
+			window.exportGitHubIssue = function(slug) {
+				var btn = document.getElementById('export-issue-btn');
+				if (btn) { btn.disabled = true; btn.textContent = 'Creating…'; }
+				fetch('/gallery/' + slug + '/feedback/export-issue', {
+					method: 'POST',
+					headers: {'Content-Type': 'application/json'}
+				}).then(function(resp) {
+					return resp.json().then(function(data) {
+						if (!resp.ok) {
+							alert('Failed to create issue: ' + (data.error || resp.status));
+							if (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }
+							return;
+						}
+						if (data.issue_url) {
+							window.open(data.issue_url, '_blank', 'noopener');
+						}
+						if (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }
+					});
+				}).catch(function(err) {
+					console.error('export issue error', err);
+					alert('Failed to create issue: ' + err.message);
+					if (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }
+				});
+			};
+
+			document.addEventListener('htmx:afterSwap', function() {
+				setTimeout(attachIframeListeners, 0);
+			});
+			document.addEventListener('DOMContentLoaded', attachIframeListeners);
+			if (document.readyState !== 'loading') { attachIframeListeners(); }
+		})();
+	</script>
+}
+
+// FeedbackListPartial renders the feedback list HTML fragment for HTMX partial swaps.
+templ FeedbackListPartial(items []Feedback) {
+	if len(items) == 0 {
+		<p class="p-4 text-xs text-base-content/40 text-center">No feedback yet. Press <kbd class="kbd kbd-xs">Alt</kbd> or click the Feedback button to enter feedback mode, then click any element in the preview.</p>
+	} else {
+		<ul class="divide-y divide-base-200">
+			for _, item := range items {
+				<li class="flex flex-col gap-1 p-3 text-xs" id={ fmt.Sprintf("feedback-item-%d", item.ID) }>
+					<div class="flex items-start justify-between gap-2">
+						<div class="flex items-center gap-2 flex-1 min-w-0">
+							<span class="font-medium text-base-content break-words flex-1">{ item.Comment }</span>
+							if item.Status == StatusResolved {
+								<span class="badge badge-xs badge-success shrink-0">resolved</span>
+							} else if item.Status == StatusWontFix {
+								<span class="badge badge-xs badge-neutral shrink-0">won't fix</span>
+							}
+						</div>
+						<button
+							class="btn btn-xs btn-ghost text-error shrink-0"
+							hx-delete={ fmt.Sprintf("/gallery/%s/feedback/%d", item.ComponentSlug, item.ID) }
+							hx-target={ fmt.Sprintf("#feedback-item-%d", item.ID) }
+							hx-swap="outerHTML"
+							hx-on:htmx:after-request="htmx.trigger(document.body, 'feedbackCreated')"
+							title="Delete this feedback"
+						>✕</button>
+					</div>
+					if item.AgentResponse != "" {
+						<div class="bg-base-200 rounded p-2 text-base-content/70 text-xs italic">{ item.AgentResponse }</div>
+					}
+					if sel := feedbackSelectorPath(item.ContextJSON); sel != "" {
+						<code class="text-base-content/50 truncate">{ sel }</code>
+					}
+					<span class="text-base-content/30">{ item.CreatedAt.Format("2006-01-02 15:04") }</span>
+				</li>
+			}
+		</ul>
+	}
+}
+
+// feedbackSelectorPath extracts the selectorPath string from context_json.
+func feedbackSelectorPath(raw string) string {
+	if raw == "" || raw == "{}" {
+		return ""
+	}
+	var ctx map[string]interface{}
+	if err := json.Unmarshal([]byte(raw), &ctx); err != nil {
+		return ""
+	}
+	if sel, ok := ctx["selectorPath"].(string); ok {
+		return sel
+	}
+	return ""
+}

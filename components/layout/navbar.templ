@@ -41,6 +41,60 @@ templ ThemeToggle(lightTheme string, darkTheme string) {
 	</button>
 }
 
+// NavbarDropdownItem is a single option in a NavbarDropdown.
+type NavbarDropdownItem struct {
+	Label  string
+	Href   string
+	Icon   string // Lucide icon suffix, e.g. "lucide--folder"
+	Active bool
+}
+
+// NavbarDropdown renders a compact dropdown in the navbar for switching context
+// (e.g. project, tenant, organisation). currentLabel is shown on the trigger button;
+// pass an empty string to show a neutral placeholder. hxTarget is the HTMX swap
+// target for each item link (e.g. "#main-content").
+templ NavbarDropdown(currentLabel string, placeholder string, icon string, hxTarget string, items []NavbarDropdownItem) {
+	if len(items) > 0 {
+		<div class="dropdown dropdown-end">
+			<label tabindex="0" class="btn btn-sm btn-ghost gap-1.5 font-normal">
+				if icon != "" {
+					<span class={ "iconify size-4 text-base-content/60 " + icon }></span>
+				}
+				if currentLabel != "" {
+					<span class="max-w-[120px] truncate text-sm">{ currentLabel }</span>
+				} else {
+					<span class="text-sm text-base-content/60">{ placeholder }</span>
+				}
+				<span class="iconify lucide--chevron-down size-3.5 text-base-content/40"></span>
+			</label>
+			<ul
+				tabindex="0"
+				class="dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-52 p-1 border border-base-content/10 mt-1"
+			>
+				for _, item := range items {
+					<li>
+						<a
+							class={ templ.KV("active", item.Active) }
+							href={ templ.SafeURL(item.Href) }
+							if hxTarget != "" {
+								hx-get={ item.Href }
+								hx-target={ hxTarget }
+								hx-swap="innerHTML"
+								hx-push-url="true"
+							}
+						>
+							if item.Icon != "" {
+								<span class={ "iconify size-4 " + item.Icon }></span>
+							}
+							<span>{ item.Label }</span>
+						</a>
+					</li>
+				}
+			</ul>
+		</div>
+	}
+}
+
 script toggleTheme(lightTheme string, darkTheme string) {
 	var html = document.documentElement;
 	var current = html.getAttribute('data-theme') || lightTheme;

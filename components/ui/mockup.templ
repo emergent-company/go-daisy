@@ -1,0 +1,46 @@
+package ui
+
+// MockupCode renders a terminal-style code mockup container.
+templ MockupCode() {
+	<div class="mockup-code">
+		{ children... }
+	</div>
+}
+
+// MockupCodeLine renders a single line with a prefix inside MockupCode.
+// colorClass: "" for default, "text-success", "text-error", "text-warning" etc.
+templ MockupCodeLine(prefix string, colorClass string) {
+	<pre
+		if prefix != "" {
+			data-prefix={ prefix }
+		}
+		class={ colorClass }
+	><code>{ children... }</code></pre>
+}
+
+// MockupBrowser renders a browser window mockup.
+templ MockupBrowser(url string) {
+	<div class="mockup-browser border border-base-300">
+		<div class="mockup-browser-toolbar">
+			<div class="input">{ url }</div>
+		</div>
+		{ children... }
+	</div>
+}
+
+// MockupPhone renders a phone frame mockup.
+templ MockupPhone() {
+	<div class="mockup-phone">
+		<div class="mockup-phone-camera"></div>
+		<div class="mockup-phone-display">
+			{ children... }
+		</div>
+	</div>
+}
+
+// MockupWindow renders a desktop window frame mockup.
+templ MockupWindow() {
+	<div class="mockup-window border border-base-300">
+		{ children... }
+	</div>
+}

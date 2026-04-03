@@ -1,30 +1,69 @@
 version: "3"
 
 vars:
-  CSS_IN:   ./assets/app.css
-  CSS_OUT:  ./staticfs/static/css/app.css
+  CSS_IN: ./assets/app.css
+  CSS_OUT: ./staticfs/static/css/app.css
   TAILWIND: tailwindcss
+  GALLERY_LOG: /tmp/go-daisy-gallery.log
+  GALLERY_PID: /tmp/go-daisy-gallery.pid
 
 tasks:
   build:ui:
-    desc: "Generate templ files and compile Tailwind CSS"
+    desc: Generate templ files and compile Tailwind CSS
     cmds:
       - ~/go/bin/templ generate ./...
       - "{{.TAILWIND}} -i {{.CSS_IN}} -o {{.CSS_OUT}} --minify"
 
   build:
-    desc: "Build:ui then go build"
+    desc: Build UI then go build
     cmds:
       - task: build:ui
       - go build ./...
 
   gallery:
-    desc: "Run the gallery app on :4100"
+    desc: Build UI then run gallery interactively (logs to stdout)
     cmds:
       - task: build:ui
       - go run ./cmd/gallery
 
+  "gallery:start":
+    desc: Build UI then start gallery as background daemon
+    cmds:
+      - task: build:ui
+      - task: "gallery:stop"
+      - >-
+        sh -c 'nohup go run ./cmd/gallery >> {{.GALLERY_LOG}} 2>&1 &
+        echo $! > {{.GALLERY_PID}} &&
+        echo "gallery started (pid $(cat {{.GALLERY_PID}})), log: {{.GALLERY_LOG}}"'
+
+  "gallery:stop":
+    desc: Stop the background gallery daemon
+    cmds:
+      - >-
+        sh -c 'if [ -f {{.GALLERY_PID}} ]; then
+        kill $(cat {{.GALLERY_PID}}) 2>/dev/null && echo "gallery stopped" || echo "gallery was not running";
+        rm -f {{.GALLERY_PID}};
+        else lsof -ti:11000 | xargs kill -9 2>/dev/null || true; fi'
+
+  "gallery:log":
+    desc: Tail the gallery daemon log
+    cmds:
+      - tail -f {{.GALLERY_LOG}}
+
+  "gallery:restart":
+    desc: Stop then start the gallery daemon
+    cmds:
+      - task: "gallery:stop"
+      - task: "gallery:start"
+
+  "gallery:dev":
+    desc: Run gallery with air (hot reload on .go changes)
+    cmds:
+      - task: build:ui
+      - task: "gallery:stop"
+      - air
+
   dev:ui:
-    desc: "Watch and recompile CSS"
+    desc: Watch and recompile CSS
     cmds:
       - "{{.TAILWIND}} -i {{.CSS_IN}} -o {{.CSS_OUT}} --watch"

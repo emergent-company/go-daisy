@@ -1,0 +1,18 @@
+package ui
+
+// ChatBubble renders a chat conversation bubble.
+// sent=true → chat-end (right), sent=false → chat-start (left)
+// bubbleClass: optional modifier e.g. "chat-bubble-primary"
+templ ChatBubble(sent bool, author string, timestamp string, bubbleClass string) {
+	<div class={ "chat", templ.KV("chat-end", sent), templ.KV("chat-start", !sent) }>
+		if author != "" {
+			<div class="chat-header text-xs text-base-content/50 mb-0.5">{ author }</div>
+		}
+		<div class={ "chat-bubble", bubbleClass }>
+			{ children... }
+		</div>
+		if timestamp != "" {
+			<div class="chat-footer text-xs text-base-content/30 mt-0.5">{ timestamp }</div>
+		}
+	</div>
+}

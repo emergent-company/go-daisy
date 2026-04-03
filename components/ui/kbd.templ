@@ -1,0 +1,18 @@
+package ui
+
+// KbdSize controls the size of a keyboard key display.
+type KbdSize string
+
+const (
+	KbdXS KbdSize = "kbd-xs"
+	KbdSM KbdSize = "kbd-sm"
+	KbdMD KbdSize = ""
+	KbdLG KbdSize = "kbd-lg"
+)
+
+// Kbd renders a keyboard key display.
+templ Kbd(size KbdSize) {
+	<kbd class={ "kbd", string(size) }>
+		{ children... }
+	</kbd>
+}

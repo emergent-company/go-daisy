@@ -1,0 +1,17 @@
+package ui
+
+// StatusColor controls the color of a status dot.
+type StatusColor string
+
+const (
+	StatusSuccess StatusColor = "status-success"
+	StatusError   StatusColor = "status-error"
+	StatusWarning StatusColor = "status-warning"
+	StatusInfo    StatusColor = "status-info"
+	StatusNeutral StatusColor = "status-neutral"
+)
+
+// Status renders a small colored status indicator dot.
+templ Status(color StatusColor) {
+	<span class={ "status", string(color) }></span>
+}

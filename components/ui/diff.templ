@@ -1,0 +1,27 @@
+package ui
+
+// Diff renders a DaisyUI diff comparison container with two side-by-side panels.
+templ Diff() {
+	<div class="diff">
+		{ children... }
+	</div>
+}
+
+// DiffItem1 renders the first (left/before) panel of a Diff.
+templ DiffItem1() {
+	<div class="diff-item-1">
+		{ children... }
+	</div>
+}
+
+// DiffItem2 renders the second (right/after) panel of a Diff.
+templ DiffItem2() {
+	<div class="diff-item-2">
+		{ children... }
+	</div>
+}
+
+// DiffResizer renders the draggable resizer handle inside a Diff.
+templ DiffResizer() {
+	<div class="diff-resizer"></div>
+}

@@ -1,0 +1,20 @@
+package ui
+
+// Carousel wraps a DaisyUI carousel container.
+templ Carousel(vertical bool) {
+	<div class={ "carousel", templ.KV("carousel-vertical", vertical) }>
+		{ children... }
+	</div>
+}
+
+// CarouselItem renders a single carousel slide.
+templ CarouselItem(id string) {
+	<div
+		if id != "" {
+			id={ id }
+		}
+		class="carousel-item"
+	>
+		{ children... }
+	</div>
+}

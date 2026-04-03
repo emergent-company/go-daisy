@@ -14,12 +14,15 @@ import "strings"
 type BadgeIntent string
 
 const (
-	BadgeSuccess BadgeIntent = "badge-success"
-	BadgeError   BadgeIntent = "badge-error"
-	BadgeWarning BadgeIntent = "badge-warning"
-	BadgeInfo    BadgeIntent = "badge-info"
-	BadgeNeutral BadgeIntent = "badge-neutral"
-	BadgeGhost   BadgeIntent = "badge-ghost"
+	BadgeSuccess   BadgeIntent = "badge-success"
+	BadgeError     BadgeIntent = "badge-error"
+	BadgeWarning   BadgeIntent = "badge-warning"
+	BadgeInfo      BadgeIntent = "badge-info"
+	BadgeNeutral   BadgeIntent = "badge-neutral"
+	BadgeGhost     BadgeIntent = "badge-ghost"
+	BadgePrimary   BadgeIntent = "badge-primary"
+	BadgeSecondary BadgeIntent = "badge-secondary"
+	BadgeAccent    BadgeIntent = "badge-accent"
 )
 
 // BadgeStyle controls the visual style variant of a badge.
@@ -48,6 +51,7 @@ type BadgeProps struct {
 	Style   BadgeStyle
 	Size    BadgeSize
 	Icon    string // Lucide icon suffix, e.g. "lucide--circle-check"
+	Animate bool   // when true, adds animate-pulse to the icon span (e.g. for "in progress" states)
 }
 
 // Badge renders a DaisyUI badge.
@@ -72,7 +76,7 @@ func Badge(props BadgeProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{"badge", string(props.Variant), string(props.Style), string(props.Size)}
+		var templ_7745c5c3_Var2 = []any{"badge gap-1", string(props.Variant), string(props.Style), string(props.Size)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -95,7 +99,7 @@ func Badge(props BadgeProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if props.Icon != "" {
-			var templ_7745c5c3_Var4 = []any{"iconify size-3 " + props.Icon}
+			var templ_7745c5c3_Var4 = []any{"iconify size-3", props.Icon, templ.KV("animate-pulse", props.Animate)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -121,7 +125,7 @@ func Badge(props BadgeProps) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 51, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 55, Col: 15}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -230,7 +234,7 @@ func StatusBadge(status string) templ.Component {
 				var templ_7745c5c3_Var12 string
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(status)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 66, Col: 37}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 70, Col: 37}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
@@ -258,7 +262,7 @@ func StatusBadge(status string) templ.Component {
 				var templ_7745c5c3_Var14 string
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(status)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 68, Col: 35}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 72, Col: 35}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 				if templ_7745c5c3_Err != nil {
@@ -286,7 +290,7 @@ func StatusBadge(status string) templ.Component {
 				var templ_7745c5c3_Var16 string
 				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(status)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 70, Col: 37}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 74, Col: 37}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 				if templ_7745c5c3_Err != nil {
@@ -314,7 +318,7 @@ func StatusBadge(status string) templ.Component {
 				var templ_7745c5c3_Var18 string
 				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(status)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 72, Col: 35}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 76, Col: 35}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 				if templ_7745c5c3_Err != nil {
@@ -342,7 +346,7 @@ func StatusBadge(status string) templ.Component {
 				var templ_7745c5c3_Var20 string
 				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(status)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 74, Col: 37}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 78, Col: 37}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 				if templ_7745c5c3_Err != nil {

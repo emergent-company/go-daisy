@@ -1,0 +1,15 @@
+package ui
+
+// Hero renders a DaisyUI hero section.
+templ Hero() {
+	<div class="hero">
+		{ children... }
+	</div>
+}
+
+// HeroContent wraps the inner hero-content div.
+templ HeroContent(centered bool) {
+	<div class={ "hero-content", templ.KV("text-center", centered) }>
+		{ children... }
+	</div>
+}

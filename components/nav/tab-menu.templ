@@ -1,10 +1,13 @@
 package nav
 
+import "strconv"
+
 // Tab represents a single tab in a tab strip.
 type Tab struct {
 	Label  string
 	Href   string
 	Active bool
+	Count  int // optional count badge shown next to the label; hidden when 0
 }
 
 // TabMenu renders a full-page tab strip. Each tab uses HTMX to load content
@@ -35,6 +38,9 @@ templ TabMenu(tabs []Tab, target ...string) {
 					}() }
 				>
 					{ tab.Label }
+				if tab.Count > 0 {
+					<span class="ml-1.5 text-xs opacity-60">{ strconv.Itoa(tab.Count) }</span>
+				}
 				</a>
 			}
 		</nav>

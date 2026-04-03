@@ -1,0 +1,20 @@
+package nav
+
+// LinkVariant controls the visual style of a link.
+type LinkVariant string
+
+const (
+	LinkDefault   LinkVariant = "link"
+	LinkPrimary   LinkVariant = "link link-primary"
+	LinkSecondary LinkVariant = "link link-secondary"
+	LinkAccent    LinkVariant = "link link-accent"
+	LinkNeutral   LinkVariant = "link link-neutral"
+	LinkHover     LinkVariant = "link link-hover"
+)
+
+// Link renders a styled anchor link.
+templ Link(href string, variant LinkVariant) {
+	<a href={ templ.URL(href) } class={ string(variant) }>
+		{ children... }
+	</a>
+}

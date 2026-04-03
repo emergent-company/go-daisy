@@ -1,0 +1,23 @@
+package ui
+
+// MaskShape controls the CSS mask shape applied to an element.
+type MaskShape string
+
+const (
+	MaskSquircle MaskShape = "mask-squircle"
+	MaskHeart    MaskShape = "mask-heart"
+	MaskHexagon  MaskShape = "mask-hexagon"
+	MaskTriangle MaskShape = "mask-triangle"
+	MaskCircle   MaskShape = "mask-circle"
+	MaskStar     MaskShape = "mask-star"
+	MaskStar2    MaskShape = "mask-star-2"
+	MaskPentagon MaskShape = "mask-pentagon"
+	MaskDiamond  MaskShape = "mask-diamond"
+)
+
+// Mask applies a CSS mask shape to its child content.
+templ Mask(shape MaskShape) {
+	<div class={ "mask", string(shape) }>
+		{ children... }
+	</div>
+}

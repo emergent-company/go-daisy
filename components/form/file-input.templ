@@ -1,0 +1,26 @@
+package form
+
+// FileInput renders a DaisyUI file upload input field.
+templ FileInput(name string, label string, accept string, errMsg string) {
+	<div class="form-control w-full">
+		if label != "" {
+			<label class="label" for={ name }>
+				<span class="label-text">{ label }</span>
+			</label>
+		}
+		<input
+			id={ name }
+			name={ name }
+			type="file"
+			if accept != "" {
+				accept={ accept }
+			}
+			class={ "file-input file-input-bordered w-full", templ.KV("file-input-error", errMsg != "") }
+		/>
+		if errMsg != "" {
+			<div class="label pt-1">
+				<span class="label-text-alt text-error">{ errMsg }</span>
+			</div>
+		}
+	</div>
+}

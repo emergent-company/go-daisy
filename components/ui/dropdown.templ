@@ -1,0 +1,27 @@
+package ui
+
+type DropdownAlign string
+
+const (
+	DropdownEnd    DropdownAlign = "dropdown-end"
+	DropdownTop    DropdownAlign = "dropdown-top"
+	DropdownBottom DropdownAlign = "dropdown-bottom"
+	DropdownLeft   DropdownAlign = "dropdown-left"
+	DropdownRight  DropdownAlign = "dropdown-right"
+)
+
+// Dropdown wraps a trigger + dropdown-content menu.
+templ Dropdown(align DropdownAlign) {
+	<div class={ "dropdown", string(align) }>
+		{ children... }
+	</div>
+}
+
+// DropdownItem renders a single menu item inside a dropdown.
+templ DropdownItem(active bool) {
+	<li>
+		<a class={ templ.KV("active", active) }>
+			{ children... }
+		</a>
+	</li>
+}

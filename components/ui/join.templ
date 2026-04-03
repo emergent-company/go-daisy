@@ -1,0 +1,8 @@
+package ui
+
+// Join renders a DaisyUI join container (fuses children into a single group).
+templ Join(vertical bool) {
+	<div class={ "join", templ.KV("join-vertical", vertical) }>
+		{ children... }
+	</div>
+}

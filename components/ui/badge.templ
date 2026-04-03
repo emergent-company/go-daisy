@@ -6,12 +6,15 @@ import "strings"
 type BadgeIntent string
 
 const (
-	BadgeSuccess BadgeIntent = "badge-success"
-	BadgeError   BadgeIntent = "badge-error"
-	BadgeWarning BadgeIntent = "badge-warning"
-	BadgeInfo    BadgeIntent = "badge-info"
-	BadgeNeutral BadgeIntent = "badge-neutral"
-	BadgeGhost   BadgeIntent = "badge-ghost"
+	BadgeSuccess   BadgeIntent = "badge-success"
+	BadgeError     BadgeIntent = "badge-error"
+	BadgeWarning   BadgeIntent = "badge-warning"
+	BadgeInfo      BadgeIntent = "badge-info"
+	BadgeNeutral   BadgeIntent = "badge-neutral"
+	BadgeGhost     BadgeIntent = "badge-ghost"
+	BadgePrimary   BadgeIntent = "badge-primary"
+	BadgeSecondary BadgeIntent = "badge-secondary"
+	BadgeAccent    BadgeIntent = "badge-accent"
 )
 
 // BadgeStyle controls the visual style variant of a badge.
@@ -40,13 +43,14 @@ type BadgeProps struct {
 	Style   BadgeStyle
 	Size    BadgeSize
 	Icon    string // Lucide icon suffix, e.g. "lucide--circle-check"
+	Animate bool   // when true, adds animate-pulse to the icon span (e.g. for "in progress" states)
 }
 
 // Badge renders a DaisyUI badge.
 templ Badge(props BadgeProps) {
-	<span class={ "badge", string(props.Variant), string(props.Style), string(props.Size) }>
+	<span class={ "badge gap-1", string(props.Variant), string(props.Style), string(props.Size) }>
 		if props.Icon != "" {
-			<span class={ "iconify size-3 " + props.Icon }></span>
+			<span class={ "iconify size-3", props.Icon, templ.KV("animate-pulse", props.Animate) }></span>
 		}
 		{ props.Label }
 	</span>
