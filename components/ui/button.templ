@@ -21,45 +21,60 @@ const (
 	ButtonLG ButtonSize = "btn-lg"
 )
 
-// Button renders a DaisyUI button element.
-templ Button(variant ButtonVariant, size ButtonSize, loading bool) {
-	<button
-		class={ "btn", string(variant), string(size),
-			templ.KV("loading loading-spinner", loading) }
-		disabled?={ loading }
-	>
-		{ children... }
-	</button>
-}
+// ButtonType controls the HTML element and type attribute rendered.
+// ButtonTypeLink renders an <a> element instead of <button>.
+type ButtonType string
 
-// SubmitButton renders a submit button (type=submit) with loading state.
-templ SubmitButton(variant ButtonVariant, size ButtonSize, loading bool) {
-	<button
-		type="submit"
-		class={ "btn", string(variant), string(size),
-			templ.KV("loading loading-spinner", loading) }
-		disabled?={ loading }
-	>
-		{ children... }
-	</button>
-}
+const (
+	ButtonTypeButton ButtonType = "button"
+	ButtonTypeSubmit ButtonType = "submit"
+	ButtonTypeReset  ButtonType = "reset"
+	ButtonTypeLink   ButtonType = "link"
+)
 
-// LinkButton renders an anchor styled as a button.
-templ LinkButton(href string, variant ButtonVariant, size ButtonSize) {
-	<a
-		href={ templ.URL(href) }
-		class={ "btn", string(variant), string(size) }
-	>
-		{ children... }
-	</a>
-}
+// ButtonShape controls whether the button is normal, square, or circle.
+type ButtonShape string
 
-// IconButton renders a square icon button.
-templ IconButton(variant ButtonVariant, size ButtonSize, icon string, label string) {
-	<button
-		class={ "btn btn-square", string(variant), string(size) }
-		aria-label={ label }
-	>
-		<span class={ "iconify size-4 " + icon }></span>
-	</button>
+const (
+	ButtonShapeDefault ButtonShape = ""
+	ButtonShapeSquare  ButtonShape = "btn-square"
+	ButtonShapeCircle  ButtonShape = "btn-circle"
+)
+
+// Button renders a DaisyUI button. When typ is ButtonTypeLink it renders an
+// <a> element using href; otherwise it renders a <button> with the given type.
+// Set shape to square/circle for icon-only buttons. Icon is always rendered
+// when non-empty; children are rendered for non-square/circle shapes only.
+templ Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType, shape ButtonShape, icon string, loading bool) {
+	if typ == ButtonTypeLink {
+		<a
+			href={ templ.URL(href) }
+			class={ "btn",
+				templ.KV(string(variant), variant != ""),
+				templ.KV(string(size), size != ""),
+				templ.KV(string(shape), shape != "") }
+		>
+			if icon != "" {
+				<span class={ "iconify size-4 " + icon }></span>
+			}
+			{ children... }
+		</a>
+	} else {
+		<button
+			type={ string(typ) }
+			class={ "btn",
+				templ.KV(string(variant), variant != ""),
+				templ.KV(string(size), size != ""),
+				templ.KV(string(shape), shape != ""),
+				templ.KV("loading loading-spinner", loading) }
+			disabled?={ loading }
+		>
+			if icon != "" {
+				<span class={ "iconify size-4 " + icon }></span>
+			}
+			if shape == ButtonShapeDefault {
+				{ children... }
+			}
+		</button>
+	}
 }

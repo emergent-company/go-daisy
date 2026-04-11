@@ -6,8 +6,20 @@ import (
 	"strconv"
 )
 
-// isTemplPage returns true when the component uses a templ.Component for rendering.
-func isTemplPage(c GalleryComponent) bool { return c.Templ != nil }
+// isTemplPage returns true when the component uses templ.Component for rendering
+// (either at the root level or via Variants). Components that use Templ have no
+// raw HTML source to display, so the HTML SOURCE panel is hidden for them.
+func isTemplPage(c GalleryComponent) bool {
+	if c.Templ != nil {
+		return true
+	}
+	for _, v := range c.EffectiveVariants() {
+		if v.Templ != nil || v.RenderFunc != nil {
+			return true
+		}
+	}
+	return false
+}
 
 func effectiveFrameHeight(c GalleryComponent) string {
 	if len(c.EffectiveVariants()) > 0 && c.EffectiveVariants()[0].FrameHeight != "" {
@@ -36,40 +48,46 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 			</div>
 		</div>
 
-		<!-- Variant tab strip (only shown when component has multiple variants) -->
-		if len(c.EffectiveVariants()) > 1 {
-			<div class="flex gap-1 border-b border-base-200 mb-1" id="variant-tabs" role="tablist">
-				for i, v := range c.EffectiveVariants() {
+	<!-- Variant tab strip (only shown when component has multiple variants) -->
+	if len(c.EffectiveVariants()) > 1 {
+		<div class="tabs tabs-border mb-1" id="variant-tabs" role="tablist">
+			for i, v := range c.EffectiveVariants() {
+				// Determine effective tokens for this variant: story tokens take precedence over component tokens.
+				// Encode as JSON for the switchVariant JS so it can re-render the token panel client-side.
+				if tokensJSON, err := json.Marshal(func() []DesignToken { if len(v.Tokens) > 0 { return v.Tokens }; return c.Tokens }()); err == nil {
 					<button
 						role="tab"
-						class={ "btn btn-xs btn-ghost rounded-b-none border-b-2 border-transparent px-3",
-							templ.KV("border-primary text-primary font-semibold", i == 0) }
+						class={ "tab", templ.KV("tab-active", i == 0) }
 						data-variant-slug={ SlugifyStoryName(v.Name) }
 						data-slug={ c.Slug }
+						data-tokens={ string(tokensJSON) }
 						onclick="switchVariant(this)"
 					>{ v.Name }</button>
 				}
-			</div>
-			<script>
-			window.switchVariant = function(btn) {
-				var slug = btn.getAttribute('data-slug');
-				var variant = btn.getAttribute('data-variant-slug');
-				// Update iframe src
-				var frame = document.getElementById('preview-frame');
-				if (frame) frame.src = '/gallery/render/' + slug + '/' + variant;
-				var fsFrame = document.getElementById('fullscreen-preview-frame');
-				if (fsFrame) fsFrame.src = '/gallery/render/' + slug + '/' + variant;
-				// Update tab active state
-				var tabs = btn.closest('[role="tablist"]').querySelectorAll('[role="tab"]');
-				tabs.forEach(function(t) {
-					t.classList.remove('border-primary', 'text-primary', 'font-semibold');
-					t.classList.add('border-transparent');
-				});
-				btn.classList.remove('border-transparent');
-				btn.classList.add('border-primary', 'text-primary', 'font-semibold');
-			};
-			</script>
-		}
+			}
+		</div>
+		<script>
+		window.switchVariant = function(btn) {
+			var slug = btn.getAttribute('data-slug');
+			var variant = btn.getAttribute('data-variant-slug');
+			var baseURL = '/gallery/render/' + slug + '/' + variant;
+			// Update iframe src (clear any query params from previous interactive state)
+			var frame = document.getElementById('preview-frame');
+			if (frame) frame.src = baseURL;
+			var fsFrame = document.getElementById('fullscreen-preview-frame');
+			if (fsFrame) fsFrame.src = baseURL;
+			// Update tab active state
+			var tabs = btn.closest('[role="tablist"]').querySelectorAll('[role="tab"]');
+			tabs.forEach(function(t) { t.classList.remove('tab-active'); });
+			btn.classList.add('tab-active');
+			// Re-render token panel from per-variant token JSON
+			var tokensRaw = btn.getAttribute('data-tokens');
+			var tokens = [];
+			try { tokens = JSON.parse(tokensRaw) || []; } catch(e) {}
+			renderTokenPanel(tokens);
+		};
+		</script>
+	}
 
 		<!-- Two-column body: left = preview + source, right = token sidebar -->
 		<div class="flex gap-4 items-start">
@@ -153,6 +171,16 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 				</div>
 				</div>
 
+			<!-- Component Tree panel (hidden by default; shown when iframe posts boundary data) -->
+			<div id="component-tree-panel" class="hidden flex flex-col gap-2">
+				<div class="flex items-center gap-2">
+					<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Component Tree</span>
+				</div>
+				<div id="component-tree-body" class="rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden">
+					<p class="p-4 text-xs text-base-content/40">Loading…</p>
+				</div>
+			</div>
+
 			<!-- HTML Source panel (only for HTML snippet components) -->
 				if !isTemplPage(c) {
 					<div class="flex flex-col">
@@ -180,92 +208,98 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 			</div><!-- end left column -->
 
 		<!-- Right column: design token sidebar + feedback panel (~30%) -->
-		<!-- Hidden by default when no tokens; JS shows it when feedback mode is active -->
-		<div id="right-column" class={ "w-[30%] shrink-0 flex flex-col gap-3 sticky top-4", templ.KV("hidden", len(c.Tokens) == 0) }>
+		<!-- Hidden by default when no tokens; JS shows it when feedback mode or dev tree is active -->
+		<div id="right-column" class={ "w-[30%] shrink-0 flex flex-col gap-3 sticky top-4", templ.KV("hidden", len(c.Tokens) == 0 && (len(c.EffectiveVariants()) == 0 || len(c.EffectiveVariants()[0].Tokens) == 0)) }>
 
-			<!-- Token sidebar (only when tokens exist) -->
-			if len(c.Tokens) > 0 {
-				<div id="token-panel" class="flex flex-col gap-2">
-					<!-- Sidebar header -->
-					<div class="flex items-center justify-between">
-						<div class="flex items-center gap-2">
-							<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Design Tokens</span>
-							<span class="badge badge-xs badge-neutral">{ fmt.Sprintf("%d", len(c.Tokens)) }</span>
-						</div>
-						<button
-							class="btn btn-xs btn-ghost border border-base-200 gap-1"
-							onclick="resetTokens()"
-						>
-							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-							Reset
-						</button>
+		<!-- Token sidebar (only when tokens exist) -->
+		if effectiveTokens := func() []DesignToken { if len(c.EffectiveVariants()) > 0 && len(c.EffectiveVariants()[0].Tokens) > 0 { return c.EffectiveVariants()[0].Tokens }; return c.Tokens }(); len(effectiveTokens) > 0 {
+			<div id="token-panel" class="flex flex-col gap-2">
+				<!-- Sidebar header -->
+				<div class="flex items-center justify-between">
+					<div class="flex items-center gap-2">
+						<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Design Tokens</span>
+						<span class="badge badge-xs badge-neutral" id="token-count-badge">{ fmt.Sprintf("%d", len(effectiveTokens)) }</span>
 					</div>
+					<button
+						class="btn btn-xs btn-ghost border border-base-200 gap-1"
+						onclick="resetTokens()"
+					>
+						<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+						Reset
+					</button>
+				</div>
 
-					<!-- Token controls -->
-					<div id="token-panel-body" class="rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden">
-						<div class="p-4 space-y-5">
-							for _, grp := range TokenGroups(c.Tokens) {
-								<div class="token-group">
-									<p class="text-xs font-semibold text-base-content/40 uppercase tracking-wide mb-3">{ grp.Name }</p>
-									<div class="space-y-3">
-										for _, tok := range grp.Tokens {
-											<div class="flex flex-col gap-1.5" data-css-var={ tok.CSSVar } data-default={ tok.Default } data-unit={ tok.Unit } data-selector={ func() string { if tok.Selector != "" { return tok.Selector }; return ":root" }() }>
-												<div class="flex items-center justify-between">
-													<label class="text-xs text-base-content/70">{ tok.Label }</label>
-													if tok.Type == TokenTypeRange {
-														<span class="text-xs text-base-content/50 font-mono" id={ "tok-val-" + SanitizeID(tok.CSSVar) }>{ tok.Default }</span>
-													} else if tok.Type == TokenTypeColor {
-														<span class="text-xs text-base-content/50 font-mono" id={ "tok-val-" + SanitizeID(tok.CSSVar) }>{ tok.Default }</span>
-													}
-												</div>
+				<!-- Token controls -->
+				<div id="token-panel-body" class="rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden">
+					<div class="p-4 space-y-5">
+						for _, grp := range TokenGroups(effectiveTokens) {
+							<div class="token-group">
+								<p class="text-xs font-semibold text-base-content/40 uppercase tracking-wide mb-3">{ grp.Name }</p>
+								<div class="space-y-3">
+									for _, tok := range grp.Tokens {
+										<div class="flex flex-col gap-1.5" data-css-var={ tok.CSSVar } data-default={ tok.Default } data-unit={ tok.Unit } data-selector={ func() string { if tok.Selector != "" { return tok.Selector }; return ":root" }() } data-query-param={ tok.QueryParam }>
+											<div class="flex items-center justify-between">
+												<label class="text-xs text-base-content/70">{ tok.Label }</label>
 												if tok.Type == TokenTypeRange {
-													<input
-														type="range"
-														class="range range-xs range-primary w-full"
-														min={ fmt.Sprintf("%g", tok.Min) }
-														max={ fmt.Sprintf("%g", tok.Max) }
-														step={ fmt.Sprintf("%g", tok.Step) }
-														value={ RangeDefaultValue(tok) }
-														oninput="handleTokenChange(this)"
-													/>
+													<span class="text-xs text-base-content/50 font-mono" id={ "tok-val-" + SanitizeID(tok.CSSVar) }>{ tok.Default }</span>
 												} else if tok.Type == TokenTypeColor {
-													<input
-														type="color"
-														class="w-full h-8 rounded cursor-pointer border border-base-200"
-														value={ tok.Default }
-														oninput="handleTokenChange(this)"
-													/>
-												} else if tok.Type == TokenTypeSelect {
-													<select
-														class="select select-xs select-bordered w-full"
-														onchange="handleTokenChange(this)"
-													>
-														for _, opt := range tok.Options {
-															if opt.Value == tok.Default {
-																<option value={ opt.Value } selected>{ opt.Label }</option>
-															} else {
-																<option value={ opt.Value }>{ opt.Label }</option>
-															}
-														}
-													</select>
+													<span class="text-xs text-base-content/50 font-mono" id={ "tok-val-" + SanitizeID(tok.CSSVar) }>{ tok.Default }</span>
 												}
 											</div>
-										}
-									</div>
+											if tok.Type == TokenTypeRange {
+												<input
+													type="range"
+													class="range range-xs range-primary w-full"
+													min={ fmt.Sprintf("%g", tok.Min) }
+													max={ fmt.Sprintf("%g", tok.Max) }
+													step={ fmt.Sprintf("%g", tok.Step) }
+													value={ RangeDefaultValue(tok) }
+													oninput="handleTokenChange(this)"
+												/>
+											} else if tok.Type == TokenTypeColor {
+												<input
+													type="color"
+													class="w-full h-8 rounded cursor-pointer border border-base-200"
+													value={ tok.Default }
+													oninput="handleTokenChange(this)"
+												/>
+										} else if tok.Type == TokenTypeSelect {
+											<select
+												class="select select-xs select-bordered w-full"
+												onchange="handleTokenChange(this)"
+											>
+												for _, opt := range tok.Options {
+													if opt.Value == tok.Default {
+														<option value={ opt.Value } selected>{ opt.Label }</option>
+													} else {
+														<option value={ opt.Value }>{ opt.Label }</option>
+													}
+												}
+											</select>
+									} else if tok.Type == TokenTypeText {
+										<input
+											type="text"
+											class="input input-xs input-bordered w-full"
+											value={ tok.Default }
+											oninput="handleTokenChange(this)"
+										/>
+									}
 								</div>
-							}
-						</div>
+									}
+								</div>
+							</div>
+						}
 					</div>
 				</div>
-			}
+			</div>
+		}
 
-			<!-- Feedback panel (hidden by default, toggled by toolbar Feedback button) -->
-			<div id="feedback-panel" class="hidden flex flex-col gap-2">
+			<!-- Feedback panel (hidden by default, toggled by toolbar Feedback button) -->			<div id="feedback-panel" class="hidden flex flex-col gap-2">
 				<div class="flex items-center justify-between">
 					<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Feedback</span>
 					<button
 						class="btn btn-xs btn-ghost"
-						onclick="toggleFeedbackPanel()"
+						onclick="toggleFeedbackMode()"
 					>✕</button>
 				</div>
 				<div
@@ -600,6 +634,86 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 	<!-- Design Token panel JS -->
 	<script>
 		(function() {
+			// ── renderTokenPanel: build token panel DOM from a JSON token array ─────
+			// Called by switchVariant when the user clicks a variant tab.
+			window.renderTokenPanel = function(tokens) {
+				var panel = document.getElementById('token-panel');
+				var body  = document.getElementById('token-panel-body');
+				var col   = document.getElementById('right-column');
+				var badge = document.getElementById('token-count-badge');
+
+				if (!tokens || tokens.length === 0) {
+					// No tokens for this variant — hide token panel (keep right col if feedback visible)
+					if (panel) panel.classList.add('hidden');
+					var feedbackPanel = document.getElementById('feedback-panel');
+					var feedbackVisible = feedbackPanel && !feedbackPanel.classList.contains('hidden');
+					if (col && !feedbackVisible) col.classList.add('hidden');
+					return;
+				}
+
+				// Show right column + token panel
+				if (col) col.classList.remove('hidden');
+				if (panel) panel.classList.remove('hidden');
+				if (badge) badge.textContent = String(tokens.length);
+
+				// Group tokens by Group field
+				var order = [], byName = {};
+				tokens.forEach(function(tok) {
+					var g = tok.Group || 'General';
+					if (!byName[g]) { order.push(g); byName[g] = []; }
+					byName[g].push(tok);
+				});
+
+				var html = '';
+				order.forEach(function(grpName) {
+					html += '<div class="token-group">';
+					html += '<p class="text-xs font-semibold text-base-content/40 uppercase tracking-wide mb-3">' + escT(grpName) + '</p>';
+					html += '<div class="space-y-3">';
+				byName[grpName].forEach(function(tok) {
+					var cssVar = tok.CSSVar || '';
+					var def    = tok.Default || '';
+					var unit   = tok.Unit || '';
+					var sel    = tok.Selector || ':root';
+					var qp     = tok.QueryParam || '';
+					var safeId = cssVar.replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, '');
+					html += '<div class="flex flex-col gap-1.5" data-css-var="' + escT(cssVar) + '" data-default="' + escT(def) + '" data-unit="' + escT(unit) + '" data-selector="' + escT(sel) + '" data-query-param="' + escT(qp) + '">';
+						html += '<div class="flex items-center justify-between">';
+						html += '<label class="text-xs text-base-content/70">' + escT(tok.Label || cssVar) + '</label>';
+						if (tok.Type === 'range' || tok.Type === 'color') {
+							html += '<span class="text-xs text-base-content/50 font-mono" id="tok-val-' + safeId + '">' + escT(def) + '</span>';
+						}
+						html += '</div>';
+						if (tok.Type === 'range') {
+							var numVal = parseFloat(def) || tok.Min || 0;
+							html += '<input type="range" class="range range-xs range-primary w-full"'
+								+ ' min="' + (tok.Min || 0) + '" max="' + (tok.Max || 1) + '" step="' + (tok.Step || 0.1) + '"'
+								+ ' value="' + numVal + '" oninput="handleTokenChange(this)"/>';
+						} else if (tok.Type === 'color') {
+							html += '<input type="color" class="w-full h-8 rounded cursor-pointer border border-base-200"'
+								+ ' value="' + escT(def) + '" oninput="handleTokenChange(this)"/>';
+					} else if (tok.Type === 'select') {
+						html += '<select class="select select-xs select-bordered w-full" onchange="handleTokenChange(this)">';
+						(tok.Options || []).forEach(function(opt) {
+							var sel2 = opt.Value === def ? ' selected' : '';
+							html += '<option value="' + escT(opt.Value) + '"' + sel2 + '>' + escT(opt.Label) + '</option>';
+						});
+						html += '</select>';
+					} else if (tok.Type === 'text') {
+						html += '<input type="text" class="input input-xs input-bordered w-full" value="' + escT(def) + '" oninput="handleTokenChange(this)"/>';
+					}
+						html += '</div>';
+					});
+					html += '</div></div>';
+				});
+
+				if (body) body.innerHTML = '<div class="p-4 space-y-5">' + html + '</div>';
+			};
+
+			function escT(s) {
+				return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+			}
+
+			// ── Token collection & application ────────────────────────────────────
 			function collectTokens() {
 				var bySelector = {};
 				var rows = document.querySelectorAll('#token-panel-body [data-css-var]');
@@ -658,26 +772,60 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 				}
 			}
 
+			// ── Query-param driven rendering ──────────────────────────────────────
+			// Collects all QueryParam tokens from the panel and updates the iframe src.
+			function applyQueryParamsToFrame(frameId) {
+				var frame = document.getElementById(frameId);
+				if (!frame) return;
+				// Start from the current base src (strip existing query string).
+				var src = frame.src || '';
+				var baseSrc = src.split('?')[0];
+				// Collect all query-param token values.
+				var params = new URLSearchParams();
+				var rows = document.querySelectorAll('#token-panel-body [data-query-param]');
+				rows.forEach(function(row) {
+					var qp = row.getAttribute('data-query-param');
+					if (!qp) return;
+					var input = row.querySelector('input, select');
+					if (!input) return;
+					params.set(qp, input.value);
+				});
+				var qs = params.toString();
+				frame.src = qs ? baseSrc + '?' + qs : baseSrc;
+			}
+
 			window.handleTokenChange = function(input) {
-				var row = input.closest('[data-css-var]');
+				var row = input.closest('[data-css-var], [data-query-param]');
 				if (!row) return;
+				var queryParam = row.getAttribute('data-query-param');
 				var unit = row.getAttribute('data-unit') || '';
+
+				// Update the visible value label for range/color tokens
 				if (input.type === 'range') {
-					var labelEl = document.getElementById('tok-val-' + row.getAttribute('data-css-var').replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
+					var labelEl = document.getElementById('tok-val-' + (row.getAttribute('data-css-var') || '').replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
 					if (labelEl) labelEl.textContent = input.value + unit;
 				} else if (input.type === 'color') {
-					var labelEl2 = document.getElementById('tok-val-' + row.getAttribute('data-css-var').replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
+					var labelEl2 = document.getElementById('tok-val-' + (row.getAttribute('data-css-var') || '').replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
 					if (labelEl2) labelEl2.textContent = input.value;
 				}
-				applyTokensToFrame('preview-frame');
+
+				if (queryParam) {
+					// QueryParam token — update iframe src query string (server-side re-render)
+					applyQueryParamsToFrame('preview-frame');
+				} else {
+					// CSS var token — inject CSS into the iframe
+					applyTokensToFrame('preview-frame');
+				}
 			};
 
 			window.resetTokens = function() {
-				var rows = document.querySelectorAll('#token-panel-body [data-css-var]');
+				var hasQueryParams = false;
+				var rows = document.querySelectorAll('#token-panel-body [data-css-var], #token-panel-body [data-query-param]');
 				rows.forEach(function(row) {
 					var def = row.getAttribute('data-default');
 					var unit = row.getAttribute('data-unit') || '';
-					var cssVar = row.getAttribute('data-css-var');
+					var cssVar = row.getAttribute('data-css-var') || '';
+					var qp = row.getAttribute('data-query-param') || '';
 					var input = row.querySelector('input, select');
 					if (!input || !def) return;
 					if (input.type === 'range') {
@@ -691,17 +839,23 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 							if (labelEl2) labelEl2.textContent = def;
 						}
 					}
+					if (qp) hasQueryParams = true;
 				});
-				var frame = document.getElementById('preview-frame');
-				if (frame && frame.getAttribute('data-original-srcdoc')) {
-					frame.setAttribute('srcdoc', frame.getAttribute('data-original-srcdoc'));
-					frame.removeAttribute('data-original-srcdoc');
-				} else if (frame && !frame.hasAttribute('srcdoc')) {
-					try {
-						var doc = frame.contentDocument || frame.contentWindow.document;
-						var styleEl = doc && doc.getElementById('token-overrides');
-						if (styleEl) styleEl.remove();
-					} catch(e) {}
+				if (hasQueryParams) {
+					// Reload iframe with default query params
+					applyQueryParamsToFrame('preview-frame');
+				} else {
+					var frame = document.getElementById('preview-frame');
+					if (frame && frame.getAttribute('data-original-srcdoc')) {
+						frame.setAttribute('srcdoc', frame.getAttribute('data-original-srcdoc'));
+						frame.removeAttribute('data-original-srcdoc');
+					} else if (frame && !frame.hasAttribute('srcdoc')) {
+						try {
+							var doc = frame.contentDocument || frame.contentWindow.document;
+							var styleEl = doc && doc.getElementById('token-overrides');
+							if (styleEl) styleEl.remove();
+						} catch(e) {}
+					}
 				}
 			};
 		})();
@@ -998,13 +1152,123 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 				});
 			};
 
-			document.addEventListener('htmx:afterSwap', function() {
-				setTimeout(attachIframeListeners, 0);
-			});
-			document.addEventListener('DOMContentLoaded', attachIframeListeners);
-			if (document.readyState !== 'loading') { attachIframeListeners(); }
-		})();
-	</script>
+		document.addEventListener('htmx:afterSwap', function() {
+			setTimeout(attachIframeListeners, 0);
+		});
+		document.addEventListener('DOMContentLoaded', attachIframeListeners);
+		if (document.readyState !== 'loading') { attachIframeListeners(); }
+	})();
+</script>
+
+<!-- Component Tree panel JS: listens for postMessage from dev overlay in iframe -->
+<script>
+(function() {
+	// Depth-indexed colour palette matching devOverlayScript.
+	var DEPTH_COLORS = ['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899'];
+
+	function depthColor(d) { return DEPTH_COLORS[d % DEPTH_COLORS.length]; }
+
+	function summariseProps(raw) {
+		var obj;
+		try { obj = JSON.parse(raw); } catch(e) { return ''; }
+		if (!obj || typeof obj !== 'object') return '';
+		var parts = [];
+		var skip = {class:1, style:1, id:1, Class:1, Style:1, ID:1};
+		var keys = Object.keys(obj);
+		for (var i = 0; i < keys.length && parts.length < 3; i++) {
+			var k = keys[i];
+			var v = obj[k];
+			if (skip[k]) continue;
+			if (v === false || v === '' || v === null || v === undefined) continue;
+			var vs = String(v);
+			if (vs.length > 20) vs = vs.slice(0, 17) + '\u2026';
+			parts.push(k + '=' + vs);
+		}
+		return parts.length ? ' ' + parts.join(' ') : '';
+	}
+
+	function escHtml(s) {
+		return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+	}
+
+	// Pretty-print HTML with basic indentation.
+	function formatHtml(raw) {
+		var indent = 0;
+		var TAB = '  ';
+		var result = '';
+		// Split on tags while keeping them.
+		var parts = raw.replace(/>\s*</g, '>\n<').split('\n');
+		for (var i = 0; i < parts.length; i++) {
+			var line = parts[i].trim();
+			if (!line) continue;
+			// Closing tag — dedent first.
+			if (/^<\//.test(line)) indent = Math.max(0, indent - 1);
+			result += TAB.repeat(indent) + line + '\n';
+			// Opening tag (not self-closing, not void) — indent next.
+			if (/^<[^/!][^>]*[^/]>$/.test(line) && !/^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/.test(line)) {
+				indent++;
+			}
+		}
+		return result.trim();
+	}
+
+	function renderTree(nodes) {
+		if (!nodes || nodes.length === 0) return '<p class="p-4 text-xs text-base-content/40">No component boundaries found.</p>';
+		var html = '<ul class="py-1">';
+		for (var i = 0; i < nodes.length; i++) {
+			var n = nodes[i];
+			var col = depthColor(n.depth);
+			var indent = n.depth * 12;
+			var props = summariseProps(n.props);
+			var nodeId = 'dev-tree-node-' + i;
+			var codeId = 'dev-tree-code-' + i;
+
+			html += '<li style="padding-left:' + (8 + indent) + 'px" class="py-0.5">';
+			// Clickable row
+			html += '<button onclick="devTreeToggle(\'' + nodeId + '\')" style="width:100%;text-align:left" class="flex items-baseline gap-1.5 w-full hover:bg-base-200 rounded px-1 py-0.5 group">';
+			html += '<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:' + col + ';flex-shrink:0;margin-top:2px"></span>';
+			html += '<span class="font-mono text-xs font-semibold text-base-content">' + escHtml(n.name) + '</span>';
+			if (props) {
+				html += '<span class="font-mono text-xs text-base-content/40 truncate" style="max-width:140px" title="' + escHtml(props) + '">' + escHtml(props) + '</span>';
+			}
+			html += '<span class="ml-auto text-base-content/20 group-hover:text-base-content/50 text-xs pr-1">\u2039/\u203a</span>';
+			html += '</button>';
+			// Collapsible HTML block (hidden by default)
+			html += '<div id="' + nodeId + '" class="hidden mt-1 mb-1" style="padding-left:8px">';
+			html += '<pre id="' + codeId + '" class="language-html" style="margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px"><code class="language-html">' + escHtml(formatHtml(n.html)) + '</code></pre>';
+			html += '</div>';
+			html += '</li>';
+		}
+		html += '</ul>';
+		return html;
+	}
+
+	window.devTreeToggle = function(id) {
+		var el = document.getElementById(id);
+		if (!el) return;
+		var isHidden = el.classList.toggle('hidden');
+		if (!isHidden && window.Prism) {
+			// Re-highlight the newly revealed block.
+			var code = el.querySelector('code');
+			if (code) Prism.highlightElement(code);
+		}
+	};
+
+	function handleTreeMessage(e) {
+		if (!e.data || e.data.type !== '__dev_component_tree__') return;
+		var tree = e.data.tree || [];
+		var panel = document.getElementById('component-tree-panel');
+		var body  = document.getElementById('component-tree-body');
+		if (!panel || !body) return;
+		body.innerHTML = renderTree(tree);
+		if (tree.length > 0) {
+			panel.classList.remove('hidden');
+		}
+	}
+
+	window.addEventListener('message', handleTreeMessage);
+})();
+</script>
 }
 
 // FeedbackListPartial renders the feedback list HTML fragment for HTMX partial swaps.

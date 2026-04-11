@@ -1,209 +1,130 @@
 package gallery
 
-import "github.com/emergent-company/go-daisy/galleryruntime"
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/ui    -out tokens_ui_gen.go     -out-pkg gallery ../../../../../../components/ui/boundary.go
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/form   -out tokens_form_gen.go   -out-pkg gallery ../../../../../../components/form/boundary.go
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/nav    -out tokens_nav_gen.go    -out-pkg gallery ../../../../../../components/nav/boundary.go
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/modal  -out tokens_modal_gen.go  -out-pkg gallery ../../../../../../components/modal/boundary.go
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/layout -out tokens_layout_gen.go -out-pkg gallery ../../../../../../components/layout/boundary.go
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/logs   -out tokens_logs_gen.go   -out-pkg gallery ../../../../../../components/logs/boundary.go
 
-// AllComponents returns the full seed registry of go-daisy gallery components.
+import (
+	"context"
+	"fmt"
+	"io"
+	"net/url"
+	"time"
+
+	"github.com/a-h/templ"
+	"github.com/emergent-company/go-daisy/components/form"
+	"github.com/emergent-company/go-daisy/components/layout"
+	"github.com/emergent-company/go-daisy/components/logs"
+	"github.com/emergent-company/go-daisy/components/modal"
+	"github.com/emergent-company/go-daisy/components/nav"
+	"github.com/emergent-company/go-daisy/components/table"
+	"github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/galleryruntime"
+)
+
+// row renders multiple components side by side in a centred flex row.
+func row(components ...templ.Component) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		if _, err := io.WriteString(w, `<div class="flex flex-wrap gap-4 p-6 justify-center items-center">`); err != nil {
+			return err
+		}
+		for _, c := range components {
+			if err := c.Render(ctx, w); err != nil {
+				return err
+			}
+		}
+		_, err := io.WriteString(w, `</div>`)
+		return err
+	})
+}
+
+// withText returns a component that renders inner with a text child injected.
+func withText(text string, inner templ.Component) templ.Component {
+	child := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		_, err := io.WriteString(w, text)
+		return err
+	})
+	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return inner.Render(templ.WithChildren(ctx, child), w)
+	})
+}
+
+// rawHTML returns a templ.Component that writes a raw HTML string.
+func rawHTML(html string) templ.Component {
+	return templ.ComponentFunc(func(_ context.Context, w io.Writer) error {
+		_, err := io.WriteString(w, html)
+		return err
+	})
+}
+
+// withChildren renders inner with the given children injected.
+func withChildren(inner templ.Component, children templ.Component) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return inner.Render(templ.WithChildren(ctx, children), w)
+	})
+}
+
+// alertIconForType returns the canonical icon for each AlertType.
+func alertIconForType(typ ui.AlertType) string {
+	switch typ {
+	case ui.AlertError:
+		return "lucide--circle-x"
+	case ui.AlertWarning:
+		return "lucide--triangle-alert"
+	case ui.AlertInfo:
+		return "lucide--info"
+	default: // AlertSuccess
+		return "lucide--circle-check"
+	}
+}
+
+// alertInteractiveTokens are the design tokens for the Alert Interactive story.
+// Only reflects actual component props: type (enum) and message (free-text string).
+var alertInteractiveTokens = []galleryruntime.DesignToken{
+	{
+		Label:      "Type",
+		Group:      "Component",
+		Type:       galleryruntime.TokenTypeSelect,
+		Default:    "alert-success",
+		QueryParam: "type",
+		Options: []galleryruntime.TokenOption{
+			{Value: "alert-success", Label: "Success"},
+			{Value: "alert-error", Label: "Error"},
+			{Value: "alert-warning", Label: "Warning"},
+			{Value: "alert-info", Label: "Info"},
+		},
+	},
+	{
+		Label:      "Message",
+		Group:      "Component",
+		Type:       galleryruntime.TokenTypeText,
+		Default:    "Your changes have been saved successfully.",
+		QueryParam: "message",
+	},
+}
+
+func alertRenderFunc(defaultMessage string) func(params url.Values) templ.Component {
+	return func(params url.Values) templ.Component {
+		typ := ui.AlertType(params.Get("type"))
+		if typ == "" {
+			typ = ui.AlertSuccess
+		}
+		message := params.Get("message")
+		if message == "" {
+			message = defaultMessage
+		}
+		return ui.AlertWithIconBoundary(typ, alertIconForType(typ), message)
+	}
+}
+
 // Add new components here — they are immediately available in the gallery.
 func AllComponents() []galleryruntime.GalleryComponent {
 	return []galleryruntime.GalleryComponent{
 
 		// ── Basics / Buttons ─────────────────────────────────────────────────────
-		{
-			Slug:        "button-variants",
-			Name:        "Button Variants",
-			Category:    galleryruntime.CategoryBasics,
-			Subcategory: "Buttons",
-			Description: "Primary, secondary, accent, ghost, outline, and error button styles.",
-			HTML: `<div class="flex flex-wrap gap-3 p-6 justify-center">
-  <button class="btn btn-primary">Primary</button>
-  <button class="btn btn-secondary">Secondary</button>
-  <button class="btn btn-accent">Accent</button>
-  <button class="btn btn-neutral">Neutral</button>
-  <button class="btn btn-ghost">Ghost</button>
-  <button class="btn btn-outline">Outline</button>
-  <button class="btn btn-error">Error</button>
-</div>`,
-		},
-		{
-			Slug:        "button-sizes",
-			Name:        "Button Sizes",
-			Category:    galleryruntime.CategoryBasics,
-			Subcategory: "Buttons",
-			Description: "XS, SM, MD, LG button sizes.",
-			HTML: `<div class="flex flex-wrap items-center gap-3 p-6 justify-center">
-  <button class="btn btn-primary btn-xs">XS</button>
-  <button class="btn btn-primary btn-sm">SM</button>
-  <button class="btn btn-primary">MD</button>
-  <button class="btn btn-primary btn-lg">LG</button>
-</div>`,
-		},
-		{
-			Slug:        "button-icon",
-			Name:        "Icon Button",
-			Category:    galleryruntime.CategoryBasics,
-			Subcategory: "Buttons",
-			Description: "Square icon-only and icon+label buttons.",
-			HTML: `<div class="flex flex-wrap gap-3 p-6 justify-center">
-  <button class="btn btn-square btn-primary btn-sm" aria-label="Search">
-    <span class="iconify lucide--search size-4"></span>
-  </button>
-  <button class="btn btn-square btn-ghost btn-sm" aria-label="Edit">
-    <span class="iconify lucide--pencil size-4"></span>
-  </button>
-  <button class="btn btn-primary btn-sm gap-1.5">
-    <span class="iconify lucide--plus size-4"></span>New
-  </button>
-  <button class="btn btn-error btn-outline btn-sm gap-1.5">
-    <span class="iconify lucide--trash-2 size-4"></span>Delete
-  </button>
-</div>`,
-		},
-
-		// ── Basics / Badges ───────────────────────────────────────────────────────
-		{
-			Slug:        "badge-variants",
-			Name:        "Badge Variants",
-			Category:    galleryruntime.CategoryBasics,
-			Subcategory: "Badges",
-			Description: "Success, error, warning, info, neutral, ghost badge intents.",
-			HTML: `<div class="flex flex-wrap gap-2 p-6 justify-center">
-  <span class="badge badge-success">Success</span>
-  <span class="badge badge-error">Error</span>
-  <span class="badge badge-warning">Warning</span>
-  <span class="badge badge-info">Info</span>
-  <span class="badge badge-neutral">Neutral</span>
-  <span class="badge badge-ghost">Ghost</span>
-</div>`,
-		},
-		{
-			Slug:        "badge-styles",
-			Name:        "Badge Styles",
-			Category:    galleryruntime.CategoryBasics,
-			Subcategory: "Badges",
-			Description: "Default, outline, soft, and dash visual styles.",
-			HTML: `<div class="flex flex-wrap gap-2 p-6 justify-center">
-  <span class="badge badge-primary">Default</span>
-  <span class="badge badge-primary badge-outline">Outline</span>
-  <span class="badge badge-primary badge-soft">Soft</span>
-  <span class="badge badge-primary badge-dash">Dash</span>
-  <span class="badge badge-success badge-sm">Small</span>
-  <span class="badge badge-warning badge-lg">Large</span>
-</div>`,
-		},
-
-		// ── Data Display / Cards ──────────────────────────────────────────────────
-		{
-			Slug:        "card-basic",
-			Name:        "Card",
-			Category:    galleryruntime.CategoryDataDisplay,
-			Subcategory: "Cards",
-			Description: "Content container with optional title, body, and actions.",
-			HTML: `<div class="p-6 flex flex-wrap gap-4 justify-center">
-  <div class="card bg-base-100 border border-base-200 shadow-sm w-72">
-    <div class="card-body">
-      <h2 class="card-title">Card Title</h2>
-      <p class="text-sm text-base-content/70">Card body with description text.</p>
-      <div class="card-actions justify-end mt-2">
-        <button class="btn btn-primary btn-sm">Action</button>
-      </div>
-    </div>
-  </div>
-  <div class="card bg-base-100 border border-base-200 shadow-sm w-64">
-    <figure class="bg-base-200 h-32 flex items-center justify-center">
-      <span class="iconify lucide--image size-10 text-base-content/30"></span>
-    </figure>
-    <div class="card-body p-4">
-      <h2 class="card-title text-sm">Media Card</h2>
-      <p class="text-xs text-base-content/60">With image figure.</p>
-    </div>
-  </div>
-</div>`,
-		},
-		{
-			Slug:        "stat-card",
-			Name:        "Stat Card",
-			Category:    galleryruntime.CategoryDataDisplay,
-			Subcategory: "Cards",
-			Description: "Metric stat card with value, title, and trend indicator.",
-			HTML: `<div class="p-6 flex flex-wrap gap-3 justify-center">
-  <div class="stat bg-base-100 border border-base-200 rounded-box shadow-sm">
-    <div class="stat-figure text-primary">
-      <span class="iconify lucide--users size-6"></span>
-    </div>
-    <div class="stat-title text-xs">Total Users</div>
-    <div class="stat-value text-primary">1,284</div>
-    <div class="stat-desc text-success">↗ +12% from last month</div>
-  </div>
-  <div class="stat bg-base-100 border border-base-200 rounded-box shadow-sm">
-    <div class="stat-figure text-secondary">
-      <span class="iconify lucide--dollar-sign size-6"></span>
-    </div>
-    <div class="stat-title text-xs">Revenue</div>
-    <div class="stat-value text-secondary">$45.2K</div>
-    <div class="stat-desc text-error">↙ -3% this month</div>
-  </div>
-</div>`,
-		},
-
-		// ── Data Display / Tables ─────────────────────────────────────────────────
-		{
-			Slug:        "table-basic",
-			Name:        "Table",
-			Category:    galleryruntime.CategoryDataDisplay,
-			Subcategory: "Tables",
-			Description: "Data table with thead, tbody, and badge status cells.",
-			HTML: `<div class="overflow-x-auto p-4">
-  <table class="table table-zebra">
-    <thead>
-      <tr>
-        <th>Name</th><th>Status</th><th>Role</th><th>Joined</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="font-medium">Alice Johnson</td>
-        <td><span class="badge badge-success badge-sm">Active</span></td>
-        <td>Admin</td><td>Jan 12, 2024</td>
-      </tr>
-      <tr>
-        <td class="font-medium">Bob Smith</td>
-        <td><span class="badge badge-ghost badge-sm">Draft</span></td>
-        <td>Member</td><td>Feb 5, 2024</td>
-      </tr>
-      <tr>
-        <td class="font-medium">Carol White</td>
-        <td><span class="badge badge-warning badge-sm">Pending</span></td>
-        <td>Viewer</td><td>Mar 3, 2024</td>
-      </tr>
-    </tbody>
-  </table>
-</div>`,
-		},
-
-		// ── Data Display / Avatar ─────────────────────────────────────────────────
-		{
-			Slug:        "avatar",
-			Name:        "Avatar",
-			Category:    galleryruntime.CategoryDataDisplay,
-			Subcategory: "Display",
-			Description: "User avatar with initials, image, and online status indicator.",
-			HTML: `<div class="flex flex-wrap gap-4 p-6 items-center justify-center">
-  <div class="avatar">
-    <div class="w-12 rounded-full bg-primary flex items-center justify-center text-primary-content font-bold">AJ</div>
-  </div>
-  <div class="avatar online">
-    <div class="w-12 rounded-full bg-secondary flex items-center justify-center text-secondary-content font-bold">BS</div>
-  </div>
-  <div class="avatar offline">
-    <div class="w-12 rounded-full bg-accent flex items-center justify-center text-accent-content font-bold">CW</div>
-  </div>
-  <div class="avatar placeholder">
-    <div class="bg-neutral text-neutral-content w-12 rounded-full">
-      <span class="text-xl">?</span>
-    </div>
-  </div>
-</div>`,
-		},
 
 		// ── Data Display / Timeline ───────────────────────────────────────────────
 		{
@@ -294,11 +215,21 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		// ── Feedback / Alerts ─────────────────────────────────────────────────────
 		{
 			Slug:        "alert-variants",
-			Name:        "Alert",
+			Name:        "Inline Alert With Icon",
 			Category:    galleryruntime.CategoryFeedback,
 			Subcategory: "Alerts",
 			Description: "Contextual feedback alerts for success, error, warning, and info states.",
-			HTML: `<div class="flex flex-col gap-3 p-6">
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Single alert with live type and message controls.",
+					RenderFunc:  alertRenderFunc("Your changes have been saved successfully."),
+					Tokens:      alertInteractiveTokens,
+				},
+				{
+					Name:        "Examples",
+					Description: "All alert types shown together.",
+					HTML: `<div class="flex flex-col gap-3 p-6">
   <div role="alert" class="alert alert-success">
     <span class="iconify lucide--circle-check size-5"></span>
     <span>Your changes have been saved successfully.</span>
@@ -316,161 +247,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
     <span>A new software update is available.</span>
   </div>
 </div>`,
+				},
+			},
 		},
-		{
-			Slug:        "toast-demo",
-			Name:        "Toast",
-			Category:    galleryruntime.CategoryFeedback,
-			Subcategory: "Toasts",
-			Description: "Floating toast notification stack at top-end.",
-			HTML: `<div class="relative min-h-32 p-6">
-  <div class="toast toast-top toast-end" style="position:absolute;top:1rem;right:1rem;">
-    <div class="alert alert-success text-sm">
-      <span class="iconify lucide--circle-check size-4"></span>
-      <span>Saved successfully!</span>
-    </div>
-    <div class="alert alert-info text-sm">
-      <span class="iconify lucide--info size-4"></span>
-      <span>Processing your request...</span>
-    </div>
-  </div>
-</div>`,
-		},
-		{
-			Slug:        "loader-variants",
-			Name:        "Loader",
-			Category:    galleryruntime.CategoryFeedback,
-			Subcategory: "Loading",
-			Description: "Spinner, dots, ring, bars, and ball loading indicators.",
-			HTML: `<div class="flex flex-wrap gap-6 p-6 items-center justify-center">
-  <span class="loading loading-spinner loading-md text-primary"></span>
-  <span class="loading loading-dots loading-md text-secondary"></span>
-  <span class="loading loading-ring loading-md text-accent"></span>
-  <span class="loading loading-bars loading-md text-info"></span>
-  <span class="loading loading-ball loading-md text-warning"></span>
-</div>`,
-		},
-		{
-			Slug:        "empty-state",
-			Name:        "Empty State",
-			Category:    galleryruntime.CategoryFeedback,
-			Subcategory: "States",
-			Description: "Zero-data placeholder with icon, heading, and CTA.",
-			HTML: `<div class="p-10 flex flex-col items-center gap-3 text-center">
-  <div class="bg-base-200 rounded-full p-4">
-    <span class="iconify lucide--inbox size-8 text-base-content/40"></span>
-  </div>
-  <h3 class="font-semibold text-base-content">No items yet</h3>
-  <p class="text-sm text-base-content/50 max-w-xs">Get started by creating your first item.</p>
-  <button class="btn btn-primary btn-sm mt-1">Create item</button>
-</div>`,
-		},
-
-		// ── Overlays / Modals ─────────────────────────────────────────────────────
-		{
-			Slug:        "modal-basic",
-			Name:        "Modal",
-			Category:    galleryruntime.CategoryOverlays,
-			Subcategory: "Modals",
-			Description: "Dialog modal with trigger, title, body, and action buttons.",
-			HTML: `<div class="p-6 flex justify-center">
-  <button class="btn btn-primary" onclick="document.getElementById('demo-modal').showModal()">Open Modal</button>
-  <dialog id="demo-modal" class="modal">
-    <div class="modal-box">
-      <h3 class="font-bold text-lg">Confirm Action</h3>
-      <p class="py-3 text-sm text-base-content/70">Are you sure? This action cannot be undone.</p>
-      <div class="modal-action">
-        <form method="dialog">
-          <button class="btn btn-sm btn-ghost">Cancel</button>
-        </form>
-        <button class="btn btn-sm btn-error">Confirm</button>
-      </div>
-    </div>
-    <form method="dialog" class="modal-backdrop"><button>close</button></form>
-  </dialog>
-</div>`,
-		},
-
 		// ── Navigation ────────────────────────────────────────────────────────────
-		{
-			Slug:        "tab-menu",
-			Name:        "Tab Menu",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Tabs",
-			Description: "Horizontal tab navigation with active state.",
-			HTML: `<div class="p-6">
-  <div class="tabs tabs-bordered" role="tablist">
-    <a role="tab" class="tab tab-active">Overview</a>
-    <a role="tab" class="tab">Activity</a>
-    <a role="tab" class="tab">Settings</a>
-    <a role="tab" class="tab">Members</a>
-  </div>
-  <div class="bg-base-100 border border-base-200 rounded-b-box p-4 text-sm text-base-content/60">
-    Tab content area
-  </div>
-</div>`,
-		},
-		{
-			Slug:        "page-header",
-			Name:        "Page Header",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Headers",
-			Description: "Page-level title bar with breadcrumbs and action button.",
-			HTML: `<div class="p-4 border-b border-base-200 bg-base-100">
-  <div class="text-xs breadcrumbs mb-1 text-base-content/40">
-    <ul><li><a href="#">Dashboard</a></li><li><a href="#">Projects</a></li><li>Overview</li></ul>
-  </div>
-  <div class="flex items-center justify-between">
-    <div>
-      <h1 class="text-lg font-bold text-base-content">Projects</h1>
-      <p class="text-sm text-base-content/50">Manage all your active projects.</p>
-    </div>
-    <button class="btn btn-primary btn-sm gap-1">
-      <span class="iconify lucide--plus size-4"></span>New Project
-    </button>
-  </div>
-</div>`,
-		},
-		{
-			Slug:        "action-menu",
-			Name:        "Action Menu",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Menus",
-			Description: "Dropdown action menu with destructive option.",
-			HTML: `<div class="p-6 flex justify-center min-h-40">
-  <div class="dropdown dropdown-end">
-    <button tabindex="0" class="btn btn-ghost btn-sm btn-square" aria-label="More actions">
-      <span class="iconify lucide--more-horizontal size-4"></span>
-    </button>
-    <ul tabindex="0" class="dropdown-content menu menu-sm z-[1] bg-base-100 border border-base-200 rounded-box shadow-lg w-44 p-1 mt-1">
-      <li><a><span class="iconify lucide--pencil size-3.5"></span> Edit</a></li>
-      <li><a><span class="iconify lucide--copy size-3.5"></span> Duplicate</a></li>
-      <li class="divider my-0.5"></li>
-      <li><a class="text-error"><span class="iconify lucide--trash size-3.5"></span> Delete</a></li>
-    </ul>
-  </div>
-</div>`,
-		},
-		{
-			Slug:        "pagination",
-			Name:        "Pagination",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Pagination",
-			Description: "Join-based pagination strip with prev/next and page numbers.",
-			HTML: `<div class="p-6 flex justify-center">
-  <div class="join">
-    <button class="btn btn-sm btn-outline border-base-300 join-item btn-disabled" aria-label="Previous">
-      <span class="iconify lucide--arrow-left size-4"></span>
-    </button>
-    <button class="btn btn-sm btn-outline border-base-300 join-item btn-active">1</button>
-    <button class="btn btn-sm btn-outline border-base-300 join-item">2</button>
-    <button class="btn btn-sm btn-outline border-base-300 join-item">3</button>
-    <button class="btn btn-sm btn-outline border-base-300 join-item" aria-label="Next">
-      <span class="iconify lucide--arrow-right size-4"></span>
-    </button>
-  </div>
-</div>`,
-		},
 		{
 			Slug:        "filter-tabs",
 			Name:        "Filter Tabs",
@@ -488,52 +268,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		},
 
 		// ── Forms ─────────────────────────────────────────────────────────────────
-		{
-			Slug:        "form-inputs",
-			Name:        "Text Inputs",
-			Category:    galleryruntime.CategoryForms,
-			Subcategory: "Inputs",
-			Description: "Text, email, password, and textarea form fields with labels.",
-			HTML: `<div class="p-6 flex flex-col gap-4 max-w-sm mx-auto">
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Full Name</legend>
-    <input type="text" placeholder="Jane Doe" class="input input-bordered w-full"/>
-  </fieldset>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Email</legend>
-    <input type="email" placeholder="jane@example.com" class="input input-bordered w-full"/>
-    <span class="fieldset-label text-base-content/50">We'll never share your email.</span>
-  </fieldset>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend text-error">Password (error)</legend>
-    <input type="password" value="weak" class="input input-bordered input-error w-full"/>
-    <span class="fieldset-label text-error">Must be at least 8 characters.</span>
-  </fieldset>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Notes</legend>
-    <textarea class="textarea textarea-bordered w-full" rows="3" placeholder="Optional notes…"></textarea>
-  </fieldset>
-</div>`,
-		},
-		{
-			Slug:        "form-select",
-			Name:        "Select",
-			Category:    galleryruntime.CategoryForms,
-			Subcategory: "Inputs",
-			Description: "Dropdown select field with label.",
-			HTML: `<div class="p-6 max-w-sm mx-auto">
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Country</legend>
-    <select class="select select-bordered w-full">
-      <option disabled selected>Pick a country</option>
-      <option>United States</option>
-      <option>United Kingdom</option>
-      <option>Canada</option>
-      <option>Australia</option>
-    </select>
-  </fieldset>
-</div>`,
-		},
 		{
 			Slug:        "form-checkbox",
 			Name:        "Checkboxes & Toggles",
@@ -582,26 +316,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
       <span class="text-sm">Enterprise – Custom</span>
     </label>
   </div>
-</div>`,
-		},
-		{
-			Slug:        "form-range",
-			Name:        "Range Slider",
-			Category:    galleryruntime.CategoryForms,
-			Subcategory: "Inputs",
-			Description: "Styled range/slider input with step markers.",
-			HTML: `<div class="p-6 max-w-sm mx-auto flex flex-col gap-4">
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Volume</legend>
-    <input type="range" min="0" max="100" value="60" class="range range-primary"/>
-    <div class="flex justify-between text-xs text-base-content/40 mt-1">
-      <span>0</span><span>50</span><span>100</span>
-    </div>
-  </fieldset>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Brightness</legend>
-    <input type="range" min="0" max="100" value="40" class="range range-secondary range-sm"/>
-  </fieldset>
 </div>`,
 		},
 		{
@@ -667,15 +381,29 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Name:        "Progress",
 			Category:    galleryruntime.CategoryFoundation,
 			Subcategory: "Display",
-			Description: "Linear progress bars in various colors.",
-			HTML: `<div class="flex flex-col gap-3 p-6 max-w-sm mx-auto">
-  <progress class="progress progress-primary w-full" value="70" max="100"></progress>
-  <progress class="progress progress-secondary w-full" value="45" max="100"></progress>
-  <progress class="progress progress-success w-full" value="90" max="100"></progress>
-  <progress class="progress progress-warning w-full" value="30" max="100"></progress>
-  <progress class="progress progress-error w-full" value="15" max="100"></progress>
-  <progress class="progress w-full"></progress>
-</div>`,
+			Description: "A DaisyUI linear progress bar with configurable color, value, and max.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Basics",
+					Description: "A DaisyUI progress bar with configurable color, value, and max.",
+					RenderFunc: func(params url.Values) templ.Component {
+						color := ui.ProgressColor(params.Get("color"))
+						if color == "" {
+							color = ui.ProgressPrimary
+						}
+						value := 70
+						if v, err := parseInt(params.Get("value")); err == nil {
+							value = v
+						}
+						max := 100
+						if m, err := parseInt(params.Get("max")); err == nil && m > 0 {
+							max = m
+						}
+						return ui.ProgressWithBoundary(color, value, max)
+					},
+					Tokens: ProgressTokens(),
+				},
+			},
 		},
 		{
 			Slug:        "steps",
@@ -792,48 +520,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
       <p class="py-4 text-base-content/60">Type-safe Templ components styled with DaisyUI for HTMX apps.</p>
       <button class="btn btn-primary">Get Started</button>
     </div>
-  </div>
-</div>`,
-		},
-
-		// ── Basics / Buttons (additional) ────────────────────────────────────────
-		{
-			Slug:        "button-loading",
-			Name:        "Loading Button",
-			Category:    galleryruntime.CategoryBasics,
-			Subcategory: "Buttons",
-			Description: "Buttons with spinner loading state.",
-			HTML: `<div class="flex flex-wrap gap-3 p-6 justify-center">
-  <button class="btn btn-primary">
-    <span class="loading loading-spinner loading-xs"></span>
-    Loading...
-  </button>
-  <button class="btn btn-secondary" disabled>
-    <span class="loading loading-spinner loading-xs"></span>
-    Saving
-  </button>
-  <button class="btn btn-outline btn-sm">
-    <span class="loading loading-dots loading-xs"></span>
-  </button>
-</div>`,
-		},
-		{
-			Slug:        "button-group",
-			Name:        "Button Group",
-			Category:    galleryruntime.CategoryBasics,
-			Subcategory: "Buttons",
-			Description: "Fused join buttons as a button group.",
-			HTML: `<div class="flex flex-wrap gap-4 p-6 justify-center">
-  <div class="join">
-    <button class="btn btn-sm btn-outline join-item">Left</button>
-    <button class="btn btn-sm btn-outline join-item btn-active">Center</button>
-    <button class="btn btn-sm btn-outline join-item">Right</button>
-  </div>
-  <div class="join">
-    <button class="btn btn-sm btn-primary join-item">Save</button>
-    <button class="btn btn-sm btn-primary join-item btn-square">
-      <span class="iconify lucide--chevron-down size-4"></span>
-    </button>
   </div>
 </div>`,
 		},
@@ -1116,65 +802,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
 </div>`,
 		},
 		{
-			Slug:        "navbar",
-			Name:        "Navbar",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Headers",
-			Description: "Responsive top navigation bar with logo, links, and actions.",
-			HTML: `<div class="navbar bg-base-100 border-b border-base-200 px-2">
-  <div class="navbar-start">
-    <a class="btn btn-ghost text-base font-bold normal-case">go-daisy</a>
-  </div>
-  <div class="navbar-center hidden sm:flex">
-    <ul class="menu menu-horizontal menu-sm gap-1 px-1">
-      <li><a class="rounded-btn font-medium">Components</a></li>
-      <li><a class="rounded-btn">Docs</a></li>
-      <li><a class="rounded-btn">Examples</a></li>
-    </ul>
-  </div>
-  <div class="navbar-end gap-2">
-    <button class="btn btn-ghost btn-sm btn-square">
-      <span class="iconify lucide--search size-4"></span>
-    </button>
-    <button class="btn btn-primary btn-sm">Get Started</button>
-  </div>
-</div>`,
-		},
-		{
-			Slug:        "menu-vertical",
-			Name:        "Menu",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Menus",
-			Description: "Vertical navigation menu with icons and active state.",
-			HTML: `<div class="p-4 w-56">
-  <ul class="menu menu-sm bg-base-100 border border-base-200 rounded-box gap-0.5">
-    <li class="menu-title text-xs">Main Menu</li>
-    <li>
-      <a class="active">
-        <span class="iconify lucide--layout-dashboard size-4"></span> Dashboard
-      </a>
-    </li>
-    <li>
-      <a>
-        <span class="iconify lucide--users size-4"></span> Users
-        <span class="badge badge-primary badge-sm">12</span>
-      </a>
-    </li>
-    <li>
-      <a>
-        <span class="iconify lucide--settings size-4"></span> Settings
-      </a>
-    </li>
-    <li class="menu-title text-xs mt-1">Support</li>
-    <li><a><span class="iconify lucide--help-circle size-4"></span> Help</a></li>
-  </ul>
-</div>`,
-		},
-		{
 			Slug:        "dock-nav",
 			Name:        "Dock",
 			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Navigation",
+			Subcategory: "Misc",
 			Description: "Bottom dock navigation bar for mobile-style UIs.",
 			HTML: `<div class="relative min-h-32 bg-base-100 border border-base-200 rounded-box overflow-hidden">
   <div class="dock">
@@ -1258,25 +889,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
 </div>`,
 		},
 
-		// ── Basics extras ─────────────────────────────────────────────────────────
-		{
-			Slug:        "status-badge",
-			Name:        "Status Badge",
-			Category:    galleryruntime.CategoryBasics,
-			Subcategory: "Badges",
-			Description: "Semantic status badges that map string values to intent colours.",
-			HTML: `<div class="flex flex-wrap gap-3 p-6 items-center">
-  <span class="badge badge-sm badge-success">active</span>
-  <span class="badge badge-sm badge-success">open</span>
-  <span class="badge badge-sm badge-success">completed</span>
-  <span class="badge badge-sm badge-error">closed</span>
-  <span class="badge badge-sm badge-error">cancelled</span>
-  <span class="badge badge-sm badge-warning">pending</span>
-  <span class="badge badge-sm badge-warning">in_progress</span>
-  <span class="badge badge-sm badge-ghost">draft</span>
-  <span class="badge badge-sm badge-neutral">unknown</span>
-</div>`,
-		},
 		{
 			Slug:        "tag",
 			Name:        "Tag",
@@ -1454,7 +1066,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Slug:        "table-with-actions",
 			Name:        "With Actions",
 			Category:    galleryruntime.CategoryDataDisplay,
-			Subcategory: "Table",
+			Subcategory: "Tables",
 			Description: "Full-featured table with sortable headers, status badges, avatars, and an action menu (ellipsis dropdown) per row.",
 			HTML: `<div class="p-6">
   <div class="overflow-x-auto rounded-md bg-base-100">
@@ -1567,7 +1179,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Slug:        "table-empty",
 			Name:        "Table — Empty State",
 			Category:    galleryruntime.CategoryDataDisplay,
-			Subcategory: "Table",
+			Subcategory: "Tables",
 			Description: "Full-width empty-state row inside a tbody when the list has no items.",
 			HTML: `<div class="p-6">
   <div class="overflow-x-auto rounded-md bg-base-100">
@@ -1639,7 +1251,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Slug:        "stat-card-minimal",
 			Name:        "Stat Card — Minimal",
 			Category:    galleryruntime.CategoryDataDisplay,
-			Subcategory: "Stat Card",
+			Subcategory: "Cards",
 			Description: "KPI stat cards with trend indicators (↑↓). Use on dashboards to surface key metrics.",
 			HTML: `<div class="p-6">
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -1698,7 +1310,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Slug:        "stat-card-icon-corner",
 			Name:        "Stat Card — Icon Corner",
 			Category:    galleryruntime.CategoryDataDisplay,
-			Subcategory: "Stat Card",
+			Subcategory: "Cards",
 			Description: "Stat cards with a floating icon in the top corner and a soft badge for the trend.",
 			HTML: `<div class="p-6">
   <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
@@ -1784,20 +1396,21 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Name:        "Skeleton",
 			Category:    galleryruntime.CategoryFeedback,
 			Subcategory: "Loading",
-			Description: "Loading placeholder blocks that mimic content layout while data loads.",
-			HTML: `<div class="p-6 space-y-4">
-  <div class="flex items-center gap-4">
-    <div class="skeleton w-12 h-12 rounded-full shrink-0"></div>
-    <div class="flex flex-col gap-2 flex-1">
-      <div class="skeleton h-4 w-48"></div>
-      <div class="skeleton h-3 w-32"></div>
-    </div>
-  </div>
-  <div class="skeleton h-4 w-full"></div>
-  <div class="skeleton h-4 w-5/6"></div>
-  <div class="skeleton h-4 w-4/6"></div>
-  <div class="skeleton h-32 w-full rounded-lg"></div>
-</div>`,
+			Description: "A DaisyUI skeleton placeholder block. Use the classes token to control size and shape.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Basics",
+					Description: "A skeleton placeholder with configurable Tailwind size classes.",
+					RenderFunc: func(params url.Values) templ.Component {
+						classes := params.Get("classes")
+						if classes == "" {
+							classes = "h-4 w-full"
+						}
+						return ui.SkeletonWithBoundary(classes)
+					},
+					Tokens: SkeletonTokens(),
+				},
+			},
 		},
 		{
 			Slug:        "skeleton-dashboard",
@@ -1846,18 +1459,20 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Category:    galleryruntime.CategoryFeedback,
 			Subcategory: "Indicators",
 			Description: "Divider with a label — used to separate logical groups within a form or detail panel.",
-			HTML: `<div class="p-6 max-w-md space-y-4">
-  <div class="divider divider-start text-xs font-semibold text-base-content/60 uppercase tracking-wide my-2">Personal Information</div>
-  <div class="form-control">
-    <label class="label pb-1"><span class="label-text font-medium text-sm text-base-content/80">Full name</span></label>
-    <input type="text" placeholder="Alice Johnson" class="input input-bordered w-full"/>
-  </div>
-  <div class="divider divider-start text-xs font-semibold text-base-content/60 uppercase tracking-wide my-2">Case Details</div>
-  <div class="form-control">
-    <label class="label pb-1"><span class="label-text font-medium text-sm text-base-content/80">Case type</span></label>
-    <select class="select select-bordered w-full"><option>Civil</option><option>Criminal</option></select>
-  </div>
-</div>`,
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Basics",
+					Description: "A section divider label with configurable title text.",
+					RenderFunc: func(params url.Values) templ.Component {
+						title := params.Get("title")
+						if title == "" {
+							title = "Personal Information"
+						}
+						return ui.SectionHeaderWithBoundary(title)
+					},
+					Tokens: SectionHeaderTokens(),
+				},
+			},
 		},
 		{
 			Slug:        "no-permissions",
@@ -1865,39 +1480,37 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Category:    galleryruntime.CategoryFeedback,
 			Subcategory: "States",
 			Description: "Permission-denied placeholder shown when the current user lacks access to a section.",
-			HTML: `<div class="p-6">
-  <div class="flex flex-col items-center justify-center py-16 text-center">
-    <svg class="w-10 h-10 text-base-content/40 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-    </svg>
-    <p class="text-base-content/60 text-sm">You don't have permission to view this.</p>
-  </div>
-</div>`,
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Basics",
+					Description: "A fixed permission-denied placeholder with no configurable props.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.NoPermissionsWithBoundary()
+					},
+					Tokens: []galleryruntime.DesignToken{},
+				},
+			},
 		},
 		{
 			Slug:        "log-status-dot",
 			Name:        "Log Status Dot",
 			Category:    galleryruntime.CategoryFeedback,
 			Subcategory: "States",
-			Description: "DaisyUI status dot for workflow log entries. Colour is derived from the log type string.",
-			HTML: `<div class="p-6 space-y-3">
-  <div class="flex items-center gap-3">
-    <span class="status status-success status-sm" aria-label="success"></span>
-    <span class="text-sm text-base-content/80">completed — success</span>
-  </div>
-  <div class="flex items-center gap-3">
-    <span class="status status-error status-sm" aria-label="error"></span>
-    <span class="text-sm text-base-content/80">error — failed</span>
-  </div>
-  <div class="flex items-center gap-3">
-    <span class="status status-warning status-sm" aria-label="pending"></span>
-    <span class="text-sm text-base-content/80">pending — started</span>
-  </div>
-  <div class="flex items-center gap-3">
-    <span class="status status-neutral status-sm" aria-label="info"></span>
-    <span class="text-sm text-base-content/80">info — other</span>
-  </div>
-</div>`,
+			Description: "DaisyUI status dot for workflow log entries. Color indicates the entry state.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Basics",
+					Description: "A small colored status indicator dot with configurable color.",
+					RenderFunc: func(params url.Values) templ.Component {
+						color := ui.StatusColor(params.Get("color"))
+						if color == "" {
+							color = ui.StatusSuccess
+						}
+						return ui.StatusWithBoundary(color)
+					},
+					Tokens: StatusTokens(),
+				},
+			},
 		},
 		{
 			Slug:        "notification-panel",
@@ -1958,82 +1571,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Overlays extras ───────────────────────────────────────────────────
 		{
-			Slug:        "modal-form",
-			Name:        "Modal — Form",
-			Category:    galleryruntime.CategoryOverlays,
-			Subcategory: "Modal",
-			Description: "Form inside a dialog with a standard header, cancel/submit footer, and HTMX submission pattern.",
-			HTML: `<div class="p-6 flex gap-4 flex-wrap">
-  <button class="btn btn-primary btn-sm" onclick="document.getElementById('form-modal-demo').showModal()">Open Form Modal</button>
-
-  <dialog id="form-modal-demo" class="modal">
-    <div class="modal-box modal-sm">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-semibold text-lg">New Case</h3>
-        <button type="button" class="btn btn-ghost btn-sm btn-square" onclick="document.getElementById('form-modal-demo').close()" aria-label="Close">✕</button>
-      </div>
-      <form>
-        <div class="form-control mb-3">
-          <label class="label pb-1"><span class="label-text font-medium text-sm text-base-content/80">Case title</span></label>
-          <input type="text" placeholder="e.g. Johnson v. Smith" class="input input-bordered w-full"/>
-        </div>
-        <div class="form-control mb-3">
-          <label class="label pb-1"><span class="label-text font-medium text-sm text-base-content/80">Status</span></label>
-          <select class="select select-bordered w-full">
-            <option>Open</option>
-            <option>In Progress</option>
-            <option>Closed</option>
-          </select>
-        </div>
-        <div class="flex justify-end gap-2 mt-4">
-          <button type="button" class="btn btn-ghost btn-sm" onclick="document.getElementById('form-modal-demo').close()">Cancel</button>
-          <button type="submit" class="btn btn-primary btn-sm">Save</button>
-        </div>
-      </form>
-    </div>
-    <form method="dialog" class="modal-backdrop"><button>close</button></form>
-  </dialog>
-</div>`,
-		},
-		{
-			Slug:        "modal-confirm",
-			Name:        "Modal — Confirm",
-			Category:    galleryruntime.CategoryOverlays,
-			Subcategory: "Modal",
-			Description: "Small destructive-action modal with a title, message, and confirm/cancel buttons.",
-			HTML: `<div class="p-6 flex gap-4 flex-wrap">
-  <button class="btn btn-error btn-sm" onclick="document.getElementById('confirm-demo').showModal()">Delete Case</button>
-
-  <dialog id="confirm-demo" class="modal">
-    <div class="modal-box max-w-sm">
-      <h3 class="font-semibold text-lg mb-2">Delete Case</h3>
-      <p class="text-sm text-base-content/70 mb-6">Are you sure you want to delete this case? This action cannot be undone.</p>
-      <div class="flex justify-end gap-2">
-        <button type="button" class="btn btn-ghost btn-sm" onclick="document.getElementById('confirm-demo').close()">Cancel</button>
-        <button type="button" class="btn btn-error btn-sm" onclick="document.getElementById('confirm-demo').close()">Delete</button>
-      </div>
-    </div>
-    <form method="dialog" class="modal-backdrop"><button>close</button></form>
-  </dialog>
-</div>`,
-		},
-		{
-			Slug:        "modal-loader",
-			Name:        "Modal — Loader",
-			Category:    galleryruntime.CategoryOverlays,
-			Subcategory: "Modal",
-			Description: "Spinner inside a dialog shell — shown while modal content is being fetched via HTMX.",
-			HTML: `<div class="p-6 flex gap-4 flex-wrap">
-  <button class="btn btn-outline btn-sm" onclick="document.getElementById('loader-modal-demo').showModal()">Show Loader Modal</button>
-
-  <dialog id="loader-modal-demo" class="modal">
-    <div class="modal-box flex items-center justify-center py-12">
-      <span class="loading loading-spinner loading-lg text-primary"></span>
-    </div>
-  </dialog>
-</div>`,
-		},
-		{
 			Slug:        "fab",
 			Name:        "FAB",
 			Category:    galleryruntime.CategoryOverlays,
@@ -2071,64 +1608,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		},
 
 		// ── Navigation extras ─────────────────────────────────────────────────
-		{
-			Slug:        "top-bar",
-			Name:        "Top Bar",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Page Title",
-			Description: "Page title + primary action button row at the top of a content area.",
-			HTML: `<div class="bg-base-200 p-4">
-  <div class="flex items-center justify-between px-4 py-4 bg-base-100 border-b border-base-200 rounded-lg">
-    <h1 class="text-xl font-semibold text-base-content">Cases</h1>
-    <div class="flex items-center gap-2">
-      <button class="btn btn-primary btn-sm">New Case</button>
-    </div>
-  </div>
-</div>`,
-		},
-		{
-			Slug:        "simple-tabs",
-			Name:        "Simple Tabs",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Tabs",
-			Description: "Lightweight DaisyUI tabs-lifted strip for in-panel use. No HTMX — just a visual tab strip.",
-			HTML: `<div class="p-6 space-y-4">
-  <div role="tablist" class="tabs tabs-lifted">
-    <a role="tab" class="tab tab-active">Details</a>
-    <a role="tab" class="tab">Members</a>
-    <a role="tab" class="tab">Settings</a>
-  </div>
-  <div role="tablist" class="tabs tabs-lifted">
-    <a role="tab" class="tab tab-active">Overview</a>
-    <a role="tab" class="tab">Documents</a>
-    <a role="tab" class="tab">Tasks</a>
-    <a role="tab" class="tab">History</a>
-  </div>
-</div>`,
-		},
-		{
-			Slug:        "breadcrumb",
-			Name:        "Breadcrumb",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Breadcrumb",
-			Description: "Hierarchical navigation trail showing the current location.",
-			HTML: `<div class="p-6 space-y-4">
-  <div class="breadcrumbs text-sm">
-    <ul>
-      <li><a>Home</a></li>
-      <li><a>Cases</a></li>
-      <li>Johnson v. Smith</li>
-    </ul>
-  </div>
-  <div class="breadcrumbs text-sm">
-    <ul>
-      <li><a>Settings</a></li>
-      <li><a>Team</a></li>
-      <li>Invite Member</li>
-    </ul>
-  </div>
-</div>`,
-		},
 		{
 			Slug:        "page-title-minimal",
 			Name:        "Page Title — Minimal",
@@ -2205,7 +1684,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Slug:        "search-dropdown",
 			Name:        "Search — Dropdown",
 			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Search",
+			Subcategory: "Misc",
 			Description: "Inline search input with a results dropdown showing recent searches and suggested items. CSS-only — no JS required.",
 			HTML: `<div class="p-6 flex justify-center">
   <div class="dropdown dropdown-bottom w-full max-w-sm">
@@ -2246,7 +1725,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Slug:        "filter-bar",
 			Name:        "Filter Bar",
 			Category:    galleryruntime.CategoryForms,
-			Subcategory: "Filter",
+			Subcategory: "Filters",
 			Description: "FilterCard wraps filter inputs in a card with Filter/Clear buttons. CompactFilterBar is the inline variant used above tables.",
 			HTML: `<div class="p-6 space-y-6">
   <div>
@@ -2321,32 +1800,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
       </select>
     </div>
   </fieldset>
-</div>`,
-		},
-		{
-			Slug:        "form-textarea",
-			Name:        "Textarea",
-			Category:    galleryruntime.CategoryForms,
-			Subcategory: "Form Fields",
-			Description: "Labeled multi-line text area for longer content with error state.",
-			HTML: `<div class="p-6 max-w-md space-y-4">
-  <div class="form-control mb-3">
-    <label class="label pb-1" for="notes">
-      <span class="label-text font-medium text-sm text-base-content/80">Case notes</span>
-    </label>
-    <textarea id="notes" name="notes" rows="4" placeholder="Add notes about this case…"
-      class="textarea textarea-bordered w-full">Initial consultation completed. Client provided all required documents.</textarea>
-  </div>
-  <div class="form-control mb-3">
-    <label class="label pb-1" for="description">
-      <span class="label-text font-medium text-sm text-base-content/80">Description</span>
-    </label>
-    <textarea id="description" name="description" rows="3" placeholder="Describe the issue…"
-      class="textarea textarea-bordered w-full textarea-error"></textarea>
-    <div class="label pt-1">
-      <span class="label-text-alt text-error">Description is required.</span>
-    </div>
-  </div>
 </div>`,
 		},
 		{
@@ -2621,30 +2074,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Navigation extras ──────────────────────────────────────────────────────
 		{
-			Slug:        "tabs",
-			Name:        "Tabs",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Tabs",
-			Description: "Tab navigation for switching between content sections.",
-			HTML: `<div class="p-6 space-y-4">
-  <div role="tablist" class="tabs tabs-border">
-    <a role="tab" class="tab tab-active">Overview</a>
-    <a role="tab" class="tab">Documents</a>
-    <a role="tab" class="tab">Tasks</a>
-    <a role="tab" class="tab">History</a>
-  </div>
-  <div role="tablist" class="tabs tabs-lifted">
-    <a role="tab" class="tab tab-active">Details</a>
-    <a role="tab" class="tab">Members</a>
-    <a role="tab" class="tab">Settings</a>
-  </div>
-</div>`,
-		},
-		{
 			Slug:        "footer-minimal",
 			Name:        "Footer — Minimal",
 			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Footer",
+			Subcategory: "Misc",
 			Description: "Simple one-line footer with copyright text and optional links.",
 			HTML: `<div class="space-y-4 p-6">
   <div class="card card-border">
@@ -2659,7 +2092,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Slug:        "profile-menu",
 			Name:        "Profile Menu",
 			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Nav",
+			Subcategory: "Misc",
 			Description: "Avatar dropdown menu with grouped menu items and sign-out action.",
 			HTML: `<div class="flex items-center justify-center p-12">
   <div class="dropdown dropdown-bottom dropdown-end">
@@ -2702,52 +2135,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
         </li>
       </ul>
     </div>
-  </div>
-</div>`,
-		},
-
-		// ── Feedback extras ────────────────────────────────────────────────────────
-		{
-			Slug:        "loading-spinner",
-			Name:        "Loading Spinner",
-			Category:    galleryruntime.CategoryFeedback,
-			Subcategory: "Loading",
-			Description: "Centered loading spinner for async content areas.",
-			HTML: `<div class="p-6 space-y-6">
-  <div class="flex items-center justify-center py-12">
-    <span class="loading loading-spinner loading-lg text-primary"></span>
-  </div>
-  <div class="flex flex-wrap gap-6 items-center justify-center">
-    <span class="loading loading-spinner loading-xs text-primary"></span>
-    <span class="loading loading-spinner loading-sm text-primary"></span>
-    <span class="loading loading-spinner loading-md text-primary"></span>
-    <span class="loading loading-spinner loading-lg text-primary"></span>
-  </div>
-  <div class="flex flex-wrap gap-4 justify-center">
-    <span class="loading loading-dots loading-md text-primary"></span>
-    <span class="loading loading-ring loading-md text-secondary"></span>
-    <span class="loading loading-ball loading-md text-accent"></span>
-  </div>
-</div>`,
-		},
-		{
-			Slug:        "toast",
-			Name:        "Toast",
-			Category:    galleryruntime.CategoryFeedback,
-			Subcategory: "Alerts",
-			Description: "Auto-dismissing notification banners for success, error, warning, and info states.",
-			HTML: `<div class="p-6 space-y-3">
-  <div class="alert alert-success shadow-md w-full">
-    <span>✓ Case created successfully.</span>
-  </div>
-  <div class="alert alert-error shadow-md w-full">
-    <span>✗ Failed to save changes. Please try again.</span>
-  </div>
-  <div class="alert alert-warning shadow-md w-full">
-    <span>⚠ Your session will expire in 5 minutes.</span>
-  </div>
-  <div class="alert alert-info shadow-md w-full">
-    <span>ℹ A new version is available. Refresh to update.</span>
   </div>
 </div>`,
 		},
@@ -2995,5 +2382,1111 @@ function copyText(text, btn) {
 }
 </script>`,
 		},
+
+		// ── Real component entries (WithBoundary + RenderFunc) ───────────────────
+
+		// ui.Button
+		{
+			Slug:        "button",
+			Name:        "Button",
+			Category:    galleryruntime.CategoryBasics,
+			Subcategory: "Buttons",
+			Description: "A DaisyUI button with configurable variant, size, type, shape, icon, and loading state.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Standard button with live controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						variant := ui.ButtonVariant(params.Get("variant"))
+						if variant == "" {
+							variant = ui.ButtonPrimary
+						}
+						size := ui.ButtonSize(params.Get("size"))
+						typ := ui.ButtonType(params.Get("typ"))
+						if typ == "" {
+							typ = ui.ButtonTypeButton
+						}
+						href := params.Get("href")
+						if href == "" {
+							href = "#"
+						}
+						shape := ui.ButtonShape(params.Get("shape"))
+						icon := params.Get("icon")
+						loading := params.Get("loading") == "true"
+						if shape == ui.ButtonShapeDefault && typ != ui.ButtonTypeLink {
+							return withText("Save changes", ui.ButtonWithBoundary(href, variant, size, typ, shape, icon, loading))
+						}
+						if typ == ui.ButtonTypeLink {
+							return withText("Go to dashboard", ui.ButtonWithBoundary(href, variant, size, typ, shape, icon, loading))
+						}
+						return ui.ButtonWithBoundary(href, variant, size, typ, shape, icon, loading)
+					},
+					Tokens: ButtonTokens(),
+				},
+			},
+		},
+
+		// ui.Badge
+		{
+			Slug:        "badge",
+			Name:        "Badge",
+			Category:    galleryruntime.CategoryBasics,
+			Subcategory: "Badges",
+			Description: "A DaisyUI badge with configurable intent, style, size, and optional icon.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live intent, style, size, and icon controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						variant := ui.BadgeIntent(params.Get("variant"))
+						if variant == "" {
+							variant = ui.BadgePrimary
+						}
+						style := ui.BadgeStyle(params.Get("style"))
+						size := ui.BadgeSize(params.Get("size"))
+						icon := params.Get("icon")
+						label := params.Get("label")
+						if label == "" {
+							label = "Active"
+						}
+						return ui.BadgeWithBoundary(variant, style, size, icon, label)
+					},
+					Tokens: BadgeTokens(),
+				},
+			},
+		},
+
+		// ui.StatusBadge
+		{
+			Slug:        "status-badge-real",
+			Name:        "Status Badge",
+			Category:    galleryruntime.CategoryBasics,
+			Subcategory: "Badges",
+			Description: "Maps a string status to an appropriate intent badge automatically.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live status control.",
+					RenderFunc: func(params url.Values) templ.Component {
+						status := params.Get("status")
+						if status == "" {
+							status = "active"
+						}
+						return ui.StatusBadgeWithBoundary(status)
+					},
+					Tokens: StatusBadgeTokens(),
+				},
+			},
+		},
+
+		// ui.Card
+		{
+			Slug:        "card-real",
+			Name:        "Card",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Cards",
+			Description: "A DaisyUI card container with a title.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live title control.",
+					RenderFunc: func(params url.Values) templ.Component {
+						title := params.Get("title")
+						if title == "" {
+							title = "Card Title"
+						}
+						return withChildren(ui.CardWithBoundary(title), rawHTML(`<p class="text-sm text-base-content/70">Card body content goes here.</p>`))
+					},
+					Tokens: CardTokens(),
+				},
+			},
+		},
+
+		// ui.InlineAlert (no icon)
+		{
+			Slug:        "inline-alert",
+			Name:        "Inline Alert",
+			Category:    galleryruntime.CategoryFeedback,
+			Subcategory: "Alerts",
+			Description: "A plain inline alert without an icon.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live type and message controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						typ := ui.AlertType(params.Get("typ"))
+						if typ == "" {
+							typ = ui.AlertSuccess
+						}
+						message := params.Get("message")
+						if message == "" {
+							message = "Operation completed successfully."
+						}
+						return ui.AlertWithBoundary(typ, message)
+					},
+					Tokens: AlertTokens(),
+				},
+			},
+		},
+
+		// ui.Toast
+		{
+			Slug:        "toast-real",
+			Name:        "Toast",
+			Category:    galleryruntime.CategoryFeedback,
+			Subcategory: "Toasts",
+			Description: "A toast notification with type and message.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live type and message controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						typ := ui.ToastType(params.Get("typ"))
+						if typ == "" {
+							typ = ui.ToastSuccess
+						}
+						message := params.Get("message")
+						if message == "" {
+							message = "Action completed successfully."
+						}
+						return ui.ToastWithBoundary(typ, message)
+					},
+					Tokens: ToastTokens(),
+				},
+			},
+		},
+
+		// ui.Pagination
+		{
+			Slug:        "pagination-real",
+			Name:        "Pagination",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Pagination",
+			Description: "A DaisyUI pagination control.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live current page control.",
+					RenderFunc: func(params url.Values) templ.Component {
+						page := 1
+						if p := params.Get("currentPage"); p != "" {
+							if v, err := parseInt(p); err == nil && v > 0 {
+								page = v
+							}
+						}
+						totalPages := 10
+						if p := params.Get("totalPages"); p != "" {
+							if v, err := parseInt(p); err == nil && v > 0 {
+								totalPages = v
+							}
+						}
+						return ui.PaginationWithBoundary(page, totalPages, "#", "main-content")
+					},
+					Tokens: PaginationTokens(),
+				},
+			},
+		},
+
+		// ui.Empty
+		{
+			Slug:        "empty-state-real",
+			Name:        "Empty State",
+			Category:    galleryruntime.CategoryFeedback,
+			Subcategory: "States",
+			Description: "An empty state placeholder with icon, title, and description.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live title and description controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						title := params.Get("title")
+						if title == "" {
+							title = "No results found"
+						}
+						desc := params.Get("description")
+						if desc == "" {
+							desc = "Try adjusting your search or filters."
+						}
+						return ui.EmptyWithBoundary("lucide--search", title, desc)
+					},
+					Tokens: EmptyTokens(),
+				},
+			},
+		},
+
+		// ui.Loader
+		{
+			Slug:        "loader",
+			Name:        "Loader",
+			Category:    galleryruntime.CategoryFeedback,
+			Subcategory: "Loading",
+			Description: "Centered loading spinner for async content areas.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Basics",
+					Description: "A centered DaisyUI loading spinner with no configurable props.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.LoaderWithBoundary()
+					},
+					Tokens: []galleryruntime.DesignToken{},
+				},
+			},
+		},
+
+		// ui.StatCard
+		{
+			Slug:        "stat-card-real",
+			Name:        "Stat Card",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Cards",
+			Description: "A compact summary stat widget with icon, value, and label.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live label, value, and icon controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						label := params.Get("label")
+						if label == "" {
+							label = "Active Sessions"
+						}
+						value := params.Get("value")
+						if value == "" {
+							value = "42"
+						}
+						icon := params.Get("icon")
+						if icon == "" {
+							icon = "lucide--users"
+						}
+						iconColor := params.Get("iconColor")
+						if iconColor == "" {
+							iconColor = "bg-primary/10 text-primary"
+						}
+						return ui.StatCardWithBoundary(ui.StatCardProps{
+							Label:     label,
+							Value:     value,
+							Icon:      icon,
+							IconColor: iconColor,
+						})
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{
+							Label:      "Label",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "Active Sessions",
+							QueryParam: "label",
+						},
+						{
+							Label:      "Value",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "42",
+							QueryParam: "value",
+						},
+						{
+							Label:      "Icon",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "lucide--users",
+							QueryParam: "icon",
+						},
+						{
+							Label:      "Icon Color",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeSelect,
+							Default:    "bg-primary/10 text-primary",
+							QueryParam: "iconColor",
+							Options: []galleryruntime.TokenOption{
+								{Value: "bg-primary/10 text-primary", Label: "Primary"},
+								{Value: "bg-secondary/10 text-secondary", Label: "Secondary"},
+								{Value: "bg-success/10 text-success", Label: "Success"},
+								{Value: "bg-error/10 text-error", Label: "Error"},
+								{Value: "bg-warning/10 text-warning", Label: "Warning"},
+								{Value: "bg-info/10 text-info", Label: "Info"},
+							},
+						},
+					},
+				},
+			},
+		},
+
+		// ui.ActionMenu
+		{
+			Slug:        "action-menu-real",
+			Name:        "Action Menu",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Menus",
+			Description: "A dropdown action menu with configurable items.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Sample action menu with three items.",
+					RenderFunc: func(params url.Values) templ.Component {
+						item1 := params.Get("items1")
+						if item1 == "" {
+							item1 = "Edit"
+						}
+						item2 := params.Get("items2")
+						if item2 == "" {
+							item2 = "Duplicate"
+						}
+						item3 := params.Get("items3")
+						if item3 == "" {
+							item3 = "Delete"
+						}
+						return ui.ActionMenuWithBoundary([]ui.ActionMenuItem{
+							{Label: item1, Icon: "lucide--pencil", HXGet: "#"},
+							{Label: item2, Icon: "lucide--copy", HXGet: "#"},
+							{Label: item3, Icon: "lucide--trash-2", HXGet: "#", Danger: true},
+						})
+					},
+					Tokens: ActionMenuTokens(),
+				},
+			},
+		},
+
+		// ui.Avatar
+		{
+			Slug:        "avatar-real",
+			Name:        "Avatar",
+			Category:    galleryruntime.CategoryBasics,
+			Subcategory: "Avatars",
+			Description: "An avatar with initials fallback and configurable size.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live name and size controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						name := params.Get("name")
+						if name == "" {
+							name = "Jane Smith"
+						}
+						size := ui.AvatarSize(params.Get("size"))
+						if size == "" {
+							size = ui.AvatarMD
+						}
+						return ui.AvatarWithBoundary(name, "", size)
+					},
+					Tokens: AvatarTokens(),
+				},
+			},
+		},
+
+		// form.TextInput
+		{
+			Slug:        "text-input",
+			Name:        "Text Input",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "A labelled text input field.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live label and required controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						label := params.Get("label")
+						if label == "" {
+							label = "Email address"
+						}
+						required := params.Get("required") == "true"
+						return form.TextInputWithBoundary("email", label, "", "", required)
+					},
+					Tokens: TextInputTokens(),
+				},
+			},
+		},
+
+		// form.TextareaInput
+		{
+			Slug:        "textarea-input",
+			Name:        "Textarea Input",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "A labelled textarea input field.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live label and rows controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						label := params.Get("label")
+						if label == "" {
+							label = "Description"
+						}
+						rows := 4
+						if r := params.Get("rows"); r != "" {
+							if v, err := parseInt(r); err == nil && v > 0 {
+								rows = v
+							}
+						}
+						required := params.Get("required") == "true"
+						return form.TextareaInputWithBoundary("description", label, "", "", rows, required)
+					},
+					Tokens: TextareaInputTokens(),
+				},
+			},
+		},
+
+		// form.CheckboxInput
+		{
+			Slug:        "checkbox-input",
+			Name:        "Checkbox Input",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Toggles",
+			Description: "A labelled checkbox input.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live label and checked state controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						label := params.Get("label")
+						if label == "" {
+							label = "I agree to the terms"
+						}
+						checked := params.Get("checked") == "true"
+						return form.CheckboxInputWithBoundary("agree", label, checked, "")
+					},
+					Tokens: CheckboxInputTokens(),
+				},
+			},
+		},
+
+		// form.SelectInput
+		{
+			Slug:        "select-input",
+			Name:        "Select Input",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "A labelled select dropdown.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live label and selected value controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						label := params.Get("label")
+						if label == "" {
+							label = "Country"
+						}
+						selected := params.Get("selected")
+						required := params.Get("required") == "true"
+						return form.SelectInputWithBoundary("country", label, selected, [][2]string{
+							{"us", "United States"},
+							{"gb", "United Kingdom"},
+							{"ca", "Canada"},
+							{"au", "Australia"},
+						}, "", required)
+					},
+					Tokens: SelectInputTokens(),
+				},
+			},
+		},
+
+		// form.RangeInput
+		{
+			Slug:        "range-input",
+			Name:        "Range Input",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "A labelled range slider input.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live value and color controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						val := 50
+						if v := params.Get("value"); v != "" {
+							if n, err := parseInt(v); err == nil {
+								val = n
+							}
+						}
+						color := params.Get("color")
+						if color == "" {
+							color = "range-primary"
+						}
+						return form.RangeInputWithBoundary("volume", "Volume", val, 0, 100, 1, color)
+					},
+					Tokens: RangeInputTokens(),
+				},
+			},
+		},
+
+		// form.FormField (unified)
+		{
+			Slug:        "form-field-real",
+			Name:        "Form Field",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "A unified form field that renders the appropriate input based on type.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live type, label, placeholder, required, disabled, and error controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						typ := form.FormFieldType(params.Get("typ"))
+						if typ == "" {
+							typ = form.FieldText
+						}
+						label := params.Get("label")
+						if label == "" {
+							label = "Full name"
+						}
+						placeholder := params.Get("placeholder")
+						if placeholder == "" {
+							placeholder = "Enter value..."
+						}
+						required := params.Get("required") == "true"
+						disabled := params.Get("disabled") == "true"
+						errMsg := params.Get("error")
+						return form.FormFieldWithBoundary(form.FormFieldProps{
+							Type:        typ,
+							Name:        "demo",
+							Label:       label,
+							Placeholder: placeholder,
+							Required:    required,
+							Disabled:    disabled,
+							Error:       errMsg,
+						})
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{
+							Label:      "Type",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeSelect,
+							Default:    "text",
+							QueryParam: "typ",
+							Options: []galleryruntime.TokenOption{
+								{Value: "text", Label: "Text"},
+								{Value: "textarea", Label: "Textarea"},
+								{Value: "email", Label: "Email"},
+								{Value: "number", Label: "Number"},
+								{Value: "date", Label: "Date"},
+								{Value: "checkbox", Label: "Checkbox"},
+								{Value: "select", Label: "Select"},
+							},
+						},
+						{
+							Label:      "Label",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "Full name",
+							QueryParam: "label",
+						},
+						{
+							Label:      "Placeholder",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "Enter value...",
+							QueryParam: "placeholder",
+						},
+						{
+							Label:      "Required",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeSelect,
+							Default:    "false",
+							QueryParam: "required",
+							Options: []galleryruntime.TokenOption{
+								{Value: "false", Label: "No"},
+								{Value: "true", Label: "Yes"},
+							},
+						},
+						{
+							Label:      "Disabled",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeSelect,
+							Default:    "false",
+							QueryParam: "disabled",
+							Options: []galleryruntime.TokenOption{
+								{Value: "false", Label: "No"},
+								{Value: "true", Label: "Yes"},
+							},
+						},
+						{
+							Label:      "Error",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "",
+							QueryParam: "error",
+						},
+					},
+				},
+			},
+		},
+
+		// form.SearchInput
+		{
+			Slug:        "search-input-real",
+			Name:        "Search Input",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "A search input field with a magnifier icon.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live value and placeholder controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						value := params.Get("value")
+						placeholder := params.Get("placeholder")
+						if placeholder == "" {
+							placeholder = "Search..."
+						}
+						return form.SearchInputWithBoundary("q", value, placeholder, "", "")
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{
+							Label:      "Value",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "",
+							QueryParam: "value",
+						},
+						{
+							Label:      "Placeholder",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "Search...",
+							QueryParam: "placeholder",
+						},
+					},
+				},
+			},
+		},
+
+		// nav.TopBar
+		{
+			Slug:        "top-bar-real",
+			Name:        "Top Bar",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Page Title",
+			Description: "A top navigation bar with a title.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live title control.",
+					RenderFunc: func(params url.Values) templ.Component {
+						title := params.Get("title")
+						if title == "" {
+							title = "Dashboard"
+						}
+						return nav.TopBarWithBoundary(title)
+					},
+					Tokens: TopBarTokens(),
+				},
+			},
+		},
+
+		// nav.TabMenu
+		{
+			Slug:        "tab-menu-real",
+			Name:        "Tab Menu",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Tabs",
+			Description: "A full-page HTMX tab strip.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Sample tab menu with three tabs.",
+					RenderFunc: func(params url.Values) templ.Component {
+						tab1 := params.Get("tabs1")
+						if tab1 == "" {
+							tab1 = "Overview"
+						}
+						tab2 := params.Get("tabs2")
+						if tab2 == "" {
+							tab2 = "Activity"
+						}
+						tab3 := params.Get("tabs3")
+						if tab3 == "" {
+							tab3 = "Settings"
+						}
+						tabs := []nav.Tab{
+							{Label: tab1, Href: "#", Active: true},
+							{Label: tab2, Href: "#"},
+							{Label: tab3, Href: "#"},
+						}
+						return nav.TabMenuWithBoundary(tabs)
+					},
+					Tokens: TabMenuTokens(),
+				},
+			},
+		},
+
+		// nav.SimpleTabs
+		{
+			Slug:        "simple-tabs-real",
+			Name:        "Simple Tabs",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Tabs",
+			Description: "A simple tab strip without HTMX.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Sample simple tabs.",
+					RenderFunc: func(params url.Values) templ.Component {
+						tab1 := params.Get("tabs1")
+						if tab1 == "" {
+							tab1 = "All"
+						}
+						tab2 := params.Get("tabs2")
+						if tab2 == "" {
+							tab2 = "Open"
+						}
+						tab3 := params.Get("tabs3")
+						if tab3 == "" {
+							tab3 = "Closed"
+						}
+						tabs := []nav.Tab{
+							{Label: tab1, Href: "#", Active: true},
+							{Label: tab2, Href: "#"},
+							{Label: tab3, Href: "#"},
+						}
+						return nav.SimpleTabsWithBoundary(tabs)
+					},
+					Tokens: SimpleTabsTokens(),
+				},
+			},
+		},
+
+		// nav.PageHeader
+		{
+			Slug:        "page-header-real",
+			Name:        "Page Header",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Headers",
+			Description: "A breadcrumb-based page header.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Sample page header with breadcrumb trail.",
+					RenderFunc: func(params url.Values) templ.Component {
+						step1 := params.Get("steps1")
+						if step1 == "" {
+							step1 = "Home"
+						}
+						step2 := params.Get("steps2")
+						if step2 == "" {
+							step2 = "Cases"
+						}
+						step3 := params.Get("steps3")
+						if step3 == "" {
+							step3 = "Edit Record"
+						}
+						return nav.PageHeaderWithBoundary(nav.Crumbs(step1, "/", step2, "/cases", step3))
+					},
+					Tokens: PageHeaderTokens(),
+				},
+			},
+		},
+
+		// nav.Menu
+		{
+			Slug:        "menu-real",
+			Name:        "Menu",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Menus",
+			Description: "A vertical navigation menu.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live size control.",
+					RenderFunc: func(params url.Values) templ.Component {
+						size := nav.MenuSize(params.Get("size"))
+						item1 := params.Get("items1")
+						if item1 == "" {
+							item1 = "Dashboard"
+						}
+						item2 := params.Get("items2")
+						if item2 == "" {
+							item2 = "Cases"
+						}
+						item3 := params.Get("items3")
+						if item3 == "" {
+							item3 = "Contacts"
+						}
+						item4 := params.Get("items4")
+						if item4 == "" {
+							item4 = "Settings"
+						}
+						return nav.MenuWithBoundary(size, []nav.MenuItem{
+							{Label: item1, Icon: "lucide--layout-dashboard", Href: "#", Active: true},
+							{Label: item2, Icon: "lucide--folder-open", Href: "#"},
+							{Label: item3, Icon: "lucide--users", Href: "#"},
+							{Label: item4, Icon: "lucide--settings", Href: "#"},
+						})
+					},
+					Tokens: MenuTokens(),
+				},
+			},
+		},
+
+		// modal.Modal
+		{
+			Slug:        "modal-real",
+			Name:        "Modal",
+			Category:    galleryruntime.CategoryOverlays,
+			Subcategory: "Modals",
+			Description: "A DaisyUI modal dialog.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live title and size controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						title := params.Get("title")
+						if title == "" {
+							title = "Confirm Action"
+						}
+						size := modal.ModalSize(params.Get("size"))
+						body := rawHTML(`<p class="text-sm text-base-content/70 mb-6">Are you sure you want to proceed? This action will be applied immediately.</p><div class="flex justify-end gap-2"><button type="button" class="btn btn-ghost btn-sm" onclick="this.closest('dialog').remove()">Cancel</button><button type="button" class="btn btn-primary btn-sm">Confirm</button></div>`)
+						inner := withChildren(modal.ModalWithBoundary(title, size), body)
+						// Wrap in a min-height container so the iframe auto-resize picks up the dialog height.
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div style="min-height:280px;position:relative;">`); err != nil {
+								return err
+							}
+							if err := inner.Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+					Tokens: ModalTokens(),
+				},
+			},
+		},
+
+		// modal.ConfirmPopup
+		{
+			Slug:        "confirm-popup",
+			Name:        "Confirm Popup",
+			Category:    galleryruntime.CategoryOverlays,
+			Subcategory: "Modals",
+			Description: "A confirmation dialog popup.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live title and message controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						title := params.Get("title")
+						if title == "" {
+							title = "Delete record?"
+						}
+						message := params.Get("message")
+						if message == "" {
+							message = "This action cannot be undone."
+						}
+						inner := modal.ConfirmPopupWithBoundary(title, message, "Delete", "#", "DELETE")
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div style="min-height:240px;position:relative;">`); err != nil {
+								return err
+							}
+							if err := inner.Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+					Tokens: ConfirmPopupTokens(),
+				},
+			},
+		},
+
+		// modal.FormModal
+		{
+			Slug:        "form-modal-real",
+			Name:        "Form Modal",
+			Category:    galleryruntime.CategoryOverlays,
+			Subcategory: "Modals",
+			Description: "A modal dialog containing an HTMX form.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live title, size, and submit label controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						title := params.Get("title")
+						if title == "" {
+							title = "Edit Record"
+						}
+						size := modal.ModalSize(params.Get("size"))
+						submitText := params.Get("submitText")
+						if submitText == "" {
+							submitText = "Save"
+						}
+						inner := modal.FormModalWithBoundary(modal.FormModalProps{
+							ID:         "gallery-form-modal",
+							Title:      title,
+							Size:       size,
+							SubmitText: submitText,
+							Action:     "#",
+							Method:     "post",
+						})
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div style="min-height:300px;position:relative;">`); err != nil {
+								return err
+							}
+							if err := inner.Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('gallery-form-modal');if(d&&d.showModal)d.showModal();});</script>`)
+							return err
+						})
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{
+							Label:      "Title",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "Edit Record",
+							QueryParam: "title",
+						},
+						{
+							Label:      "Size",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeSelect,
+							Default:    "",
+							QueryParam: "size",
+							Options: []galleryruntime.TokenOption{
+								{Value: "modal-sm", Label: "SM"},
+								{Value: "", Label: "MD"},
+								{Value: "modal-lg", Label: "LG"},
+								{Value: "modal-xl", Label: "XL"},
+							},
+						},
+						{
+							Label:      "Submit Label",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "Save",
+							QueryParam: "submitText",
+						},
+					},
+				},
+			},
+		},
+
+		// table.TableWithProps
+		{
+			Slug:        "table-real",
+			Name:        "Table",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Tables",
+			Description: "A configurable DaisyUI data table.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live zebra and pinned controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						zebra := params.Get("zebra") == "true"
+						size := ""
+						if params.Get("size") == "sm" {
+							size = "sm"
+						}
+						rows := rawHTML(`<thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Joined</th></tr></thead><tbody><tr><td>Alice Johnson</td><td>Admin</td><td><span class="badge badge-success badge-sm">Active</span></td><td>Jan 2024</td></tr><tr><td>Bob Martinez</td><td>Member</td><td><span class="badge badge-warning badge-sm">Pending</span></td><td>Mar 2024</td></tr><tr><td>Carol White</td><td>Viewer</td><td><span class="badge badge-error badge-sm">Inactive</span></td><td>Jun 2024</td></tr><tr><td>David Kim</td><td>Member</td><td><span class="badge badge-success badge-sm">Active</span></td><td>Aug 2024</td></tr></tbody>`)
+						return withChildren(
+							table.TableWithPropsWithBoundary(table.TableProps{
+								Striped: zebra,
+								Size:    size,
+							}),
+							rows,
+						)
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{
+							Label:      "Zebra Stripes",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeSelect,
+							Default:    "false",
+							QueryParam: "zebra",
+							Options: []galleryruntime.TokenOption{
+								{Value: "false", Label: "Off"},
+								{Value: "true", Label: "On"},
+							},
+						},
+						{
+							Label:      "Size",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeSelect,
+							Default:    "",
+							QueryParam: "size",
+							Options: []galleryruntime.TokenOption{
+								{Value: "", Label: "Default"},
+								{Value: "sm", Label: "Small"},
+							},
+						},
+					},
+				},
+			},
+		},
+
+		// logs.LogsTable
+		{
+			Slug:        "logs-table",
+			Name:        "Logs Table",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Tables",
+			Description: "A workflow/event log display table.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Sample log entries.",
+					RenderFunc: func(params url.Values) templ.Component {
+						now := time.Now()
+						msg1 := params.Get("entries1")
+						if msg1 == "" {
+							msg1 = "Record created successfully."
+						}
+						msg2 := params.Get("entries2")
+						if msg2 == "" {
+							msg2 = "Workflow triggered."
+						}
+						msg3 := params.Get("entries3")
+						if msg3 == "" {
+							msg3 = "Rate limit approaching threshold."
+						}
+						msg4 := params.Get("entries4")
+						if msg4 == "" {
+							msg4 = "Integration sync failed."
+						}
+						return logs.LogsTableWithBoundary([]logs.LogEntry{
+							{Type: "success", Message: msg1, CreatedAt: now.Add(-1 * time.Minute)},
+							{Type: "info", Message: msg2, CreatedAt: now.Add(-3 * time.Minute)},
+							{Type: "warn", Message: msg3, CreatedAt: now.Add(-10 * time.Minute)},
+							{Type: "error", Message: msg4, CreatedAt: now.Add(-30 * time.Minute)},
+						})
+					},
+					Tokens: LogsTableTokens(),
+				},
+			},
+		},
+
+		// layout.Navbar
+		{
+			Slug:        "navbar-real",
+			Name:        "Navbar",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Headers",
+			Description: "The application top navigation bar.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live app name control.",
+					RenderFunc: func(params url.Values) templ.Component {
+						appName := params.Get("appName")
+						if appName == "" {
+							appName = "MyApp"
+						}
+						return layout.NavbarWithBoundary(appName)
+					},
+					Tokens: NavbarTokens(),
+				},
+			},
+		},
 	}
+}
+
+// ── helpers used by new real-component entries ────────────────────────────────
+
+func parseInt(s string) (int, error) {
+	var n int
+	_, err := fmt.Sscanf(s, "%d", &n)
+	return n, err
 }

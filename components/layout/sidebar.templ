@@ -18,11 +18,16 @@ type SidebarGroup struct {
 
 // Sidebar renders the app sidebar.
 // Toggle is driven by hidden checkbox #layout-sidebar-toggle-trigger (sibling in AppShell).
-templ Sidebar(appName string, groups []SidebarGroup) {
+// Pass a non-nil logo component to replace the plain appName text in the header.
+templ Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) {
 	<div id="layout-sidebar" class="flex flex-col bg-base-100">
-		<!-- Header: app name + fold button -->
+		<!-- Header: logo or app name + fold button -->
 		<div class="flex min-h-10 items-center justify-between gap-3 px-5 py-3 pb-5 shrink-0">
-			<span class="text-xl font-semibold truncate">{ appName }</span>
+			if len(logo) > 0 && logo[0] != nil {
+				@logo[0]
+			} else {
+				<span class="text-xl font-semibold truncate">{ appName }</span>
+			}
 			<label
 				for="layout-sidebar-toggle-trigger"
 				title="Toggle sidebar"

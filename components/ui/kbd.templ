@@ -12,7 +12,7 @@ const (
 
 // Kbd renders a keyboard key display.
 templ Kbd(size KbdSize) {
-	<kbd class={ "kbd", string(size) }>
+	<kbd class={ "kbd", templ.KV(string(size), size != "") }>
 		{ children... }
 	</kbd>
 }

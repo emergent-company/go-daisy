@@ -43,6 +43,7 @@ func main() {
 		Port:       11000,
 		StorePath:  dbPath,
 		GitHubCfg:  ghCfg,
+		DevMode:    true,
 	}); err != nil {
 		log.Fatal(err)
 	}

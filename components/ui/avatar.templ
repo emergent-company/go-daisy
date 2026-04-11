@@ -29,7 +29,7 @@ func avatarInitials(name string) string {
 
 // Avatar renders a circular avatar: image if src is set, otherwise initials.
 templ Avatar(name string, src string, size AvatarSize) {
-	<div class={ "avatar", string(size) }>
+	<div class={ "avatar", templ.KV(string(size), size != "") }>
 		if src != "" {
 			<div class="rounded-full overflow-hidden">
 				<img src={ src } alt={ name } class="object-cover w-full h-full"/>
@@ -44,7 +44,7 @@ templ Avatar(name string, src string, size AvatarSize) {
 
 // PlaceholderAvatar renders a circular avatar with an icon placeholder.
 templ PlaceholderAvatar(icon string, size AvatarSize) {
-	<div class={ "avatar", string(size) }>
+	<div class={ "avatar", templ.KV(string(size), size != "") }>
 		<div class="avatar-placeholder rounded-full bg-base-300 flex items-center justify-center text-base-content/60">
 			<span class={ "iconify size-[55%] " + icon }></span>
 		</div>

@@ -3,7 +3,7 @@ version: "3"
 vars:
   CSS_IN: ./assets/app.css
   CSS_OUT: ./staticfs/static/css/app.css
-  TAILWIND: tailwindcss
+  TAILWIND: node_modules/.bin/tailwindcss
   GALLERY_LOG: /tmp/go-daisy-gallery.log
   GALLERY_PID: /tmp/go-daisy-gallery.pid
 

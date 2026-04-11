@@ -36,7 +36,7 @@ func gallerySearchIndex(categories []CategoryGroup) string {
 
 // GalleryPage renders the full gallery shell with sidebar and content area.
 // Use for direct browser navigation (non-HTMX requests).
-templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, content templ.Component) {
+templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, logo templ.Component, content templ.Component) {
 	@layout.Page(title + " · Gallery", "") {
 		<div id="gallery-shell" class="flex h-screen overflow-hidden">
 			<!-- Sidebar toggle checkbox (hidden, CSS-driven) — must be sibling of #gallery-sidebar -->
@@ -53,9 +53,15 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, c
 			></label>
 			<!-- Sidebar -->
 			<div id="layout-sidebar" class="flex flex-col bg-base-100">
-				<!-- Header: title -->
+				<!-- Header: logo or title -->
 				<div class="flex min-h-10 items-center justify-between gap-3 px-5 py-3 shrink-0">
-					<a href="/gallery" class="text-xl font-semibold truncate">{ title }</a>
+					<a href="/gallery" class="truncate">
+						if logo != nil {
+							@logo
+						} else {
+							<span class="text-xl font-semibold">{ title }</span>
+						}
+					</a>
 					<!-- Fold / unfold toggle (desktop only) -->
 					<label
 						for="layout-sidebar-toggle-trigger"
@@ -374,6 +380,6 @@ templ gallerySearchModal(categories []CategoryGroup) {
 }
 
 // GalleryPageContent renders only the content area for HTMX partial swaps.
-templ GalleryPageContent(title string, activeSlug string, categories []CategoryGroup, content templ.Component) {
+templ GalleryPageContent(title string, activeSlug string, categories []CategoryGroup, logo templ.Component, content templ.Component) {
 	@content
 }

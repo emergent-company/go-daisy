@@ -40,7 +40,7 @@ templ Modal(title string, size ModalSize) {
 		class="modal modal-open"
 		onclick="if(event.target===this){this.remove()}"
 	>
-		<div class={ "modal-box", string(size) }>
+		<div class={ "modal-box", templ.KV(string(size), size != "") }>
 			<div class="flex items-center justify-between mb-4">
 				<h3 class="font-semibold text-lg text-base-content">{ title }</h3>
 			<button
@@ -69,7 +69,7 @@ templ FormModal(props FormModalProps) {
 	{{ size := props.Size }}
 	{{ if size == "" { size = ModalSM } }}
 	<dialog id={ props.ID } class="modal">
-		<div class={ "modal-box", string(size) }>
+		<div class={ "modal-box", templ.KV(string(size), size != "") }>
 			<div class="flex items-center justify-between mb-4">
 				<h3 class="font-semibold text-lg">{ props.Title }</h3>
 			<button

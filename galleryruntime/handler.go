@@ -1,32 +1,42 @@
 package galleryruntime
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
+	"github.com/a-h/templ"
 	"github.com/labstack/echo/v4"
 
+	"github.com/emergent-company/go-daisy/devmode"
 	"github.com/emergent-company/go-daisy/render"
 )
 
 // galleryHandler holds gallery route handlers and dependencies.
 type galleryHandler struct {
-	title      string
-	components []GalleryComponent
-	store      *Store
-	github     *GitHubClient
+	title          string
+	logo           templ.Component // optional branded logo; nil falls back to title text
+	components     []GalleryComponent
+	store          *Store
+	github         *GitHubClient
+	staticPrefixes []string // all CSS prefixes: default "/static/" + any ExtraStaticPrefixes
+	devMode        bool     // when true, component boundary annotations are injected
 }
 
 // newGalleryHandler creates a new gallery handler.
-func newGalleryHandler(title string, components []GalleryComponent, store *Store, gh *GitHubClient) *galleryHandler {
+func newGalleryHandler(title string, logo templ.Component, components []GalleryComponent, store *Store, gh *GitHubClient, staticPrefixes []string, devModeEnabled bool) *galleryHandler {
 	return &galleryHandler{
-		title:      title,
-		components: components,
-		store:      store,
-		github:     gh,
+		title:          title,
+		logo:           logo,
+		components:     components,
+		store:          store,
+		github:         gh,
+		staticPrefixes: staticPrefixes,
+		devMode:        devModeEnabled,
 	}
 }
 
@@ -51,8 +61,8 @@ func (h *galleryHandler) handleIndex(c echo.Context) error {
 	categories := BuildCategoryGroups(all)
 	content := GalleryIndex()
 	render.RenderAuto(c.Response().Writer, c.Request(),
-		GalleryPage(h.title, "", categories, content),
-		GalleryPageContent(h.title, "", categories, content),
+		GalleryPage(h.title, "", categories, h.logo, content),
+		GalleryPageContent(h.title, "", categories, h.logo, content),
 	)
 	return nil
 }
@@ -75,8 +85,8 @@ func (h *galleryHandler) handleDetail(c echo.Context) error {
 
 	content := ComponentDetail(comp, feedbackCount, h.github != nil)
 	render.RenderAuto(c.Response().Writer, c.Request(),
-		GalleryPage(h.title, slug, categories, content),
-		GalleryPageContent(h.title, slug, categories, content),
+		GalleryPage(h.title, slug, categories, h.logo, content),
+		GalleryPageContent(h.title, slug, categories, h.logo, content),
 	)
 	return nil
 }
@@ -92,19 +102,32 @@ func (h *galleryHandler) handleRender(c echo.Context) error {
 
 	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
 
+	baseURL := h.baseURL(c)
+
 	if comp.Templ != nil {
-		return comp.Templ.Render(c.Request().Context(), c.Response().Writer)
+		return h.renderTemplPage(c, baseURL, comp.Templ)
 	}
 
 	if comp.HTML != "" {
-		scheme := "http"
-		if c.Request().TLS != nil {
-			scheme = "https"
-		}
-		baseURL := scheme + "://" + c.Request().Host
-		html := renderSnippetPage(baseURL, comp.HTML)
+		html := renderSnippetPage(baseURL, h.staticPrefixes, comp.HTML, false)
 		_, err := c.Response().Writer.Write([]byte(html))
 		return err
+	}
+
+	// Fall back to first variant's RenderFunc/Templ/HTML
+	if variants := comp.EffectiveVariants(); len(variants) > 0 {
+		v := variants[0]
+		if v.RenderFunc != nil {
+			return h.renderTemplPage(c, baseURL, v.RenderFunc(c.Request().URL.Query()))
+		}
+		if v.Templ != nil {
+			return h.renderTemplPage(c, baseURL, v.Templ)
+		}
+		if v.HTML != "" {
+			html := renderSnippetPage(baseURL, h.staticPrefixes, v.HTML, false)
+			_, err := c.Response().Writer.Write([]byte(html))
+			return err
+		}
 	}
 
 	return echo.NewHTTPError(http.StatusNotFound, "component has no renderable content")
@@ -123,17 +146,18 @@ func (h *galleryHandler) handleRenderVariant(c echo.Context) error {
 
 	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
 
+	baseURL := h.baseURL(c)
+
+	if story.RenderFunc != nil {
+		return h.renderTemplPage(c, baseURL, story.RenderFunc(c.Request().URL.Query()))
+	}
+
 	if story.Templ != nil {
-		return story.Templ.Render(c.Request().Context(), c.Response().Writer)
+		return h.renderTemplPage(c, baseURL, story.Templ)
 	}
 
 	if story.HTML != "" {
-		scheme := "http"
-		if c.Request().TLS != nil {
-			scheme = "https"
-		}
-		baseURL := scheme + "://" + c.Request().Host
-		html := renderSnippetPage(baseURL, story.HTML)
+		html := renderSnippetPage(baseURL, h.staticPrefixes, story.HTML, false)
 		_, err := c.Response().Writer.Write([]byte(html))
 		return err
 	}
@@ -141,15 +165,54 @@ func (h *galleryHandler) handleRenderVariant(c echo.Context) error {
 	return echo.NewHTTPError(http.StatusNotFound, "variant has no renderable content")
 }
 
-// renderSnippetPage wraps an HTML snippet in a complete standalone HTML document.
-func renderSnippetPage(baseURL, snippet string) string {
+// baseURL returns the scheme+host for the current request.
+func (h *galleryHandler) baseURL(c echo.Context) string {
+	scheme := "http"
+	if c.Request().TLS != nil {
+		scheme = "https"
+	}
+	return scheme + "://" + c.Request().Host
+}
+
+// renderTemplPage renders a templ.Component wrapped in a full HTML shell with
+// all project CSS injected, so partial/fragment components display correctly.
+func (h *galleryHandler) renderTemplPage(c echo.Context, baseURL string, comp templ.Component) error {
+	ctx := c.Request().Context()
+	if h.devMode {
+		ctx = devmode.WithDevMode(ctx)
+	}
+	var buf bytes.Buffer
+	if err := comp.Render(ctx, &buf); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("render error: %v", err))
+	}
+	html := renderSnippetPage(baseURL, h.staticPrefixes, buf.String(), h.devMode)
+	_, err := c.Response().Writer.Write([]byte(html))
+	return err
+}
+
+// renderSnippetPage wraps an HTML snippet in a complete standalone HTML document
+// with all CSS links injected. When devMode is true, the hover overlay script
+// for component boundary visualisation is injected into the document.
+func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, devMode bool) string {
+	var cssLinks strings.Builder
+	for _, prefix := range staticPrefixes {
+		// Ensure prefix ends with /
+		p := strings.TrimRight(prefix, "/") + "/"
+		fmt.Fprintf(&cssLinks, `  <link href="%s%scss/app.css" rel="stylesheet" type="text/css"/>`, baseURL, p)
+		cssLinks.WriteString("\n")
+	}
+
+	devScript := ""
+	if devMode {
+		devScript = devOverlayScript
+	}
+
 	return fmt.Sprintf(`<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link href="%s/static/css/app.css" rel="stylesheet" type="text/css"/>
-  <script>
+%s  <script>
     try {
       var t = localStorage.getItem('gallery-preview-theme');
       if (t) document.documentElement.setAttribute('data-theme', t);
@@ -161,9 +224,9 @@ func renderSnippetPage(baseURL, snippet string) string {
   </style>
 </head>
 <body>
-%s
+%s%s
 </body>
-</html>`, baseURL, snippet)
+</html>`, cssLinks.String(), snippet, devScript)
 }
 
 // feedbackRequest is the JSON body for POST /gallery/:slug/feedback.

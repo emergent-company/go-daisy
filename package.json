@@ -8,5 +8,8 @@
     "@iconify-json/lucide": "^1.2.98",
     "@iconify/tailwind4": "^1.2.3",
     "daisyui": "^5.5.19"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2"
   }
 }

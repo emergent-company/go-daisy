@@ -19,7 +19,7 @@ type MenuItem struct {
 
 // Menu renders a DaisyUI vertical navigation menu.
 templ Menu(size MenuSize, items []MenuItem) {
-	<ul class={ "menu", string(size) }>
+	<ul class={ "menu", templ.KV(string(size), size != "") }>
 		for _, item := range items {
 			<li>
 				<a

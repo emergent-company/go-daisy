@@ -56,26 +56,19 @@ templ Badge(props BadgeProps) {
 	</span>
 }
 
-// BadgePill renders a small pill badge with children slot.
-templ BadgePill(intent BadgeIntent) {
-	<span class={ "badge badge-sm", string(intent) }>
-		{ children... }
-	</span>
-}
-
 // StatusBadge maps a string status value to an appropriate intent badge.
 templ StatusBadge(status string) {
 	switch status {
 	case "active", "open", "completed", "approved":
-		@BadgePill(BadgeSuccess) { { status } }
+		@Badge(BadgeProps{Label: status, Variant: BadgeSuccess, Size: BadgeSizeSM})
 	case "closed", "rejected", "cancelled", "deleted":
-		@BadgePill(BadgeError) { { status } }
+		@Badge(BadgeProps{Label: status, Variant: BadgeError, Size: BadgeSizeSM})
 	case "pending", "in_progress", "review":
-		@BadgePill(BadgeWarning) { { status } }
+		@Badge(BadgeProps{Label: status, Variant: BadgeWarning, Size: BadgeSizeSM})
 	case "draft":
-		@BadgePill(BadgeGhost) { { status } }
+		@Badge(BadgeProps{Label: status, Variant: BadgeGhost, Size: BadgeSizeSM})
 	default:
-		@BadgePill(BadgeNeutral) { { status } }
+		@Badge(BadgeProps{Label: status, Variant: BadgeNeutral, Size: BadgeSizeSM})
 	}
 }
 

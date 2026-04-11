@@ -2,14 +2,15 @@ package layout
 
 // Navbar renders the topbar. The children slot is for the right-side content
 // (theme toggle, user dropdown, etc.). Pass nil/empty for a minimal navbar.
-templ Navbar(appName string) {
+// Pass a non-nil logo component as the optional second argument to replace the plain appName text.
+templ Navbar(appName string, logo ...templ.Component) {
 	<div
 		role="navigation"
 		aria-label="Navbar"
 		class="flex items-center justify-between px-4 bg-base-100"
 		id="layout-topbar"
 	>
-		<!-- LEFT: sidebar toggle + app name -->
+		<!-- LEFT: sidebar toggle + app name or logo -->
 		<div class="flex items-center gap-3">
 			<label
 				for="layout-sidebar-toggle-trigger"
@@ -19,7 +20,11 @@ templ Navbar(appName string) {
 				<span id="topbar-menu-icon" class="iconify lucide--menu size-5"></span>
 				<span id="topbar-close-icon" class="iconify lucide--panel-left-close size-5"></span>
 			</label>
-			<span class="font-semibold text-base-content/80 text-sm hidden md:block">{ appName }</span>
+			if len(logo) > 0 && logo[0] != nil {
+				@logo[0]
+			} else {
+				<span class="font-semibold text-base-content/80 text-sm hidden md:block">{ appName }</span>
+			}
 		</div>
 		<!-- RIGHT: slot for theme toggle, user menu, etc. -->
 		<div class="flex items-center gap-1">

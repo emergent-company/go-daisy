@@ -4,7 +4,11 @@
 // panel, and feedback loop.
 package galleryruntime
 
-import "github.com/a-h/templ"
+import (
+	"net/url"
+
+	"github.com/a-h/templ"
+)
 
 // TokenType describes the kind of control rendered for a design token.
 type TokenType string
@@ -13,6 +17,7 @@ const (
 	TokenTypeRange  TokenType = "range"  // numeric slider (produces px / rem / % values)
 	TokenTypeColor  TokenType = "color"  // colour picker
 	TokenTypeSelect TokenType = "select" // named option list
+	TokenTypeText   TokenType = "text"   // free-form text input (drives a QueryParam)
 )
 
 // DesignToken describes a single manipulable design parameter for a component.
@@ -40,6 +45,10 @@ type DesignToken struct {
 	Min, Max, Step float64
 	// Options is the ordered list of (value, label) pairs for select tokens.
 	Options []TokenOption
+	// QueryParam, when non-empty, means this token drives a URL query parameter
+	// on the render iframe (e.g. "type") instead of injecting a CSS custom property.
+	// The select value is appended as ?QueryParam=value to the iframe src.
+	QueryParam string
 }
 
 // TokenOption is a single choice in a select-type token.
@@ -71,13 +80,21 @@ type GalleryStory struct {
 	// Description is optional extra context shown below the tab name.
 	Description string
 	// Templ is a pre-instantiated templ.Component for this story.
-	// Mutually exclusive with HTML.
+	// Mutually exclusive with HTML and RenderFunc.
 	Templ templ.Component
+	// RenderFunc, when set, is called with the request's URL query params to
+	// produce a templ.Component. Use this when tokens need to drive server-side
+	// rendering (e.g. changing an alert type class via ?type=alert-error).
+	// Takes precedence over Templ when present.
+	RenderFunc func(params url.Values) templ.Component
 	// HTML is a raw HTML snippet for this story.
-	// Mutually exclusive with Templ.
+	// Mutually exclusive with Templ and RenderFunc.
 	HTML string
 	// FrameHeight overrides the default iframe height for this story only.
 	FrameHeight string
+	// Tokens are optional design token controls shown in the token panel for
+	// this story only. When set, they take precedence over GalleryComponent.Tokens.
+	Tokens []DesignToken
 }
 
 // GalleryComponent describes a single component entry in the gallery.
