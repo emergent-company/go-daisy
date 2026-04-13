@@ -80,7 +80,7 @@ func LogsTable(entries []LogEntry) templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = ui.LogStatusDot(entry.Type).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = ui.StatusDot(ui.StatusColorForLog(entry.Type), false).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}

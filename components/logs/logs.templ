@@ -24,7 +24,7 @@ templ LogsTable(entries []LogEntry) {
 				for _, entry := range entries {
 					<tr>
 						<td>
-							@ui.LogStatusDot(entry.Type)
+							@ui.StatusDot(ui.StatusColorForLog(entry.Type), false)
 						</td>
 						<td class="text-sm text-base-content">{ formatTime(entry.CreatedAt) }</td>
 						<td class="text-sm text-base-content">{ entry.Message }</td>

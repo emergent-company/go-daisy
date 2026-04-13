@@ -5,20 +5,28 @@
 // This makes the component hierarchy visible in DevTools and enables the gallery's
 // hover overlay, component tree panel, and annotated source view.
 //
+// For structural HTML elements that cannot legally contain a <div> wrapper
+// (e.g. <thead>, <tbody>, <tr>, <td>, <th>), use [ElementBoundary] instead.
+// It injects the data-component/data-props attributes directly onto the first
+// opening tag emitted by the inner component rather than wrapping it.
+//
 // Usage in the gallery server:
 //
 //	ctx = devmode.WithDevMode(ctx)   // inject once per request
 //	comp = devmode.ComponentBoundary("Button", props, ui.Button(props))
+//	comp = devmode.ElementBoundary("TableRow", props, table.TableRow(id, hover))
 //
-// In production (when [IsDevMode] returns false), [ComponentBoundary] is a
-// zero-overhead passthrough — no wrapper element is emitted.
+// In production (when [IsDevMode] returns false), both functions are a
+// zero-overhead passthrough — no wrapper element or extra attributes are emitted.
 package devmode
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/a-h/templ"
 )
@@ -75,6 +83,55 @@ func ComponentBoundary(name string, props any, inner templ.Component) templ.Comp
 		}
 
 		_, err = io.WriteString(w, `</div>`)
+		return err
+	})
+}
+
+// ElementBoundary annotates the first opening tag emitted by inner with
+// data-component and data-props attributes, without adding any wrapper element.
+//
+// Use this for structural HTML elements that cannot legally contain a <div>
+// wrapper, such as <thead>, <tbody>, <tr>, <td>, and <th>. The browser's
+// HTML parser will strip a <div> placed directly inside a <table> or <tr>,
+// making [ComponentBoundary] ineffective for these elements.
+//
+// Like [ComponentBoundary], this is a zero-overhead passthrough in production
+// (when [IsDevMode] returns false).
+func ElementBoundary(name string, props any, inner templ.Component) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		if !IsDevMode(ctx) {
+			return inner.Render(ctx, w)
+		}
+
+		propsJSON, err := json.Marshal(props)
+		if err != nil {
+			propsJSON = []byte("null")
+		}
+		attrs := fmt.Sprintf(` data-component=%q data-props=%q`, name, string(propsJSON))
+
+		// Render the inner component into a buffer so we can inject attributes
+		// into the first opening tag before forwarding to the real writer.
+		var buf bytes.Buffer
+		if err := inner.Render(ctx, &buf); err != nil {
+			return err
+		}
+
+		// Find the first '>' and insert the attributes just before it,
+		// after any existing attributes on the tag.
+		html := buf.String()
+		idx := strings.Index(html, ">")
+		if idx < 0 {
+			// Shouldn't happen for well-formed templ output; fall through.
+			_, err = io.WriteString(w, html)
+			return err
+		}
+		// Handle self-closing tags: don't inject before '/>'
+		insert := idx
+		if insert > 0 && html[insert-1] == '/' {
+			insert--
+		}
+		annotated := html[:insert] + attrs + html[insert:]
+		_, err = io.WriteString(w, annotated)
 		return err
 	})
 }

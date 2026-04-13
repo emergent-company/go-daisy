@@ -7,6 +7,13 @@ templ Diff() {
 	</div>
 }
 
+// DiffContainer renders a sized, styled diff wrapper for the gallery.
+templ DiffContainer() {
+	<div class="diff aspect-[16/6] w-full max-w-lg rounded-box overflow-hidden border border-base-200">
+		{ children... }
+	</div>
+}
+
 // DiffItem1 renders the first (left/before) panel of a Diff.
 templ DiffItem1() {
 	<div class="diff-item-1">
@@ -24,4 +31,11 @@ templ DiffItem2() {
 // DiffResizer renders the draggable resizer handle inside a Diff.
 templ DiffResizer() {
 	<div class="diff-resizer"></div>
+}
+
+// DiffItemContent renders labelled content inside a DiffItem panel.
+templ DiffItemContent(text string, bold bool) {
+	<div class={ "flex items-center justify-center p-4 text-sm", templ.KV("font-medium", bold), templ.KV("text-base-content/60", !bold) }>
+		{ text }
+	</div>
 }

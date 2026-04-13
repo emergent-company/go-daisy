@@ -1,7 +1,5 @@
 package ui
 
-import "strings"
-
 // BadgeIntent maps a semantic intent to a DaisyUI badge class.
 type BadgeIntent string
 
@@ -43,45 +41,65 @@ type BadgeProps struct {
 	Style   BadgeStyle
 	Size    BadgeSize
 	Icon    string // Lucide icon suffix, e.g. "lucide--circle-check"
-	Animate bool   // when true, adds animate-pulse to the icon span (e.g. for "in progress" states)
+	Dot     bool   // when true, renders a status dot prefix (uses Variant to colour it)
+	Animate bool   // when true, adds animate-pulse to the icon/dot span
+}
+
+// StatusIntentFor maps a status string to a BadgeIntent.
+// Exported so callers (e.g. gallery seed) can use the same mapping.
+func StatusIntentFor(status string) BadgeIntent {
+	switch status {
+	case "active", "open", "completed", "approved":
+		return BadgeSuccess
+	case "closed", "rejected", "cancelled", "deleted":
+		return BadgeError
+	case "pending", "in_progress", "review":
+		return BadgeWarning
+	case "draft":
+		return BadgeGhost
+	default:
+		return BadgeNeutral
+	}
 }
 
 // Badge renders a DaisyUI badge.
+// Set Dot=true to show a coloured status dot prefix (colour matches Variant).
+// Set Icon to show a Lucide icon prefix instead of (or in addition to) a dot.
 templ Badge(props BadgeProps) {
 	<span class={ "badge gap-1", string(props.Variant), string(props.Style), string(props.Size) }>
-		if props.Icon != "" {
+		if props.Dot {
+			<span class={ templ.KV("animate-pulse", props.Animate), dotClass(props.Variant) }></span>
+		} else if props.Icon != "" {
 			<span class={ "iconify size-3", props.Icon, templ.KV("animate-pulse", props.Animate) }></span>
 		}
 		{ props.Label }
 	</span>
 }
 
-// StatusBadge maps a string status value to an appropriate intent badge.
-templ StatusBadge(status string) {
-	switch status {
-	case "active", "open", "completed", "approved":
-		@Badge(BadgeProps{Label: status, Variant: BadgeSuccess, Size: BadgeSizeSM})
-	case "closed", "rejected", "cancelled", "deleted":
-		@Badge(BadgeProps{Label: status, Variant: BadgeError, Size: BadgeSizeSM})
-	case "pending", "in_progress", "review":
-		@Badge(BadgeProps{Label: status, Variant: BadgeWarning, Size: BadgeSizeSM})
-	case "draft":
-		@Badge(BadgeProps{Label: status, Variant: BadgeGhost, Size: BadgeSizeSM})
+// dotClass maps a BadgeIntent to its corresponding DaisyUI status-dot class.
+func dotClass(intent BadgeIntent) string {
+	switch intent {
+	case BadgeSuccess:
+		return "status status-success status-xs"
+	case BadgeError:
+		return "status status-error status-xs"
+	case BadgeWarning:
+		return "status status-warning status-xs"
+	case BadgeInfo:
+		return "status status-info status-xs"
+	case BadgePrimary:
+		return "status status-primary status-xs"
+	case BadgeSecondary:
+		return "status status-secondary status-xs"
+	case BadgeAccent:
+		return "status status-accent status-xs"
 	default:
-		@Badge(BadgeProps{Label: status, Variant: BadgeNeutral, Size: BadgeSizeSM})
+		return "status status-neutral status-xs"
 	}
 }
 
-// LogStatusDot renders a DaisyUI status dot for a log entry type.
-templ LogStatusDot(logType string) {
-	{{ lowerType := strings.ToLower(logType) }}
-	if strings.Contains(lowerType, "error") || strings.Contains(lowerType, "fail") {
-		<span class="status status-error status-sm" aria-label="error"></span>
-	} else if strings.Contains(lowerType, "success") || strings.Contains(lowerType, "complete") {
-		<span class="status status-success status-sm" aria-label="success"></span>
-	} else if strings.Contains(lowerType, "pending") || strings.Contains(lowerType, "start") {
-		<span class="status status-warning status-sm" aria-label="pending"></span>
-	} else {
-		<span class="status status-neutral status-sm" aria-label="info"></span>
-	}
+// StatusBadge maps a string status value to an appropriately coloured Badge.
+// Kept as a convenience wrapper for callers that receive raw status strings.
+templ StatusBadge(status string) {
+	@Badge(BadgeProps{Label: status, Variant: StatusIntentFor(status), Size: BadgeSizeSM})
 }

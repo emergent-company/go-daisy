@@ -21,3 +21,8 @@ templ Mask(shape MaskShape) {
 		{ children... }
 	</div>
 }
+
+// MaskSwatch renders a 16×16 colored square with a centered label, suitable for use inside Mask.
+templ MaskSwatch(label string, colorClasses string) {
+	<div class={ "w-16", "h-16", "flex", "items-center", "justify-center", "font-bold", "text-lg", colorClasses }>{ label }</div>
+}

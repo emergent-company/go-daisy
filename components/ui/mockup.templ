@@ -28,6 +28,11 @@ templ MockupBrowser(url string) {
 	</div>
 }
 
+// MockupBrowserPlaceholder renders placeholder content for the MockupBrowser gallery example.
+templ MockupBrowserPlaceholder() {
+	<div class="flex justify-center px-4 py-8 border-t border-base-300 bg-base-200 text-sm text-base-content/50">Page content here</div>
+}
+
 // MockupPhone renders a phone frame mockup.
 templ MockupPhone() {
 	<div class="mockup-phone">
@@ -38,9 +43,19 @@ templ MockupPhone() {
 	</div>
 }
 
+// MockupPhonePlaceholder renders placeholder content for the MockupPhone gallery example.
+templ MockupPhonePlaceholder() {
+	<div class="artboard artboard-demo phone-1 bg-base-200 flex items-center justify-center text-sm text-base-content/50">App screen</div>
+}
+
 // MockupWindow renders a desktop window frame mockup.
 templ MockupWindow() {
 	<div class="mockup-window border border-base-300">
 		{ children... }
 	</div>
+}
+
+// MockupWindowPlaceholder renders placeholder content for the MockupWindow gallery example.
+templ MockupWindowPlaceholder() {
+	<div class="flex justify-center px-4 py-8 border-t border-base-300 bg-base-200 text-sm text-base-content/50">Window content here</div>
 }

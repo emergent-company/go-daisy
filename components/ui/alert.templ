@@ -10,19 +10,26 @@ const (
 	AlertInfo    AlertType = "alert-info"
 )
 
-// InlineAlert renders a DaisyUI alert banner with a message.
-templ InlineAlert(typ AlertType, message string) {
-	<div role="alert" class={ "alert", string(typ) }>
-		<span>{ message }</span>
-	</div>
-}
-
-// InlineAlertWithIcon renders a DaisyUI alert with an icon and message.
-templ InlineAlertWithIcon(typ AlertType, icon string, message string) {
+// Alert renders a DaisyUI alert banner.
+// Set icon to a Lucide icon suffix (e.g. "lucide--circle-check") to show an icon.
+// Leave icon empty for a text-only alert.
+templ Alert(typ AlertType, icon string, message string) {
 	<div role="alert" class={ "alert", string(typ) }>
 		if icon != "" {
 			<span class={ "iconify size-5 " + icon }></span>
 		}
 		<span>{ message }</span>
 	</div>
+}
+
+// InlineAlert is a backwards-compatible alias for Alert without an icon.
+// Deprecated: use Alert(typ, "", message) directly.
+templ InlineAlert(typ AlertType, message string) {
+	@Alert(typ, "", message)
+}
+
+// InlineAlertWithIcon is a backwards-compatible alias for Alert with an icon.
+// Deprecated: use Alert(typ, icon, message) directly.
+templ InlineAlertWithIcon(typ AlertType, icon string, message string) {
+	@Alert(typ, icon, message)
 }

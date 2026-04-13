@@ -18,3 +18,8 @@ templ CarouselItem(id string) {
 		{ children... }
 	</div>
 }
+
+// CarouselSlide renders a labelled full-width colored slide for gallery examples.
+templ CarouselSlide(label string, colorClasses string) {
+	<div class={ "h-32", "w-full", "rounded-box", "flex", "items-center", "justify-center", "font-bold", colorClasses }>{ label }</div>
+}

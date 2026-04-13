@@ -1,0 +1,17 @@
+package ui
+
+// FilterTabs renders a radio-button join group used for filtering lists.
+// name: the shared radio input name; selected: the currently active tab label; tabs: ordered tab labels.
+templ FilterTabs(name string, selected string, tabs []string) {
+	<div class="join">
+		for _, tab := range tabs {
+			<input
+				class="join-item btn btn-sm btn-outline checked:btn-primary"
+				type="radio"
+				name={ name }
+				aria-label={ tab }
+				checked?={ tab == selected }
+			/>
+		}
+	</div>
+}

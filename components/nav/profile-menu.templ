@@ -1,0 +1,85 @@
+package nav
+
+// ProfileMenuItem is a single item in the profile dropdown menu.
+type ProfileMenuItem struct {
+	// Label is the display text.
+	Label string
+	// Href is the link target.
+	Href string
+	// Icon is the Iconify icon identifier (e.g. "lucide--user").
+	Icon string
+	// Badge is an optional numeric badge count shown after the label.
+	Badge int
+	// Danger renders the item in error colour (for sign-out etc.).
+	Danger bool
+}
+
+// ProfileMenu renders an avatar dropdown with user info, grouped menu items,
+// and a sign-out action at the bottom.
+//
+// items before the divider are regular menu items; signOutHref adds the
+// dedicated sign-out row.
+templ ProfileMenu(name, email, initials string, items []ProfileMenuItem, signOutHref string) {
+	<div class="dropdown dropdown-bottom dropdown-end">
+		<div tabindex="0" class="avatar bg-base-200 size-12 cursor-pointer overflow-hidden rounded-full">
+			<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-lg">
+				{ initials }
+			</div>
+		</div>
+		<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-base-200">
+			<div class="px-4 py-3 border-b border-base-200">
+				<p class="font-semibold text-sm">{ name }</p>
+				<p class="text-base-content/60 text-xs mt-0.5">{ email }</p>
+			</div>
+			<ul class="menu w-full p-2">
+				for _, item := range items {
+					<li>
+						<a
+							href={ templ.SafeURL(item.Href) }
+							class={ templ.KV("text-error hover:bg-error/10", item.Danger) }
+						>
+							if item.Icon != "" {
+								<span class={ "iconify size-4", item.Icon } aria-hidden="true"></span>
+							}
+							<span>{ item.Label }</span>
+							if item.Badge > 0 {
+								<span class="badge badge-sm badge-primary">{ intStr(item.Badge) }</span>
+							}
+						</a>
+					</li>
+				}
+			</ul>
+			if signOutHref != "" {
+				<hr class="border-base-200"/>
+				<ul class="menu w-full p-2">
+					<li>
+						<a class="text-error hover:bg-error/10" href={ templ.SafeURL(signOutHref) }>
+							<span class="iconify lucide--log-out size-4" aria-hidden="true"></span>
+							<span>Sign Out</span>
+						</a>
+					</li>
+				</ul>
+			}
+		</div>
+	</div>
+}
+
+// intStr converts an int to a string for use inside templ templates.
+func intStr(n int) string {
+	if n == 0 {
+		return "0"
+	}
+	neg := n < 0
+	if neg {
+		n = -n
+	}
+	s := ""
+	for n > 0 {
+		s = string(rune('0'+n%10)) + s
+		n /= 10
+	}
+	if neg {
+		return "-" + s
+	}
+	return s
+}

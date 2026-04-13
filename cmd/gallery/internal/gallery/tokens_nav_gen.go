@@ -144,3 +144,85 @@ func MenuTokens() []galleryruntime.DesignToken {
 		},
 	}
 }
+
+// BreadcrumbsTokens returns the DesignToken slice for BreadcrumbsWithBoundary.
+func BreadcrumbsTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Items 1",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 1",
+			QueryParam: "items1",
+		},
+		{
+			Label:      "Items 2",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 2",
+			QueryParam: "items2",
+		},
+		{
+			Label:      "Items 3",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 3",
+			QueryParam: "items3",
+		},
+	}
+}
+
+// DockTokens returns the DesignToken slice for DockWithBoundary.
+func DockTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Items 1",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 1",
+			QueryParam: "items1",
+		},
+		{
+			Label:      "Items 2",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 2",
+			QueryParam: "items2",
+		},
+		{
+			Label:      "Items 3",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 3",
+			QueryParam: "items3",
+		},
+		{
+			Label:      "Items 4",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 4",
+			QueryParam: "items4",
+		},
+	}
+}
+
+// LinkTokens returns the DesignToken slice for LinkWithBoundary.
+func LinkTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Variant",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "link",
+			QueryParam: "variant",
+			Options: []galleryruntime.TokenOption{
+				{Value: "link link-accent", Label: "Accent"},
+				{Value: "link", Label: "Default"},
+				{Value: "link link-hover", Label: "Hover"},
+				{Value: "link link-neutral", Label: "Neutral"},
+				{Value: "link link-primary", Label: "Primary"},
+				{Value: "link link-secondary", Label: "Secondary"},
+			},
+		},
+	}
+}

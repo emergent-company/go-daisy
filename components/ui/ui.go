@@ -11,3 +11,15 @@ import (
 func StaticHandlerFS(prefix string, fsys fs.FS) http.Handler {
 	return http.StripPrefix(prefix, http.FileServer(http.FS(fsys)))
 }
+
+// LoaderVariant controls how a Loader spinner is presented.
+type LoaderVariant string
+
+const (
+	// LoaderCentered renders a large spinner centred in its container (default).
+	LoaderCentered LoaderVariant = "centered"
+	// LoaderInline renders a small inline spinner (no wrapper div).
+	LoaderInline LoaderVariant = "inline"
+	// LoaderOverlay renders a full-area semi-transparent overlay with a spinner.
+	LoaderOverlay LoaderVariant = "overlay"
+)

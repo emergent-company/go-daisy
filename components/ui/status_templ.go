@@ -8,19 +8,41 @@ package ui
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "strings"
+
 // StatusColor controls the color of a status dot.
 type StatusColor string
 
 const (
-	StatusSuccess StatusColor = "status-success"
-	StatusError   StatusColor = "status-error"
-	StatusWarning StatusColor = "status-warning"
-	StatusInfo    StatusColor = "status-info"
-	StatusNeutral StatusColor = "status-neutral"
+	StatusSuccess   StatusColor = "status-success"
+	StatusError     StatusColor = "status-error"
+	StatusWarning   StatusColor = "status-warning"
+	StatusInfo      StatusColor = "status-info"
+	StatusNeutral   StatusColor = "status-neutral"
+	StatusPrimary   StatusColor = "status-primary"
+	StatusSecondary StatusColor = "status-secondary"
+	StatusAccent    StatusColor = "status-accent"
 )
 
-// Status renders a small colored status indicator dot.
-func Status(color StatusColor) templ.Component {
+// StatusColorForLog maps a log type string to a StatusColor via substring matching.
+// Exported so callers can perform the mapping without depending on the component internals.
+func StatusColorForLog(logType string) StatusColor {
+	lower := strings.ToLower(logType)
+	switch {
+	case strings.Contains(lower, "error") || strings.Contains(lower, "fail"):
+		return StatusError
+	case strings.Contains(lower, "success") || strings.Contains(lower, "complete"):
+		return StatusSuccess
+	case strings.Contains(lower, "pending") || strings.Contains(lower, "start"):
+		return StatusWarning
+	default:
+		return StatusNeutral
+	}
+}
+
+// StatusDot renders a small colored DaisyUI status indicator dot.
+// Set animate=true to pulse the dot (e.g. for "in progress" states).
+func StatusDot(color StatusColor, animate bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -41,7 +63,7 @@ func Status(color StatusColor) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{"status", string(color)}
+		var templ_7745c5c3_Var2 = []any{"status", string(color), templ.KV("animate-ping", animate)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

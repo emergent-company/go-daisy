@@ -1,0 +1,117 @@
+package nav
+
+// PageTitleStep is a single breadcrumb step used in page title components.
+// A step with an empty Href renders as plain text.
+type PageTitleStep struct {
+	Label string
+	// Href is the link target. If empty the step is rendered as plain text.
+	Href string
+	// Icon is an optional Iconify icon identifier shown before the label.
+	Icon string
+}
+
+// PageTitleMinimal renders a compact title bar with an inline breadcrumb trail
+// on the right and a primary title on the left.
+templ PageTitleMinimal(title string, steps []PageTitleStep) {
+	<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3">
+		<div class="flex w-full items-center justify-between gap-3">
+			<p class="font-semibold text-base-content">{ title }</p>
+			<nav class="text-base-content/80 flex items-center gap-2 text-sm" aria-label="Breadcrumb">
+				for i, step := range steps {
+					if i > 0 {
+						<span aria-hidden="true">/</span>
+					}
+					if step.Href != "" {
+						<a class="inline-flex items-center gap-1 hover:text-primary" href={ templ.SafeURL(step.Href) }>
+							if step.Icon != "" {
+								<span class={ "iconify size-4", step.Icon } aria-hidden="true"></span>
+							}
+							{ step.Label }
+						</a>
+					} else {
+						<span class="text-base-content font-medium">{ step.Label }</span>
+					}
+				}
+			</nav>
+		</div>
+	</div>
+}
+
+// PageTitleEditorAction is a single action button rendered in PageTitleEditor.
+type PageTitleEditorAction struct {
+	// Label is the button text. Leave empty for icon-only buttons.
+	Label string
+	// Icon is an optional Iconify icon identifier.
+	Icon string
+	// Href is the link target (renders an <a> instead of <button>).
+	Href string
+	// Class is extra DaisyUI button classes (e.g. "btn-primary btn-sm").
+	Class string
+	// AriaLabel is used for icon-only buttons.
+	AriaLabel string
+}
+
+// PageTitleEditor renders a full page title with DaisyUI breadcrumbs,
+// a subtitle meta line, and a row of action buttons.
+templ PageTitleEditor(steps []BreadcrumbStep, title, subtitle string, actions []PageTitleEditorAction) {
+	<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3">
+		<div class="breadcrumbs text-sm mb-1">
+			<ul>
+				for _, step := range steps {
+					<li>
+						if step.URL != "" {
+							<a href={ templ.SafeURL(step.URL) }>{ step.Label }</a>
+						} else {
+							{ step.Label }
+						}
+					</li>
+				}
+			</ul>
+		</div>
+		<div class="flex items-end justify-between gap-3">
+			<div>
+				<p class="font-semibold text-base-content sm:text-lg">{ title }</p>
+				if subtitle != "" {
+					<p class="text-base-content/60 mt-0.5 text-sm">{ subtitle }</p>
+				}
+			</div>
+			if len(actions) > 0 {
+				<div class="flex items-center gap-2">
+					for _, action := range actions {
+						if action.Href != "" {
+							<a
+								href={ templ.SafeURL(action.Href) }
+								class={ "btn", action.Class }
+								if action.AriaLabel != "" {
+									aria-label={ action.AriaLabel }
+								}
+							>
+								if action.Icon != "" {
+									<span class={ "iconify size-4", action.Icon } aria-hidden="true"></span>
+								}
+								if action.Label != "" {
+									{ action.Label }
+								}
+							</a>
+						} else {
+							<button
+								type="button"
+								class={ "btn", action.Class }
+								if action.AriaLabel != "" {
+									aria-label={ action.AriaLabel }
+								}
+							>
+								if action.Icon != "" {
+									<span class={ "iconify size-4", action.Icon } aria-hidden="true"></span>
+								}
+								if action.Label != "" {
+									{ action.Label }
+								}
+							</button>
+						}
+					}
+				</div>
+			}
+		</div>
+	</div>
+}

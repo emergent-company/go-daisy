@@ -6,3 +6,13 @@ templ Join(vertical bool) {
 		{ children... }
 	</div>
 }
+
+// JoinButton renders a button with the join-item class.
+templ JoinButton(label string, variant ButtonVariant, active bool) {
+	<button class={ "join-item", "btn", "btn-sm", string(variant), templ.KV("btn-active", active) }>{ label }</button>
+}
+
+// JoinInputPlaceholder renders a text input with the join-item class.
+templ JoinInputPlaceholder(placeholder string) {
+	<input class="join-item input input-bordered input-sm" placeholder={ placeholder }/>
+}

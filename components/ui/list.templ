@@ -1,0 +1,36 @@
+package ui
+
+// ListRowProps holds data for a single list row.
+type ListRowProps struct {
+	Title    string
+	Subtitle string
+	// Badge is an optional component for a badge/status element on the right.
+	Badge templ.Component
+	// Leading is an optional component for a leading slot (icon/avatar).
+	Leading templ.Component
+}
+
+// List renders a DaisyUI list container.
+templ List() {
+	<ul class="list bg-base-100 rounded-box border border-base-200">
+		{ children... }
+	</ul>
+}
+
+// ListRow renders a single row inside a List.
+templ ListRow(p ListRowProps) {
+	<li class="list-row">
+		if p.Leading != nil {
+			@p.Leading
+		}
+		<div class="list-col-grow">
+			<div class="font-medium text-sm">{ p.Title }</div>
+			if p.Subtitle != "" {
+				<div class="text-xs text-base-content/50">{ p.Subtitle }</div>
+			}
+		</div>
+		if p.Badge != nil {
+			@p.Badge
+		}
+	</li>
+}

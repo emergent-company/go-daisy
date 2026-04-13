@@ -7,9 +7,25 @@ templ Hero() {
 	</div>
 }
 
+// HeroSection renders a hero section with a configurable min-height and background.
+templ HeroSection(minHeight string) {
+	<div class={ "hero", minHeight, "bg-base-200" }>
+		{ children... }
+	</div>
+}
+
 // HeroContent wraps the inner hero-content div.
 templ HeroContent(centered bool) {
 	<div class={ "hero-content", templ.KV("text-center", centered) }>
 		{ children... }
+	</div>
+}
+
+// HeroBody renders the standard hero body: heading, subtitle paragraph, and CTA button.
+templ HeroBody(title string, subtitle string, ctaLabel string) {
+	<div class="max-w-md">
+		<h1 class="text-4xl font-bold">{ title }</h1>
+		<p class="py-4 text-base-content/60">{ subtitle }</p>
+		<button class="btn btn-primary">{ ctaLabel }</button>
 	</div>
 }

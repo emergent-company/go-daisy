@@ -402,11 +402,14 @@ func infer(pname, typeName string, hint hintVal, typeConsts map[string][]constEn
 				Label: constLabel(c.name, typeName),
 			})
 		}
-		// Pick default: prefer consts whose name contains a "natural default" keyword.
-		// Priority: Primary > Default > MD > Medium > first option.
+		// Pick default: explicit hint wins, then natural keyword priority, then first option.
 		def := ""
 		if len(consts) > 0 {
 			def = consts[0].value
+		}
+		if hint.defaultVal != "" {
+			def = hint.defaultVal
+			goto foundDefault
 		}
 		for _, priority := range []string{"Primary", "Default", "MD", "Medium", "Info"} {
 			for _, c := range consts {

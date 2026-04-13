@@ -1,6 +1,9 @@
 package nav
 
 import (
+	"context"
+	"io"
+
 	"github.com/a-h/templ"
 	"github.com/emergent-company/go-daisy/devmode"
 )
@@ -41,4 +44,36 @@ func MenuWithBoundary(size MenuSize, items []MenuItem) templ.Component {
 		"size":      string(size),
 		"itemCount": len(items),
 	}, Menu(size, items))
+}
+
+// BreadcrumbsWithBoundary wraps Breadcrumbs with a dev-mode component boundary annotation.
+// gallery:token items
+// gallery:hint items:slice(3)
+func BreadcrumbsWithBoundary(items []BreadcrumbItem) templ.Component {
+	return devmode.ComponentBoundary("Breadcrumbs", map[string]any{"itemCount": len(items)}, Breadcrumbs(items))
+}
+
+// DockWithBoundary wraps Dock with a dev-mode component boundary annotation.
+// gallery:token items
+// gallery:hint items:slice(4)
+func DockWithBoundary(items []DockItem) templ.Component {
+	return devmode.ComponentBoundary("Dock", map[string]any{"itemCount": len(items)}, Dock(items))
+}
+
+// LinkWithBoundary wraps Link with a dev-mode component boundary annotation.
+// gallery:token variant
+// gallery:hint variant:default(link)
+func LinkWithBoundary(href string, variant LinkVariant, label string) templ.Component {
+	child := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		_, err := io.WriteString(w, label)
+		return err
+	})
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return Link(href, variant).Render(templ.WithChildren(ctx, child), w)
+	})
+	return devmode.ComponentBoundary("Link", map[string]any{
+		"href":    href,
+		"variant": string(variant),
+		"label":   label,
+	}, inner)
 }

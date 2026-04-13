@@ -17,10 +17,25 @@ templ Dropdown(align DropdownAlign) {
 	</div>
 }
 
+// DropdownTrigger renders a standard button trigger for a Dropdown.
+templ DropdownTrigger(label string, variant string) {
+	<div tabindex="0" role="button" class={ "btn", "btn-sm", "m-1", variant }>
+		{ label }
+		<span class="iconify lucide--chevron-down size-3.5"></span>
+	</div>
+}
+
+// DropdownMenu renders the dropdown-content menu list.
+templ DropdownMenu() {
+	<ul tabindex="0" class="dropdown-content z-[1] menu menu-sm p-1 bg-base-100 border border-base-200 rounded-box shadow-lg w-40 mt-1">
+		{ children... }
+	</ul>
+}
+
 // DropdownItem renders a single menu item inside a dropdown.
-templ DropdownItem(active bool) {
+templ DropdownItem(active bool, danger bool) {
 	<li>
-		<a class={ templ.KV("active", active) }>
+		<a class={ templ.KV("active", active), templ.KV("text-error", danger) }>
 			{ children... }
 		</a>
 	</li>

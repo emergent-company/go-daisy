@@ -5,7 +5,9 @@ type ButtonVariant string
 
 const (
 	ButtonPrimary   ButtonVariant = "btn-primary"
-	ButtonSecondary ButtonVariant = "btn-ghost"
+	ButtonSecondary ButtonVariant = "btn-secondary"
+	ButtonAccent    ButtonVariant = "btn-accent"
+	ButtonGhost     ButtonVariant = "btn-ghost"
 	ButtonError     ButtonVariant = "btn-error"
 	ButtonOutline   ButtonVariant = "btn-outline"
 	ButtonNeutral   ButtonVariant = "btn-neutral"
@@ -41,7 +43,21 @@ const (
 	ButtonShapeCircle  ButtonShape = "btn-circle"
 )
 
-// Button renders a DaisyUI button. When typ is ButtonTypeLink it renders an
+// SimpleButton renders a DaisyUI button with a plain text label.
+templ SimpleButton(label string, variant ButtonVariant, size ButtonSize) {
+	<button
+		type="button"
+		class={ "btn",
+			templ.KV(string(variant), variant != ""),
+			templ.KV(string(size), size != "") }
+	>{ label }</button>
+}
+
+// IconSpan renders an Iconify icon span with a configurable size class.
+// name: full iconify class e.g. "lucide--sun"; size: tailwind size class e.g. "size-8"
+templ IconSpan(name string, size string) {
+	<span class={ "iconify", name, size }></span>
+}
 // <a> element using href; otherwise it renders a <button> with the given type.
 // Set shape to square/circle for icon-only buttons. Icon is always rendered
 // when non-empty; children are rendered for non-square/circle shapes only.

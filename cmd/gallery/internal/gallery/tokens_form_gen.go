@@ -140,3 +140,87 @@ func RangeInputTokens() []galleryruntime.DesignToken {
 		},
 	}
 }
+
+// RadioGroupTokens returns the DesignToken slice for RadioGroupWithBoundary.
+func RadioGroupTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Color",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "radio-primary",
+			QueryParam: "color",
+		},
+	}
+}
+
+// RatingTokens returns the DesignToken slice for RatingWithBoundary.
+func RatingTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Value",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeRange,
+			Default:    "3",
+			QueryParam: "value",
+			Min:        1,
+			Max:        10,
+			Step:       1,
+		},
+		{
+			Label:      "Max",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeRange,
+			Default:    "5",
+			QueryParam: "max",
+			Min:        1,
+			Max:        10,
+			Step:       1,
+		},
+		{
+			Label:      "Shape",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "mask-heart",
+			QueryParam: "shape",
+			Options: []galleryruntime.TokenOption{
+				{Value: "mask-heart", Label: "Heart"},
+				{Value: "mask-star-2", Label: "Star"},
+			},
+		},
+		{
+			Label:      "Color",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "bg-orange-400",
+			QueryParam: "color",
+		},
+		{
+			Label:      "Size",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "size",
+		},
+	}
+}
+
+// FileInputTokens returns the DesignToken slice for FileInputWithBoundary.
+func FileInputTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Upload file",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Accept",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "accept",
+		},
+	}
+}

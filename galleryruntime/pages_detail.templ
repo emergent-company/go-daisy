@@ -48,46 +48,101 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 			</div>
 		</div>
 
-	<!-- Variant tab strip (only shown when component has multiple variants) -->
-	if len(c.EffectiveVariants()) > 1 {
-		<div class="tabs tabs-border mb-1" id="variant-tabs" role="tablist">
-			for i, v := range c.EffectiveVariants() {
-				// Determine effective tokens for this variant: story tokens take precedence over component tokens.
-				// Encode as JSON for the switchVariant JS so it can re-render the token panel client-side.
-				if tokensJSON, err := json.Marshal(func() []DesignToken { if len(v.Tokens) > 0 { return v.Tokens }; return c.Tokens }()); err == nil {
-					<button
-						role="tab"
-						class={ "tab", templ.KV("tab-active", i == 0) }
-						data-variant-slug={ SlugifyStoryName(v.Name) }
-						data-slug={ c.Slug }
-						data-tokens={ string(tokensJSON) }
-						onclick="switchVariant(this)"
-					>{ v.Name }</button>
-				}
+	<!-- Tab strip: interactive variant tabs + always-present Examples tab -->
+	{{
+		// interactiveVariants excludes stories named "Examples" since our
+		// synthetic Examples tab covers the stacked-view use-case.
+		// If filtering would leave nothing (e.g. component only has an "Examples"
+		// variant), fall back to all variants so the Interactive tab is always present.
+		interactiveVariants := make([]GalleryStory, 0, len(c.EffectiveVariants()))
+		for _, v := range c.EffectiveVariants() {
+			if v.Name != "Examples" {
+				interactiveVariants = append(interactiveVariants, v)
 			}
-		</div>
-		<script>
-		window.switchVariant = function(btn) {
-			var slug = btn.getAttribute('data-slug');
-			var variant = btn.getAttribute('data-variant-slug');
-			var baseURL = '/gallery/render/' + slug + '/' + variant;
-			// Update iframe src (clear any query params from previous interactive state)
-			var frame = document.getElementById('preview-frame');
-			if (frame) frame.src = baseURL;
-			var fsFrame = document.getElementById('fullscreen-preview-frame');
-			if (fsFrame) fsFrame.src = baseURL;
-			// Update tab active state
-			var tabs = btn.closest('[role="tablist"]').querySelectorAll('[role="tab"]');
-			tabs.forEach(function(t) { t.classList.remove('tab-active'); });
-			btn.classList.add('tab-active');
-			// Re-render token panel from per-variant token JSON
-			var tokensRaw = btn.getAttribute('data-tokens');
-			var tokens = [];
-			try { tokens = JSON.parse(tokensRaw) || []; } catch(e) {}
-			renderTokenPanel(tokens);
-		};
-		</script>
-	}
+		}
+		if len(interactiveVariants) == 0 {
+			interactiveVariants = c.EffectiveVariants()
+		}
+	}}
+	<div class="tabs tabs-border mb-1" id="variant-tabs" role="tablist">
+		for i, v := range interactiveVariants {
+			// Determine effective tokens for this variant: story tokens take precedence over component tokens.
+			// Encode as JSON for the switchVariant JS so it can re-render the token panel client-side.
+			if tokensJSON, err := json.Marshal(func() []DesignToken { if len(v.Tokens) > 0 { return v.Tokens }; return c.Tokens }()); err == nil {
+				<button
+					role="tab"
+					class={ "tab", templ.KV("tab-active", i == 0) }
+					data-variant-slug={ SlugifyStoryName(v.Name) }
+					data-slug={ c.Slug }
+					data-tokens={ string(tokensJSON) }
+					onclick="switchVariant(this)"
+				>{ func() string { if i == 0 { return "Interactive" }; return v.Name }() }</button>
+			}
+		}
+		<!-- Always-present Examples tab: shows stacked preview of all stories -->
+		<button
+			role="tab"
+			class="tab"
+			onclick="switchToExamples(this)"
+		>Examples</button>
+	</div>
+	<script>
+	window.switchVariant = function(btn) {
+		var slug = btn.getAttribute('data-slug');
+		var variant = btn.getAttribute('data-variant-slug');
+		var baseURL = '/gallery/render/' + slug + '/' + variant;
+		// Restore interactive view if we were on Examples
+		var interactiveBody = document.getElementById('interactive-body');
+		var examplesBody = document.getElementById('examples-body');
+		if (interactiveBody) interactiveBody.style.display = '';
+		if (examplesBody) examplesBody.style.display = 'none';
+		// Update iframe src (clear any query params from previous interactive state)
+		var frame = document.getElementById('preview-frame');
+		if (frame) frame.src = baseURL;
+		var fsFrame = document.getElementById('fullscreen-preview-frame');
+		if (fsFrame) fsFrame.src = baseURL;
+		// Update tab active state
+		var tabs = btn.closest('[role="tablist"]').querySelectorAll('[role="tab"]');
+		tabs.forEach(function(t) { t.classList.remove('tab-active'); });
+		btn.classList.add('tab-active');
+		// Re-render token panel from per-variant token JSON
+		var tokensRaw = btn.getAttribute('data-tokens');
+		var tokens = [];
+		try { tokens = JSON.parse(tokensRaw) || []; } catch(e) {}
+		renderTokenPanel(tokens);
+	};
+	window.switchToExamples = function(btn) {
+		var interactiveBody = document.getElementById('interactive-body');
+		var examplesBody = document.getElementById('examples-body');
+		if (interactiveBody) interactiveBody.style.display = 'none';
+		if (examplesBody) examplesBody.style.display = '';
+		// Update tab active state
+		var tabs = btn.closest('[role="tablist"]').querySelectorAll('[role="tab"]');
+		tabs.forEach(function(t) { t.classList.remove('tab-active'); });
+		btn.classList.add('tab-active');
+		// Resize each example iframe after one rAF (ensures browser has reflowed the now-visible container).
+		// Then poll as fallback for any frame still loading.
+		requestAnimationFrame(function() {
+			document.querySelectorAll('.examples-frame').forEach(function(frame) {
+				var attempts = 0;
+				function tryResize() {
+					try {
+						var doc = frame.contentDocument || frame.contentWindow.document;
+						if (doc && doc.readyState === 'complete' && doc.body && doc.body.scrollHeight > 40) {
+							frame.style.height = doc.body.scrollHeight + 'px';
+							return;
+						}
+					} catch(e) {}
+					if (++attempts < 30) setTimeout(tryResize, 100);
+				}
+				tryResize();
+			});
+		});
+	};
+	</script>
+
+		<!-- Interactive body: single-story preview + tokens (hidden when Examples tab active) -->
+		<div id="interactive-body">
 
 		<!-- Two-column body: left = preview + source, right = token sidebar -->
 		<div class="flex gap-4 items-start">
@@ -329,6 +384,14 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 		</div>
 
 		</div><!-- end two-column body -->
+
+		</div><!-- end interactive-body -->
+
+		<!-- Examples body: all stories stacked (hidden by default, shown when Examples tab active) -->
+		<div id="examples-body" style="display:none">
+			@ComponentExamples(c)
+		</div>
+
 	</div>
 
 	<!-- Fullscreen preview overlay -->
@@ -1269,6 +1332,176 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 	window.addEventListener('message', handleTreeMessage);
 })();
 </script>
+}
+
+// ComponentExamples renders all stories stacked vertically with labeled iframe previews.
+// Stories named "Interactive" are excluded — they belong to the Interactive tab only.
+templ ComponentExamples(c GalleryComponent) {
+	<div class="flex flex-col gap-8 py-2">
+		for i, story := range c.EffectiveVariants() {
+			if story.Name != "Interactive" {
+			<div class="flex flex-col gap-2">
+				<!-- Story toolbar: label + controls matching the Interactive toolbar -->
+				<div class="flex items-center justify-between mb-2 gap-3 flex-wrap">
+					<div class="flex items-center gap-2 min-w-0">
+						<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">{ story.Name }</span>
+						if story.Description != "" {
+							<span class="text-xs text-base-content/40">{ story.Description }</span>
+						}
+					</div>
+					<div class="flex items-center gap-2">
+						<!-- Fullscreen -->
+						<button
+							class="btn btn-xs btn-ghost border border-base-200 gap-1"
+							onclick={ templ.JSFuncCall("openExamplesFullscreen", c.Slug, SlugifyStoryName(story.Name), i) }
+							title="Fullscreen preview"
+						>
+							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+							Fullscreen
+						</button>
+						<!-- Open in new tab -->
+						<a
+							href={ templ.URL("/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name)) }
+							target="_blank"
+							class="btn btn-xs btn-ghost border border-base-200 gap-1"
+							title="Open in new tab"
+						>
+							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+							Open
+						</a>
+						<!-- Theme toggle -->
+						<span class="text-xs text-base-content/40">Theme:</span>
+						<button
+							class="btn btn-xs btn-ghost border border-base-200 examples-theme-btn"
+							data-frame-idx={ fmt.Sprintf("%d", i) }
+							onclick={ templ.JSFuncCall("toggleExamplesTheme", i) }
+						>
+							&#9728; Light
+						</button>
+					</div>
+				</div>
+				<!-- Story iframe -->
+				<div class="rounded-xl border border-base-200 overflow-hidden bg-base-100 shadow-sm">
+					<iframe
+						id={ fmt.Sprintf("examples-frame-%d", i) }
+						class="block w-full examples-frame"
+						style="height:200px; border:none;"
+						src={ "/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name) }
+						title={ story.Name }
+					></iframe>
+				</div>
+			</div>
+			}
+		}
+	</div>
+	<!-- Examples tab JS: theme per-frame, fullscreen, auto-resize -->
+	<script>
+	(function() {
+		// Per-frame theme state: inherits from global gallery theme on init
+		var frameThemes = {};
+
+		function getSavedTheme() {
+			try { return localStorage.getItem('gallery-preview-theme') || 'light'; } catch(e) { return 'light'; }
+		}
+
+		function applyThemeToFrame(frame, theme) {
+			try {
+				var doc = frame.contentDocument || frame.contentWindow.document;
+				if (doc && doc.documentElement) doc.documentElement.setAttribute('data-theme', theme);
+			} catch(e) {}
+		}
+
+		function updateThemeBtn(idx, theme) {
+			var btn = document.querySelector('.examples-theme-btn[data-frame-idx="' + idx + '"]');
+			if (!btn) return;
+			btn.innerHTML = theme === 'dark' ? '&#9790; Dark' : '&#9728; Light';
+		}
+
+		window.toggleExamplesTheme = function(idx) {
+			var current = frameThemes[idx] || getSavedTheme();
+			var next = current === 'dark' ? 'light' : 'dark';
+			frameThemes[idx] = next;
+			var frame = document.getElementById('examples-frame-' + idx);
+			if (frame) applyThemeToFrame(frame, next);
+			updateThemeBtn(idx, next);
+		};
+
+		window.openExamplesFullscreen = function(slug, variantSlug, idx) {
+			var theme = frameThemes[idx] || getSavedTheme();
+			var url = '/gallery/render/' + slug + '/' + variantSlug;
+			// Reuse the existing fullscreen overlay (ComponentDetail renders it as #fullscreen-preview-overlay)
+			var overlay = document.getElementById('fullscreen-preview-overlay');
+			if (overlay) {
+				var fsFrame = document.getElementById('fullscreen-preview-frame');
+				if (fsFrame) fsFrame.src = url;
+				overlay.classList.remove('hidden');
+				document.body.style.overflow = 'hidden';
+				// Apply the per-frame theme to the fullscreen frame
+				if (fsFrame) {
+					var applyTheme = function() {
+						try {
+							var doc = fsFrame.contentDocument || fsFrame.contentWindow.document;
+							if (doc && doc.documentElement) doc.documentElement.setAttribute('data-theme', theme);
+						} catch(e) {}
+					};
+					if (fsFrame.contentDocument && fsFrame.contentDocument.readyState === 'complete') {
+						applyTheme();
+					} else {
+						fsFrame.addEventListener('load', applyTheme, { once: true });
+					}
+				}
+				return;
+			}
+			// Fallback: open in new tab
+			window.open(url, '_blank');
+		};
+
+		function autoResizeFrame(frame) {
+			var attempts = 0;
+			function tryResize() {
+				try {
+					var doc = frame.contentDocument || frame.contentWindow.document;
+					if (doc && doc.body && doc.body.scrollHeight > 40) {
+						frame.style.height = doc.body.scrollHeight + 'px';
+						var ro = new ResizeObserver(function() {
+							try {
+								var h = (frame.contentDocument || frame.contentWindow.document).body.scrollHeight;
+								if (h > 40) frame.style.height = h + 'px';
+							} catch(e) {}
+						});
+						ro.observe(doc.body);
+						return;
+					}
+				} catch(e) {}
+				if (++attempts < 20) setTimeout(tryResize, 100);
+			}
+			tryResize();
+		}
+
+		function attachFrameHandlers(frame) {
+			var idx = frame.id.replace('examples-frame-', '');
+			var theme = frameThemes[idx] || getSavedTheme();
+			frameThemes[idx] = theme;
+			updateThemeBtn(idx, theme);
+			function applyAndResize() {
+				applyThemeToFrame(frame, theme);
+				autoResizeFrame(frame);
+			}
+			if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
+				applyAndResize();
+			} else {
+				frame.addEventListener('load', applyAndResize);
+			}
+		}
+
+		function initFrames() {
+			document.querySelectorAll('.examples-frame').forEach(attachFrameHandlers);
+		}
+		document.addEventListener('DOMContentLoaded', initFrames);
+		document.addEventListener('htmx:afterSwap', initFrames);
+		if (document.readyState !== 'loading') initFrames();
+	})();
+	</script>
 }
 
 // FeedbackListPartial renders the feedback list HTML fragment for HTMX partial swaps.

@@ -6,3 +6,8 @@ templ Stack() {
 		{ children... }
 	</div>
 }
+
+// StackCard renders a card suitable for use inside a Stack.
+templ StackCard(label string, colorClasses string) {
+	<div class={ "card", "h-24", "w-48", "flex", "items-center", "justify-center", "text-sm", "font-medium", colorClasses }>{ label }</div>
+}
