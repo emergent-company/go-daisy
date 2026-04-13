@@ -12,6 +12,21 @@ const (
 	AvatarLG AvatarSize = "avatar-lg"
 )
 
+// avatarSizeClass maps an AvatarSize to a Tailwind size-* utility for the inner div.
+// DaisyUI v5 does not ship avatar-xs/sm/md/lg CSS rules; sizing must be explicit.
+func avatarSizeClass(size AvatarSize) string {
+	switch size {
+	case AvatarXS:
+		return "size-6"
+	case AvatarSM:
+		return "size-8"
+	case AvatarLG:
+		return "size-14"
+	default: // AvatarMD and zero-value
+		return "size-10"
+	}
+}
+
 // avatarInitials returns up to 2 uppercase initials from a name string.
 func avatarInitials(name string) string {
 	parts := strings.Fields(name)
@@ -31,17 +46,18 @@ func avatarInitials(name string) string {
 // Priority: src (image) > icon (icon placeholder) > name initials.
 // Set icon to a Lucide icon suffix, e.g. "lucide--building-2" for a company avatar.
 templ Avatar(name string, src string, icon string, size AvatarSize) {
-	<div class={ "avatar", templ.KV(string(size), size != "") }>
+	{{ sc := avatarSizeClass(size) }}
+	<div class="avatar">
 		if src != "" {
-			<div class="rounded-full overflow-hidden">
+			<div class={ sc + " rounded-full overflow-hidden" }>
 				<img src={ src } alt={ name } class="object-cover w-full h-full"/>
 			</div>
 		} else if icon != "" {
-			<div class="avatar-placeholder rounded-full bg-base-300 flex items-center justify-center text-base-content/60">
+			<div class={ sc + " avatar-placeholder rounded-full bg-base-300 flex items-center justify-center text-base-content/60" }>
 				<span class={ "iconify size-[55%] " + icon }></span>
 			</div>
 		} else {
-			<div class="avatar-placeholder rounded-full bg-primary flex items-center justify-center font-semibold text-primary-content">
+			<div class={ sc + " avatar-placeholder rounded-full bg-primary flex items-center justify-center font-semibold text-primary-content" }>
 				{ avatarInitials(name) }
 			</div>
 		}
