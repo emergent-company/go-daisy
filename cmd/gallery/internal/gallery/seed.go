@@ -775,9 +775,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Vertical list with labelled rows and status badges.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return ui.ListWithBoundary([]ui.ListRowProps{
-							{Title: "Alice Johnson", Subtitle: "alice@example.com", Badge: ui.Badge(ui.BadgeProps{Label: "Active", Variant: ui.BadgeSuccess, Style: ui.BadgeStyleSoft, Size: ui.BadgeSizeSM})},
-							{Title: "Bob Smith", Subtitle: "bob@example.com", Badge: ui.Badge(ui.BadgeProps{Label: "Inactive", Variant: ui.BadgeGhost, Style: ui.BadgeStyleSoft, Size: ui.BadgeSizeSM})},
-							{Title: "Carol White", Subtitle: "carol@example.com", Badge: ui.Badge(ui.BadgeProps{Label: "Pending", Variant: ui.BadgeWarning, Style: ui.BadgeStyleSoft, Size: ui.BadgeSizeSM})},
+							{Title: "Alice Johnson", Subtitle: "alice@example.com", Badge: ui.StatusBadgeWithBoundary("active")},
+							{Title: "Bob Smith", Subtitle: "bob@example.com", Badge: ui.StatusBadgeWithBoundary("closed")},
+							{Title: "Carol White", Subtitle: "carol@example.com", Badge: ui.StatusBadgeWithBoundary("pending")},
 						})
 					},
 					Tokens: []galleryruntime.DesignToken{},
@@ -1847,95 +1847,14 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		},
 		{
 			Slug:        "stat-card-minimal",
-			Name:        "Stat Card — Minimal",
+			Name:        "Stat Card",
 			Category:    galleryruntime.CategoryDataDisplay,
 			Subcategory: "Cards",
-			Description: "KPI stat cards with trend indicators (↑↓). Use on dashboards to surface key metrics.",
+			Description: "KPI stat card with trend indicator. Set Icon to show a floating icon-corner variant.",
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
-					Description: "Single stat card with configurable value, label, and trend.",
-					RenderFunc: func(params url.Values) templ.Component {
-						value := params.Get("value")
-						if value == "" {
-							value = "142"
-						}
-						label := params.Get("label")
-						if label == "" {
-							label = "Open Cases"
-						}
-						trendLabel := params.Get("trend_label")
-						if trendLabel == "" {
-							trendLabel = "12.3%"
-						}
-						trend := ui.StatTrend(params.Get("trend"))
-						if trend == "" {
-							trend = ui.StatTrendUp
-						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 max-w-xs">`); err != nil {
-								return err
-							}
-							if err := ui.StatCardMinimal(ui.StatCardMinimalItem{
-								Label:      label,
-								Value:      value,
-								Trend:      trend,
-								TrendLabel: trendLabel,
-							}).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
-					},
-					Tokens: []galleryruntime.DesignToken{
-						{Label: "Value", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "142", QueryParam: "value"},
-						{Label: "Label", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Open Cases", QueryParam: "label"},
-						{Label: "Trend", Group: "Content", Type: galleryruntime.TokenTypeSelect, Default: "up", QueryParam: "trend", Options: []galleryruntime.TokenOption{
-							{Value: "up", Label: "Up ↑"},
-							{Value: "down", Label: "Down ↓"},
-							{Value: "", Label: "Neutral"},
-						}},
-						{Label: "Trend label", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "12.3%", QueryParam: "trend_label"},
-					},
-				},
-				{
-					Name:        "Examples",
-					Description: "Four KPI stat cards in a responsive grid.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						items := []ui.StatCardMinimalItem{
-							{Label: "Open Cases", Value: "142", Trend: ui.StatTrendUp, TrendLabel: "12.3%"},
-							{Label: "Pending Tasks", Value: "38", Trend: ui.StatTrendDown, TrendLabel: "4.1%"},
-							{Label: "Clients", Value: "89", Trend: ui.StatTrendUp, TrendLabel: "7.8%"},
-							{Label: "Avg. Case Days", Value: "24", Trend: ui.StatTrendUp, TrendLabel: "2.5%"},
-						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6"><div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">`); err != nil {
-								return err
-							}
-							for _, item := range items {
-								if err := ui.StatCardMinimal(item).Render(ctx, w); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div></div>`)
-							return err
-						})
-					},
-					Tokens: []galleryruntime.DesignToken{},
-				},
-			},
-		},
-		{
-			Slug:        "stat-card-icon-corner",
-			Name:        "Stat Card — Icon Corner",
-			Category:    galleryruntime.CategoryDataDisplay,
-			Subcategory: "Cards",
-			Description: "Stat cards with a floating icon in the top corner and a soft badge for the trend.",
-			Variants: []galleryruntime.GalleryStory{
-				{
-					Name:        "Interactive",
-					Description: "Single stat card with configurable value, label, icon, and trend.",
+					Description: "Single stat card — toggle Icon to switch between minimal and icon-corner layouts.",
 					RenderFunc: func(params url.Values) templ.Component {
 						value := params.Get("value")
 						if value == "" {
@@ -1946,39 +1865,28 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							label = "Open Cases"
 						}
 						icon := params.Get("icon")
-						if icon == "" {
-							icon = "lucide--briefcase"
-						}
 						trendLabel := params.Get("trend_label")
 						if trendLabel == "" {
-							trendLabel = "14.6%"
+							trendLabel = "12.3%"
 						}
 						trend := ui.StatTrend(params.Get("trend"))
 						if trend == "" {
 							trend = ui.StatTrendUp
 						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 max-w-xs">`); err != nil {
-								return err
-							}
-							if err := ui.StatCardIconCorner(ui.StatCardIconCornerItem{
-								Value:      value,
-								Label:      label,
-								Icon:       icon,
-								IconColor:  "text-primary",
-								Trend:      trend,
-								TrendLabel: trendLabel,
-							}).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
+						return ui.StatCardMinimalWithBoundary(ui.StatCardMinimalItem{
+							Label:      label,
+							Value:      value,
+							Icon:       icon,
+							IconColor:  "text-primary",
+							Trend:      trend,
+							TrendLabel: trendLabel,
 						})
 					},
 					Tokens: []galleryruntime.DesignToken{
 						{Label: "Value", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "142", QueryParam: "value"},
 						{Label: "Label", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Open Cases", QueryParam: "label"},
-						{Label: "Icon", Group: "Content", Type: galleryruntime.TokenTypeSelect, Default: "lucide--briefcase", QueryParam: "icon", Options: []galleryruntime.TokenOption{
+						{Label: "Icon", Group: "Style", Type: galleryruntime.TokenTypeSelect, Default: "", QueryParam: "icon", Options: []galleryruntime.TokenOption{
+							{Value: "", Label: "None (minimal)"},
 							{Value: "lucide--briefcase", Label: "Briefcase"},
 							{Value: "lucide--users", Label: "Users"},
 							{Value: "lucide--check-square", Label: "Check square"},
@@ -1990,29 +1898,43 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Value: "down", Label: "Down ↓"},
 							{Value: "", Label: "Neutral"},
 						}},
-						{Label: "Trend label", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "14.6%", QueryParam: "trend_label"},
+						{Label: "Trend label", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "12.3%", QueryParam: "trend_label"},
 					},
 				},
 				{
 					Name:        "Examples",
-					Description: "Four stat cards with corner icons in a responsive grid.",
+					Description: "Minimal style (no icon) and icon-corner style grids.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						items := []ui.StatCardIconCornerItem{
+						minimalItems := []ui.StatCardMinimalItem{
+							{Label: "Open Cases", Value: "142", Trend: ui.StatTrendUp, TrendLabel: "12.3%"},
+							{Label: "Pending Tasks", Value: "38", Trend: ui.StatTrendDown, TrendLabel: "4.1%"},
+							{Label: "Clients", Value: "89", Trend: ui.StatTrendUp, TrendLabel: "7.8%"},
+							{Label: "Avg. Case Days", Value: "24", Trend: ui.StatTrendUp, TrendLabel: "2.5%"},
+						}
+						iconItems := []ui.StatCardMinimalItem{
 							{Value: "142", Label: "Open Cases", Trend: ui.StatTrendUp, TrendLabel: "14.6%", Icon: "lucide--briefcase", IconColor: "text-primary"},
 							{Value: "38", Label: "Pending Tasks", Trend: ui.StatTrendDown, TrendLabel: "4.1%", Icon: "lucide--check-square", IconColor: "text-warning"},
 							{Value: "89", Label: "Active Clients", Trend: ui.StatTrendUp, TrendLabel: "7.8%", Icon: "lucide--users", IconColor: "text-success"},
 							{Value: "$48K", Label: "Revenue (MTD)", Trend: ui.StatTrendUp, TrendLabel: "9.2%", Icon: "lucide--dollar-sign", IconColor: "text-secondary"},
 						}
 						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6"><div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">`); err != nil {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8"><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Minimal (no icon)</p><div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">`); err != nil {
 								return err
 							}
-							for _, item := range items {
-								if err := ui.StatCardIconCorner(item).Render(ctx, w); err != nil {
+							for _, item := range minimalItems {
+								if err := ui.StatCardMinimal(item).Render(ctx, w); err != nil {
 									return err
 								}
 							}
-							_, err := io.WriteString(w, `</div></div>`)
+							if _, err := io.WriteString(w, `</div></div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Icon corner</p><div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">`); err != nil {
+								return err
+							}
+							for _, item := range iconItems {
+								if err := ui.StatCardMinimal(item).Render(ctx, w); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div></div></div>`)
 							return err
 						})
 					},
@@ -2308,11 +2230,11 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Name:        "Filter Bar",
 			Category:    galleryruntime.CategoryForms,
 			Subcategory: "Filters",
-			Description: "FilterCard wraps filter inputs in a card with Filter/Clear buttons. CompactFilterBar is the inline variant used above tables.",
+			Description: "FilterCard wraps filter inputs in a card with Filter/Clear buttons. Set Inline=true for a bare horizontal bar (used above tables).",
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Basics",
-					Description: "FilterCard and CompactFilterBar with sample search and status inputs.",
+					Description: "FilterCard (card style) and inline variant with sample search and status inputs.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						filterInputs := seq(
 							form.SearchInputWithBoundary("q", "", "Search cases…", "", "#"),
@@ -2332,16 +2254,16 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							}, "", false),
 						)
 						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-6"><div><p class="text-xs text-base-content/60 mb-2 font-semibold uppercase">FilterCard</p>`); err != nil {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6"><div><p class="text-xs text-base-content/60 mb-2 font-semibold uppercase">Card style</p>`); err != nil {
 								return err
 							}
 							if err := withChildren(ui.FilterCard(ui.FilterCardProps{Action: "#"}), filterInputs).Render(ctx, w); err != nil {
 								return err
 							}
-							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-2 font-semibold uppercase">CompactFilterBar</p>`); err != nil {
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-2 font-semibold uppercase">Inline (Inline: true)</p>`); err != nil {
 								return err
 							}
-							if err := withChildren(ui.CompactFilterBar(ui.FilterCardProps{Action: "#"}), compactInputs).Render(ctx, w); err != nil {
+							if err := withChildren(ui.FilterCard(ui.FilterCardProps{Action: "#", Inline: true}), compactInputs).Render(ctx, w); err != nil {
 								return err
 							}
 							_, err := io.WriteString(w, `</div></div>`)
@@ -2922,7 +2844,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "A DaisyUI button with configurable variant, size, type, shape, icon, and loading state.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Default",
+					Name:        "Interactive",
 					Description: "Standard button with live controls.",
 					RenderFunc: func(params url.Values) templ.Component {
 						variant := ui.ButtonVariant(params.Get("variant"))
@@ -2950,6 +2872,39 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return ui.ButtonWithBoundary(href, variant, size, typ, shape, icon, loading)
 					},
 					Tokens: ButtonTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "All variants, sizes, and special states.",
+					RenderFunc: func(params url.Values) templ.Component {
+						variants := []ui.ButtonVariant{
+							ui.ButtonPrimary, ui.ButtonSecondary, ui.ButtonAccent,
+							ui.ButtonNeutral, ui.ButtonGhost, ui.ButtonOutline,
+							ui.ButtonError,
+						}
+						sizes := []ui.ButtonSize{ui.ButtonXS, ui.ButtonSM, ui.ButtonMD, ui.ButtonLG}
+						variantRow := func(v ui.ButtonVariant) templ.Component {
+							items := make([]templ.Component, len(sizes))
+							for i, s := range sizes {
+								items[i] = withText(string(v)+" "+string(s), ui.Button("#", v, s, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+							}
+							return row(items...)
+						}
+						rows := make([]templ.Component, 0, len(variants)+3)
+						for _, v := range variants {
+							rows = append(rows, variantRow(v))
+						}
+						// Loading state row
+						rows = append(rows,
+							row(
+								withText("Loading", ui.Button("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", true)),
+								withText("Icon + Label", ui.Button("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--star", false)),
+								withText("Icon Only (Square)", ui.Button("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--pencil", false)),
+								withText("Icon Only (Circle)", ui.Button("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeCircle, "lucide--plus", false)),
+							),
+						)
+						return seq(rows...)
+					},
 				},
 			},
 		},
@@ -2982,6 +2937,44 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: BadgeTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "All intents × styles, dot variant, icon variant.",
+					RenderFunc: func(params url.Values) templ.Component {
+						intents := []ui.BadgeIntent{
+							ui.BadgePrimary, ui.BadgeSecondary, ui.BadgeAccent,
+							ui.BadgeSuccess, ui.BadgeWarning, ui.BadgeError,
+							ui.BadgeInfo, ui.BadgeNeutral, ui.BadgeGhost,
+						}
+						styles := []ui.BadgeStyle{
+							ui.BadgeStyleDefault, ui.BadgeStyleOutline,
+							ui.BadgeStyleSoft, ui.BadgeStyleDash,
+						}
+						// Row per style showing all intents
+						rows := make([]templ.Component, 0, len(styles)+2)
+						for _, s := range styles {
+							items := make([]templ.Component, len(intents))
+							for i, v := range intents {
+								items[i] = ui.Badge(ui.BadgeProps{Label: string(v)[6:], Variant: v, Style: s, Size: ui.BadgeSizeMD})
+							}
+							rows = append(rows, row(items...))
+						}
+						// Sizes row
+						rows = append(rows, row(
+							ui.Badge(ui.BadgeProps{Label: "Small", Variant: ui.BadgePrimary, Size: ui.BadgeSizeSM}),
+							ui.Badge(ui.BadgeProps{Label: "Medium", Variant: ui.BadgePrimary, Size: ui.BadgeSizeMD}),
+							ui.Badge(ui.BadgeProps{Label: "Large", Variant: ui.BadgePrimary, Size: ui.BadgeSizeLG}),
+						))
+						// Dot + icon row
+						rows = append(rows, row(
+							ui.Badge(ui.BadgeProps{Label: "Active", Variant: ui.BadgeSuccess, Dot: true}),
+							ui.Badge(ui.BadgeProps{Label: "Pending", Variant: ui.BadgeWarning, Dot: true, Animate: true}),
+							ui.Badge(ui.BadgeProps{Label: "Error", Variant: ui.BadgeError, Icon: "lucide--circle-x"}),
+							ui.Badge(ui.BadgeProps{Label: "Info", Variant: ui.BadgeInfo, Icon: "lucide--info"}),
+						))
+						return seq(rows...)
+					},
+				},
 			},
 		},
 
@@ -3004,6 +2997,23 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return ui.StatusBadgeWithBoundary(status)
 					},
 					Tokens: StatusBadgeTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "All supported status strings side-by-side.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						statuses := []string{
+							"active", "open", "completed", "approved",
+							"closed", "rejected", "cancelled", "deleted",
+							"pending", "in_progress", "review",
+							"draft", "unknown",
+						}
+						items := make([]templ.Component, len(statuses))
+						for i, s := range statuses {
+							items[i] = withText(s, ui.StatusBadge(s))
+						}
+						return row(items...)
+					},
 				},
 			},
 		},
@@ -3054,6 +3064,18 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return ui.ToastWithBoundary(typ, message)
 					},
 					Tokens: ToastTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "All four toast types stacked.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							ui.Toast(ui.ToastSuccess, "Record saved successfully."),
+							ui.Toast(ui.ToastError, "Something went wrong. Please try again."),
+							ui.Toast(ui.ToastWarning, "Your session will expire in 5 minutes."),
+							ui.Toast(ui.ToastInfo, "A new version is available."),
+						)
+					},
 				},
 			},
 		},
@@ -3248,6 +3270,32 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: ActionMenuTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Various item configurations including dangerous actions and many items.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return row(
+							withText("Basic 3 items", ui.ActionMenu([]ui.ActionMenuItem{
+								{Label: "Edit", Icon: "lucide--pencil", HXGet: "#"},
+								{Label: "Duplicate", Icon: "lucide--copy", HXGet: "#"},
+								{Label: "Delete", Icon: "lucide--trash-2", HXGet: "#", Danger: true},
+							})),
+							withText("View only", ui.ActionMenu([]ui.ActionMenuItem{
+								{Label: "View details", Icon: "lucide--eye", HXGet: "#"},
+								{Label: "Download", Icon: "lucide--download", HXGet: "#"},
+								{Label: "Share", Icon: "lucide--share-2", HXGet: "#"},
+							})),
+							withText("Many items", ui.ActionMenu([]ui.ActionMenuItem{
+								{Label: "Edit", Icon: "lucide--pencil", HXGet: "#"},
+								{Label: "Rename", Icon: "lucide--text-cursor", HXGet: "#"},
+								{Label: "Move", Icon: "lucide--folder-input", HXGet: "#"},
+								{Label: "Copy link", Icon: "lucide--link", HXGet: "#"},
+								{Label: "Archive", Icon: "lucide--archive", HXGet: "#"},
+								{Label: "Delete", Icon: "lucide--trash-2", HXGet: "#", Danger: true},
+							})),
+						)
+					},
+				},
 			},
 		},
 
@@ -3276,6 +3324,26 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: AvatarTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "All sizes, initials fallback, icon placeholder, and image variants.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						sizes := []ui.AvatarSize{ui.AvatarXS, ui.AvatarSM, ui.AvatarMD, ui.AvatarLG}
+						sizeItems := make([]templ.Component, len(sizes))
+						for i, s := range sizes {
+							sizeItems[i] = withText(string(s), ui.Avatar("Jane Smith", "", "", s))
+						}
+						return seq(
+							row(sizeItems...),
+							row(
+								withText("Initials (single)", ui.Avatar("Alice", "", "", ui.AvatarMD)),
+								withText("Initials (two-word)", ui.Avatar("Bob Carter", "", "", ui.AvatarMD)),
+								withText("Icon placeholder", ui.Avatar("", "", "lucide--building-2", ui.AvatarMD)),
+								withText("With image", ui.Avatar("User", "https://i.pravatar.cc/150?img=3", "", ui.AvatarMD)),
+							),
+						)
+					},
+				},
 			},
 		},
 
@@ -3289,16 +3357,44 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
-					Description: "Live label and required controls.",
+					Description: "Live label, value, required, and error controls.",
 					RenderFunc: func(params url.Values) templ.Component {
 						label := params.Get("label")
 						if label == "" {
 							label = "Email address"
 						}
+						value := params.Get("value")
+						errMsg := params.Get("errMsg")
 						required := params.Get("required") == "true"
-						return form.TextInputWithBoundary("email", label, "", "", required)
+						return form.TextInputWithBoundary("email", label, value, errMsg, required)
 					},
-					Tokens: TextInputTokens(),
+					Tokens: append(TextInputTokens(),
+						galleryruntime.DesignToken{
+							Label:      "Value",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "",
+							QueryParam: "value",
+						},
+						galleryruntime.DesignToken{
+							Label:      "Error Message",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "",
+							QueryParam: "errMsg",
+						},
+					),
+				},
+				{
+					Name:        "Examples",
+					Description: "Default, pre-filled value, required, and error states.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							form.TextInput("name", "Full Name", "", "", false),
+							form.TextInput("email", "Email", "jane@example.com", "", true),
+							form.TextInput("err-field", "Username", "taken_user", "Username is already taken.", false),
+						)
+					},
 				},
 			},
 		},
@@ -3313,7 +3409,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
-					Description: "Live label and rows controls.",
+					Description: "Live label, rows, required, and error controls.",
 					RenderFunc: func(params url.Values) templ.Component {
 						label := params.Get("label")
 						if label == "" {
@@ -3325,10 +3421,30 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								rows = v
 							}
 						}
+						errMsg := params.Get("errMsg")
 						required := params.Get("required") == "true"
-						return form.TextareaInputWithBoundary("description", label, "", "", rows, required)
+						return form.TextareaInputWithBoundary("description", label, "", errMsg, rows, required)
 					},
-					Tokens: TextareaInputTokens(),
+					Tokens: append(TextareaInputTokens(),
+						galleryruntime.DesignToken{
+							Label:      "Error Message",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "",
+							QueryParam: "errMsg",
+						},
+					),
+				},
+				{
+					Name:        "Examples",
+					Description: "Default, required, and error states.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							form.TextareaInput("bio", "Bio", "", "", 3, false),
+							form.TextareaInput("notes", "Notes", "", "", 3, true),
+							form.TextareaInput("err-area", "Summary", "Too short", "Summary must be at least 50 characters.", 3, false),
+						)
+					},
 				},
 			},
 		},
@@ -3367,22 +3483,48 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
-					Description: "Live label and selected value controls.",
+					Description: "Live label, selected value, required, and error controls.",
 					RenderFunc: func(params url.Values) templ.Component {
 						label := params.Get("label")
 						if label == "" {
 							label = "Country"
 						}
 						selected := params.Get("selected")
+						errMsg := params.Get("errMsg")
 						required := params.Get("required") == "true"
 						return form.SelectInputWithBoundary("country", label, selected, [][2]string{
 							{"us", "United States"},
 							{"gb", "United Kingdom"},
 							{"ca", "Canada"},
 							{"au", "Australia"},
-						}, "", required)
+						}, errMsg, required)
 					},
-					Tokens: SelectInputTokens(),
+					Tokens: append(SelectInputTokens(),
+						galleryruntime.DesignToken{
+							Label:      "Error Message",
+							Group:      "Component",
+							Type:       galleryruntime.TokenTypeText,
+							Default:    "",
+							QueryParam: "errMsg",
+						},
+					),
+				},
+				{
+					Name:        "Examples",
+					Description: "Default, pre-selected, required, and error states.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						opts := [][2]string{
+							{"us", "United States"},
+							{"gb", "United Kingdom"},
+							{"ca", "Canada"},
+							{"au", "Australia"},
+						}
+						return seq(
+							form.SelectInput("country1", "Country", "", opts, "", false),
+							form.SelectInput("country2", "Country (pre-selected)", "gb", opts, "", true),
+							form.SelectInput("country3", "Country (error)", "", opts, "Please select a country.", false),
+						)
+					},
 				},
 			},
 		},
@@ -3580,17 +3722,17 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 
-		// nav.TabMenu
+		// nav.TabMenu / nav.SimpleTabs (unified)
 		{
 			Slug:        "tab-menu-real",
-			Name:        "Tab Menu",
+			Name:        "Tabs",
 			Category:    galleryruntime.CategoryNavigation,
 			Subcategory: "Tabs",
-			Description: "A full-page HTMX tab strip.",
+			Description: "Tab strip component. Full HTMX variant for page-level navigation; pass target=\"-\" for an in-panel lifted strip without HTMX.",
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
-					Description: "Sample tab menu with three tabs.",
+					Description: "HTMX tab strip with configurable labels.",
 					RenderFunc: func(params url.Values) templ.Component {
 						tab1 := params.Get("tabs1")
 						if tab1 == "" {
@@ -3613,41 +3755,37 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: TabMenuTokens(),
 				},
-			},
-		},
-
-		// nav.SimpleTabs
-		{
-			Slug:        "simple-tabs-real",
-			Name:        "Simple Tabs",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Tabs",
-			Description: "A simple tab strip without HTMX.",
-			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Interactive",
-					Description: "Sample simple tabs.",
-					RenderFunc: func(params url.Values) templ.Component {
-						tab1 := params.Get("tabs1")
-						if tab1 == "" {
-							tab1 = "All"
-						}
-						tab2 := params.Get("tabs2")
-						if tab2 == "" {
-							tab2 = "Open"
-						}
-						tab3 := params.Get("tabs3")
-						if tab3 == "" {
-							tab3 = "Closed"
-						}
+					Name:        "Examples",
+					Description: "HTMX full-page strip and lifted in-panel strip.",
+					RenderFunc: func(_ url.Values) templ.Component {
 						tabs := []nav.Tab{
-							{Label: tab1, Href: "#", Active: true},
-							{Label: tab2, Href: "#"},
-							{Label: tab3, Href: "#"},
+							{Label: "Overview", Href: "#", Active: true},
+							{Label: "Activity", Href: "#"},
+							{Label: "Settings", Href: "#"},
 						}
-						return nav.SimpleTabsWithBoundary(tabs)
+						simpleTabs := []nav.Tab{
+							{Label: "All", Href: "#", Active: true},
+							{Label: "Open", Href: "#"},
+							{Label: "Closed", Href: "#"},
+						}
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="space-y-8"><div><p class="text-xs text-base-content/60 mb-2 font-semibold uppercase px-4 pt-4">HTMX (TabMenu)</p>`); err != nil {
+								return err
+							}
+							if err := nav.TabMenu(tabs).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-2 font-semibold uppercase px-4">Lifted in-panel (SimpleTabs / target="-")</p><div class="px-4">`); err != nil {
+								return err
+							}
+							if err := nav.SimpleTabs(simpleTabs).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div></div>`)
+							return err
+						})
 					},
-					Tokens: SimpleTabsTokens(),
 				},
 			},
 		},

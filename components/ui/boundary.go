@@ -616,3 +616,50 @@ func FieldsetWithBoundary(legend string, content templ.Component) templ.Componen
 	})
 	return devmode.ComponentBoundary("Fieldset", map[string]any{"legend": legend}, outer)
 }
+
+// ProgressCardWithBoundary wraps ProgressCard with a dev-mode component boundary annotation.
+func ProgressCardWithBoundary(props ProgressCardProps) templ.Component {
+	return devmode.ComponentBoundary("ProgressCard", props, ProgressCard(props))
+}
+
+// StatCardMinimalWithBoundary wraps StatCardMinimal with a dev-mode component boundary annotation.
+// gallery:token label,value,trend,trendLabel
+// gallery:hint label:default(Total Users)
+// gallery:hint value:default(12,430)
+func StatCardMinimalWithBoundary(item StatCardMinimalItem) templ.Component {
+	return devmode.ComponentBoundary("StatCardMinimal", map[string]any{
+		"label":      item.Label,
+		"value":      item.Value,
+		"trend":      string(item.Trend),
+		"trendLabel": item.TrendLabel,
+	}, StatCardMinimal(item))
+}
+
+// StatCardIconCornerWithBoundary wraps StatCardMinimal (icon-corner style) with a dev-mode component boundary annotation.
+// Deprecated: use StatCardMinimalWithBoundary with Icon/IconColor set instead.
+// gallery:token label,value,icon,iconColor,trend,trendLabel
+// gallery:hint label:default(Revenue)
+// gallery:hint value:default($48,290)
+func StatCardIconCornerWithBoundary(item StatCardIconCornerItem) templ.Component {
+	return devmode.ComponentBoundary("StatCardMinimal", map[string]any{
+		"label":      item.Label,
+		"value":      item.Value,
+		"icon":       item.Icon,
+		"iconColor":  item.IconColor,
+		"trend":      string(item.Trend),
+		"trendLabel": item.TrendLabel,
+	}, StatCardMinimal(item))
+}
+
+// PersonChipWithBoundary wraps PersonChip with a dev-mode component boundary annotation.
+// gallery:token name,avatarColor,textColor
+// gallery:hint name:default(Jane Smith)
+func PersonChipWithBoundary(name string, avatarColor string, textColor string, gradientFrom string, gradientTo string, contact PersonChipContact) templ.Component {
+	return devmode.ComponentBoundary("PersonChip", map[string]any{
+		"name":         name,
+		"avatarColor":  avatarColor,
+		"textColor":    textColor,
+		"gradientFrom": gradientFrom,
+		"gradientTo":   gradientTo,
+	}, PersonChip(name, avatarColor, textColor, gradientFrom, gradientTo, contact))
+}

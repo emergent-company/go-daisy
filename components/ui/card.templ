@@ -46,68 +46,70 @@ type StatCardMinimalItem struct {
 	// Trend direction and percentage label (e.g. "12.3%").
 	Trend      StatTrend
 	TrendLabel string
-}
-
-// StatCardMinimal renders a KPI stat card with a trend indicator (↑↓).
-templ StatCardMinimal(item StatCardMinimalItem) {
-	<div class="card bg-base-100 card-border">
-		<div class="card-body">
-			<p class="text-base-content/60 text-xs font-medium tracking-wide uppercase">{ item.Label }</p>
-			<div class="mt-4 flex items-end justify-between gap-2 text-sm">
-				<p class="text-2xl/none font-semibold">{ item.Value }</p>
-				if item.TrendLabel != "" {
-					<div class={ "flex items-center gap-0.5 px-1 font-medium text-xs", templ.KV("text-success", item.Trend == StatTrendUp), templ.KV("text-error", item.Trend == StatTrendDown) }>
-						if item.Trend == StatTrendUp {
-							<svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
-						} else if item.Trend == StatTrendDown {
-							<svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-						}
-						{ item.TrendLabel }
-					</div>
-				}
-			</div>
-		</div>
-	</div>
-}
-
-// StatCardIconCornerItem holds data for a single StatCardIconCorner cell.
-type StatCardIconCornerItem struct {
-	Value      string
-	Label      string
-	TrendLabel string
-	Trend      StatTrend
 	// Icon is a Lucide icon suffix, e.g. "lucide--briefcase".
+	// When set, StatCardMinimal renders as StatCardIconCorner style.
 	Icon string
 	// IconColor is a Tailwind text-* class for the icon colour.
 	IconColor string
 }
 
-// StatCardIconCorner renders a stat card with a floating icon in the top corner and a soft trend badge.
-templ StatCardIconCorner(item StatCardIconCornerItem) {
-	<div class="card bg-base-100 relative shadow-sm border border-base-200">
-		<div class="card-body gap-2">
-			<p class="text-2xl/none font-semibold">{ item.Value }</p>
-			<p class="text-base-content/60 mt-1 text-sm font-medium">{ item.Label }</p>
-			if item.TrendLabel != "" {
-				<div class="mt-5 flex items-center gap-2">
-					<span class={ "badge badge-soft badge-sm gap-0.5 px-1 font-medium", templ.KV("badge-success", item.Trend == StatTrendUp), templ.KV("badge-error", item.Trend == StatTrendDown) }>
-						if item.Trend == StatTrendUp {
-							<svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
-						} else if item.Trend == StatTrendDown {
-							<svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-						}
-						{ item.TrendLabel }
-					</span>
-					<p class="text-base-content/60 text-sm">vs last month</p>
-				</div>
-			}
-		</div>
-		if item.Icon != "" {
+// StatCardMinimal renders a KPI stat card with a trend indicator (↑↓).
+// When item.Icon is set, it renders as StatCardIconCorner style with a
+// floating icon badge and a soft trend pill; otherwise as the minimal layout.
+templ StatCardMinimal(item StatCardMinimalItem) {
+	if item.Icon != "" {
+		<div class="card bg-base-100 relative shadow-sm border border-base-200">
+			<div class="card-body gap-2">
+				<p class="text-2xl/none font-semibold">{ item.Value }</p>
+				<p class="text-base-content/60 mt-1 text-sm font-medium">{ item.Label }</p>
+				if item.TrendLabel != "" {
+					<div class="mt-5 flex items-center gap-2">
+						<span class={ "badge badge-soft badge-sm gap-0.5 px-1 font-medium", templ.KV("badge-success", item.Trend == StatTrendUp), templ.KV("badge-error", item.Trend == StatTrendDown) }>
+							if item.Trend == StatTrendUp {
+								<svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+							} else if item.Trend == StatTrendDown {
+								<svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+							}
+							{ item.TrendLabel }
+						</span>
+						<p class="text-base-content/60 text-sm">vs last month</p>
+					</div>
+				}
+			</div>
 			<div class="absolute -end-3 -top-3 rounded-full bg-gradient-to-bl from-transparent to-base-200/60 p-1.5">
 				<div class="bg-base-100 flex items-center justify-center rounded-full p-2 shadow">
 					<span class={ "iconify size-5", item.IconColor, item.Icon }></span>
 				</div>
 			</div>
-		}
-	</div>
+		</div>
+	} else {
+		<div class="card bg-base-100 card-border">
+			<div class="card-body">
+				<p class="text-base-content/60 text-xs font-medium tracking-wide uppercase">{ item.Label }</p>
+				<div class="mt-4 flex items-end justify-between gap-2 text-sm">
+					<p class="text-2xl/none font-semibold">{ item.Value }</p>
+					if item.TrendLabel != "" {
+						<div class={ "flex items-center gap-0.5 px-1 font-medium text-xs", templ.KV("text-success", item.Trend == StatTrendUp), templ.KV("text-error", item.Trend == StatTrendDown) }>
+							if item.Trend == StatTrendUp {
+								<svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+							} else if item.Trend == StatTrendDown {
+								<svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+							}
+							{ item.TrendLabel }
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+}
+
+// StatCardIconCornerItem holds data for a single StatCardIconCorner cell.
+// Deprecated: use StatCardMinimalItem with Icon/IconColor set instead.
+type StatCardIconCornerItem = StatCardMinimalItem
+
+// StatCardIconCorner renders a stat card with a floating icon in the top corner and a soft trend badge.
+// Deprecated: use StatCardMinimal with Icon/IconColor set instead.
+templ StatCardIconCorner(item StatCardMinimalItem) {
+	@StatCardMinimal(item)
 }

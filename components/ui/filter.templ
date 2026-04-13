@@ -6,6 +6,8 @@ type FilterCardProps struct {
 	Method string // defaults to "get"
 	Target string // hx-target selector
 	Swap   string // hx-swap strategy
+	// Inline renders the bar without a card wrapper (equivalent to CompactFilterBar).
+	Inline bool
 }
 
 func (p FilterCardProps) method() string {
@@ -15,51 +17,66 @@ func (p FilterCardProps) method() string {
 	return p.Method
 }
 
-// FilterCard renders a card-styled filter form.
+// FilterCard renders a filter form. When props.Inline is false (default) it
+// wraps the form in a card; when true it renders a plain horizontal flex bar
+// (equivalent to the former CompactFilterBar).
 templ FilterCard(props FilterCardProps) {
-	<div class="card bg-base-100 shadow-sm border border-base-200 mb-4">
-		<div class="card-body p-4">
-			<form
-				method={ props.method() }
-				action={ templ.URL(props.Action) }
-				if props.Target != "" {
-					hx-get={ props.Action }
-					hx-target={ props.Target }
-					if props.Swap != "" {
-						hx-swap={ props.Swap }
-					}
+	if props.Inline {
+		<form
+			class="flex flex-wrap gap-3 items-end mb-4"
+			method={ props.method() }
+			action={ templ.URL(props.Action) }
+			if props.Target != "" {
+				hx-get={ props.Action }
+				hx-target={ props.Target }
+				if props.Swap != "" {
+					hx-swap={ props.Swap }
 				}
-			>
-				<div class="flex flex-wrap gap-3 items-end">
-					{ children... }
-					<div class="flex gap-2">
-						<button type="submit" class="btn btn-primary btn-sm">Filter</button>
-						<a href={ templ.URL(props.Action) } class="btn btn-ghost btn-sm">Clear</a>
+			}
+		>
+			{ children... }
+			<div class="flex gap-2">
+				<button type="submit" class="btn btn-primary btn-sm">Filter</button>
+				<a href={ templ.URL(props.Action) } class="btn btn-ghost btn-sm">Clear</a>
+			</div>
+		</form>
+	} else {
+		<div class="card bg-base-100 shadow-sm border border-base-200 mb-4">
+			<div class="card-body p-4">
+				<form
+					method={ props.method() }
+					action={ templ.URL(props.Action) }
+					if props.Target != "" {
+						hx-get={ props.Action }
+						hx-target={ props.Target }
+						if props.Swap != "" {
+							hx-swap={ props.Swap }
+						}
+					}
+				>
+					<div class="flex flex-wrap gap-3 items-end">
+						{ children... }
+						<div class="flex gap-2">
+							<button type="submit" class="btn btn-primary btn-sm">Filter</button>
+							<a href={ templ.URL(props.Action) } class="btn btn-ghost btn-sm">Clear</a>
+						</div>
 					</div>
-				</div>
-			</form>
+				</form>
+			</div>
 		</div>
-	</div>
+	}
 }
 
-// CompactFilterBar renders a horizontal flex filter form.
+// CompactFilterBar is an alias for FilterCard with Inline=true.
+// Deprecated: set FilterCardProps.Inline = true instead.
 templ CompactFilterBar(props FilterCardProps) {
-	<form
-		class="flex flex-wrap gap-3 items-end mb-4"
-		method={ props.method() }
-		action={ templ.URL(props.Action) }
-		if props.Target != "" {
-			hx-get={ props.Action }
-			hx-target={ props.Target }
-			if props.Swap != "" {
-				hx-swap={ props.Swap }
-			}
-		}
-	>
+	@FilterCard(FilterCardProps{
+		Action: props.Action,
+		Method: props.Method,
+		Target: props.Target,
+		Swap:   props.Swap,
+		Inline: true,
+	}) {
 		{ children... }
-		<div class="flex gap-2">
-			<button type="submit" class="btn btn-primary btn-sm">Filter</button>
-			<a href={ templ.URL(props.Action) } class="btn btn-ghost btn-sm">Clear</a>
-		</div>
-	</form>
+	}
 }
