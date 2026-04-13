@@ -632,3 +632,98 @@ func MockupBrowserTokens() []galleryruntime.DesignToken {
 		},
 	}
 }
+
+// ListTokens returns the DesignToken slice for the List interactive story.
+func ListTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Title",
+			Group:      "Row",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Alice Johnson",
+			QueryParam: "title",
+		},
+		{
+			Label:      "Subtitle",
+			Group:      "Row",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "alice@example.com",
+			QueryParam: "subtitle",
+		},
+		{
+			Label:      "Description",
+			Group:      "Row",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "description",
+		},
+		{
+			Label:      "Status badge",
+			Group:      "Row",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "active",
+			QueryParam: "status",
+			Options: []galleryruntime.TokenOption{
+				{Value: "active", Label: "Active"},
+				{Value: "pending", Label: "Pending"},
+				{Value: "closed", Label: "Closed"},
+				{Value: "none", Label: "None"},
+			},
+		},
+		{
+			Label:      "Leading avatar",
+			Group:      "Row",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "yes",
+			QueryParam: "leading",
+			Options: []galleryruntime.TokenOption{
+				{Value: "yes", Label: "Show"},
+				{Value: "no", Label: "Hide"},
+			},
+		},
+		{
+			Label:      "Header",
+			Group:      "List",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "yes",
+			QueryParam: "header",
+			Options: []galleryruntime.TokenOption{
+				{Value: "yes", Label: "Show"},
+				{Value: "no", Label: "Hide"},
+			},
+		},
+	}
+}
+
+// PersonCellTokens returns the DesignToken slice for PersonCellWithBoundary.
+func PersonCellTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Name",
+			Group:      "Content",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Alice Johnson",
+			QueryParam: "name",
+		},
+		{
+			Label:      "Subtitle",
+			Group:      "Content",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "alice@example.com",
+			QueryParam: "subtitle",
+		},
+		{
+			Label:      "Size",
+			Group:      "Avatar",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "avatar-sm",
+			QueryParam: "size",
+			Options: []galleryruntime.TokenOption{
+				{Value: "avatar-xs", Label: "XS"},
+				{Value: "avatar-sm", Label: "SM"},
+				{Value: "avatar-md", Label: "MD"},
+				{Value: "avatar-lg", Label: "LG"},
+			},
+		},
+	}
+}

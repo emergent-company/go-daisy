@@ -583,7 +583,7 @@ type MockupCodeLineProps struct {
 }
 
 // ListWithBoundary wraps List with a dev-mode component boundary annotation.
-func ListWithBoundary(items []ListRowProps) templ.Component {
+func ListWithBoundary(props ListProps, items []ListRowProps) templ.Component {
 	children := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		for _, item := range items {
 			if err := ListRow(item).Render(ctx, w); err != nil {
@@ -593,9 +593,9 @@ func ListWithBoundary(items []ListRowProps) templ.Component {
 		return nil
 	})
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		return List().Render(templ.WithChildren(ctx, children), w)
+		return List(props).Render(templ.WithChildren(ctx, children), w)
 	})
-	return devmode.ComponentBoundary("List", map[string]any{"itemCount": len(items)}, outer)
+	return devmode.ComponentBoundary("List", map[string]any{"itemCount": len(items), "header": props.Header}, outer)
 }
 
 // FilterTabsWithBoundary wraps FilterTabs with a dev-mode component boundary annotation.
@@ -649,6 +649,20 @@ func StatCardIconCornerWithBoundary(item StatCardIconCornerItem) templ.Component
 		"trend":      string(item.Trend),
 		"trendLabel": item.TrendLabel,
 	}, StatCardMinimal(item))
+}
+
+// PersonCellWithBoundary wraps PersonCell with a dev-mode component boundary annotation.
+// gallery:token name,subtitle,size
+// gallery:hint name:default(Alice Johnson)
+// gallery:hint subtitle:default(alice@example.com)
+func PersonCellWithBoundary(p PersonCellProps) templ.Component {
+	return devmode.ComponentBoundary("PersonCell", map[string]any{
+		"name":     p.Name,
+		"subtitle": p.Subtitle,
+		"src":      p.Src,
+		"icon":     p.Icon,
+		"size":     string(p.Size),
+	}, PersonCell(p))
 }
 
 // PersonChipWithBoundary wraps PersonChip with a dev-mode component boundary annotation.

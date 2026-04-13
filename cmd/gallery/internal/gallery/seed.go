@@ -771,16 +771,144 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "DaisyUI list component for vertical item groups.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
-					Description: "Vertical list with labelled rows and status badges.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return ui.ListWithBoundary([]ui.ListRowProps{
-							{Title: "Alice Johnson", Subtitle: "alice@example.com", Badge: ui.StatusBadgeWithBoundary("active")},
-							{Title: "Bob Smith", Subtitle: "bob@example.com", Badge: ui.StatusBadgeWithBoundary("closed")},
-							{Title: "Carol White", Subtitle: "carol@example.com", Badge: ui.StatusBadgeWithBoundary("pending")},
+					Name:        "Interactive",
+					Description: "Single list row with live controls for every prop.",
+					RenderFunc: func(params url.Values) templ.Component {
+						name := params.Get("title")
+						if name == "" {
+							name = "Alice Johnson"
+						}
+						subtitle := params.Get("subtitle")
+						if subtitle == "" {
+							subtitle = "alice@example.com"
+						}
+						description := params.Get("description")
+						status := params.Get("status")
+						if status == "" {
+							status = "active"
+						}
+						showLeading := params.Get("leading") != "no"
+						showHeader := params.Get("header") != "no"
+
+						var leading templ.Component
+						if showLeading {
+							leading = ui.PersonCellWithBoundary(ui.PersonCellProps{Name: name, Subtitle: subtitle})
+						}
+						var trailing []templ.Component
+						if status != "none" {
+							trailing = []templ.Component{ui.StatusBadgeWithBoundary(status)}
+						}
+						header := ""
+						if showHeader {
+							header = "Members"
+						}
+						// Use LeadingGrow so PersonCell (which already contains name+subtitle)
+						// fills the available space; Title/Subtitle on the row stay empty.
+						return ui.ListWithBoundary(ui.ListProps{Header: header}, []ui.ListRowProps{
+							{
+								Description: description,
+								Leading:     leading,
+								LeadingGrow: showLeading,
+								Trailing:    trailing,
+							},
 						})
 					},
-					Tokens: []galleryruntime.DesignToken{},
+					Tokens: ListTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "All three list layout patterns: default, col-wrap description, and multiple trailing actions.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						editBtn := ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--pencil size-4", false)
+						deleteBtn := ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--trash-2 size-4", false)
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
+								return err
+							}
+
+							// ── Default: PersonCell + status badge ──────────────────────────
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Default — person cell + trailing badge</p>`); err != nil {
+								return err
+							}
+							if err := ui.List(ui.ListProps{Header: "Members"}).Render(templ.WithChildren(ctx, seq(
+								ui.ListRow(ui.ListRowProps{
+									Leading:     ui.PersonCellWithBoundary(ui.PersonCellProps{Name: "Alice Johnson", Subtitle: "alice@example.com"}),
+									LeadingGrow: true,
+									Trailing:    []templ.Component{ui.StatusBadgeWithBoundary("active")},
+								}),
+								ui.ListRow(ui.ListRowProps{
+									Leading:     ui.PersonCellWithBoundary(ui.PersonCellProps{Name: "Bob Smith", Subtitle: "bob@example.com"}),
+									LeadingGrow: true,
+									Trailing:    []templ.Component{ui.StatusBadgeWithBoundary("closed")},
+								}),
+								ui.ListRow(ui.ListRowProps{
+									Leading:     ui.PersonCellWithBoundary(ui.PersonCellProps{Name: "Carol White", Subtitle: "carol@example.com"}),
+									LeadingGrow: true,
+									Trailing:    []templ.Component{ui.StatusBadgeWithBoundary("pending")},
+								}),
+							)), w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div>`); err != nil {
+								return err
+							}
+
+							// ── Col-wrap: description wraps to second row ─────────────────────
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Col-wrap — description on second row</p>`); err != nil {
+								return err
+							}
+							if err := ui.List(ui.ListProps{}).Render(templ.WithChildren(ctx, seq(
+								ui.ListRow(ui.ListRowProps{
+									Title:       "Design System Audit",
+									Subtitle:    "Due Nov 15",
+									Description: "Review all components for accessibility compliance and update token usage across the board.",
+									Leading:     ui.AvatarWithBoundary("DS Audit", "", "lucide--clipboard-list", ui.AvatarSM),
+									Trailing:    []templ.Component{ui.BadgeWithBoundary(ui.BadgeWarning, ui.BadgeStyleSoft, ui.BadgeSizeMD, false, "", "In Progress")},
+								}),
+								ui.ListRow(ui.ListRowProps{
+									Title:       "Migrate API to v2",
+									Subtitle:    "Due Dec 1",
+									Description: "Refactor all client calls to use the new v2 endpoints. Coordinate with the backend team.",
+									Leading:     ui.AvatarWithBoundary("API Migration", "", "lucide--code-2", ui.AvatarSM),
+									Trailing:    []templ.Component{ui.BadgeWithBoundary(ui.BadgeSuccess, ui.BadgeStyleSoft, ui.BadgeSizeMD, false, "", "Done")},
+								}),
+							)), w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div>`); err != nil {
+								return err
+							}
+
+							// ── Multiple trailing actions ─────────────────────────────────────
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Multiple trailing actions</p>`); err != nil {
+								return err
+							}
+							if err := ui.List(ui.ListProps{Header: "Files"}).Render(templ.WithChildren(ctx, seq(
+								ui.ListRow(ui.ListRowProps{
+									Title:    "quarterly-report.pdf",
+									Subtitle: "2.4 MB · Updated 3 days ago",
+									Leading:  templ.Raw(`<span class="iconify lucide--file-text size-8 text-base-content/40"></span>`),
+									Trailing: []templ.Component{editBtn, deleteBtn},
+								}),
+								ui.ListRow(ui.ListRowProps{
+									Title:    "brand-assets.zip",
+									Subtitle: "14.8 MB · Updated today",
+									Leading:  templ.Raw(`<span class="iconify lucide--archive size-8 text-base-content/40"></span>`),
+									Trailing: []templ.Component{editBtn, deleteBtn},
+								}),
+								ui.ListRow(ui.ListRowProps{
+									Title:    "onboarding-deck.pptx",
+									Subtitle: "5.1 MB · Updated 1 week ago",
+									Leading:  templ.Raw(`<span class="iconify lucide--presentation size-8 text-base-content/40"></span>`),
+									Trailing: []templ.Component{editBtn, deleteBtn},
+								}),
+							)), w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
 				},
 			},
 		},
@@ -1592,6 +1720,103 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 					Tokens: []galleryruntime.DesignToken{},
+				},
+			},
+		},
+
+		// ── Data Display extras ────────────────────────────────────────────────
+		{
+			Slug:        "person-cell",
+			Name:        "Person Cell",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Display",
+			Description: "Compact avatar + name + subtitle identity block for use in lists, tables, and flex rows.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Single person cell with live controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						name := params.Get("name")
+						if name == "" {
+							name = "Alice Johnson"
+						}
+						subtitle := params.Get("subtitle")
+						if subtitle == "" {
+							subtitle = "alice@example.com"
+						}
+						size := ui.AvatarSize(params.Get("size"))
+						if size == "" {
+							size = ui.AvatarSM
+						}
+						return ui.PersonCellWithBoundary(ui.PersonCellProps{
+							Name:     name,
+							Subtitle: subtitle,
+							Size:     size,
+						})
+					},
+					Tokens: PersonCellTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "PersonCell in different sizes and contexts.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
+								return err
+							}
+
+							// ── Sizes ────────────────────────────────────────────────────────
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Sizes</p><div class="flex flex-col gap-4">`); err != nil {
+								return err
+							}
+							for _, size := range []ui.AvatarSize{ui.AvatarXS, ui.AvatarSM, ui.AvatarMD, ui.AvatarLG} {
+								if err := ui.PersonCell(ui.PersonCellProps{
+									Name:     "Alice Johnson",
+									Subtitle: "alice@example.com",
+									Size:     size,
+								}).Render(ctx, w); err != nil {
+									return err
+								}
+							}
+							if _, err := io.WriteString(w, `</div></div>`); err != nil {
+								return err
+							}
+
+							// ── Without subtitle ─────────────────────────────────────────────
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Name only</p><div class="flex flex-col gap-4">`); err != nil {
+								return err
+							}
+							for _, person := range []string{"Alice Johnson", "Bob Smith", "Carol White"} {
+								if err := ui.PersonCell(ui.PersonCellProps{Name: person}).Render(ctx, w); err != nil {
+									return err
+								}
+							}
+							if _, err := io.WriteString(w, `</div></div>`); err != nil {
+								return err
+							}
+
+							// ── In a list ────────────────────────────────────────────────────
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Inside a list row</p>`); err != nil {
+								return err
+							}
+							if err := ui.List(ui.ListProps{Header: "Team"}).Render(templ.WithChildren(ctx, seq(
+								ui.ListRow(ui.ListRowProps{
+									Leading:     ui.PersonCellWithBoundary(ui.PersonCellProps{Name: "Alice Johnson", Subtitle: "alice@example.com"}),
+									LeadingGrow: true,
+									Trailing:    []templ.Component{ui.StatusBadgeWithBoundary("active")},
+								}),
+								ui.ListRow(ui.ListRowProps{
+									Leading:     ui.PersonCellWithBoundary(ui.PersonCellProps{Name: "Bob Smith", Subtitle: "bob@example.com"}),
+									LeadingGrow: true,
+									Trailing:    []templ.Component{ui.StatusBadgeWithBoundary("pending")},
+								}),
+							)), w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
 				},
 			},
 		},
