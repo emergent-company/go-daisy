@@ -1605,6 +1605,48 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Full-featured table with sortable headers, status badges, avatars, and an action menu (ellipsis dropdown) per row.",
 			Variants: []galleryruntime.GalleryStory{
 				{
+					Name:        "Interactive",
+					Description: "Configurable row count and pagination state.",
+					RenderFunc: func(params url.Values) templ.Component {
+						page := 1
+						if v, err := parseInt(params.Get("page")); err == nil && v > 0 {
+							page = v
+						}
+						allRows := []table.TableWithActionsRow{
+							{Name: "Alice Johnson", Status: "active", Role: "Admin", Joined: "2024-01-15"},
+							{Name: "Bob Smith", Status: "pending", Role: "Employee", Joined: "2024-03-02"},
+							{Name: "Carol White", Status: "closed", Role: "Employee", Joined: "2023-11-20"},
+							{Name: "David Kim", Status: "active", Role: "Viewer", Joined: "2024-06-10"},
+							{Name: "Eve Martinez", Status: "pending", Role: "Employee", Joined: "2024-08-22"},
+						}
+						rowCount := 3
+						if v, err := parseInt(params.Get("rows")); err == nil && v >= 1 && v <= 5 {
+							rowCount = v
+						}
+						rows := allRows[:rowCount]
+						return table.TableWithActions(table.TableWithActionsProps{
+							Rows:        rows,
+							TotalCount:  47,
+							CurrentPage: page,
+							TotalPages:  3,
+						})
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Visible rows", Group: "Data", Type: galleryruntime.TokenTypeSelect, Default: "3", QueryParam: "rows", Options: []galleryruntime.TokenOption{
+							{Value: "1", Label: "1"},
+							{Value: "2", Label: "2"},
+							{Value: "3", Label: "3"},
+							{Value: "4", Label: "4"},
+							{Value: "5", Label: "5"},
+						}},
+						{Label: "Current page", Group: "Pagination", Type: galleryruntime.TokenTypeSelect, Default: "1", QueryParam: "page", Options: []galleryruntime.TokenOption{
+							{Value: "1", Label: "Page 1"},
+							{Value: "2", Label: "Page 2"},
+							{Value: "3", Label: "Page 3"},
+						}},
+					},
+				},
+				{
 					Name:        "Examples",
 					Description: "Three rows with avatar, status badge, role, and ellipsis action dropdown.",
 					RenderFunc: func(_ url.Values) templ.Component {
@@ -3924,6 +3966,86 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							},
 						},
 					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Default, zebra-striped, and compact (small) variants.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						type memberRow struct {
+							Name   string
+							Role   string
+							Status string
+							Joined string
+						}
+						members := []memberRow{
+							{"Alice Johnson", "Admin", "Active", "Jan 2024"},
+							{"Bob Martinez", "Member", "Pending", "Mar 2024"},
+							{"Carol White", "Viewer", "Inactive", "Jun 2024"},
+						}
+						buildTable := func(props table.TableProps) templ.Component {
+							rowComponents := make([]templ.Component, len(members))
+							for i, m := range members {
+								m := m
+								rowComponents[i] = withChildren(
+									table.TableRow("", false),
+									seq(
+										withChildren(table.TableCell(""), rawHTML(m.Name)),
+										withChildren(table.TableCell(""), rawHTML(m.Role)),
+										withChildren(table.TableCell(""), ui.StatusBadge(m.Status)),
+										withChildren(table.TableCell(""), rawHTML(m.Joined)),
+									),
+								)
+							}
+							return withChildren(
+								table.TableWithProps(props),
+								seq(
+									withChildren(
+										table.TableHead(),
+										withChildren(
+											table.TableHeadRow(),
+											seq(
+												table.TableHeadCell("Name"),
+												table.TableHeadCell("Role"),
+												table.TableHeadCell("Status"),
+												table.TableHeadCell("Joined"),
+											),
+										),
+									),
+									withChildren(
+										table.TableBody(),
+										seq(rowComponents...),
+									),
+								),
+							)
+						}
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							variants := []struct {
+								label string
+								props table.TableProps
+							}{
+								{"Default", table.TableProps{}},
+								{"Zebra stripes", table.TableProps{Striped: true}},
+								{"Compact (small)", table.TableProps{Size: "sm", Striped: true}},
+							}
+							if _, err := io.WriteString(w, `<div class="p-6 flex flex-col gap-8">`); err != nil {
+								return err
+							}
+							for _, v := range variants {
+								if _, err := io.WriteString(w, `<div class="flex flex-col gap-2"><p class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">`+v.label+`</p>`); err != nil {
+									return err
+								}
+								if err := buildTable(v.props).Render(ctx, w); err != nil {
+									return err
+								}
+								if _, err := io.WriteString(w, `</div>`); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+					Tokens: []galleryruntime.DesignToken{},
 				},
 			},
 		},
