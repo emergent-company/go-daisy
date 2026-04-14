@@ -126,7 +126,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Vertical timeline for activity or event history.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Vertical timeline with done and pending items.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return ui.TimelineWithBoundary([]ui.TimelineItemProps{
@@ -136,6 +136,18 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 					Tokens: []galleryruntime.DesignToken{},
+				},
+				{
+					Name:        "Examples",
+					Description: "Vertical timeline with mixed done/pending states.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.TimelineWithBoundary([]ui.TimelineItemProps{
+							{Date: "Day 1", Label: "Order placed", Done: true},
+							{Date: "Day 2", Label: "Processing", Done: true},
+							{Date: "Day 3", Label: "Shipped", Done: false},
+							{Date: "Day 4", Label: "Delivered", Done: false},
+						})
+					},
 				},
 			},
 		},
@@ -200,7 +212,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Code block mockup with terminal-style prefix lines.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Terminal-style code block with prefix lines.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return ui.MockupCodeWithBoundary([]ui.MockupCodeLineProps{
@@ -210,6 +222,18 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 					Tokens: []galleryruntime.DesignToken{},
+				},
+				{
+					Name:        "Examples",
+					Description: "Terminal code block with multiple lines and colors.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.MockupCodeWithBoundary([]ui.MockupCodeLineProps{
+							{Prefix: "$", Code: "npm install go-daisy"},
+							{Prefix: ">", Code: "Installing packages...", ColorClass: "text-warning"},
+							{Prefix: "", Code: "added 42 packages"},
+							{Prefix: "", Code: "Done!", ColorClass: "text-success"},
+						})
+					},
 				},
 			},
 		},
@@ -231,6 +255,13 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return ui.MockupBrowserWithBoundary(u)
 					},
 					Tokens: MockupBrowserTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "Browser mockup with a custom URL.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.MockupBrowserWithBoundary("https://app.example.com/dashboard")
+					},
 				},
 			},
 		},
@@ -300,6 +331,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Value: "Pending", Label: "Pending"},
 							{Value: "Closed", Label: "Closed"},
 						}},
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Filter tabs with different selections.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">All selected</p>`); err != nil {
+								return err
+							}
+							if err := ui.FilterTabs("filter1", "All", []string{"All", "Active", "Pending", "Closed"}).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Active selected</p>`); err != nil {
+								return err
+							}
+							if err := ui.FilterTabs("filter2", "Active", []string{"All", "Active", "Pending", "Closed"}).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
 					},
 				},
 			},
@@ -388,6 +444,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: RadioGroupTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Radio groups with different colors.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						opts := [][2]string{{"opt1", "Option 1"}, {"opt2", "Option 2"}, {"opt3", "Option 3"}}
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							for _, color := range []string{"radio-primary", "radio-secondary", "radio-accent"} {
+								if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">`+color+`</p>`); err != nil {
+									return err
+								}
+								if err := form.RadioGroup("radio-"+color, "opt1", opts, color).Render(ctx, w); err != nil {
+									return err
+								}
+								if _, err := io.WriteString(w, `</div>`); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 		{
@@ -420,6 +501,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return form.RatingWithBoundary("rating-demo", value, max, shape, color, "")
 					},
 					Tokens: RatingTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "Star and heart rating shapes at different values.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Stars (3/5)</p>`); err != nil {
+								return err
+							}
+							if err := form.Rating("r1", 3, 5, form.RatingStar, "rating-warning", "").Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Hearts (4/5)</p>`); err != nil {
+								return err
+							}
+							if err := form.Rating("r2", 4, 5, form.RatingHeart, "rating-error", "").Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
 				},
 			},
 		},
@@ -546,7 +652,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "A DaisyUI linear progress bar with configurable color, value, and max.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "A DaisyUI progress bar with configurable color, value, and max.",
 					RenderFunc: func(params url.Values) templ.Component {
 						color := ui.ProgressColor(params.Get("color"))
@@ -565,6 +671,35 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: ProgressTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Progress bars in all DaisyUI color variants.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-4">`); err != nil {
+								return err
+							}
+							type item struct {
+								color ui.ProgressColor
+								val   int
+							}
+							for _, it := range []item{
+								{ui.ProgressPrimary, 40},
+								{ui.ProgressSecondary, 60},
+								{ui.ProgressSuccess, 75},
+								{ui.ProgressSuccess, 90},
+								{ui.ProgressError, 25},
+								{ui.ProgressWarning, 50},
+							} {
+								if err := ui.Progress(it.color, it.val, 100).Render(ctx, w); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 		{
@@ -575,7 +710,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Step progress indicator for multi-step flows.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "4-step progress indicator.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return ui.StepsWithBoundary([]ui.StepProps{
@@ -587,6 +722,40 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: []galleryruntime.DesignToken{},
 				},
+				{
+					Name:        "Examples",
+					Description: "Horizontal and vertical step trackers.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">2 of 4 done</p>`); err != nil {
+								return err
+							}
+							if err := ui.StepsWithBoundary([]ui.StepProps{
+								{Label: "Register", Done: true},
+								{Label: "Profile", Done: true},
+								{Label: "Billing", Done: false},
+								{Label: "Confirm", Done: false},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">All complete</p>`); err != nil {
+								return err
+							}
+							if err := ui.StepsWithBoundary([]ui.StepProps{
+								{Label: "Draft", Done: true},
+								{Label: "Review", Done: true},
+								{Label: "Published", Done: true},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 		{
@@ -597,7 +766,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Collapsible sections using DaisyUI collapse.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Accordion with multiple collapsible items.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return ui.AccordionWithBoundary([]ui.AccordionItemProps{
@@ -606,6 +775,17 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 					Tokens: []galleryruntime.DesignToken{},
+				},
+				{
+					Name:        "Examples",
+					Description: "Multiple accordion items open/closed.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.AccordionWithBoundary([]ui.AccordionItemProps{
+							{Title: "What is DaisyUI?", Content: rawHTML("DaisyUI is a plugin for Tailwind CSS that adds component classes."), Open: true},
+							{Title: "Is it free?", Content: rawHTML("Yes, DaisyUI is free and open-source."), Open: false},
+							{Title: "Does it support dark mode?", Content: rawHTML("Yes, DaisyUI supports light and dark themes out of the box."), Open: false},
+						})
+					},
 				},
 			},
 		},
@@ -638,6 +818,21 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Value: "dropdown-left", Label: "Left"},
 							{Value: "dropdown-right", Label: "Right"},
 						}},
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Dropdown variants: left-aligned and right-aligned.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						items := []ui.DropdownItemProps{
+							{Label: "Edit"},
+							{Label: "Duplicate"},
+							{Label: "Delete", Danger: true},
+						}
+						return row(
+							withText("Align left", ui.DropdownWithBoundary("", ui.Button("", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false), items)),
+							withText("Align right", ui.DropdownWithBoundary(ui.DropdownEnd, ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false), items)),
+						)
 					},
 				},
 			},
@@ -757,6 +952,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						{Label: "Title", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "go-daisy", QueryParam: "title"},
 						{Label: "Subtitle", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Type-safe Templ components styled with DaisyUI for HTMX apps.", QueryParam: "subtitle"},
 						{Label: "CTA Label", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Get Started", QueryParam: "ctaLabel"},
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Hero sections with different heights and copy.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="space-y-4">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-1 font-semibold uppercase px-4 pt-4">Compact</p>`); err != nil {
+								return err
+							}
+							if err := ui.HeroWithBoundary("min-h-24", "Welcome", "Start building today.", "Get started").Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-1 font-semibold uppercase px-4">Full height</p>`); err != nil {
+								return err
+							}
+							if err := ui.HeroWithBoundary("min-h-screen", "Build faster with go-daisy", "Type-safe HTMX components for Go.", "Explore components").Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
 					},
 				},
 			},
@@ -983,7 +1203,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Overlapping stacked card effect.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Three cards stacked with depth effect.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return ui.StackWithBoundary(
@@ -993,6 +1213,24 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						)
 					},
 					Tokens: []galleryruntime.DesignToken{},
+				},
+				{
+					Name:        "Examples",
+					Description: "Stacked cards in different color combinations.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return row(
+							withText("Primary stack", ui.StackWithBoundary(
+								ui.StackCard("Card A", "bg-primary text-primary-content"),
+								ui.StackCard("Card B", "bg-primary/80 text-primary-content"),
+								ui.StackCard("Card C", "bg-primary/60 text-primary-content"),
+							)),
+							withText("Neutral stack", ui.StackWithBoundary(
+								ui.StackCard("Card 1", "bg-base-300"),
+								ui.StackCard("Card 2", "bg-base-200"),
+								ui.StackCard("Card 3", "bg-base-100"),
+							)),
+						)
+					},
 				},
 			},
 		},
@@ -1022,6 +1260,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Tokens: []galleryruntime.DesignToken{
 						{Label: "Before", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Before: Old content here", QueryParam: "before"},
 						{Label: "After", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "After: New content here", QueryParam: "after"},
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Before/after comparison with text content.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Image comparison</p>`); err != nil {
+								return err
+							}
+							if err := ui.DiffWithBoundary("Before: Original content", "After: Updated content").Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
 					},
 				},
 			},
@@ -1096,7 +1353,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Horizontal scrolling carousel with snap items.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Three-slide horizontal carousel.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return ui.CarouselWithBoundary(false, []ui.CarouselItemProps{
@@ -1106,6 +1363,36 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 					Tokens: []galleryruntime.DesignToken{},
+				},
+				{
+					Name:        "Examples",
+					Description: "Horizontal and vertical carousel variants.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						slides := []ui.CarouselItemProps{
+							{ID: "slide1", Content: ui.CarouselSlide("Slide 1", "bg-primary text-primary-content")},
+							{ID: "slide2", Content: ui.CarouselSlide("Slide 2", "bg-secondary text-secondary-content")},
+							{ID: "slide3", Content: ui.CarouselSlide("Slide 3", "bg-accent text-accent-content")},
+						}
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Horizontal</p>`); err != nil {
+								return err
+							}
+							if err := ui.CarouselWithBoundary(false, slides).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Vertical</p>`); err != nil {
+								return err
+							}
+							if err := ui.CarouselWithBoundary(true, slides).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
 				},
 			},
 		},
@@ -1142,6 +1429,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: CountdownTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Various countdown configurations.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Days remaining</p>`); err != nil {
+								return err
+							}
+							if err := ui.CountdownWithBoundary(7, 0, 0, 0).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Full countdown</p>`); err != nil {
+								return err
+							}
+							if err := ui.CountdownWithBoundary(2, 14, 30, 45).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 
@@ -1154,12 +1466,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Phone frame mockup for mobile UI display.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Phone frame with an app screen placeholder.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return ui.MockupPhoneWithBoundary()
 					},
 					Tokens: []galleryruntime.DesignToken{},
+				},
+				{
+					Name:        "Examples",
+					Description: "Phone mockup with placeholder content.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.MockupPhoneWithBoundary()
+					},
 				},
 			},
 		},
@@ -1171,12 +1490,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Desktop window frame mockup.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Desktop window frame with content placeholder.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return ui.MockupWindowWithBoundary()
 					},
 					Tokens: []galleryruntime.DesignToken{},
+				},
+				{
+					Name:        "Examples",
+					Description: "Window mockup with placeholder content.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.MockupWindowWithBoundary()
+					},
 				},
 			},
 		},
@@ -1334,6 +1660,39 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: BreadcrumbsTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Short and long breadcrumb trails.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Two levels</p>`); err != nil {
+								return err
+							}
+							if err := nav.BreadcrumbsWithBoundary([]nav.BreadcrumbItem{
+								{Label: "Home", Href: "#"},
+								{Label: "Cases"},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Four levels</p>`); err != nil {
+								return err
+							}
+							if err := nav.BreadcrumbsWithBoundary([]nav.BreadcrumbItem{
+								{Label: "Home", Href: "#"},
+								{Label: "Cases", Href: "#"},
+								{Label: "Johnson v. Smith", Href: "#"},
+								{Label: "Documents"},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 		{
@@ -1372,6 +1731,41 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: DockTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Mobile dock with 3 and 5 item configurations.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">3 items</p>`); err != nil {
+								return err
+							}
+							if err := nav.DockWithBoundary([]nav.DockItem{
+								{Label: "Home", Icon: "lucide--home", Href: "#", Active: true},
+								{Label: "Search", Icon: "lucide--search", Href: "#"},
+								{Label: "Profile", Icon: "lucide--user", Href: "#"},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">5 items</p>`); err != nil {
+								return err
+							}
+							if err := nav.DockWithBoundary([]nav.DockItem{
+								{Label: "Home", Icon: "lucide--home", Href: "#", Active: true},
+								{Label: "Cases", Icon: "lucide--folder", Href: "#"},
+								{Label: "Search", Icon: "lucide--search", Href: "#"},
+								{Label: "Alerts", Icon: "lucide--bell", Href: "#"},
+								{Label: "Profile", Icon: "lucide--user", Href: "#"},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 
@@ -1395,6 +1789,37 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return form.FileInputWithBoundary("upload", label, accept)
 					},
 					Tokens: FileInputTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "File input with different accept types.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Any file</p>`); err != nil {
+								return err
+							}
+							if err := form.FileInput("upload1", "Upload file", "", "").Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Images only</p>`); err != nil {
+								return err
+							}
+							if err := form.FileInput("upload2", "Upload image", "image/*", "").Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">PDF only</p>`); err != nil {
+								return err
+							}
+							if err := form.FileInput("upload3", "Upload PDF", ".pdf", "").Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
 				},
 			},
 		},
@@ -2177,7 +2602,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "A DaisyUI skeleton placeholder block. Use the classes token to control size and shape.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "A skeleton placeholder with configurable Tailwind size classes.",
 					RenderFunc: func(params url.Values) templ.Component {
 						classes := params.Get("classes")
@@ -2187,6 +2612,37 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return ui.SkeletonWithBoundary(classes)
 					},
 					Tokens: SkeletonTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "Skeleton loaders for text, avatar, and card patterns.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Text line</p>`); err != nil {
+								return err
+							}
+							if err := ui.SkeletonWithBoundary("h-4 w-48").Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Avatar circle</p>`); err != nil {
+								return err
+							}
+							if err := ui.SkeletonWithBoundary("size-16 rounded-full").Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Card</p>`); err != nil {
+								return err
+							}
+							if err := ui.SkeletonWithBoundary("h-32 w-full").Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
 				},
 			},
 		},
@@ -2225,7 +2681,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Divider with a label — used to separate logical groups within a form or detail panel.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "A section divider label with configurable title text.",
 					RenderFunc: func(params url.Values) templ.Component {
 						title := params.Get("title")
@@ -2235,6 +2691,17 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return ui.SectionHeaderWithBoundary(title)
 					},
 					Tokens: SectionHeaderTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "Section headers with different titles.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							ui.SectionHeaderWithBoundary("Account Settings"),
+							ui.SectionHeaderWithBoundary("Notifications"),
+							ui.SectionHeaderWithBoundary("Billing & Payments"),
+						)
+					},
 				},
 			},
 		},
@@ -2246,12 +2713,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Permission-denied placeholder shown when the current user lacks access to a section.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "A fixed permission-denied placeholder with no configurable props.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return ui.NoPermissionsWithBoundary()
 					},
 					Tokens: []galleryruntime.DesignToken{},
+				},
+				{
+					Name:        "Examples",
+					Description: "The no-permissions placeholder.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.NoPermissionsWithBoundary()
+					},
 				},
 			},
 		},
@@ -2264,7 +2738,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Tab-based notification center with All / Unread tabs and a list of notification items.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Notification panel with three sample items.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						items := []ui.NotificationItem{
@@ -2308,6 +2782,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Panel with unread and read notifications.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						items := []ui.NotificationItem{
+							{Title: "Case assigned", Body: "Johnson v. Smith was assigned to you.", Time: "2 min ago", Unread: true},
+							{Title: "Document uploaded", Body: "A new document was added to Case #142.", Time: "10 min ago", Unread: true},
+							{Title: "Reminder", Body: "Court date in 3 days.", Time: "1 hour ago", Unread: false},
+							{Title: "Workflow complete", Body: "Document review workflow finished.", Time: "2 hours ago", Unread: false},
+						}
+						return ui.NotificationPanel(items, 2, "#")
+					},
+				},
 			},
 		},
 
@@ -2319,7 +2806,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "CSS-only floating action button with an expandable sub-menu of quick actions. No JS required.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "FAB appears bottom-right. Click it to expand sub-actions.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						actions := []ui.FABAction{
@@ -2339,6 +2826,39 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "FAB with 2 and 4 action items.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">2 actions</p>`); err != nil {
+								return err
+							}
+							if err := ui.FAB("lucide--plus", []ui.FABAction{
+								{Icon: "lucide--file-plus", Label: "New case", Href: "#"},
+								{Icon: "lucide--upload", Label: "Upload", Href: "#"},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">4 actions</p>`); err != nil {
+								return err
+							}
+							if err := ui.FAB("lucide--plus", []ui.FABAction{
+								{Icon: "lucide--file-plus", Label: "New case", Href: "#"},
+								{Icon: "lucide--users", Label: "Add contact", Href: "#"},
+								{Icon: "lucide--upload", Label: "Upload doc", Href: "#"},
+								{Icon: "lucide--calendar", Label: "Schedule", Href: "#"},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 
@@ -2351,7 +2871,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Breadcrumb-only page header with home icon. Lightweight variant for inner pages.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Compact title bar with inline breadcrumb trail.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						steps := []nav.PageTitleStep{
@@ -2371,6 +2891,34 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Page title with different step counts.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="space-y-4">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-1 font-semibold uppercase px-4 pt-4">Single level</p>`); err != nil {
+								return err
+							}
+							if err := nav.PageTitleMinimal("Dashboard", nil).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-1 font-semibold uppercase px-4">With breadcrumbs</p>`); err != nil {
+								return err
+							}
+							if err := nav.PageTitleMinimal("Edit Record", []nav.PageTitleStep{
+								{Label: "Cases", Href: "#"},
+								{Label: "Johnson v. Smith", Href: "#"},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 		{
@@ -2381,7 +2929,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Full page title with DaisyUI breadcrumbs, subtitle meta, and action buttons.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Editor title with breadcrumbs, subtitle, and action buttons.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						steps := []nav.BreadcrumbStep{
@@ -2406,6 +2954,21 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Editor title bar with actions.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return nav.PageTitleEditor(
+							[]nav.BreadcrumbStep{{Label: "Cases", URL: "#"}, {Label: "Johnson v. Smith", URL: "#"}},
+							"Edit Document",
+							"Last edited 2 minutes ago",
+							[]nav.PageTitleEditorAction{
+								{Label: "Preview", Icon: "lucide--eye", Href: "#"},
+								{Label: "Save", Icon: "lucide--save", Href: "#", Class: "btn-primary"},
+							},
+						)
+					},
+				},
 			},
 		},
 		{
@@ -2416,7 +2979,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Inline search input with a results dropdown showing recent searches and suggested items. CSS-only — no JS required.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Search input with recent and suggested result sections.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						sections := []ui.SearchDropdownSection{
@@ -2446,6 +3009,28 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Search dropdown with multiple result sections.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.SearchDropdown("Search cases, contacts...", []ui.SearchDropdownSection{
+							{
+								Title: "Cases",
+								Items: []ui.SearchDropdownItem{
+									{Label: "Johnson v. Smith", Href: "#", Icon: "lucide--folder"},
+									{Label: "Garcia Estate", Href: "#", Icon: "lucide--folder"},
+								},
+							},
+							{
+								Title: "Contacts",
+								Items: []ui.SearchDropdownItem{
+									{Label: "Alice Johnson", Href: "#", Icon: "lucide--user"},
+									{Label: "Bob Martinez", Href: "#", Icon: "lucide--user"},
+								},
+							},
+						})
+					},
+				},
 			},
 		},
 
@@ -2458,7 +3043,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "FilterCard wraps filter inputs in a card with Filter/Clear buttons. Set Inline=true for a bare horizontal bar (used above tables).",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "FilterCard (card style) and inline variant with sample search and status inputs.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						filterInputs := seq(
@@ -2496,6 +3081,39 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Filter card and compact bar variants.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						inputs := seq(
+							form.SearchInput("q", "", "Search cases…", "", "#"),
+							form.SelectInput("status", "Status", "", [][2]string{
+								{"", "All statuses"},
+								{"active", "Active"},
+								{"closed", "Closed"},
+							}, "", false),
+						)
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-2 font-semibold uppercase">Card style</p>`); err != nil {
+								return err
+							}
+							if err := withChildren(ui.FilterCard(ui.FilterCardProps{Action: "#"}), inputs).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-2 font-semibold uppercase">Inline bar</p>`); err != nil {
+								return err
+							}
+							if err := withChildren(ui.FilterCard(ui.FilterCardProps{Action: "#", Inline: true}), inputs).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 		{
@@ -2506,7 +3124,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Fieldset wrapper with an optional legend label grouping related form inputs.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Two fieldsets grouping personal information and case detail inputs.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						personal := withChildren(
@@ -2539,6 +3157,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Fieldsets grouping related form inputs.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if err := ui.FieldsetWithBoundary("Personal Info", seq(
+								form.TextInput("name", "Full Name", "", "", true),
+								form.TextInput("email", "Email", "", "", true),
+							)).Render(ctx, w); err != nil {
+								return err
+							}
+							if err := ui.FieldsetWithBoundary("Preferences", seq(
+								form.CheckboxInput("newsletter", "Subscribe to newsletter", false, ""),
+								form.CheckboxInput("updates", "Receive product updates", true, ""),
+							)).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 		{
@@ -2549,7 +3192,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Minimal AI prompt / chat input with token counter and send button.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Prompt bar with attach, image, voice, and token counter.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
@@ -2572,6 +3215,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Prompt bar with different placeholder text.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Default</p>`); err != nil {
+								return err
+							}
+							if err := form.PromptBar(form.PromptBarProps{Placeholder: "Ask anything..."}).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Legal context</p>`); err != nil {
+								return err
+							}
+							if err := form.PromptBar(form.PromptBarProps{Placeholder: "Search case law, statutes, or documents..."}).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 		{
@@ -2582,7 +3250,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "AI prompt input with quick-action buttons (Add File, Deep Thinking, Browsing).",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Prompt bar with labelled quick-action buttons.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						actions := []form.PromptBarActionItem{
@@ -2601,6 +3269,38 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Prompt bar with action toolbar variants.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">With 2 actions</p>`); err != nil {
+								return err
+							}
+							if err := form.PromptBarAction("Ask a question...", []form.PromptBarActionItem{
+								{Icon: "lucide--paperclip", Label: "Attach"},
+								{Icon: "lucide--mic", Label: "Record"},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">With 3 actions</p>`); err != nil {
+								return err
+							}
+							if err := form.PromptBarAction("Type a message...", []form.PromptBarActionItem{
+								{Icon: "lucide--image", Label: "Image"},
+								{Icon: "lucide--paperclip", Label: "Attach"},
+								{Icon: "lucide--smile", Label: "Emoji"},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 
@@ -2613,7 +3313,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Gradient text using Tailwind v4 bg-linear-to-r + bg-clip-text. Useful for hero headings.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Primary→secondary, success→info, and warning→error gradient examples.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return rawHTML(`<div class="p-6 space-y-6">
@@ -2630,6 +3330,17 @@ func AllComponents() []galleryruntime.GalleryComponent {
 </div>`)
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Gradient text in multiple color directions.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return rawHTML(`<div class="p-6 space-y-4">
+	<p class="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Primary to Secondary</p>
+	<p class="text-3xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">Accent to Primary</p>
+	<p class="text-3xl font-bold bg-gradient-to-br from-success to-info bg-clip-text text-transparent">Success to Info</p>
+</div>`)
+					},
+				},
 			},
 		},
 		{
@@ -2640,7 +3351,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Tailwind v4 colored shadow utilities using shadow-{color}/{opacity}.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Cards and buttons with colored drop shadows.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return rawHTML(`<div class="p-8 space-y-6">
@@ -2674,6 +3385,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 </div>`)
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Cards with colored drop shadows.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return rawHTML(`<div class="p-8 flex flex-wrap gap-8">
+	<div class="card bg-primary text-primary-content w-32 h-20 shadow-lg shadow-primary/50 flex items-center justify-center font-semibold">Primary</div>
+	<div class="card bg-secondary text-secondary-content w-32 h-20 shadow-lg shadow-secondary/50 flex items-center justify-center font-semibold">Secondary</div>
+	<div class="card bg-accent text-accent-content w-32 h-20 shadow-lg shadow-accent/50 flex items-center justify-center font-semibold">Accent</div>
+	<div class="card bg-success text-success-content w-32 h-20 shadow-lg shadow-success/50 flex items-center justify-center font-semibold">Success</div>
+	<div class="card bg-error text-error-content w-32 h-20 shadow-lg shadow-error/50 flex items-center justify-center font-semibold">Error</div>
+</div>`)
+					},
+				},
 			},
 		},
 
@@ -2686,7 +3410,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Heading and body text scale used across the application.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Heading levels, body, muted, overline, and link styles.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return rawHTML(`<div class="p-6 space-y-3">
@@ -2701,6 +3425,21 @@ func AllComponents() []galleryruntime.GalleryComponent {
 </div>`)
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Typography hierarchy showcase.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return rawHTML(`<div class="p-6 space-y-3">
+	<h1 class="text-4xl font-bold">Heading 1</h1>
+	<h2 class="text-3xl font-semibold">Heading 2</h2>
+	<h3 class="text-2xl font-semibold">Heading 3</h3>
+	<h4 class="text-xl font-medium">Heading 4</h4>
+	<p class="text-base">Body text — the quick brown fox jumps over the lazy dog.</p>
+	<p class="text-sm text-base-content/70">Small muted text for secondary information.</p>
+	<p class="text-xs text-base-content/50 uppercase tracking-wider font-semibold">Label / Caption</p>
+</div>`)
+					},
+				},
 			},
 		},
 		{
@@ -2711,7 +3450,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Text size scale (xs→6xl) and font weight scale (thin→black).",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Size scale from xs to 4xl and all font weights.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return rawHTML(`<div class="space-y-6 p-6">
@@ -2744,6 +3483,22 @@ func AllComponents() []galleryruntime.GalleryComponent {
 </div>`)
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Full Tailwind font-size scale.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return rawHTML(`<div class="p-6 space-y-2">
+	<p class="text-xs">xs — 12px</p>
+	<p class="text-sm">sm — 14px</p>
+	<p class="text-base">base — 16px</p>
+	<p class="text-lg">lg — 18px</p>
+	<p class="text-xl">xl — 20px</p>
+	<p class="text-2xl">2xl — 24px</p>
+	<p class="text-3xl">3xl — 30px</p>
+	<p class="text-4xl">4xl — 36px</p>
+</div>`)
+					},
+				},
 			},
 		},
 		{
@@ -2754,7 +3509,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Box shadows from none→2xl, colored shadows, inset shadows, and text shadows.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Box shadow, inset shadow, and text shadow scales.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return rawHTML(`<div class="space-y-6 p-6">
@@ -2794,6 +3549,20 @@ func AllComponents() []galleryruntime.GalleryComponent {
 </div>`)
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Tailwind shadow scale from sm to 2xl.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return rawHTML(`<div class="p-8 flex flex-wrap gap-6 items-end">
+	<div class="card bg-base-100 w-20 h-20 shadow-sm flex items-center justify-center text-xs font-medium">sm</div>
+	<div class="card bg-base-100 w-20 h-20 shadow flex items-center justify-center text-xs font-medium">default</div>
+	<div class="card bg-base-100 w-20 h-20 shadow-md flex items-center justify-center text-xs font-medium">md</div>
+	<div class="card bg-base-100 w-20 h-20 shadow-lg flex items-center justify-center text-xs font-medium">lg</div>
+	<div class="card bg-base-100 w-20 h-20 shadow-xl flex items-center justify-center text-xs font-medium">xl</div>
+	<div class="card bg-base-100 w-20 h-20 shadow-2xl flex items-center justify-center text-xs font-medium">2xl</div>
+</div>`)
+					},
+				},
 			},
 		},
 		{
@@ -2804,7 +3573,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Tailwind filter utilities: grayscale, invert, sepia, blur, brightness, contrast, saturate.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Image filter utility classes applied to sample images.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return rawHTML(`<div class="p-6">
@@ -2848,6 +3617,20 @@ func AllComponents() []galleryruntime.GalleryComponent {
 </div>`)
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "CSS filter effects: blur, brightness, contrast.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return rawHTML(`<div class="p-6 flex flex-wrap gap-6">
+	<div class="flex flex-col items-center gap-2"><div class="w-20 h-20 rounded bg-primary"></div><span class="text-xs">Normal</span></div>
+	<div class="flex flex-col items-center gap-2"><div class="w-20 h-20 rounded bg-primary blur-sm"></div><span class="text-xs">blur-sm</span></div>
+	<div class="flex flex-col items-center gap-2"><div class="w-20 h-20 rounded bg-primary brightness-75"></div><span class="text-xs">brightness-75</span></div>
+	<div class="flex flex-col items-center gap-2"><div class="w-20 h-20 rounded bg-primary brightness-125"></div><span class="text-xs">brightness-125</span></div>
+	<div class="flex flex-col items-center gap-2"><div class="w-20 h-20 rounded bg-primary contrast-50"></div><span class="text-xs">contrast-50</span></div>
+	<div class="flex flex-col items-center gap-2"><div class="w-20 h-20 rounded bg-primary saturate-50"></div><span class="text-xs">saturate-50</span></div>
+</div>`)
+					},
+				},
 			},
 		},
 
@@ -2860,7 +3643,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Simple one-line footer with copyright text and optional links.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Footer with copyright text only.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
@@ -2868,6 +3651,35 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								return err
 							}
 							if err := nav.FooterMinimal("© 2025 LegalPlant. All rights reserved.", nil).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Footer with various link configurations.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="space-y-4">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-1 font-semibold uppercase px-4 pt-4">Minimal (no links)</p>`); err != nil {
+								return err
+							}
+							if err := nav.FooterMinimal("© 2026 Acme Corp.", nil).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-1 font-semibold uppercase px-4">With links</p>`); err != nil {
+								return err
+							}
+							if err := nav.FooterMinimal("© 2026 Acme Corp.", []nav.FooterLink{
+								{Label: "Privacy Policy", Href: "#"},
+								{Label: "Terms of Service", Href: "#"},
+								{Label: "Contact", Href: "#"},
+							}).Render(ctx, w); err != nil {
 								return err
 							}
 							_, err := io.WriteString(w, `</div></div>`)
@@ -2885,7 +3697,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Avatar dropdown menu with grouped menu items and sign-out action.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Profile dropdown with avatar, user info, menu items, and sign-out.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						items := []nav.ProfileMenuItem{
@@ -2905,6 +3717,38 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Variants: with badge count, and minimal (sign-out only).",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Full featured</p>`); err != nil {
+								return err
+							}
+							if err := nav.ProfileMenu("Jane Doe", "jane@example.com", "JD", []nav.ProfileMenuItem{
+								{Label: "Profile", Href: "#", Icon: "lucide--user"},
+								{Label: "Settings", Href: "#", Icon: "lucide--settings"},
+								{Label: "Notifications", Href: "#", Icon: "lucide--bell", Badge: 5},
+							}, "#").Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div>`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Sign-out only</p>`); err != nil {
+								return err
+							}
+							if err := nav.ProfileMenu("Bob Smith", "bob@example.com", "BS", []nav.ProfileMenuItem{}, "#").Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 
@@ -2917,7 +3761,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Numeric increment/decrement input with +/- buttons. Uses vanilla JS — no library needed. Includes simple and joined variants.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Simple spinner with default styling.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
@@ -2938,6 +3782,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Spinner variants: default, bounded, and no-display-bounds.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Default (0–99)</p>`); err != nil {
+								return err
+							}
+							if err := form.InputSpinner("ex-spin1", 0, 0, 99, true, "btn-outline", "w-24").Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Bounded (0–10)</p>`); err != nil {
+								return err
+							}
+							if err := form.InputSpinner("ex-spin2", 5, 0, 10, true, "btn-primary btn-sm", "w-20 input-sm").Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 		{
@@ -2948,7 +3817,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Multi-step form wizard with step indicators, next/prev navigation, and a finish action. Implemented in vanilla JS — no Alpine.js needed.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Four-step case creation wizard.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						steps := []form.WizardStep{
@@ -3009,6 +3878,28 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Wizard with 2 and 4 steps.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">2-step wizard</p>`); err != nil {
+								return err
+							}
+							if err := form.WizardStepper("wiz-2", []form.WizardStep{{Label: "Details"}, {Label: "Confirm"}}, []form.WizardStepPanel{
+								{Title: "Step 1 — Details", Content: `<input type="text" placeholder="Enter details" class="input input-bordered w-full"/>`},
+								{Title: "Step 2 — Confirm", Content: `<p class="text-sm text-base-content/70">Review and submit.</p>`},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 		{
@@ -3019,7 +3910,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "Click-to-copy buttons with visual feedback. Uses vanilla JS navigator.clipboard — no library needed.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Copy text field, share link, and inline copy badge.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						items := []form.ClipboardCopyItem{
@@ -3048,6 +3939,26 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								return err
 							}
 							if err := form.ClipboardCopy(items).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Clipboard copy with text, URL, and mono code variants.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 max-w-lg">`); err != nil {
+								return err
+							}
+							if err := form.ClipboardCopy([]form.ClipboardCopyItem{
+								{ID: "ex-copy1", Label: "Case ID", Value: "CASE-2026-00142", ButtonLabel: "Copy"},
+								{ID: "ex-copy2", Label: "Share link", Value: "https://app.example.com/cases/CASE-2026-00142", ButtonLabel: "Copy Link", ButtonClass: "btn-primary"},
+								{ID: "ex-copy3", Label: "API key", Value: "sk-live-abc123xyz789", Mono: true},
+							}).Render(ctx, w); err != nil {
 								return err
 							}
 							_, err := io.WriteString(w, `</div>`)
@@ -3263,6 +4174,17 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: CardTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Cards with different titles and body content.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return row(
+							withChildren(ui.Card("User Profile"), rawHTML(`<p class="text-sm text-base-content/70">Name: Alice Johnson<br/>Role: Admin</p>`)),
+							withChildren(ui.Card("Statistics"), rawHTML(`<p class="text-sm text-base-content/70">Active cases: 12<br/>Closed this month: 4</p>`)),
+							withChildren(ui.Card("Recent Activity"), rawHTML(`<p class="text-sm text-base-content/70">Document uploaded 2m ago<br/>Comment added 5m ago</p>`)),
+						)
+					},
+				},
 			},
 		},
 
@@ -3333,6 +4255,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: PaginationTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Pagination at different pages within a 10-page set.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							for _, page := range []int{1, 5, 10} {
+								pageStr := fmt.Sprintf("%d", page)
+								if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Page `+pageStr+` of 10</p>`); err != nil {
+									return err
+								}
+								if err := ui.Pagination(page, 10, "#", "content").Render(ctx, w); err != nil {
+									return err
+								}
+								if _, err := io.WriteString(w, `</div>`); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 
@@ -3360,6 +4307,28 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: EmptyTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Empty states for different contexts.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
+								return err
+							}
+							if err := ui.Empty("lucide--search", "No results found", "Try adjusting your search or filters.").Render(ctx, w); err != nil {
+								return err
+							}
+							if err := ui.Empty("lucide--folder-open", "No cases yet", "Create your first case to get started.").Render(ctx, w); err != nil {
+								return err
+							}
+							if err := ui.Empty("lucide--bell-off", "No notifications", "You're all caught up!").Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 
@@ -3372,7 +4341,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Description: "DaisyUI loading spinner with centered, inline, and overlay variants.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Basics",
+					Name:        "Interactive",
 					Description: "Configurable spinner variant: centered, inline, or overlay.",
 					RenderFunc: func(params url.Values) templ.Component {
 						variant := ui.LoaderVariant(params.Get("variant"))
@@ -3382,6 +4351,30 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return ui.LoaderWithBoundary(variant)
 					},
 					Tokens: LoaderTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "All three loader variants side by side.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
+								return err
+							}
+							for _, v := range []ui.LoaderVariant{ui.LoaderCentered, ui.LoaderInline} {
+								if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">`+string(v)+`</p>`); err != nil {
+									return err
+								}
+								if err := ui.Loader(v).Render(ctx, w); err != nil {
+									return err
+								}
+								if _, err := io.WriteString(w, `</div>`); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
 				},
 			},
 		},
@@ -3458,6 +4451,18 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{Value: "bg-info/10 text-info", Label: "Info"},
 							},
 						},
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Stat cards in different icon color schemes.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return row(
+							ui.StatCard(ui.StatCardProps{Label: "Active Cases", Value: "42", Icon: "lucide--folder-open", IconColor: "bg-primary/10 text-primary"}),
+							ui.StatCard(ui.StatCardProps{Label: "Contacts", Value: "128", Icon: "lucide--users", IconColor: "bg-secondary/10 text-secondary"}),
+							ui.StatCard(ui.StatCardProps{Label: "Documents", Value: "315", Icon: "lucide--file-text", IconColor: "bg-success/10 text-success"}),
+							ui.StatCard(ui.StatCardProps{Label: "Overdue", Value: "7", Icon: "lucide--alert-circle", IconColor: "bg-error/10 text-error"}),
+						)
 					},
 				},
 			},
@@ -3695,6 +4700,17 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: CheckboxInputTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Checkboxes: unchecked, checked, and with error.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							form.CheckboxInput("opt1", "Enable notifications", false, ""),
+							form.CheckboxInput("opt2", "I agree to the terms", true, ""),
+							form.CheckboxInput("opt3", "Subscribe to newsletter", false, "This field is required."),
+						)
+					},
+				},
 			},
 		},
 
@@ -3779,6 +4795,17 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return form.RangeInputWithBoundary("volume", "Volume", val, 0, 100, 1, color)
 					},
 					Tokens: RangeInputTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "Range sliders with different colors and values.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							form.RangeInput("vol", "Volume", 70, 0, 100, 1, "range-primary"),
+							form.RangeInput("bright", "Brightness", 50, 0, 100, 10, "range-secondary"),
+							form.RangeInput("speed", "Speed", 30, 0, 100, 5, "range-accent"),
+						)
+					},
 				},
 			},
 		},
@@ -3882,6 +4909,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						},
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Form fields of each type.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "name", Label: "Full Name", Placeholder: "Jane Smith", Required: true}),
+							form.FormField(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Placeholder: "jane@example.com"}),
+							form.FormField(form.FormFieldProps{Type: form.FieldTextarea, Name: "bio", Label: "Bio", Placeholder: "Tell us about yourself..."}),
+							form.FormField(form.FormFieldProps{Type: form.FieldSelect, Name: "role", Label: "Role", Options: []form.SelectOption{{Value: "admin", Label: "Admin"}, {Value: "member", Label: "Member"}, {Value: "viewer", Label: "Viewer"}}}),
+							form.FormField(form.FormFieldProps{Type: form.FieldCheckbox, Name: "agree", Label: "I agree to the terms"}),
+						)
+					},
+				},
 			},
 		},
 
@@ -3921,6 +4961,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						},
 					},
 				},
+				{
+					Name:        "Examples",
+					Description: "Search inputs with different placeholders.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Default</p>`); err != nil {
+								return err
+							}
+							if err := form.SearchInput("q1", "", "Search...", "", "").Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">With pre-filled value</p>`); err != nil {
+								return err
+							}
+							if err := form.SearchInput("q2", "Johnson v. Smith", "Search cases...", "", "").Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 
@@ -3943,6 +5008,24 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return nav.TopBarWithBoundary(title)
 					},
 					Tokens: TopBarTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "Top bars with different section titles.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="space-y-4">`); err != nil {
+								return err
+							}
+							for _, title := range []string{"Dashboard", "Cases", "Contacts", "Settings"} {
+								if err := nav.TopBar(title).Render(ctx, w); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
 				},
 			},
 		},
@@ -4043,6 +5126,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: PageHeaderTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Page headers with 2 and 3 breadcrumb levels.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="space-y-2">`); err != nil {
+								return err
+							}
+							if err := nav.PageHeader(nav.Crumbs("Home", "/", "Dashboard")).Render(ctx, w); err != nil {
+								return err
+							}
+							if err := nav.PageHeader(nav.Crumbs("Home", "/", "Cases", "/cases", "Johnson v. Smith")).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 
@@ -4083,6 +5185,37 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 					Tokens: MenuTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "Menu in default and compact sizes.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						items := []nav.MenuItem{
+							{Label: "Dashboard", Icon: "lucide--layout-dashboard", Href: "#", Active: true},
+							{Label: "Cases", Icon: "lucide--folder-open", Href: "#"},
+							{Label: "Contacts", Icon: "lucide--users", Href: "#"},
+							{Label: "Settings", Icon: "lucide--settings", Href: "#"},
+						}
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 flex gap-8">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Default size</p>`); err != nil {
+								return err
+							}
+							if err := nav.Menu("", items).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Compact (xs)</p>`); err != nil {
+								return err
+							}
+							if err := nav.Menu("menu-xs", items).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
 				},
 			},
 		},
@@ -4125,6 +5258,27 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: ModalTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Modal in SM, MD, and LG sizes.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-4 relative" style="min-height:320px;">`); err != nil {
+								return err
+							}
+							body := func(size modal.ModalSize) templ.Component {
+								return withChildren(modal.ModalWithBoundary("Confirm — "+string(size), size), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`))
+							}
+							for _, size := range []modal.ModalSize{"modal-sm", "", "modal-lg"} {
+								if err := body(size).Render(ctx, w); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
 			},
 		},
 
@@ -4161,6 +5315,22 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 					Tokens: ConfirmPopupTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "Confirm dialogs for delete and archive actions.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-8 relative" style="min-height:280px;">`); err != nil {
+								return err
+							}
+							if err := modal.ConfirmPopupWithBoundary("Delete record?", "This action cannot be undone.", "Delete", "#", "DELETE").Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
 				},
 			},
 		},
@@ -4233,6 +5403,24 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							Default:    "Save",
 							QueryParam: "submitText",
 						},
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Form modal at different sizes.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="relative" style="min-height:320px;">`); err != nil {
+								return err
+							}
+							if err := modal.FormModalWithBoundary(modal.FormModalProps{
+								ID: "ex-form-modal", Title: "New Case", Size: "", SubmitText: "Create", Action: "#", Method: "post",
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('ex-form-modal');if(d&&d.showModal)d.showModal();});</script>`)
+							return err
+						})
 					},
 				},
 			},
@@ -4451,6 +5639,20 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: LogsTableTokens(),
 				},
+				{
+					Name:        "Examples",
+					Description: "Log table with all four log types.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						now := time.Now()
+						return logs.LogsTableWithBoundary([]logs.LogEntry{
+							{Type: "success", Message: "Case created successfully.", CreatedAt: now.Add(-1 * time.Minute)},
+							{Type: "info", Message: "Workflow triggered: document-review.", CreatedAt: now.Add(-3 * time.Minute)},
+							{Type: "warn", Message: "API rate limit at 80% of quota.", CreatedAt: now.Add(-10 * time.Minute)},
+							{Type: "error", Message: "Integration sync failed: connection timeout.", CreatedAt: now.Add(-30 * time.Minute)},
+							{Type: "info", Message: "User logged in from new device.", CreatedAt: now.Add(-1 * time.Hour)},
+						})
+					},
+				},
 			},
 		},
 
@@ -4473,6 +5675,24 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return layout.NavbarWithBoundary(appName)
 					},
 					Tokens: NavbarTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "Navbar with different app names.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="space-y-4">`); err != nil {
+								return err
+							}
+							for _, name := range []string{"LegalDesk", "CaseFlow", "DocVault"} {
+								if err := layout.Navbar(name).Render(ctx, w); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
 				},
 			},
 		},
