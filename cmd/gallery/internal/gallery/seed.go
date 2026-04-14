@@ -1355,42 +1355,66 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
-					Description: "Three-slide horizontal carousel.",
+					Description: "Full-width one-at-a-time horizontal carousel (snap to start).",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return ui.CarouselWithBoundary(false, []ui.CarouselItemProps{
-							{ID: "slide1", Content: ui.CarouselSlide("Slide 1", "bg-primary text-primary-content")},
-							{ID: "slide2", Content: ui.CarouselSlide("Slide 2", "bg-secondary text-secondary-content")},
-							{ID: "slide3", Content: ui.CarouselSlide("Slide 3", "bg-accent text-accent-content")},
+						return ui.CarouselWithBoundary(ui.CarouselSnapStart, false, "w-full", []ui.CarouselItemProps{
+							{ID: "slide1", ItemWidth: "w-full", Content: ui.CarouselSlide("Slide 1", "bg-primary text-primary-content")},
+							{ID: "slide2", ItemWidth: "w-full", Content: ui.CarouselSlide("Slide 2", "bg-secondary text-secondary-content")},
+							{ID: "slide3", ItemWidth: "w-full", Content: ui.CarouselSlide("Slide 3", "bg-accent text-accent-content")},
 						})
 					},
 					Tokens: []galleryruntime.DesignToken{},
 				},
 				{
 					Name:        "Examples",
-					Description: "Horizontal and vertical carousel variants.",
+					Description: "Snap-start full-width, snap-center, snap-end, half-width, and vertical variants.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						slides := []ui.CarouselItemProps{
-							{ID: "slide1", Content: ui.CarouselSlide("Slide 1", "bg-primary text-primary-content")},
-							{ID: "slide2", Content: ui.CarouselSlide("Slide 2", "bg-secondary text-secondary-content")},
-							{ID: "slide3", Content: ui.CarouselSlide("Slide 3", "bg-accent text-accent-content")},
+						fullSlides := []ui.CarouselItemProps{
+							{ID: "s1a", ItemWidth: "w-full", Content: ui.CarouselSlide("Slide 1", "bg-primary text-primary-content")},
+							{ID: "s2a", ItemWidth: "w-full", Content: ui.CarouselSlide("Slide 2", "bg-secondary text-secondary-content")},
+							{ID: "s3a", ItemWidth: "w-full", Content: ui.CarouselSlide("Slide 3", "bg-accent text-accent-content")},
+						}
+						centerSlides := []ui.CarouselItemProps{
+							{ID: "s1b", ItemWidth: "w-64", Content: ui.CarouselSlide("Slide 1", "bg-primary text-primary-content")},
+							{ID: "s2b", ItemWidth: "w-64", Content: ui.CarouselSlide("Slide 2", "bg-secondary text-secondary-content")},
+							{ID: "s3b", ItemWidth: "w-64", Content: ui.CarouselSlide("Slide 3", "bg-accent text-accent-content")},
+						}
+						halfSlides := []ui.CarouselItemProps{
+							{ID: "s1c", ItemWidth: "w-1/2", Content: ui.CarouselSlide("Slide 1", "bg-primary text-primary-content")},
+							{ID: "s2c", ItemWidth: "w-1/2", Content: ui.CarouselSlide("Slide 2", "bg-secondary text-secondary-content")},
+							{ID: "s3c", ItemWidth: "w-1/2", Content: ui.CarouselSlide("Slide 3", "bg-accent text-accent-content")},
+						}
+						vertSlides := []ui.CarouselItemProps{
+							{ID: "s1d", ItemWidth: "h-full", Content: ui.CarouselSlide("Slide 1", "bg-primary text-primary-content")},
+							{ID: "s2d", ItemWidth: "h-full", Content: ui.CarouselSlide("Slide 2", "bg-secondary text-secondary-content")},
+							{ID: "s3d", ItemWidth: "h-full", Content: ui.CarouselSlide("Slide 3", "bg-accent text-accent-content")},
 						}
 						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							sections := []struct {
+								label string
+								comp  templ.Component
+							}{
+								{"Snap Start — full width items", ui.CarouselWithBoundary(ui.CarouselSnapStart, false, "w-full", fullSlides)},
+								{"Snap Center — fixed width items", ui.CarouselWithBoundary(ui.CarouselSnapCenter, false, "w-96", centerSlides)},
+								{"Snap End — fixed width items", ui.CarouselWithBoundary(ui.CarouselSnapEnd, false, "w-96", centerSlides)},
+								{"Half-width items", ui.CarouselWithBoundary(ui.CarouselSnapStart, false, "w-96", halfSlides)},
+								{"Vertical", ui.CarouselWithBoundary(ui.CarouselSnapStart, true, "h-48", vertSlides)},
+							}
 							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
 								return err
 							}
-							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Horizontal</p>`); err != nil {
-								return err
+							for _, s := range sections {
+								if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">`+s.label+`</p>`); err != nil {
+									return err
+								}
+								if err := s.comp.Render(ctx, w); err != nil {
+									return err
+								}
+								if _, err := io.WriteString(w, `</div>`); err != nil {
+									return err
+								}
 							}
-							if err := ui.CarouselWithBoundary(false, slides).Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Vertical</p>`); err != nil {
-								return err
-							}
-							if err := ui.CarouselWithBoundary(true, slides).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div></div>`)
+							_, err := io.WriteString(w, `</div>`)
 							return err
 						})
 					},

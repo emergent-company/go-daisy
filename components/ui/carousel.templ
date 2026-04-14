@@ -1,19 +1,43 @@
 package ui
 
+// CarouselSnap controls scroll-snap alignment on the carousel container.
+type CarouselSnap string
+
+const (
+	CarouselSnapStart  CarouselSnap = "carousel-start"  // default
+	CarouselSnapCenter CarouselSnap = "carousel-center"
+	CarouselSnapEnd    CarouselSnap = "carousel-end"
+)
+
 // Carousel wraps a DaisyUI carousel container.
-templ Carousel(vertical bool) {
-	<div class={ "carousel", templ.KV("carousel-vertical", vertical) }>
+// snap controls scroll-snap alignment (start/center/end).
+// vertical switches to carousel-vertical layout.
+// width is an optional Tailwind width class (e.g. "w-64", "w-full") applied to the container.
+templ Carousel(snap CarouselSnap, vertical bool, width string) {
+	<div
+		class={
+			"carousel",
+			"rounded-box",
+			templ.KV(string(snap), snap != "" && snap != CarouselSnapStart),
+			templ.KV("carousel-vertical", vertical),
+			templ.KV(width, width != ""),
+		}
+	>
 		{ children... }
 	</div>
 }
 
 // CarouselItem renders a single carousel slide.
-templ CarouselItem(id string) {
+// itemWidth is an optional Tailwind width class applied to the item (e.g. "w-full", "w-1/2").
+templ CarouselItem(id string, itemWidth string) {
 	<div
 		if id != "" {
 			id={ id }
 		}
-		class="carousel-item"
+		class={
+			"carousel-item",
+			templ.KV(itemWidth, itemWidth != ""),
+		}
 	>
 		{ children... }
 	</div>

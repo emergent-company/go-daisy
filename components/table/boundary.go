@@ -32,6 +32,12 @@ func TableHeadCellWithBoundary(label string) templ.Component {
 	return devmode.ElementBoundary("TableHeadCell", map[string]any{"label": label}, TableHeadCell(label))
 }
 
+// TableHeaderWithBoundary wraps TableHeader with a dev-mode element boundary annotation.
+// Uses ElementBoundary because TableHeader renders a <th> element directly.
+func TableHeaderWithBoundary(label string, sortKey string, currentSortKey string, currentDir SortDir, baseURL string) templ.Component {
+	return devmode.ElementBoundary("TableHeader", map[string]any{"label": label, "sortKey": sortKey}, TableHeader(label, sortKey, currentSortKey, currentDir, baseURL))
+}
+
 // TableBodyWithBoundary wraps TableBody with a dev-mode element boundary annotation.
 func TableBodyWithBoundary() templ.Component {
 	return devmode.ElementBoundary("TableBody", nil, TableBody())

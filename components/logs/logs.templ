@@ -12,19 +12,19 @@ templ LogsTable(entries []LogEntry) {
 	if len(entries) == 0 {
 		<p class="text-base-content/60">No logs found</p>
 	} else {
-		@tablecomp.Table() {
+		@tablecomp.TableWithBoundary() {
 			<thead>
 				<tr>
-					@tablecomp.TableHeader("Status", "", "", "", "")
-					@tablecomp.TableHeader("Date/Time", "", "", "", "")
-					@tablecomp.TableHeader("Event", "", "", "", "")
+					@tablecomp.TableHeaderWithBoundary("Status", "", "", "", "")
+					@tablecomp.TableHeaderWithBoundary("Date/Time", "", "", "", "")
+					@tablecomp.TableHeaderWithBoundary("Event", "", "", "", "")
 				</tr>
 			</thead>
 			<tbody>
 				for _, entry := range entries {
 					<tr>
 						<td>
-							@ui.StatusDot(ui.StatusColorForLog(entry.Type), false)
+							@ui.StatusDotWithBoundary(ui.StatusColorForLog(entry.Type), false)
 						</td>
 						<td class="text-sm text-base-content">{ formatTime(entry.CreatedAt) }</td>
 						<td class="text-sm text-base-content">{ entry.Message }</td>

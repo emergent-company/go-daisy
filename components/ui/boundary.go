@@ -515,27 +515,32 @@ func MaskWithBoundary(shape MaskShape, content templ.Component) templ.Component 
 }
 
 // CarouselWithBoundary wraps Carousel with a dev-mode component boundary annotation.
-// gallery:token vertical
-func CarouselWithBoundary(vertical bool, items []CarouselItemProps) templ.Component {
+// gallery:token snap,vertical,width
+func CarouselWithBoundary(snap CarouselSnap, vertical bool, width string, items []CarouselItemProps) templ.Component {
 	children := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		for _, item := range items {
 			it := item
-			if err := CarouselItem(it.ID).Render(templ.WithChildren(ctx, it.Content), w); err != nil {
+			inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+				return CarouselItem(it.ID, it.ItemWidth).Render(templ.WithChildren(ctx, it.Content), w)
+			})
+			itemBoundary := devmode.ComponentBoundary("CarouselItem", map[string]any{"id": it.ID, "itemWidth": it.ItemWidth}, inner)
+			if err := itemBoundary.Render(ctx, w); err != nil {
 				return err
 			}
 		}
 		return nil
 	})
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		return Carousel(vertical).Render(templ.WithChildren(ctx, children), w)
+		return Carousel(snap, vertical, width).Render(templ.WithChildren(ctx, children), w)
 	})
-	return devmode.ComponentBoundary("Carousel", map[string]any{"vertical": vertical, "itemCount": len(items)}, outer)
+	return devmode.ComponentBoundary("Carousel", map[string]any{"snap": string(snap), "vertical": vertical, "width": width, "itemCount": len(items)}, outer)
 }
 
 // CarouselItemProps holds props for a single carousel slide.
 type CarouselItemProps struct {
-	ID      string
-	Content templ.Component
+	ID        string
+	ItemWidth string // optional Tailwind width class, e.g. "w-full", "w-1/2"
+	Content   templ.Component
 }
 
 // TimelineWithBoundary wraps Timeline with a dev-mode component boundary annotation.
