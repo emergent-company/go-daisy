@@ -677,3 +677,20 @@ func PersonChipWithBoundary(name string, avatarColor string, textColor string, g
 		"gradientTo":   gradientTo,
 	}, PersonChip(name, avatarColor, textColor, gradientFrom, gradientTo, contact))
 }
+
+// NotificationPanelWithBoundary wraps NotificationPanel with a dev-mode component boundary annotation.
+func NotificationPanelWithBoundary(items []NotificationItem, unreadCount int, viewAllHref string) templ.Component {
+	return devmode.ComponentBoundary("NotificationPanel", map[string]any{
+		"itemCount":   len(items),
+		"unreadCount": unreadCount,
+		"viewAllHref": viewAllHref,
+	}, NotificationPanel(items, unreadCount, viewAllHref))
+}
+
+// FABWithBoundary wraps FAB with a dev-mode component boundary annotation.
+func FABWithBoundary(icon string, actions []FABAction) templ.Component {
+	return devmode.ComponentBoundary("FAB", map[string]any{
+		"icon":        icon,
+		"actionCount": len(actions),
+	}, FAB(icon, actions))
+}

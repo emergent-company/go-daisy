@@ -191,6 +191,10 @@ const devOverlayScript = `
     } catch(e) {}
   }
 
+  // Expose postTree so the parent gallery page can re-request the tree
+  // after an HTMX navigation reassigns the iframe src.
+  window.postTree = postTree;
+
   if (document.readyState === 'complete') {
     postTree();
   } else {

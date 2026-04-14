@@ -143,3 +143,38 @@ func ToggleWithBoundary(name string, checked bool, label string) templ.Component
 		"label":   label,
 	}, Toggle(name, checked, label))
 }
+
+// PromptBarWithBoundary wraps PromptBar with a dev-mode component boundary annotation.
+func PromptBarWithBoundary(props PromptBarProps) templ.Component {
+	return devmode.ComponentBoundary("PromptBar", props, PromptBar(props))
+}
+
+// PromptBarActionWithBoundary wraps PromptBarAction with a dev-mode component boundary annotation.
+func PromptBarActionWithBoundary(placeholder string, actions []PromptBarActionItem) templ.Component {
+	return devmode.ComponentBoundary("PromptBarAction", map[string]any{
+		"placeholder": placeholder,
+		"actionCount": len(actions),
+	}, PromptBarAction(placeholder, actions))
+}
+
+// InputSpinnerWithBoundary wraps InputSpinner with a dev-mode component boundary annotation.
+func InputSpinnerWithBoundary(id string, value, min, max int, hasMinMax bool, btnClass, inputClass string) templ.Component {
+	return devmode.ComponentBoundary("InputSpinner", map[string]any{
+		"id":         id,
+		"value":      value,
+		"min":        min,
+		"max":        max,
+		"hasMinMax":  hasMinMax,
+		"btnClass":   btnClass,
+		"inputClass": inputClass,
+	}, InputSpinner(id, value, min, max, hasMinMax, btnClass, inputClass))
+}
+
+// WizardStepperWithBoundary wraps WizardStepper with a dev-mode component boundary annotation.
+func WizardStepperWithBoundary(id string, steps []WizardStep, panels []WizardStepPanel) templ.Component {
+	return devmode.ComponentBoundary("WizardStepper", map[string]any{
+		"id":         id,
+		"stepCount":  len(steps),
+		"panelCount": len(panels),
+	}, WizardStepper(id, steps, panels))
+}

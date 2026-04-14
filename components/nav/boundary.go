@@ -77,3 +77,40 @@ func LinkWithBoundary(href string, variant LinkVariant, label string) templ.Comp
 		"label":   label,
 	}, inner)
 }
+
+// PageTitleMinimalWithBoundary wraps PageTitleMinimal with a dev-mode component boundary annotation.
+func PageTitleMinimalWithBoundary(title string, steps []PageTitleStep) templ.Component {
+	return devmode.ComponentBoundary("PageTitleMinimal", map[string]any{
+		"title":     title,
+		"stepCount": len(steps),
+	}, PageTitleMinimal(title, steps))
+}
+
+// PageTitleEditorWithBoundary wraps PageTitleEditor with a dev-mode component boundary annotation.
+func PageTitleEditorWithBoundary(steps []BreadcrumbStep, title, subtitle string, actions []PageTitleEditorAction) templ.Component {
+	return devmode.ComponentBoundary("PageTitleEditor", map[string]any{
+		"title":       title,
+		"subtitle":    subtitle,
+		"stepCount":   len(steps),
+		"actionCount": len(actions),
+	}, PageTitleEditor(steps, title, subtitle, actions))
+}
+
+// FooterMinimalWithBoundary wraps FooterMinimal with a dev-mode component boundary annotation.
+func FooterMinimalWithBoundary(copyright string, links []FooterLink) templ.Component {
+	return devmode.ComponentBoundary("FooterMinimal", map[string]any{
+		"copyright": copyright,
+		"linkCount": len(links),
+	}, FooterMinimal(copyright, links))
+}
+
+// ProfileMenuWithBoundary wraps ProfileMenu with a dev-mode component boundary annotation.
+func ProfileMenuWithBoundary(name, email, initials string, items []ProfileMenuItem, signOutHref string) templ.Component {
+	return devmode.ComponentBoundary("ProfileMenu", map[string]any{
+		"name":        name,
+		"email":       email,
+		"initials":    initials,
+		"itemCount":   len(items),
+		"signOutHref": signOutHref,
+	}, ProfileMenu(name, email, initials, items, signOutHref))
+}

@@ -22,6 +22,7 @@ import (
 	"github.com/emergent-company/go-daisy/components/nav"
 	"github.com/emergent-company/go-daisy/components/table"
 	"github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/devmode"
 	"github.com/emergent-company/go-daisy/galleryruntime"
 )
 
@@ -2096,7 +2097,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						case "closed":
 							badgeLabel, badgeClass = "Closed", "badge-neutral badge-soft"
 						}
-						return ui.PersonChip(name, "bg-primary", "text-primary-content", "from-primary/20", "to-primary/5", ui.PersonChipContact{
+						return ui.PersonChipWithBoundary(name, "bg-primary", "text-primary-content", "from-primary/20", "to-primary/5", ui.PersonChipContact{
 							Role:        role,
 							BadgeLabel:  badgeLabel,
 							BadgeClass:  badgeClass,
@@ -2274,7 +2275,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							rowCount = v
 						}
 						rows := allRows[:rowCount]
-						return table.TableWithActions(table.TableWithActionsProps{
+						return table.TableWithActionsWithBoundary(table.TableWithActionsProps{
 							Rows:        rows,
 							TotalCount:  47,
 							CurrentPage: page,
@@ -2426,27 +2427,18 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							progress = 72
 						}
 						horizontal := params.Get("layout") == "horizontal"
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 max-w-sm">`); err != nil {
-								return err
-							}
-							if err := ui.ProgressCard(ui.ProgressCardProps{
-								Title:         "Case Compliance",
-								Subtitle:      "Johnson v. Smith",
-								ProgressValue: progress,
-								ProgressLabel: fmt.Sprintf("%d%%", progress),
-								GradientClass: "bg-gradient-to-r from-primary/10 to-primary/5",
-								Stats: []ui.ProgressStat{
-									{Label: "Tasks", Value: "18 / 25"},
-									{Label: "Documents", Value: "12 / 15"},
-									{Label: "Due", Value: "Apr 30"},
-								},
-								Horizontal: horizontal,
-							}).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
+						return ui.ProgressCardWithBoundary(ui.ProgressCardProps{
+							Title:         "Case Compliance",
+							Subtitle:      "Johnson v. Smith",
+							ProgressValue: progress,
+							ProgressLabel: fmt.Sprintf("%d%%", progress),
+							GradientClass: "bg-gradient-to-r from-primary/10 to-primary/5",
+							Stats: []ui.ProgressStat{
+								{Label: "Tasks", Value: "18 / 25"},
+								{Label: "Documents", Value: "12 / 15"},
+								{Label: "Due", Value: "Apr 30"},
+							},
+							Horizontal: horizontal,
 						})
 					},
 					Tokens: []galleryruntime.DesignToken{
@@ -2770,16 +2762,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								Unread:        false,
 							},
 						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 flex justify-center">`); err != nil {
-								return err
-							}
-							if err := ui.NotificationPanel(items, 2, "#").Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+						return ui.NotificationPanelWithBoundary(items, 2, "#")
 					},
 				},
 				{
@@ -2814,16 +2797,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: "Upload Doc", Icon: "lucide--file-up"},
 							{Label: "Add Task", Icon: "lucide--check-square"},
 						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="relative h-56 bg-base-100 rounded-lg border border-base-200 overflow-hidden"><p class="text-xs text-base-content/50 p-4">FAB appears bottom-right. Click it to expand sub-actions.</p>`); err != nil {
-								return err
-							}
-							if err := ui.FAB("lucide--plus", actions).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+						return ui.FABWithBoundary("lucide--plus", actions)
 					},
 				},
 				{
@@ -2879,16 +2853,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: "Cases", Href: "#", Icon: "lucide--briefcase"},
 							{Label: "New"},
 						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 bg-base-100">`); err != nil {
-								return err
-							}
-							if err := nav.PageTitleMinimal("Create New Case", steps).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+						return nav.PageTitleMinimalWithBoundary("Create New Case", steps)
 					},
 				},
 				{
@@ -2942,16 +2907,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: "Preview", Class: "btn-outline btn-sm border-base-300"},
 							{Icon: "lucide--ellipsis-vertical", Class: "btn-outline btn-sm border-base-300 btn-square", AriaLabel: "More options"},
 						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 bg-base-100">`); err != nil {
-								return err
-							}
-							if err := nav.PageTitleEditor(steps, "Johnson v. Smith", "Type: Civil Litigation", actions).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+						return nav.PageTitleEditorWithBoundary(steps, "Johnson v. Smith", "Type: Civil Litigation", actions)
 					},
 				},
 				{
@@ -3195,23 +3151,14 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Prompt bar with attach, image, voice, and token counter.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 flex justify-center">`); err != nil {
-								return err
-							}
-							if err := form.PromptBar(form.PromptBarProps{
-								Placeholder:      "Describe what you want to generate or ask a question…",
-								ShowTokenCounter: true,
-								TokenCurrent:     88,
-								TokenMax:         100,
-								ShowAttach:       true,
-								ShowImage:        true,
-								ShowVoice:        true,
-							}).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder:      "Describe what you want to generate or ask a question…",
+							ShowTokenCounter: true,
+							TokenCurrent:     88,
+							TokenMax:         100,
+							ShowAttach:       true,
+							ShowImage:        true,
+							ShowVoice:        true,
 						})
 					},
 				},
@@ -3257,16 +3204,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: "Add File", Icon: "lucide--circle-plus"},
 							{Label: "Deep Think", Icon: "lucide--lightbulb"},
 						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 flex justify-center">`); err != nil {
-								return err
-							}
-							if err := form.PromptBarAction("Type your request or attach files to get started…", actions).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+						return form.PromptBarActionWithBoundary("Type your request or attach files to get started…", actions)
 					},
 				},
 				{
@@ -3316,7 +3254,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Primary→secondary, success→info, and warning→error gradient examples.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return rawHTML(`<div class="p-6 space-y-6">
+						return devmode.ComponentBoundary("GradientText", nil, rawHTML(`<div class="p-6 space-y-6">
   <p class="inline-block bg-linear-to-r from-primary to-secondary bg-clip-text text-3xl font-black text-transparent">
     go-daisy — UI Component Library
   </p>
@@ -3327,7 +3265,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
     Deadline approaching — 3 days left
   </p>
   <p class="text-sm text-base-content/60">Uses <code class="bg-base-200 px-1 rounded text-xs">bg-linear-to-r from-X to-Y bg-clip-text text-transparent</code></p>
-</div>`)
+</div>`))
 					},
 				},
 				{
@@ -3354,7 +3292,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Cards and buttons with colored drop shadows.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return rawHTML(`<div class="p-8 space-y-6">
+						return devmode.ComponentBoundary("ColoredShadows", nil, rawHTML(`<div class="p-8 space-y-6">
   <div class="flex flex-wrap gap-6">
     <div class="card bg-base-100 rounded-box shadow-lg shadow-primary/20 p-4 w-36 text-center">
       <p class="text-sm font-semibold">Primary</p>
@@ -3382,7 +3320,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
     <button class="btn btn-success shadow-lg shadow-success/30">Success Button</button>
     <button class="btn btn-error shadow-lg shadow-error/30">Danger Button</button>
   </div>
-</div>`)
+</div>`))
 					},
 				},
 				{
@@ -3413,7 +3351,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Heading levels, body, muted, overline, and link styles.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return rawHTML(`<div class="p-6 space-y-3">
+						return devmode.ComponentBoundary("Typography", nil, rawHTML(`<div class="p-6 space-y-3">
   <h1 class="text-3xl font-bold text-base-content">Heading 1</h1>
   <h2 class="text-2xl font-semibold text-base-content">Heading 2</h2>
   <h3 class="text-xl font-semibold text-base-content">Heading 3</h3>
@@ -3422,7 +3360,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
   <p class="text-sm text-base-content/60">Small / muted text — used for labels, hints, and secondary information.</p>
   <p class="text-xs text-base-content/50 uppercase tracking-wide font-semibold">Overline / label text</p>
   <a href="#" class="link link-primary text-sm">Link text</a>
-</div>`)
+</div>`))
 					},
 				},
 				{
@@ -3453,7 +3391,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Size scale from xs to 4xl and all font weights.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return rawHTML(`<div class="space-y-6 p-6">
+						return devmode.ComponentBoundary("TypographyScale", nil, rawHTML(`<div class="space-y-6 p-6">
   <div class="card card-border">
     <div class="bg-base-200/30 rounded-t-box px-5 py-3 font-medium">Sizes</div>
     <div class="flex flex-col gap-3 p-6">
@@ -3480,7 +3418,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
       <p class="font-black">The quick brown fox jumps… <span class="text-base-content/40">font-black</span></p>
     </div>
   </div>
-</div>`)
+</div>`))
 					},
 				},
 				{
@@ -3512,7 +3450,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Box shadow, inset shadow, and text shadow scales.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return rawHTML(`<div class="space-y-6 p-6">
+						return devmode.ComponentBoundary("ShadowScale", nil, rawHTML(`<div class="space-y-6 p-6">
   <div class="card card-border bg-base-200/20">
     <div class="bg-base-200/40 rounded-t-box px-5 py-3 font-medium">Box Shadow</div>
     <div class="grid grid-cols-2 gap-6 p-6 lg:grid-cols-4">
@@ -3546,7 +3484,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
       <p class="text-error text-shadow-error/20 font-semibold capitalize text-shadow-lg sm:text-lg">text-shadow-error</p>
     </div>
   </div>
-</div>`)
+</div>`))
 					},
 				},
 				{
@@ -3576,7 +3514,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Image filter utility classes applied to sample images.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return rawHTML(`<div class="p-6">
+						return devmode.ComponentBoundary("CSSFilters", nil, rawHTML(`<div class="p-6">
   <div class="card card-border">
     <div class="bg-base-200/30 rounded-t-box px-5 py-3 font-medium">Image Filters</div>
     <div class="grid grid-cols-3 gap-6 p-6 lg:grid-cols-4">
@@ -3614,7 +3552,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
       </div>
     </div>
   </div>
-</div>`)
+</div>`))
 					},
 				},
 				{
@@ -3646,16 +3584,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Footer with copyright text only.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="space-y-4 p-6"><div class="card card-border"><div class="bg-base-200/30 rounded-t-box px-5 py-3 font-medium">Copyright only</div>`); err != nil {
-								return err
-							}
-							if err := nav.FooterMinimal("© 2025 LegalPlant. All rights reserved.", nil).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div></div>`)
-							return err
-						})
+						return nav.FooterMinimalWithBoundary("© 2025 LegalPlant. All rights reserved.", nil)
 					},
 				},
 				{
@@ -3705,16 +3634,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: "Settings", Href: "#", Icon: "lucide--pencil"},
 							{Label: "Notifications", Href: "#", Icon: "lucide--bell", Badge: 3},
 						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="flex items-center justify-center p-12">`); err != nil {
-								return err
-							}
-							if err := nav.ProfileMenu("Jane Doe", "jane@example.com", "JD", items, "#").Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+						return nav.ProfileMenuWithBoundary("Jane Doe", "jane@example.com", "JD", items, "#")
 					},
 				},
 				{
@@ -3764,22 +3684,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Simple spinner with default styling.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-6"><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Simple</p>`); err != nil {
-								return err
-							}
-							if err := form.InputSpinner("spin1", 0, 0, 99, true, "btn-outline", "w-24").Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">With min/max (0–10)</p>`); err != nil {
-								return err
-							}
-							if err := form.InputSpinner("spin2", 5, 0, 10, true, "btn-primary btn-sm", "w-20 input-sm").Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div></div>`)
-							return err
-						})
+						return form.InputSpinnerWithBoundary("spin1", 0, 0, 99, true, "btn-outline", "w-24")
 					},
 				},
 				{
@@ -3866,16 +3771,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 </div>`,
 							},
 						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6">`); err != nil {
-								return err
-							}
-							if err := form.WizardStepper("wizard-demo", steps, panels).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+						return form.WizardStepperWithBoundary("wizard-demo", steps, panels)
 					},
 				},
 				{

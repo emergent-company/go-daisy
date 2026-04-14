@@ -51,3 +51,8 @@ func TableCellWithBoundary(class string) templ.Component {
 func ListAreaWithBoundary(props ListAreaProps) templ.Component {
 	return devmode.ComponentBoundary("ListArea", props, ListArea(props))
 }
+
+// TableWithActionsWithBoundary wraps TableWithActions with a dev-mode component boundary annotation.
+func TableWithActionsWithBoundary(props TableWithActionsProps) templ.Component {
+	return devmode.ComponentBoundary("TableWithActions", props, TableWithActions(props))
+}

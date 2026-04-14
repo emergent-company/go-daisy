@@ -662,6 +662,17 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 						var src = frame.src;
 						frame.src = '';
 						frame.src = src;
+						// After the iframe loads, ask its devoverlay to re-post the
+						// component tree. This fixes the race where postTree() fires
+						// before the new handleTreeMessage listener is ready.
+						frame.addEventListener('load', function onFrameLoad() {
+							frame.removeEventListener('load', onFrameLoad);
+							try {
+								if (frame.contentWindow && typeof frame.contentWindow.postTree === 'function') {
+									frame.contentWindow.postTree();
+								}
+							} catch(e) {}
+						});
 					}
 					var fsFrame = document.getElementById('fullscreen-preview-frame');
 					if (fsFrame && fsFrame.src && !fsFrame.srcdoc) {
