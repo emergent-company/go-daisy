@@ -1,10 +1,12 @@
 package ui
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // ChatBubble renders a chat conversation bubble.
 // sent=true → chat-end (right), sent=false → chat-start (left)
 // bubbleClass: optional modifier e.g. "chat-bubble-primary"
 templ ChatBubble(sent bool, author string, timestamp string, bubbleClass string) {
-	<div class={ "chat", templ.KV("chat-end", sent), templ.KV("chat-start", !sent) }>
+	<div class={ "chat", templ.KV("chat-end", sent), templ.KV("chat-start", !sent) } { devmode.Attrs(ctx, "ui/ChatBubble")... }>
 		if author != "" {
 			<div class="chat-header text-xs text-base-content/50 mb-0.5">{ author }</div>
 		}

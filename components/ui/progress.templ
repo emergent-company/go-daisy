@@ -1,6 +1,10 @@
 package ui
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // ProgressColor controls the color of a progress bar.
 type ProgressColor string
@@ -16,12 +20,13 @@ const (
 // Progress renders a DaisyUI progress bar. value=-1 for indeterminate.
 templ Progress(color ProgressColor, value int, max int) {
 	if value < 0 {
-		<progress class={ "progress", string(color), "w-full" }></progress>
+		<progress class={ "progress", string(color), "w-full" } { devmode.Attrs(ctx, "ui/Progress")... }></progress>
 	} else {
 		<progress
 			class={ "progress", string(color), "w-full" }
 			value={ strconv.Itoa(value) }
 			max={ strconv.Itoa(max) }
+			{ devmode.Attrs(ctx, "ui/Progress")... }
 		></progress>
 	}
 }

@@ -1,6 +1,6 @@
 package table
 
-import "github.com/emergent-company/go-daisy/components/ui"
+import "github.com/emergent-company/go-daisy/devmode"
 
 // SortDir indicates the current sort direction.
 type SortDir string
@@ -13,27 +13,46 @@ const (
 
 // TableProps configures the appearance of a TableWithProps component.
 type TableProps struct {
-	// Size controls the DaisyUI size modifier: "sm" adds table-sm, "" uses default size.
+	// Size controls the DaisyUI size modifier: "xs", "sm", "md" (default/empty), "lg", "xl".
 	Size string
 	// Striped adds table-zebra for alternating row colours.
 	Striped bool
+	// PinRows makes <thead> and <tfoot> rows sticky (table-pin-rows).
+	PinRows bool
+	// PinCols makes <th> columns sticky (table-pin-cols).
+	PinCols bool
+	// Bordered wraps the table with a rounded border (rounded-box border border-base-content/5 bg-base-100).
+	Bordered bool
 }
 
 // tableClasses builds the DaisyUI class string from TableProps.
 func tableClasses(props TableProps) string {
 	cls := "table w-full"
-	if props.Size == "sm" {
+	switch props.Size {
+	case "xs":
+		cls += " table-xs"
+	case "sm":
 		cls += " table-sm"
+	case "lg":
+		cls += " table-lg"
+	case "xl":
+		cls += " table-xl"
 	}
 	if props.Striped {
 		cls += " table-zebra"
+	}
+	if props.PinRows {
+		cls += " table-pin-rows"
+	}
+	if props.PinCols {
+		cls += " table-pin-cols"
 	}
 	return cls
 }
 
 // Table renders a DaisyUI table wrapper with zebra striping.
 templ Table() {
-	<div class="overflow-x-auto rounded-md bg-base-100">
+	<div class="overflow-x-auto rounded-md bg-base-100" { devmode.Attrs(ctx, "table/Table")... }>
 		<table class="table table-zebra w-full">
 			{ children... }
 		</table>
@@ -42,14 +61,24 @@ templ Table() {
 
 // TableWithProps renders a DaisyUI table with a canonical wrapper.
 templ TableWithProps(props TableProps) {
-	<div class="overflow-x-auto">
-		<table class={ tableClasses(props) }>
-			{ children... }
-		</table>
-	</div>
+	if props.Bordered {
+		<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100" { devmode.Attrs(ctx, "table/TableWithProps")... }>
+			<table class={ tableClasses(props) }>
+				{ children... }
+			</table>
+		</div>
+	} else {
+		<div class="overflow-x-auto" { devmode.Attrs(ctx, "table/TableWithProps")... }>
+			<table class={ tableClasses(props) }>
+				{ children... }
+			</table>
+		</div>
+	}
 }
 
 // TableHead renders a <thead> wrapper accepting head-row children.
+// Note: data-component is intentionally omitted on table structural elements
+// (<thead>, <tbody>, <tr>, <th>, <td>) to avoid browser table-parsing issues.
 templ TableHead() {
 	<thead>
 		{ children... }
@@ -168,6 +197,7 @@ templ FilterText(name string, value string, placeholder string, hxTarget string,
 		hx-target={ hxTarget }
 		hx-trigger="input delay:300ms, search"
 		hx-include="closest form"
+		{ devmode.Attrs(ctx, "table/FilterText")... }
 	/>
 }
 
@@ -180,91 +210,8 @@ templ FilterSelect(name string, hxTarget string, hxGet string) {
 		hx-target={ hxTarget }
 		hx-trigger="change"
 		hx-include="closest form"
+		{ devmode.Attrs(ctx, "table/FilterSelect")... }
 	>
 		{ children... }
 	</select>
-}
-
-// TableWithActionsRow holds data for a single row in TableWithActions.
-type TableWithActionsRow struct {
-	// Name is the person's full name; initials are derived automatically for the avatar.
-	Name string
-	// Status is a semantic status string (e.g. "active", "pending", "closed");
-	// colour is derived automatically via ui.StatusBadge.
-	Status string
-	Role   string
-	Joined string
-}
-
-// TableWithActionsProps configures TableWithActions.
-type TableWithActionsProps struct {
-	Rows          []TableWithActionsRow
-	TotalCount    int
-	CurrentPage   int
-	TotalPages    int
-	SortHeaderURL string // base URL for sort links; passed to TableHeader
-}
-
-// TableWithActions renders a full-featured table with sortable headers, avatar cells,
-// status badges, and a per-row ellipsis action dropdown.
-templ TableWithActions(props TableWithActionsProps) {
-	<div class="p-6">
-		<div class="overflow-x-auto rounded-md bg-base-100">
-			<table class="table table-zebra w-full">
-				<thead>
-					<tr>
-						<th class="text-xs font-semibold text-base-content/60 uppercase">
-							<a class="flex items-center gap-1 hover:text-base-content cursor-pointer">
-								Name
-								<svg class="w-3 h-3" viewBox="0 0 16 16" fill="currentColor"><path d="M8 4l4 4H4l4-4zm0 8L4 8h8l-4 4z"/></svg>
-							</a>
-						</th>
-						<th class="text-xs font-semibold text-base-content/60 uppercase">Status</th>
-						<th class="text-xs font-semibold text-base-content/60 uppercase">Role</th>
-						<th class="text-xs font-semibold text-base-content/60 uppercase">Joined</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					for _, row := range props.Rows {
-						<tr class="hover">
-							<td>
-								<div class="flex items-center gap-3">
-									@ui.Avatar(row.Name, "", "", ui.AvatarSM)
-									<span class="font-medium">{ row.Name }</span>
-								</div>
-							</td>
-							<td>@ui.StatusBadge(row.Status)</td>
-							<td class="text-sm text-base-content/70">{ row.Role }</td>
-							<td class="text-sm text-base-content/60">{ row.Joined }</td>
-							<td class="text-right">
-								@ui.ActionMenu([]ui.ActionMenuItem{
-									{Label: "View"},
-									{Label: "Edit"},
-									{Label: "Delete", Danger: true},
-								})
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		</div>
-		if props.TotalCount > 0 || props.TotalPages > 0 {
-			<div class="flex items-center justify-between mt-4">
-				<p class="text-sm text-base-content/60">
-					if props.TotalCount > 0 {
-						Showing { intToStr(len(props.Rows)) } of { intToStr(props.TotalCount) } entries
-					}
-				</p>
-				if props.TotalPages > 1 {
-					<div class="join">
-						for i := 1; i <= props.TotalPages; i++ {
-							<button class={ "join-item btn btn-sm", templ.KV("btn-active", i == props.CurrentPage) }>{ intToStr(i) }</button>
-						}
-						<button class="join-item btn btn-sm">»</button>
-					</div>
-				}
-			</div>
-		}
-	</div>
 }

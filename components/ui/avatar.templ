@@ -1,6 +1,10 @@
 package ui
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // AvatarSize maps to a DaisyUI avatar size modifier.
 type AvatarSize string
@@ -47,7 +51,7 @@ func avatarInitials(name string) string {
 // Set icon to a Lucide icon suffix, e.g. "lucide--building-2" for a company avatar.
 templ Avatar(name string, src string, icon string, size AvatarSize) {
 	{{ sc := avatarSizeClass(size) }}
-	<div class="avatar">
+	<div class="avatar" { devmode.Attrs(ctx, "ui/Avatar")... }>
 		if src != "" {
 			<div class={ sc + " rounded-full overflow-hidden" }>
 				<img src={ src } alt={ name } class="object-cover w-full h-full"/>
@@ -110,7 +114,7 @@ templ PersonChip(name string, avatarColor string, textColor string, gradientFrom
 			transform: translateY(0) scale(1);
 		}
 	</style>
-	<div class="relative person-chip inline-flex items-center gap-1.5 rounded-full px-2 py-1 cursor-default select-none hover:bg-base-200 transition-colors">
+	<div class="relative person-chip inline-flex items-center gap-1.5 rounded-full px-2 py-1 cursor-default select-none hover:bg-base-200 transition-colors" { devmode.Attrs(ctx, "ui/PersonChip")... }>
 		<div class={ "size-6 rounded-full flex items-center justify-center text-[10px] font-semibold shrink-0", avatarColor, textColor }>{ avatarInitials(name) }</div>
 		<span class="text-sm font-medium text-base-content leading-none">{ name }</span>
 		<div class="person-card absolute left-[-8px] top-full z-50 w-64 rounded-2xl border border-base-200 bg-base-100 shadow-xl overflow-hidden">

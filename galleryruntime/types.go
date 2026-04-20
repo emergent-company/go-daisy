@@ -18,6 +18,7 @@ const (
 	TokenTypeColor  TokenType = "color"  // colour picker
 	TokenTypeSelect TokenType = "select" // named option list
 	TokenTypeText   TokenType = "text"   // free-form text input (drives a QueryParam)
+	TokenTypeBool   TokenType = "bool"   // toggle checkbox — value is "true" or "false" (drives a QueryParam)
 )
 
 // DesignToken describes a single manipulable design parameter for a component.
@@ -71,6 +72,17 @@ const (
 	CategoryLayout      Category = "Layout"
 )
 
+// GallerySubExample is a single labeled sub-example shown in the Examples tab.
+// When a GalleryStory has SubExamples set, each sub-example is rendered with
+// its own sandboxed iframe preview and component tree, rather than sharing a
+// single combined iframe with all sub-examples stacked together.
+type GallerySubExample struct {
+	// Label is the human-readable name displayed above the iframe preview.
+	Label string
+	// RenderFunc produces the templ.Component to render inside the iframe.
+	RenderFunc func(params url.Values) templ.Component
+}
+
 // GalleryStory is a single named variant/story of a component preview.
 // Stories let you show the same component in different states side-by-side
 // (e.g. "Default", "Loading", "Error", "Empty").
@@ -95,6 +107,11 @@ type GalleryStory struct {
 	// Tokens are optional design token controls shown in the token panel for
 	// this story only. When set, they take precedence over GalleryComponent.Tokens.
 	Tokens []DesignToken
+	// SubExamples, when set, causes the Examples tab to render each entry as its
+	// own labeled iframe preview with its own component tree, instead of the
+	// single shared iframe produced by RenderFunc/Templ/HTML.
+	// Mutually exclusive with RenderFunc/Templ/HTML for the Examples story.
+	SubExamples []GallerySubExample
 }
 
 // GalleryComponent describes a single component entry in the gallery.

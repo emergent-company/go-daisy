@@ -1,5 +1,7 @@
 package ui
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // ListRowProps holds data for a single list row.
 //
 // Layout patterns:
@@ -44,7 +46,7 @@ type ListProps struct {
 
 // List renders a DaisyUI list container with an optional header row.
 templ List(p ListProps) {
-	<ul class="list bg-base-100 rounded-box border border-base-200">
+	<ul class="list bg-base-100 rounded-box border border-base-200" { devmode.Attrs(ctx, "ui/List")... }>
 		if p.Header != "" {
 			<li class="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">{ p.Header }</li>
 		}
@@ -54,7 +56,7 @@ templ List(p ListProps) {
 
 // ListRow renders a single row inside a List.
 templ ListRow(p ListRowProps) {
-	<li class="list-row">
+	<li class="list-row" { devmode.Attrs(ctx, "ui/ListRow")... }>
 		if p.Leading != nil {
 			if p.LeadingGrow {
 				<div class="list-col-grow">

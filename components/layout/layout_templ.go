@@ -8,6 +8,8 @@ package layout
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // Page renders the full HTML shell. themeAttr is the DaisyUI data-theme value
 // (e.g. "nord", "flow", "dark"). Pass "" to use the browser/OS default.
 func Page(title string, themeAttr string) templ.Component {
@@ -38,7 +40,7 @@ func Page(title string, themeAttr string) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(themeAttr)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 7, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 9, Col: 39}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -51,13 +53,13 @@ func Page(title string, themeAttr string) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 12, Col: 16}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 14, Col: 16}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</title><link rel=\"stylesheet\" href=\"/static/css/app.css\"></head><body class=\"bg-base-200 min-h-screen\"><!-- Modal container — modals are swapped into here by HTMX --><div id=\"modal-container\"></div><!-- Toast container --><div id=\"toast-container\" class=\"toast toast-top toast-end z-70\"></div><!-- Main content slot -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</title><link rel=\"stylesheet\" href=\"/static/css/app.css\"></head><body class=\"bg-base-200 min-h-screen\"><!-- Modal container --><div id=\"modal-container\"></div><!-- Toast container --><div id=\"toast-container\" class=\"toast toast-top toast-end z-70\"></div><!-- Main content slot -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -74,7 +76,6 @@ func Page(title string, themeAttr string) templ.Component {
 }
 
 // AppShell renders the sidebar + topbar + main content layout.
-// The sidebar toggle checkbox must be a sibling of #layout-sidebar (handled internally).
 func AppShell(appName string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -96,7 +97,15 @@ func AppShell(appName string) templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div id=\"app-shell\" class=\"flex h-screen overflow-hidden\"><!-- Sidebar toggle checkbox (hidden, CSS-driven) — must be sibling of #layout-sidebar --><input type=\"checkbox\" id=\"layout-sidebar-toggle-trigger\" class=\"hidden\" aria-label=\"Toggle layout sidebar\"><!-- Mobile backdrop --><label for=\"layout-sidebar-toggle-trigger\" id=\"layout-sidebar-backdrop\"></label><!-- Sidebar slot -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div id=\"app-shell\" class=\"flex h-screen overflow-hidden\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "layout/AppShell"))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "><input type=\"checkbox\" id=\"layout-sidebar-toggle-trigger\" class=\"hidden\" aria-label=\"Toggle layout sidebar\"> <label for=\"layout-sidebar-toggle-trigger\" id=\"layout-sidebar-backdrop\"></label>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -104,7 +113,7 @@ func AppShell(appName string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -113,7 +122,6 @@ func AppShell(appName string) templ.Component {
 }
 
 // AppShellContent renders the right column (topbar + scrollable content) inside AppShell.
-// Use after @Sidebar(...) inside an AppShell children block.
 func AppShellContent() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -135,7 +143,15 @@ func AppShellContent() templ.Component {
 			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"flex min-w-0 grow flex-col overflow-hidden\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"flex min-w-0 grow flex-col overflow-hidden\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "layout/AppShellContent"))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -143,7 +159,7 @@ func AppShellContent() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<!-- Scrollable content area --><main id=\"main-content\" class=\"grow overflow-auto\"></main></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<main id=\"main-content\" class=\"grow overflow-auto\"></main></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -151,8 +167,7 @@ func AppShellContent() templ.Component {
 	})
 }
 
-// AppShellWithNav is a convenience wrapper that combines AppShell + Sidebar + Navbar + main content.
-// groups is the sidebar navigation. navRight is the right side of the navbar (theme toggle, user, etc.).
+// AppShellWithNav is a convenience wrapper combining AppShell + Sidebar + Navbar + main content.
 func AppShellWithNav(appName string, groups []SidebarGroup) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -174,7 +189,15 @@ func AppShellWithNav(appName string, groups []SidebarGroup) templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div id=\"app-shell\" class=\"flex h-screen overflow-hidden\"><input type=\"checkbox\" id=\"layout-sidebar-toggle-trigger\" class=\"hidden\" aria-label=\"Toggle layout sidebar\"> <label for=\"layout-sidebar-toggle-trigger\" id=\"layout-sidebar-backdrop\"></label>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div id=\"app-shell\" class=\"flex h-screen overflow-hidden\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "layout/AppShellWithNav"))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "><input type=\"checkbox\" id=\"layout-sidebar-toggle-trigger\" class=\"hidden\" aria-label=\"Toggle layout sidebar\"> <label for=\"layout-sidebar-toggle-trigger\" id=\"layout-sidebar-backdrop\"></label>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -182,7 +205,7 @@ func AppShellWithNav(appName string, groups []SidebarGroup) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"flex min-w-0 grow flex-col overflow-hidden\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"flex min-w-0 grow flex-col overflow-hidden\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -208,7 +231,7 @@ func AppShellWithNav(appName string, groups []SidebarGroup) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<main id=\"main-content\" class=\"grow overflow-auto bg-base-200\"></main></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<main id=\"main-content\" class=\"grow overflow-auto bg-base-200\"></main></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

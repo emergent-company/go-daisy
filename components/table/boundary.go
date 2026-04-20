@@ -58,7 +58,7 @@ func ListAreaWithBoundary(props ListAreaProps) templ.Component {
 	return devmode.ComponentBoundary("ListArea", props, ListArea(props))
 }
 
-// TableWithActionsWithBoundary wraps TableWithActions with a dev-mode component boundary annotation.
-func TableWithActionsWithBoundary(props TableWithActionsProps) templ.Component {
-	return devmode.ComponentBoundary("TableWithActions", props, TableWithActions(props))
+// TableEmptyWithBoundary wraps TableEmpty with a dev-mode element boundary annotation.
+func TableEmptyWithBoundary(colspan int, message string) templ.Component {
+	return devmode.ElementBoundary("TableEmpty", map[string]any{"colspan": colspan, "message": message}, TableEmpty(colspan, message))
 }

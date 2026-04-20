@@ -3,12 +3,7 @@ package form
 // SelectInput renders a DaisyUI select dropdown with label.
 // options: [][2]string where [0]=value, [1]=label
 templ SelectInput(name string, label string, selected string, options [][2]string, errMsg string, required bool) {
-	<div class="form-control w-full">
-		if label != "" {
-			<label class="label" for={ name }>
-				<span class="label-text">{ label }</span>
-			</label>
-		}
+	@Field(label, name, errMsg) {
 		<select
 			id={ name }
 			name={ name }
@@ -22,10 +17,5 @@ templ SelectInput(name string, label string, selected string, options [][2]strin
 				>{ opt[1] }</option>
 			}
 		</select>
-		if errMsg != "" {
-			<div class="label pt-1">
-				<span class="label-text-alt text-error">{ errMsg }</span>
-			</div>
-		}
-	</div>
+	}
 }

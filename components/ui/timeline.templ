@@ -1,5 +1,7 @@
 package ui
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // TimelineItemProps holds data for a single timeline entry.
 type TimelineItemProps struct {
 	Date    string
@@ -25,14 +27,14 @@ func (p TimelineItemProps) iconOff() string {
 
 // Timeline renders a DaisyUI vertical timeline container.
 templ Timeline() {
-	<ul class="timeline timeline-vertical">
+	<ul class="timeline timeline-vertical" { devmode.Attrs(ctx, "ui/Timeline")... }>
 		{ children... }
 	</ul>
 }
 
 // TimelineItem renders a single timeline list item.
 templ TimelineItem(p TimelineItemProps, first bool, last bool) {
-	<li>
+	<li { devmode.Attrs(ctx, "ui/TimelineItem")... }>
 		if !first {
 			if p.Done {
 				<hr class="bg-primary"/>

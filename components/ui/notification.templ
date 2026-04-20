@@ -1,5 +1,7 @@
 package ui
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // NotificationItem holds the data for a single notification entry.
 type NotificationItem struct {
 	// IconClass is the Tailwind class for the icon background (e.g. "bg-primary/10").
@@ -21,7 +23,7 @@ type NotificationItem struct {
 // NotificationPanel renders a tab-based notification center with All / Unread tabs
 // and a scrollable list of notification items.
 templ NotificationPanel(items []NotificationItem, unreadCount int, viewAllHref string) {
-	<div class="bg-base-100 border border-base-200 rounded-box shadow-lg w-80">
+	<div class="bg-base-100 border border-base-200 rounded-box shadow-lg w-80" { devmode.Attrs(ctx, "ui/NotificationPanel")... }>
 		<div class="flex items-center justify-between px-4 pt-4 pb-2">
 			<p class="font-semibold text-sm">Notifications</p>
 			<button class="btn btn-ghost btn-xs text-primary">Mark all read</button>

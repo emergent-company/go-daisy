@@ -1,9 +1,11 @@
 package ui
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // Indicator wraps content with a badge/dot indicator overlay.
 // indicatorClasses: position classes e.g. "indicator-top indicator-end"
 templ Indicator(indicatorClasses string) {
-	<div class="indicator">
+	<div class="indicator" { devmode.Attrs(ctx, "ui/Indicator")... }>
 		<span class={ "indicator-item", indicatorClasses }>
 			{ children... }
 		</span>
@@ -12,12 +14,12 @@ templ Indicator(indicatorClasses string) {
 
 // IndicatorWrapper is the outer container for indicator + content.
 templ IndicatorWrapper() {
-	<div class="indicator">
+	<div class="indicator" { devmode.Attrs(ctx, "ui/IndicatorWrapper")... }>
 		{ children... }
 	</div>
 }
 
 // IndicatorBadge renders the indicator-item badge slot.
 templ IndicatorBadge(positionClasses string, badgeClasses string) {
-	<span class={ "indicator-item", positionClasses, badgeClasses }></span>
+	<span class={ "indicator-item", positionClasses, badgeClasses } { devmode.Attrs(ctx, "ui/IndicatorBadge")... }></span>
 }

@@ -1,5 +1,7 @@
 package form
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // ClipboardCopyItem holds one copy-able field for the ClipboardCopy component.
 type ClipboardCopyItem struct {
 	// ID must be unique on the page.
@@ -19,7 +21,7 @@ type ClipboardCopyItem struct {
 // ClipboardCopy renders one or more click-to-copy fields with visual feedback.
 // Uses vanilla JS navigator.clipboard — no library needed.
 templ ClipboardCopy(items []ClipboardCopyItem) {
-	<div class="space-y-4">
+	<div class="space-y-4" { devmode.Attrs(ctx, "form/ClipboardCopy")... }>
 		for _, item := range items {
 			<div>
 				if item.Label != "" {

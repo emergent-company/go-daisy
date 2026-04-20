@@ -1,6 +1,10 @@
 package form
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // RatingShape controls the shape of rating inputs.
 type RatingShape string
@@ -15,7 +19,7 @@ const (
 // color: "bg-orange-400", "bg-red-400" etc.
 // size: "" | "rating-sm" | "rating-lg"
 templ Rating(name string, value int, max int, shape RatingShape, color string, size string) {
-	<div class={ "rating", size }>
+	<div class={ "rating", size } { devmode.Attrs(ctx, "form/Rating")... }>
 		for i := 1; i <= max; i++ {
 			<input
 				type="radio"

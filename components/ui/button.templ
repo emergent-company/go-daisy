@@ -1,5 +1,7 @@
 package ui
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // ButtonVariant controls the visual style of a button.
 type ButtonVariant string
 
@@ -50,15 +52,23 @@ templ SimpleButton(label string, variant ButtonVariant, size ButtonSize) {
 		class={ "btn",
 			templ.KV(string(variant), variant != ""),
 			templ.KV(string(size), size != "") }
+		{ devmode.Attrs(ctx, "ui/SimpleButton")... }
 	>{ label }</button>
 }
 
 // IconSpan renders an Iconify icon span with a configurable size class.
 // name: full iconify class e.g. "lucide--sun"; size: tailwind size class e.g. "size-8"
 templ IconSpan(name string, size string) {
-	<span class={ "iconify", name, size }></span>
+	<span class={ "iconify", name, size } { devmode.Attrs(ctx, "ui/IconSpan")... }></span>
 }
-// <a> element using href; otherwise it renders a <button> with the given type.
+
+// IconSpanColored renders an Iconify icon span with a size and an extra color class.
+templ IconSpanColored(name string, size string, color string) {
+	<span class={ "iconify", name, size, color } { devmode.Attrs(ctx, "ui/IconSpanColored")... }></span>
+}
+
+// Button renders a full-featured DaisyUI button.
+// Set typ=ButtonTypeLink to get an <a> element using href; otherwise renders <button>.
 // Set shape to square/circle for icon-only buttons. Icon is always rendered
 // when non-empty; children are rendered for non-square/circle shapes only.
 templ Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType, shape ButtonShape, icon string, loading bool) {
@@ -69,6 +79,7 @@ templ Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType
 				templ.KV(string(variant), variant != ""),
 				templ.KV(string(size), size != ""),
 				templ.KV(string(shape), shape != "") }
+			{ devmode.Attrs(ctx, "ui/Button")... }
 		>
 			if icon != "" {
 				<span class={ "iconify size-4 " + icon }></span>
@@ -84,6 +95,7 @@ templ Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType
 				templ.KV(string(shape), shape != ""),
 				templ.KV("loading loading-spinner", loading) }
 			disabled?={ loading }
+			{ devmode.Attrs(ctx, "ui/Button")... }
 		>
 			if icon != "" {
 				<span class={ "iconify size-4 " + icon }></span>

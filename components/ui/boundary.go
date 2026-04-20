@@ -699,3 +699,12 @@ func FABWithBoundary(icon string, actions []FABAction) templ.Component {
 		"actionCount": len(actions),
 	}, FAB(icon, actions))
 }
+
+// IconSpanColoredWithBoundary wraps IconSpanColored with a dev-mode component boundary annotation.
+func IconSpanColoredWithBoundary(name string, size string, color string) templ.Component {
+	return devmode.ComponentBoundary("IconSpanColored", map[string]any{
+		"name":  name,
+		"size":  size,
+		"color": color,
+	}, IconSpanColored(name, size, color))
+}

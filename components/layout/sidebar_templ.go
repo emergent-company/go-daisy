@@ -8,7 +8,11 @@ package layout
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // SidebarItem represents a single navigation item in the sidebar.
 type SidebarItem struct {
@@ -48,7 +52,15 @@ func Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) tem
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"layout-sidebar\" class=\"flex flex-col bg-base-100\"><!-- Header: logo or app name + fold button --><div class=\"flex min-h-10 items-center justify-between gap-3 px-5 py-3 pb-5 shrink-0\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"layout-sidebar\" class=\"flex flex-col bg-base-100\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "layout/Sidebar"))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "><!-- Header: logo or app name + fold button --><div class=\"flex min-h-10 items-center justify-between gap-3 px-5 py-3 pb-5 shrink-0\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -58,25 +70,25 @@ func Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) tem
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<span class=\"text-xl font-semibold truncate\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<span class=\"text-xl font-semibold truncate\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(appName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 29, Col: 58}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 33, Col: 58}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</span> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<label for=\"layout-sidebar-toggle-trigger\" title=\"Toggle sidebar\" class=\"btn btn-circle btn-ghost btn-sm text-base-content/50 max-lg:hidden\"><span class=\"iconify lucide--panel-left-close size-4.5\"></span></label></div><!-- Nav menu --><div class=\"sidebar-menu grow overflow-y-auto\"><div class=\"mb-3 space-y-0.5 px-2.5 pt-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<label for=\"layout-sidebar-toggle-trigger\" title=\"Toggle sidebar\" class=\"btn btn-circle btn-ghost btn-sm text-base-content/50 max-lg:hidden\"><span class=\"iconify lucide--panel-left-close size-4.5\"></span></label></div><!-- Nav menu --><div class=\"sidebar-menu grow overflow-y-auto\"><div class=\"mb-3 space-y-0.5 px-2.5 pt-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -87,7 +99,7 @@ func Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) tem
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<p class=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<p class=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -100,20 +112,20 @@ func Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) tem
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(group.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 44, Col: 110}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 48, Col: 110}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -125,7 +137,7 @@ func Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) tem
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div></div></div><script>\n\t\t(function() {\n\t\t\tvar sidebar = document.getElementById('layout-sidebar');\n\t\t\tif (!sidebar) return;\n\n\t\t\tsidebar.addEventListener('click', function(e) {\n\t\t\t\tif (window.innerWidth >= 1024) return;\n\t\t\t\tvar link = e.target.closest('a');\n\t\t\t\tif (!link) return;\n\t\t\t\tvar cb = document.getElementById('layout-sidebar-toggle-trigger');\n\t\t\t\tif (cb) cb.checked = false;\n\t\t\t});\n\n\t\t\tfunction updateActiveSidebarItem(path) {\n\t\t\t\tpath = path || window.location.pathname;\n\t\t\t\tvar links = sidebar.querySelectorAll('a.menu-item[href]');\n\t\t\t\tvar bestMatch = null;\n\t\t\t\tvar bestLen = 0;\n\t\t\t\tlinks.forEach(function(link) {\n\t\t\t\t\tlink.classList.remove('active');\n\t\t\t\t\tvar href = link.getAttribute('href');\n\t\t\t\t\tif (href && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {\n\t\t\t\t\t\tbestMatch = link;\n\t\t\t\t\t\tbestLen = href.length;\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t\tif (bestMatch) bestMatch.classList.add('active');\n\t\t\t}\n\n\t\t\tupdateActiveSidebarItem();\n\t\t\tdocument.addEventListener('htmx:after:history:push', function(e) {\n\t\t\t\tupdateActiveSidebarItem(e.detail && e.detail.path);\n\t\t\t});\n\t\t\tdocument.addEventListener('htmx:after:history:replace', function(e) {\n\t\t\t\tupdateActiveSidebarItem(e.detail && e.detail.path);\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div></div></div><script>\n\t\t(function() {\n\t\t\tvar sidebar = document.getElementById('layout-sidebar');\n\t\t\tif (!sidebar) return;\n\n\t\t\tsidebar.addEventListener('click', function(e) {\n\t\t\t\tif (window.innerWidth >= 1024) return;\n\t\t\t\tvar link = e.target.closest('a');\n\t\t\t\tif (!link) return;\n\t\t\t\tvar cb = document.getElementById('layout-sidebar-toggle-trigger');\n\t\t\t\tif (cb) cb.checked = false;\n\t\t\t});\n\n\t\t\tfunction updateActiveSidebarItem(path) {\n\t\t\t\tpath = path || window.location.pathname;\n\t\t\t\tvar links = sidebar.querySelectorAll('a.menu-item[href]');\n\t\t\t\tvar bestMatch = null;\n\t\t\t\tvar bestLen = 0;\n\t\t\t\tlinks.forEach(function(link) {\n\t\t\t\t\tlink.classList.remove('active');\n\t\t\t\t\tvar href = link.getAttribute('href');\n\t\t\t\t\tif (href && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {\n\t\t\t\t\t\tbestMatch = link;\n\t\t\t\t\t\tbestLen = href.length;\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t\tif (bestMatch) bestMatch.classList.add('active');\n\t\t\t}\n\n\t\t\tupdateActiveSidebarItem();\n\t\t\tdocument.addEventListener('htmx:after:history:push', function(e) {\n\t\t\t\tupdateActiveSidebarItem(e.detail && e.detail.path);\n\t\t\t});\n\t\t\tdocument.addEventListener('htmx:after:history:replace', function(e) {\n\t\t\t\tupdateActiveSidebarItem(e.detail && e.detail.path);\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -160,33 +172,41 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<a")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "layout/sidebarNavItem"))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 templ.SafeURL
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(item.Href))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 96, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 101, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" hx-get=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(item.Href)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 97, Col: 20}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 102, Col: 20}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -199,7 +219,7 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -209,7 +229,7 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<span class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<span class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -222,25 +242,25 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\"></span> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\"></span> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<span class=\"grow\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<span class=\"grow\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 106, Col: 33}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 111, Col: 33}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</span></a>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</span></a>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

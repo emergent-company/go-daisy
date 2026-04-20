@@ -216,14 +216,14 @@ func ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<!-- Always-present Examples tab: shows stacked preview of all stories --><button role=\"tab\" class=\"tab\" onclick=\"switchToExamples(this)\">Examples</button></div><script>\n\twindow.switchVariant = function(btn) {\n\t\tvar slug = btn.getAttribute('data-slug');\n\t\tvar variant = btn.getAttribute('data-variant-slug');\n\t\tvar baseURL = '/gallery/render/' + slug + '/' + variant;\n\t\t// Restore interactive view if we were on Examples\n\t\tvar interactiveBody = document.getElementById('interactive-body');\n\t\tvar examplesBody = document.getElementById('examples-body');\n\t\tif (interactiveBody) interactiveBody.style.display = '';\n\t\tif (examplesBody) examplesBody.style.display = 'none';\n\t\t// Update iframe src (clear any query params from previous interactive state)\n\t\tvar frame = document.getElementById('preview-frame');\n\t\tif (frame) frame.src = baseURL;\n\t\tvar fsFrame = document.getElementById('fullscreen-preview-frame');\n\t\tif (fsFrame) fsFrame.src = baseURL;\n\t\t// Update tab active state\n\t\tvar tabs = btn.closest('[role=\"tablist\"]').querySelectorAll('[role=\"tab\"]');\n\t\ttabs.forEach(function(t) { t.classList.remove('tab-active'); });\n\t\tbtn.classList.add('tab-active');\n\t\t// Re-render token panel from per-variant token JSON\n\t\tvar tokensRaw = btn.getAttribute('data-tokens');\n\t\tvar tokens = [];\n\t\ttry { tokens = JSON.parse(tokensRaw) || []; } catch(e) {}\n\t\trenderTokenPanel(tokens);\n\t};\n\twindow.switchToExamples = function(btn) {\n\t\tvar interactiveBody = document.getElementById('interactive-body');\n\t\tvar examplesBody = document.getElementById('examples-body');\n\t\tif (interactiveBody) interactiveBody.style.display = 'none';\n\t\tif (examplesBody) examplesBody.style.display = '';\n\t\t// Update tab active state\n\t\tvar tabs = btn.closest('[role=\"tablist\"]').querySelectorAll('[role=\"tab\"]');\n\t\ttabs.forEach(function(t) { t.classList.remove('tab-active'); });\n\t\tbtn.classList.add('tab-active');\n\t\t// Resize each example iframe after one rAF (ensures browser has reflowed the now-visible container).\n\t\t// Then poll as fallback for any frame still loading.\n\t\trequestAnimationFrame(function() {\n\t\t\tdocument.querySelectorAll('.examples-frame').forEach(function(frame) {\n\t\t\t\tvar attempts = 0;\n\t\t\t\tfunction tryResize() {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\tif (doc && doc.readyState === 'complete' && doc.body && doc.body.scrollHeight > 40) {\n\t\t\t\t\t\t\tframe.style.height = doc.body.scrollHeight + 'px';\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\t\t\t\t\t} catch(e) {}\n\t\t\t\t\tif (++attempts < 30) setTimeout(tryResize, 100);\n\t\t\t\t}\n\t\t\t\ttryResize();\n\t\t\t});\n\t\t});\n\t};\n\t</script><!-- Interactive body: single-story preview + tokens (hidden when Examples tab active) --><div id=\"interactive-body\"><!-- Two-column body: left = preview + source, right = token sidebar --><div class=\"flex gap-4 items-start\"><!-- Left column: preview + HTML source --><div class=\"flex flex-col gap-3 flex-1 min-w-0\"><!-- Preview section --><div class=\"flex flex-col\"><!-- Preview toolbar --><div class=\"flex items-center justify-between mb-2 gap-3 flex-wrap\"><span class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide\">Preview</span><div class=\"flex items-center gap-2\"><!-- Responsive breakpoint buttons --><div class=\"join\"><button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setPreviewWidth('375px')\" title=\"Mobile (375px)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"7\" y=\"2\" width=\"10\" height=\"20\" rx=\"2\"></rect><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"18\"></line></svg></button> <button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setPreviewWidth('768px')\" title=\"Tablet (768px)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"2\" width=\"16\" height=\"20\" rx=\"2\"></rect><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"18\"></line></svg></button> <button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setPreviewWidth('100%')\" title=\"Desktop (full width)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"4\" width=\"20\" height=\"14\" rx=\"2\"></rect><line x1=\"8\" y1=\"22\" x2=\"16\" y2=\"22\"></line><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"22\"></line></svg></button></div><!-- Fullscreen button --><button class=\"btn btn-xs btn-ghost border border-base-200 gap-1\" onclick=\"openFullscreenPreview()\" title=\"Fullscreen preview\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polyline points=\"15 3 21 3 21 9\"></polyline><polyline points=\"9 21 3 21 3 15\"></polyline><line x1=\"21\" y1=\"3\" x2=\"14\" y2=\"10\"></line><line x1=\"3\" y1=\"21\" x2=\"10\" y2=\"14\"></line></svg> Fullscreen</button> <a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<!-- Always-present Examples tab: shows stacked preview of all stories --><button role=\"tab\" class=\"tab\" onclick=\"switchToExamples(this)\">Examples</button></div><script>\n\twindow.switchVariant = function(btn) {\n\t\tvar slug = btn.getAttribute('data-slug');\n\t\tvar variant = btn.getAttribute('data-variant-slug');\n\t\tvar baseURL = '/gallery/render/' + slug + '/' + variant;\n\t\t// Restore interactive view if we were on Examples\n\t\tvar interactiveBody = document.getElementById('interactive-body');\n\t\tvar examplesBody = document.getElementById('examples-body');\n\t\tif (interactiveBody) interactiveBody.style.display = '';\n\t\tif (examplesBody) examplesBody.style.display = 'none';\n\t\t// Update iframe src (clear any query params from previous interactive state)\n\t\tvar frame = document.getElementById('preview-frame');\n\t\tif (frame) frame.src = baseURL;\n\t\tvar fsFrame = document.getElementById('fullscreen-preview-frame');\n\t\tif (fsFrame) fsFrame.src = baseURL;\n\t\t// Update tab active state\n\t\tvar tabs = btn.closest('[role=\"tablist\"]').querySelectorAll('[role=\"tab\"]');\n\t\ttabs.forEach(function(t) { t.classList.remove('tab-active'); });\n\t\tbtn.classList.add('tab-active');\n\t\t// Re-render params section from per-variant token JSON\n\t\tvar tokensRaw = btn.getAttribute('data-tokens');\n\t\tvar tokens = [];\n\t\ttry { tokens = JSON.parse(tokensRaw) || []; } catch(e) {}\n\t\trenderParamsSection(tokens);\n\t\t// Reset so the next tree message re-applies defaults for this variant.\n\t\twindow._treeReceivedOnce = false;\n\t};\n\twindow.switchToExamples = function(btn) {\n\t\tvar interactiveBody = document.getElementById('interactive-body');\n\t\tvar examplesBody = document.getElementById('examples-body');\n\t\tif (interactiveBody) interactiveBody.style.display = 'none';\n\t\tif (examplesBody) examplesBody.style.display = '';\n\t\t// Update tab active state\n\t\tvar tabs = btn.closest('[role=\"tablist\"]').querySelectorAll('[role=\"tab\"]');\n\t\ttabs.forEach(function(t) { t.classList.remove('tab-active'); });\n\t\tbtn.classList.add('tab-active');\n\t\t// Resize each example iframe after one rAF (ensures browser has reflowed the now-visible container).\n\t\t// Then poll as fallback for any frame still loading.\n\t\trequestAnimationFrame(function() {\n\t\t\tdocument.querySelectorAll('.examples-frame').forEach(function(frame) {\n\t\t\t\tvar attempts = 0;\n\t\t\t\tfunction tryResize() {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\tif (doc && doc.readyState === 'complete' && doc.body && doc.body.scrollHeight > 40) {\n\t\t\t\t\t\t\tframe.style.height = doc.body.scrollHeight + 'px';\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\t\t\t\t\t} catch(e) {}\n\t\t\t\t\tif (++attempts < 30) setTimeout(tryResize, 100);\n\t\t\t\t}\n\t\t\t\ttryResize();\n\t\t\t});\n\t\t});\n\t};\n\t</script><!-- Interactive body: single-story preview + tokens (hidden when Examples tab active) --><div id=\"interactive-body\"><!-- Two-column body: left = preview + source, right = token sidebar --><div class=\"flex gap-4 items-start\"><!-- Left column: preview + HTML source --><div class=\"flex flex-col gap-3 flex-1 min-w-0\"><!-- Preview section --><div class=\"flex flex-col\"><!-- Preview toolbar --><div class=\"flex items-center justify-between mb-2 gap-3 flex-wrap\"><span class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide\">Preview</span><div class=\"flex items-center gap-2\"><!-- Responsive breakpoint buttons --><div class=\"join\"><button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setPreviewWidth('375px')\" title=\"Mobile (375px)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"7\" y=\"2\" width=\"10\" height=\"20\" rx=\"2\"></rect><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"18\"></line></svg></button> <button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setPreviewWidth('768px')\" title=\"Tablet (768px)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"2\" width=\"16\" height=\"20\" rx=\"2\"></rect><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"18\"></line></svg></button> <button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setPreviewWidth('100%')\" title=\"Desktop (full width)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"4\" width=\"20\" height=\"14\" rx=\"2\"></rect><line x1=\"8\" y1=\"22\" x2=\"16\" y2=\"22\"></line><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"22\"></line></svg></button></div><!-- Fullscreen button --><button class=\"btn btn-xs btn-ghost border border-base-200 gap-1\" onclick=\"openFullscreenPreview()\" title=\"Fullscreen preview\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polyline points=\"15 3 21 3 21 9\"></polyline><polyline points=\"9 21 3 21 3 15\"></polyline><line x1=\"21\" y1=\"3\" x2=\"14\" y2=\"10\"></line><line x1=\"3\" y1=\"21\" x2=\"10\" y2=\"14\"></line></svg> Fullscreen</button> <a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 templ.SafeURL
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/render/" + c.Slug))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 180, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 182, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -236,7 +236,7 @@ func ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs("feedback-count-" + c.Slug)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 202, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 204, Col: 39}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -249,7 +249,7 @@ func ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs("/gallery/" + c.Slug + "/feedback/count")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 204, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 206, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
@@ -262,7 +262,7 @@ func ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.FormatInt(feedbackCount, 10))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 207, Col: 46}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 209, Col: 46}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
@@ -275,7 +275,7 @@ func ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues("height:" + effectiveFrameHeight(c) + "; border:none; transition:width 0.2s, height 0.15s;")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 222, Col: 105}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 224, Col: 105}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
@@ -293,7 +293,7 @@ func ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool
 			return "/gallery/render/" + c.Slug
 		}())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 223, Col: 196}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 225, Col: 196}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -306,13 +306,13 @@ func ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Preview: %s", c.Name))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 224, Col: 48}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 226, Col: 48}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\"></iframe></div></div><!-- Component Tree panel (hidden by default; shown when iframe posts boundary data) --><div id=\"component-tree-panel\" class=\"hidden flex flex-col gap-2\"><div class=\"flex items-center gap-2\"><span class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide\">Component Tree</span></div><div id=\"component-tree-body\" class=\"rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden\"><p class=\"p-4 text-xs text-base-content/40\">Loading…</p></div></div><!-- HTML Source panel (only for HTML snippet components) -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\"></iframe></div></div><!-- Component Tree panel (hidden by default; shown when iframe posts boundary data) --><div id=\"component-tree-panel\" class=\"hidden flex flex-col gap-2\"><div class=\"flex items-center justify-between gap-2\"><span class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide\">Component Tree</span> <button class=\"btn btn-xs btn-ghost border border-base-200 gap-1\" onclick=\"resetAllParams()\" title=\"Reset all props and parameters to defaults\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"></path><path d=\"M3 3v5h5\"></path></svg> Reset</button></div><div id=\"component-tree-body\" class=\"rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden\"><p class=\"p-4 text-xs text-base-content/40\">Loading…</p></div><!-- Parameters section: query-param tokens rendered by JS below the tree --><div id=\"tree-params-panel\" class=\"hidden flex flex-col gap-2\"><span class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide\">Parameters</span><div id=\"tree-params-body\" class=\"rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden\"><div class=\"p-4 space-y-3\"></div></div></div></div><!-- HTML Source panel (only for HTML snippet components) -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -324,7 +324,7 @@ func ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(c.HTML)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 258, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 275, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 			if templ_7745c5c3_Err != nil {
@@ -335,461 +335,56 @@ func ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div><!-- end left column --><!-- Right column: design token sidebar + feedback panel (~30%) --><!-- Hidden by default when no tokens; JS shows it when feedback mode or dev tree is active -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div><!-- end left column --><!-- Right column: feedback panel only (shown by JS when feedback mode is active) --><div id=\"right-column\" class=\"w-[30%] shrink-0 flex-col gap-3 sticky top-4 hidden\"><!-- Feedback panel (hidden by default, toggled by toolbar Feedback button) --><div id=\"feedback-panel\" class=\"flex flex-col gap-2\"><div class=\"flex items-center justify-between\"><span class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide\">Feedback</span> <button class=\"btn btn-xs btn-ghost\" onclick=\"toggleFeedbackMode()\">✕</button></div><div id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var19 = []any{"w-[30%] shrink-0 flex flex-col gap-3 sticky top-4", templ.KV("hidden", len(c.Tokens) == 0 && (len(c.EffectiveVariants()) == 0 || len(c.EffectiveVariants()[0].Tokens) == 0))}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var19...)
+		var templ_7745c5c3_Var19 string
+		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs("feedback-list-" + c.Slug)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 295, Col: 35}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<div id=\"right-column\" class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\" class=\"rounded-xl border border-base-200 bg-base-100 shadow-sm overflow-hidden\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var20 string
-		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var19).String())
+		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs("/gallery/" + c.Slug + "/feedback")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1, Col: 0}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 297, Col: 48}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\"><!-- Token sidebar (only when tokens exist) -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\" hx-trigger=\"load, feedbackCreated from:body\" hx-swap=\"innerHTML\"><p class=\"p-4 text-xs text-base-content/40\">Loading...</p></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if effectiveTokens := func() []DesignToken {
-			if len(c.EffectiveVariants()) > 0 && len(c.EffectiveVariants()[0].Tokens) > 0 {
-				return c.EffectiveVariants()[0].Tokens
-			}
-			return c.Tokens
-		}(); len(effectiveTokens) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<div id=\"token-panel\" class=\"flex flex-col gap-2\"><!-- Sidebar header --><div class=\"flex items-center justify-between\"><div class=\"flex items-center gap-2\"><span class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide\">Design Tokens</span> <span class=\"badge badge-xs badge-neutral\" id=\"token-count-badge\">")
+		if githubEnabled {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<div class=\"flex justify-end\"><button id=\"export-issue-btn\" class=\"btn btn-xs btn-outline gap-1\" data-slug=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var21 string
-			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(effectiveTokens)))
+			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(c.Slug)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 276, Col: 113}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 308, Col: 25}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</span></div><button class=\"btn btn-xs btn-ghost border border-base-200 gap-1\" onclick=\"resetTokens()\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"></path><path d=\"M3 3v5h5\"></path></svg> Reset</button></div><!-- Token controls --><div id=\"token-panel-body\" class=\"rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden\"><div class=\"p-4 space-y-5\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			for _, grp := range TokenGroups(effectiveTokens) {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"token-group\"><p class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide mb-3\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var22 string
-				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(grp.Name)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 292, Col: 101}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</p><div class=\"space-y-3\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				for _, tok := range grp.Tokens {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div class=\"flex flex-col gap-1.5\" data-css-var=\"")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var23 string
-					templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(tok.CSSVar)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 295, Col: 70}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\" data-default=\"")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var24 string
-					templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(tok.Default)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 295, Col: 99}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "\" data-unit=\"")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var25 string
-					templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(tok.Unit)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 295, Col: 122}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\" data-selector=\"")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var26 string
-					templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
-						if tok.Selector != "" {
-							return tok.Selector
-						}
-						return ":root"
-					}())
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 295, Col: 222}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\" data-query-param=\"")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var27 string
-					templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(tok.QueryParam)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 295, Col: 258}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "\"><div class=\"flex items-center justify-between\"><label class=\"text-xs text-base-content/70\">")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var28 string
-					templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(tok.Label)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 297, Col: 67}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</label> ")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					if tok.Type == TokenTypeRange {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<span class=\"text-xs text-base-content/50 font-mono\" id=\"")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var29 string
-						templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs("tok-val-" + SanitizeID(tok.CSSVar))
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 299, Col: 106}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "\">")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var30 string
-						templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(tok.Default)
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 299, Col: 122}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</span>")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-					} else if tok.Type == TokenTypeColor {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "<span class=\"text-xs text-base-content/50 font-mono\" id=\"")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var31 string
-						templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs("tok-val-" + SanitizeID(tok.CSSVar))
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 301, Col: 106}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "\">")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var32 string
-						templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(tok.Default)
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 301, Col: 122}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</span>")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</div>")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					if tok.Type == TokenTypeRange {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<input type=\"range\" class=\"range range-xs range-primary w-full\" min=\"")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var33 string
-						templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%g", tok.Min))
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 308, Col: 45}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "\" max=\"")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var34 string
-						templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%g", tok.Max))
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 309, Col: 45}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "\" step=\"")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var35 string
-						templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%g", tok.Step))
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 310, Col: 47}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "\" value=\"")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var36 string
-						templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(RangeDefaultValue(tok))
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 311, Col: 43}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "\" oninput=\"handleTokenChange(this)\">")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-					} else if tok.Type == TokenTypeColor {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "<input type=\"color\" class=\"w-full h-8 rounded cursor-pointer border border-base-200\" value=\"")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var37 string
-						templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(tok.Default)
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 318, Col: 32}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "\" oninput=\"handleTokenChange(this)\">")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-					} else if tok.Type == TokenTypeSelect {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<select class=\"select select-xs select-bordered w-full\" onchange=\"handleTokenChange(this)\">")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						for _, opt := range tok.Options {
-							if opt.Value == tok.Default {
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<option value=\"")
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-								var templ_7745c5c3_Var38 string
-								templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(opt.Value)
-								if templ_7745c5c3_Err != nil {
-									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 328, Col: 39}
-								}
-								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "\" selected>")
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-								var templ_7745c5c3_Var39 string
-								templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(opt.Label)
-								if templ_7745c5c3_Err != nil {
-									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 328, Col: 62}
-								}
-								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</option>")
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-							} else {
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<option value=\"")
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-								var templ_7745c5c3_Var40 string
-								templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(opt.Value)
-								if templ_7745c5c3_Err != nil {
-									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 330, Col: 39}
-								}
-								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "\">")
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-								var templ_7745c5c3_Var41 string
-								templ_7745c5c3_Var41, templ_7745c5c3_Err = templ.JoinStringErrs(opt.Label)
-								if templ_7745c5c3_Err != nil {
-									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 330, Col: 53}
-								}
-								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var41))
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</option>")
-								if templ_7745c5c3_Err != nil {
-									return templ_7745c5c3_Err
-								}
-							}
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "</select>")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-					} else if tok.Type == TokenTypeText {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<input type=\"text\" class=\"input input-xs input-bordered w-full\" value=\"")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var42 string
-						templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(tok.Default)
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 338, Col: 30}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "\" oninput=\"handleTokenChange(this)\">")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "</div>")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</div></div>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "</div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\" onclick=\"exportGitHubIssue(this.dataset.slug)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z\"></path></svg> Create GitHub Issue</button></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "<!-- Feedback panel (hidden by default, toggled by toolbar Feedback button) --><div id=\"feedback-panel\" class=\"hidden flex flex-col gap-2\"><div class=\"flex items-center justify-between\"><span class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide\">Feedback</span> <button class=\"btn btn-xs btn-ghost\" onclick=\"toggleFeedbackMode()\">✕</button></div><div id=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var43 string
-		templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.JoinStringErrs("feedback-list-" + c.Slug)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 361, Col: 35}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var43))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "\" class=\"rounded-xl border border-base-200 bg-base-100 shadow-sm overflow-hidden\" hx-get=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var44 string
-		templ_7745c5c3_Var44, templ_7745c5c3_Err = templ.JoinStringErrs("/gallery/" + c.Slug + "/feedback")
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 363, Col: 48}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var44))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "\" hx-trigger=\"load, feedbackCreated from:body\" hx-swap=\"innerHTML\"><p class=\"p-4 text-xs text-base-content/40\">Loading...</p></div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if githubEnabled {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "<div class=\"flex justify-end\"><button id=\"export-issue-btn\" class=\"btn btn-xs btn-outline gap-1\" data-slug=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var45 string
-			templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.JoinStringErrs(c.Slug)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 374, Col: 25}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "\" onclick=\"exportGitHubIssue(this.dataset.slug)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z\"></path></svg> Create GitHub Issue</button></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "</div></div></div><!-- end two-column body --></div><!-- end interactive-body --><!-- Examples body: all stories stacked (hidden by default, shown when Examples tab active) --><div id=\"examples-body\" style=\"display:none\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</div></div></div><!-- end two-column body --></div><!-- end interactive-body --><!-- Examples body: all stories stacked (hidden by default, shown when Examples tab active) --><div id=\"examples-body\" style=\"display:none\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -797,77 +392,77 @@ func ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "</div></div><!-- Fullscreen preview overlay --><div id=\"fullscreen-preview-overlay\" class=\"fixed inset-0 z-50 hidden bg-base-100 flex flex-col\"><!-- Fullscreen title bar --><div class=\"flex items-center justify-between px-4 py-3 border-b border-base-200 shrink-0 bg-base-100\"><div class=\"flex items-center gap-3\"><h2 class=\"text-lg font-bold text-base-content\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</div></div><!-- Fullscreen preview overlay --><div id=\"fullscreen-preview-overlay\" class=\"fixed inset-0 z-50 hidden bg-base-100 flex flex-col\"><!-- Fullscreen title bar --><div class=\"flex items-center justify-between px-4 py-3 border-b border-base-200 shrink-0 bg-base-100\"><div class=\"flex items-center gap-3\"><h2 class=\"text-lg font-bold text-base-content\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var46 string
-		templ_7745c5c3_Var46, templ_7745c5c3_Err = templ.JoinStringErrs(c.Name)
+		var templ_7745c5c3_Var22 string
+		templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(c.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 402, Col: 60}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 336, Col: 60}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var46))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</h2><span class=\"badge badge-neutral badge-sm\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var47 string
-		templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.JoinStringErrs(string(c.Category))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 403, Col: 67}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var47))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</h2><span class=\"badge badge-neutral badge-sm\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "</span></div><div class=\"flex items-center gap-2\"><!-- Responsive breakpoint buttons --><div class=\"join\"><button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setFullscreenPreviewWidth('375px')\" title=\"Mobile (375px)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"7\" y=\"2\" width=\"10\" height=\"20\" rx=\"2\"></rect><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"18\"></line></svg></button> <button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setFullscreenPreviewWidth('768px')\" title=\"Tablet (768px)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"2\" width=\"16\" height=\"20\" rx=\"2\"></rect><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"18\"></line></svg></button> <button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setFullscreenPreviewWidth('100%')\" title=\"Desktop (full width)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"4\" width=\"20\" height=\"14\" rx=\"2\"></rect><line x1=\"8\" y1=\"22\" x2=\"16\" y2=\"22\"></line><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"22\"></line></svg></button></div><!-- Theme toggle --><span class=\"text-xs text-base-content/40\">Theme:</span> <button id=\"fullscreen-theme-toggle\" class=\"btn btn-xs btn-ghost border border-base-200\" onclick=\"toggleFullscreenTheme()\">&#9728; Light</button><!-- Exit button --><button class=\"btn btn-sm btn-ghost gap-1\" onclick=\"closeFullscreenPreview()\" title=\"Exit fullscreen\"><svg class=\"w-4 h-4\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polyline points=\"4 14 10 14 10 20\"></polyline><polyline points=\"20 10 14 10 14 4\"></polyline><line x1=\"14\" y1=\"10\" x2=\"21\" y2=\"3\"></line><line x1=\"3\" y1=\"21\" x2=\"10\" y2=\"14\"></line></svg> Exit</button></div></div><!-- Fullscreen iframe --><div id=\"fullscreen-preview-container\" class=\"grow overflow-hidden p-4 flex justify-center\"><iframe id=\"fullscreen-preview-frame\" class=\"h-full block rounded-lg border border-base-200\" style=\"width:100%; border:none; transition:width 0.2s;\" src=\"")
+		var templ_7745c5c3_Var23 string
+		templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(string(c.Category))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 337, Col: 67}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var48 string
-		templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</span></div><div class=\"flex items-center gap-2\"><!-- Responsive breakpoint buttons --><div class=\"join\"><button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setFullscreenPreviewWidth('375px')\" title=\"Mobile (375px)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"7\" y=\"2\" width=\"10\" height=\"20\" rx=\"2\"></rect><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"18\"></line></svg></button> <button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setFullscreenPreviewWidth('768px')\" title=\"Tablet (768px)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"2\" width=\"16\" height=\"20\" rx=\"2\"></rect><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"18\"></line></svg></button> <button class=\"join-item btn btn-xs btn-ghost border border-base-200\" onclick=\"setFullscreenPreviewWidth('100%')\" title=\"Desktop (full width)\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"4\" width=\"20\" height=\"14\" rx=\"2\"></rect><line x1=\"8\" y1=\"22\" x2=\"16\" y2=\"22\"></line><line x1=\"12\" y1=\"18\" x2=\"12\" y2=\"22\"></line></svg></button></div><!-- Theme toggle --><span class=\"text-xs text-base-content/40\">Theme:</span> <button id=\"fullscreen-theme-toggle\" class=\"btn btn-xs btn-ghost border border-base-200\" onclick=\"toggleFullscreenTheme()\">&#9728; Light</button><!-- Exit button --><button class=\"btn btn-sm btn-ghost gap-1\" onclick=\"closeFullscreenPreview()\" title=\"Exit fullscreen\"><svg class=\"w-4 h-4\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polyline points=\"4 14 10 14 10 20\"></polyline><polyline points=\"20 10 14 10 14 4\"></polyline><line x1=\"14\" y1=\"10\" x2=\"21\" y2=\"3\"></line><line x1=\"3\" y1=\"21\" x2=\"10\" y2=\"14\"></line></svg> Exit</button></div></div><!-- Fullscreen iframe --><div id=\"fullscreen-preview-container\" class=\"grow overflow-hidden p-4 flex justify-center\"><iframe id=\"fullscreen-preview-frame\" class=\"h-full block rounded-lg border border-base-200\" style=\"width:100%; border:none; transition:width 0.2s;\" src=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var24 string
+		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(func() string {
 			if len(c.EffectiveVariants()) > 1 {
 				return "/gallery/render/" + c.Slug + "/" + SlugifyStoryName(c.EffectiveVariants()[0].Name)
 			}
 			return "/gallery/render/" + c.Slug
 		}())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 444, Col: 194}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 378, Col: 194}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "\" title=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "\" title=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var49 string
-		templ_7745c5c3_Var49, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Fullscreen preview: %s", c.Name))
+		var templ_7745c5c3_Var25 string
+		templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Fullscreen preview: %s", c.Name))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 445, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 379, Col: 57}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var49))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "\"></iframe></div></div><!-- Feedback submission dialog --><dialog id=\"feedback-dialog\" class=\"modal\"><div class=\"modal-box w-full max-w-md\"><h3 class=\"font-bold text-lg mb-3\">Add Feedback</h3><!-- Read-only element context --><div class=\"mb-3 space-y-1\"><p class=\"text-xs text-base-content/50\"><span class=\"font-semibold\">Element:</span> <span id=\"fb-tag-display\" class=\"font-mono\"></span></p><p class=\"text-xs text-base-content/50\"><span class=\"font-semibold\">Selector:</span> <span id=\"fb-selector-display\" class=\"font-mono break-all\"></span></p><p class=\"text-xs text-base-content/50 hidden\" id=\"fb-text-row\"><span class=\"font-semibold\">Text:</span> <span id=\"fb-text-display\" class=\"italic\"></span></p></div><!-- Hidden context inputs --><input type=\"hidden\" id=\"fb-slug\" value=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var50 string
-		templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.JoinStringErrs(c.Slug)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 470, Col: 51}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var50))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\"></iframe></div></div><!-- Feedback submission dialog --><dialog id=\"feedback-dialog\" class=\"modal\"><div class=\"modal-box w-full max-w-md\"><h3 class=\"font-bold text-lg mb-3\">Add Feedback</h3><!-- Read-only element context --><div class=\"mb-3 space-y-1\"><p class=\"text-xs text-base-content/50\"><span class=\"font-semibold\">Element:</span> <span id=\"fb-tag-display\" class=\"font-mono\"></span></p><p class=\"text-xs text-base-content/50\"><span class=\"font-semibold\">Selector:</span> <span id=\"fb-selector-display\" class=\"font-mono break-all\"></span></p><p class=\"text-xs text-base-content/50 hidden\" id=\"fb-text-row\"><span class=\"font-semibold\">Text:</span> <span id=\"fb-text-display\" class=\"italic\"></span></p></div><!-- Hidden context inputs --><input type=\"hidden\" id=\"fb-slug\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "\"> <input type=\"hidden\" id=\"fb-tag\"> <input type=\"hidden\" id=\"fb-selector\"> <input type=\"hidden\" id=\"fb-innertext\"><!-- Comment textarea --><textarea id=\"fb-comment\" class=\"textarea textarea-bordered w-full text-sm\" rows=\"3\" placeholder=\"Describe the issue or suggestion...\"></textarea><div class=\"modal-action mt-3\"><button class=\"btn btn-sm btn-ghost\" onclick=\"closeFeedbackDialog()\">Cancel</button> <button class=\"btn btn-sm btn-primary\" onclick=\"submitFeedback()\">Submit</button></div></div><form method=\"dialog\" class=\"modal-backdrop\"><button>close</button></form></dialog><!-- Prism.js syntax highlighting (dev tool only) --><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css\"><script src=\"https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js\"></script><!-- Theme toggle + copy + fullscreen script --><script>\n\t\t(function() {\n\t\t\tvar STORAGE_KEY = 'gallery-preview-theme';\n\n\t\t\tfunction getSavedTheme() {\n\t\t\t\ttry { return localStorage.getItem(STORAGE_KEY) || 'light'; } catch(e) { return 'light'; }\n\t\t\t}\n\t\t\tfunction saveTheme(theme) {\n\t\t\t\ttry { localStorage.setItem(STORAGE_KEY, theme); } catch(e) {}\n\t\t\t}\n\n\t\t\tfunction applyThemeToFrame(frameId, theme) {\n\t\t\t\tvar frame = document.getElementById(frameId);\n\t\t\t\tif (!frame) return;\n\t\t\t\ttry {\n\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\tif (doc && doc.documentElement) {\n\t\t\t\t\t\tdoc.documentElement.setAttribute('data-theme', theme);\n\t\t\t\t\t}\n\t\t\t\t} catch(e) {}\n\t\t\t}\n\n\t\t\tfunction updateThemeButton(btnId, theme) {\n\t\t\t\tvar btn = document.getElementById(btnId);\n\t\t\t\tif (btn) btn.textContent = theme === 'dark' ? '\\uD83C\\uDF19 Dark' : '\\u2600 Light';\n\t\t\t}\n\n\t\t\tfunction applyStoredTheme() {\n\t\t\t\tvar theme = getSavedTheme();\n\t\t\t\tapplyThemeToFrame('preview-frame', theme);\n\t\t\t\tapplyThemeToFrame('fullscreen-preview-frame', theme);\n\t\t\t\tupdateThemeButton('preview-theme-toggle', theme);\n\t\t\t\tupdateThemeButton('fullscreen-theme-toggle', theme);\n\t\t\t}\n\n\t\t\tfunction resizePreviewFrame() {\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (!frame) return;\n\t\t\t\ttry {\n\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\tif (doc && doc.body) {\n\t\t\t\t\t\tvar h = doc.body.scrollHeight;\n\t\t\t\t\t\tif (h > 0) frame.style.height = h + 'px';\n\t\t\t\t\t}\n\t\t\t\t} catch(e) {}\n\t\t\t}\n\n\t\t\tfunction applyThemeOnLoad(frameId) {\n\t\t\t\tvar frame = document.getElementById(frameId);\n\t\t\t\tif (!frame) return;\n\t\t\t\tvar theme = getSavedTheme();\n\t\t\t\tapplyThemeToFrame(frameId, theme);\n\t\t\t\tframe.addEventListener('load', function() {\n\t\t\t\t\tapplyThemeToFrame(frameId, theme);\n\t\t\t\t\tif (frameId === 'preview-frame') {\n\t\t\t\t\t\tsetTimeout(resizePreviewFrame, 100);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\n\t\t\tfunction attachPreviewResizeObserver() {\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (!frame) return;\n\t\t\t\tfunction observe() {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\tif (!doc || !doc.body) return;\n\t\t\t\t\t\tfunction measure() {\n\t\t\t\t\t\t\treturn Math.max(doc.body.scrollHeight, 40);\n\t\t\t\t\t\t}\n\t\t\t\t\t\tvar ro = new ResizeObserver(function() {\n\t\t\t\t\t\t\tframe.style.height = measure() + 'px';\n\t\t\t\t\t\t});\n\t\t\t\t\t\tro.observe(doc.body);\n\t\t\t\t\t\tframe.style.height = measure() + 'px';\n\t\t\t\t\t} catch(e) {}\n\t\t\t\t}\n\t\t\t\tif (frame.contentDocument && frame.contentDocument.readyState === 'complete') {\n\t\t\t\t\tobserve();\n\t\t\t\t} else {\n\t\t\t\t\tframe.addEventListener('load', observe);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\twindow.toggleGalleryTheme = function() {\n\t\t\t\tvar theme = getSavedTheme() === 'dark' ? 'light' : 'dark';\n\t\t\t\tsaveTheme(theme);\n\t\t\t\tapplyThemeToFrame('preview-frame', theme);\n\t\t\t\tupdateThemeButton('preview-theme-toggle', theme);\n\t\t\t\tapplyThemeToFrame('fullscreen-preview-frame', theme);\n\t\t\t\tupdateThemeButton('fullscreen-theme-toggle', theme);\n\t\t\t\tsetTimeout(resizePreviewFrame, 50);\n\t\t\t};\n\n\t\t\twindow.setPreviewWidth = function(w) {\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (!frame) return;\n\t\t\t\tvar container = frame.parentElement;\n\t\t\t\tif (w === '100%') {\n\t\t\t\t\tframe.style.width = '100%';\n\t\t\t\t\tif (container) container.style.justifyContent = '';\n\t\t\t\t} else {\n\t\t\t\t\tframe.style.width = w;\n\t\t\t\t\tif (container) container.style.justifyContent = 'center';\n\t\t\t\t}\n\t\t\t\tsetTimeout(resizePreviewFrame, 200);\n\t\t\t};\n\n\t\t\twindow.copyGalleryHTML = function() {\n\t\t\t\tvar pre = document.getElementById('gallery-html-source');\n\t\t\t\tif (!pre) return;\n\t\t\t\tvar text = pre.innerText || pre.textContent;\n\t\t\t\tnavigator.clipboard.writeText(text).then(function() {\n\t\t\t\t\tvar btn = document.getElementById('copy-html-btn');\n\t\t\t\t\tif (btn) {\n\t\t\t\t\t\tbtn.textContent = '\\u2713 Copied!';\n\t\t\t\t\t\tsetTimeout(function() { btn.innerHTML = '<svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\"/><path d=\"M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1\"/></svg> Copy'; }, 2000);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t};\n\n\t\t\twindow.openFullscreenPreview = function() {\n\t\t\t\tvar overlay = document.getElementById('fullscreen-preview-overlay');\n\t\t\t\tif (overlay) {\n\t\t\t\t\toverlay.classList.remove('hidden');\n\t\t\t\t\tdocument.body.style.overflow = 'hidden';\n\t\t\t\t}\n\t\t\t\tvar theme = getSavedTheme();\n\t\t\t\tapplyThemeToFrame('fullscreen-preview-frame', theme);\n\t\t\t\tupdateThemeButton('fullscreen-theme-toggle', theme);\n\t\t\t};\n\n\t\t\twindow.closeFullscreenPreview = function() {\n\t\t\t\tvar overlay = document.getElementById('fullscreen-preview-overlay');\n\t\t\t\tif (overlay) {\n\t\t\t\t\toverlay.classList.add('hidden');\n\t\t\t\t\tdocument.body.style.overflow = '';\n\t\t\t\t}\n\t\t\t\tvar frame = document.getElementById('fullscreen-preview-frame');\n\t\t\t\tif (frame) frame.style.width = '100%';\n\t\t\t};\n\n\t\t\twindow.toggleFullscreenTheme = function() {\n\t\t\t\tvar theme = getSavedTheme() === 'dark' ? 'light' : 'dark';\n\t\t\t\tsaveTheme(theme);\n\t\t\t\tapplyThemeToFrame('fullscreen-preview-frame', theme);\n\t\t\t\tupdateThemeButton('fullscreen-theme-toggle', theme);\n\t\t\t\tapplyThemeToFrame('preview-frame', theme);\n\t\t\t\tupdateThemeButton('preview-theme-toggle', theme);\n\t\t\t};\n\n\t\t\twindow.setFullscreenPreviewWidth = function(w) {\n\t\t\t\tvar frame = document.getElementById('fullscreen-preview-frame');\n\t\t\t\tif (!frame) return;\n\t\t\t\tframe.style.width = w;\n\t\t\t};\n\n\t\t\tdocument.addEventListener('keydown', function(e) {\n\t\t\t\tif (e.key === 'Escape') { closeFullscreenPreview(); }\n\t\t\t});\n\n\t\t\tdocument.addEventListener('htmx:afterSwap', function() {\n\t\t\t\tsetTimeout(function() {\n\t\t\t\t\t// After HTMX swaps innerHTML, iframes with src= don't auto-load.\n\t\t\t\t\t// Reassign src to force the browser to navigate the iframe.\n\t\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\t\tif (frame && frame.src && !frame.srcdoc) {\n\t\t\t\t\t\tvar src = frame.src;\n\t\t\t\t\t\tframe.src = '';\n\t\t\t\t\t\tframe.src = src;\n\t\t\t\t\t\t// After the iframe loads, ask its devoverlay to re-post the\n\t\t\t\t\t\t// component tree. This fixes the race where postTree() fires\n\t\t\t\t\t\t// before the new handleTreeMessage listener is ready.\n\t\t\t\t\t\tframe.addEventListener('load', function onFrameLoad() {\n\t\t\t\t\t\t\tframe.removeEventListener('load', onFrameLoad);\n\t\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\t\tif (frame.contentWindow && typeof frame.contentWindow.postTree === 'function') {\n\t\t\t\t\t\t\t\t\tframe.contentWindow.postTree();\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t} catch(e) {}\n\t\t\t\t\t\t});\n\t\t\t\t\t}\n\t\t\t\t\tvar fsFrame = document.getElementById('fullscreen-preview-frame');\n\t\t\t\t\tif (fsFrame && fsFrame.src && !fsFrame.srcdoc) {\n\t\t\t\t\t\tvar fsSrc = fsFrame.src;\n\t\t\t\t\t\tfsFrame.src = '';\n\t\t\t\t\t\tfsFrame.src = fsSrc;\n\t\t\t\t\t}\n\t\t\t\t\tapplyStoredTheme();\n\t\t\t\t\tapplyThemeOnLoad('preview-frame');\n\t\t\t\t\tapplyThemeOnLoad('fullscreen-preview-frame');\n\t\t\t\t\tattachPreviewResizeObserver();\n\t\t\t\t}, 0);\n\t\t\t\tif (window.Prism) Prism.highlightAll();\n\t\t\t});\n\n\t\t\tdocument.addEventListener('DOMContentLoaded', function() {\n\t\t\t\tapplyStoredTheme();\n\t\t\t\tapplyThemeOnLoad('preview-frame');\n\t\t\t\tapplyThemeOnLoad('fullscreen-preview-frame');\n\t\t\t\tattachPreviewResizeObserver();\n\t\t\t\tif (window.Prism) Prism.highlightAll();\n\t\t\t});\n\t\t\tif (document.readyState !== 'loading') {\n\t\t\t\tapplyStoredTheme();\n\t\t\t\tapplyThemeOnLoad('preview-frame');\n\t\t\t\tapplyThemeOnLoad('fullscreen-preview-frame');\n\t\t\t\tattachPreviewResizeObserver();\n\t\t\t\tif (window.Prism) Prism.highlightAll();\n\t\t\t}\n\t\t})();\n\t</script><!-- Design Token panel JS --><script>\n\t\t(function() {\n\t\t\t// ── renderTokenPanel: build token panel DOM from a JSON token array ─────\n\t\t\t// Called by switchVariant when the user clicks a variant tab.\n\t\t\twindow.renderTokenPanel = function(tokens) {\n\t\t\t\tvar panel = document.getElementById('token-panel');\n\t\t\t\tvar body  = document.getElementById('token-panel-body');\n\t\t\t\tvar col   = document.getElementById('right-column');\n\t\t\t\tvar badge = document.getElementById('token-count-badge');\n\n\t\t\t\tif (!tokens || tokens.length === 0) {\n\t\t\t\t\t// No tokens for this variant — hide token panel (keep right col if feedback visible)\n\t\t\t\t\tif (panel) panel.classList.add('hidden');\n\t\t\t\t\tvar feedbackPanel = document.getElementById('feedback-panel');\n\t\t\t\t\tvar feedbackVisible = feedbackPanel && !feedbackPanel.classList.contains('hidden');\n\t\t\t\t\tif (col && !feedbackVisible) col.classList.add('hidden');\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\t// Show right column + token panel\n\t\t\t\tif (col) col.classList.remove('hidden');\n\t\t\t\tif (panel) panel.classList.remove('hidden');\n\t\t\t\tif (badge) badge.textContent = String(tokens.length);\n\n\t\t\t\t// Group tokens by Group field\n\t\t\t\tvar order = [], byName = {};\n\t\t\t\ttokens.forEach(function(tok) {\n\t\t\t\t\tvar g = tok.Group || 'General';\n\t\t\t\t\tif (!byName[g]) { order.push(g); byName[g] = []; }\n\t\t\t\t\tbyName[g].push(tok);\n\t\t\t\t});\n\n\t\t\t\tvar html = '';\n\t\t\t\torder.forEach(function(grpName) {\n\t\t\t\t\thtml += '<div class=\"token-group\">';\n\t\t\t\t\thtml += '<p class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide mb-3\">' + escT(grpName) + '</p>';\n\t\t\t\t\thtml += '<div class=\"space-y-3\">';\n\t\t\t\tbyName[grpName].forEach(function(tok) {\n\t\t\t\t\tvar cssVar = tok.CSSVar || '';\n\t\t\t\t\tvar def    = tok.Default || '';\n\t\t\t\t\tvar unit   = tok.Unit || '';\n\t\t\t\t\tvar sel    = tok.Selector || ':root';\n\t\t\t\t\tvar qp     = tok.QueryParam || '';\n\t\t\t\t\tvar safeId = cssVar.replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, '');\n\t\t\t\t\thtml += '<div class=\"flex flex-col gap-1.5\" data-css-var=\"' + escT(cssVar) + '\" data-default=\"' + escT(def) + '\" data-unit=\"' + escT(unit) + '\" data-selector=\"' + escT(sel) + '\" data-query-param=\"' + escT(qp) + '\">';\n\t\t\t\t\t\thtml += '<div class=\"flex items-center justify-between\">';\n\t\t\t\t\t\thtml += '<label class=\"text-xs text-base-content/70\">' + escT(tok.Label || cssVar) + '</label>';\n\t\t\t\t\t\tif (tok.Type === 'range' || tok.Type === 'color') {\n\t\t\t\t\t\t\thtml += '<span class=\"text-xs text-base-content/50 font-mono\" id=\"tok-val-' + safeId + '\">' + escT(def) + '</span>';\n\t\t\t\t\t\t}\n\t\t\t\t\t\thtml += '</div>';\n\t\t\t\t\t\tif (tok.Type === 'range') {\n\t\t\t\t\t\t\tvar numVal = parseFloat(def) || tok.Min || 0;\n\t\t\t\t\t\t\thtml += '<input type=\"range\" class=\"range range-xs range-primary w-full\"'\n\t\t\t\t\t\t\t\t+ ' min=\"' + (tok.Min || 0) + '\" max=\"' + (tok.Max || 1) + '\" step=\"' + (tok.Step || 0.1) + '\"'\n\t\t\t\t\t\t\t\t+ ' value=\"' + numVal + '\" oninput=\"handleTokenChange(this)\"/>';\n\t\t\t\t\t\t} else if (tok.Type === 'color') {\n\t\t\t\t\t\t\thtml += '<input type=\"color\" class=\"w-full h-8 rounded cursor-pointer border border-base-200\"'\n\t\t\t\t\t\t\t\t+ ' value=\"' + escT(def) + '\" oninput=\"handleTokenChange(this)\"/>';\n\t\t\t\t\t} else if (tok.Type === 'select') {\n\t\t\t\t\t\thtml += '<select class=\"select select-xs select-bordered w-full\" onchange=\"handleTokenChange(this)\">';\n\t\t\t\t\t\t(tok.Options || []).forEach(function(opt) {\n\t\t\t\t\t\t\tvar sel2 = opt.Value === def ? ' selected' : '';\n\t\t\t\t\t\t\thtml += '<option value=\"' + escT(opt.Value) + '\"' + sel2 + '>' + escT(opt.Label) + '</option>';\n\t\t\t\t\t\t});\n\t\t\t\t\t\thtml += '</select>';\n\t\t\t\t\t} else if (tok.Type === 'text') {\n\t\t\t\t\t\thtml += '<input type=\"text\" class=\"input input-xs input-bordered w-full\" value=\"' + escT(def) + '\" oninput=\"handleTokenChange(this)\"/>';\n\t\t\t\t\t}\n\t\t\t\t\t\thtml += '</div>';\n\t\t\t\t\t});\n\t\t\t\t\thtml += '</div></div>';\n\t\t\t\t});\n\n\t\t\t\tif (body) body.innerHTML = '<div class=\"p-4 space-y-5\">' + html + '</div>';\n\t\t\t};\n\n\t\t\tfunction escT(s) {\n\t\t\t\treturn String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');\n\t\t\t}\n\n\t\t\t// ── Token collection & application ────────────────────────────────────\n\t\t\tfunction collectTokens() {\n\t\t\t\tvar bySelector = {};\n\t\t\t\tvar rows = document.querySelectorAll('#token-panel-body [data-css-var]');\n\t\t\t\trows.forEach(function(row) {\n\t\t\t\t\tvar cssVar = row.getAttribute('data-css-var');\n\t\t\t\t\tvar unit = row.getAttribute('data-unit') || '';\n\t\t\t\t\tvar selector = row.getAttribute('data-selector') || ':root';\n\t\t\t\t\tvar input = row.querySelector('input, select');\n\t\t\t\t\tif (!input || !cssVar) return;\n\t\t\t\t\tvar value = input.value;\n\t\t\t\t\tif (input.type === 'range') { value = value + unit; }\n\t\t\t\t\tif (!bySelector[selector]) bySelector[selector] = {};\n\t\t\t\t\tbySelector[selector][cssVar] = value;\n\t\t\t\t});\n\t\t\t\treturn bySelector;\n\t\t\t}\n\n\t\t\tfunction buildCSS(bySelector) {\n\t\t\t\tvar blocks = [];\n\t\t\t\tObject.keys(bySelector).forEach(function(selector) {\n\t\t\t\t\tvar lines = [selector + ' {'];\n\t\t\t\t\tObject.keys(bySelector[selector]).forEach(function(k) {\n\t\t\t\t\t\tlines.push('  ' + k + ': ' + bySelector[selector][k] + ';');\n\t\t\t\t\t});\n\t\t\t\t\tlines.push('}');\n\t\t\t\t\tblocks.push(lines.join('\\n'));\n\t\t\t\t});\n\t\t\t\treturn blocks.join('\\n');\n\t\t\t}\n\n\t\t\tfunction applyTokensToFrame(frameId) {\n\t\t\t\tvar frame = document.getElementById(frameId);\n\t\t\t\tif (!frame) return;\n\t\t\t\tvar bySelector = collectTokens();\n\t\t\t\tvar css = buildCSS(bySelector);\n\n\t\t\t\tif (frame.hasAttribute('srcdoc')) {\n\t\t\t\t\tvar originalSrcdoc = frame.getAttribute('data-original-srcdoc') || frame.getAttribute('srcdoc');\n\t\t\t\t\tif (!frame.getAttribute('data-original-srcdoc')) {\n\t\t\t\t\t\tframe.setAttribute('data-original-srcdoc', originalSrcdoc);\n\t\t\t\t\t}\n\t\t\t\t\tvar injected = originalSrcdoc.replace('</head>', '<style id=\"token-overrides\">\\n' + css + '\\n</style>\\n</head>');\n\t\t\t\t\tframe.setAttribute('srcdoc', injected);\n\t\t\t\t} else {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\tif (!doc) return;\n\t\t\t\t\t\tvar styleEl = doc.getElementById('token-overrides');\n\t\t\t\t\t\tif (!styleEl) {\n\t\t\t\t\t\t\tstyleEl = doc.createElement('style');\n\t\t\t\t\t\t\tstyleEl.id = 'token-overrides';\n\t\t\t\t\t\t\t(doc.head || doc.documentElement).appendChild(styleEl);\n\t\t\t\t\t\t}\n\t\t\t\t\t\tstyleEl.textContent = css;\n\t\t\t\t\t} catch(e) {}\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t// ── Query-param driven rendering ──────────────────────────────────────\n\t\t\t// Collects all QueryParam tokens from the panel and updates the iframe src.\n\t\t\tfunction applyQueryParamsToFrame(frameId) {\n\t\t\t\tvar frame = document.getElementById(frameId);\n\t\t\t\tif (!frame) return;\n\t\t\t\t// Start from the current base src (strip existing query string).\n\t\t\t\tvar src = frame.src || '';\n\t\t\t\tvar baseSrc = src.split('?')[0];\n\t\t\t\t// Collect all query-param token values.\n\t\t\t\tvar params = new URLSearchParams();\n\t\t\t\tvar rows = document.querySelectorAll('#token-panel-body [data-query-param]');\n\t\t\t\trows.forEach(function(row) {\n\t\t\t\t\tvar qp = row.getAttribute('data-query-param');\n\t\t\t\t\tif (!qp) return;\n\t\t\t\t\tvar input = row.querySelector('input, select');\n\t\t\t\t\tif (!input) return;\n\t\t\t\t\tparams.set(qp, input.value);\n\t\t\t\t});\n\t\t\t\tvar qs = params.toString();\n\t\t\t\tframe.src = qs ? baseSrc + '?' + qs : baseSrc;\n\t\t\t}\n\n\t\t\twindow.handleTokenChange = function(input) {\n\t\t\t\tvar row = input.closest('[data-css-var], [data-query-param]');\n\t\t\t\tif (!row) return;\n\t\t\t\tvar queryParam = row.getAttribute('data-query-param');\n\t\t\t\tvar unit = row.getAttribute('data-unit') || '';\n\n\t\t\t\t// Update the visible value label for range/color tokens\n\t\t\t\tif (input.type === 'range') {\n\t\t\t\t\tvar labelEl = document.getElementById('tok-val-' + (row.getAttribute('data-css-var') || '').replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));\n\t\t\t\t\tif (labelEl) labelEl.textContent = input.value + unit;\n\t\t\t\t} else if (input.type === 'color') {\n\t\t\t\t\tvar labelEl2 = document.getElementById('tok-val-' + (row.getAttribute('data-css-var') || '').replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));\n\t\t\t\t\tif (labelEl2) labelEl2.textContent = input.value;\n\t\t\t\t}\n\n\t\t\t\tif (queryParam) {\n\t\t\t\t\t// QueryParam token — update iframe src query string (server-side re-render)\n\t\t\t\t\tapplyQueryParamsToFrame('preview-frame');\n\t\t\t\t} else {\n\t\t\t\t\t// CSS var token — inject CSS into the iframe\n\t\t\t\t\tapplyTokensToFrame('preview-frame');\n\t\t\t\t}\n\t\t\t};\n\n\t\t\twindow.resetTokens = function() {\n\t\t\t\tvar hasQueryParams = false;\n\t\t\t\tvar rows = document.querySelectorAll('#token-panel-body [data-css-var], #token-panel-body [data-query-param]');\n\t\t\t\trows.forEach(function(row) {\n\t\t\t\t\tvar def = row.getAttribute('data-default');\n\t\t\t\t\tvar unit = row.getAttribute('data-unit') || '';\n\t\t\t\t\tvar cssVar = row.getAttribute('data-css-var') || '';\n\t\t\t\t\tvar qp = row.getAttribute('data-query-param') || '';\n\t\t\t\t\tvar input = row.querySelector('input, select');\n\t\t\t\t\tif (!input || !def) return;\n\t\t\t\t\tif (input.type === 'range') {\n\t\t\t\t\t\tinput.value = parseFloat(def) || 0;\n\t\t\t\t\t\tvar labelEl = document.getElementById('tok-val-' + cssVar.replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));\n\t\t\t\t\t\tif (labelEl) labelEl.textContent = def;\n\t\t\t\t\t} else {\n\t\t\t\t\t\tinput.value = def;\n\t\t\t\t\t\tif (input.type === 'color') {\n\t\t\t\t\t\t\tvar labelEl2 = document.getElementById('tok-val-' + cssVar.replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));\n\t\t\t\t\t\t\tif (labelEl2) labelEl2.textContent = def;\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\tif (qp) hasQueryParams = true;\n\t\t\t\t});\n\t\t\t\tif (hasQueryParams) {\n\t\t\t\t\t// Reload iframe with default query params\n\t\t\t\t\tapplyQueryParamsToFrame('preview-frame');\n\t\t\t\t} else {\n\t\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\t\tif (frame && frame.getAttribute('data-original-srcdoc')) {\n\t\t\t\t\t\tframe.setAttribute('srcdoc', frame.getAttribute('data-original-srcdoc'));\n\t\t\t\t\t\tframe.removeAttribute('data-original-srcdoc');\n\t\t\t\t\t} else if (frame && !frame.hasAttribute('srcdoc')) {\n\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\t\tvar styleEl = doc && doc.getElementById('token-overrides');\n\t\t\t\t\t\t\tif (styleEl) styleEl.remove();\n\t\t\t\t\t\t} catch(e) {}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t};\n\t\t})();\n\t</script><!-- Crosshair feedback tool JS (press Alt or click Feedback button to toggle) --><script>\n\t\t(function() {\n\t\t\tvar feedbackModeActive = false;\n\t\t\tvar hoveredEl = null;\n\t\t\tvar HIGHLIGHT_OUTLINE = '2px solid #f472b6';\n\n\t\t\t// ── Toggle helpers ────────────────────────────────────────────────────\n\n\t\t\twindow.toggleFeedbackMode = function() {\n\t\t\t\tvar col = document.getElementById('right-column');\n\t\t\t\tif (feedbackModeActive) {\n\t\t\t\t\tdeactivateFeedbackMode();\n\t\t\t\t\t// Hide the feedback panel when turning off feedback mode\n\t\t\t\t\tvar panel = document.getElementById('feedback-panel');\n\t\t\t\t\tif (panel) panel.classList.add('hidden');\n\t\t\t\t\t// Hide the right column entirely if there are no tokens\n\t\t\t\t\tif (col && !col.querySelector('#token-panel')) col.classList.add('hidden');\n\t\t\t\t\t// Force flex reflow then re-measure iframe height\n\t\t\t\t\tsetTimeout(function() {\n\t\t\t\t\t\tvar twoCol = col && col.parentElement;\n\t\t\t\t\t\tif (twoCol) { twoCol.style.display = 'none'; void twoCol.offsetHeight; twoCol.style.display = ''; }\n\t\t\t\t\t\tresizePreviewFrame();\n\t\t\t\t\t}, 0);\n\t\t\t\t} else {\n\t\t\t\t\tactivateFeedbackMode();\n\t\t\t\t\t// Show the right column + feedback panel\n\t\t\t\t\tif (col) col.classList.remove('hidden');\n\t\t\t\t\tvar panel = document.getElementById('feedback-panel');\n\t\t\t\t\tif (panel) panel.classList.remove('hidden');\n\t\t\t\t\t// Re-measure iframe after reflow\n\t\t\t\t\tsetTimeout(resizePreviewFrame, 50);\n\t\t\t\t}\n\t\t\t};\n\n\t\t\t// Keep legacy toggleFeedbackPanel working (opens the list panel)\n\t\t\twindow.toggleFeedbackPanel = function() {\n\t\t\t\tvar panel = document.getElementById('feedback-panel');\n\t\t\t\tif (!panel) return;\n\t\t\t\tpanel.classList.toggle('hidden');\n\t\t\t};\n\n\t\t\tfunction activateFeedbackMode() {\n\t\t\t\tif (feedbackModeActive) return;\n\t\t\t\tfeedbackModeActive = true;\n\n\t\t\t\t// Cursor\n\t\t\t\tdocument.body.style.cursor = 'crosshair';\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (frame) {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar fdoc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\tif (fdoc && fdoc.body) fdoc.body.style.cursor = 'crosshair';\n\t\t\t\t\t} catch(err) {}\n\t\t\t\t}\n\n\t\t\t\t// Banner\n\t\t\t\tvar banner = document.getElementById('feedback-mode-banner');\n\t\t\t\tif (banner) banner.classList.remove('hidden');\n\n\t\t\t\t// Button active state\n\t\t\t\tvar btn = document.getElementById('feedback-mode-btn');\n\t\t\t\tif (btn) btn.classList.add('btn-primary', 'text-primary-content');\n\t\t\t}\n\n\t\t\tfunction deactivateFeedbackMode() {\n\t\t\t\tif (!feedbackModeActive) return;\n\t\t\t\tfeedbackModeActive = false;\n\n\t\t\t\t// Cursor\n\t\t\t\tdocument.body.style.cursor = '';\n\t\t\t\tif (hoveredEl) {\n\t\t\t\t\ttry { hoveredEl.style.outline = ''; } catch(err) {}\n\t\t\t\t\thoveredEl = null;\n\t\t\t\t}\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (frame) {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar fdoc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\tif (fdoc && fdoc.body) fdoc.body.style.cursor = '';\n\t\t\t\t\t} catch(err) {}\n\t\t\t\t}\n\n\t\t\t\t// Banner\n\t\t\t\tvar banner = document.getElementById('feedback-mode-banner');\n\t\t\t\tif (banner) banner.classList.add('hidden');\n\n\t\t\t\t// Button active state\n\t\t\t\tvar btn = document.getElementById('feedback-mode-btn');\n\t\t\t\tif (btn) btn.classList.remove('btn-primary', 'text-primary-content');\n\t\t\t}\n\n\t\t\t// ── Keyboard: Alt toggles mode ────────────────────────────────────────\n\t\t\tdocument.addEventListener('keyup', function(e) {\n\t\t\t\tif (e.key === 'Alt' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {\n\t\t\t\t\te.preventDefault();\n\t\t\t\t\twindow.toggleFeedbackMode();\n\t\t\t\t}\n\t\t\t\tif (e.key === 'Escape') {\n\t\t\t\t\tdeactivateFeedbackMode();\n\t\t\t\t\tvar dialog = document.getElementById('feedback-dialog');\n\t\t\t\t\tif (dialog && dialog.open) dialog.close();\n\t\t\t\t}\n\t\t\t});\n\n\t\t\t// ── Selector utilities ────────────────────────────────────────────────\n\n\t\t\tfunction selectorSegment(el) {\n\t\t\t\tif (!el || el.nodeType !== 1) return '';\n\t\t\t\tvar seg = el.tagName.toLowerCase();\n\t\t\t\tif (el.id) {\n\t\t\t\t\tseg += '#' + el.id;\n\t\t\t\t} else if (el.className && typeof el.className === 'string') {\n\t\t\t\t\tvar cls = el.className.trim().split(/\\s+/).slice(0, 2).join('.');\n\t\t\t\t\tif (cls) seg += '.' + cls;\n\t\t\t\t}\n\t\t\t\treturn seg;\n\t\t\t}\n\n\t\t\tfunction computeSelectorPath(el) {\n\t\t\t\tvar parts = [];\n\t\t\t\tvar cur = el;\n\t\t\t\tfor (var i = 0; i < 4 && cur && cur.nodeType === 1 && cur.tagName !== 'BODY' && cur.tagName !== 'HTML'; i++) {\n\t\t\t\t\tparts.unshift(selectorSegment(cur));\n\t\t\t\t\tcur = cur.parentElement;\n\t\t\t\t}\n\t\t\t\treturn parts.join(' > ');\n\t\t\t}\n\n\t\t\tvar LAYOUT_TAGS = {\n\t\t\t\tdiv: 1, section: 1, article: 1, main: 1, aside: 1,\n\t\t\t\theader: 1, footer: 1, nav: 1, ul: 1, ol: 1, li: 1,\n\t\t\t\tfigure: 1, figcaption: 1, fieldset: 1, form: 1,\n\t\t\t\tdl: 1, dt: 1, dd: 1, template: 1\n\t\t\t};\n\n\t\t\tfunction isMeaningful(el) {\n\t\t\t\tif (!el || el.nodeType !== 1) return false;\n\t\t\t\tvar tag = el.tagName.toLowerCase();\n\t\t\t\tif (!LAYOUT_TAGS[tag]) return true;\n\t\t\t\tif (el.id) return true;\n\t\t\t\tvar attrs = el.attributes;\n\t\t\t\tfor (var i = 0; i < attrs.length; i++) {\n\t\t\t\t\tif (attrs[i].name.indexOf('data-') === 0) return true;\n\t\t\t\t}\n\t\t\t\tif (!el.firstElementChild) return true;\n\t\t\t\treturn false;\n\t\t\t}\n\n\t\t\tfunction pickTarget(el, body) {\n\t\t\t\tvar cur = el;\n\t\t\t\twhile (cur && cur !== body) {\n\t\t\t\t\tif (isMeaningful(cur)) return cur;\n\t\t\t\t\tcur = cur.parentElement;\n\t\t\t\t}\n\t\t\t\treturn body;\n\t\t\t}\n\n\t\t\t// ── Iframe listeners ──────────────────────────────────────────────────\n\n\t\t\tfunction attachIframeListeners() {\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (!frame) return;\n\t\t\t\tfunction tryAttach() {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar fdoc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\tif (!fdoc || !fdoc.body) return;\n\n\t\t\t\t\t\tfdoc.addEventListener('mousemove', function(e) {\n\t\t\t\t\t\t\tif (!feedbackModeActive) return;\n\t\t\t\t\t\t\tvar raw = fdoc.elementFromPoint(e.clientX, e.clientY);\n\t\t\t\t\t\t\tvar el = raw ? pickTarget(raw, fdoc.body) : null;\n\t\t\t\t\t\t\tif (el === hoveredEl) return;\n\t\t\t\t\t\t\tif (hoveredEl) { try { hoveredEl.style.outline = ''; } catch(err) {} }\n\t\t\t\t\t\t\thoveredEl = el;\n\t\t\t\t\t\t\tif (el && el !== fdoc.body) { try { el.style.outline = HIGHLIGHT_OUTLINE; } catch(err) {} }\n\t\t\t\t\t\t});\n\n\t\t\t\t\t\tfdoc.addEventListener('mouseleave', function() {\n\t\t\t\t\t\t\tif (hoveredEl) { try { hoveredEl.style.outline = ''; } catch(err) {} hoveredEl = null; }\n\t\t\t\t\t\t});\n\n\t\t\t\t\t\tfdoc.addEventListener('click', function(e) {\n\t\t\t\t\t\t\tif (!feedbackModeActive) return;\n\t\t\t\t\t\t\te.preventDefault();\n\t\t\t\t\t\t\te.stopPropagation();\n\t\t\t\t\t\t\tvar raw = e.target;\n\t\t\t\t\t\t\tvar el = raw ? pickTarget(raw, fdoc.body) : null;\n\t\t\t\t\t\t\tif (!el || el === fdoc.body) return;\n\n\t\t\t\t\t\t\tvar tag = el.tagName.toLowerCase();\n\t\t\t\t\t\t\tvar selector = computeSelectorPath(el);\n\t\t\t\t\t\t\tvar innerText = (el.innerText || el.textContent || '').trim().slice(0, 100);\n\n\t\t\t\t\t\t\tvar tagIn = document.getElementById('fb-tag');\n\t\t\t\t\t\t\tvar selIn = document.getElementById('fb-selector');\n\t\t\t\t\t\t\tvar textIn = document.getElementById('fb-innertext');\n\t\t\t\t\t\t\tvar tagDisp = document.getElementById('fb-tag-display');\n\t\t\t\t\t\t\tvar selDisp = document.getElementById('fb-selector-display');\n\t\t\t\t\t\t\tvar textDisp = document.getElementById('fb-text-display');\n\t\t\t\t\t\t\tvar textRow = document.getElementById('fb-text-row');\n\t\t\t\t\t\t\tvar commentEl = document.getElementById('fb-comment');\n\n\t\t\t\t\t\t\tif (tagIn) tagIn.value = tag;\n\t\t\t\t\t\t\tif (selIn) selIn.value = selector;\n\t\t\t\t\t\t\tif (textIn) textIn.value = innerText;\n\t\t\t\t\t\t\tif (tagDisp) tagDisp.textContent = '<' + tag + '>';\n\t\t\t\t\t\t\tif (selDisp) selDisp.textContent = selector;\n\t\t\t\t\t\t\tif (textDisp) textDisp.textContent = innerText;\n\t\t\t\t\t\t\tif (textRow) textRow.classList.toggle('hidden', !innerText);\n\t\t\t\t\t\t\tif (commentEl) { commentEl.value = ''; commentEl.focus(); }\n\n\t\t\t\t\t\t\tvar dialog = document.getElementById('feedback-dialog');\n\t\t\t\t\t\t\tif (dialog) dialog.showModal();\n\t\t\t\t\t\t}, true);\n\t\t\t\t\t} catch(err) {}\n\t\t\t\t}\n\t\t\t\tif (frame.contentDocument && frame.contentDocument.readyState === 'complete') {\n\t\t\t\t\ttryAttach();\n\t\t\t\t} else {\n\t\t\t\t\tframe.addEventListener('load', tryAttach);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t// ── Feedback submission ───────────────────────────────────────────────\n\n\t\t\twindow.submitFeedback = function() {\n\t\t\t\tvar slug = document.getElementById('fb-slug');\n\t\t\t\tvar tag = document.getElementById('fb-tag');\n\t\t\t\tvar sel = document.getElementById('fb-selector');\n\t\t\t\tvar text = document.getElementById('fb-innertext');\n\t\t\t\tvar comment = document.getElementById('fb-comment');\n\t\t\t\tif (!slug || !comment || !comment.value.trim()) return;\n\n\t\t\t\tvar contextJson = {\n\t\t\t\t\ttagName: tag ? tag.value : '',\n\t\t\t\t\tselectorPath: sel ? sel.value : '',\n\t\t\t\t\tinnerText: text ? text.value : '',\n\t\t\t\t\tcomponentSlug: slug.value,\n\t\t\t\t\tpageURL: window.location.href\n\t\t\t\t};\n\n\t\t\t\tfetch('/gallery/' + slug.value + '/feedback', {\n\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\theaders: {'Content-Type': 'application/json'},\n\t\t\t\t\tbody: JSON.stringify({ comment: comment.value.trim(), context_json: contextJson })\n\t\t\t\t}).then(function(resp) {\n\t\t\t\t\tif (!resp.ok) { console.error('feedback submit failed', resp.status); return; }\n\t\t\t\tvar dialog = document.getElementById('feedback-dialog');\n\t\t\t\tif (dialog) dialog.close();\n\t\t\t\t// Auto-open feedback panel and refresh list\n\t\t\t\tvar col = document.getElementById('right-column');\n\t\t\t\tif (col) col.classList.remove('hidden');\n\t\t\t\tvar panel = document.getElementById('feedback-panel');\n\t\t\t\tif (panel) panel.classList.remove('hidden');\n\t\t\t\t\thtmx.trigger(document.body, 'feedbackCreated');\n\t\t\t\t\tvar badge = document.getElementById('feedback-count-' + slug.value);\n\t\t\t\t\tif (badge) htmx.trigger(badge, 'load');\n\t\t\t\t}).catch(function(err) { console.error('feedback submit error', err); });\n\t\t\t};\n\n\t\t\twindow.closeFeedbackDialog = function() {\n\t\t\t\tvar dialog = document.getElementById('feedback-dialog');\n\t\t\t\tif (dialog) dialog.close();\n\t\t\t};\n\n\t\t\twindow.exportGitHubIssue = function(slug) {\n\t\t\t\tvar btn = document.getElementById('export-issue-btn');\n\t\t\t\tif (btn) { btn.disabled = true; btn.textContent = 'Creating…'; }\n\t\t\t\tfetch('/gallery/' + slug + '/feedback/export-issue', {\n\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\theaders: {'Content-Type': 'application/json'}\n\t\t\t\t}).then(function(resp) {\n\t\t\t\t\treturn resp.json().then(function(data) {\n\t\t\t\t\t\tif (!resp.ok) {\n\t\t\t\t\t\t\talert('Failed to create issue: ' + (data.error || resp.status));\n\t\t\t\t\t\t\tif (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tif (data.issue_url) {\n\t\t\t\t\t\t\twindow.open(data.issue_url, '_blank', 'noopener');\n\t\t\t\t\t\t}\n\t\t\t\t\t\tif (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }\n\t\t\t\t\t});\n\t\t\t\t}).catch(function(err) {\n\t\t\t\t\tconsole.error('export issue error', err);\n\t\t\t\t\talert('Failed to create issue: ' + err.message);\n\t\t\t\t\tif (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }\n\t\t\t\t});\n\t\t\t};\n\n\t\tdocument.addEventListener('htmx:afterSwap', function() {\n\t\t\tsetTimeout(attachIframeListeners, 0);\n\t\t});\n\t\tdocument.addEventListener('DOMContentLoaded', attachIframeListeners);\n\t\tif (document.readyState !== 'loading') { attachIframeListeners(); }\n\t})();\n</script><!-- Component Tree panel JS: listens for postMessage from dev overlay in iframe --><script>\n(function() {\n\t// Depth-indexed colour palette matching devOverlayScript.\n\tvar DEPTH_COLORS = ['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899'];\n\n\tfunction depthColor(d) { return DEPTH_COLORS[d % DEPTH_COLORS.length]; }\n\n\tfunction summariseProps(raw) {\n\t\tvar obj;\n\t\ttry { obj = JSON.parse(raw); } catch(e) { return ''; }\n\t\tif (!obj || typeof obj !== 'object') return '';\n\t\tvar parts = [];\n\t\tvar skip = {class:1, style:1, id:1, Class:1, Style:1, ID:1};\n\t\tvar keys = Object.keys(obj);\n\t\tfor (var i = 0; i < keys.length && parts.length < 3; i++) {\n\t\t\tvar k = keys[i];\n\t\t\tvar v = obj[k];\n\t\t\tif (skip[k]) continue;\n\t\t\tif (v === false || v === '' || v === null || v === undefined) continue;\n\t\t\tvar vs = String(v);\n\t\t\tif (vs.length > 20) vs = vs.slice(0, 17) + '\\u2026';\n\t\t\tparts.push(k + '=' + vs);\n\t\t}\n\t\treturn parts.length ? ' ' + parts.join(' ') : '';\n\t}\n\n\tfunction escHtml(s) {\n\t\treturn String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');\n\t}\n\n\t// Pretty-print HTML with basic indentation.\n\tfunction formatHtml(raw) {\n\t\tvar indent = 0;\n\t\tvar TAB = '  ';\n\t\tvar result = '';\n\t\t// Split on tags while keeping them.\n\t\tvar parts = raw.replace(/>\\s*</g, '>\\n<').split('\\n');\n\t\tfor (var i = 0; i < parts.length; i++) {\n\t\t\tvar line = parts[i].trim();\n\t\t\tif (!line) continue;\n\t\t\t// Closing tag — dedent first.\n\t\t\tif (/^<\\//.test(line)) indent = Math.max(0, indent - 1);\n\t\t\tresult += TAB.repeat(indent) + line + '\\n';\n\t\t\t// Opening tag (not self-closing, not void) — indent next.\n\t\t\tif (/^<[^/!][^>]*[^/]>$/.test(line) && !/^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/.test(line)) {\n\t\t\t\tindent++;\n\t\t\t}\n\t\t}\n\t\treturn result.trim();\n\t}\n\n\tfunction renderTree(nodes) {\n\t\tif (!nodes || nodes.length === 0) return '<p class=\"p-4 text-xs text-base-content/40\">No component boundaries found.</p>';\n\t\tvar html = '<ul class=\"py-1\">';\n\t\tfor (var i = 0; i < nodes.length; i++) {\n\t\t\tvar n = nodes[i];\n\t\t\tvar col = depthColor(n.depth);\n\t\t\tvar indent = n.depth * 12;\n\t\t\tvar props = summariseProps(n.props);\n\t\t\tvar nodeId = 'dev-tree-node-' + i;\n\t\t\tvar codeId = 'dev-tree-code-' + i;\n\n\t\t\thtml += '<li style=\"padding-left:' + (8 + indent) + 'px\" class=\"py-0.5\">';\n\t\t\t// Clickable row\n\t\t\thtml += '<button onclick=\"devTreeToggle(\\'' + nodeId + '\\')\" style=\"width:100%;text-align:left\" class=\"flex items-baseline gap-1.5 w-full hover:bg-base-200 rounded px-1 py-0.5 group\">';\n\t\t\thtml += '<span style=\"display:inline-block;width:8px;height:8px;border-radius:2px;background:' + col + ';flex-shrink:0;margin-top:2px\"></span>';\n\t\t\thtml += '<span class=\"font-mono text-xs font-semibold text-base-content\">' + escHtml(n.name) + '</span>';\n\t\t\tif (props) {\n\t\t\t\thtml += '<span class=\"font-mono text-xs text-base-content/40 truncate\" style=\"max-width:140px\" title=\"' + escHtml(props) + '\">' + escHtml(props) + '</span>';\n\t\t\t}\n\t\t\thtml += '<span class=\"ml-auto text-base-content/20 group-hover:text-base-content/50 text-xs pr-1\">\\u2039/\\u203a</span>';\n\t\t\thtml += '</button>';\n\t\t\t// Collapsible HTML block (hidden by default)\n\t\t\thtml += '<div id=\"' + nodeId + '\" class=\"hidden mt-1 mb-1\" style=\"padding-left:8px\">';\n\t\t\thtml += '<pre id=\"' + codeId + '\" class=\"language-html\" style=\"margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px\"><code class=\"language-html\">' + escHtml(formatHtml(n.html)) + '</code></pre>';\n\t\t\thtml += '</div>';\n\t\t\thtml += '</li>';\n\t\t}\n\t\thtml += '</ul>';\n\t\treturn html;\n\t}\n\n\twindow.devTreeToggle = function(id) {\n\t\tvar el = document.getElementById(id);\n\t\tif (!el) return;\n\t\tvar isHidden = el.classList.toggle('hidden');\n\t\tif (!isHidden && window.Prism) {\n\t\t\t// Re-highlight the newly revealed block.\n\t\t\tvar code = el.querySelector('code');\n\t\t\tif (code) Prism.highlightElement(code);\n\t\t}\n\t};\n\n\tfunction handleTreeMessage(e) {\n\t\tif (!e.data || e.data.type !== '__dev_component_tree__') return;\n\t\tvar tree = e.data.tree || [];\n\t\tvar panel = document.getElementById('component-tree-panel');\n\t\tvar body  = document.getElementById('component-tree-body');\n\t\tif (!panel || !body) return;\n\t\tbody.innerHTML = renderTree(tree);\n\t\tif (tree.length > 0) {\n\t\t\tpanel.classList.remove('hidden');\n\t\t}\n\t}\n\n\twindow.addEventListener('message', handleTreeMessage);\n})();\n</script>")
+		var templ_7745c5c3_Var26 string
+		templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(c.Slug)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 404, Col: 51}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\"> <input type=\"hidden\" id=\"fb-tag\"> <input type=\"hidden\" id=\"fb-selector\"> <input type=\"hidden\" id=\"fb-innertext\"><!-- Comment textarea --><textarea id=\"fb-comment\" class=\"textarea textarea-bordered w-full text-sm\" rows=\"3\" placeholder=\"Describe the issue or suggestion...\"></textarea><div class=\"modal-action mt-3\"><button class=\"btn btn-sm btn-ghost\" onclick=\"closeFeedbackDialog()\">Cancel</button> <button class=\"btn btn-sm btn-primary\" onclick=\"submitFeedback()\">Submit</button></div></div><form method=\"dialog\" class=\"modal-backdrop\"><button>close</button></form></dialog><!-- Prism.js syntax highlighting (dev tool only) --><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css\"><script src=\"https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js\"></script><!-- Theme toggle + copy + fullscreen script --><script>\n\t\t(function() {\n\t\t\tvar STORAGE_KEY = 'gallery-preview-theme';\n\n\t\t\tfunction getSavedTheme() {\n\t\t\t\ttry { return localStorage.getItem(STORAGE_KEY) || 'light'; } catch(e) { return 'light'; }\n\t\t\t}\n\t\t\tfunction saveTheme(theme) {\n\t\t\t\ttry { localStorage.setItem(STORAGE_KEY, theme); } catch(e) {}\n\t\t\t}\n\n\t\t\tfunction applyThemeToFrame(frameId, theme) {\n\t\t\t\tvar frame = document.getElementById(frameId);\n\t\t\t\tif (!frame) return;\n\t\t\t\ttry {\n\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\tif (doc && doc.documentElement) {\n\t\t\t\t\t\tdoc.documentElement.setAttribute('data-theme', theme);\n\t\t\t\t\t}\n\t\t\t\t} catch(e) {}\n\t\t\t}\n\n\t\t\tfunction updateThemeButton(btnId, theme) {\n\t\t\t\tvar btn = document.getElementById(btnId);\n\t\t\t\tif (btn) btn.textContent = theme === 'dark' ? '\\uD83C\\uDF19 Dark' : '\\u2600 Light';\n\t\t\t}\n\n\t\t\tfunction applyStoredTheme() {\n\t\t\t\tvar theme = getSavedTheme();\n\t\t\t\tapplyThemeToFrame('preview-frame', theme);\n\t\t\t\tapplyThemeToFrame('fullscreen-preview-frame', theme);\n\t\t\t\tupdateThemeButton('preview-theme-toggle', theme);\n\t\t\t\tupdateThemeButton('fullscreen-theme-toggle', theme);\n\t\t\t}\n\n\t\t\tfunction resizePreviewFrame() {\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (!frame) return;\n\t\t\t\ttry {\n\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\tif (doc && doc.body) {\n\t\t\t\t\t\tvar h = doc.body.scrollHeight;\n\t\t\t\t\t\tif (h > 0) frame.style.height = h + 'px';\n\t\t\t\t\t}\n\t\t\t\t} catch(e) {}\n\t\t\t}\n\n\t\t\tfunction applyThemeOnLoad(frameId) {\n\t\t\t\tvar frame = document.getElementById(frameId);\n\t\t\t\tif (!frame) return;\n\t\t\t\tvar theme = getSavedTheme();\n\t\t\t\tapplyThemeToFrame(frameId, theme);\n\t\t\t\tframe.addEventListener('load', function() {\n\t\t\t\t\tapplyThemeToFrame(frameId, theme);\n\t\t\t\t\tif (frameId === 'preview-frame') {\n\t\t\t\t\t\tsetTimeout(resizePreviewFrame, 100);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\n\t\t\tfunction attachPreviewResizeObserver() {\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (!frame) return;\n\t\t\t\tfunction observe() {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\tif (!doc || !doc.body) return;\n\t\t\t\t\t\tfunction measure() {\n\t\t\t\t\t\t\treturn Math.max(doc.body.scrollHeight, 40);\n\t\t\t\t\t\t}\n\t\t\t\t\t\tvar ro = new ResizeObserver(function() {\n\t\t\t\t\t\t\tframe.style.height = measure() + 'px';\n\t\t\t\t\t\t});\n\t\t\t\t\t\tro.observe(doc.body);\n\t\t\t\t\t\tframe.style.height = measure() + 'px';\n\t\t\t\t\t} catch(e) {}\n\t\t\t\t}\n\t\t\t\tif (frame.contentDocument && frame.contentDocument.readyState === 'complete') {\n\t\t\t\t\tobserve();\n\t\t\t\t} else {\n\t\t\t\t\tframe.addEventListener('load', observe);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\twindow.toggleGalleryTheme = function() {\n\t\t\t\tvar theme = getSavedTheme() === 'dark' ? 'light' : 'dark';\n\t\t\t\tsaveTheme(theme);\n\t\t\t\tapplyThemeToFrame('preview-frame', theme);\n\t\t\t\tupdateThemeButton('preview-theme-toggle', theme);\n\t\t\t\tapplyThemeToFrame('fullscreen-preview-frame', theme);\n\t\t\t\tupdateThemeButton('fullscreen-theme-toggle', theme);\n\t\t\t\tsetTimeout(resizePreviewFrame, 50);\n\t\t\t};\n\n\t\t\twindow.setPreviewWidth = function(w) {\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (!frame) return;\n\t\t\t\tvar container = frame.parentElement;\n\t\t\t\tif (w === '100%') {\n\t\t\t\t\tframe.style.width = '100%';\n\t\t\t\t\tif (container) container.style.justifyContent = '';\n\t\t\t\t} else {\n\t\t\t\t\tframe.style.width = w;\n\t\t\t\t\tif (container) container.style.justifyContent = 'center';\n\t\t\t\t}\n\t\t\t\tsetTimeout(resizePreviewFrame, 200);\n\t\t\t};\n\n\t\t\twindow.copyGalleryHTML = function() {\n\t\t\t\tvar pre = document.getElementById('gallery-html-source');\n\t\t\t\tif (!pre) return;\n\t\t\t\tvar text = pre.innerText || pre.textContent;\n\t\t\t\tnavigator.clipboard.writeText(text).then(function() {\n\t\t\t\t\tvar btn = document.getElementById('copy-html-btn');\n\t\t\t\t\tif (btn) {\n\t\t\t\t\t\tbtn.textContent = '\\u2713 Copied!';\n\t\t\t\t\t\tsetTimeout(function() { btn.innerHTML = '<svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\"/><path d=\"M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1\"/></svg> Copy'; }, 2000);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t};\n\n\t\t\twindow.openFullscreenPreview = function() {\n\t\t\t\tvar overlay = document.getElementById('fullscreen-preview-overlay');\n\t\t\t\tif (overlay) {\n\t\t\t\t\toverlay.classList.remove('hidden');\n\t\t\t\t\tdocument.body.style.overflow = 'hidden';\n\t\t\t\t}\n\t\t\t\tvar theme = getSavedTheme();\n\t\t\t\tapplyThemeToFrame('fullscreen-preview-frame', theme);\n\t\t\t\tupdateThemeButton('fullscreen-theme-toggle', theme);\n\t\t\t};\n\n\t\t\twindow.closeFullscreenPreview = function() {\n\t\t\t\tvar overlay = document.getElementById('fullscreen-preview-overlay');\n\t\t\t\tif (overlay) {\n\t\t\t\t\toverlay.classList.add('hidden');\n\t\t\t\t\tdocument.body.style.overflow = '';\n\t\t\t\t}\n\t\t\t\tvar frame = document.getElementById('fullscreen-preview-frame');\n\t\t\t\tif (frame) frame.style.width = '100%';\n\t\t\t};\n\n\t\t\twindow.toggleFullscreenTheme = function() {\n\t\t\t\tvar theme = getSavedTheme() === 'dark' ? 'light' : 'dark';\n\t\t\t\tsaveTheme(theme);\n\t\t\t\tapplyThemeToFrame('fullscreen-preview-frame', theme);\n\t\t\t\tupdateThemeButton('fullscreen-theme-toggle', theme);\n\t\t\t\tapplyThemeToFrame('preview-frame', theme);\n\t\t\t\tupdateThemeButton('preview-theme-toggle', theme);\n\t\t\t};\n\n\t\t\twindow.setFullscreenPreviewWidth = function(w) {\n\t\t\t\tvar frame = document.getElementById('fullscreen-preview-frame');\n\t\t\t\tif (!frame) return;\n\t\t\t\tframe.style.width = w;\n\t\t\t};\n\n\t\t\tdocument.addEventListener('keydown', function(e) {\n\t\t\t\tif (e.key === 'Escape') { closeFullscreenPreview(); }\n\t\t\t});\n\n\t\t\tdocument.addEventListener('htmx:afterSwap', function() {\n\t\t\t\tsetTimeout(function() {\n\t\t\t\t\t// After HTMX swaps innerHTML, iframes with src= don't auto-load.\n\t\t\t\t\t// Reassign src to force the browser to navigate the iframe.\n\t\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\t\tif (frame && frame.src && !frame.srcdoc) {\n\t\t\t\t\t\tvar src = frame.src;\n\t\t\t\t\t\tframe.src = '';\n\t\t\t\t\t\tframe.src = src;\n\t\t\t\t\t\t// After the iframe loads, ask its devoverlay to re-post the\n\t\t\t\t\t\t// component tree. This fixes the race where postTree() fires\n\t\t\t\t\t\t// before the new handleTreeMessage listener is ready.\n\t\t\t\t\t\tframe.addEventListener('load', function onFrameLoad() {\n\t\t\t\t\t\t\tframe.removeEventListener('load', onFrameLoad);\n\t\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\t\tif (frame.contentWindow && typeof frame.contentWindow.postTree === 'function') {\n\t\t\t\t\t\t\t\t\tframe.contentWindow.postTree();\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t} catch(e) {}\n\t\t\t\t\t\t});\n\t\t\t\t\t}\n\t\t\t\t\tvar fsFrame = document.getElementById('fullscreen-preview-frame');\n\t\t\t\t\tif (fsFrame && fsFrame.src && !fsFrame.srcdoc) {\n\t\t\t\t\t\tvar fsSrc = fsFrame.src;\n\t\t\t\t\t\tfsFrame.src = '';\n\t\t\t\t\t\tfsFrame.src = fsSrc;\n\t\t\t\t\t}\n\t\t\t\t\tapplyStoredTheme();\n\t\t\t\t\tapplyThemeOnLoad('preview-frame');\n\t\t\t\t\tapplyThemeOnLoad('fullscreen-preview-frame');\n\t\t\t\t\tattachPreviewResizeObserver();\n\t\t\t\t}, 0);\n\t\t\t\tif (window.Prism) Prism.highlightAll();\n\t\t\t});\n\n\t\t\tdocument.addEventListener('DOMContentLoaded', function() {\n\t\t\t\tapplyStoredTheme();\n\t\t\t\tapplyThemeOnLoad('preview-frame');\n\t\t\t\tapplyThemeOnLoad('fullscreen-preview-frame');\n\t\t\t\tattachPreviewResizeObserver();\n\t\t\t\tif (window.Prism) Prism.highlightAll();\n\t\t\t});\n\t\t\tif (document.readyState !== 'loading') {\n\t\t\t\tapplyStoredTheme();\n\t\t\t\tapplyThemeOnLoad('preview-frame');\n\t\t\t\tapplyThemeOnLoad('fullscreen-preview-frame');\n\t\t\t\tattachPreviewResizeObserver();\n\t\t\t\tif (window.Prism) Prism.highlightAll();\n\t\t\t}\n\t\t})();\n\t</script><!-- Props / Parameters editor JS --><script>\n\t\t(function() {\n\t\t\tfunction escT(s) {\n\t\t\t\treturn String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');\n\t\t\t}\n\n\t\t\t// Convert PascalCase or camelCase prop name to snake_case query param.\n\t\t\t// e.g. \"PinRows\" → \"pin_rows\", \"Striped\" → \"striped\", \"Size\" → \"size\"\n\t\t\tfunction camelToSnake(s) {\n\t\t\t\treturn s.replace(/([A-Z])/g, function(m, c, i) {\n\t\t\t\t\treturn (i > 0 ? '_' : '') + c.toLowerCase();\n\t\t\t\t});\n\t\t\t}\n\n\t\t\t// ── renderParamsSection: render query-param tokens in #tree-params-body ─\n\t\t\t// Called by switchVariant and handleTreeMessage after tree is rendered.\n\t\t\twindow.renderParamsSection = function(tokens) {\n\t\t\t\tvar panel = document.getElementById('tree-params-panel');\n\t\t\t\tvar body  = document.getElementById('tree-params-body');\n\t\t\t\tif (!panel || !body) return;\n\n\t\t\t\t// Filter to only query-param tokens (not CSS var tokens)\n\t\t\t\tvar qpTokens = (tokens || []).filter(function(t) { return t.QueryParam; });\n\n\t\t\t\tif (qpTokens.length === 0) {\n\t\t\t\t\tpanel.classList.add('hidden');\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\t// Group by Group field\n\t\t\t\tvar order = [], byName = {};\n\t\t\t\tqpTokens.forEach(function(tok) {\n\t\t\t\t\tvar g = tok.Group || 'General';\n\t\t\t\t\tif (!byName[g]) { order.push(g); byName[g] = []; }\n\t\t\t\t\tbyName[g].push(tok);\n\t\t\t\t});\n\n\t\t\t\tvar html = '';\n\t\t\t\torder.forEach(function(grpName) {\n\t\t\t\t\thtml += '<div class=\"token-group mb-4\">';\n\t\t\t\t\thtml += '<p class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide mb-2\">' + escT(grpName) + '</p>';\n\t\t\t\t\thtml += '<div class=\"space-y-3\">';\n\t\t\t\t\tbyName[grpName].forEach(function(tok) {\n\t\t\t\t\t\tvar def = tok.Default || '';\n\t\t\t\t\t\tvar qp  = tok.QueryParam || '';\n\t\t\t\t\t\tvar safeId = qp.replace(/[^a-zA-Z0-9]/g, '-');\n\t\t\t\t\t\thtml += '<div class=\"flex flex-col gap-1\" data-default=\"' + escT(def) + '\" data-query-param=\"' + escT(qp) + '\">';\n\t\t\t\t\t\thtml += '<div class=\"flex items-center justify-between\">';\n\t\t\t\t\t\thtml += '<label class=\"text-xs text-base-content/60\">' + escT(tok.Label || qp) + '</label>';\n\t\t\t\t\t\tif (tok.Type === 'range') {\n\t\t\t\t\t\t\thtml += '<span class=\"text-xs text-base-content/40 font-mono\" id=\"param-val-' + safeId + '\">' + escT(def) + '</span>';\n\t\t\t\t\t\t}\n\t\t\t\t\t\thtml += '</div>';\n\t\t\t\t\t\tif (tok.Type === 'range') {\n\t\t\t\t\t\t\tvar numVal = parseFloat(def) || tok.Min || 0;\n\t\t\t\t\t\t\thtml += '<input type=\"range\" class=\"range range-xs range-primary w-full\"'\n\t\t\t\t\t\t\t\t+ ' min=\"' + (tok.Min||0) + '\" max=\"' + (tok.Max||1) + '\" step=\"' + (tok.Step||0.1) + '\"'\n\t\t\t\t\t\t\t\t+ ' value=\"' + numVal + '\" oninput=\"handleParamChange(this)\"/>';\n\t\t\t\t\t\t} else if (tok.Type === 'color') {\n\t\t\t\t\t\t\thtml += '<input type=\"color\" class=\"w-full h-8 rounded cursor-pointer border border-base-200\"'\n\t\t\t\t\t\t\t\t+ ' value=\"' + escT(def) + '\" oninput=\"handleParamChange(this)\"/>';\n\t\t\t\t\t\t} else if (tok.Type === 'select') {\n\t\t\t\t\t\t\thtml += '<select class=\"select select-xs select-bordered w-full\" onchange=\"handleParamChange(this)\">';\n\t\t\t\t\t\t\t(tok.Options || []).forEach(function(opt) {\n\t\t\t\t\t\t\t\tvar sel = opt.Value === def ? ' selected' : '';\n\t\t\t\t\t\t\t\thtml += '<option value=\"' + escT(opt.Value) + '\"' + sel + '>' + escT(opt.Label) + '</option>';\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t\thtml += '</select>';\n\t\t\t\t\t\t} else if (tok.Type === 'text') {\n\t\t\t\t\t\t\thtml += '<input type=\"text\" class=\"input input-xs input-bordered w-full\" value=\"' + escT(def) + '\" oninput=\"handleParamChange(this)\"/>';\n\t\t\t\t\t\t} else if (tok.Type === 'bool') {\n\t\t\t\t\t\t\tvar chk = def === 'true' ? ' checked' : '';\n\t\t\t\t\t\t\thtml += '<input type=\"checkbox\" class=\"toggle toggle-xs toggle-primary\"' + chk + ' onchange=\"handleParamChange(this)\"/>';\n\t\t\t\t\t\t}\n\t\t\t\t\t\thtml += '</div>';\n\t\t\t\t\t});\n\t\t\t\t\thtml += '</div></div>';\n\t\t\t\t});\n\n\t\t\t\tbody.innerHTML = '<div class=\"p-3 space-y-1\">' + html + '</div>';\n\t\t\t\tpanel.classList.remove('hidden');\n\t\t\t};\n\n\t\t\t// handleParamChange: fires when a parameter control changes.\n\t\t\twindow.handleParamChange = function(input) {\n\t\t\t\tapplyAllQueryParamsToFrame('preview-frame');\n\t\t\t};\n\n\t\t\t// ── Collect all query params from both the params section and prop editors ─\n\t\t\tfunction applyAllQueryParamsToFrame(frameId) {\n\t\t\t\tvar frame = document.getElementById(frameId);\n\t\t\t\tif (!frame) return;\n\t\t\t\tvar src = frame.src || '';\n\t\t\t\tvar baseSrc = src.split('?')[0];\n\t\t\t\tvar params = new URLSearchParams();\n\n\t\t\t\t// 1. Collect from #tree-params-body (DesignToken query params)\n\t\t\t\tdocument.querySelectorAll('#tree-params-body [data-query-param]').forEach(function(row) {\n\t\t\t\t\tvar qp = row.getAttribute('data-query-param');\n\t\t\t\t\tif (!qp) return;\n\t\t\t\t\tvar input = row.querySelector('input, select');\n\t\t\t\t\tif (!input) return;\n\t\t\t\t\tvar val = input.type === 'checkbox' ? (input.checked ? 'true' : 'false') : input.value;\n\t\t\t\t\tparams.set(qp, val);\n\t\t\t\t});\n\n\t\t\t\t// 2. Collect from #component-tree-body prop editors ([data-prop-key])\n\t\t\t\tdocument.querySelectorAll('#component-tree-body [data-prop-key]').forEach(function(row) {\n\t\t\t\t\tvar propKey = row.getAttribute('data-prop-key');\n\t\t\t\t\tif (!propKey) return;\n\t\t\t\t\tvar qp = camelToSnake(propKey);\n\t\t\t\t\tvar input = row.querySelector('input, select, textarea');\n\t\t\t\t\tif (!input) return;\n\t\t\t\t\tvar val = input.type === 'checkbox' ? (input.checked ? 'true' : 'false') : input.value;\n\t\t\t\t\tparams.set(qp, val);\n\t\t\t\t});\n\n\t\t\t\tvar qs = params.toString();\n\t\t\t\tframe.src = qs ? baseSrc + '?' + qs : baseSrc;\n\t\t\t}\n\n\t\t\t// Expose for callers in other scopes (handleTreeMessage, switchVariant, etc.)\n\t\t\twindow.applyAllQueryParamsToFrame = applyAllQueryParamsToFrame;\n\t\t\twindow.applyQueryParamsToFrame = applyAllQueryParamsToFrame;\n\n\t\t\t// handlePropChange: fires when an inline prop editor control changes.\n\t\t\twindow.handlePropChange = function(input) {\n\t\t\t\tapplyAllQueryParamsToFrame('preview-frame');\n\t\t\t};\n\n\t\t\t// ── Reset all params and prop editors to defaults ─────────────────────\n\t\t\twindow.resetAllParams = function() {\n\t\t\t\t// Reset param controls\n\t\t\t\tdocument.querySelectorAll('#tree-params-body [data-query-param]').forEach(function(row) {\n\t\t\t\t\tvar def = row.getAttribute('data-default') || '';\n\t\t\t\t\tvar input = row.querySelector('input, select');\n\t\t\t\t\tif (!input) return;\n\t\t\t\t\tif (input.type === 'checkbox') { input.checked = def === 'true'; }\n\t\t\t\t\telse if (input.type === 'range') {\n\t\t\t\t\t\tinput.value = parseFloat(def) || 0;\n\t\t\t\t\t\tvar qp = row.getAttribute('data-query-param') || '';\n\t\t\t\t\t\tvar label = document.getElementById('param-val-' + qp.replace(/[^a-zA-Z0-9]/g, '-'));\n\t\t\t\t\t\tif (label) label.textContent = def;\n\t\t\t\t\t} else { input.value = def; }\n\t\t\t\t});\n\t\t\t\t// Reset prop editors\n\t\t\t\tdocument.querySelectorAll('#component-tree-body [data-prop-key]').forEach(function(row) {\n\t\t\t\t\tvar def = row.getAttribute('data-default') || '';\n\t\t\t\t\tvar input = row.querySelector('input, select, textarea');\n\t\t\t\t\tif (!input) return;\n\t\t\t\t\tif (input.type === 'checkbox') { input.checked = def === 'true'; }\n\t\t\t\t\telse { input.value = def; }\n\t\t\t\t});\n\t\t\t\tapplyAllQueryParamsToFrame('preview-frame');\n\t\t\t};\n\n\t\t\t// Legacy alias kept so any remaining callers don't break.\n\t\t\twindow.resetTokens = window.resetAllParams;\n\t\t})();\n\t</script><!-- Crosshair feedback tool JS (press Alt or click Feedback button to toggle) --><script>\n\t\t(function() {\n\t\t\tvar feedbackModeActive = false;\n\t\t\tvar hoveredEl = null;\n\t\t\tvar HIGHLIGHT_OUTLINE = '2px solid #f472b6';\n\n\t\t\t// ── Toggle helpers ────────────────────────────────────────────────────\n\n\t\t\twindow.toggleFeedbackMode = function() {\n\t\t\t\tvar col = document.getElementById('right-column');\n\t\t\t\tif (feedbackModeActive) {\n\t\t\t\t\tdeactivateFeedbackMode();\n\t\t\t\t\t// Hide the feedback panel and right column when turning off feedback mode\n\t\t\t\t\tvar panel = document.getElementById('feedback-panel');\n\t\t\t\t\tif (panel) panel.classList.add('hidden');\n\t\t\t\t\tif (col) col.classList.add('hidden');\n\t\t\t\t\t// Force flex reflow then re-measure iframe height\n\t\t\t\t\tsetTimeout(function() {\n\t\t\t\t\t\tvar twoCol = col && col.parentElement;\n\t\t\t\t\t\tif (twoCol) { twoCol.style.display = 'none'; void twoCol.offsetHeight; twoCol.style.display = ''; }\n\t\t\t\t\t\tresizePreviewFrame();\n\t\t\t\t\t}, 0);\n\t\t\t\t} else {\n\t\t\t\t\tactivateFeedbackMode();\n\t\t\t\t\t// Show the right column + feedback panel\n\t\t\t\t\tif (col) { col.classList.remove('hidden'); col.style.display = 'flex'; }\n\t\t\t\t\tvar panel = document.getElementById('feedback-panel');\n\t\t\t\t\tif (panel) panel.classList.remove('hidden');\n\t\t\t\t\t// Re-measure iframe after reflow\n\t\t\t\t\tsetTimeout(resizePreviewFrame, 50);\n\t\t\t\t}\n\t\t\t};\n\n\t\t\t// Keep legacy toggleFeedbackPanel working (opens the list panel)\n\t\t\twindow.toggleFeedbackPanel = function() {\n\t\t\t\tvar panel = document.getElementById('feedback-panel');\n\t\t\t\tif (!panel) return;\n\t\t\t\tpanel.classList.toggle('hidden');\n\t\t\t};\n\n\t\t\tfunction activateFeedbackMode() {\n\t\t\t\tif (feedbackModeActive) return;\n\t\t\t\tfeedbackModeActive = true;\n\n\t\t\t\t// Cursor\n\t\t\t\tdocument.body.style.cursor = 'crosshair';\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (frame) {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar fdoc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\tif (fdoc && fdoc.body) fdoc.body.style.cursor = 'crosshair';\n\t\t\t\t\t} catch(err) {}\n\t\t\t\t}\n\n\t\t\t\t// Banner\n\t\t\t\tvar banner = document.getElementById('feedback-mode-banner');\n\t\t\t\tif (banner) banner.classList.remove('hidden');\n\n\t\t\t\t// Button active state\n\t\t\t\tvar btn = document.getElementById('feedback-mode-btn');\n\t\t\t\tif (btn) btn.classList.add('btn-primary', 'text-primary-content');\n\t\t\t}\n\n\t\t\tfunction deactivateFeedbackMode() {\n\t\t\t\tif (!feedbackModeActive) return;\n\t\t\t\tfeedbackModeActive = false;\n\n\t\t\t\t// Cursor\n\t\t\t\tdocument.body.style.cursor = '';\n\t\t\t\tif (hoveredEl) {\n\t\t\t\t\ttry { hoveredEl.style.outline = ''; } catch(err) {}\n\t\t\t\t\thoveredEl = null;\n\t\t\t\t}\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (frame) {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar fdoc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\tif (fdoc && fdoc.body) fdoc.body.style.cursor = '';\n\t\t\t\t\t} catch(err) {}\n\t\t\t\t}\n\n\t\t\t\t// Banner\n\t\t\t\tvar banner = document.getElementById('feedback-mode-banner');\n\t\t\t\tif (banner) banner.classList.add('hidden');\n\n\t\t\t\t// Button active state\n\t\t\t\tvar btn = document.getElementById('feedback-mode-btn');\n\t\t\t\tif (btn) btn.classList.remove('btn-primary', 'text-primary-content');\n\t\t\t}\n\n\t\t\t// ── Keyboard: Alt toggles mode ────────────────────────────────────────\n\t\t\tdocument.addEventListener('keyup', function(e) {\n\t\t\t\tif (e.key === 'Alt' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {\n\t\t\t\t\te.preventDefault();\n\t\t\t\t\twindow.toggleFeedbackMode();\n\t\t\t\t}\n\t\t\t\tif (e.key === 'Escape') {\n\t\t\t\t\tdeactivateFeedbackMode();\n\t\t\t\t\tvar dialog = document.getElementById('feedback-dialog');\n\t\t\t\t\tif (dialog && dialog.open) dialog.close();\n\t\t\t\t}\n\t\t\t});\n\n\t\t\t// ── Selector utilities ────────────────────────────────────────────────\n\n\t\t\tfunction selectorSegment(el) {\n\t\t\t\tif (!el || el.nodeType !== 1) return '';\n\t\t\t\tvar seg = el.tagName.toLowerCase();\n\t\t\t\tif (el.id) {\n\t\t\t\t\tseg += '#' + el.id;\n\t\t\t\t} else if (el.className && typeof el.className === 'string') {\n\t\t\t\t\tvar cls = el.className.trim().split(/\\s+/).slice(0, 2).join('.');\n\t\t\t\t\tif (cls) seg += '.' + cls;\n\t\t\t\t}\n\t\t\t\treturn seg;\n\t\t\t}\n\n\t\t\tfunction computeSelectorPath(el) {\n\t\t\t\tvar parts = [];\n\t\t\t\tvar cur = el;\n\t\t\t\tfor (var i = 0; i < 4 && cur && cur.nodeType === 1 && cur.tagName !== 'BODY' && cur.tagName !== 'HTML'; i++) {\n\t\t\t\t\tparts.unshift(selectorSegment(cur));\n\t\t\t\t\tcur = cur.parentElement;\n\t\t\t\t}\n\t\t\t\treturn parts.join(' > ');\n\t\t\t}\n\n\t\t\tvar LAYOUT_TAGS = {\n\t\t\t\tdiv: 1, section: 1, article: 1, main: 1, aside: 1,\n\t\t\t\theader: 1, footer: 1, nav: 1, ul: 1, ol: 1, li: 1,\n\t\t\t\tfigure: 1, figcaption: 1, fieldset: 1, form: 1,\n\t\t\t\tdl: 1, dt: 1, dd: 1, template: 1\n\t\t\t};\n\n\t\t\tfunction isMeaningful(el) {\n\t\t\t\tif (!el || el.nodeType !== 1) return false;\n\t\t\t\tvar tag = el.tagName.toLowerCase();\n\t\t\t\tif (!LAYOUT_TAGS[tag]) return true;\n\t\t\t\tif (el.id) return true;\n\t\t\t\tvar attrs = el.attributes;\n\t\t\t\tfor (var i = 0; i < attrs.length; i++) {\n\t\t\t\t\tif (attrs[i].name.indexOf('data-') === 0) return true;\n\t\t\t\t}\n\t\t\t\tif (!el.firstElementChild) return true;\n\t\t\t\treturn false;\n\t\t\t}\n\n\t\t\tfunction pickTarget(el, body) {\n\t\t\t\tvar cur = el;\n\t\t\t\twhile (cur && cur !== body) {\n\t\t\t\t\tif (isMeaningful(cur)) return cur;\n\t\t\t\t\tcur = cur.parentElement;\n\t\t\t\t}\n\t\t\t\treturn body;\n\t\t\t}\n\n\t\t\t// ── Iframe listeners ──────────────────────────────────────────────────\n\n\t\t\tfunction attachIframeListeners() {\n\t\t\t\tvar frame = document.getElementById('preview-frame');\n\t\t\t\tif (!frame) return;\n\t\t\t\tfunction tryAttach() {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar fdoc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\t\tif (!fdoc || !fdoc.body) return;\n\n\t\t\t\t\t\tfdoc.addEventListener('mousemove', function(e) {\n\t\t\t\t\t\t\tif (!feedbackModeActive) return;\n\t\t\t\t\t\t\tvar raw = fdoc.elementFromPoint(e.clientX, e.clientY);\n\t\t\t\t\t\t\tvar el = raw ? pickTarget(raw, fdoc.body) : null;\n\t\t\t\t\t\t\tif (el === hoveredEl) return;\n\t\t\t\t\t\t\tif (hoveredEl) { try { hoveredEl.style.outline = ''; } catch(err) {} }\n\t\t\t\t\t\t\thoveredEl = el;\n\t\t\t\t\t\t\tif (el && el !== fdoc.body) { try { el.style.outline = HIGHLIGHT_OUTLINE; } catch(err) {} }\n\t\t\t\t\t\t});\n\n\t\t\t\t\t\tfdoc.addEventListener('mouseleave', function() {\n\t\t\t\t\t\t\tif (hoveredEl) { try { hoveredEl.style.outline = ''; } catch(err) {} hoveredEl = null; }\n\t\t\t\t\t\t});\n\n\t\t\t\t\t\tfdoc.addEventListener('click', function(e) {\n\t\t\t\t\t\t\tif (!feedbackModeActive) return;\n\t\t\t\t\t\t\te.preventDefault();\n\t\t\t\t\t\t\te.stopPropagation();\n\t\t\t\t\t\t\tvar raw = e.target;\n\t\t\t\t\t\t\tvar el = raw ? pickTarget(raw, fdoc.body) : null;\n\t\t\t\t\t\t\tif (!el || el === fdoc.body) return;\n\n\t\t\t\t\t\t\tvar tag = el.tagName.toLowerCase();\n\t\t\t\t\t\t\tvar selector = computeSelectorPath(el);\n\t\t\t\t\t\t\tvar innerText = (el.innerText || el.textContent || '').trim().slice(0, 100);\n\n\t\t\t\t\t\t\tvar tagIn = document.getElementById('fb-tag');\n\t\t\t\t\t\t\tvar selIn = document.getElementById('fb-selector');\n\t\t\t\t\t\t\tvar textIn = document.getElementById('fb-innertext');\n\t\t\t\t\t\t\tvar tagDisp = document.getElementById('fb-tag-display');\n\t\t\t\t\t\t\tvar selDisp = document.getElementById('fb-selector-display');\n\t\t\t\t\t\t\tvar textDisp = document.getElementById('fb-text-display');\n\t\t\t\t\t\t\tvar textRow = document.getElementById('fb-text-row');\n\t\t\t\t\t\t\tvar commentEl = document.getElementById('fb-comment');\n\n\t\t\t\t\t\t\tif (tagIn) tagIn.value = tag;\n\t\t\t\t\t\t\tif (selIn) selIn.value = selector;\n\t\t\t\t\t\t\tif (textIn) textIn.value = innerText;\n\t\t\t\t\t\t\tif (tagDisp) tagDisp.textContent = '<' + tag + '>';\n\t\t\t\t\t\t\tif (selDisp) selDisp.textContent = selector;\n\t\t\t\t\t\t\tif (textDisp) textDisp.textContent = innerText;\n\t\t\t\t\t\t\tif (textRow) textRow.classList.toggle('hidden', !innerText);\n\t\t\t\t\t\t\tif (commentEl) { commentEl.value = ''; commentEl.focus(); }\n\n\t\t\t\t\t\t\tvar dialog = document.getElementById('feedback-dialog');\n\t\t\t\t\t\t\tif (dialog) dialog.showModal();\n\t\t\t\t\t\t}, true);\n\t\t\t\t\t} catch(err) {}\n\t\t\t\t}\n\t\t\t\tif (frame.contentDocument && frame.contentDocument.readyState === 'complete') {\n\t\t\t\t\ttryAttach();\n\t\t\t\t} else {\n\t\t\t\t\tframe.addEventListener('load', tryAttach);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t// ── Feedback submission ───────────────────────────────────────────────\n\n\t\t\twindow.submitFeedback = function() {\n\t\t\t\tvar slug = document.getElementById('fb-slug');\n\t\t\t\tvar tag = document.getElementById('fb-tag');\n\t\t\t\tvar sel = document.getElementById('fb-selector');\n\t\t\t\tvar text = document.getElementById('fb-innertext');\n\t\t\t\tvar comment = document.getElementById('fb-comment');\n\t\t\t\tif (!slug || !comment || !comment.value.trim()) return;\n\n\t\t\t\tvar contextJson = {\n\t\t\t\t\ttagName: tag ? tag.value : '',\n\t\t\t\t\tselectorPath: sel ? sel.value : '',\n\t\t\t\t\tinnerText: text ? text.value : '',\n\t\t\t\t\tcomponentSlug: slug.value,\n\t\t\t\t\tpageURL: window.location.href\n\t\t\t\t};\n\n\t\t\t\tfetch('/gallery/' + slug.value + '/feedback', {\n\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\theaders: {'Content-Type': 'application/json'},\n\t\t\t\t\tbody: JSON.stringify({ comment: comment.value.trim(), context_json: contextJson })\n\t\t\t\t}).then(function(resp) {\n\t\t\t\t\tif (!resp.ok) { console.error('feedback submit failed', resp.status); return; }\n\t\t\t\tvar dialog = document.getElementById('feedback-dialog');\n\t\t\t\tif (dialog) dialog.close();\n\t\t\t\t// Auto-open feedback panel and refresh list\n\t\t\t\tvar col = document.getElementById('right-column');\n\t\t\t\tif (col) { col.classList.remove('hidden'); col.style.display = 'flex'; }\n\t\t\t\tvar panel = document.getElementById('feedback-panel');\n\t\t\t\tif (panel) panel.classList.remove('hidden');\n\t\t\t\t\thtmx.trigger(document.body, 'feedbackCreated');\n\t\t\t\t\tvar badge = document.getElementById('feedback-count-' + slug.value);\n\t\t\t\t\tif (badge) htmx.trigger(badge, 'load');\n\t\t\t\t}).catch(function(err) { console.error('feedback submit error', err); });\n\t\t\t};\n\n\t\t\twindow.closeFeedbackDialog = function() {\n\t\t\t\tvar dialog = document.getElementById('feedback-dialog');\n\t\t\t\tif (dialog) dialog.close();\n\t\t\t};\n\n\t\t\twindow.exportGitHubIssue = function(slug) {\n\t\t\t\tvar btn = document.getElementById('export-issue-btn');\n\t\t\t\tif (btn) { btn.disabled = true; btn.textContent = 'Creating…'; }\n\t\t\t\tfetch('/gallery/' + slug + '/feedback/export-issue', {\n\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\theaders: {'Content-Type': 'application/json'}\n\t\t\t\t}).then(function(resp) {\n\t\t\t\t\treturn resp.json().then(function(data) {\n\t\t\t\t\t\tif (!resp.ok) {\n\t\t\t\t\t\t\talert('Failed to create issue: ' + (data.error || resp.status));\n\t\t\t\t\t\t\tif (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }\n\t\t\t\t\t\t\treturn;\n\t\t\t\t\t\t}\n\t\t\t\t\t\tif (data.issue_url) {\n\t\t\t\t\t\t\twindow.open(data.issue_url, '_blank', 'noopener');\n\t\t\t\t\t\t}\n\t\t\t\t\t\tif (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }\n\t\t\t\t\t});\n\t\t\t\t}).catch(function(err) {\n\t\t\t\t\tconsole.error('export issue error', err);\n\t\t\t\t\talert('Failed to create issue: ' + err.message);\n\t\t\t\t\tif (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }\n\t\t\t\t});\n\t\t\t};\n\n\t\tdocument.addEventListener('htmx:afterSwap', function() {\n\t\t\tsetTimeout(attachIframeListeners, 0);\n\t\t});\n\t\tdocument.addEventListener('DOMContentLoaded', attachIframeListeners);\n\t\tif (document.readyState !== 'loading') { attachIframeListeners(); }\n\t})();\n</script><!-- Component Tree panel JS: listens for postMessage from dev overlay in iframe --><script>\n(function() {\n\t// Depth-indexed colour palette matching devOverlayScript.\n\tvar DEPTH_COLORS = ['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899'];\n\n\t// Map component name → gallery slug (must stay in sync with devoverlay.go).\n\tvar COMPONENT_SLUGS = {\n\t\t// Basics\n\t\t'Button':'button','Badge':'badge','StatusBadge':'status-badge-real',\n\t\t'Avatar':'avatar-real','Card':'card-real','Tag':'tag',\n\t\t'Divider':'divider','Kbd':'kbd','IconSpanColored':'button',\n\t\t// Feedback\n\t\t'Toast':'toast-real','Alert':'alert','Empty':'empty-state-real',\n\t\t'Loader':'loader','NoPermissions':'no-permissions','SectionHeader':'section-header','Skeleton':'skeleton',\n\t\t// Data display\n\t\t'StatCard':'stat-card-real','StatCardMinimal':'stat-card-minimal','ProgressCard':'progress-card',\n\t\t'Timeline':'timeline','ChatBubble':'chat-bubble','LogsTable':'logs-table',\n\t\t// Table (root only — sub-primitives have no standalone page)\n\t\t'TableWithProps':'table','Table':'table','ListArea':'list-basic',\n\t\t// Navigation\n\t\t'ActionMenu':'action-menu-real','FilterTabs':'filter-tabs','FilterCard':'filter-bar',\n\t\t'Pagination':'pagination-real','TabMenu':'tab-menu-real','SimpleTabs':'tab-menu-real',\n\t\t'PageHeader':'page-header-real','Menu':'menu-real','TopBar':'top-bar-real',\n\t\t'Navbar':'navbar-real','Breadcrumbs':'breadcrumbs','Dock':'dock-nav',\n\t\t'ProfileMenu':'profile-menu','PageTitleMinimal':'page-title-minimal',\n\t\t'PageTitleEditor':'page-title-editor','FooterMinimal':'footer-minimal',\n\t\t// Foundation / display\n\t\t'Progress':'progress','Steps':'steps','Accordion':'collapse','Swap':'swap',\n\t\t'Countdown':'countdown','StatusDot':'status-dots','Tooltip':'tooltip',\n\t\t'Indicator':'indicator','Stack':'stack','Diff':'diff','Mask':'mask',\n\t\t'Carousel':'carousel','Link':'link-styles',\n\t\t// Layout\n\t\t'Hero':'hero','Join':'join','Fieldset':'fieldset',\n\t\t// Mockups\n\t\t'MockupBrowser':'mockup-browser','MockupCode':'mockup-code',\n\t\t'MockupPhone':'mockup-phone','MockupWindow':'mockup-window',\n\t\t// Overlays\n\t\t'Modal':'modal-real','ConfirmPopup':'confirm-popup','FormModal':'form-modal-real',\n\t\t'Dropdown':'dropdown','FAB':'fab','NotificationPanel':'notification-panel',\n\t\t// Person\n\t\t'PersonCell':'person-cell',\n\t\t// Forms\n\t\t'TextInput':'text-input','TextareaInput':'textarea-input',\n\t\t'CheckboxInput':'checkbox-input','SelectInput':'select-input',\n\t\t'RangeInput':'range-input','SearchInput':'search-input-real',\n\t\t'FormField':'form-field-real','RadioGroup':'form-radio','Rating':'form-rating',\n\t\t'FileInput':'form-file','Checkbox':'form-checkbox','Toggle':'form-checkbox',\n\t\t'PromptBar':'prompt-bar-minimal','PromptBarAction':'prompt-bar-action',\n\t\t'InputSpinner':'input-spinner','WizardStepper':'wizard-stepper',\n\t};\n\n\tfunction depthColor(d) { return DEPTH_COLORS[d % DEPTH_COLORS.length]; }\n\n\tfunction escHtml(s) {\n\t\treturn String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');\n\t}\n\n\t// Strip dev-only attributes (data-component, data-props, display:contents wrapper divs)\n\t// from HTML before displaying it in the code preview.\n\tfunction cleanHtml(raw) {\n\t\t// Remove data-component=\"…\" — value never contains escaped quotes.\n\t\tvar s = raw.replace(/\\s*data-component=\"[^\"]*\"/g, '');\n\t\t// Remove data-props=\"…\" — value may contain \\\" escaped quotes inside JSON.\n\t\t// Match: data-props=\" then any chars (including \\\") until an unescaped closing \"\n\t\ts = s.replace(/\\s*data-props=\"(?:[^\"\\\\]|\\\\.)*\"/g, '');\n\t\t// Also remove any orphaned =\"\": artefacts left by the devmode attribute injection\n\t\t// (e.g. data-props=\"{...}\"=\"\" the browser parses the trailing =\"\" as an empty attr).\n\t\ts = s.replace(/\\s*=\"\"(?=[\\s>])/g, '');\n\t\t// Remove display:contents wrapper divs left by ComponentBoundary.\n\t\t// These look like: <div style=\"display:contents\">…</div>\n\t\t// Use a simple iterative replacement (no recursion limit issues).\n\t\tvar prev;\n\t\tdo {\n\t\t\tprev = s;\n\t\t\ts = s.replace(/<div\\s+style=\"display:contents\"\\s*>([\\s\\S]*?)<\\/div>/g, '$1');\n\t\t} while (s !== prev);\n\t\treturn s.trim();\n\t}\n\n\t// Pretty-print HTML with basic indentation.\n\tfunction formatHtml(raw) {\n\t\tvar indent = 0;\n\t\tvar TAB = '  ';\n\t\tvar result = '';\n\t\t// Split on tags while keeping them.\n\t\tvar parts = raw.replace(/>\\s*</g, '>\\n<').split('\\n');\n\t\tfor (var i = 0; i < parts.length; i++) {\n\t\t\tvar line = parts[i].trim();\n\t\t\tif (!line) continue;\n\t\t\t// Closing tag — dedent first.\n\t\t\tif (/^<\\//.test(line)) indent = Math.max(0, indent - 1);\n\t\t\tresult += TAB.repeat(indent) + line + '\\n';\n\t\t\t// Opening tag (not self-closing, not void) — indent next.\n\t\t\tif (/^<[^/!][^>]*[^/]>$/.test(line) && !/^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/.test(line)) {\n\t\t\t\tindent++;\n\t\t\t}\n\t\t}\n\t\treturn result.trim();\n\t}\n\n\t// Convert PascalCase prop name to snake_case query param key.\n\tfunction camelToSnake(s) {\n\t\treturn s.replace(/([A-Z])/g, function(m, c, i) {\n\t\t\treturn (i > 0 ? '_' : '') + c.toLowerCase();\n\t\t});\n\t}\n\n\t// Render an editable props panel for a component node.\n\t// Returns an HTML string, or '' if no props worth showing.\n\t// Bool props become toggle checkboxes; strings/numbers become text inputs.\n\t// Each row has data-prop-key so applyAllQueryParamsToFrame can collect them.\n\tfunction renderPropsTable(rawProps, coveredQPs) {\n\t\tvar obj;\n\t\ttry { obj = JSON.parse(rawProps); } catch(e) { return ''; }\n\t\tif (!obj || typeof obj !== 'object' || Array.isArray(obj)) return '';\n\t\tvar skip = {class:1, style:1, id:1, Class:1, Style:1, ID:1};\n\t\tvar covered = coveredQPs || {};\n\t\tvar rows = '';\n\t\tvar count = 0;\n\t\tvar keys = Object.keys(obj);\n\t\tfor (var i = 0; i < keys.length; i++) {\n\t\t\tvar k = keys[i];\n\t\t\tif (skip[k]) continue;\n\t\t\tif (covered[camelToSnake(k)]) continue;\n\t\t\tvar v = obj[k];\n\t\t\tvar defVal = (v === null || v === undefined) ? '' : String(v);\n\t\t\tvar ctrl;\n\t\t\tif (typeof v === 'boolean' || v === true || v === false) {\n\t\t\t\tvar chk = v ? ' checked' : '';\n\t\t\t\tctrl = '<input type=\"checkbox\" class=\"toggle toggle-xs toggle-primary\" data-default=\"' + escHtml(defVal) + '\"' + chk + ' onchange=\"handlePropChange(this)\" style=\"vertical-align:middle\"/>';\n\t\t\t} else if (typeof v === 'number') {\n\t\t\t\tctrl = '<input type=\"number\" class=\"input input-xs input-bordered w-20 font-mono text-right\" data-default=\"' + escHtml(defVal) + '\" value=\"' + escHtml(defVal) + '\" oninput=\"handlePropChange(this)\"/>';\n\t\t\t} else {\n\t\t\t\tvar str = (v === null || v === undefined || v === '') ? '' : String(v);\n\t\t\t\tctrl = '<input type=\"text\" class=\"input input-xs input-bordered w-full font-mono\" data-default=\"' + escHtml(str) + '\" value=\"' + escHtml(str) + '\" oninput=\"handlePropChange(this)\"/>';\n\t\t\t}\n\t\t\trows += '<tr>'\n\t\t\t\t+ '<td style=\"padding:3px 8px 3px 0;white-space:nowrap;color:#94a3b8;font-size:0.68rem;vertical-align:middle\" class=\"font-mono\">' + escHtml(k) + '</td>'\n\t\t\t\t+ '<td style=\"padding:3px 0;font-size:0.68rem\" data-prop-key=\"' + escHtml(k) + '\" data-default=\"' + escHtml(defVal) + '\">' + ctrl + '</td>'\n\t\t\t\t+ '</tr>';\n\t\t\tcount++;\n\t\t}\n\t\tif (!count) return '';\n\t\treturn '<div style=\"padding:4px 8px 4px 16px\">'\n\t\t\t+ '<table style=\"border-collapse:collapse;width:100%;font-family:ui-monospace,monospace\">'\n\t\t\t+ '<tbody>' + rows + '</tbody></table></div>';\n\t}\n\n\tfunction renderTree(nodes, coveredQPs) {\n\t\tif (!nodes || nodes.length === 0) return '<p class=\"p-4 text-xs text-base-content/40\">No component boundaries found.</p>';\n\t\tvar html = '<ul class=\"py-1\">';\n\t\tfor (var i = 0; i < nodes.length; i++) {\n\t\t\tvar n = nodes[i];\n\t\t\tvar col = depthColor(n.depth);\n\t\t\tvar indent = n.depth * 12;\n\t\t\tvar nodeId = 'dev-tree-node-' + i;\n\t\t\tvar codeId = 'dev-tree-code-' + i;\n\t\t\tvar slug = COMPONENT_SLUGS[n.name] || '';\n\t\t\tvar propsHtml = renderPropsTable(n.props, coveredQPs);\n\n\t\t\thtml += '<li style=\"padding-left:' + (8 + indent) + 'px\" class=\"py-0.5\">';\n\t\t\thtml += '<div class=\"flex items-center gap-1.5 w-full rounded px-1 py-0.5 group hover:bg-base-200\">';\n\t\t\thtml += '<span style=\"display:inline-block;width:8px;height:8px;border-radius:2px;background:' + col + ';flex-shrink:0\"></span>';\n\t\t\t// Name: link if slug exists, plain text otherwise\n\t\t\tif (slug) {\n\t\t\t\thtml += '<a href=\"/gallery/' + slug + '\" class=\"font-mono text-xs font-semibold text-base-content hover:underline\" style=\"cursor:pointer\">' + escHtml(n.name) + '</a>';\n\t\t\t} else {\n\t\t\t\thtml += '<span class=\"font-mono text-xs font-semibold text-base-content\">' + escHtml(n.name) + '</span>';\n\t\t\t}\n\t\t\t// Toggle button for HTML block\n\t\t\thtml += '<button onclick=\"devTreeToggle(\\'' + nodeId + '\\')\" class=\"ml-auto text-base-content/20 group-hover:text-base-content/50 text-xs pr-1 hover:text-base-content/80\" style=\"flex-shrink:0\">\\u2039/\\u203a</button>';\n\t\t\thtml += '</div>';\n\t\t\t// Props table (always visible)\n\t\t\tif (propsHtml) html += propsHtml;\n\t\t\t// Collapsible HTML block (expanded by default)\n\t\t\thtml += '<div id=\"' + nodeId + '\" class=\"mt-1 mb-1\" style=\"padding-left:8px\">';\n\t\t\thtml += '<pre id=\"' + codeId + '\" class=\"language-html\" style=\"margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px\"><code class=\"language-html\">' + escHtml(formatHtml(cleanHtml(n.html))) + '</code></pre>';\n\t\t\thtml += '</div>';\n\t\t\thtml += '</li>';\n\t\t}\n\t\thtml += '</ul>';\n\t\treturn html;\n\t}\n\n\twindow.devTreeToggle = function(id) {\n\t\tvar el = document.getElementById(id);\n\t\tif (!el) return;\n\t\tvar isHidden = el.classList.toggle('hidden');\n\t\tif (!isHidden && window.Prism) {\n\t\t\tvar code = el.querySelector('code');\n\t\t\tif (code) Prism.highlightElement(code);\n\t\t}\n\t};\n\n\twindow._treeReceivedOnce = false;\n\tfunction handleTreeMessage(e) {\n\t\tif (!e.data || e.data.type !== '__dev_component_tree__') return;\n\t\tvar tree = e.data.tree || [];\n\t\tvar panel = document.getElementById('component-tree-panel');\n\t\tvar body  = document.getElementById('component-tree-body');\n\t\tif (!panel || !body) return;\n\t\tif (tree.length > 0) {\n\t\t\tpanel.classList.remove('hidden');\n\t\t\t// Render the params section using the active variant's tokens.\n\t\t\tvar activeTab = document.querySelector('#variant-tabs [role=\"tab\"].tab-active');\n\t\t\tvar tokens = [];\n\t\t\tif (activeTab) {\n\t\t\t\ttry { tokens = JSON.parse(activeTab.getAttribute('data-tokens') || '[]') || []; } catch(e) {}\n\t\t\t}\n\t\t\tif (window.renderParamsSection) window.renderParamsSection(tokens);\n\t\t\t// Build set of query params already covered by the Parameters section.\n\t\t\t// This prevents prop editors from conflicting with Parameters section defaults.\n\t\t\tvar coveredQPs = {};\n\t\t\t(tokens || []).filter(function(t){ return t.QueryParam; }).forEach(function(t){ coveredQPs[t.QueryParam] = 1; });\n\t\t\tbody.innerHTML = renderTree(tree, coveredQPs);\n\t\t\t// On first tree receive per variant, apply all defaults so the iframe reflects them.\n\t\t\tif (!window._treeReceivedOnce) {\n\t\t\t\twindow._treeReceivedOnce = true;\n\t\t\t\tif (window.applyAllQueryParamsToFrame) window.applyAllQueryParamsToFrame('preview-frame');\n\t\t\t}\n\t\t} else {\n\t\t\tbody.innerHTML = renderTree(tree, {});\n\t\t}\n\t}\n\n\twindow.addEventListener('message', handleTreeMessage);\n})();\n</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -877,6 +472,8 @@ func ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool
 
 // ComponentExamples renders all stories stacked vertically with labeled iframe previews.
 // Stories named "Interactive" are excluded — they belong to the Interactive tab only.
+// When a story has SubExamples set, each sub-example gets its own labeled iframe and
+// component tree panel instead of a single shared iframe for the whole story.
 func ComponentExamples(c GalleryComponent) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -893,159 +490,359 @@ func ComponentExamples(c GalleryComponent) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var51 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var51 == nil {
-			templ_7745c5c3_Var51 = templ.NopComponent
+		templ_7745c5c3_Var27 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var27 == nil {
+			templ_7745c5c3_Var27 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "<div class=\"flex flex-col gap-8 py-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<div class=\"flex flex-col gap-8 py-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for i, story := range c.EffectiveVariants() {
+		for si, story := range c.EffectiveVariants() {
 			if story.Name != "Interactive" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "<div class=\"flex flex-col gap-2\"><!-- Story toolbar: label + controls matching the Interactive toolbar --><div class=\"flex items-center justify-between mb-2 gap-3 flex-wrap\"><div class=\"flex items-center gap-2 min-w-0\"><span class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var52 string
-				templ_7745c5c3_Var52, templ_7745c5c3_Err = templ.JoinStringErrs(story.Name)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1358, Col: 99}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var52))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "</span> ")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				if story.Description != "" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "<span class=\"text-xs text-base-content/40\">")
+				if len(story.SubExamples) > 0 {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<!-- SubExamples mode: one iframe + component tree per sub-example --> <div class=\"flex flex-col gap-6\"><div class=\"flex items-center gap-2 min-w-0\"><span class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					var templ_7745c5c3_Var53 string
-					templ_7745c5c3_Var53, templ_7745c5c3_Err = templ.JoinStringErrs(story.Description)
+					var templ_7745c5c3_Var28 string
+					templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(story.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1360, Col: 69}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1345, Col: 99}
 					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var53))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "</span>")
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "</div><div class=\"flex items-center gap-2\"><!-- Fullscreen -->")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, templ.JSFuncCall("openExamplesFullscreen", c.Slug, SlugifyStoryName(story.Name), i))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "<button class=\"btn btn-xs btn-ghost border border-base-200 gap-1\" onclick=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var54 templ.ComponentScript = templ.JSFuncCall("openExamplesFullscreen", c.Slug, SlugifyStoryName(story.Name), i)
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var54.Call)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "\" title=\"Fullscreen preview\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polyline points=\"15 3 21 3 21 9\"></polyline><polyline points=\"9 21 3 21 3 15\"></polyline><line x1=\"21\" y1=\"3\" x2=\"14\" y2=\"10\"></line><line x1=\"3\" y1=\"21\" x2=\"10\" y2=\"14\"></line></svg> Fullscreen</button><!-- Open in new tab --><a href=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var55 templ.SafeURL
-				templ_7745c5c3_Var55, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name)))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1375, Col: 89}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var55))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "\" target=\"_blank\" class=\"btn btn-xs btn-ghost border border-base-200 gap-1\" title=\"Open in new tab\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6\"></path><polyline points=\"15 3 21 3 21 9\"></polyline><line x1=\"10\" y1=\"14\" x2=\"21\" y2=\"3\"></line></svg> Open</a><!-- Theme toggle --><span class=\"text-xs text-base-content/40\">Theme:</span> ")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, templ.JSFuncCall("toggleExamplesTheme", i))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "<button class=\"btn btn-xs btn-ghost border border-base-200 examples-theme-btn\" data-frame-idx=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var56 string
-				templ_7745c5c3_Var56, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1387, Col: 44}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var56))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "\" onclick=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var57 templ.ComponentScript = templ.JSFuncCall("toggleExamplesTheme", i)
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var57.Call)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "\">&#9728; Light</button></div></div><!-- Story iframe --><div class=\"rounded-xl border border-base-200 overflow-hidden bg-base-100 shadow-sm\"><iframe id=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var58 string
-				templ_7745c5c3_Var58, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("examples-frame-%d", i))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1397, Col: 46}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var58))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "\" class=\"block w-full examples-frame\" style=\"height:200px; border:none;\" src=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var59 string
-				templ_7745c5c3_Var59, templ_7745c5c3_Err = templ.JoinStringErrs("/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1400, Col: 76}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var59))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "\" title=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var60 string
-				templ_7745c5c3_Var60, templ_7745c5c3_Err = templ.JoinStringErrs(story.Name)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1401, Col: 24}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var60))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "\"></iframe></div></div>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</span> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					if story.Description != "" {
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<span class=\"text-xs text-base-content/40\">")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var29 string
+						templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(story.Description)
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1347, Col: 69}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</span>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					for ei, sub := range story.SubExamples {
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<div class=\"flex flex-col gap-2\"><!-- Sub-example toolbar --><div class=\"flex items-center justify-between mb-1 gap-3 flex-wrap\"><div class=\"flex items-center gap-2 min-w-0\"><span class=\"text-xs font-semibold text-base-content/60\">")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var30 string
+						templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(sub.Label)
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1355, Col: 76}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</span></div><div class=\"flex items-center gap-2\"><!-- Open in new tab --><a href=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var31 templ.SafeURL
+						templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(fmt.Sprintf("/gallery/render/%s/examples?s=%d&e=%d", c.Slug, si, ei)))
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1360, Col: 95}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "\" target=\"_blank\" class=\"btn btn-xs btn-ghost border border-base-200 gap-1\" title=\"Open in new tab\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6\"></path><polyline points=\"15 3 21 3 21 9\"></polyline><line x1=\"10\" y1=\"14\" x2=\"21\" y2=\"3\"></line></svg> Open</a><!-- Theme toggle --><span class=\"text-xs text-base-content/40\">Theme:</span> ")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, templ.JSFuncCall("toggleExamplesSubTheme", fmt.Sprintf("examples-sub-frame-%d-%d", si, ei)))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<button class=\"btn btn-xs btn-ghost border border-base-200 examples-theme-btn\" data-frame-id=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var32 string
+						templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("examples-sub-frame-%d-%d", si, ei))
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1372, Col: 72}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "\" onclick=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var33 templ.ComponentScript = templ.JSFuncCall("toggleExamplesSubTheme", fmt.Sprintf("examples-sub-frame-%d-%d", si, ei))
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var33.Call)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "\">&#9728; Light</button></div></div><!-- Sub-example iframe --><div class=\"rounded-xl border border-base-200 overflow-hidden bg-base-100 shadow-sm\"><iframe id=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var34 string
+						templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("examples-sub-frame-%d-%d", si, ei))
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1382, Col: 60}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "\" class=\"block w-full examples-sub-frame\" style=\"height:200px; border:none;\" src=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var35 string
+						templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/gallery/render/%s/examples?s=%d&e=%d", c.Slug, si, ei))
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1385, Col: 82}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "\" title=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var36 string
+						templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(sub.Label)
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1386, Col: 25}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "\" data-tree-panel=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var37 string
+						templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("examples-sub-tree-%d-%d", si, ei))
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1387, Col: 72}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "\" data-tree-body=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var38 string
+						templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("examples-sub-tree-body-%d-%d", si, ei))
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1388, Col: 76}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "\"></iframe></div><!-- Per-sub-example component tree panel (hidden until iframe sends data) --><div id=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var39 string
+						templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("examples-sub-tree-%d-%d", si, ei))
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1392, Col: 62}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "\" class=\"hidden rounded-xl border border-base-200 overflow-hidden bg-base-100 shadow-sm\"><div class=\"px-3 py-2 border-b border-base-200 bg-base-200/40\"><span class=\"text-xs font-semibold text-base-content/50 uppercase tracking-wide\">Component Tree</span></div><div id=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var40 string
+						templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("examples-sub-tree-body-%d-%d", si, ei))
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1396, Col: 68}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "\" class=\"overflow-auto max-h-64\"></div></div></div>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<!-- Standard mode: single iframe for the whole story --> <div class=\"flex flex-col gap-2\"><!-- Story toolbar: label + controls matching the Interactive toolbar --><div class=\"flex items-center justify-between mb-2 gap-3 flex-wrap\"><div class=\"flex items-center gap-2 min-w-0\"><span class=\"text-xs font-semibold text-base-content/40 uppercase tracking-wide\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var41 string
+					templ_7745c5c3_Var41, templ_7745c5c3_Err = templ.JoinStringErrs(story.Name)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1407, Col: 100}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var41))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</span> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					if story.Description != "" {
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<span class=\"text-xs text-base-content/40\">")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var42 string
+						templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(story.Description)
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1409, Col: 70}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "</span>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "</div><div class=\"flex items-center gap-2\"><!-- Fullscreen -->")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, templ.JSFuncCall("openExamplesFullscreen", c.Slug, SlugifyStoryName(story.Name), si))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "<button class=\"btn btn-xs btn-ghost border border-base-200 gap-1\" onclick=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var43 templ.ComponentScript = templ.JSFuncCall("openExamplesFullscreen", c.Slug, SlugifyStoryName(story.Name), si)
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var43.Call)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "\" title=\"Fullscreen preview\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polyline points=\"15 3 21 3 21 9\"></polyline><polyline points=\"9 21 3 21 3 15\"></polyline><line x1=\"21\" y1=\"3\" x2=\"14\" y2=\"10\"></line><line x1=\"3\" y1=\"21\" x2=\"10\" y2=\"14\"></line></svg> Fullscreen</button><!-- Open in new tab --><a href=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var44 templ.SafeURL
+					templ_7745c5c3_Var44, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name)))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1424, Col: 90}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var44))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "\" target=\"_blank\" class=\"btn btn-xs btn-ghost border border-base-200 gap-1\" title=\"Open in new tab\"><svg class=\"w-3 h-3\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6\"></path><polyline points=\"15 3 21 3 21 9\"></polyline><line x1=\"10\" y1=\"14\" x2=\"21\" y2=\"3\"></line></svg> Open</a><!-- Theme toggle --><span class=\"text-xs text-base-content/40\">Theme:</span> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, templ.JSFuncCall("toggleExamplesTheme", si))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<button class=\"btn btn-xs btn-ghost border border-base-200 examples-theme-btn\" data-frame-idx=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var45 string
+					templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", si))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1436, Col: 46}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "\" onclick=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var46 templ.ComponentScript = templ.JSFuncCall("toggleExamplesTheme", si)
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var46.Call)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "\">&#9728; Light</button></div></div><!-- Story iframe --><div class=\"rounded-xl border border-base-200 overflow-hidden bg-base-100 shadow-sm\"><iframe id=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var47 string
+					templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("examples-frame-%d", si))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1446, Col: 48}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var47))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "\" class=\"block w-full examples-frame\" style=\"height:200px; border:none;\" src=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var48 string
+					templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs("/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1449, Col: 77}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "\" title=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var49 string
+					templ_7745c5c3_Var49, templ_7745c5c3_Err = templ.JoinStringErrs(story.Name)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1450, Col: 25}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var49))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "\"></iframe></div></div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "</div><!-- Examples tab JS: theme per-frame, fullscreen, auto-resize --><script>\n\t(function() {\n\t\t// Per-frame theme state: inherits from global gallery theme on init\n\t\tvar frameThemes = {};\n\n\t\tfunction getSavedTheme() {\n\t\t\ttry { return localStorage.getItem('gallery-preview-theme') || 'light'; } catch(e) { return 'light'; }\n\t\t}\n\n\t\tfunction applyThemeToFrame(frame, theme) {\n\t\t\ttry {\n\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\tif (doc && doc.documentElement) doc.documentElement.setAttribute('data-theme', theme);\n\t\t\t} catch(e) {}\n\t\t}\n\n\t\tfunction updateThemeBtn(idx, theme) {\n\t\t\tvar btn = document.querySelector('.examples-theme-btn[data-frame-idx=\"' + idx + '\"]');\n\t\t\tif (!btn) return;\n\t\t\tbtn.innerHTML = theme === 'dark' ? '&#9790; Dark' : '&#9728; Light';\n\t\t}\n\n\t\twindow.toggleExamplesTheme = function(idx) {\n\t\t\tvar current = frameThemes[idx] || getSavedTheme();\n\t\t\tvar next = current === 'dark' ? 'light' : 'dark';\n\t\t\tframeThemes[idx] = next;\n\t\t\tvar frame = document.getElementById('examples-frame-' + idx);\n\t\t\tif (frame) applyThemeToFrame(frame, next);\n\t\t\tupdateThemeBtn(idx, next);\n\t\t};\n\n\t\twindow.openExamplesFullscreen = function(slug, variantSlug, idx) {\n\t\t\tvar theme = frameThemes[idx] || getSavedTheme();\n\t\t\tvar url = '/gallery/render/' + slug + '/' + variantSlug;\n\t\t\t// Reuse the existing fullscreen overlay (ComponentDetail renders it as #fullscreen-preview-overlay)\n\t\t\tvar overlay = document.getElementById('fullscreen-preview-overlay');\n\t\t\tif (overlay) {\n\t\t\t\tvar fsFrame = document.getElementById('fullscreen-preview-frame');\n\t\t\t\tif (fsFrame) fsFrame.src = url;\n\t\t\t\toverlay.classList.remove('hidden');\n\t\t\t\tdocument.body.style.overflow = 'hidden';\n\t\t\t\t// Apply the per-frame theme to the fullscreen frame\n\t\t\t\tif (fsFrame) {\n\t\t\t\t\tvar applyTheme = function() {\n\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\tvar doc = fsFrame.contentDocument || fsFrame.contentWindow.document;\n\t\t\t\t\t\t\tif (doc && doc.documentElement) doc.documentElement.setAttribute('data-theme', theme);\n\t\t\t\t\t\t} catch(e) {}\n\t\t\t\t\t};\n\t\t\t\t\tif (fsFrame.contentDocument && fsFrame.contentDocument.readyState === 'complete') {\n\t\t\t\t\t\tapplyTheme();\n\t\t\t\t\t} else {\n\t\t\t\t\t\tfsFrame.addEventListener('load', applyTheme, { once: true });\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\treturn;\n\t\t\t}\n\t\t\t// Fallback: open in new tab\n\t\t\twindow.open(url, '_blank');\n\t\t};\n\n\t\tfunction autoResizeFrame(frame) {\n\t\t\tvar attempts = 0;\n\t\t\tfunction tryResize() {\n\t\t\t\ttry {\n\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\tif (doc && doc.body && doc.body.scrollHeight > 40) {\n\t\t\t\t\t\tframe.style.height = doc.body.scrollHeight + 'px';\n\t\t\t\t\t\tvar ro = new ResizeObserver(function() {\n\t\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\t\tvar h = (frame.contentDocument || frame.contentWindow.document).body.scrollHeight;\n\t\t\t\t\t\t\t\tif (h > 40) frame.style.height = h + 'px';\n\t\t\t\t\t\t\t} catch(e) {}\n\t\t\t\t\t\t});\n\t\t\t\t\t\tro.observe(doc.body);\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t} catch(e) {}\n\t\t\t\tif (++attempts < 20) setTimeout(tryResize, 100);\n\t\t\t}\n\t\t\ttryResize();\n\t\t}\n\n\t\tfunction attachFrameHandlers(frame) {\n\t\t\tvar idx = frame.id.replace('examples-frame-', '');\n\t\t\tvar theme = frameThemes[idx] || getSavedTheme();\n\t\t\tframeThemes[idx] = theme;\n\t\t\tupdateThemeBtn(idx, theme);\n\t\t\tfunction applyAndResize() {\n\t\t\t\tapplyThemeToFrame(frame, theme);\n\t\t\t\tautoResizeFrame(frame);\n\t\t\t}\n\t\t\tif (frame.contentDocument && frame.contentDocument.readyState === 'complete') {\n\t\t\t\tapplyAndResize();\n\t\t\t} else {\n\t\t\t\tframe.addEventListener('load', applyAndResize);\n\t\t\t}\n\t\t}\n\n\t\tfunction initFrames() {\n\t\t\tdocument.querySelectorAll('.examples-frame').forEach(attachFrameHandlers);\n\t\t}\n\t\tdocument.addEventListener('DOMContentLoaded', initFrames);\n\t\tdocument.addEventListener('htmx:afterSwap', initFrames);\n\t\tif (document.readyState !== 'loading') initFrames();\n\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "</div><!-- Examples tab JS: theme per-frame, fullscreen, auto-resize --><script>\n\t(function() {\n\t\t// Per-frame theme state: inherits from global gallery theme on init\n\t\tvar frameThemes = {};\n\n\t\tfunction getSavedTheme() {\n\t\t\ttry { return localStorage.getItem('gallery-preview-theme') || 'light'; } catch(e) { return 'light'; }\n\t\t}\n\n\t\tfunction applyThemeToFrame(frame, theme) {\n\t\t\ttry {\n\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\tif (doc && doc.documentElement) doc.documentElement.setAttribute('data-theme', theme);\n\t\t\t} catch(e) {}\n\t\t}\n\n\t\tfunction updateThemeBtn(idx, theme) {\n\t\t\tvar btn = document.querySelector('.examples-theme-btn[data-frame-idx=\"' + idx + '\"]');\n\t\t\tif (!btn) return;\n\t\t\tbtn.innerHTML = theme === 'dark' ? '&#9790; Dark' : '&#9728; Light';\n\t\t}\n\n\t\tfunction updateThemeBtnById(frameId, theme) {\n\t\t\tvar btn = document.querySelector('.examples-theme-btn[data-frame-id=\"' + frameId + '\"]');\n\t\t\tif (!btn) return;\n\t\t\tbtn.innerHTML = theme === 'dark' ? '&#9790; Dark' : '&#9728; Light';\n\t\t}\n\n\t\twindow.toggleExamplesTheme = function(idx) {\n\t\t\tvar current = frameThemes[idx] || getSavedTheme();\n\t\t\tvar next = current === 'dark' ? 'light' : 'dark';\n\t\t\tframeThemes[idx] = next;\n\t\t\tvar frame = document.getElementById('examples-frame-' + idx);\n\t\t\tif (frame) applyThemeToFrame(frame, next);\n\t\t\tupdateThemeBtn(idx, next);\n\t\t};\n\n\t\t// Sub-example theme toggle (keyed by full frame id string)\n\t\twindow.toggleExamplesSubTheme = function(frameId) {\n\t\t\tvar current = frameThemes[frameId] || getSavedTheme();\n\t\t\tvar next = current === 'dark' ? 'light' : 'dark';\n\t\t\tframeThemes[frameId] = next;\n\t\t\tvar frame = document.getElementById(frameId);\n\t\t\tif (frame) applyThemeToFrame(frame, next);\n\t\t\tupdateThemeBtnById(frameId, next);\n\t\t};\n\n\t\twindow.openExamplesFullscreen = function(slug, variantSlug, idx) {\n\t\t\tvar theme = frameThemes[idx] || getSavedTheme();\n\t\t\tvar url = '/gallery/render/' + slug + '/' + variantSlug;\n\t\t\t// Reuse the existing fullscreen overlay (ComponentDetail renders it as #fullscreen-preview-overlay)\n\t\t\tvar overlay = document.getElementById('fullscreen-preview-overlay');\n\t\t\tif (overlay) {\n\t\t\t\tvar fsFrame = document.getElementById('fullscreen-preview-frame');\n\t\t\t\tif (fsFrame) fsFrame.src = url;\n\t\t\t\toverlay.classList.remove('hidden');\n\t\t\t\tdocument.body.style.overflow = 'hidden';\n\t\t\t\t// Apply the per-frame theme to the fullscreen frame\n\t\t\t\tif (fsFrame) {\n\t\t\t\t\tvar applyTheme = function() {\n\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\tvar doc = fsFrame.contentDocument || fsFrame.contentWindow.document;\n\t\t\t\t\t\t\tif (doc && doc.documentElement) doc.documentElement.setAttribute('data-theme', theme);\n\t\t\t\t\t\t} catch(e) {}\n\t\t\t\t\t};\n\t\t\t\t\tif (fsFrame.contentDocument && fsFrame.contentDocument.readyState === 'complete') {\n\t\t\t\t\t\tapplyTheme();\n\t\t\t\t\t} else {\n\t\t\t\t\t\tfsFrame.addEventListener('load', applyTheme, { once: true });\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\treturn;\n\t\t\t}\n\t\t\t// Fallback: open in new tab\n\t\t\twindow.open(url, '_blank');\n\t\t};\n\n\t\tfunction autoResizeFrame(frame) {\n\t\t\tvar attempts = 0;\n\t\t\tfunction tryResize() {\n\t\t\t\ttry {\n\t\t\t\t\tvar doc = frame.contentDocument || frame.contentWindow.document;\n\t\t\t\t\tif (doc && doc.body && doc.body.scrollHeight > 40) {\n\t\t\t\t\t\tframe.style.height = doc.body.scrollHeight + 'px';\n\t\t\t\t\t\tvar ro = new ResizeObserver(function() {\n\t\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\t\tvar h = (frame.contentDocument || frame.contentWindow.document).body.scrollHeight;\n\t\t\t\t\t\t\t\tif (h > 40) frame.style.height = h + 'px';\n\t\t\t\t\t\t\t} catch(e) {}\n\t\t\t\t\t\t});\n\t\t\t\t\t\tro.observe(doc.body);\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t} catch(e) {}\n\t\t\t\tif (++attempts < 20) setTimeout(tryResize, 100);\n\t\t\t}\n\t\t\ttryResize();\n\t\t}\n\n\t\tfunction attachFrameHandlers(frame) {\n\t\t\tvar idx = frame.id.replace('examples-frame-', '');\n\t\t\tvar theme = frameThemes[idx] || getSavedTheme();\n\t\t\tframeThemes[idx] = theme;\n\t\t\tupdateThemeBtn(idx, theme);\n\t\t\tfunction applyAndResize() {\n\t\t\t\tapplyThemeToFrame(frame, theme);\n\t\t\t\tautoResizeFrame(frame);\n\t\t\t}\n\t\t\tif (frame.contentDocument && frame.contentDocument.readyState === 'complete') {\n\t\t\t\tapplyAndResize();\n\t\t\t} else {\n\t\t\t\tframe.addEventListener('load', applyAndResize);\n\t\t\t}\n\t\t}\n\n\t\tfunction attachSubFrameHandlers(frame) {\n\t\t\tvar frameId = frame.id;\n\t\t\tvar theme = frameThemes[frameId] || getSavedTheme();\n\t\t\tframeThemes[frameId] = theme;\n\t\t\tupdateThemeBtnById(frameId, theme);\n\t\t\tfunction applyAndResize() {\n\t\t\t\tapplyThemeToFrame(frame, theme);\n\t\t\t\tautoResizeFrame(frame);\n\t\t\t}\n\t\t\tif (frame.contentDocument && frame.contentDocument.readyState === 'complete') {\n\t\t\t\tapplyAndResize();\n\t\t\t} else {\n\t\t\t\tframe.addEventListener('load', applyAndResize);\n\t\t\t}\n\t\t}\n\n\t\tfunction initFrames() {\n\t\t\tdocument.querySelectorAll('.examples-frame').forEach(attachFrameHandlers);\n\t\t\tdocument.querySelectorAll('.examples-sub-frame').forEach(attachSubFrameHandlers);\n\t\t}\n\t\tdocument.addEventListener('DOMContentLoaded', initFrames);\n\t\tdocument.addEventListener('htmx:afterSwap', initFrames);\n\t\tif (document.readyState !== 'loading') initFrames();\n\n\t\t// Component tree rendering for sub-example iframes.\n\t\t// Each sub-example iframe has data-tree-panel and data-tree-body attributes\n\t\t// that point to its dedicated tree panel div.\n\t\t(function() {\n\t\t\tvar DEPTH_COLORS = ['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899'];\n\t\t\tvar COMPONENT_SLUGS = {\n\t\t\t\t\t\t// Basics\n\t\t\t\t\t\t'Button':'button','Badge':'badge','StatusBadge':'status-badge-real',\n\t\t\t\t\t\t'Avatar':'avatar-real','Card':'card-real','Tag':'tag',\n\t\t\t\t\t\t'Divider':'divider','Kbd':'kbd','IconSpanColored':'button',\n\t\t\t\t\t\t// Feedback\n\t\t\t\t\t\t'Toast':'toast-real','Alert':'alert','Empty':'empty-state-real',\n\t\t\t\t\t\t'Loader':'loader','NoPermissions':'no-permissions','SectionHeader':'section-header','Skeleton':'skeleton',\n\t\t\t\t\t\t// Data display\n\t\t\t\t\t\t'StatCard':'stat-card-real','StatCardMinimal':'stat-card-minimal','ProgressCard':'progress-card',\n\t\t\t\t\t\t'Timeline':'timeline','ChatBubble':'chat-bubble','LogsTable':'logs-table',\n\t\t\t\t\t\t// Table (root only — sub-primitives have no standalone page)\n\t\t\t\t\t\t'TableWithProps':'table','Table':'table','ListArea':'list-basic',\n\t\t\t\t\t\t// Navigation\n\t\t\t\t\t\t'ActionMenu':'action-menu-real','FilterTabs':'filter-tabs','FilterCard':'filter-bar',\n\t\t\t\t\t\t'Pagination':'pagination-real','TabMenu':'tab-menu-real','SimpleTabs':'tab-menu-real',\n\t\t\t\t\t\t'PageHeader':'page-header-real','Menu':'menu-real','TopBar':'top-bar-real',\n\t\t\t\t\t\t'Navbar':'navbar-real','Breadcrumbs':'breadcrumbs','Dock':'dock-nav',\n\t\t\t\t\t\t'ProfileMenu':'profile-menu','PageTitleMinimal':'page-title-minimal',\n\t\t\t\t\t\t'PageTitleEditor':'page-title-editor','FooterMinimal':'footer-minimal',\n\t\t\t\t\t\t// Foundation / display\n\t\t\t\t\t\t'Progress':'progress','Steps':'steps','Accordion':'collapse','Swap':'swap',\n\t\t\t\t\t\t'Countdown':'countdown','StatusDot':'status-dots','Tooltip':'tooltip',\n\t\t\t\t\t\t'Indicator':'indicator','Stack':'stack','Diff':'diff','Mask':'mask',\n\t\t\t\t\t\t'Carousel':'carousel','Link':'link-styles',\n\t\t\t\t\t\t// Layout\n\t\t\t\t\t\t'Hero':'hero','Join':'join','Fieldset':'fieldset',\n\t\t\t\t\t\t// Mockups\n\t\t\t\t\t\t'MockupBrowser':'mockup-browser','MockupCode':'mockup-code',\n\t\t\t\t\t\t'MockupPhone':'mockup-phone','MockupWindow':'mockup-window',\n\t\t\t\t\t\t// Overlays\n\t\t\t\t\t\t'Modal':'modal-real','ConfirmPopup':'confirm-popup','FormModal':'form-modal-real',\n\t\t\t\t\t\t'Dropdown':'dropdown','FAB':'fab','NotificationPanel':'notification-panel',\n\t\t\t\t\t\t// Person\n\t\t\t\t\t\t'PersonCell':'person-cell',\n\t\t\t\t\t\t// Forms\n\t\t\t\t\t\t'TextInput':'text-input','TextareaInput':'textarea-input',\n\t\t\t\t\t\t'CheckboxInput':'checkbox-input','SelectInput':'select-input',\n\t\t\t\t\t\t'RangeInput':'range-input','SearchInput':'search-input-real',\n\t\t\t\t\t\t'FormField':'form-field-real','RadioGroup':'form-radio','Rating':'form-rating',\n\t\t\t\t\t\t'FileInput':'form-file','Checkbox':'form-checkbox','Toggle':'form-checkbox',\n\t\t\t\t\t\t'PromptBar':'prompt-bar-minimal','PromptBarAction':'prompt-bar-action',\n\t\t\t\t\t\t'InputSpinner':'input-spinner','WizardStepper':'wizard-stepper',\n\t\t\t};\n\t\t\tfunction depthColor(d) { return DEPTH_COLORS[d % DEPTH_COLORS.length]; }\n\t\tfunction escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;'); }\n\t\tfunction cleanHtml(raw) {\n\t\t\tvar s = raw.replace(/\\s*data-component=\"[^\"]*\"/g, '');\n\t\t\ts = s.replace(/\\s*data-props=\"(?:[^\"\\\\]|\\\\.)*\"/g, '');\n\t\t\ts = s.replace(/\\s*=\"\"(?=[\\s>])/g, '');\n\t\t\tvar prev;\n\t\t\tdo { prev = s; s = s.replace(/<div\\s+style=\"display:contents\"\\s*>([\\s\\S]*?)<\\/div>/g, '$1'); } while (s !== prev);\n\t\t\treturn s.trim();\n\t\t}\n\t\tfunction formatHtml(raw) {\n\t\t\tvar indent = 0, TAB = '  ', result = '';\n\t\t\tvar parts = raw.replace(/>\\s*</g, '>\\n<').split('\\n');\n\t\t\tfor (var i = 0; i < parts.length; i++) {\n\t\t\t\tvar line = parts[i].trim();\n\t\t\t\tif (!line) continue;\n\t\t\t\tif (/^<\\//.test(line)) indent = Math.max(0, indent - 1);\n\t\t\t\tresult += TAB.repeat(indent) + line + '\\n';\n\t\t\t\tif (/^<[^/!][^>]*[^/]>$/.test(line) && !/^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/.test(line)) indent++;\n\t\t\t}\n\t\t\treturn result.trim();\n\t\t}\n\t\tfunction renderPropsTable(rawProps) {\n\t\t\tvar obj; try { obj = JSON.parse(rawProps); } catch(e) { return ''; }\n\t\t\tif (!obj || typeof obj !== 'object' || Array.isArray(obj)) return '';\n\t\t\tvar skip = {class:1,style:1,id:1,Class:1,Style:1,ID:1};\n\t\t\tvar rows = '', count = 0, keys = Object.keys(obj);\n\t\t\tfor (var i = 0; i < keys.length; i++) {\n\t\t\t\tvar k = keys[i]; if (skip[k]) continue;\n\t\t\t\tvar v = obj[k];\n\t\t\t\tvar defVal = (v === null || v === undefined) ? '' : String(v);\n\t\t\t\tvar vs;\n\t\t\t\tif (v === null || v === undefined) vs = '<span style=\"color:#94a3b8\">null</span>';\n\t\t\t\telse if (v === true)  vs = '<span style=\"color:#22c55e\">true</span>';\n\t\t\t\telse if (v === false) vs = '<span style=\"color:#f87171\">false</span>';\n\t\t\t\telse if (typeof v === 'number') vs = '<span style=\"color:#fb923c\">' + escHtml(String(v)) + '</span>';\n\t\t\t\telse { var str = String(v); vs = str === '' ? '<span style=\"color:#94a3b8\">(empty)</span>' : '<span style=\"color:#e2e8f0\">' + escHtml(str.length > 60 ? str.slice(0,57)+'…' : str) + '</span>'; }\n\t\t\t\trows += '<tr><td style=\"padding:2px 8px 2px 0;white-space:nowrap;color:#94a3b8;font-size:0.68rem;vertical-align:top\">' + escHtml(k) + '</td><td style=\"padding:2px 0;font-size:0.68rem;word-break:break-all\">' + vs + '</td></tr>';\n\t\t\t\tcount++;\n\t\t\t}\n\t\t\tif (!count) return '';\n\t\t\treturn '<div style=\"padding:4px 8px 4px 16px\"><table style=\"border-collapse:collapse;width:100%;font-family:ui-monospace,monospace\"><tbody>' + rows + '</tbody></table></div>';\n\t\t}\n\t\t// Unique counter for sub-tree node IDs to avoid collisions across multiple trees.\n\t\tvar _subNodeSeq = 0;\n\t\twindow.subDevTreeToggle = function(id) {\n\t\t\tvar el = document.getElementById(id);\n\t\t\tif (!el) return;\n\t\t\tvar isHidden = el.classList.toggle('hidden');\n\t\t\tif (!isHidden && window.Prism) {\n\t\t\t\tvar code = el.querySelector('code');\n\t\t\t\tif (code) Prism.highlightElement(code);\n\t\t\t}\n\t\t};\n\t\tfunction renderSubTree(nodes) {\n\t\t\tif (!nodes || nodes.length === 0) return '<p class=\"p-4 text-xs text-base-content/40\">No component boundaries found.</p>';\n\t\t\tvar html = '<ul class=\"py-1\">';\n\t\t\tfor (var i = 0; i < nodes.length; i++) {\n\t\t\t\tvar n = nodes[i], col = depthColor(n.depth), indent = n.depth * 12;\n\t\t\t\tvar seq = ++_subNodeSeq;\n\t\t\t\tvar nodeId = 'sub-tree-node-' + seq;\n\t\t\t\tvar codeId = 'sub-tree-code-' + seq;\n\t\t\t\tvar slug = COMPONENT_SLUGS[n.name] || '';\n\t\t\t\tvar propsHtml = renderPropsTable(n.props);\n\t\t\t\thtml += '<li style=\"padding-left:' + (8 + indent) + 'px\" class=\"py-0.5\">';\n\t\t\t\thtml += '<div class=\"flex items-center gap-1.5 w-full rounded px-1 py-0.5 group hover:bg-base-200\">';\n\t\t\t\thtml += '<span style=\"display:inline-block;width:8px;height:8px;border-radius:2px;background:' + col + ';flex-shrink:0\"></span>';\n\t\t\t\tif (slug) {\n\t\t\t\t\thtml += '<a href=\"/gallery/' + slug + '\" class=\"font-mono text-xs font-semibold text-base-content hover:underline\" style=\"cursor:pointer\">' + escHtml(n.name) + '</a>';\n\t\t\t\t} else {\n\t\t\t\t\thtml += '<span class=\"font-mono text-xs font-semibold text-base-content\">' + escHtml(n.name) + '</span>';\n\t\t\t\t}\n\t\t\t\thtml += '<button onclick=\"subDevTreeToggle(\\'' + nodeId + '\\')\" class=\"ml-auto text-base-content/20 group-hover:text-base-content/50 text-xs pr-1 hover:text-base-content/80\" style=\"flex-shrink:0\">\\u2039/\\u203a</button>';\n\t\t\t\thtml += '</div>';\n\t\t\t\t// Props table (always visible)\n\t\t\t\tif (propsHtml) html += propsHtml;\n\t\t\t\t// Expanded by default\n\t\t\t\thtml += '<div id=\"' + nodeId + '\" class=\"mt-1 mb-1\" style=\"padding-left:8px\">';\n\t\t\t\thtml += '<pre id=\"' + codeId + '\" class=\"language-html\" style=\"margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px\"><code class=\"language-html\">' + escHtml(formatHtml(cleanHtml(n.html))) + '</code></pre>';\n\t\t\t\thtml += '</div>';\n\t\t\t\thtml += '</li>';\n\t\t\t}\n\t\t\thtml += '</ul>';\n\t\t\treturn html;\n\t\t}\n\t\t\twindow.addEventListener('message', function(e) {\n\t\t\t\tif (!e.data || e.data.type !== '__dev_component_tree__') return;\n\t\t\t\tvar tree = e.data.tree || [];\n\t\t\t\t// Find which sub-example frame sent this message\n\t\t\t\tvar frames = document.querySelectorAll('.examples-sub-frame');\n\t\t\t\tvar panelId = null, bodyId = null;\n\t\t\t\tframes.forEach(function(f) {\n\t\t\t\t\tif (f.contentWindow === e.source) {\n\t\t\t\t\t\tpanelId = f.dataset.treePanel;\n\t\t\t\t\t\tbodyId = f.dataset.treeBody;\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t\tif (!bodyId) return;\n\t\t\t\tvar panel = document.getElementById(panelId);\n\t\t\t\tvar body = document.getElementById(bodyId);\n\t\t\t\tif (!body) return;\n\t\t\t\tbody.innerHTML = renderSubTree(tree);\n\t\t\t\tif (panel) panel.classList.toggle('hidden', tree.length === 0);\n\t\t\t});\n\t\t})();\n\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1070,150 +867,150 @@ func FeedbackListPartial(items []Feedback) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var61 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var61 == nil {
-			templ_7745c5c3_Var61 = templ.NopComponent
+		templ_7745c5c3_Var50 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var50 == nil {
+			templ_7745c5c3_Var50 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		if len(items) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "<p class=\"p-4 text-xs text-base-content/40 text-center\">No feedback yet. Press <kbd class=\"kbd kbd-xs\">Alt</kbd> or click the Feedback button to enter feedback mode, then click any element in the preview.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "<p class=\"p-4 text-xs text-base-content/40 text-center\">No feedback yet. Press <kbd class=\"kbd kbd-xs\">Alt</kbd> or click the Feedback button to enter feedback mode, then click any element in the preview.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "<ul class=\"divide-y divide-base-200\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "<ul class=\"divide-y divide-base-200\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, item := range items {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "<li class=\"flex flex-col gap-1 p-3 text-xs\" id=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "<li class=\"flex flex-col gap-1 p-3 text-xs\" id=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var62 string
-				templ_7745c5c3_Var62, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("feedback-item-%d", item.ID))
+				var templ_7745c5c3_Var51 string
+				templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("feedback-item-%d", item.ID))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1525, Col: 93}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1763, Col: 93}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var62))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "\"><div class=\"flex items-start justify-between gap-2\"><div class=\"flex items-center gap-2 flex-1 min-w-0\"><span class=\"font-medium text-base-content break-words flex-1\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var51))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var63 string
-				templ_7745c5c3_Var63, templ_7745c5c3_Err = templ.JoinStringErrs(item.Comment)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1528, Col: 84}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var63))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "\"><div class=\"flex items-start justify-between gap-2\"><div class=\"flex items-center gap-2 flex-1 min-w-0\"><span class=\"font-medium text-base-content break-words flex-1\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "</span> ")
+				var templ_7745c5c3_Var52 string
+				templ_7745c5c3_Var52, templ_7745c5c3_Err = templ.JoinStringErrs(item.Comment)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1766, Col: 84}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var52))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "</span> ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				if item.Status == StatusResolved {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "<span class=\"badge badge-xs badge-success shrink-0\">resolved</span>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "<span class=\"badge badge-xs badge-success shrink-0\">resolved</span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				} else if item.Status == StatusWontFix {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "<span class=\"badge badge-xs badge-neutral shrink-0\">won't fix</span>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "<span class=\"badge badge-xs badge-neutral shrink-0\">won't fix</span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "</div><button class=\"btn btn-xs btn-ghost text-error shrink-0\" hx-delete=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "</div><button class=\"btn btn-xs btn-ghost text-error shrink-0\" hx-delete=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var64 string
-				templ_7745c5c3_Var64, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/gallery/%s/feedback/%d", item.ComponentSlug, item.ID))
+				var templ_7745c5c3_Var53 string
+				templ_7745c5c3_Var53, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/gallery/%s/feedback/%d", item.ComponentSlug, item.ID))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1537, Col: 86}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1775, Col: 86}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var64))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "\" hx-target=\"")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var53))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var65 string
-				templ_7745c5c3_Var65, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("#feedback-item-%d", item.ID))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1538, Col: 60}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var65))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "\" hx-target=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "\" hx-swap=\"outerHTML\" hx-on:htmx:after-request=\"htmx.trigger(document.body, 'feedbackCreated')\" title=\"Delete this feedback\">✕</button></div>")
+				var templ_7745c5c3_Var54 string
+				templ_7745c5c3_Var54, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("#feedback-item-%d", item.ID))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1776, Col: 60}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var54))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "\" hx-swap=\"outerHTML\" hx-on:htmx:after-request=\"htmx.trigger(document.body, 'feedbackCreated')\" title=\"Delete this feedback\">✕</button></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				if item.AgentResponse != "" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "<div class=\"bg-base-200 rounded p-2 text-base-content/70 text-xs italic\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "<div class=\"bg-base-200 rounded p-2 text-base-content/70 text-xs italic\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					var templ_7745c5c3_Var66 string
-					templ_7745c5c3_Var66, templ_7745c5c3_Err = templ.JoinStringErrs(item.AgentResponse)
+					var templ_7745c5c3_Var55 string
+					templ_7745c5c3_Var55, templ_7745c5c3_Err = templ.JoinStringErrs(item.AgentResponse)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1545, Col: 99}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1783, Col: 99}
 					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var66))
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var55))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "</div>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "</div>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
 				if sel := feedbackSelectorPath(item.ContextJSON); sel != "" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "<code class=\"text-base-content/50 truncate\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "<code class=\"text-base-content/50 truncate\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					var templ_7745c5c3_Var67 string
-					templ_7745c5c3_Var67, templ_7745c5c3_Err = templ.JoinStringErrs(sel)
+					var templ_7745c5c3_Var56 string
+					templ_7745c5c3_Var56, templ_7745c5c3_Err = templ.JoinStringErrs(sel)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1548, Col: 55}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1786, Col: 55}
 					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var67))
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var56))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "</code> ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "</code> ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, "<span class=\"text-base-content/30\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "<span class=\"text-base-content/30\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var68 string
-				templ_7745c5c3_Var68, templ_7745c5c3_Err = templ.JoinStringErrs(item.CreatedAt.Format("2006-01-02 15:04"))
+				var templ_7745c5c3_Var57 string
+				templ_7745c5c3_Var57, templ_7745c5c3_Err = templ.JoinStringErrs(item.CreatedAt.Format("2006-01-02 15:04"))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1550, Col: 83}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_detail.templ`, Line: 1788, Col: 83}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var68))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var57))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, "</span></li>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "</span></li>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "</ul>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "</ul>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

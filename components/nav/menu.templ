@@ -1,5 +1,7 @@
 package nav
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // MenuSize controls the size of a menu.
 type MenuSize string
 
@@ -19,7 +21,7 @@ type MenuItem struct {
 
 // Menu renders a DaisyUI vertical navigation menu.
 templ Menu(size MenuSize, items []MenuItem) {
-	<ul class={ "menu", templ.KV(string(size), size != "") }>
+	<ul class={ "menu", templ.KV(string(size), size != "") } { devmode.Attrs(ctx, "nav/Menu")... }>
 		for _, item := range items {
 			<li>
 				<a
@@ -39,7 +41,7 @@ templ Menu(size MenuSize, items []MenuItem) {
 // MenuSection renders a titled group of menu items.
 templ MenuSection(title string, items []MenuItem) {
 	if title != "" {
-		<li class="menu-title">{ title }</li>
+		<li class="menu-title" { devmode.Attrs(ctx, "nav/MenuSection")... }>{ title }</li>
 	}
 	for _, item := range items {
 		<li>

@@ -1,5 +1,10 @@
 package modal
 
+import (
+	"github.com/emergent-company/go-daisy/components/form"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
 // ModalSize controls the max-width of the modal dialog.
 type ModalSize string
 
@@ -33,25 +38,31 @@ type FormModalProps struct {
 	Variant     string // "error" for destructive modals
 }
 
+// ModalHeader renders the title + close button row shared by all modal variants.
+templ ModalHeader(title string, onClose templ.ComponentScript) {
+	<div class="flex items-center justify-between mb-4" { devmode.Attrs(ctx, "modal/ModalHeader")... }>
+		<h3 class="font-semibold text-lg text-base-content">{ title }</h3>
+		<button
+			type="button"
+			class="btn btn-ghost btn-sm btn-square"
+			onclick={ onClose }
+			aria-label="Close"
+		>
+			<span class="iconify lucide--x size-5"></span>
+		</button>
+	</div>
+}
+
 // Modal renders a DaisyUI dialog modal with backdrop close.
 templ Modal(title string, size ModalSize) {
 	<dialog
 		id="modal"
 		class="modal modal-open"
 		onclick="if(event.target===this){this.remove()}"
+		{ devmode.Attrs(ctx, "modal/Modal")... }
 	>
 		<div class={ "modal-box", templ.KV(string(size), size != "") }>
-			<div class="flex items-center justify-between mb-4">
-				<h3 class="font-semibold text-lg text-base-content">{ title }</h3>
-			<button
-				type="button"
-				class="btn btn-ghost btn-sm btn-square"
-				onclick="this.closest('dialog').remove()"
-				aria-label="Close"
-			>
-				<span class="iconify lucide--x size-5"></span>
-			</button>
-			</div>
+			@ModalHeader(title, templ.JSUnsafeFuncCall("this.closest('dialog').remove()"))
 			{ children... }
 		</div>
 		<form method="dialog" class="modal-backdrop" onclick="document.getElementById('modal').remove()">
@@ -68,19 +79,9 @@ templ FormModal(props FormModalProps) {
 	{{ if cancelText == "" { cancelText = "Cancel" } }}
 	{{ size := props.Size }}
 	{{ if size == "" { size = ModalSM } }}
-	<dialog id={ props.ID } class="modal">
+	<dialog id={ props.ID } class="modal" { devmode.Attrs(ctx, "modal/FormModal")... }>
 		<div class={ "modal-box", templ.KV(string(size), size != "") }>
-			<div class="flex items-center justify-between mb-4">
-				<h3 class="font-semibold text-lg">{ props.Title }</h3>
-			<button
-				type="button"
-				class="btn btn-ghost btn-sm btn-square"
-				onclick={ closeModal(props.ID) }
-				aria-label="Close"
-			>
-				<span class="iconify lucide--x size-5"></span>
-			</button>
-			</div>
+			@ModalHeader(props.Title, closeModal(props.ID))
 			<form
 				if props.Method == "put" {
 					hx-put={ props.Action }
@@ -100,7 +101,7 @@ templ FormModal(props FormModalProps) {
 				}
 			>
 				{ children... }
-				<div class="flex justify-end gap-2 mt-4">
+				@form.FormActions() {
 					<button
 						type="button"
 						class="btn btn-ghost btn-sm"
@@ -112,7 +113,7 @@ templ FormModal(props FormModalProps) {
 							templ.KV("btn-primary", props.Variant != "error"),
 							templ.KV("btn-error", props.Variant == "error") }
 					>{ submitText }</button>
-				</div>
+				}
 			</form>
 		</div>
 		<form method="dialog" class="modal-backdrop">
@@ -123,7 +124,7 @@ templ FormModal(props FormModalProps) {
 
 // OpenModalButton renders a primary button that opens a modal by id.
 templ OpenModalButton(modalID string, label string) {
-	<button type="button" class="btn btn-primary btn-sm" onclick={ openModal(modalID) }>
+	<button type="button" class="btn btn-primary btn-sm" onclick={ openModal(modalID) } { devmode.Attrs(ctx, "modal/OpenModalButton")... }>
 		{ label }
 	</button>
 }
@@ -144,12 +145,13 @@ templ DeleteButton(url string, confirm string, target string, swap string, label
 		if swap != "" {
 			hx-swap={ swap }
 		}
+		{ devmode.Attrs(ctx, "modal/DeleteButton")... }
 	>{ label }</button>
 }
 
 // LoaderModal renders a modal containing only a loading spinner.
 templ LoaderModal() {
-	<dialog id="modal" class="modal modal-open">
+	<dialog id="modal" class="modal modal-open" { devmode.Attrs(ctx, "modal/LoaderModal")... }>
 		<div class="modal-box flex items-center justify-center py-12">
 			<span class="loading loading-spinner loading-lg text-primary"></span>
 		</div>
@@ -158,11 +160,11 @@ templ LoaderModal() {
 
 // ConfirmPopup renders a small confirmation modal with confirm/cancel buttons.
 templ ConfirmPopup(title string, message string, confirmLabel string, confirmURL string, confirmHXMethod string) {
-	<dialog id="modal" class="modal modal-open">
+	<dialog id="modal" class="modal modal-open" { devmode.Attrs(ctx, "modal/ConfirmPopup")... }>
 		<div class="modal-box max-w-sm">
-			<h3 class="font-semibold text-lg mb-2">{ title }</h3>
+			@ModalHeader(title, templ.JSUnsafeFuncCall("document.getElementById('modal').remove()"))
 			<p class="text-sm text-base-content/60 mb-6">{ message }</p>
-			<div class="flex justify-end gap-2">
+			@form.FormActions() {
 				<button
 					type="button"
 					class="btn btn-ghost btn-sm"
@@ -186,7 +188,7 @@ templ ConfirmPopup(title string, message string, confirmLabel string, confirmURL
 				>
 					{ confirmLabel }
 				</button>
-			</div>
+			}
 		</div>
 		<form method="dialog" class="modal-backdrop" onclick="document.getElementById('modal').remove()">
 			<button>close</button>

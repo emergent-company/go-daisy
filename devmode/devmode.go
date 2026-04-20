@@ -25,6 +25,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html"
 	"io"
 	"strings"
 
@@ -34,6 +35,9 @@ import (
 // contextKey is the unexported typed key used to store devmode state in context.
 // Using a named type prevents collisions with any other package's context keys.
 type contextKey struct{}
+
+// emptyAttrs is returned by [Attrs] in production to avoid per-call allocations.
+var emptyAttrs = templ.Attributes{}
 
 // WithDevMode returns a new context with dev mode enabled.
 // Pass this context (or a context derived from it) to [templ.Component.Render]
@@ -46,6 +50,25 @@ func WithDevMode(ctx context.Context) context.Context {
 func IsDevMode(ctx context.Context) bool {
 	v, _ := ctx.Value(contextKey{}).(bool)
 	return v
+}
+
+// Attrs returns a [templ.Attributes] map containing data-component="name" when
+// dev mode is active in ctx. In production (when [IsDevMode] returns false) it
+// returns a shared empty map — no allocation, no HTML output.
+//
+// Spread the result into any templ element to annotate it with its component
+// name, making it easy to identify components in browser DevTools:
+//
+//	templ Button(...) {
+//	    <button { devmode.Attrs(ctx, "ui/Button")... }>
+//	        { children... }
+//	    </button>
+//	}
+func Attrs(ctx context.Context, name string) templ.Attributes {
+	if !IsDevMode(ctx) {
+		return emptyAttrs
+	}
+	return templ.Attributes{"data-component": name}
 }
 
 // ComponentBoundary wraps inner with a display:contents <div> annotated with
@@ -71,9 +94,11 @@ func ComponentBoundary(name string, props any, inner templ.Component) templ.Comp
 		// Emit the opening wrapper. display:contents makes the div invisible to
 		// layout engines (flexbox, grid) while preserving its presence in the DOM
 		// so DevTools and JavaScript can query [data-component] freely.
+		// Use HTML-escaped attribute values so JSON containing " characters is
+		// preserved correctly when read back via getAttribute() in the browser.
 		if _, err := fmt.Fprintf(w,
-			`<div data-component=%q data-props=%q style="display:contents">`,
-			name, string(propsJSON),
+			`<div data-component="%s" data-props="%s" style="display:contents">`,
+			html.EscapeString(name), html.EscapeString(string(propsJSON)),
 		); err != nil {
 			return err
 		}
@@ -107,7 +132,10 @@ func ElementBoundary(name string, props any, inner templ.Component) templ.Compon
 		if err != nil {
 			propsJSON = []byte("null")
 		}
-		attrs := fmt.Sprintf(` data-component=%q data-props=%q`, name, string(propsJSON))
+		// Use HTML-escaped attribute values so JSON containing " characters is
+		// preserved correctly when read back via getAttribute() in the browser.
+		attrs := fmt.Sprintf(` data-component="%s" data-props="%s"`,
+			html.EscapeString(name), html.EscapeString(string(propsJSON)))
 
 		// Render the inner component into a buffer so we can inject attributes
 		// into the first opening tag before forwarding to the real writer.
@@ -118,19 +146,19 @@ func ElementBoundary(name string, props any, inner templ.Component) templ.Compon
 
 		// Find the first '>' and insert the attributes just before it,
 		// after any existing attributes on the tag.
-		html := buf.String()
-		idx := strings.Index(html, ">")
+		raw := buf.String()
+		idx := strings.Index(raw, ">")
 		if idx < 0 {
 			// Shouldn't happen for well-formed templ output; fall through.
-			_, err = io.WriteString(w, html)
+			_, err = io.WriteString(w, raw)
 			return err
 		}
 		// Handle self-closing tags: don't inject before '/>'
 		insert := idx
-		if insert > 0 && html[insert-1] == '/' {
+		if insert > 0 && raw[insert-1] == '/' {
 			insert--
 		}
-		annotated := html[:insert] + attrs + html[insert:]
+		annotated := raw[:insert] + attrs + raw[insert:]
 		_, err = io.WriteString(w, annotated)
 		return err
 	})

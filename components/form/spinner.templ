@@ -1,10 +1,12 @@
 package form
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // InputSpinner renders a numeric increment/decrement input with +/− buttons.
 // It includes a small inline <script> to handle button clicks — no library needed.
 // id must be unique on the page.
 templ InputSpinner(id string, value int, min int, max int, hasMinMax bool, btnClass string, inputClass string) {
-	<div class="flex items-center gap-3">
+	<div class="flex items-center gap-3" { devmode.Attrs(ctx, "form/InputSpinner")... }>
 		<button
 			type="button"
 			class={ "btn btn-square", btnClass }

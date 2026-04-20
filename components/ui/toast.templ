@@ -1,5 +1,7 @@
 package ui
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // ToastType maps to a DaisyUI alert class.
 type ToastType string
 
@@ -45,6 +47,7 @@ templ Toast(typ ToastType, message string) {
 		class={ "alert text-sm shadow-md toast-auto-dismiss", string(typ) }
 		role="alert"
 		data-duration="4000"
+		{ devmode.Attrs(ctx, "ui/Toast")... }
 	>
 		<span>{ message }</span>
 	</div>
@@ -52,7 +55,7 @@ templ Toast(typ ToastType, message string) {
 
 // ToastOOB renders a toast using HTMX out-of-band swap to append to #toast-container.
 templ ToastOOB(typ ToastType, message string) {
-	<div hx-swap-oob="beforeend:#toast-container">
+	<div hx-swap-oob="beforeend:#toast-container" { devmode.Attrs(ctx, "ui/ToastOOB")... }>
 		@Toast(typ, message)
 	</div>
 }

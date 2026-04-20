@@ -1,8 +1,10 @@
 package nav
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // TopBar renders the page title + primary action button row at the top of a content area.
 templ TopBar(title string) {
-	<div class="flex items-center justify-between px-4 py-4 bg-base-100 border-b border-base-200">
+	<div class="flex items-center justify-between px-4 py-4 bg-base-100 border-b border-base-200" { devmode.Attrs(ctx, "nav/TopBar")... }>
 		<h1 class="text-xl font-semibold text-base-content">{ title }</h1>
 		<div class="flex items-center gap-2">
 			{ children... }

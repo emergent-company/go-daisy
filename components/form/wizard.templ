@@ -1,5 +1,7 @@
 package form
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // WizardStep holds data for one step in the wizard indicator.
 type WizardStep struct {
 	// Label is the step name shown next to the dot (hidden on small screens).
@@ -18,7 +20,7 @@ type WizardStepPanel struct {
 // next/prev navigation, and a finish action. Implemented with vanilla JS.
 // id must be unique on the page when multiple wizards are embedded.
 templ WizardStepper(id string, steps []WizardStep, panels []WizardStepPanel) {
-	<div class="max-w-lg mx-auto" id={ id }>
+	<div class="max-w-lg mx-auto" id={ id } { devmode.Attrs(ctx, "form/WizardStepper")... }>
 		<!-- Step indicator -->
 		<div class="flex items-center gap-2 mb-6">
 			for i, step := range steps {

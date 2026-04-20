@@ -44,6 +44,7 @@ func newGalleryHandler(title string, logo templ.Component, components []GalleryC
 func (h *galleryHandler) register(e *echo.Echo) {
 	e.GET("/gallery", h.handleIndex)
 	e.GET("/gallery/render/:slug", h.handleRender)
+	e.GET("/gallery/render/:slug/examples", h.handleRenderSubExample)
 	e.GET("/gallery/render/:slug/:variant", h.handleRenderVariant)
 	e.GET("/gallery/:slug", h.handleDetail)
 
@@ -131,6 +132,33 @@ func (h *galleryHandler) handleRender(c echo.Context) error {
 	}
 
 	return echo.NewHTTPError(http.StatusNotFound, "component has no renderable content")
+}
+
+// handleRenderSubExample renders an individual sub-example (from GallerySubExample)
+// as a standalone iframe page. The story index and sub-example index are passed
+// via query params: ?s=<storyIdx>&e=<subExampleIdx>.
+func (h *galleryHandler) handleRenderSubExample(c echo.Context) error {
+	slug := c.Param("slug")
+	comp, ok := ComponentBySlug(h.components, slug)
+	if !ok {
+		return echo.NewHTTPError(http.StatusNotFound, "component not found")
+	}
+
+	si, _ := strconv.Atoi(c.QueryParam("s"))
+	ei, _ := strconv.Atoi(c.QueryParam("e"))
+
+	variants := comp.EffectiveVariants()
+	if si < 0 || si >= len(variants) {
+		return echo.NewHTTPError(http.StatusNotFound, "story index out of range")
+	}
+	story := variants[si]
+	if ei < 0 || ei >= len(story.SubExamples) {
+		return echo.NewHTTPError(http.StatusNotFound, "sub-example index out of range")
+	}
+	sub := story.SubExamples[ei]
+
+	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
+	return h.renderTemplPage(c, h.baseURL(c), sub.RenderFunc(c.Request().URL.Query()))
 }
 
 // handleRenderVariant renders a specific named variant/story of a component.

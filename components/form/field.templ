@@ -1,6 +1,10 @@
 package form
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // FormFieldType identifies the type of input to render in a FormField.
 type FormFieldType string
@@ -33,7 +37,7 @@ type FormFieldProps struct {
 
 // Field wraps a label + input + error message into a form group.
 templ Field(label string, name string, errMsg string) {
-	<div class="form-control mb-3">
+	<div class="form-control mb-3" { devmode.Attrs(ctx, "form/Field")... }>
 		if label != "" {
 			<label class="label pb-1" for={ name }>
 				<span class="label-text font-medium text-sm text-base-content/70">{ label }</span>
@@ -51,9 +55,9 @@ templ Field(label string, name string, errMsg string) {
 // FormField renders a form field based on FormFieldProps.
 templ FormField(props FormFieldProps) {
 	if props.Type == FieldHidden {
-		<input type="hidden" name={ props.Name } value={ props.Value }/>
+		<input type="hidden" name={ props.Name } value={ props.Value } { devmode.Attrs(ctx, "form/FormField")... }/>
 	} else if props.Type == FieldCheckbox {
-		<div class="form-control mb-3">
+		<div class="form-control mb-3" { devmode.Attrs(ctx, "form/FormField")... }>
 			<label class="label cursor-pointer justify-start gap-3">
 				<input
 					id={ props.Name }
@@ -136,6 +140,7 @@ templ Input(name string, value string, placeholder string, hasError bool) {
 		placeholder={ placeholder }
 		class={ "input input-bordered w-full",
 			templ.KV("input-error", hasError) }
+		{ devmode.Attrs(ctx, "form/Input")... }
 	/>
 }
 
@@ -148,6 +153,7 @@ templ PasswordInput(name string, placeholder string, hasError bool) {
 		placeholder={ placeholder }
 		class={ "input input-bordered w-full",
 			templ.KV("input-error", hasError) }
+		{ devmode.Attrs(ctx, "form/PasswordInput")... }
 	/>
 }
 
@@ -160,6 +166,7 @@ templ Textarea(name string, value string, placeholder string, rows int, hasError
 		rows={ strconv.Itoa(rows) }
 		class={ "textarea textarea-bordered w-full",
 			templ.KV("textarea-error", hasError) }
+		{ devmode.Attrs(ctx, "form/Textarea")... }
 	>{ value }</textarea>
 }
 
@@ -170,6 +177,7 @@ templ Select(name string, hasError bool) {
 		name={ name }
 		class={ "select select-bordered w-full",
 			templ.KV("select-error", hasError) }
+		{ devmode.Attrs(ctx, "form/Select")... }
 	>
 		{ children... }
 	</select>

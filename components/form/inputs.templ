@@ -1,6 +1,10 @@
 package form
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // TextInput renders a labeled text input with error support.
 templ TextInput(name string, label string, value string, errMsg string, required bool) {
@@ -31,7 +35,7 @@ templ TextareaInput(name string, label string, value string, errMsg string, rows
 
 // CheckboxInput renders a labeled checkbox.
 templ CheckboxInput(name string, label string, checked bool, errMsg string) {
-	<div class="form-control mb-3">
+	<div class="form-control mb-3" { devmode.Attrs(ctx, "form/CheckboxInput")... }>
 		<label class="label cursor-pointer justify-start gap-3">
 			<input
 				id={ name }
@@ -52,7 +56,7 @@ templ CheckboxInput(name string, label string, checked bool, errMsg string) {
 
 // FormActions renders a flex-end footer for form action buttons.
 templ FormActions() {
-	<div class="flex justify-end gap-2 pt-2">
+	<div class="flex justify-end gap-2 pt-2" { devmode.Attrs(ctx, "form/FormActions")... }>
 		{ children... }
 	</div>
 }
@@ -74,7 +78,7 @@ templ FormActionsWithLoading(submitText string, indicatorID string) {
 
 // SearchInput renders a text input with HTMX search debounce.
 templ SearchInput(name string, value string, placeholder string, hxTarget string, hxGet string) {
-	<label class="input input-sm w-full flex items-center gap-2">
+	<label class="input input-sm w-full flex items-center gap-2" { devmode.Attrs(ctx, "form/SearchInput")... }>
 		<span class="iconify lucide--search size-4 opacity-50 shrink-0"></span>
 		<input
 			type="search"
@@ -99,12 +103,13 @@ templ DateInput(name string, value string, hasError bool) {
 		value={ value }
 		class={ "input input-bordered w-full",
 			templ.KV("input-error", hasError) }
+		{ devmode.Attrs(ctx, "form/DateInput")... }
 	/>
 }
 
 // Checkbox renders a DaisyUI checkbox.
 templ Checkbox(name string, checked bool, label string) {
-	<label class="cursor-pointer label justify-start gap-3">
+	<label class="cursor-pointer label justify-start gap-3" { devmode.Attrs(ctx, "form/Checkbox")... }>
 		<input
 			type="checkbox"
 			name={ name }
@@ -119,7 +124,7 @@ templ Checkbox(name string, checked bool, label string) {
 
 // Toggle renders a DaisyUI toggle switch.
 templ Toggle(name string, checked bool, label string) {
-	<label class="cursor-pointer label justify-start gap-3">
+	<label class="cursor-pointer label justify-start gap-3" { devmode.Attrs(ctx, "form/Toggle")... }>
 		<input
 			type="checkbox"
 			name={ name }
@@ -135,7 +140,7 @@ templ Toggle(name string, checked bool, label string) {
 // FieldError renders a standalone field error message.
 templ FieldError(errMsg string) {
 	if errMsg != "" {
-		<div class="label pt-1">
+		<div class="label pt-1" { devmode.Attrs(ctx, "form/FieldError")... }>
 			<span class="label-text-alt text-error">{ errMsg }</span>
 		</div>
 	}

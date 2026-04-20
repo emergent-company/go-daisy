@@ -283,26 +283,32 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				},
 				{
 					Name:        "Examples",
-					Description: "All alert types shown together.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="flex flex-col gap-3 p-6">`); err != nil {
-								return err
-							}
-							alerts := []templ.Component{
-								ui.Alert(ui.AlertSuccess, "lucide--circle-check", "Your changes have been saved successfully."),
-								ui.Alert(ui.AlertError, "lucide--circle-x", "Something went wrong. Please try again."),
-								ui.Alert(ui.AlertWarning, "lucide--triangle-alert", "Your session will expire in 5 minutes."),
-								ui.Alert(ui.AlertInfo, "lucide--info", "A new software update is available."),
-							}
-							for _, a := range alerts {
-								if err := a.Render(ctx, w); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					Description: "All alert types shown individually.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Success",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.AlertWithBoundary(ui.AlertSuccess, "lucide--circle-check", "Your changes have been saved successfully.")
+							},
+						},
+						{
+							Label: "Error",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.AlertWithBoundary(ui.AlertError, "lucide--circle-x", "Something went wrong. Please try again.")
+							},
+						},
+						{
+							Label: "Warning",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.AlertWithBoundary(ui.AlertWarning, "lucide--triangle-alert", "Your session will expire in 5 minutes.")
+							},
+						},
+						{
+							Label: "Info",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.AlertWithBoundary(ui.AlertInfo, "lucide--info", "A new software update is available.")
+							},
+						},
 					},
 				},
 			},
@@ -337,26 +343,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Filter tabs with different selections.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">All selected</p>`); err != nil {
-								return err
-							}
-							if err := ui.FilterTabs("filter1", "All", []string{"All", "Active", "Pending", "Closed"}).Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Active selected</p>`); err != nil {
-								return err
-							}
-							if err := ui.FilterTabs("filter2", "Active", []string{"All", "Active", "Pending", "Closed"}).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div></div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "All selected",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.FilterTabsWithBoundary("filter1", "All", []string{"All", "Active", "Pending", "Closed"})
+							},
+						},
+						{
+							Label: "Active selected",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.FilterTabsWithBoundary("filter2", "Active", []string{"All", "Active", "Pending", "Closed"})
+							},
+						},
 					},
 				},
 			},
@@ -398,26 +397,32 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				},
 				{
 					Name:        "Examples",
-					Description: "Checkboxes and toggles together.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 flex flex-col gap-4 max-w-sm mx-auto">`); err != nil {
-								return err
-							}
-							comps := []templ.Component{
-								form.CheckboxWithBoundary("n1", true, "Receive email notifications"),
-								form.CheckboxWithBoundary("n2", false, "Subscribe to newsletter"),
-								form.ToggleWithBoundary("dark", true, "Dark mode"),
-								form.ToggleWithBoundary("autosave", false, "Auto-save"),
-							}
-							for _, c := range comps {
-								if err := c.Render(ctx, w); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					Description: "Checkboxes and toggles in checked and unchecked states.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Checkbox (checked)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.CheckboxWithBoundary("n1", true, "Receive email notifications")
+							},
+						},
+						{
+							Label: "Checkbox (unchecked)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.CheckboxWithBoundary("n2", false, "Subscribe to newsletter")
+							},
+						},
+						{
+							Label: "Toggle (on)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.ToggleWithBoundary("dark", true, "Dark mode")
+							},
+						},
+						{
+							Label: "Toggle (off)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.ToggleWithBoundary("autosave", false, "Auto-save")
+							},
+						},
 					},
 				},
 			},
@@ -448,26 +453,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Radio groups with different colors.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						opts := [][2]string{{"opt1", "Option 1"}, {"opt2", "Option 2"}, {"opt3", "Option 3"}}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
-								return err
-							}
-							for _, color := range []string{"radio-primary", "radio-secondary", "radio-accent"} {
-								if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">`+color+`</p>`); err != nil {
-									return err
-								}
-								if err := form.RadioGroup("radio-"+color, "opt1", opts, color).Render(ctx, w); err != nil {
-									return err
-								}
-								if _, err := io.WriteString(w, `</div>`); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Primary",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.RadioGroupWithBoundary("radio-primary", "opt1", [][2]string{{"opt1", "Option 1"}, {"opt2", "Option 2"}, {"opt3", "Option 3"}}, "radio-primary")
+							},
+						},
+						{
+							Label: "Secondary",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.RadioGroupWithBoundary("radio-secondary", "opt1", [][2]string{{"opt1", "Option 1"}, {"opt2", "Option 2"}, {"opt3", "Option 3"}}, "radio-secondary")
+							},
+						},
+						{
+							Label: "Accent",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.RadioGroupWithBoundary("radio-accent", "opt1", [][2]string{{"opt1", "Option 1"}, {"opt2", "Option 2"}, {"opt3", "Option 3"}}, "radio-accent")
+							},
+						},
 					},
 				},
 			},
@@ -506,26 +510,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Star and heart rating shapes at different values.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Stars (3/5)</p>`); err != nil {
-								return err
-							}
-							if err := form.Rating("r1", 3, 5, form.RatingStar, "rating-warning", "").Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Hearts (4/5)</p>`); err != nil {
-								return err
-							}
-							if err := form.Rating("r2", 4, 5, form.RatingHeart, "rating-error", "").Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div></div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Stars (3/5)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.RatingWithBoundary("r1", 3, 5, form.RatingStar, "rating-warning", "")
+							},
+						},
+						{
+							Label: "Hearts (4/5)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.RatingWithBoundary("r2", 4, 5, form.RatingHeart, "rating-error", "")
+							},
+						},
 					},
 				},
 			},
@@ -553,26 +550,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Horizontal and vertical dividers.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 flex flex-col gap-4 max-w-sm mx-auto">`); err != nil {
-								return err
-							}
-							if err := withText("OR", ui.Divider(ui.DividerDefault, false)).Render(ctx, w); err != nil {
-								return err
-							}
-							if err := withText("Primary", ui.Divider(ui.DividerPrimary, false)).Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `<div class="flex h-20 items-center gap-4"><span class="text-sm">Left</span>`); err != nil {
-								return err
-							}
-							if err := ui.Divider(ui.DividerDefault, true).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `<span class="text-sm">Right</span></div></div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Default (OR)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.DividerWithBoundary(ui.DividerDefault, false, "OR")
+							},
+						},
+						{
+							Label: "Primary",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.DividerWithBoundary(ui.DividerPrimary, false, "Primary")
+							},
+						},
+						{
+							Label: "Vertical",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.DividerWithBoundary(ui.DividerDefault, true, "")
+							},
+						},
 					},
 				},
 			},
@@ -600,47 +596,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Various keyboard shortcut combinations.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="flex flex-wrap gap-4 p-6 items-center justify-center">`); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `<div class="flex items-center gap-1 text-sm">Press `); err != nil {
-								return err
-							}
-							if err := withText("⌘", ui.Kbd(ui.KbdSM)).Render(ctx, w); err != nil {
-								return err
-							}
-							if err := withText("K", ui.Kbd(ui.KbdSM)).Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, ` to search</div>`); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `<div class="flex items-center gap-1">`); err != nil {
-								return err
-							}
-							if err := withText("Ctrl", ui.Kbd(ui.KbdSM)).Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `<span class="text-sm">+</span>`); err != nil {
-								return err
-							}
-							if err := withText("S", ui.Kbd(ui.KbdSM)).Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `</div>`); err != nil {
-								return err
-							}
-							if err := withText("Enter", ui.Kbd(ui.KbdLG)).Render(ctx, w); err != nil {
-								return err
-							}
-							if err := withText("Esc", ui.Kbd(ui.KbdXS)).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "⌘K search",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.KbdWithBoundary(ui.KbdSM, "⌘K")
+							},
+						},
+						{
+							Label: "Ctrl+S",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.KbdWithBoundary(ui.KbdSM, "Ctrl+S")
+							},
+						},
+						{
+							Label: "Enter (large)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.KbdWithBoundary(ui.KbdLG, "Enter")
+							},
+						},
+						{
+							Label: "Esc (xs)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.KbdWithBoundary(ui.KbdXS, "Esc")
+							},
+						},
 					},
 				},
 			},
@@ -675,30 +655,43 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Progress bars in all DaisyUI color variants.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-4">`); err != nil {
-								return err
-							}
-							type item struct {
-								color ui.ProgressColor
-								val   int
-							}
-							for _, it := range []item{
-								{ui.ProgressPrimary, 40},
-								{ui.ProgressSecondary, 60},
-								{ui.ProgressSuccess, 75},
-								{ui.ProgressSuccess, 90},
-								{ui.ProgressError, 25},
-								{ui.ProgressWarning, 50},
-							} {
-								if err := ui.Progress(it.color, it.val, 100).Render(ctx, w); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Primary (40%)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ProgressWithBoundary(ui.ProgressPrimary, 40, 100)
+							},
+						},
+						{
+							Label: "Secondary (60%)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ProgressWithBoundary(ui.ProgressSecondary, 60, 100)
+							},
+						},
+						{
+							Label: "Success (75%)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ProgressWithBoundary(ui.ProgressSuccess, 75, 100)
+							},
+						},
+						{
+							Label: "Success (90%)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ProgressWithBoundary(ui.ProgressSuccess, 90, 100)
+							},
+						},
+						{
+							Label: "Error (25%)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ProgressWithBoundary(ui.ProgressError, 25, 100)
+							},
+						},
+						{
+							Label: "Warning (50%)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ProgressWithBoundary(ui.ProgressWarning, 50, 100)
+							},
+						},
 					},
 				},
 			},
@@ -726,35 +719,28 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Horizontal and vertical step trackers.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">2 of 4 done</p>`); err != nil {
-								return err
-							}
-							if err := ui.StepsWithBoundary([]ui.StepProps{
-								{Label: "Register", Done: true},
-								{Label: "Profile", Done: true},
-								{Label: "Billing", Done: false},
-								{Label: "Confirm", Done: false},
-							}).Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">All complete</p>`); err != nil {
-								return err
-							}
-							if err := ui.StepsWithBoundary([]ui.StepProps{
-								{Label: "Draft", Done: true},
-								{Label: "Review", Done: true},
-								{Label: "Published", Done: true},
-							}).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div></div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "2 of 4 done",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StepsWithBoundary([]ui.StepProps{
+									{Label: "Register", Done: true},
+									{Label: "Profile", Done: true},
+									{Label: "Billing", Done: false},
+									{Label: "Confirm", Done: false},
+								})
+							},
+						},
+						{
+							Label: "All complete",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StepsWithBoundary([]ui.StepProps{
+									{Label: "Draft", Done: true},
+									{Label: "Review", Done: true},
+									{Label: "Published", Done: true},
+								})
+							},
+						},
 					},
 				},
 			},
@@ -1555,36 +1541,38 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				},
 				{
 					Name:        "Examples",
-					Description: "All status colors.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="flex flex-wrap gap-6 p-6 items-center justify-center">`); err != nil {
-								return err
-							}
-							items := []struct {
-								color ui.StatusColor
-								label string
-							}{
-								{ui.StatusSuccess, "Online"},
-								{ui.StatusError, "Offline"},
-								{ui.StatusWarning, "Away"},
-								{ui.StatusInfo, "Busy"},
-								{ui.StatusNeutral, "Unknown"},
-							}
-							for _, item := range items {
-								if _, err := io.WriteString(w, `<div class="flex items-center gap-2 text-sm">`); err != nil {
-									return err
-								}
-								if err := ui.StatusDot(item.color, false).Render(ctx, w); err != nil {
-									return err
-								}
-								if _, err := io.WriteString(w, " "+item.label+`</div>`); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					Description: "All status colors, each with a labeled dot.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Online (Success)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return row(ui.StatusDotWithBoundary(ui.StatusSuccess, false))
+							},
+						},
+						{
+							Label: "Offline (Error)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return row(ui.StatusDotWithBoundary(ui.StatusError, false))
+							},
+						},
+						{
+							Label: "Away (Warning)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return row(ui.StatusDotWithBoundary(ui.StatusWarning, false))
+							},
+						},
+						{
+							Label: "Busy (Info)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return row(ui.StatusDotWithBoundary(ui.StatusInfo, false))
+							},
+						},
+						{
+							Label: "Unknown (Neutral)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return row(ui.StatusDotWithBoundary(ui.StatusNeutral, false))
+							},
+						},
 					},
 				},
 			},
@@ -1991,27 +1979,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Multiple removable and read-only tags.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-4"><div class="flex flex-wrap gap-2">`); err != nil {
-								return err
-							}
-							for _, label := range []string{"Contract Law", "Family Law", "Civil Litigation"} {
-								if err := ui.Tag(label, "#").Render(ctx, w); err != nil {
-									return err
-								}
-							}
-							if _, err := io.WriteString(w, `</div><p class="text-xs text-base-content/50">Read-only (no remove link):</p><div class="flex flex-wrap gap-2">`); err != nil {
-								return err
-							}
-							for _, label := range []string{"Contract Law", "Family Law", "Civil Litigation"} {
-								if err := ui.Tag(label, "").Render(ctx, w); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div></div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Removable",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.TagWithBoundary("Contract Law", "#")
+							},
+						},
+						{
+							Label: "Read-only",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.TagWithBoundary("Family Law", "")
+							},
+						},
 					},
 				},
 			},
@@ -2271,170 +2251,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 
-		// ── Data Display extras ────────────────────────────────────────────────
-		{
-			Slug:        "table-with-actions",
-			Name:        "With Actions",
-			Category:    galleryruntime.CategoryDataDisplay,
-			Subcategory: "Tables",
-			Description: "Full-featured table with sortable headers, status badges, avatars, and an action menu (ellipsis dropdown) per row.",
-			Variants: []galleryruntime.GalleryStory{
-				{
-					Name:        "Interactive",
-					Description: "Configurable row count and pagination state.",
-					RenderFunc: func(params url.Values) templ.Component {
-						page := 1
-						if v, err := parseInt(params.Get("page")); err == nil && v > 0 {
-							page = v
-						}
-						allRows := []table.TableWithActionsRow{
-							{Name: "Alice Johnson", Status: "active", Role: "Admin", Joined: "2024-01-15"},
-							{Name: "Bob Smith", Status: "pending", Role: "Employee", Joined: "2024-03-02"},
-							{Name: "Carol White", Status: "closed", Role: "Employee", Joined: "2023-11-20"},
-							{Name: "David Kim", Status: "active", Role: "Viewer", Joined: "2024-06-10"},
-							{Name: "Eve Martinez", Status: "pending", Role: "Employee", Joined: "2024-08-22"},
-						}
-						rowCount := 3
-						if v, err := parseInt(params.Get("rows")); err == nil && v >= 1 && v <= 5 {
-							rowCount = v
-						}
-						rows := allRows[:rowCount]
-						return table.TableWithActionsWithBoundary(table.TableWithActionsProps{
-							Rows:        rows,
-							TotalCount:  47,
-							CurrentPage: page,
-							TotalPages:  3,
-						})
-					},
-					Tokens: []galleryruntime.DesignToken{
-						{Label: "Visible rows", Group: "Data", Type: galleryruntime.TokenTypeSelect, Default: "3", QueryParam: "rows", Options: []galleryruntime.TokenOption{
-							{Value: "1", Label: "1"},
-							{Value: "2", Label: "2"},
-							{Value: "3", Label: "3"},
-							{Value: "4", Label: "4"},
-							{Value: "5", Label: "5"},
-						}},
-						{Label: "Current page", Group: "Pagination", Type: galleryruntime.TokenTypeSelect, Default: "1", QueryParam: "page", Options: []galleryruntime.TokenOption{
-							{Value: "1", Label: "Page 1"},
-							{Value: "2", Label: "Page 2"},
-							{Value: "3", Label: "Page 3"},
-						}},
-					},
-				},
-				{
-					Name:        "Examples",
-					Description: "Three rows with avatar, status badge, role, and ellipsis action dropdown.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return table.TableWithActions(table.TableWithActionsProps{
-							Rows: []table.TableWithActionsRow{
-								{Name: "Alice Johnson", Status: "active", Role: "Admin", Joined: "2024-01-15"},
-								{Name: "Bob Smith", Status: "pending", Role: "Employee", Joined: "2024-03-02"},
-								{Name: "Carol White", Status: "closed", Role: "Employee", Joined: "2023-11-20"},
-							},
-							TotalCount:  47,
-							CurrentPage: 1,
-							TotalPages:  3,
-						})
-					},
-					Tokens: []galleryruntime.DesignToken{},
-				},
-			},
-		},
-		{
-			Slug:        "table-empty",
-			Name:        "Table — Empty State",
-			Category:    galleryruntime.CategoryDataDisplay,
-			Subcategory: "Tables",
-			Description: "Full-width empty-state row inside a tbody when the list has no items.",
-			Variants: []galleryruntime.GalleryStory{
-				{
-					Name:        "Interactive",
-					Description: "Empty state row with configurable message and column span.",
-					RenderFunc: func(params url.Values) templ.Component {
-						message := params.Get("message")
-						if message == "" {
-							message = "No records found."
-						}
-						cols, _ := parseInt(params.Get("cols"))
-						if cols == 0 {
-							cols = 3
-						}
-						tableContent := seq(
-							withChildren(
-								table.TableHeadWithBoundary(),
-								withChildren(
-									table.TableHeadRowWithBoundary(),
-									func() templ.Component {
-										headers := []string{"Name", "Status", "Role"}[:cols]
-										comps := make([]templ.Component, 0, len(headers))
-										for _, h := range headers {
-											comps = append(comps, table.TableHeadCellWithBoundary(h))
-										}
-										return seq(comps...)
-									}(),
-								),
-							),
-							withChildren(
-								table.TableBodyWithBoundary(),
-								table.TableEmpty(cols, message),
-							),
-						)
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6">`); err != nil {
-								return err
-							}
-							if err := withChildren(table.TableWithBoundary(), tableContent).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
-					},
-					Tokens: []galleryruntime.DesignToken{
-						{Label: "Message", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "No records found.", QueryParam: "message"},
-						{Label: "Columns", Group: "Layout", Type: galleryruntime.TokenTypeSelect, Default: "3", QueryParam: "cols", Options: []galleryruntime.TokenOption{
-							{Value: "2", Label: "2"},
-							{Value: "3", Label: "3"},
-							{Value: "4", Label: "4"},
-						}},
-					},
-				},
-				{
-					Name:        "Examples",
-					Description: "Empty state spanning 3 columns inside a zebra-striped table.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						tableContent := seq(
-							withChildren(
-								table.TableHeadWithBoundary(),
-								withChildren(
-									table.TableHeadRowWithBoundary(),
-									seq(
-										table.TableHeadCellWithBoundary("Name"),
-										table.TableHeadCellWithBoundary("Status"),
-										table.TableHeadCellWithBoundary("Role"),
-									),
-								),
-							),
-							withChildren(
-								table.TableBodyWithBoundary(),
-								table.TableEmpty(3, "No records found."),
-							),
-						)
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6">`); err != nil {
-								return err
-							}
-							if err := withChildren(table.TableWithBoundary(), tableContent).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
-					},
-					Tokens: []galleryruntime.DesignToken{},
-				},
-			},
-		},
 		{
 			Slug:        "progress-card",
 			Name:        "Progress Card",
@@ -2475,37 +2291,36 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				},
 				{
 					Name:        "Examples",
-					Description: "Full gradient header card and a compact horizontal inline variant.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-4 max-w-lg">`); err != nil {
-								return err
-							}
-							if err := ui.ProgressCard(ui.ProgressCardProps{
-								Title:         "Case Compliance",
-								Subtitle:      "Johnson v. Smith",
-								ProgressValue: 72,
-								ProgressLabel: "72%",
-								GradientClass: "bg-gradient-to-r from-primary/10 to-primary/5",
-								Stats: []ui.ProgressStat{
-									{Label: "Tasks", Value: "18 / 25"},
-									{Label: "Documents", Value: "12 / 15"},
-									{Label: "Due", Value: "Apr 30"},
-								},
-							}).Render(ctx, w); err != nil {
-								return err
-							}
-							if err := ui.ProgressCard(ui.ProgressCardProps{
-								Title:         "Document Review",
-								Subtitle:      "3 of 8 complete",
-								ProgressValue: 38,
-								Horizontal:    true,
-							}).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					Description: "Vertical with stats and compact horizontal variant.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Vertical with stats",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ProgressCardWithBoundary(ui.ProgressCardProps{
+									Title:         "Case Compliance",
+									Subtitle:      "Johnson v. Smith",
+									ProgressValue: 72,
+									ProgressLabel: "72%",
+									GradientClass: "bg-gradient-to-r from-primary/10 to-primary/5",
+									Stats: []ui.ProgressStat{
+										{Label: "Tasks", Value: "18 / 25"},
+										{Label: "Documents", Value: "12 / 15"},
+										{Label: "Due", Value: "Apr 30"},
+									},
+								})
+							},
+						},
+						{
+							Label: "Horizontal (compact)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ProgressCardWithBoundary(ui.ProgressCardProps{
+									Title:         "Document Review",
+									Subtitle:      "3 of 8 complete",
+									ProgressValue: 38,
+									Horizontal:    true,
+								})
+							},
+						},
 					},
 					Tokens: []galleryruntime.DesignToken{},
 				},
@@ -2569,42 +2384,57 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				},
 				{
 					Name:        "Examples",
-					Description: "Minimal style (no icon) and icon-corner style grids.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						minimalItems := []ui.StatCardMinimalItem{
-							{Label: "Open Cases", Value: "142", Trend: ui.StatTrendUp, TrendLabel: "12.3%"},
-							{Label: "Pending Tasks", Value: "38", Trend: ui.StatTrendDown, TrendLabel: "4.1%"},
-							{Label: "Clients", Value: "89", Trend: ui.StatTrendUp, TrendLabel: "7.8%"},
-							{Label: "Avg. Case Days", Value: "24", Trend: ui.StatTrendUp, TrendLabel: "2.5%"},
-						}
-						iconItems := []ui.StatCardMinimalItem{
-							{Value: "142", Label: "Open Cases", Trend: ui.StatTrendUp, TrendLabel: "14.6%", Icon: "lucide--briefcase", IconColor: "text-primary"},
-							{Value: "38", Label: "Pending Tasks", Trend: ui.StatTrendDown, TrendLabel: "4.1%", Icon: "lucide--check-square", IconColor: "text-warning"},
-							{Value: "89", Label: "Active Clients", Trend: ui.StatTrendUp, TrendLabel: "7.8%", Icon: "lucide--users", IconColor: "text-success"},
-							{Value: "$48K", Label: "Revenue (MTD)", Trend: ui.StatTrendUp, TrendLabel: "9.2%", Icon: "lucide--dollar-sign", IconColor: "text-secondary"},
-						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-8"><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Minimal (no icon)</p><div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">`); err != nil {
-								return err
-							}
-							for _, item := range minimalItems {
-								if err := ui.StatCardMinimal(item).Render(ctx, w); err != nil {
-									return err
-								}
-							}
-							if _, err := io.WriteString(w, `</div></div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Icon corner</p><div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">`); err != nil {
-								return err
-							}
-							for _, item := range iconItems {
-								if err := ui.StatCardMinimal(item).Render(ctx, w); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div></div></div>`)
-							return err
-						})
+					Description: "Minimal style (no icon) and icon-corner style variants.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Minimal — Open Cases",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardMinimalWithBoundary(ui.StatCardMinimalItem{Label: "Open Cases", Value: "142", Trend: ui.StatTrendUp, TrendLabel: "12.3%"})
+							},
+						},
+						{
+							Label: "Minimal — Pending Tasks",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardMinimalWithBoundary(ui.StatCardMinimalItem{Label: "Pending Tasks", Value: "38", Trend: ui.StatTrendDown, TrendLabel: "4.1%"})
+							},
+						},
+						{
+							Label: "Minimal — Clients",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardMinimalWithBoundary(ui.StatCardMinimalItem{Label: "Clients", Value: "89", Trend: ui.StatTrendUp, TrendLabel: "7.8%"})
+							},
+						},
+						{
+							Label: "Minimal — Avg. Case Days",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardMinimalWithBoundary(ui.StatCardMinimalItem{Label: "Avg. Case Days", Value: "24", Trend: ui.StatTrendUp, TrendLabel: "2.5%"})
+							},
+						},
+						{
+							Label: "Icon corner — Open Cases",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardMinimalWithBoundary(ui.StatCardMinimalItem{Value: "142", Label: "Open Cases", Trend: ui.StatTrendUp, TrendLabel: "14.6%", Icon: "lucide--briefcase", IconColor: "text-primary"})
+							},
+						},
+						{
+							Label: "Icon corner — Pending Tasks",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardMinimalWithBoundary(ui.StatCardMinimalItem{Value: "38", Label: "Pending Tasks", Trend: ui.StatTrendDown, TrendLabel: "4.1%", Icon: "lucide--check-square", IconColor: "text-warning"})
+							},
+						},
+						{
+							Label: "Icon corner — Active Clients",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardMinimalWithBoundary(ui.StatCardMinimalItem{Value: "89", Label: "Active Clients", Trend: ui.StatTrendUp, TrendLabel: "7.8%", Icon: "lucide--users", IconColor: "text-success"})
+							},
+						},
+						{
+							Label: "Icon corner — Revenue (MTD)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardMinimalWithBoundary(ui.StatCardMinimalItem{Value: "$48K", Label: "Revenue (MTD)", Trend: ui.StatTrendUp, TrendLabel: "9.2%", Icon: "lucide--dollar-sign", IconColor: "text-secondary"})
+							},
+						},
 					},
-					Tokens: []galleryruntime.DesignToken{},
 				},
 			},
 		},
@@ -2632,32 +2462,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Skeleton loaders for text, avatar, and card patterns.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Text line</p>`); err != nil {
-								return err
-							}
-							if err := ui.SkeletonWithBoundary("h-4 w-48").Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Avatar circle</p>`); err != nil {
-								return err
-							}
-							if err := ui.SkeletonWithBoundary("size-16 rounded-full").Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Card</p>`); err != nil {
-								return err
-							}
-							if err := ui.SkeletonWithBoundary("h-32 w-full").Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div></div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Text line",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.SkeletonWithBoundary("h-4 w-48")
+							},
+						},
+						{
+							Label: "Avatar circle",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.SkeletonWithBoundary("size-16 rounded-full")
+							},
+						},
+						{
+							Label: "Card",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.SkeletonWithBoundary("h-32 w-full")
+							},
+						},
 					},
 				},
 			},
@@ -2711,12 +2534,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Section headers with different titles.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return seq(
-							ui.SectionHeaderWithBoundary("Account Settings"),
-							ui.SectionHeaderWithBoundary("Notifications"),
-							ui.SectionHeaderWithBoundary("Billing & Payments"),
-						)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Account Settings",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.SectionHeaderWithBoundary("Account Settings")
+							},
+						},
+						{
+							Label: "Notifications",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.SectionHeaderWithBoundary("Notifications")
+							},
+						},
+						{
+							Label: "Billing & Payments",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.SectionHeaderWithBoundary("Billing & Payments")
+							},
+						},
 					},
 				},
 			},
@@ -3932,34 +3768,73 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "All variants, sizes, and special states.",
-					RenderFunc: func(params url.Values) templ.Component {
-						variants := []ui.ButtonVariant{
-							ui.ButtonPrimary, ui.ButtonSecondary, ui.ButtonAccent,
-							ui.ButtonNeutral, ui.ButtonGhost, ui.ButtonOutline,
-							ui.ButtonError,
-						}
-						sizes := []ui.ButtonSize{ui.ButtonXS, ui.ButtonSM, ui.ButtonMD, ui.ButtonLG}
-						variantRow := func(v ui.ButtonVariant) templ.Component {
-							items := make([]templ.Component, len(sizes))
-							for i, s := range sizes {
-								items[i] = withText(string(v)+" "+string(s), ui.Button("#", v, s, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
-							}
-							return row(items...)
-						}
-						rows := make([]templ.Component, 0, len(variants)+3)
-						for _, v := range variants {
-							rows = append(rows, variantRow(v))
-						}
-						// Loading state row
-						rows = append(rows,
-							row(
-								withText("Loading", ui.Button("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", true)),
-								withText("Icon + Label", ui.Button("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--star", false)),
-								withText("Icon Only (Square)", ui.Button("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--pencil", false)),
-								withText("Icon Only (Circle)", ui.Button("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeCircle, "lucide--plus", false)),
-							),
-						)
-						return seq(rows...)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Primary",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+							},
+						},
+						{
+							Label: "Secondary",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+							},
+						},
+						{
+							Label: "Accent",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+							},
+						},
+						{
+							Label: "Neutral",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+							},
+						},
+						{
+							Label: "Ghost",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonGhost, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+							},
+						},
+						{
+							Label: "Outline",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonOutline, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+							},
+						},
+						{
+							Label: "Error",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonError, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+							},
+						},
+						{
+							Label: "Loading",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", true)
+							},
+						},
+						{
+							Label: "Icon + Label",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withText("Star", ui.ButtonWithBoundary("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--star", false))
+							},
+						},
+						{
+							Label: "Icon Only (Square)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ButtonWithBoundary("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--pencil", false)
+							},
+						},
+						{
+							Label: "Icon Only (Circle)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ButtonWithBoundary("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeCircle, "lucide--plus", false)
+							},
+						},
 					},
 				},
 			},
@@ -3996,39 +3871,55 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "All intents × styles, dot variant, icon variant.",
-					RenderFunc: func(params url.Values) templ.Component {
-						intents := []ui.BadgeIntent{
-							ui.BadgePrimary, ui.BadgeSecondary, ui.BadgeAccent,
-							ui.BadgeSuccess, ui.BadgeWarning, ui.BadgeError,
-							ui.BadgeInfo, ui.BadgeNeutral, ui.BadgeGhost,
-						}
-						styles := []ui.BadgeStyle{
-							ui.BadgeStyleDefault, ui.BadgeStyleOutline,
-							ui.BadgeStyleSoft, ui.BadgeStyleDash,
-						}
-						// Row per style showing all intents
-						rows := make([]templ.Component, 0, len(styles)+2)
-						for _, s := range styles {
-							items := make([]templ.Component, len(intents))
-							for i, v := range intents {
-								items[i] = ui.Badge(ui.BadgeProps{Label: string(v)[6:], Variant: v, Style: s, Size: ui.BadgeSizeMD})
-							}
-							rows = append(rows, row(items...))
-						}
-						// Sizes row
-						rows = append(rows, row(
-							ui.Badge(ui.BadgeProps{Label: "Small", Variant: ui.BadgePrimary, Size: ui.BadgeSizeSM}),
-							ui.Badge(ui.BadgeProps{Label: "Medium", Variant: ui.BadgePrimary, Size: ui.BadgeSizeMD}),
-							ui.Badge(ui.BadgeProps{Label: "Large", Variant: ui.BadgePrimary, Size: ui.BadgeSizeLG}),
-						))
-						// Dot + icon row
-						rows = append(rows, row(
-							ui.Badge(ui.BadgeProps{Label: "Active", Variant: ui.BadgeSuccess, Dot: true}),
-							ui.Badge(ui.BadgeProps{Label: "Pending", Variant: ui.BadgeWarning, Dot: true, Animate: true}),
-							ui.Badge(ui.BadgeProps{Label: "Error", Variant: ui.BadgeError, Icon: "lucide--circle-x"}),
-							ui.Badge(ui.BadgeProps{Label: "Info", Variant: ui.BadgeInfo, Icon: "lucide--info"}),
-						))
-						return seq(rows...)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Primary",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.BadgeWithBoundary(ui.BadgePrimary, ui.BadgeStyleDefault, ui.BadgeSizeMD, false, "", "Primary")
+							},
+						},
+						{
+							Label: "Success",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.BadgeWithBoundary(ui.BadgeSuccess, ui.BadgeStyleDefault, ui.BadgeSizeMD, false, "", "Success")
+							},
+						},
+						{
+							Label: "Warning",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.BadgeWithBoundary(ui.BadgeWarning, ui.BadgeStyleDefault, ui.BadgeSizeMD, false, "", "Warning")
+							},
+						},
+						{
+							Label: "Error",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.BadgeWithBoundary(ui.BadgeError, ui.BadgeStyleDefault, ui.BadgeSizeMD, false, "", "Error")
+							},
+						},
+						{
+							Label: "Outline",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.BadgeWithBoundary(ui.BadgePrimary, ui.BadgeStyleOutline, ui.BadgeSizeMD, false, "", "Outline")
+							},
+						},
+						{
+							Label: "Soft",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.BadgeWithBoundary(ui.BadgePrimary, ui.BadgeStyleSoft, ui.BadgeSizeMD, false, "", "Soft")
+							},
+						},
+						{
+							Label: "Dot (animated)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.BadgeWithBoundary(ui.BadgeWarning, ui.BadgeStyleDefault, ui.BadgeSizeMD, true, "", "Pending")
+							},
+						},
+						{
+							Label: "With icon",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.BadgeWithBoundary(ui.BadgeError, ui.BadgeStyleDefault, ui.BadgeSizeMD, false, "lucide--circle-x", "Error")
+							},
+						},
 					},
 				},
 			},
@@ -4056,19 +3947,42 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				},
 				{
 					Name:        "Examples",
-					Description: "All supported status strings side-by-side.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						statuses := []string{
-							"active", "open", "completed", "approved",
-							"closed", "rejected", "cancelled", "deleted",
-							"pending", "in_progress", "review",
-							"draft", "unknown",
-						}
-						items := make([]templ.Component, len(statuses))
-						for i, s := range statuses {
-							items[i] = withText(s, ui.StatusBadge(s))
-						}
-						return row(items...)
+					Description: "All supported status strings grouped by intent.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Positive states",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return row(
+									withText("active", ui.StatusBadgeWithBoundary("active")),
+									withText("open", ui.StatusBadgeWithBoundary("open")),
+									withText("completed", ui.StatusBadgeWithBoundary("completed")),
+									withText("approved", ui.StatusBadgeWithBoundary("approved")),
+								)
+							},
+						},
+						{
+							Label: "Negative states",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return row(
+									withText("closed", ui.StatusBadgeWithBoundary("closed")),
+									withText("rejected", ui.StatusBadgeWithBoundary("rejected")),
+									withText("cancelled", ui.StatusBadgeWithBoundary("cancelled")),
+									withText("deleted", ui.StatusBadgeWithBoundary("deleted")),
+								)
+							},
+						},
+						{
+							Label: "Neutral states",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return row(
+									withText("pending", ui.StatusBadgeWithBoundary("pending")),
+									withText("in_progress", ui.StatusBadgeWithBoundary("in_progress")),
+									withText("review", ui.StatusBadgeWithBoundary("review")),
+									withText("draft", ui.StatusBadgeWithBoundary("draft")),
+									withText("unknown", ui.StatusBadgeWithBoundary("unknown")),
+								)
+							},
+						},
 					},
 				},
 			},
@@ -4097,12 +4011,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Cards with different titles and body content.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return row(
-							withChildren(ui.Card("User Profile"), rawHTML(`<p class="text-sm text-base-content/70">Name: Alice Johnson<br/>Role: Admin</p>`)),
-							withChildren(ui.Card("Statistics"), rawHTML(`<p class="text-sm text-base-content/70">Active cases: 12<br/>Closed this month: 4</p>`)),
-							withChildren(ui.Card("Recent Activity"), rawHTML(`<p class="text-sm text-base-content/70">Document uploaded 2m ago<br/>Comment added 5m ago</p>`)),
-						)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "User Profile",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(ui.CardWithBoundary("User Profile"), rawHTML(`<p class="text-sm text-base-content/70">Name: Alice Johnson<br/>Role: Admin</p>`))
+							},
+						},
+						{
+							Label: "Statistics",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(ui.CardWithBoundary("Statistics"), rawHTML(`<p class="text-sm text-base-content/70">Active cases: 12<br/>Closed this month: 4</p>`))
+							},
+						},
+						{
+							Label: "Recent Activity",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(ui.CardWithBoundary("Recent Activity"), rawHTML(`<p class="text-sm text-base-content/70">Document uploaded 2m ago<br/>Comment added 5m ago</p>`))
+							},
+						},
 					},
 				},
 			},
@@ -4134,14 +4061,32 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				},
 				{
 					Name:        "Examples",
-					Description: "All four toast types stacked.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return seq(
-							ui.Toast(ui.ToastSuccess, "Record saved successfully."),
-							ui.Toast(ui.ToastError, "Something went wrong. Please try again."),
-							ui.Toast(ui.ToastWarning, "Your session will expire in 5 minutes."),
-							ui.Toast(ui.ToastInfo, "A new version is available."),
-						)
+					Description: "All four toast types.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Success",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ToastWithBoundary(ui.ToastSuccess, "Record saved successfully.")
+							},
+						},
+						{
+							Label: "Error",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ToastWithBoundary(ui.ToastError, "Something went wrong. Please try again.")
+							},
+						},
+						{
+							Label: "Warning",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ToastWithBoundary(ui.ToastWarning, "Your session will expire in 5 minutes.")
+							},
+						},
+						{
+							Label: "Info",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ToastWithBoundary(ui.ToastInfo, "A new version is available.")
+							},
+						},
 					},
 				},
 			},
@@ -4178,26 +4123,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Pagination at different pages within a 10-page set.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
-								return err
-							}
-							for _, page := range []int{1, 5, 10} {
-								pageStr := fmt.Sprintf("%d", page)
-								if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Page `+pageStr+` of 10</p>`); err != nil {
-									return err
-								}
-								if err := ui.Pagination(page, 10, "#", "content").Render(ctx, w); err != nil {
-									return err
-								}
-								if _, err := io.WriteString(w, `</div>`); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Page 1 of 10",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.PaginationWithBoundary(1, 10, "#", "content")
+							},
+						},
+						{
+							Label: "Page 5 of 10",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.PaginationWithBoundary(5, 10, "#", "content")
+							},
+						},
+						{
+							Label: "Page 10 of 10",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.PaginationWithBoundary(10, 10, "#", "content")
+							},
+						},
 					},
 				},
 			},
@@ -4230,23 +4174,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Empty states for different contexts.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
-								return err
-							}
-							if err := ui.Empty("lucide--search", "No results found", "Try adjusting your search or filters.").Render(ctx, w); err != nil {
-								return err
-							}
-							if err := ui.Empty("lucide--folder-open", "No cases yet", "Create your first case to get started.").Render(ctx, w); err != nil {
-								return err
-							}
-							if err := ui.Empty("lucide--bell-off", "No notifications", "You're all caught up!").Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "No results",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.EmptyWithBoundary("lucide--search", "No results found", "Try adjusting your search or filters.")
+							},
+						},
+						{
+							Label: "No cases",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.EmptyWithBoundary("lucide--folder-open", "No cases yet", "Create your first case to get started.")
+							},
+						},
+						{
+							Label: "No notifications",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.EmptyWithBoundary("lucide--bell-off", "No notifications", "You're all caught up!")
+							},
+						},
 					},
 				},
 			},
@@ -4275,25 +4221,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "All three loader variants side by side.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
-								return err
-							}
-							for _, v := range []ui.LoaderVariant{ui.LoaderCentered, ui.LoaderInline} {
-								if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">`+string(v)+`</p>`); err != nil {
-									return err
-								}
-								if err := ui.Loader(v).Render(ctx, w); err != nil {
-									return err
-								}
-								if _, err := io.WriteString(w, `</div>`); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Centered",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.LoaderWithBoundary(ui.LoaderCentered)
+							},
+						},
+						{
+							Label: "Inline",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.LoaderWithBoundary(ui.LoaderInline)
+							},
+						},
 					},
 				},
 			},
@@ -4376,13 +4316,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Stat cards in different icon color schemes.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return row(
-							ui.StatCard(ui.StatCardProps{Label: "Active Cases", Value: "42", Icon: "lucide--folder-open", IconColor: "bg-primary/10 text-primary"}),
-							ui.StatCard(ui.StatCardProps{Label: "Contacts", Value: "128", Icon: "lucide--users", IconColor: "bg-secondary/10 text-secondary"}),
-							ui.StatCard(ui.StatCardProps{Label: "Documents", Value: "315", Icon: "lucide--file-text", IconColor: "bg-success/10 text-success"}),
-							ui.StatCard(ui.StatCardProps{Label: "Overdue", Value: "7", Icon: "lucide--alert-circle", IconColor: "bg-error/10 text-error"}),
-						)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Active Cases",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardWithBoundary(ui.StatCardProps{Label: "Active Cases", Value: "42", Icon: "lucide--folder-open", IconColor: "bg-primary/10 text-primary"})
+							},
+						},
+						{
+							Label: "Contacts",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardWithBoundary(ui.StatCardProps{Label: "Contacts", Value: "128", Icon: "lucide--users", IconColor: "bg-secondary/10 text-secondary"})
+							},
+						},
+						{
+							Label: "Documents",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardWithBoundary(ui.StatCardProps{Label: "Documents", Value: "315", Icon: "lucide--file-text", IconColor: "bg-success/10 text-success"})
+							},
+						},
+						{
+							Label: "Overdue",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.StatCardWithBoundary(ui.StatCardProps{Label: "Overdue", Value: "7", Icon: "lucide--alert-circle", IconColor: "bg-error/10 text-error"})
+							},
+						},
 					},
 				},
 			},
@@ -4423,27 +4381,40 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Various item configurations including dangerous actions and many items.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return row(
-							withText("Basic 3 items", ui.ActionMenu([]ui.ActionMenuItem{
-								{Label: "Edit", Icon: "lucide--pencil", HXGet: "#"},
-								{Label: "Duplicate", Icon: "lucide--copy", HXGet: "#"},
-								{Label: "Delete", Icon: "lucide--trash-2", HXGet: "#", Danger: true},
-							})),
-							withText("View only", ui.ActionMenu([]ui.ActionMenuItem{
-								{Label: "View details", Icon: "lucide--eye", HXGet: "#"},
-								{Label: "Download", Icon: "lucide--download", HXGet: "#"},
-								{Label: "Share", Icon: "lucide--share-2", HXGet: "#"},
-							})),
-							withText("Many items", ui.ActionMenu([]ui.ActionMenuItem{
-								{Label: "Edit", Icon: "lucide--pencil", HXGet: "#"},
-								{Label: "Rename", Icon: "lucide--text-cursor", HXGet: "#"},
-								{Label: "Move", Icon: "lucide--folder-input", HXGet: "#"},
-								{Label: "Copy link", Icon: "lucide--link", HXGet: "#"},
-								{Label: "Archive", Icon: "lucide--archive", HXGet: "#"},
-								{Label: "Delete", Icon: "lucide--trash-2", HXGet: "#", Danger: true},
-							})),
-						)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Basic 3 items",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ActionMenuWithBoundary([]ui.ActionMenuItem{
+									{Label: "Edit", Icon: "lucide--pencil", HXGet: "#"},
+									{Label: "Duplicate", Icon: "lucide--copy", HXGet: "#"},
+									{Label: "Delete", Icon: "lucide--trash-2", HXGet: "#", Danger: true},
+								})
+							},
+						},
+						{
+							Label: "View only",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ActionMenuWithBoundary([]ui.ActionMenuItem{
+									{Label: "View details", Icon: "lucide--eye", HXGet: "#"},
+									{Label: "Download", Icon: "lucide--download", HXGet: "#"},
+									{Label: "Share", Icon: "lucide--share-2", HXGet: "#"},
+								})
+							},
+						},
+						{
+							Label: "Many items",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.ActionMenuWithBoundary([]ui.ActionMenuItem{
+									{Label: "Edit", Icon: "lucide--pencil", HXGet: "#"},
+									{Label: "Rename", Icon: "lucide--text-cursor", HXGet: "#"},
+									{Label: "Move", Icon: "lucide--folder-input", HXGet: "#"},
+									{Label: "Copy link", Icon: "lucide--link", HXGet: "#"},
+									{Label: "Archive", Icon: "lucide--archive", HXGet: "#"},
+									{Label: "Delete", Icon: "lucide--trash-2", HXGet: "#", Danger: true},
+								})
+							},
+						},
 					},
 				},
 			},
@@ -4477,21 +4448,43 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "All sizes, initials fallback, icon placeholder, and image variants.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						sizes := []ui.AvatarSize{ui.AvatarXS, ui.AvatarSM, ui.AvatarMD, ui.AvatarLG}
-						sizeItems := make([]templ.Component, len(sizes))
-						for i, s := range sizes {
-							sizeItems[i] = withText(string(s), ui.Avatar("Jane Smith", "", "", s))
-						}
-						return seq(
-							row(sizeItems...),
-							row(
-								withText("Initials (single)", ui.Avatar("Alice", "", "", ui.AvatarMD)),
-								withText("Initials (two-word)", ui.Avatar("Bob Carter", "", "", ui.AvatarMD)),
-								withText("Icon placeholder", ui.Avatar("", "", "lucide--building-2", ui.AvatarMD)),
-								withText("With image", ui.Avatar("User", "https://i.pravatar.cc/150?img=3", "", ui.AvatarMD)),
-							),
-						)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Initials (two-word)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.AvatarWithBoundary("Bob Carter", "", "", ui.AvatarMD)
+							},
+						},
+						{
+							Label: "Icon placeholder",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.AvatarWithBoundary("", "", "lucide--building-2", ui.AvatarMD)
+							},
+						},
+						{
+							Label: "With image",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.AvatarWithBoundary("User", "https://i.pravatar.cc/150?img=3", "", ui.AvatarMD)
+							},
+						},
+						{
+							Label: "XS size",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.AvatarWithBoundary("Jane Smith", "", "", ui.AvatarXS)
+							},
+						},
+						{
+							Label: "SM size",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.AvatarWithBoundary("Jane Smith", "", "", ui.AvatarSM)
+							},
+						},
+						{
+							Label: "LG size",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.AvatarWithBoundary("Jane Smith", "", "", ui.AvatarLG)
+							},
+						},
 					},
 				},
 			},
@@ -4538,12 +4531,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Default, pre-filled value, required, and error states.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return seq(
-							form.TextInput("name", "Full Name", "", "", false),
-							form.TextInput("email", "Email", "jane@example.com", "", true),
-							form.TextInput("err-field", "Username", "taken_user", "Username is already taken.", false),
-						)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Default",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.TextInputWithBoundary("name", "Full Name", "", "", false)
+							},
+						},
+						{
+							Label: "Pre-filled + required",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.TextInputWithBoundary("email", "Email", "jane@example.com", "", true)
+							},
+						},
+						{
+							Label: "Error state",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.TextInputWithBoundary("err-field", "Username", "taken_user", "Username is already taken.", false)
+							},
+						},
 					},
 				},
 			},
@@ -4588,12 +4594,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Default, required, and error states.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return seq(
-							form.TextareaInput("bio", "Bio", "", "", 3, false),
-							form.TextareaInput("notes", "Notes", "", "", 3, true),
-							form.TextareaInput("err-area", "Summary", "Too short", "Summary must be at least 50 characters.", 3, false),
-						)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Default",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.TextareaInputWithBoundary("bio", "Bio", "", "", 3, false)
+							},
+						},
+						{
+							Label: "Required",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.TextareaInputWithBoundary("notes", "Notes", "", "", 3, true)
+							},
+						},
+						{
+							Label: "Error state",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.TextareaInputWithBoundary("err-area", "Summary", "Too short", "Summary must be at least 50 characters.", 3, false)
+							},
+						},
 					},
 				},
 			},
@@ -4623,12 +4642,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Checkboxes: unchecked, checked, and with error.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return seq(
-							form.CheckboxInput("opt1", "Enable notifications", false, ""),
-							form.CheckboxInput("opt2", "I agree to the terms", true, ""),
-							form.CheckboxInput("opt3", "Subscribe to newsletter", false, "This field is required."),
-						)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Unchecked",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.CheckboxInputWithBoundary("opt1", "Enable notifications", false, "")
+							},
+						},
+						{
+							Label: "Checked",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.CheckboxInputWithBoundary("opt2", "I agree to the terms", true, "")
+							},
+						},
+						{
+							Label: "Error state",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.CheckboxInputWithBoundary("opt3", "Subscribe to newsletter", false, "This field is required.")
+							},
+						},
 					},
 				},
 			},
@@ -4673,18 +4705,28 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Default, pre-selected, required, and error states.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						opts := [][2]string{
-							{"us", "United States"},
-							{"gb", "United Kingdom"},
-							{"ca", "Canada"},
-							{"au", "Australia"},
-						}
-						return seq(
-							form.SelectInput("country1", "Country", "", opts, "", false),
-							form.SelectInput("country2", "Country (pre-selected)", "gb", opts, "", true),
-							form.SelectInput("country3", "Country (error)", "", opts, "Please select a country.", false),
-						)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Default",
+							RenderFunc: func(_ url.Values) templ.Component {
+								opts := [][2]string{{"us", "United States"}, {"gb", "United Kingdom"}, {"ca", "Canada"}, {"au", "Australia"}}
+								return form.SelectInputWithBoundary("country1", "Country", "", opts, "", false)
+							},
+						},
+						{
+							Label: "Pre-selected + required",
+							RenderFunc: func(_ url.Values) templ.Component {
+								opts := [][2]string{{"us", "United States"}, {"gb", "United Kingdom"}, {"ca", "Canada"}, {"au", "Australia"}}
+								return form.SelectInputWithBoundary("country2", "Country", "gb", opts, "", true)
+							},
+						},
+						{
+							Label: "Error state",
+							RenderFunc: func(_ url.Values) templ.Component {
+								opts := [][2]string{{"us", "United States"}, {"gb", "United Kingdom"}, {"ca", "Canada"}, {"au", "Australia"}}
+								return form.SelectInputWithBoundary("country3", "Country", "", opts, "Please select a country.", false)
+							},
+						},
 					},
 				},
 			},
@@ -4719,12 +4761,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Range sliders with different colors and values.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return seq(
-							form.RangeInput("vol", "Volume", 70, 0, 100, 1, "range-primary"),
-							form.RangeInput("bright", "Brightness", 50, 0, 100, 10, "range-secondary"),
-							form.RangeInput("speed", "Speed", 30, 0, 100, 5, "range-accent"),
-						)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Primary",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.RangeInputWithBoundary("vol", "Volume", 70, 0, 100, 1, "range-primary")
+							},
+						},
+						{
+							Label: "Secondary",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.RangeInputWithBoundary("bright", "Brightness", 50, 0, 100, 10, "range-secondary")
+							},
+						},
+						{
+							Label: "Accent",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.RangeInputWithBoundary("speed", "Speed", 30, 0, 100, 5, "range-accent")
+							},
+						},
 					},
 				},
 			},
@@ -4832,14 +4887,37 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Form fields of each type.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return seq(
-							form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "name", Label: "Full Name", Placeholder: "Jane Smith", Required: true}),
-							form.FormField(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Placeholder: "jane@example.com"}),
-							form.FormField(form.FormFieldProps{Type: form.FieldTextarea, Name: "bio", Label: "Bio", Placeholder: "Tell us about yourself..."}),
-							form.FormField(form.FormFieldProps{Type: form.FieldSelect, Name: "role", Label: "Role", Options: []form.SelectOption{{Value: "admin", Label: "Admin"}, {Value: "member", Label: "Member"}, {Value: "viewer", Label: "Viewer"}}}),
-							form.FormField(form.FormFieldProps{Type: form.FieldCheckbox, Name: "agree", Label: "I agree to the terms"}),
-						)
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Text",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.FormFieldWithBoundary(form.FormFieldProps{Type: form.FieldText, Name: "name", Label: "Full Name", Placeholder: "Jane Smith", Required: true})
+							},
+						},
+						{
+							Label: "Email",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.FormFieldWithBoundary(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Placeholder: "jane@example.com"})
+							},
+						},
+						{
+							Label: "Textarea",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.FormFieldWithBoundary(form.FormFieldProps{Type: form.FieldTextarea, Name: "bio", Label: "Bio", Placeholder: "Tell us about yourself..."})
+							},
+						},
+						{
+							Label: "Select",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.FormFieldWithBoundary(form.FormFieldProps{Type: form.FieldSelect, Name: "role", Label: "Role", Options: []form.SelectOption{{Value: "admin", Label: "Admin"}, {Value: "member", Label: "Member"}, {Value: "viewer", Label: "Viewer"}}})
+							},
+						},
+						{
+							Label: "Checkbox",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.FormFieldWithBoundary(form.FormFieldProps{Type: form.FieldCheckbox, Name: "agree", Label: "I agree to the terms"})
+							},
+						},
 					},
 				},
 			},
@@ -4884,26 +4962,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Search inputs with different placeholders.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Default</p>`); err != nil {
-								return err
-							}
-							if err := form.SearchInput("q1", "", "Search...", "", "").Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">With pre-filled value</p>`); err != nil {
-								return err
-							}
-							if err := form.SearchInput("q2", "Johnson v. Smith", "Search cases...", "", "").Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div></div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Default",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.SearchInputWithBoundary("q1", "", "Search...", "", "")
+							},
+						},
+						{
+							Label: "Pre-filled value",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.SearchInputWithBoundary("q2", "Johnson v. Smith", "Search cases...", "", "")
+							},
+						},
 					},
 				},
 			},
@@ -4932,19 +5003,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Top bars with different section titles.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="space-y-4">`); err != nil {
-								return err
-							}
-							for _, title := range []string{"Dashboard", "Cases", "Contacts", "Settings"} {
-								if err := nav.TopBar(title).Render(ctx, w); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Dashboard",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.TopBarWithBoundary("Dashboard")
+							},
+						},
+						{
+							Label: "Cases",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.TopBarWithBoundary("Cases")
+							},
+						},
+						{
+							Label: "Contacts",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.TopBarWithBoundary("Contacts")
+							},
+						},
+						{
+							Label: "Settings",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.TopBarWithBoundary("Settings")
+							},
+						},
 					},
 				},
 			},
@@ -4986,33 +5069,27 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "HTMX full-page strip and lifted in-panel strip.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						tabs := []nav.Tab{
-							{Label: "Overview", Href: "#", Active: true},
-							{Label: "Activity", Href: "#"},
-							{Label: "Settings", Href: "#"},
-						}
-						simpleTabs := []nav.Tab{
-							{Label: "All", Href: "#", Active: true},
-							{Label: "Open", Href: "#"},
-							{Label: "Closed", Href: "#"},
-						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="space-y-8"><div><p class="text-xs text-base-content/60 mb-2 font-semibold uppercase px-4 pt-4">HTMX (TabMenu)</p>`); err != nil {
-								return err
-							}
-							if err := nav.TabMenu(tabs).Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-2 font-semibold uppercase px-4">Lifted in-panel (SimpleTabs / target="-")</p><div class="px-4">`); err != nil {
-								return err
-							}
-							if err := nav.SimpleTabs(simpleTabs).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div></div></div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "HTMX (TabMenu)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.TabMenuWithBoundary([]nav.Tab{
+									{Label: "Overview", Href: "#", Active: true},
+									{Label: "Activity", Href: "#"},
+									{Label: "Settings", Href: "#"},
+								})
+							},
+						},
+						{
+							Label: "Lifted in-panel (SimpleTabs)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.SimpleTabsWithBoundary([]nav.Tab{
+									{Label: "All", Href: "#", Active: true},
+									{Label: "Open", Href: "#"},
+									{Label: "Closed", Href: "#"},
+								})
+							},
+						},
 					},
 				},
 			},
@@ -5049,20 +5126,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Examples",
 					Description: "Page headers with 2 and 3 breadcrumb levels.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="space-y-2">`); err != nil {
-								return err
-							}
-							if err := nav.PageHeader(nav.Crumbs("Home", "/", "Dashboard")).Render(ctx, w); err != nil {
-								return err
-							}
-							if err := nav.PageHeader(nav.Crumbs("Home", "/", "Cases", "/cases", "Johnson v. Smith")).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "2-level breadcrumb",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.PageHeaderWithBoundary(nav.Crumbs("Home", "/", "Dashboard"))
+							},
+						},
+						{
+							Label: "3-level breadcrumb",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.PageHeaderWithBoundary(nav.Crumbs("Home", "/", "Cases", "/cases", "Johnson v. Smith"))
+							},
+						},
 					},
 				},
 			},
@@ -5106,37 +5182,34 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: MenuTokens(),
 				},
-				{
-					Name:        "Examples",
-					Description: "Menu in default and compact sizes.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						items := []nav.MenuItem{
-							{Label: "Dashboard", Icon: "lucide--layout-dashboard", Href: "#", Active: true},
-							{Label: "Cases", Icon: "lucide--folder-open", Href: "#"},
-							{Label: "Contacts", Icon: "lucide--users", Href: "#"},
-							{Label: "Settings", Icon: "lucide--settings", Href: "#"},
-						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 flex gap-8">`); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Default size</p>`); err != nil {
-								return err
-							}
-							if err := nav.Menu("", items).Render(ctx, w); err != nil {
-								return err
-							}
-							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Compact (xs)</p>`); err != nil {
-								return err
-							}
-							if err := nav.Menu("menu-xs", items).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div></div>`)
-							return err
-						})
+			{
+				Name:        "Examples",
+				Description: "Menu in default and compact sizes.",
+				SubExamples: []galleryruntime.GallerySubExample{
+					{
+						Label: "Default size",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return nav.MenuWithBoundary("", []nav.MenuItem{
+								{Label: "Dashboard", Icon: "lucide--layout-dashboard", Href: "#", Active: true},
+								{Label: "Cases", Icon: "lucide--folder-open", Href: "#"},
+								{Label: "Contacts", Icon: "lucide--users", Href: "#"},
+								{Label: "Settings", Icon: "lucide--settings", Href: "#"},
+							})
+						},
+					},
+					{
+						Label: "Compact (xs)",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return nav.MenuWithBoundary("menu-xs", []nav.MenuItem{
+								{Label: "Dashboard", Icon: "lucide--layout-dashboard", Href: "#", Active: true},
+								{Label: "Cases", Icon: "lucide--folder-open", Href: "#"},
+								{Label: "Contacts", Icon: "lucide--users", Href: "#"},
+								{Label: "Settings", Icon: "lucide--settings", Href: "#"},
+							})
+						},
 					},
 				},
+			},
 			},
 		},
 
@@ -5178,31 +5251,61 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: ModalTokens(),
 				},
-				{
-					Name:        "Examples",
-					Description: "Modal in SM, MD, and LG sizes.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-4 relative" style="min-height:320px;">`); err != nil {
-								return err
-							}
-							body := func(size modal.ModalSize) templ.Component {
-								return withChildren(modal.ModalWithBoundary("Confirm — "+string(size), size), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`))
-							}
-							for _, size := range []modal.ModalSize{"modal-sm", "", "modal-lg"} {
-								if err := body(size).Render(ctx, w); err != nil {
+			{
+				Name:        "Examples",
+				Description: "Modal in SM, MD, and LG sizes.",
+				SubExamples: []galleryruntime.GallerySubExample{
+					{
+						Label: "Small (modal-sm)",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+								if _, err := io.WriteString(w, `<div style="min-height:240px;position:relative;">`); err != nil {
 									return err
 								}
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+								if err := withChildren(modal.ModalWithBoundary("Confirm — SM", modal.ModalSM), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
+									return err
+								}
+								_, err := io.WriteString(w, `</div>`)
+								return err
+							})
+						},
+					},
+					{
+						Label: "Default (modal-md)",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+								if _, err := io.WriteString(w, `<div style="min-height:280px;position:relative;">`); err != nil {
+									return err
+								}
+								if err := withChildren(modal.ModalWithBoundary("Confirm — MD", modal.ModalMD), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
+									return err
+								}
+								_, err := io.WriteString(w, `</div>`)
+								return err
+							})
+						},
+					},
+					{
+						Label: "Large (modal-lg)",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+								if _, err := io.WriteString(w, `<div style="min-height:280px;position:relative;">`); err != nil {
+									return err
+								}
+								if err := withChildren(modal.ModalWithBoundary("Confirm — LG", modal.ModalLG), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
+									return err
+								}
+								_, err := io.WriteString(w, `</div>`)
+								return err
+							})
+						},
 					},
 				},
 			},
 		},
+	},
 
-		// modal.ConfirmPopup
+	// modal.ConfirmPopup
 		{
 			Slug:        "confirm-popup",
 			Name:        "Confirm Popup",
@@ -5236,26 +5339,46 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: ConfirmPopupTokens(),
 				},
-				{
-					Name:        "Examples",
-					Description: "Confirm dialogs for delete and archive actions.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-6 space-y-8 relative" style="min-height:280px;">`); err != nil {
+			{
+				Name:        "Examples",
+				Description: "Confirm dialogs for delete and archive actions.",
+				SubExamples: []galleryruntime.GallerySubExample{
+					{
+						Label: "Delete confirmation",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+								if _, err := io.WriteString(w, `<div style="min-height:240px;position:relative;">`); err != nil {
+									return err
+								}
+								if err := modal.ConfirmPopupWithBoundary("Delete record?", "This action cannot be undone.", "Delete", "#", "delete").Render(ctx, w); err != nil {
+									return err
+								}
+								_, err := io.WriteString(w, `</div>`)
 								return err
-							}
-							if err := modal.ConfirmPopupWithBoundary("Delete record?", "This action cannot be undone.", "Delete", "#", "DELETE").Render(ctx, w); err != nil {
+							})
+						},
+					},
+					{
+						Label: "Archive confirmation",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+								if _, err := io.WriteString(w, `<div style="min-height:240px;position:relative;">`); err != nil {
+									return err
+								}
+								if err := modal.ConfirmPopupWithBoundary("Archive case?", "The case will be moved to your archive.", "Archive", "#", "patch").Render(ctx, w); err != nil {
+									return err
+								}
+								_, err := io.WriteString(w, `</div>`)
 								return err
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+							})
+						},
 					},
 				},
 			},
 		},
+	},
 
-		// modal.FormModal
+	// modal.FormModal
 		{
 			Slug:        "form-modal-real",
 			Name:        "Form Modal",
@@ -5325,198 +5448,609 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						},
 					},
 				},
-				{
-					Name:        "Examples",
-					Description: "Form modal at different sizes.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="relative" style="min-height:320px;">`); err != nil {
+			{
+				Name:        "Examples",
+				Description: "Form modal at different sizes.",
+				SubExamples: []galleryruntime.GallerySubExample{
+					{
+						Label: "Small form modal",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+								if _, err := io.WriteString(w, `<div style="min-height:300px;position:relative;">`); err != nil {
+									return err
+								}
+								if err := modal.FormModalWithBoundary(modal.FormModalProps{
+									ID: "ex-form-sm", Title: "New Case", Size: modal.ModalSM, SubmitText: "Create", Action: "#", Method: "post",
+								}).Render(ctx, w); err != nil {
+									return err
+								}
+								_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('ex-form-sm');if(d&&d.showModal)d.showModal();});</script>`)
 								return err
-							}
-							if err := modal.FormModalWithBoundary(modal.FormModalProps{
-								ID: "ex-form-modal", Title: "New Case", Size: "", SubmitText: "Create", Action: "#", Method: "post",
-							}).Render(ctx, w); err != nil {
+							})
+						},
+					},
+					{
+						Label: "Destructive form modal",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+								if _, err := io.WriteString(w, `<div style="min-height:300px;position:relative;">`); err != nil {
+									return err
+								}
+								if err := modal.FormModalWithBoundary(modal.FormModalProps{
+									ID: "ex-form-err", Title: "Delete Case", Size: modal.ModalSM, SubmitText: "Delete", CancelText: "Keep", Action: "#", Method: "post", Variant: "error",
+								}).Render(ctx, w); err != nil {
+									return err
+								}
+								_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('ex-form-err');if(d&&d.showModal)d.showModal();});</script>`)
 								return err
-							}
-							_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('ex-form-modal');if(d&&d.showModal)d.showModal();});</script>`)
-							return err
-						})
+							})
+						},
 					},
 				},
 			},
+			},
 		},
 
-		// table.TableWithProps
+		// table — consolidated entry (covers text cells, badge cells, avatar cells, action menus, zebra, compact, empty)
 		{
-			Slug:        "table-real",
+			Slug:        "table",
 			Name:        "Table",
 			Category:    galleryruntime.CategoryDataDisplay,
 			Subcategory: "Tables",
-			Description: "A configurable DaisyUI data table.",
+			Description: "Composable data table. TableWithProps wraps TableHead/TableBody; content is composed from TableRow and TableCell primitives with any component as cell content.",
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
-					Description: "Live zebra and pinned controls.",
+					Description: "Full-featured table: avatar + name, status badge, action menu, and pagination. Configurable row count, page, and all DaisyUI table modifiers.",
 					RenderFunc: func(params url.Values) templ.Component {
-						zebra := params.Get("zebra") == "true"
-						size := ""
-						if params.Get("size") == "sm" {
-							size = "sm"
+						page := 1
+						if v, err := parseInt(params.Get("page")); err == nil && v > 0 {
+							page = v
 						}
-						type memberRow struct {
-							Name   string
-							Role   string
-							Status string
-							Joined string
+						type tableRow struct{ Name, Status, Role, Joined string }
+						allRows := []tableRow{
+							{"Alice Johnson", "active", "Admin", "2024-01-15"},
+							{"Bob Smith", "pending", "Employee", "2024-03-02"},
+							{"Carol White", "closed", "Employee", "2023-11-20"},
+							{"David Kim", "active", "Viewer", "2024-06-10"},
+							{"Eve Martinez", "pending", "Employee", "2024-08-22"},
 						}
-						members := []memberRow{
-							{"Alice Johnson", "Admin", "Active", "Jan 2024"},
-							{"Bob Martinez", "Member", "Pending", "Mar 2024"},
-							{"Carol White", "Viewer", "Inactive", "Jun 2024"},
-							{"David Kim", "Member", "Active", "Aug 2024"},
+						rowCount := 3
+						if v, err := parseInt(params.Get("rows")); err == nil && v >= 1 && v <= 5 {
+							rowCount = v
 						}
-						rowComponents := make([]templ.Component, len(members))
-						for i, m := range members {
-							m := m
+						props := table.TableProps{
+							Size:     params.Get("size"),
+							Striped:  params.Get("striped") != "false",
+							PinRows:  params.Get("pin_rows") == "true",
+							PinCols:  params.Get("pin_cols") == "true",
+							Bordered: params.Get("bordered") == "true",
+						}
+						actionItems := []ui.ActionMenuItem{{Label: "View"}, {Label: "Edit"}, {Label: "Delete", Danger: true}}
+						rowComponents := make([]templ.Component, rowCount)
+						for i, r := range allRows[:rowCount] {
+							r := r
+							nameCell := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+								if _, err := io.WriteString(w, `<div class="flex items-center gap-3">`); err != nil {
+									return err
+								}
+								if err := ui.AvatarWithBoundary(r.Name, "", "", ui.AvatarSM).Render(ctx, w); err != nil {
+									return err
+								}
+								_, err := fmt.Fprintf(w, `<span class="font-medium">%s</span></div>`, r.Name)
+								return err
+							})
 							rowComponents[i] = withChildren(
-								table.TableRowWithBoundary("", false),
+								table.TableRowWithBoundary("", true),
 								seq(
-									withChildren(table.TableCellWithBoundary(""), rawHTML(m.Name)),
-									withChildren(table.TableCellWithBoundary(""), rawHTML(m.Role)),
-									withChildren(table.TableCellWithBoundary(""), ui.StatusBadgeWithBoundary(m.Status)),
-									withChildren(table.TableCellWithBoundary(""), rawHTML(m.Joined)),
+									withChildren(table.TableCellWithBoundary(""), nameCell),
+									withChildren(table.TableCellWithBoundary(""), ui.StatusBadgeWithBoundary(r.Status)),
+									withChildren(table.TableCellWithBoundary("text-sm text-base-content/70"), rawHTML(r.Role)),
+									withChildren(table.TableCellWithBoundary("text-sm text-base-content/60"), rawHTML(r.Joined)),
+									withChildren(table.TableCellWithBoundary("text-right"), ui.ActionMenuWithBoundary(actionItems)),
 								),
 							)
 						}
-						return withChildren(
-							table.TableWithPropsWithBoundary(table.TableProps{
-								Striped: zebra,
-								Size:    size,
-							}),
+						tbl := withChildren(
+							table.TableWithPropsWithBoundary(props),
 							seq(
 								withChildren(
 									table.TableHeadWithBoundary(),
-									withChildren(
-										table.TableHeadRowWithBoundary(),
-										seq(
-											table.TableHeadCellWithBoundary("Name"),
-											table.TableHeadCellWithBoundary("Role"),
-											table.TableHeadCellWithBoundary("Status"),
-											table.TableHeadCellWithBoundary("Joined"),
-										),
-									),
+									withChildren(table.TableHeadRowWithBoundary(), seq(
+										table.TableHeadCellWithBoundary("Name"),
+										table.TableHeadCellWithBoundary("Status"),
+										table.TableHeadCellWithBoundary("Role"),
+										table.TableHeadCellWithBoundary("Joined"),
+										table.TableHeadCellWithBoundary(""),
+									)),
 								),
-								withChildren(
-									table.TableBodyWithBoundary(),
-									seq(rowComponents...),
-								),
+								withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
 							),
 						)
+						totalPages := 3
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6">`); err != nil {
+								return err
+							}
+							if err := tbl.Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := fmt.Fprintf(w, `<div class="flex items-center justify-between mt-4"><p class="text-sm text-base-content/60">Showing %d of 47 entries</p>`, rowCount); err != nil {
+								return err
+							}
+							if err := ui.PaginationWithBoundary(page, totalPages, "#", "main-content").Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
 					},
 					Tokens: []galleryruntime.DesignToken{
-						{
-							Label:      "Zebra Stripes",
-							Group:      "Component",
-							Type:       galleryruntime.TokenTypeSelect,
-							Default:    "false",
-							QueryParam: "zebra",
-							Options: []galleryruntime.TokenOption{
-								{Value: "false", Label: "Off"},
-								{Value: "true", Label: "On"},
-							},
-						},
-						{
-							Label:      "Size",
-							Group:      "Component",
-							Type:       galleryruntime.TokenTypeSelect,
-							Default:    "",
-							QueryParam: "size",
-							Options: []galleryruntime.TokenOption{
-								{Value: "", Label: "Default"},
-								{Value: "sm", Label: "Small"},
-							},
-						},
+						{Label: "Visible rows", Group: "Data", Type: galleryruntime.TokenTypeSelect, Default: "3", QueryParam: "rows", Options: []galleryruntime.TokenOption{
+							{Value: "1", Label: "1"},
+							{Value: "2", Label: "2"},
+							{Value: "3", Label: "3"},
+							{Value: "4", Label: "4"},
+							{Value: "5", Label: "5"},
+						}},
+						{Label: "Current page", Group: "Pagination", Type: galleryruntime.TokenTypeSelect, Default: "1", QueryParam: "page", Options: []galleryruntime.TokenOption{
+							{Value: "1", Label: "Page 1"},
+							{Value: "2", Label: "Page 2"},
+							{Value: "3", Label: "Page 3"},
+						}},
+						{Label: "Size", Group: "Style", Type: galleryruntime.TokenTypeSelect, Default: "", QueryParam: "size", Options: []galleryruntime.TokenOption{
+							{Value: "xs", Label: "xs"},
+							{Value: "sm", Label: "sm"},
+							{Value: "", Label: "md (default)"},
+							{Value: "lg", Label: "lg"},
+							{Value: "xl", Label: "xl"},
+						}},
+						{Label: "Striped", Group: "Style", Type: galleryruntime.TokenTypeBool, Default: "true", QueryParam: "striped"},
+						{Label: "Bordered", Group: "Style", Type: galleryruntime.TokenTypeBool, Default: "false", QueryParam: "bordered"},
+						{Label: "Pin rows", Group: "Style", Type: galleryruntime.TokenTypeBool, Default: "false", QueryParam: "pin_rows"},
+						{Label: "Pin cols", Group: "Style", Type: galleryruntime.TokenTypeBool, Default: "false", QueryParam: "pin_cols"},
 					},
 				},
 				{
 					Name:        "Examples",
-					Description: "Default, zebra-striped, and compact (small) variants.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						type memberRow struct {
-							Name   string
-							Role   string
-							Status string
-							Joined string
-						}
-						members := []memberRow{
-							{"Alice Johnson", "Admin", "Active", "Jan 2024"},
-							{"Bob Martinez", "Member", "Pending", "Mar 2024"},
-							{"Carol White", "Viewer", "Inactive", "Jun 2024"},
-						}
-						buildTable := func(props table.TableProps) templ.Component {
-							rowComponents := make([]templ.Component, len(members))
-							for i, m := range members {
-								m := m
-								rowComponents[i] = withChildren(
-									table.TableRow("", false),
+					Description: "Cell type variations: text, status badge, avatar+name, action menu, empty state, and styling variants.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Text cells",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Role, Dept, Joined string }
+								rows := []tableRow{
+									{"Alice Johnson", "Admin", "Engineering", "Jan 2024"},
+									{"Bob Martinez", "Member", "Legal", "Mar 2024"},
+									{"Carol White", "Viewer", "Finance", "Jun 2024"},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Dept)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Joined)),
+									))
+								}
+								return withChildren(
+									table.TableWithPropsWithBoundary(table.TableProps{}),
 									seq(
-										withChildren(table.TableCell(""), rawHTML(m.Name)),
-										withChildren(table.TableCell(""), rawHTML(m.Role)),
-										withChildren(table.TableCell(""), ui.StatusBadge(m.Status)),
-										withChildren(table.TableCell(""), rawHTML(m.Joined)),
+										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+											table.TableHeadCellWithBoundary("Name"),
+											table.TableHeadCellWithBoundary("Role"),
+											table.TableHeadCellWithBoundary("Department"),
+											table.TableHeadCellWithBoundary("Joined"),
+										))),
+										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
 									),
 								)
-							}
-							return withChildren(
-								table.TableWithProps(props),
-								seq(
-									withChildren(
-										table.TableHead(),
-										withChildren(
-											table.TableHeadRow(),
-											seq(
-												table.TableHeadCell("Name"),
-												table.TableHeadCell("Role"),
-												table.TableHeadCell("Status"),
-												table.TableHeadCell("Joined"),
-											),
+							},
+						},
+						{
+							Label: "Status badge cells",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Status, Role string }
+								rows := []tableRow{
+									{"Alice Johnson", "active", "Admin"},
+									{"Bob Martinez", "pending", "Member"},
+									{"Carol White", "closed", "Viewer"},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+										withChildren(table.TableCellWithBoundary(""), ui.StatusBadgeWithBoundary(r.Status)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
+									))
+								}
+								return withChildren(
+									table.TableWithPropsWithBoundary(table.TableProps{}),
+									seq(
+										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+											table.TableHeadCellWithBoundary("Name"),
+											table.TableHeadCellWithBoundary("Status"),
+											table.TableHeadCellWithBoundary("Role"),
+										))),
+										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
+									),
+								)
+							},
+						},
+						{
+							Label: "Avatar + name cells",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Role, Joined string }
+								rows := []tableRow{
+									{"Alice Johnson", "Admin", "Jan 2024"},
+									{"Bob Martinez", "Member", "Mar 2024"},
+									{"Carol White", "Viewer", "Jun 2024"},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									nameCell := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+										if _, err := io.WriteString(w, `<div class="flex items-center gap-3">`); err != nil {
+											return err
+										}
+										if err := ui.AvatarWithBoundary(r.Name, "", "", ui.AvatarSM).Render(ctx, w); err != nil {
+											return err
+										}
+										_, err := fmt.Fprintf(w, `<span class="font-medium">%s</span></div>`, r.Name)
+										return err
+									})
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), nameCell),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Joined)),
+									))
+								}
+								return withChildren(
+									table.TableWithPropsWithBoundary(table.TableProps{}),
+									seq(
+										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+											table.TableHeadCellWithBoundary("Name"),
+											table.TableHeadCellWithBoundary("Role"),
+											table.TableHeadCellWithBoundary("Joined"),
+										))),
+										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
+									),
+								)
+							},
+						},
+						{
+							Label: "Action menu column",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Role string }
+								rows := []tableRow{
+									{"Alice Johnson", "Admin"},
+									{"Bob Martinez", "Member"},
+									{"Carol White", "Viewer"},
+								}
+								actionItems := []ui.ActionMenuItem{
+									{Label: "Edit", Icon: "lucide--pencil", HXGet: "#"},
+									{Label: "Delete", Icon: "lucide--trash-2", HXGet: "#", Danger: true},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
+										withChildren(table.TableCellWithBoundary("text-right"), ui.ActionMenuWithBoundary(actionItems)),
+									))
+								}
+								return withChildren(
+									table.TableWithPropsWithBoundary(table.TableProps{}),
+									seq(
+										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+											table.TableHeadCellWithBoundary("Name"),
+											table.TableHeadCellWithBoundary("Role"),
+											table.TableHeadCellWithBoundary(""),
+										))),
+										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
+									),
+								)
+							},
+						},
+						{
+							Label: "Zebra stripes",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Role, Dept string }
+								rows := []tableRow{
+									{"Alice Johnson", "Admin", "Engineering"},
+									{"Bob Martinez", "Member", "Legal"},
+									{"Carol White", "Viewer", "Finance"},
+									{"David Kim", "Member", "Operations"},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Dept)),
+									))
+								}
+								return withChildren(
+									table.TableWithPropsWithBoundary(table.TableProps{Striped: true}),
+									seq(
+										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+											table.TableHeadCellWithBoundary("Name"),
+											table.TableHeadCellWithBoundary("Role"),
+											table.TableHeadCellWithBoundary("Department"),
+										))),
+										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
+									),
+								)
+							},
+						},
+						{
+							Label: "Compact (sm)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Role, Dept string }
+								rows := []tableRow{
+									{"Alice Johnson", "Admin", "Engineering"},
+									{"Bob Martinez", "Member", "Legal"},
+									{"Carol White", "Viewer", "Finance"},
+									{"David Kim", "Member", "Operations"},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Dept)),
+									))
+								}
+								return withChildren(
+									table.TableWithPropsWithBoundary(table.TableProps{Size: "sm"}),
+									seq(
+										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+											table.TableHeadCellWithBoundary("Name"),
+											table.TableHeadCellWithBoundary("Role"),
+											table.TableHeadCellWithBoundary("Department"),
+										))),
+										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
+									),
+								)
+							},
+						},
+						{
+							Label: "Bordered",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Role, Dept string }
+								rows := []tableRow{
+									{"Alice Johnson", "Admin", "Engineering"},
+									{"Bob Martinez", "Member", "Legal"},
+									{"Carol White", "Viewer", "Finance"},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Dept)),
+									))
+								}
+								return withChildren(
+									table.TableWithPropsWithBoundary(table.TableProps{Bordered: true}),
+									seq(
+										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+											table.TableHeadCellWithBoundary("Name"),
+											table.TableHeadCellWithBoundary("Role"),
+											table.TableHeadCellWithBoundary("Department"),
+										))),
+										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
+									),
+								)
+							},
+						},
+						{
+							Label: "Extra small (xs)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Role, Dept string }
+								rows := []tableRow{
+									{"Alice Johnson", "Admin", "Engineering"},
+									{"Bob Martinez", "Member", "Legal"},
+									{"Carol White", "Viewer", "Finance"},
+									{"David Kim", "Member", "Operations"},
+									{"Eve Martinez", "Viewer", "HR"},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Dept)),
+									))
+								}
+								return withChildren(
+									table.TableWithPropsWithBoundary(table.TableProps{Size: "xs"}),
+									seq(
+										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+											table.TableHeadCellWithBoundary("Name"),
+											table.TableHeadCellWithBoundary("Role"),
+											table.TableHeadCellWithBoundary("Department"),
+										))),
+										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
+									),
+								)
+							},
+						},
+						{
+							Label: "Large (lg)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Role, Dept string }
+								rows := []tableRow{
+									{"Alice Johnson", "Admin", "Engineering"},
+									{"Bob Martinez", "Member", "Legal"},
+									{"Carol White", "Viewer", "Finance"},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Dept)),
+									))
+								}
+								return withChildren(
+									table.TableWithPropsWithBoundary(table.TableProps{Size: "lg"}),
+									seq(
+										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+											table.TableHeadCellWithBoundary("Name"),
+											table.TableHeadCellWithBoundary("Role"),
+											table.TableHeadCellWithBoundary("Department"),
+										))),
+										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
+									),
+								)
+							},
+						},
+						{
+							Label: "Extra large (xl)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Role, Dept string }
+								rows := []tableRow{
+									{"Alice Johnson", "Admin", "Engineering"},
+									{"Bob Martinez", "Member", "Legal"},
+									{"Carol White", "Viewer", "Finance"},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Dept)),
+									))
+								}
+								return withChildren(
+									table.TableWithPropsWithBoundary(table.TableProps{Size: "xl"}),
+									seq(
+										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+											table.TableHeadCellWithBoundary("Name"),
+											table.TableHeadCellWithBoundary("Role"),
+											table.TableHeadCellWithBoundary("Department"),
+										))),
+										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
+									),
+								)
+							},
+						},
+						{
+							Label: "Pinned rows",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Role, Dept string }
+								rows := []tableRow{
+									{"Alice Johnson", "Admin", "Engineering"},
+									{"Bob Martinez", "Member", "Legal"},
+									{"Carol White", "Viewer", "Finance"},
+									{"David Kim", "Member", "Operations"},
+									{"Eve Martinez", "Viewer", "HR"},
+									{"Frank Lee", "Admin", "Engineering"},
+									{"Grace Chen", "Member", "Legal"},
+									{"Henry Park", "Viewer", "Finance"},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Dept)),
+									))
+								}
+								return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									if _, err := io.WriteString(w, `<div class="h-48 overflow-auto">`); err != nil {
+										return err
+									}
+									if err := withChildren(
+										table.TableWithPropsWithBoundary(table.TableProps{PinRows: true}),
+										seq(
+											withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+												table.TableHeadCellWithBoundary("Name"),
+												table.TableHeadCellWithBoundary("Role"),
+												table.TableHeadCellWithBoundary("Department"),
+											))),
+											withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
 										),
+									).Render(ctx, w); err != nil {
+										return err
+									}
+									_, err := io.WriteString(w, `</div>`)
+									return err
+								})
+							},
+						},
+						{
+							Label: "Pinned cols",
+							RenderFunc: func(_ url.Values) templ.Component {
+								type tableRow struct{ Name, Col2, Col3, Col4, Col5 string }
+								rows := []tableRow{
+									{"Alice Johnson", "Admin", "Engineering", "New York", "Full-time"},
+									{"Bob Martinez", "Member", "Legal", "Chicago", "Part-time"},
+									{"Carol White", "Viewer", "Finance", "Austin", "Full-time"},
+								}
+								rowComponents := make([]templ.Component, len(rows))
+								for i, r := range rows {
+									r := r
+									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Col2)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Col3)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Col4)),
+										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Col5)),
+									))
+								}
+								return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									if _, err := io.WriteString(w, `<div class="w-72 overflow-auto">`); err != nil {
+										return err
+									}
+									if err := withChildren(
+										table.TableWithPropsWithBoundary(table.TableProps{PinCols: true}),
+										seq(
+											withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+												table.TableHeadCellWithBoundary("Name"),
+												table.TableHeadCellWithBoundary("Role"),
+												table.TableHeadCellWithBoundary("Dept"),
+												table.TableHeadCellWithBoundary("City"),
+												table.TableHeadCellWithBoundary("Type"),
+											))),
+											withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
+										),
+									).Render(ctx, w); err != nil {
+										return err
+									}
+									_, err := io.WriteString(w, `</div>`)
+									return err
+								})
+							},
+						},
+						{
+							Label: "Empty state",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(
+									table.TableWithPropsWithBoundary(table.TableProps{}),
+									seq(
+										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+											table.TableHeadCellWithBoundary("Name"),
+											table.TableHeadCellWithBoundary("Status"),
+											table.TableHeadCellWithBoundary("Role"),
+										))),
+										withChildren(table.TableBodyWithBoundary(), table.TableEmptyWithBoundary(3, "No records found.")),
 									),
-									withChildren(
-										table.TableBody(),
-										seq(rowComponents...),
-									),
-								),
-							)
-						}
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							variants := []struct {
-								label string
-								props table.TableProps
-							}{
-								{"Default", table.TableProps{}},
-								{"Zebra stripes", table.TableProps{Striped: true}},
-								{"Compact (small)", table.TableProps{Size: "sm", Striped: true}},
-							}
-							if _, err := io.WriteString(w, `<div class="p-6 flex flex-col gap-8">`); err != nil {
-								return err
-							}
-							for _, v := range variants {
-								if _, err := io.WriteString(w, `<div class="flex flex-col gap-2"><p class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">`+v.label+`</p>`); err != nil {
-									return err
-								}
-								if err := buildTable(v.props).Render(ctx, w); err != nil {
-									return err
-								}
-								if _, err := io.WriteString(w, `</div>`); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+								)
+							},
+						},
 					},
-					Tokens: []galleryruntime.DesignToken{},
 				},
 			},
 		},
@@ -5559,20 +6093,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: LogsTableTokens(),
 				},
-				{
-					Name:        "Examples",
-					Description: "Log table with all four log types.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						now := time.Now()
-						return logs.LogsTableWithBoundary([]logs.LogEntry{
-							{Type: "success", Message: "Case created successfully.", CreatedAt: now.Add(-1 * time.Minute)},
-							{Type: "info", Message: "Workflow triggered: document-review.", CreatedAt: now.Add(-3 * time.Minute)},
-							{Type: "warn", Message: "API rate limit at 80% of quota.", CreatedAt: now.Add(-10 * time.Minute)},
-							{Type: "error", Message: "Integration sync failed: connection timeout.", CreatedAt: now.Add(-30 * time.Minute)},
-							{Type: "info", Message: "User logged in from new device.", CreatedAt: now.Add(-1 * time.Hour)},
-						})
+			{
+				Name:        "Examples",
+				Description: "Log table with all four log types.",
+				SubExamples: []galleryruntime.GallerySubExample{
+					{
+						Label: "All log types",
+						RenderFunc: func(_ url.Values) templ.Component {
+							now := time.Now()
+							return logs.LogsTableWithBoundary([]logs.LogEntry{
+								{Type: "success", Message: "Case created successfully.", CreatedAt: now.Add(-1 * time.Minute)},
+								{Type: "info", Message: "Workflow triggered: document-review.", CreatedAt: now.Add(-3 * time.Minute)},
+								{Type: "warn", Message: "API rate limit at 80% of quota.", CreatedAt: now.Add(-10 * time.Minute)},
+								{Type: "error", Message: "Integration sync failed: connection timeout.", CreatedAt: now.Add(-30 * time.Minute)},
+								{Type: "info", Message: "User logged in from new device.", CreatedAt: now.Add(-1 * time.Hour)},
+							})
+						},
+					},
+					{
+						Label: "Empty state",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return logs.LogsTableWithBoundary([]logs.LogEntry{})
+						},
 					},
 				},
+			},
 			},
 		},
 
@@ -5596,24 +6141,30 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: NavbarTokens(),
 				},
-				{
-					Name:        "Examples",
-					Description: "Navbar with different app names.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="space-y-4">`); err != nil {
-								return err
-							}
-							for _, name := range []string{"LegalDesk", "CaseFlow", "DocVault"} {
-								if err := layout.Navbar(name).Render(ctx, w); err != nil {
-									return err
-								}
-							}
-							_, err := io.WriteString(w, `</div>`)
-							return err
-						})
+			{
+				Name:        "Examples",
+				Description: "Navbar with different app names.",
+				SubExamples: []galleryruntime.GallerySubExample{
+					{
+						Label: "LegalDesk",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return layout.NavbarWithBoundary("LegalDesk")
+						},
+					},
+					{
+						Label: "CaseFlow",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return layout.NavbarWithBoundary("CaseFlow")
+						},
+					},
+					{
+						Label: "DocVault",
+						RenderFunc: func(_ url.Values) templ.Component {
+							return layout.NavbarWithBoundary("DocVault")
+						},
 					},
 				},
+			},
 			},
 		},
 	}

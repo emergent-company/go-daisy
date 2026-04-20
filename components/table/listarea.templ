@@ -2,12 +2,14 @@ package table
 
 import (
 	"fmt"
+
 	ui "github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/devmode"
 )
 
 // ListArea renders a self-contained filterable+paginated (or scroll-load) list area.
 templ ListArea(props ListAreaProps) {
-	<div id={ props.ID } class="rounded-box border border-base-200 bg-base-100">
+	<div id={ props.ID } class="rounded-box border border-base-200 bg-base-100" { devmode.Attrs(ctx, "table/ListArea")... }>
 		<form
 			id={ props.ID + "-form" }
 			hx-get={ props.URL }
@@ -47,6 +49,7 @@ templ ListAreaSentinel(props ScrollSentinelProps) {
 		hx-swap="outerHTML"
 		hx-include={ "#" + props.ID + "-form" }
 		class="flex justify-center py-4"
+		{ devmode.Attrs(ctx, "table/ListAreaSentinel")... }
 	>
 		<span class="loading loading-spinner loading-sm text-base-content/40"></span>
 	</div>

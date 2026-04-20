@@ -105,11 +105,13 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 		var tabs = btn.closest('[role="tablist"]').querySelectorAll('[role="tab"]');
 		tabs.forEach(function(t) { t.classList.remove('tab-active'); });
 		btn.classList.add('tab-active');
-		// Re-render token panel from per-variant token JSON
+		// Re-render params section from per-variant token JSON
 		var tokensRaw = btn.getAttribute('data-tokens');
 		var tokens = [];
 		try { tokens = JSON.parse(tokensRaw) || []; } catch(e) {}
-		renderTokenPanel(tokens);
+		renderParamsSection(tokens);
+		// Reset so the next tree message re-applies defaults for this variant.
+		window._treeReceivedOnce = false;
 	};
 	window.switchToExamples = function(btn) {
 		var interactiveBody = document.getElementById('interactive-body');
@@ -226,15 +228,30 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 				</div>
 				</div>
 
-			<!-- Component Tree panel (hidden by default; shown when iframe posts boundary data) -->
-			<div id="component-tree-panel" class="hidden flex flex-col gap-2">
-				<div class="flex items-center gap-2">
-					<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Component Tree</span>
-				</div>
-				<div id="component-tree-body" class="rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden">
-					<p class="p-4 text-xs text-base-content/40">Loading…</p>
+		<!-- Component Tree panel (hidden by default; shown when iframe posts boundary data) -->
+		<div id="component-tree-panel" class="hidden flex flex-col gap-2">
+			<div class="flex items-center justify-between gap-2">
+				<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Component Tree</span>
+				<button
+					class="btn btn-xs btn-ghost border border-base-200 gap-1"
+					onclick="resetAllParams()"
+					title="Reset all props and parameters to defaults"
+				>
+					<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+					Reset
+				</button>
+			</div>
+			<div id="component-tree-body" class="rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden">
+				<p class="p-4 text-xs text-base-content/40">Loading…</p>
+			</div>
+			<!-- Parameters section: query-param tokens rendered by JS below the tree -->
+			<div id="tree-params-panel" class="hidden flex flex-col gap-2">
+				<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Parameters</span>
+				<div id="tree-params-body" class="rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden">
+					<div class="p-4 space-y-3"></div>
 				</div>
 			</div>
+		</div>
 
 			<!-- HTML Source panel (only for HTML snippet components) -->
 				if !isTemplPage(c) {
@@ -262,94 +279,11 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 
 			</div><!-- end left column -->
 
-		<!-- Right column: design token sidebar + feedback panel (~30%) -->
-		<!-- Hidden by default when no tokens; JS shows it when feedback mode or dev tree is active -->
-		<div id="right-column" class={ "w-[30%] shrink-0 flex flex-col gap-3 sticky top-4", templ.KV("hidden", len(c.Tokens) == 0 && (len(c.EffectiveVariants()) == 0 || len(c.EffectiveVariants()[0].Tokens) == 0)) }>
+		<!-- Right column: feedback panel only (shown by JS when feedback mode is active) -->
+		<div id="right-column" class="w-[30%] shrink-0 flex-col gap-3 sticky top-4 hidden">
 
-		<!-- Token sidebar (only when tokens exist) -->
-		if effectiveTokens := func() []DesignToken { if len(c.EffectiveVariants()) > 0 && len(c.EffectiveVariants()[0].Tokens) > 0 { return c.EffectiveVariants()[0].Tokens }; return c.Tokens }(); len(effectiveTokens) > 0 {
-			<div id="token-panel" class="flex flex-col gap-2">
-				<!-- Sidebar header -->
-				<div class="flex items-center justify-between">
-					<div class="flex items-center gap-2">
-						<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Design Tokens</span>
-						<span class="badge badge-xs badge-neutral" id="token-count-badge">{ fmt.Sprintf("%d", len(effectiveTokens)) }</span>
-					</div>
-					<button
-						class="btn btn-xs btn-ghost border border-base-200 gap-1"
-						onclick="resetTokens()"
-					>
-						<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-						Reset
-					</button>
-				</div>
-
-				<!-- Token controls -->
-				<div id="token-panel-body" class="rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden">
-					<div class="p-4 space-y-5">
-						for _, grp := range TokenGroups(effectiveTokens) {
-							<div class="token-group">
-								<p class="text-xs font-semibold text-base-content/40 uppercase tracking-wide mb-3">{ grp.Name }</p>
-								<div class="space-y-3">
-									for _, tok := range grp.Tokens {
-										<div class="flex flex-col gap-1.5" data-css-var={ tok.CSSVar } data-default={ tok.Default } data-unit={ tok.Unit } data-selector={ func() string { if tok.Selector != "" { return tok.Selector }; return ":root" }() } data-query-param={ tok.QueryParam }>
-											<div class="flex items-center justify-between">
-												<label class="text-xs text-base-content/70">{ tok.Label }</label>
-												if tok.Type == TokenTypeRange {
-													<span class="text-xs text-base-content/50 font-mono" id={ "tok-val-" + SanitizeID(tok.CSSVar) }>{ tok.Default }</span>
-												} else if tok.Type == TokenTypeColor {
-													<span class="text-xs text-base-content/50 font-mono" id={ "tok-val-" + SanitizeID(tok.CSSVar) }>{ tok.Default }</span>
-												}
-											</div>
-											if tok.Type == TokenTypeRange {
-												<input
-													type="range"
-													class="range range-xs range-primary w-full"
-													min={ fmt.Sprintf("%g", tok.Min) }
-													max={ fmt.Sprintf("%g", tok.Max) }
-													step={ fmt.Sprintf("%g", tok.Step) }
-													value={ RangeDefaultValue(tok) }
-													oninput="handleTokenChange(this)"
-												/>
-											} else if tok.Type == TokenTypeColor {
-												<input
-													type="color"
-													class="w-full h-8 rounded cursor-pointer border border-base-200"
-													value={ tok.Default }
-													oninput="handleTokenChange(this)"
-												/>
-										} else if tok.Type == TokenTypeSelect {
-											<select
-												class="select select-xs select-bordered w-full"
-												onchange="handleTokenChange(this)"
-											>
-												for _, opt := range tok.Options {
-													if opt.Value == tok.Default {
-														<option value={ opt.Value } selected>{ opt.Label }</option>
-													} else {
-														<option value={ opt.Value }>{ opt.Label }</option>
-													}
-												}
-											</select>
-									} else if tok.Type == TokenTypeText {
-										<input
-											type="text"
-											class="input input-xs input-bordered w-full"
-											value={ tok.Default }
-											oninput="handleTokenChange(this)"
-										/>
-									}
-								</div>
-									}
-								</div>
-							</div>
-						}
-					</div>
-				</div>
-			</div>
-		}
-
-			<!-- Feedback panel (hidden by default, toggled by toolbar Feedback button) -->			<div id="feedback-panel" class="hidden flex flex-col gap-2">
+			<!-- Feedback panel (hidden by default, toggled by toolbar Feedback button) -->
+			<div id="feedback-panel" class="flex flex-col gap-2">
 				<div class="flex items-center justify-between">
 					<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Feedback</span>
 					<button
@@ -705,34 +639,39 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 		})();
 	</script>
 
-	<!-- Design Token panel JS -->
+	<!-- Props / Parameters editor JS -->
 	<script>
 		(function() {
-			// ── renderTokenPanel: build token panel DOM from a JSON token array ─────
-			// Called by switchVariant when the user clicks a variant tab.
-			window.renderTokenPanel = function(tokens) {
-				var panel = document.getElementById('token-panel');
-				var body  = document.getElementById('token-panel-body');
-				var col   = document.getElementById('right-column');
-				var badge = document.getElementById('token-count-badge');
+			function escT(s) {
+				return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+			}
 
-				if (!tokens || tokens.length === 0) {
-					// No tokens for this variant — hide token panel (keep right col if feedback visible)
-					if (panel) panel.classList.add('hidden');
-					var feedbackPanel = document.getElementById('feedback-panel');
-					var feedbackVisible = feedbackPanel && !feedbackPanel.classList.contains('hidden');
-					if (col && !feedbackVisible) col.classList.add('hidden');
+			// Convert PascalCase or camelCase prop name to snake_case query param.
+			// e.g. "PinRows" → "pin_rows", "Striped" → "striped", "Size" → "size"
+			function camelToSnake(s) {
+				return s.replace(/([A-Z])/g, function(m, c, i) {
+					return (i > 0 ? '_' : '') + c.toLowerCase();
+				});
+			}
+
+			// ── renderParamsSection: render query-param tokens in #tree-params-body ─
+			// Called by switchVariant and handleTreeMessage after tree is rendered.
+			window.renderParamsSection = function(tokens) {
+				var panel = document.getElementById('tree-params-panel');
+				var body  = document.getElementById('tree-params-body');
+				if (!panel || !body) return;
+
+				// Filter to only query-param tokens (not CSS var tokens)
+				var qpTokens = (tokens || []).filter(function(t) { return t.QueryParam; });
+
+				if (qpTokens.length === 0) {
+					panel.classList.add('hidden');
 					return;
 				}
 
-				// Show right column + token panel
-				if (col) col.classList.remove('hidden');
-				if (panel) panel.classList.remove('hidden');
-				if (badge) badge.textContent = String(tokens.length);
-
-				// Group tokens by Group field
+				// Group by Group field
 				var order = [], byName = {};
-				tokens.forEach(function(tok) {
+				qpTokens.forEach(function(tok) {
 					var g = tok.Group || 'General';
 					if (!byName[g]) { order.push(g); byName[g] = []; }
 					byName[g].push(tok);
@@ -740,198 +679,125 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 
 				var html = '';
 				order.forEach(function(grpName) {
-					html += '<div class="token-group">';
-					html += '<p class="text-xs font-semibold text-base-content/40 uppercase tracking-wide mb-3">' + escT(grpName) + '</p>';
+					html += '<div class="token-group mb-4">';
+					html += '<p class="text-xs font-semibold text-base-content/40 uppercase tracking-wide mb-2">' + escT(grpName) + '</p>';
 					html += '<div class="space-y-3">';
-				byName[grpName].forEach(function(tok) {
-					var cssVar = tok.CSSVar || '';
-					var def    = tok.Default || '';
-					var unit   = tok.Unit || '';
-					var sel    = tok.Selector || ':root';
-					var qp     = tok.QueryParam || '';
-					var safeId = cssVar.replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, '');
-					html += '<div class="flex flex-col gap-1.5" data-css-var="' + escT(cssVar) + '" data-default="' + escT(def) + '" data-unit="' + escT(unit) + '" data-selector="' + escT(sel) + '" data-query-param="' + escT(qp) + '">';
+					byName[grpName].forEach(function(tok) {
+						var def = tok.Default || '';
+						var qp  = tok.QueryParam || '';
+						var safeId = qp.replace(/[^a-zA-Z0-9]/g, '-');
+						html += '<div class="flex flex-col gap-1" data-default="' + escT(def) + '" data-query-param="' + escT(qp) + '">';
 						html += '<div class="flex items-center justify-between">';
-						html += '<label class="text-xs text-base-content/70">' + escT(tok.Label || cssVar) + '</label>';
-						if (tok.Type === 'range' || tok.Type === 'color') {
-							html += '<span class="text-xs text-base-content/50 font-mono" id="tok-val-' + safeId + '">' + escT(def) + '</span>';
+						html += '<label class="text-xs text-base-content/60">' + escT(tok.Label || qp) + '</label>';
+						if (tok.Type === 'range') {
+							html += '<span class="text-xs text-base-content/40 font-mono" id="param-val-' + safeId + '">' + escT(def) + '</span>';
 						}
 						html += '</div>';
 						if (tok.Type === 'range') {
 							var numVal = parseFloat(def) || tok.Min || 0;
 							html += '<input type="range" class="range range-xs range-primary w-full"'
-								+ ' min="' + (tok.Min || 0) + '" max="' + (tok.Max || 1) + '" step="' + (tok.Step || 0.1) + '"'
-								+ ' value="' + numVal + '" oninput="handleTokenChange(this)"/>';
+								+ ' min="' + (tok.Min||0) + '" max="' + (tok.Max||1) + '" step="' + (tok.Step||0.1) + '"'
+								+ ' value="' + numVal + '" oninput="handleParamChange(this)"/>';
 						} else if (tok.Type === 'color') {
 							html += '<input type="color" class="w-full h-8 rounded cursor-pointer border border-base-200"'
-								+ ' value="' + escT(def) + '" oninput="handleTokenChange(this)"/>';
-					} else if (tok.Type === 'select') {
-						html += '<select class="select select-xs select-bordered w-full" onchange="handleTokenChange(this)">';
-						(tok.Options || []).forEach(function(opt) {
-							var sel2 = opt.Value === def ? ' selected' : '';
-							html += '<option value="' + escT(opt.Value) + '"' + sel2 + '>' + escT(opt.Label) + '</option>';
-						});
-						html += '</select>';
-					} else if (tok.Type === 'text') {
-						html += '<input type="text" class="input input-xs input-bordered w-full" value="' + escT(def) + '" oninput="handleTokenChange(this)"/>';
-					}
+								+ ' value="' + escT(def) + '" oninput="handleParamChange(this)"/>';
+						} else if (tok.Type === 'select') {
+							html += '<select class="select select-xs select-bordered w-full" onchange="handleParamChange(this)">';
+							(tok.Options || []).forEach(function(opt) {
+								var sel = opt.Value === def ? ' selected' : '';
+								html += '<option value="' + escT(opt.Value) + '"' + sel + '>' + escT(opt.Label) + '</option>';
+							});
+							html += '</select>';
+						} else if (tok.Type === 'text') {
+							html += '<input type="text" class="input input-xs input-bordered w-full" value="' + escT(def) + '" oninput="handleParamChange(this)"/>';
+						} else if (tok.Type === 'bool') {
+							var chk = def === 'true' ? ' checked' : '';
+							html += '<input type="checkbox" class="toggle toggle-xs toggle-primary"' + chk + ' onchange="handleParamChange(this)"/>';
+						}
 						html += '</div>';
 					});
 					html += '</div></div>';
 				});
 
-				if (body) body.innerHTML = '<div class="p-4 space-y-5">' + html + '</div>';
+				body.innerHTML = '<div class="p-3 space-y-1">' + html + '</div>';
+				panel.classList.remove('hidden');
 			};
 
-			function escT(s) {
-				return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-			}
+			// handleParamChange: fires when a parameter control changes.
+			window.handleParamChange = function(input) {
+				applyAllQueryParamsToFrame('preview-frame');
+			};
 
-			// ── Token collection & application ────────────────────────────────────
-			function collectTokens() {
-				var bySelector = {};
-				var rows = document.querySelectorAll('#token-panel-body [data-css-var]');
-				rows.forEach(function(row) {
-					var cssVar = row.getAttribute('data-css-var');
-					var unit = row.getAttribute('data-unit') || '';
-					var selector = row.getAttribute('data-selector') || ':root';
-					var input = row.querySelector('input, select');
-					if (!input || !cssVar) return;
-					var value = input.value;
-					if (input.type === 'range') { value = value + unit; }
-					if (!bySelector[selector]) bySelector[selector] = {};
-					bySelector[selector][cssVar] = value;
-				});
-				return bySelector;
-			}
-
-			function buildCSS(bySelector) {
-				var blocks = [];
-				Object.keys(bySelector).forEach(function(selector) {
-					var lines = [selector + ' {'];
-					Object.keys(bySelector[selector]).forEach(function(k) {
-						lines.push('  ' + k + ': ' + bySelector[selector][k] + ';');
-					});
-					lines.push('}');
-					blocks.push(lines.join('\n'));
-				});
-				return blocks.join('\n');
-			}
-
-			function applyTokensToFrame(frameId) {
+			// ── Collect all query params from both the params section and prop editors ─
+			function applyAllQueryParamsToFrame(frameId) {
 				var frame = document.getElementById(frameId);
 				if (!frame) return;
-				var bySelector = collectTokens();
-				var css = buildCSS(bySelector);
-
-				if (frame.hasAttribute('srcdoc')) {
-					var originalSrcdoc = frame.getAttribute('data-original-srcdoc') || frame.getAttribute('srcdoc');
-					if (!frame.getAttribute('data-original-srcdoc')) {
-						frame.setAttribute('data-original-srcdoc', originalSrcdoc);
-					}
-					var injected = originalSrcdoc.replace('</head>', '<style id="token-overrides">\n' + css + '\n</style>\n</head>');
-					frame.setAttribute('srcdoc', injected);
-				} else {
-					try {
-						var doc = frame.contentDocument || frame.contentWindow.document;
-						if (!doc) return;
-						var styleEl = doc.getElementById('token-overrides');
-						if (!styleEl) {
-							styleEl = doc.createElement('style');
-							styleEl.id = 'token-overrides';
-							(doc.head || doc.documentElement).appendChild(styleEl);
-						}
-						styleEl.textContent = css;
-					} catch(e) {}
-				}
-			}
-
-			// ── Query-param driven rendering ──────────────────────────────────────
-			// Collects all QueryParam tokens from the panel and updates the iframe src.
-			function applyQueryParamsToFrame(frameId) {
-				var frame = document.getElementById(frameId);
-				if (!frame) return;
-				// Start from the current base src (strip existing query string).
 				var src = frame.src || '';
 				var baseSrc = src.split('?')[0];
-				// Collect all query-param token values.
 				var params = new URLSearchParams();
-				var rows = document.querySelectorAll('#token-panel-body [data-query-param]');
-				rows.forEach(function(row) {
+
+				// 1. Collect from #tree-params-body (DesignToken query params)
+				document.querySelectorAll('#tree-params-body [data-query-param]').forEach(function(row) {
 					var qp = row.getAttribute('data-query-param');
 					if (!qp) return;
 					var input = row.querySelector('input, select');
 					if (!input) return;
-					params.set(qp, input.value);
+					var val = input.type === 'checkbox' ? (input.checked ? 'true' : 'false') : input.value;
+					params.set(qp, val);
 				});
+
+				// 2. Collect from #component-tree-body prop editors ([data-prop-key])
+				document.querySelectorAll('#component-tree-body [data-prop-key]').forEach(function(row) {
+					var propKey = row.getAttribute('data-prop-key');
+					if (!propKey) return;
+					var qp = camelToSnake(propKey);
+					var input = row.querySelector('input, select, textarea');
+					if (!input) return;
+					var val = input.type === 'checkbox' ? (input.checked ? 'true' : 'false') : input.value;
+					params.set(qp, val);
+				});
+
 				var qs = params.toString();
 				frame.src = qs ? baseSrc + '?' + qs : baseSrc;
 			}
 
-			window.handleTokenChange = function(input) {
-				var row = input.closest('[data-css-var], [data-query-param]');
-				if (!row) return;
-				var queryParam = row.getAttribute('data-query-param');
-				var unit = row.getAttribute('data-unit') || '';
+			// Expose for callers in other scopes (handleTreeMessage, switchVariant, etc.)
+			window.applyAllQueryParamsToFrame = applyAllQueryParamsToFrame;
+			window.applyQueryParamsToFrame = applyAllQueryParamsToFrame;
 
-				// Update the visible value label for range/color tokens
-				if (input.type === 'range') {
-					var labelEl = document.getElementById('tok-val-' + (row.getAttribute('data-css-var') || '').replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
-					if (labelEl) labelEl.textContent = input.value + unit;
-				} else if (input.type === 'color') {
-					var labelEl2 = document.getElementById('tok-val-' + (row.getAttribute('data-css-var') || '').replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
-					if (labelEl2) labelEl2.textContent = input.value;
-				}
-
-				if (queryParam) {
-					// QueryParam token — update iframe src query string (server-side re-render)
-					applyQueryParamsToFrame('preview-frame');
-				} else {
-					// CSS var token — inject CSS into the iframe
-					applyTokensToFrame('preview-frame');
-				}
+			// handlePropChange: fires when an inline prop editor control changes.
+			window.handlePropChange = function(input) {
+				applyAllQueryParamsToFrame('preview-frame');
 			};
 
-			window.resetTokens = function() {
-				var hasQueryParams = false;
-				var rows = document.querySelectorAll('#token-panel-body [data-css-var], #token-panel-body [data-query-param]');
-				rows.forEach(function(row) {
-					var def = row.getAttribute('data-default');
-					var unit = row.getAttribute('data-unit') || '';
-					var cssVar = row.getAttribute('data-css-var') || '';
-					var qp = row.getAttribute('data-query-param') || '';
+			// ── Reset all params and prop editors to defaults ─────────────────────
+			window.resetAllParams = function() {
+				// Reset param controls
+				document.querySelectorAll('#tree-params-body [data-query-param]').forEach(function(row) {
+					var def = row.getAttribute('data-default') || '';
 					var input = row.querySelector('input, select');
-					if (!input || !def) return;
-					if (input.type === 'range') {
+					if (!input) return;
+					if (input.type === 'checkbox') { input.checked = def === 'true'; }
+					else if (input.type === 'range') {
 						input.value = parseFloat(def) || 0;
-						var labelEl = document.getElementById('tok-val-' + cssVar.replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
-						if (labelEl) labelEl.textContent = def;
-					} else {
-						input.value = def;
-						if (input.type === 'color') {
-							var labelEl2 = document.getElementById('tok-val-' + cssVar.replace(/[^a-zA-Z0-9]/g, '-').replace(/^-+|-+$/g, ''));
-							if (labelEl2) labelEl2.textContent = def;
-						}
-					}
-					if (qp) hasQueryParams = true;
+						var qp = row.getAttribute('data-query-param') || '';
+						var label = document.getElementById('param-val-' + qp.replace(/[^a-zA-Z0-9]/g, '-'));
+						if (label) label.textContent = def;
+					} else { input.value = def; }
 				});
-				if (hasQueryParams) {
-					// Reload iframe with default query params
-					applyQueryParamsToFrame('preview-frame');
-				} else {
-					var frame = document.getElementById('preview-frame');
-					if (frame && frame.getAttribute('data-original-srcdoc')) {
-						frame.setAttribute('srcdoc', frame.getAttribute('data-original-srcdoc'));
-						frame.removeAttribute('data-original-srcdoc');
-					} else if (frame && !frame.hasAttribute('srcdoc')) {
-						try {
-							var doc = frame.contentDocument || frame.contentWindow.document;
-							var styleEl = doc && doc.getElementById('token-overrides');
-							if (styleEl) styleEl.remove();
-						} catch(e) {}
-					}
-				}
+				// Reset prop editors
+				document.querySelectorAll('#component-tree-body [data-prop-key]').forEach(function(row) {
+					var def = row.getAttribute('data-default') || '';
+					var input = row.querySelector('input, select, textarea');
+					if (!input) return;
+					if (input.type === 'checkbox') { input.checked = def === 'true'; }
+					else { input.value = def; }
+				});
+				applyAllQueryParamsToFrame('preview-frame');
 			};
+
+			// Legacy alias kept so any remaining callers don't break.
+			window.resetTokens = window.resetAllParams;
 		})();
 	</script>
 
@@ -948,11 +814,10 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 				var col = document.getElementById('right-column');
 				if (feedbackModeActive) {
 					deactivateFeedbackMode();
-					// Hide the feedback panel when turning off feedback mode
+					// Hide the feedback panel and right column when turning off feedback mode
 					var panel = document.getElementById('feedback-panel');
 					if (panel) panel.classList.add('hidden');
-					// Hide the right column entirely if there are no tokens
-					if (col && !col.querySelector('#token-panel')) col.classList.add('hidden');
+					if (col) col.classList.add('hidden');
 					// Force flex reflow then re-measure iframe height
 					setTimeout(function() {
 						var twoCol = col && col.parentElement;
@@ -962,7 +827,7 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 				} else {
 					activateFeedbackMode();
 					// Show the right column + feedback panel
-					if (col) col.classList.remove('hidden');
+					if (col) { col.classList.remove('hidden'); col.style.display = 'flex'; }
 					var panel = document.getElementById('feedback-panel');
 					if (panel) panel.classList.remove('hidden');
 					// Re-measure iframe after reflow
@@ -1187,7 +1052,7 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 				if (dialog) dialog.close();
 				// Auto-open feedback panel and refresh list
 				var col = document.getElementById('right-column');
-				if (col) col.classList.remove('hidden');
+				if (col) { col.classList.remove('hidden'); col.style.display = 'flex'; }
 				var panel = document.getElementById('feedback-panel');
 				if (panel) panel.classList.remove('hidden');
 					htmx.trigger(document.body, 'feedbackCreated');
@@ -1240,29 +1105,78 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 	// Depth-indexed colour palette matching devOverlayScript.
 	var DEPTH_COLORS = ['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899'];
 
-	function depthColor(d) { return DEPTH_COLORS[d % DEPTH_COLORS.length]; }
+	// Map component name → gallery slug (must stay in sync with devoverlay.go).
+	var COMPONENT_SLUGS = {
+		// Basics
+		'Button':'button','Badge':'badge','StatusBadge':'status-badge-real',
+		'Avatar':'avatar-real','Card':'card-real','Tag':'tag',
+		'Divider':'divider','Kbd':'kbd','IconSpanColored':'button',
+		// Feedback
+		'Toast':'toast-real','Alert':'alert','Empty':'empty-state-real',
+		'Loader':'loader','NoPermissions':'no-permissions','SectionHeader':'section-header','Skeleton':'skeleton',
+		// Data display
+		'StatCard':'stat-card-real','StatCardMinimal':'stat-card-minimal','ProgressCard':'progress-card',
+		'Timeline':'timeline','ChatBubble':'chat-bubble','LogsTable':'logs-table',
+		// Table (root only — sub-primitives have no standalone page)
+		'TableWithProps':'table','Table':'table','ListArea':'list-basic',
+		// Navigation
+		'ActionMenu':'action-menu-real','FilterTabs':'filter-tabs','FilterCard':'filter-bar',
+		'Pagination':'pagination-real','TabMenu':'tab-menu-real','SimpleTabs':'tab-menu-real',
+		'PageHeader':'page-header-real','Menu':'menu-real','TopBar':'top-bar-real',
+		'Navbar':'navbar-real','Breadcrumbs':'breadcrumbs','Dock':'dock-nav',
+		'ProfileMenu':'profile-menu','PageTitleMinimal':'page-title-minimal',
+		'PageTitleEditor':'page-title-editor','FooterMinimal':'footer-minimal',
+		// Foundation / display
+		'Progress':'progress','Steps':'steps','Accordion':'collapse','Swap':'swap',
+		'Countdown':'countdown','StatusDot':'status-dots','Tooltip':'tooltip',
+		'Indicator':'indicator','Stack':'stack','Diff':'diff','Mask':'mask',
+		'Carousel':'carousel','Link':'link-styles',
+		// Layout
+		'Hero':'hero','Join':'join','Fieldset':'fieldset',
+		// Mockups
+		'MockupBrowser':'mockup-browser','MockupCode':'mockup-code',
+		'MockupPhone':'mockup-phone','MockupWindow':'mockup-window',
+		// Overlays
+		'Modal':'modal-real','ConfirmPopup':'confirm-popup','FormModal':'form-modal-real',
+		'Dropdown':'dropdown','FAB':'fab','NotificationPanel':'notification-panel',
+		// Person
+		'PersonCell':'person-cell',
+		// Forms
+		'TextInput':'text-input','TextareaInput':'textarea-input',
+		'CheckboxInput':'checkbox-input','SelectInput':'select-input',
+		'RangeInput':'range-input','SearchInput':'search-input-real',
+		'FormField':'form-field-real','RadioGroup':'form-radio','Rating':'form-rating',
+		'FileInput':'form-file','Checkbox':'form-checkbox','Toggle':'form-checkbox',
+		'PromptBar':'prompt-bar-minimal','PromptBarAction':'prompt-bar-action',
+		'InputSpinner':'input-spinner','WizardStepper':'wizard-stepper',
+	};
 
-	function summariseProps(raw) {
-		var obj;
-		try { obj = JSON.parse(raw); } catch(e) { return ''; }
-		if (!obj || typeof obj !== 'object') return '';
-		var parts = [];
-		var skip = {class:1, style:1, id:1, Class:1, Style:1, ID:1};
-		var keys = Object.keys(obj);
-		for (var i = 0; i < keys.length && parts.length < 3; i++) {
-			var k = keys[i];
-			var v = obj[k];
-			if (skip[k]) continue;
-			if (v === false || v === '' || v === null || v === undefined) continue;
-			var vs = String(v);
-			if (vs.length > 20) vs = vs.slice(0, 17) + '\u2026';
-			parts.push(k + '=' + vs);
-		}
-		return parts.length ? ' ' + parts.join(' ') : '';
-	}
+	function depthColor(d) { return DEPTH_COLORS[d % DEPTH_COLORS.length]; }
 
 	function escHtml(s) {
 		return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+	}
+
+	// Strip dev-only attributes (data-component, data-props, display:contents wrapper divs)
+	// from HTML before displaying it in the code preview.
+	function cleanHtml(raw) {
+		// Remove data-component="…" — value never contains escaped quotes.
+		var s = raw.replace(/\s*data-component="[^"]*"/g, '');
+		// Remove data-props="…" — value may contain \" escaped quotes inside JSON.
+		// Match: data-props=" then any chars (including \") until an unescaped closing "
+		s = s.replace(/\s*data-props="(?:[^"\\]|\\.)*"/g, '');
+		// Also remove any orphaned ="": artefacts left by the devmode attribute injection
+		// (e.g. data-props="{...}"="" the browser parses the trailing ="" as an empty attr).
+		s = s.replace(/\s*=""(?=[\s>])/g, '');
+		// Remove display:contents wrapper divs left by ComponentBoundary.
+		// These look like: <div style="display:contents">…</div>
+		// Use a simple iterative replacement (no recursion limit issues).
+		var prev;
+		do {
+			prev = s;
+			s = s.replace(/<div\s+style="display:contents"\s*>([\s\S]*?)<\/div>/g, '$1');
+		} while (s !== prev);
+		return s.trim();
 	}
 
 	// Pretty-print HTML with basic indentation.
@@ -1286,30 +1200,83 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 		return result.trim();
 	}
 
-	function renderTree(nodes) {
+	// Convert PascalCase prop name to snake_case query param key.
+	function camelToSnake(s) {
+		return s.replace(/([A-Z])/g, function(m, c, i) {
+			return (i > 0 ? '_' : '') + c.toLowerCase();
+		});
+	}
+
+	// Render an editable props panel for a component node.
+	// Returns an HTML string, or '' if no props worth showing.
+	// Bool props become toggle checkboxes; strings/numbers become text inputs.
+	// Each row has data-prop-key so applyAllQueryParamsToFrame can collect them.
+	function renderPropsTable(rawProps, coveredQPs) {
+		var obj;
+		try { obj = JSON.parse(rawProps); } catch(e) { return ''; }
+		if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return '';
+		var skip = {class:1, style:1, id:1, Class:1, Style:1, ID:1};
+		var covered = coveredQPs || {};
+		var rows = '';
+		var count = 0;
+		var keys = Object.keys(obj);
+		for (var i = 0; i < keys.length; i++) {
+			var k = keys[i];
+			if (skip[k]) continue;
+			if (covered[camelToSnake(k)]) continue;
+			var v = obj[k];
+			var defVal = (v === null || v === undefined) ? '' : String(v);
+			var ctrl;
+			if (typeof v === 'boolean' || v === true || v === false) {
+				var chk = v ? ' checked' : '';
+				ctrl = '<input type="checkbox" class="toggle toggle-xs toggle-primary" data-default="' + escHtml(defVal) + '"' + chk + ' onchange="handlePropChange(this)" style="vertical-align:middle"/>';
+			} else if (typeof v === 'number') {
+				ctrl = '<input type="number" class="input input-xs input-bordered w-20 font-mono text-right" data-default="' + escHtml(defVal) + '" value="' + escHtml(defVal) + '" oninput="handlePropChange(this)"/>';
+			} else {
+				var str = (v === null || v === undefined || v === '') ? '' : String(v);
+				ctrl = '<input type="text" class="input input-xs input-bordered w-full font-mono" data-default="' + escHtml(str) + '" value="' + escHtml(str) + '" oninput="handlePropChange(this)"/>';
+			}
+			rows += '<tr>'
+				+ '<td style="padding:3px 8px 3px 0;white-space:nowrap;color:#94a3b8;font-size:0.68rem;vertical-align:middle" class="font-mono">' + escHtml(k) + '</td>'
+				+ '<td style="padding:3px 0;font-size:0.68rem" data-prop-key="' + escHtml(k) + '" data-default="' + escHtml(defVal) + '">' + ctrl + '</td>'
+				+ '</tr>';
+			count++;
+		}
+		if (!count) return '';
+		return '<div style="padding:4px 8px 4px 16px">'
+			+ '<table style="border-collapse:collapse;width:100%;font-family:ui-monospace,monospace">'
+			+ '<tbody>' + rows + '</tbody></table></div>';
+	}
+
+	function renderTree(nodes, coveredQPs) {
 		if (!nodes || nodes.length === 0) return '<p class="p-4 text-xs text-base-content/40">No component boundaries found.</p>';
 		var html = '<ul class="py-1">';
 		for (var i = 0; i < nodes.length; i++) {
 			var n = nodes[i];
 			var col = depthColor(n.depth);
 			var indent = n.depth * 12;
-			var props = summariseProps(n.props);
 			var nodeId = 'dev-tree-node-' + i;
 			var codeId = 'dev-tree-code-' + i;
+			var slug = COMPONENT_SLUGS[n.name] || '';
+			var propsHtml = renderPropsTable(n.props, coveredQPs);
 
 			html += '<li style="padding-left:' + (8 + indent) + 'px" class="py-0.5">';
-			// Clickable row
-			html += '<button onclick="devTreeToggle(\'' + nodeId + '\')" style="width:100%;text-align:left" class="flex items-baseline gap-1.5 w-full hover:bg-base-200 rounded px-1 py-0.5 group">';
-			html += '<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:' + col + ';flex-shrink:0;margin-top:2px"></span>';
-			html += '<span class="font-mono text-xs font-semibold text-base-content">' + escHtml(n.name) + '</span>';
-			if (props) {
-				html += '<span class="font-mono text-xs text-base-content/40 truncate" style="max-width:140px" title="' + escHtml(props) + '">' + escHtml(props) + '</span>';
+			html += '<div class="flex items-center gap-1.5 w-full rounded px-1 py-0.5 group hover:bg-base-200">';
+			html += '<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:' + col + ';flex-shrink:0"></span>';
+			// Name: link if slug exists, plain text otherwise
+			if (slug) {
+				html += '<a href="/gallery/' + slug + '" class="font-mono text-xs font-semibold text-base-content hover:underline" style="cursor:pointer">' + escHtml(n.name) + '</a>';
+			} else {
+				html += '<span class="font-mono text-xs font-semibold text-base-content">' + escHtml(n.name) + '</span>';
 			}
-			html += '<span class="ml-auto text-base-content/20 group-hover:text-base-content/50 text-xs pr-1">\u2039/\u203a</span>';
-			html += '</button>';
-			// Collapsible HTML block (hidden by default)
-			html += '<div id="' + nodeId + '" class="hidden mt-1 mb-1" style="padding-left:8px">';
-			html += '<pre id="' + codeId + '" class="language-html" style="margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px"><code class="language-html">' + escHtml(formatHtml(n.html)) + '</code></pre>';
+			// Toggle button for HTML block
+			html += '<button onclick="devTreeToggle(\'' + nodeId + '\')" class="ml-auto text-base-content/20 group-hover:text-base-content/50 text-xs pr-1 hover:text-base-content/80" style="flex-shrink:0">\u2039/\u203a</button>';
+			html += '</div>';
+			// Props table (always visible)
+			if (propsHtml) html += propsHtml;
+			// Collapsible HTML block (expanded by default)
+			html += '<div id="' + nodeId + '" class="mt-1 mb-1" style="padding-left:8px">';
+			html += '<pre id="' + codeId + '" class="language-html" style="margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px"><code class="language-html">' + escHtml(formatHtml(cleanHtml(n.html))) + '</code></pre>';
 			html += '</div>';
 			html += '</li>';
 		}
@@ -1322,21 +1289,39 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 		if (!el) return;
 		var isHidden = el.classList.toggle('hidden');
 		if (!isHidden && window.Prism) {
-			// Re-highlight the newly revealed block.
 			var code = el.querySelector('code');
 			if (code) Prism.highlightElement(code);
 		}
 	};
 
+	window._treeReceivedOnce = false;
 	function handleTreeMessage(e) {
 		if (!e.data || e.data.type !== '__dev_component_tree__') return;
 		var tree = e.data.tree || [];
 		var panel = document.getElementById('component-tree-panel');
 		var body  = document.getElementById('component-tree-body');
 		if (!panel || !body) return;
-		body.innerHTML = renderTree(tree);
 		if (tree.length > 0) {
 			panel.classList.remove('hidden');
+			// Render the params section using the active variant's tokens.
+			var activeTab = document.querySelector('#variant-tabs [role="tab"].tab-active');
+			var tokens = [];
+			if (activeTab) {
+				try { tokens = JSON.parse(activeTab.getAttribute('data-tokens') || '[]') || []; } catch(e) {}
+			}
+			if (window.renderParamsSection) window.renderParamsSection(tokens);
+			// Build set of query params already covered by the Parameters section.
+			// This prevents prop editors from conflicting with Parameters section defaults.
+			var coveredQPs = {};
+			(tokens || []).filter(function(t){ return t.QueryParam; }).forEach(function(t){ coveredQPs[t.QueryParam] = 1; });
+			body.innerHTML = renderTree(tree, coveredQPs);
+			// On first tree receive per variant, apply all defaults so the iframe reflects them.
+			if (!window._treeReceivedOnce) {
+				window._treeReceivedOnce = true;
+				if (window.applyAllQueryParamsToFrame) window.applyAllQueryParamsToFrame('preview-frame');
+			}
+		} else {
+			body.innerHTML = renderTree(tree, {});
 		}
 	}
 
@@ -1347,61 +1332,126 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 
 // ComponentExamples renders all stories stacked vertically with labeled iframe previews.
 // Stories named "Interactive" are excluded — they belong to the Interactive tab only.
+// When a story has SubExamples set, each sub-example gets its own labeled iframe and
+// component tree panel instead of a single shared iframe for the whole story.
 templ ComponentExamples(c GalleryComponent) {
 	<div class="flex flex-col gap-8 py-2">
-		for i, story := range c.EffectiveVariants() {
+		for si, story := range c.EffectiveVariants() {
 			if story.Name != "Interactive" {
-			<div class="flex flex-col gap-2">
-				<!-- Story toolbar: label + controls matching the Interactive toolbar -->
-				<div class="flex items-center justify-between mb-2 gap-3 flex-wrap">
+				if len(story.SubExamples) > 0 {
+				<!-- SubExamples mode: one iframe + component tree per sub-example -->
+				<div class="flex flex-col gap-6">
 					<div class="flex items-center gap-2 min-w-0">
 						<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">{ story.Name }</span>
 						if story.Description != "" {
 							<span class="text-xs text-base-content/40">{ story.Description }</span>
 						}
 					</div>
-					<div class="flex items-center gap-2">
-						<!-- Fullscreen -->
-						<button
-							class="btn btn-xs btn-ghost border border-base-200 gap-1"
-							onclick={ templ.JSFuncCall("openExamplesFullscreen", c.Slug, SlugifyStoryName(story.Name), i) }
-							title="Fullscreen preview"
-						>
-							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-							Fullscreen
-						</button>
-						<!-- Open in new tab -->
-						<a
-							href={ templ.URL("/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name)) }
-							target="_blank"
-							class="btn btn-xs btn-ghost border border-base-200 gap-1"
-							title="Open in new tab"
-						>
-							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-							Open
-						</a>
-						<!-- Theme toggle -->
-						<span class="text-xs text-base-content/40">Theme:</span>
-						<button
-							class="btn btn-xs btn-ghost border border-base-200 examples-theme-btn"
-							data-frame-idx={ fmt.Sprintf("%d", i) }
-							onclick={ templ.JSFuncCall("toggleExamplesTheme", i) }
-						>
-							&#9728; Light
-						</button>
+					for ei, sub := range story.SubExamples {
+					<div class="flex flex-col gap-2">
+						<!-- Sub-example toolbar -->
+						<div class="flex items-center justify-between mb-1 gap-3 flex-wrap">
+							<div class="flex items-center gap-2 min-w-0">
+								<span class="text-xs font-semibold text-base-content/60">{ sub.Label }</span>
+							</div>
+							<div class="flex items-center gap-2">
+								<!-- Open in new tab -->
+								<a
+									href={ templ.URL(fmt.Sprintf("/gallery/render/%s/examples?s=%d&e=%d", c.Slug, si, ei)) }
+									target="_blank"
+									class="btn btn-xs btn-ghost border border-base-200 gap-1"
+									title="Open in new tab"
+								>
+									<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+									Open
+								</a>
+								<!-- Theme toggle -->
+								<span class="text-xs text-base-content/40">Theme:</span>
+								<button
+									class="btn btn-xs btn-ghost border border-base-200 examples-theme-btn"
+									data-frame-id={ fmt.Sprintf("examples-sub-frame-%d-%d", si, ei) }
+									onclick={ templ.JSFuncCall("toggleExamplesSubTheme", fmt.Sprintf("examples-sub-frame-%d-%d", si, ei)) }
+								>
+									&#9728; Light
+								</button>
+							</div>
+						</div>
+						<!-- Sub-example iframe -->
+						<div class="rounded-xl border border-base-200 overflow-hidden bg-base-100 shadow-sm">
+							<iframe
+								id={ fmt.Sprintf("examples-sub-frame-%d-%d", si, ei) }
+								class="block w-full examples-sub-frame"
+								style="height:200px; border:none;"
+								src={ fmt.Sprintf("/gallery/render/%s/examples?s=%d&e=%d", c.Slug, si, ei) }
+								title={ sub.Label }
+								data-tree-panel={ fmt.Sprintf("examples-sub-tree-%d-%d", si, ei) }
+								data-tree-body={ fmt.Sprintf("examples-sub-tree-body-%d-%d", si, ei) }
+							></iframe>
+						</div>
+						<!-- Per-sub-example component tree panel (hidden until iframe sends data) -->
+						<div id={ fmt.Sprintf("examples-sub-tree-%d-%d", si, ei) } class="hidden rounded-xl border border-base-200 overflow-hidden bg-base-100 shadow-sm">
+							<div class="px-3 py-2 border-b border-base-200 bg-base-200/40">
+								<span class="text-xs font-semibold text-base-content/50 uppercase tracking-wide">Component Tree</span>
+							</div>
+							<div id={ fmt.Sprintf("examples-sub-tree-body-%d-%d", si, ei) } class="overflow-auto max-h-64"></div>
+						</div>
+					</div>
+					}
+				</div>
+				} else {
+				<!-- Standard mode: single iframe for the whole story -->
+				<div class="flex flex-col gap-2">
+					<!-- Story toolbar: label + controls matching the Interactive toolbar -->
+					<div class="flex items-center justify-between mb-2 gap-3 flex-wrap">
+						<div class="flex items-center gap-2 min-w-0">
+							<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">{ story.Name }</span>
+							if story.Description != "" {
+								<span class="text-xs text-base-content/40">{ story.Description }</span>
+							}
+						</div>
+						<div class="flex items-center gap-2">
+							<!-- Fullscreen -->
+							<button
+								class="btn btn-xs btn-ghost border border-base-200 gap-1"
+								onclick={ templ.JSFuncCall("openExamplesFullscreen", c.Slug, SlugifyStoryName(story.Name), si) }
+								title="Fullscreen preview"
+							>
+								<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+								Fullscreen
+							</button>
+							<!-- Open in new tab -->
+							<a
+								href={ templ.URL("/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name)) }
+								target="_blank"
+								class="btn btn-xs btn-ghost border border-base-200 gap-1"
+								title="Open in new tab"
+							>
+								<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+								Open
+							</a>
+							<!-- Theme toggle -->
+							<span class="text-xs text-base-content/40">Theme:</span>
+							<button
+								class="btn btn-xs btn-ghost border border-base-200 examples-theme-btn"
+								data-frame-idx={ fmt.Sprintf("%d", si) }
+								onclick={ templ.JSFuncCall("toggleExamplesTheme", si) }
+							>
+								&#9728; Light
+							</button>
+						</div>
+					</div>
+					<!-- Story iframe -->
+					<div class="rounded-xl border border-base-200 overflow-hidden bg-base-100 shadow-sm">
+						<iframe
+							id={ fmt.Sprintf("examples-frame-%d", si) }
+							class="block w-full examples-frame"
+							style="height:200px; border:none;"
+							src={ "/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name) }
+							title={ story.Name }
+						></iframe>
 					</div>
 				</div>
-				<!-- Story iframe -->
-				<div class="rounded-xl border border-base-200 overflow-hidden bg-base-100 shadow-sm">
-					<iframe
-						id={ fmt.Sprintf("examples-frame-%d", i) }
-						class="block w-full examples-frame"
-						style="height:200px; border:none;"
-						src={ "/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name) }
-						title={ story.Name }
-					></iframe>
-				</div>
-			</div>
+				}
 			}
 		}
 	</div>
@@ -1428,6 +1478,12 @@ templ ComponentExamples(c GalleryComponent) {
 			btn.innerHTML = theme === 'dark' ? '&#9790; Dark' : '&#9728; Light';
 		}
 
+		function updateThemeBtnById(frameId, theme) {
+			var btn = document.querySelector('.examples-theme-btn[data-frame-id="' + frameId + '"]');
+			if (!btn) return;
+			btn.innerHTML = theme === 'dark' ? '&#9790; Dark' : '&#9728; Light';
+		}
+
 		window.toggleExamplesTheme = function(idx) {
 			var current = frameThemes[idx] || getSavedTheme();
 			var next = current === 'dark' ? 'light' : 'dark';
@@ -1435,6 +1491,16 @@ templ ComponentExamples(c GalleryComponent) {
 			var frame = document.getElementById('examples-frame-' + idx);
 			if (frame) applyThemeToFrame(frame, next);
 			updateThemeBtn(idx, next);
+		};
+
+		// Sub-example theme toggle (keyed by full frame id string)
+		window.toggleExamplesSubTheme = function(frameId) {
+			var current = frameThemes[frameId] || getSavedTheme();
+			var next = current === 'dark' ? 'light' : 'dark';
+			frameThemes[frameId] = next;
+			var frame = document.getElementById(frameId);
+			if (frame) applyThemeToFrame(frame, next);
+			updateThemeBtnById(frameId, next);
 		};
 
 		window.openExamplesFullscreen = function(slug, variantSlug, idx) {
@@ -1505,12 +1571,184 @@ templ ComponentExamples(c GalleryComponent) {
 			}
 		}
 
+		function attachSubFrameHandlers(frame) {
+			var frameId = frame.id;
+			var theme = frameThemes[frameId] || getSavedTheme();
+			frameThemes[frameId] = theme;
+			updateThemeBtnById(frameId, theme);
+			function applyAndResize() {
+				applyThemeToFrame(frame, theme);
+				autoResizeFrame(frame);
+			}
+			if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
+				applyAndResize();
+			} else {
+				frame.addEventListener('load', applyAndResize);
+			}
+		}
+
 		function initFrames() {
 			document.querySelectorAll('.examples-frame').forEach(attachFrameHandlers);
+			document.querySelectorAll('.examples-sub-frame').forEach(attachSubFrameHandlers);
 		}
 		document.addEventListener('DOMContentLoaded', initFrames);
 		document.addEventListener('htmx:afterSwap', initFrames);
 		if (document.readyState !== 'loading') initFrames();
+
+		// Component tree rendering for sub-example iframes.
+		// Each sub-example iframe has data-tree-panel and data-tree-body attributes
+		// that point to its dedicated tree panel div.
+		(function() {
+			var DEPTH_COLORS = ['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899'];
+			var COMPONENT_SLUGS = {
+						// Basics
+						'Button':'button','Badge':'badge','StatusBadge':'status-badge-real',
+						'Avatar':'avatar-real','Card':'card-real','Tag':'tag',
+						'Divider':'divider','Kbd':'kbd','IconSpanColored':'button',
+						// Feedback
+						'Toast':'toast-real','Alert':'alert','Empty':'empty-state-real',
+						'Loader':'loader','NoPermissions':'no-permissions','SectionHeader':'section-header','Skeleton':'skeleton',
+						// Data display
+						'StatCard':'stat-card-real','StatCardMinimal':'stat-card-minimal','ProgressCard':'progress-card',
+						'Timeline':'timeline','ChatBubble':'chat-bubble','LogsTable':'logs-table',
+						// Table (root only — sub-primitives have no standalone page)
+						'TableWithProps':'table','Table':'table','ListArea':'list-basic',
+						// Navigation
+						'ActionMenu':'action-menu-real','FilterTabs':'filter-tabs','FilterCard':'filter-bar',
+						'Pagination':'pagination-real','TabMenu':'tab-menu-real','SimpleTabs':'tab-menu-real',
+						'PageHeader':'page-header-real','Menu':'menu-real','TopBar':'top-bar-real',
+						'Navbar':'navbar-real','Breadcrumbs':'breadcrumbs','Dock':'dock-nav',
+						'ProfileMenu':'profile-menu','PageTitleMinimal':'page-title-minimal',
+						'PageTitleEditor':'page-title-editor','FooterMinimal':'footer-minimal',
+						// Foundation / display
+						'Progress':'progress','Steps':'steps','Accordion':'collapse','Swap':'swap',
+						'Countdown':'countdown','StatusDot':'status-dots','Tooltip':'tooltip',
+						'Indicator':'indicator','Stack':'stack','Diff':'diff','Mask':'mask',
+						'Carousel':'carousel','Link':'link-styles',
+						// Layout
+						'Hero':'hero','Join':'join','Fieldset':'fieldset',
+						// Mockups
+						'MockupBrowser':'mockup-browser','MockupCode':'mockup-code',
+						'MockupPhone':'mockup-phone','MockupWindow':'mockup-window',
+						// Overlays
+						'Modal':'modal-real','ConfirmPopup':'confirm-popup','FormModal':'form-modal-real',
+						'Dropdown':'dropdown','FAB':'fab','NotificationPanel':'notification-panel',
+						// Person
+						'PersonCell':'person-cell',
+						// Forms
+						'TextInput':'text-input','TextareaInput':'textarea-input',
+						'CheckboxInput':'checkbox-input','SelectInput':'select-input',
+						'RangeInput':'range-input','SearchInput':'search-input-real',
+						'FormField':'form-field-real','RadioGroup':'form-radio','Rating':'form-rating',
+						'FileInput':'form-file','Checkbox':'form-checkbox','Toggle':'form-checkbox',
+						'PromptBar':'prompt-bar-minimal','PromptBarAction':'prompt-bar-action',
+						'InputSpinner':'input-spinner','WizardStepper':'wizard-stepper',
+			};
+			function depthColor(d) { return DEPTH_COLORS[d % DEPTH_COLORS.length]; }
+		function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+		function cleanHtml(raw) {
+			var s = raw.replace(/\s*data-component="[^"]*"/g, '');
+			s = s.replace(/\s*data-props="(?:[^"\\]|\\.)*"/g, '');
+			s = s.replace(/\s*=""(?=[\s>])/g, '');
+			var prev;
+			do { prev = s; s = s.replace(/<div\s+style="display:contents"\s*>([\s\S]*?)<\/div>/g, '$1'); } while (s !== prev);
+			return s.trim();
+		}
+		function formatHtml(raw) {
+			var indent = 0, TAB = '  ', result = '';
+			var parts = raw.replace(/>\s*</g, '>\n<').split('\n');
+			for (var i = 0; i < parts.length; i++) {
+				var line = parts[i].trim();
+				if (!line) continue;
+				if (/^<\//.test(line)) indent = Math.max(0, indent - 1);
+				result += TAB.repeat(indent) + line + '\n';
+				if (/^<[^/!][^>]*[^/]>$/.test(line) && !/^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/.test(line)) indent++;
+			}
+			return result.trim();
+		}
+		function renderPropsTable(rawProps) {
+			var obj; try { obj = JSON.parse(rawProps); } catch(e) { return ''; }
+			if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return '';
+			var skip = {class:1,style:1,id:1,Class:1,Style:1,ID:1};
+			var rows = '', count = 0, keys = Object.keys(obj);
+			for (var i = 0; i < keys.length; i++) {
+				var k = keys[i]; if (skip[k]) continue;
+				var v = obj[k];
+				var defVal = (v === null || v === undefined) ? '' : String(v);
+				var vs;
+				if (v === null || v === undefined) vs = '<span style="color:#94a3b8">null</span>';
+				else if (v === true)  vs = '<span style="color:#22c55e">true</span>';
+				else if (v === false) vs = '<span style="color:#f87171">false</span>';
+				else if (typeof v === 'number') vs = '<span style="color:#fb923c">' + escHtml(String(v)) + '</span>';
+				else { var str = String(v); vs = str === '' ? '<span style="color:#94a3b8">(empty)</span>' : '<span style="color:#e2e8f0">' + escHtml(str.length > 60 ? str.slice(0,57)+'…' : str) + '</span>'; }
+				rows += '<tr><td style="padding:2px 8px 2px 0;white-space:nowrap;color:#94a3b8;font-size:0.68rem;vertical-align:top">' + escHtml(k) + '</td><td style="padding:2px 0;font-size:0.68rem;word-break:break-all">' + vs + '</td></tr>';
+				count++;
+			}
+			if (!count) return '';
+			return '<div style="padding:4px 8px 4px 16px"><table style="border-collapse:collapse;width:100%;font-family:ui-monospace,monospace"><tbody>' + rows + '</tbody></table></div>';
+		}
+		// Unique counter for sub-tree node IDs to avoid collisions across multiple trees.
+		var _subNodeSeq = 0;
+		window.subDevTreeToggle = function(id) {
+			var el = document.getElementById(id);
+			if (!el) return;
+			var isHidden = el.classList.toggle('hidden');
+			if (!isHidden && window.Prism) {
+				var code = el.querySelector('code');
+				if (code) Prism.highlightElement(code);
+			}
+		};
+		function renderSubTree(nodes) {
+			if (!nodes || nodes.length === 0) return '<p class="p-4 text-xs text-base-content/40">No component boundaries found.</p>';
+			var html = '<ul class="py-1">';
+			for (var i = 0; i < nodes.length; i++) {
+				var n = nodes[i], col = depthColor(n.depth), indent = n.depth * 12;
+				var seq = ++_subNodeSeq;
+				var nodeId = 'sub-tree-node-' + seq;
+				var codeId = 'sub-tree-code-' + seq;
+				var slug = COMPONENT_SLUGS[n.name] || '';
+				var propsHtml = renderPropsTable(n.props);
+				html += '<li style="padding-left:' + (8 + indent) + 'px" class="py-0.5">';
+				html += '<div class="flex items-center gap-1.5 w-full rounded px-1 py-0.5 group hover:bg-base-200">';
+				html += '<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:' + col + ';flex-shrink:0"></span>';
+				if (slug) {
+					html += '<a href="/gallery/' + slug + '" class="font-mono text-xs font-semibold text-base-content hover:underline" style="cursor:pointer">' + escHtml(n.name) + '</a>';
+				} else {
+					html += '<span class="font-mono text-xs font-semibold text-base-content">' + escHtml(n.name) + '</span>';
+				}
+				html += '<button onclick="subDevTreeToggle(\'' + nodeId + '\')" class="ml-auto text-base-content/20 group-hover:text-base-content/50 text-xs pr-1 hover:text-base-content/80" style="flex-shrink:0">\u2039/\u203a</button>';
+				html += '</div>';
+				// Props table (always visible)
+				if (propsHtml) html += propsHtml;
+				// Expanded by default
+				html += '<div id="' + nodeId + '" class="mt-1 mb-1" style="padding-left:8px">';
+				html += '<pre id="' + codeId + '" class="language-html" style="margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px"><code class="language-html">' + escHtml(formatHtml(cleanHtml(n.html))) + '</code></pre>';
+				html += '</div>';
+				html += '</li>';
+			}
+			html += '</ul>';
+			return html;
+		}
+			window.addEventListener('message', function(e) {
+				if (!e.data || e.data.type !== '__dev_component_tree__') return;
+				var tree = e.data.tree || [];
+				// Find which sub-example frame sent this message
+				var frames = document.querySelectorAll('.examples-sub-frame');
+				var panelId = null, bodyId = null;
+				frames.forEach(function(f) {
+					if (f.contentWindow === e.source) {
+						panelId = f.dataset.treePanel;
+						bodyId = f.dataset.treeBody;
+					}
+				});
+				if (!bodyId) return;
+				var panel = document.getElementById(panelId);
+				var body = document.getElementById(bodyId);
+				if (!body) return;
+				body.innerHTML = renderSubTree(tree);
+				if (panel) panel.classList.toggle('hidden', tree.length === 0);
+			});
+		})();
 	})();
 	</script>
 }

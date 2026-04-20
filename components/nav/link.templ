@@ -1,5 +1,7 @@
 package nav
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // LinkVariant controls the visual style of a link.
 type LinkVariant string
 
@@ -14,7 +16,7 @@ const (
 
 // Link renders a styled anchor link.
 templ Link(href string, variant LinkVariant) {
-	<a href={ templ.URL(href) } class={ string(variant) }>
+	<a href={ templ.URL(href) } class={ string(variant) } { devmode.Attrs(ctx, "nav/Link")... }>
 		{ children... }
 	</a>
 }

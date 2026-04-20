@@ -1,5 +1,7 @@
 package form
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // PromptBarProps configures a PromptBar component.
 type PromptBarProps struct {
 	// Placeholder is the textarea placeholder text.
@@ -21,7 +23,7 @@ type PromptBarProps struct {
 // PromptBar renders a minimal AI prompt / chat input with optional toolbar icons,
 // a token counter, and a send button.
 templ PromptBar(props PromptBarProps) {
-	<div class="card bg-base-100 card-border w-full max-w-2xl">
+	<div class="card bg-base-100 card-border w-full max-w-2xl" { devmode.Attrs(ctx, "form/PromptBar")... }>
 		<div class="card-body p-3">
 			<textarea
 				class="textarea w-full h-28 resize-none border-0 p-1 text-base focus:outline-none m-0"
@@ -72,7 +74,7 @@ type PromptBarActionItem struct {
 
 // PromptBarAction renders an AI prompt input with quick-action labelled buttons.
 templ PromptBarAction(placeholder string, actions []PromptBarActionItem) {
-	<div class="card bg-base-100 card-border w-full max-w-2xl">
+	<div class="card bg-base-100 card-border w-full max-w-2xl" { devmode.Attrs(ctx, "form/PromptBarAction")... }>
 		<div class="card-body p-3">
 			<textarea
 				class="textarea w-full h-28 resize-none border-0 p-1 text-base focus:outline-none m-0"

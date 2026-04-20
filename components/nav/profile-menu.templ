@@ -1,5 +1,7 @@
 package nav
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // ProfileMenuItem is a single item in the profile dropdown menu.
 type ProfileMenuItem struct {
 	// Label is the display text.
@@ -20,7 +22,7 @@ type ProfileMenuItem struct {
 // items before the divider are regular menu items; signOutHref adds the
 // dedicated sign-out row.
 templ ProfileMenu(name, email, initials string, items []ProfileMenuItem, signOutHref string) {
-	<div class="dropdown dropdown-bottom dropdown-end">
+	<div class="dropdown dropdown-bottom dropdown-end" { devmode.Attrs(ctx, "nav/ProfileMenu")... }>
 		<div tabindex="0" class="avatar bg-base-200 size-12 cursor-pointer overflow-hidden rounded-full">
 			<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-lg">
 				{ initials }

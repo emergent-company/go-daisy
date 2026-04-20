@@ -3,6 +3,8 @@ package ui
 import (
 	"fmt"
 	"strconv"
+
+	"github.com/emergent-company/go-daisy/devmode"
 )
 
 // PaginationProps holds all data needed to render a full pagination strip.
@@ -40,7 +42,7 @@ func pageURL(base string, page int) string {
 // Pagination renders a join-based pagination strip.
 templ Pagination(currentPage int, totalPages int, baseURL string, targetID string) {
 	if totalPages > 1 {
-		<div class="join">
+		<div class="join" { devmode.Attrs(ctx, "ui/Pagination")... }>
 			<a
 				class={ "btn btn-square btn-sm btn-outline border-base-300 join-item",
 					templ.KV("btn-disabled", currentPage <= 1) }
@@ -89,7 +91,7 @@ templ Pagination(currentPage int, totalPages int, baseURL string, targetID strin
 // PaginationWithProps renders a pagination bar with item count summary.
 templ PaginationWithProps(props PaginationProps) {
 	if props.TotalPages > 1 {
-		<div class="border-base-200 flex flex-wrap items-center justify-between gap-2 border-t border-dashed p-5">
+		<div class="border-base-200 flex flex-wrap items-center justify-between gap-2 border-t border-dashed p-5" { devmode.Attrs(ctx, "ui/PaginationWithProps")... }>
 			<p class="text-base-content/70 text-sm">
 				if props.TotalItems == 0 {
 					No entries

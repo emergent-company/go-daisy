@@ -4,12 +4,7 @@ import "strconv"
 
 // RangeInput renders a DaisyUI range slider.
 templ RangeInput(name string, label string, value int, min int, max int, step int, color string) {
-	<div class="form-control w-full">
-		if label != "" {
-			<label class="label">
-				<span class="label-text">{ label }</span>
-			</label>
-		}
+	@Field(label, name, "") {
 		<input
 			type="range"
 			name={ name }
@@ -19,5 +14,5 @@ templ RangeInput(name string, label string, value int, min int, max int, step in
 			step={ strconv.Itoa(step) }
 			class={ "range", color }
 		/>
-	</div>
+	}
 }

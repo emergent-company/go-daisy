@@ -1,5 +1,7 @@
 package layout
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // Navbar renders the topbar. The children slot is for the right-side content
 // (theme toggle, user dropdown, etc.). Pass nil/empty for a minimal navbar.
 // Pass a non-nil logo component as the optional second argument to replace the plain appName text.
@@ -9,6 +11,7 @@ templ Navbar(appName string, logo ...templ.Component) {
 		aria-label="Navbar"
 		class="flex items-center justify-between px-4 bg-base-100"
 		id="layout-topbar"
+		{ devmode.Attrs(ctx, "layout/Navbar")... }
 	>
 		<!-- LEFT: sidebar toggle + app name or logo -->
 		<div class="flex items-center gap-3">
@@ -40,6 +43,7 @@ templ ThemeToggle(lightTheme string, darkTheme string) {
 		class="btn btn-sm btn-circle btn-ghost"
 		aria-label="Toggle theme"
 		onclick={ toggleTheme(lightTheme, darkTheme) }
+		{ devmode.Attrs(ctx, "layout/ThemeToggle")... }
 	>
 		<span id="theme-icon-sun" class="iconify lucide--sun size-4.5"></span>
 		<span id="theme-icon-moon" class="iconify lucide--moon size-4.5" style="display:none"></span>
@@ -60,7 +64,7 @@ type NavbarDropdownItem struct {
 // target for each item link (e.g. "#main-content").
 templ NavbarDropdown(currentLabel string, placeholder string, icon string, hxTarget string, items []NavbarDropdownItem) {
 	if len(items) > 0 {
-		<div class="dropdown dropdown-end">
+		<div class="dropdown dropdown-end" { devmode.Attrs(ctx, "layout/NavbarDropdown")... }>
 			<label tabindex="0" class="btn btn-sm btn-ghost gap-1.5 font-normal">
 				if icon != "" {
 					<span class={ "iconify size-4 text-base-content/60 " + icon }></span>

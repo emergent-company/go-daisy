@@ -5,32 +5,37 @@ import (
 
 	ui "github.com/emergent-company/go-daisy/components/ui"
 	tablecomp "github.com/emergent-company/go-daisy/components/table"
+	"github.com/emergent-company/go-daisy/devmode"
 )
 
 // LogsTable renders a table of log entries.
 templ LogsTable(entries []LogEntry) {
 	if len(entries) == 0 {
-		<p class="text-base-content/60">No logs found</p>
+		<p class="text-base-content/60" { devmode.Attrs(ctx, "logs/LogsTable")... }>No logs found</p>
 	} else {
 		@tablecomp.TableWithBoundary() {
-			<thead>
-				<tr>
+			@tablecomp.TableHeadWithBoundary() {
+				@tablecomp.TableHeadRowWithBoundary() {
 					@tablecomp.TableHeaderWithBoundary("Status", "", "", "", "")
 					@tablecomp.TableHeaderWithBoundary("Date/Time", "", "", "", "")
 					@tablecomp.TableHeaderWithBoundary("Event", "", "", "", "")
-				</tr>
-			</thead>
-			<tbody>
-				for _, entry := range entries {
-					<tr>
-						<td>
-							@ui.StatusDotWithBoundary(ui.StatusColorForLog(entry.Type), false)
-						</td>
-						<td class="text-sm text-base-content">{ formatTime(entry.CreatedAt) }</td>
-						<td class="text-sm text-base-content">{ entry.Message }</td>
-					</tr>
 				}
-			</tbody>
+			}
+			@tablecomp.TableBodyWithBoundary() {
+				for _, entry := range entries {
+					@tablecomp.TableRowWithBoundary("", true) {
+						@tablecomp.TableCellWithBoundary("") {
+							@ui.StatusDotWithBoundary(ui.StatusColorForLog(entry.Type), false)
+						}
+						@tablecomp.TableCellWithBoundary("text-sm text-base-content") {
+							{ formatTime(entry.CreatedAt) }
+						}
+						@tablecomp.TableCellWithBoundary("text-sm text-base-content") {
+							{ entry.Message }
+						}
+					}
+				}
+			}
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package ui
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // FABAction holds the data for a single action in the FAB sub-menu.
 type FABAction struct {
 	// Label is the tooltip text shown next to the action button.
@@ -14,7 +16,7 @@ type FABAction struct {
 // The FAB appears in the bottom-right of its nearest positioned ancestor.
 // No JS is required — the sub-menu opens via DaisyUI dropdown focus.
 templ FAB(icon string, actions []FABAction) {
-	<div class="absolute bottom-4 end-4 z-10">
+	<div class="absolute bottom-4 end-4 z-10" { devmode.Attrs(ctx, "ui/FAB")... }>
 		<div class="dropdown dropdown-top dropdown-end">
 			<div tabindex="0" role="button" class="btn btn-primary btn-lg btn-circle shadow-lg">
 				<span class={ "iconify size-6", icon } aria-hidden="true"></span>

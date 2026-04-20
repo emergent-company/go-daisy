@@ -1,6 +1,10 @@
 package ui
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // StatusColor controls the color of a status dot.
 type StatusColor string
@@ -35,5 +39,5 @@ func StatusColorForLog(logType string) StatusColor {
 // StatusDot renders a small colored DaisyUI status indicator dot.
 // Set animate=true to pulse the dot (e.g. for "in progress" states).
 templ StatusDot(color StatusColor, animate bool) {
-	<span class={ "status", string(color), templ.KV("animate-ping", animate) }></span>
+	<span class={ "status", string(color), templ.KV("animate-ping", animate) } { devmode.Attrs(ctx, "ui/StatusDot")... }></span>
 }

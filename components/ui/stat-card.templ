@@ -1,6 +1,10 @@
 package ui
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // StatCardProps configures a summary stat widget.
 type StatCardProps struct {
@@ -12,22 +16,20 @@ type StatCardProps struct {
 
 // StatCard renders a compact summary widget: icon + big number + label.
 templ StatCard(p StatCardProps) {
-	<div class="card bg-base-100 border border-base-content/10 shadow-sm h-full">
-		<div class="card-body p-4 flex flex-row items-center gap-3 h-full">
-			<div class={ "rounded-xl p-2.5 shrink-0", p.IconColor }>
-				<span class={ "iconify size-5 " + p.Icon }></span>
-			</div>
-			<div class="min-w-0">
-				<p class="text-xl font-bold text-base-content leading-none">{ p.Value }</p>
-				<p class="text-xs text-base-content/60 mt-1 whitespace-nowrap">{ p.Label }</p>
-			</div>
+	@CardRaw("border border-base-content/10 shadow-sm h-full", "p-4 flex flex-row items-center gap-3 h-full") {
+		<div class={ "rounded-xl p-2.5 shrink-0", p.IconColor }>
+			<span class={ "iconify size-5 " + p.Icon }></span>
 		</div>
-	</div>
+		<div class="min-w-0">
+			<p class="text-xl font-bold text-base-content leading-none">{ p.Value }</p>
+			<p class="text-xs text-base-content/60 mt-1 whitespace-nowrap">{ p.Label }</p>
+		</div>
+	}
 }
 
 // StatCards renders a responsive grid of StatCard widgets.
 templ StatCards(cards []StatCardProps) {
-	<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 py-4 items-stretch">
+	<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 py-4 items-stretch" { devmode.Attrs(ctx, "ui/StatCards")... }>
 		for _, c := range cards {
 			@StatCard(c)
 		}
@@ -55,29 +57,27 @@ type ProgressCardProps struct {
 // Set Horizontal=true for a compact inline layout.
 templ ProgressCard(props ProgressCardProps) {
 	if props.Horizontal {
-		<div class="card bg-base-100 shadow-sm border border-base-content/10 overflow-hidden">
-			<div class="px-4 py-3 flex items-center justify-between gap-3">
-				<div>
-					<p class="text-sm font-semibold text-base-content">{ props.Title }</p>
-					if props.Subtitle != "" {
-						<p class="text-xs text-base-content/60">{ props.Subtitle }</p>
-					}
-				</div>
-				<div class="flex items-center gap-2 min-w-0">
-					<progress class="progress progress-primary w-24" value={ strconv.Itoa(props.ProgressValue) } max="100"></progress>
-					<span class="text-xs font-medium text-base-content/70 whitespace-nowrap">{ strconv.Itoa(props.ProgressValue) }%</span>
-				</div>
+		@CardRaw("shadow-sm border border-base-content/10 overflow-hidden", "px-4 py-3 flex items-center justify-between gap-3") {
+			<div>
+				<p class="text-sm font-semibold text-base-content">{ props.Title }</p>
+				if props.Subtitle != "" {
+					<p class="text-xs text-base-content/60">{ props.Subtitle }</p>
+				}
 			</div>
-		</div>
+			<div class="flex items-center gap-2 min-w-0">
+				<progress class="progress progress-primary w-24" value={ strconv.Itoa(props.ProgressValue) } max="100"></progress>
+				<span class="text-xs font-medium text-base-content/70 whitespace-nowrap">{ strconv.Itoa(props.ProgressValue) }%</span>
+			</div>
+		}
 	} else {
-		<div class="card bg-base-100 shadow-sm border border-base-content/10 overflow-hidden">
+		@CardRaw("shadow-sm border border-base-content/10 overflow-hidden", "p-0 gap-0") {
 			<div class={ "p-4", props.GradientClass }>
 				<h3 class="text-base font-semibold text-base-content">{ props.Title }</h3>
 				if props.Subtitle != "" {
 					<p class="text-sm text-base-content/50 mt-0.5">{ props.Subtitle }</p>
 				}
 			</div>
-			<div class="card-body p-4 pt-3 gap-3">
+			<div class="p-4 pt-3 flex flex-col gap-3">
 				<div class="flex items-center gap-3">
 					<progress
 						class="progress progress-primary flex-1"
@@ -99,6 +99,6 @@ templ ProgressCard(props ProgressCardProps) {
 					</div>
 				}
 			</div>
-		</div>
+		}
 	}
 }

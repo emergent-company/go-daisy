@@ -1,5 +1,7 @@
 package nav
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // PageTitleStep is a single breadcrumb step used in page title components.
 // A step with an empty Href renders as plain text.
 type PageTitleStep struct {
@@ -13,7 +15,7 @@ type PageTitleStep struct {
 // PageTitleMinimal renders a compact title bar with an inline breadcrumb trail
 // on the right and a primary title on the left.
 templ PageTitleMinimal(title string, steps []PageTitleStep) {
-	<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3">
+	<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3" { devmode.Attrs(ctx, "nav/PageTitleMinimal")... }>
 		<div class="flex w-full items-center justify-between gap-3">
 			<p class="font-semibold text-base-content">{ title }</p>
 			<nav class="text-base-content/80 flex items-center gap-2 text-sm" aria-label="Breadcrumb">
@@ -54,7 +56,7 @@ type PageTitleEditorAction struct {
 // PageTitleEditor renders a full page title with DaisyUI breadcrumbs,
 // a subtitle meta line, and a row of action buttons.
 templ PageTitleEditor(steps []BreadcrumbStep, title, subtitle string, actions []PageTitleEditorAction) {
-	<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3">
+	<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3" { devmode.Attrs(ctx, "nav/PageTitleEditor")... }>
 		<div class="breadcrumbs text-sm mb-1">
 			<ul>
 				for _, step := range steps {

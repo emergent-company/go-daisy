@@ -1,5 +1,7 @@
 package ui
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // BadgeIntent maps a semantic intent to a DaisyUI badge class.
 type BadgeIntent string
 
@@ -66,7 +68,7 @@ func StatusIntentFor(status string) BadgeIntent {
 // Set Dot=true to show a coloured status dot prefix (colour matches Variant).
 // Set Icon to show a Lucide icon prefix instead of (or in addition to) a dot.
 templ Badge(props BadgeProps) {
-	<span class={ "badge gap-1", string(props.Variant), string(props.Style), string(props.Size) }>
+	<span class={ "badge gap-1", string(props.Variant), string(props.Style), string(props.Size) } { devmode.Attrs(ctx, "ui/Badge")... }>
 		if props.Dot {
 			<span class={ templ.KV("animate-pulse", props.Animate), dotClass(props.Variant) }></span>
 		} else if props.Icon != "" {

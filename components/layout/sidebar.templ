@@ -1,6 +1,10 @@
 package layout
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // SidebarItem represents a single navigation item in the sidebar.
 type SidebarItem struct {
@@ -20,7 +24,7 @@ type SidebarGroup struct {
 // Toggle is driven by hidden checkbox #layout-sidebar-toggle-trigger (sibling in AppShell).
 // Pass a non-nil logo component to replace the plain appName text in the header.
 templ Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) {
-	<div id="layout-sidebar" class="flex flex-col bg-base-100">
+	<div id="layout-sidebar" class="flex flex-col bg-base-100" { devmode.Attrs(ctx, "layout/Sidebar")... }>
 		<!-- Header: logo or app name + fold button -->
 		<div class="flex min-h-10 items-center justify-between gap-3 px-5 py-3 pb-5 shrink-0">
 			if len(logo) > 0 && logo[0] != nil {
@@ -93,6 +97,7 @@ templ Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) {
 // sidebarNavItem renders a single flat nav link.
 templ sidebarNavItem(item SidebarItem) {
 	<a
+		{ devmode.Attrs(ctx, "layout/sidebarNavItem")... }
 		href={ templ.URL(item.Href) }
 		hx-get={ item.Href }
 		hx-target="#main-content"

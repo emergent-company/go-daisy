@@ -7,6 +7,108 @@ package galleryruntime
 const devOverlayScript = `
 <script>
 (function() {
+  // Map from data-component name → gallery slug for click-to-navigate.
+  // Table sub-primitives (TableHead, TableRow, TableCell, etc.) are intentionally
+  // omitted — they are layout elements with no standalone page; only TableWithProps
+  // links to the table page as the canonical root entry.
+  var COMPONENT_SLUGS = {
+    // Basics
+    'Button':           'button',
+    'Badge':            'badge',
+    'StatusBadge':      'status-badge-real',
+    'Avatar':           'avatar-real',
+    'Card':             'card-real',
+    'Tag':              'tag',
+    'Divider':          'divider',
+    'Kbd':              'kbd',
+    'IconSpanColored':  'button',
+    // Feedback
+    'Toast':            'toast-real',
+    'Alert':            'alert',
+    'Empty':            'empty-state-real',
+    'Loader':           'loader',
+    'NoPermissions':    'no-permissions',
+    'SectionHeader':    'section-header',
+    'Skeleton':         'skeleton',
+    // Data display
+    'StatCard':         'stat-card-real',
+    'StatCardMinimal':  'stat-card-minimal',
+    'ProgressCard':     'progress-card',
+    'Timeline':         'timeline',
+    'ChatBubble':       'chat-bubble',
+    'LogsTable':        'logs-table',
+    // Table (root only — sub-primitives have no standalone page)
+    'TableWithProps':   'table',
+    'Table':            'table',
+    'ListArea':         'list-basic',
+    // Navigation
+    'ActionMenu':       'action-menu-real',
+    'FilterTabs':       'filter-tabs',
+    'FilterCard':       'filter-bar',
+    'Pagination':       'pagination-real',
+    'TabMenu':          'tab-menu-real',
+    'SimpleTabs':       'tab-menu-real',
+    'PageHeader':       'page-header-real',
+    'Menu':             'menu-real',
+    'TopBar':           'top-bar-real',
+    'Navbar':           'navbar-real',
+    'Breadcrumbs':      'breadcrumbs',
+    'Dock':             'dock-nav',
+    'ProfileMenu':      'profile-menu',
+    'PageTitleMinimal': 'page-title-minimal',
+    'PageTitleEditor':  'page-title-editor',
+    'FooterMinimal':    'footer-minimal',
+    // Foundation / display
+    'Progress':         'progress',
+    'Steps':            'steps',
+    'Accordion':        'collapse',
+    'Swap':             'swap',
+    'Countdown':        'countdown',
+    'StatusDot':        'status-dots',
+    'Tooltip':          'tooltip',
+    'Indicator':        'indicator',
+    'Stack':            'stack',
+    'Diff':             'diff',
+    'Mask':             'mask',
+    'Carousel':         'carousel',
+    'Link':             'link-styles',
+    // Layout
+    'Hero':             'hero',
+    'Join':             'join',
+    'Fieldset':         'fieldset',
+    // Mockups
+    'MockupBrowser':    'mockup-browser',
+    'MockupCode':       'mockup-code',
+    'MockupPhone':      'mockup-phone',
+    'MockupWindow':     'mockup-window',
+    // Overlays
+    'Modal':            'modal-real',
+    'ConfirmPopup':     'confirm-popup',
+    'FormModal':        'form-modal-real',
+    'Dropdown':         'dropdown',
+    'FAB':              'fab',
+    'NotificationPanel':'notification-panel',
+    // Person / avatars
+    'PersonCell':       'person-cell',
+    // Forms
+    'TextInput':        'text-input',
+    'TextareaInput':    'textarea-input',
+    'CheckboxInput':    'checkbox-input',
+    'SelectInput':      'select-input',
+    'RangeInput':       'range-input',
+    'SearchInput':      'search-input-real',
+    'FormField':        'form-field-real',
+    'RadioGroup':       'form-radio',
+    'Rating':           'form-rating',
+    'FileInput':        'form-file',
+    'Checkbox':         'form-checkbox',
+    'Toggle':           'form-checkbox',
+    'PromptBar':        'prompt-bar-minimal',
+    'PromptBarAction':  'prompt-bar-action',
+    'InputSpinner':     'input-spinner',
+    'WizardStepper':    'wizard-stepper',
+  };
+
   // Depth-indexed colour palette for nested component indicators.
   var DEPTH_COLORS = [
     {bg:'#3b82f6',text:'#fff'},  // blue-500
@@ -107,8 +209,8 @@ const devOverlayScript = `
     highlight.style.top    = rect.top    + 'px';
     highlight.style.width  = rect.width  + 'px';
     highlight.style.height = rect.height + 'px';
-    highlight.style.border = '2px solid ' + col.bg;
-    highlight.style.background = col.bg.replace(')', ',.08)').replace('rgb', 'rgba');
+    highlight.style.border = '2px dashed ' + col.bg;
+    highlight.style.background = 'transparent';
     highlight.style.opacity = '1';
   }
 
@@ -129,17 +231,39 @@ const devOverlayScript = `
     if (!el || el === badge || el === highlight) return;
 
     var newAnc = collectAncestors(el);
-    if (newAnc.length === 0) { hideBadge(); ancestors = []; return; }
+    if (newAnc.length === 0) { hideBadge(); ancestors = []; document.body.style.cursor = ''; return; }
 
     // Only reset altDepth when we move to a genuinely different component tree.
     if (!ancestors.length || ancestors[0] !== newAnc[0]) {
       altDepth = 0;
     }
     ancestors = newAnc;
-    showBadge(currentTarget(), e.clientX, e.clientY);
+    var target = currentTarget();
+    showBadge(target, e.clientX, e.clientY);
+
+    // Show pointer cursor when the hovered component has a gallery page.
+    var name = target ? (target.getAttribute('data-component') || '') : '';
+    document.body.style.cursor = COMPONENT_SLUGS[name] ? 'pointer' : '';
   }, {passive: true});
 
-  document.addEventListener('mouseleave', hideBadge);
+  document.addEventListener('mouseleave', function() {
+    hideBadge();
+    document.body.style.cursor = '';
+  });
+
+  // --- Click: navigate parent to the component's gallery page ---------------
+  document.addEventListener('click', function(e) {
+    var target = currentTarget();
+    if (!target) return;
+    var name = target.getAttribute('data-component') || '';
+    var slug = COMPONENT_SLUGS[name];
+    if (!slug) return;
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      window.parent.location.href = '/gallery/' + slug;
+    } catch(ex) {}
+  });
 
   // --- Alt key: cycle ancestors ---------------------------------------------
 

@@ -1,5 +1,7 @@
 package layout
 
+import "github.com/emergent-company/go-daisy/devmode"
+
 // Page renders the full HTML shell. themeAttr is the DaisyUI data-theme value
 // (e.g. "nord", "flow", "dark"). Pass "" to use the browser/OS default.
 templ Page(title string, themeAttr string) {
@@ -13,7 +15,7 @@ templ Page(title string, themeAttr string) {
 		<link rel="stylesheet" href="/static/css/app.css"/>
 	</head>
 	<body class="bg-base-200 min-h-screen">
-		<!-- Modal container — modals are swapped into here by HTMX -->
+		<!-- Modal container -->
 		<div id="modal-container"></div>
 		<!-- Toast container -->
 		<div id="toast-container" class="toast toast-top toast-end z-70"></div>
@@ -26,32 +28,26 @@ templ Page(title string, themeAttr string) {
 }
 
 // AppShell renders the sidebar + topbar + main content layout.
-// The sidebar toggle checkbox must be a sibling of #layout-sidebar (handled internally).
 templ AppShell(appName string) {
-	<div id="app-shell" class="flex h-screen overflow-hidden">
-		<!-- Sidebar toggle checkbox (hidden, CSS-driven) — must be sibling of #layout-sidebar -->
+	<div id="app-shell" class="flex h-screen overflow-hidden" { devmode.Attrs(ctx, "layout/AppShell")... }>
 		<input
 			type="checkbox"
 			id="layout-sidebar-toggle-trigger"
 			class="hidden"
 			aria-label="Toggle layout sidebar"
 		/>
-		<!-- Mobile backdrop -->
 		<label
 			for="layout-sidebar-toggle-trigger"
 			id="layout-sidebar-backdrop"
 		></label>
-		<!-- Sidebar slot -->
 		{ children... }
 	</div>
 }
 
 // AppShellContent renders the right column (topbar + scrollable content) inside AppShell.
-// Use after @Sidebar(...) inside an AppShell children block.
 templ AppShellContent() {
-	<div class="flex min-w-0 grow flex-col overflow-hidden">
+	<div class="flex min-w-0 grow flex-col overflow-hidden" { devmode.Attrs(ctx, "layout/AppShellContent")... }>
 		{ children... }
-		<!-- Scrollable content area -->
 		<main
 			id="main-content"
 			class="grow overflow-auto"
@@ -60,10 +56,9 @@ templ AppShellContent() {
 	</div>
 }
 
-// AppShellWithNav is a convenience wrapper that combines AppShell + Sidebar + Navbar + main content.
-// groups is the sidebar navigation. navRight is the right side of the navbar (theme toggle, user, etc.).
+// AppShellWithNav is a convenience wrapper combining AppShell + Sidebar + Navbar + main content.
 templ AppShellWithNav(appName string, groups []SidebarGroup) {
-	<div id="app-shell" class="flex h-screen overflow-hidden">
+	<div id="app-shell" class="flex h-screen overflow-hidden" { devmode.Attrs(ctx, "layout/AppShellWithNav")... }>
 		<input
 			type="checkbox"
 			id="layout-sidebar-toggle-trigger"
