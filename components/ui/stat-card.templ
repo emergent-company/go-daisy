@@ -17,8 +17,8 @@ type StatCardProps struct {
 // StatCard renders a compact summary widget: icon + big number + label.
 templ StatCard(p StatCardProps) {
 	@CardRaw("border border-base-content/10 shadow-sm h-full", "p-4 flex flex-row items-center gap-3 h-full") {
-		<div class={ "rounded-xl p-2.5 shrink-0", p.IconColor }>
-			<span class={ "iconify size-5 " + p.Icon }></span>
+		<div class={ "rounded-xl p-2.5 shrink-0 flex items-center justify-center", p.IconColor }>
+			@IconSpan(p.Icon, "size-5")
 		</div>
 		<div class="min-w-0">
 			<p class="text-xl font-bold text-base-content leading-none">{ p.Value }</p>

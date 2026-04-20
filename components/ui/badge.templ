@@ -38,13 +38,14 @@ const (
 
 // BadgeProps configures a Badge component.
 type BadgeProps struct {
-	Label   string
-	Variant BadgeIntent
-	Style   BadgeStyle
-	Size    BadgeSize
-	Icon    string // Lucide icon suffix, e.g. "lucide--circle-check"
-	Dot     bool   // when true, renders a status dot prefix (uses Variant to colour it)
-	Animate bool   // when true, adds animate-pulse to the icon/dot span
+	Label    string
+	Variant  BadgeIntent
+	Style    BadgeStyle
+	Size     BadgeSize
+	Icon     string // Lucide icon suffix, e.g. "lucide--circle-check"
+	Dot      bool   // when true, renders a status dot prefix (uses Variant to colour it)
+	Animate  bool   // when true, adds animate-pulse to the icon/dot span
+	MaxWidth string // optional Tailwind max-width class (e.g. "max-w-24"); enables truncation with ellipsis
 }
 
 // StatusIntentFor maps a status string to a BadgeIntent.
@@ -67,14 +68,15 @@ func StatusIntentFor(status string) BadgeIntent {
 // Badge renders a DaisyUI badge.
 // Set Dot=true to show a coloured status dot prefix (colour matches Variant).
 // Set Icon to show a Lucide icon prefix instead of (or in addition to) a dot.
+// Set MaxWidth to a Tailwind max-width class (e.g. "max-w-24") to enable label truncation.
 templ Badge(props BadgeProps) {
-	<span class={ "badge gap-1", string(props.Variant), string(props.Style), string(props.Size) } { devmode.Attrs(ctx, "ui/Badge")... }>
+	<span class={ "badge gap-1", string(props.Variant), string(props.Style), string(props.Size), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth } { devmode.Attrs(ctx, "ui/Badge")... }>
 		if props.Dot {
 			<span class={ templ.KV("animate-pulse", props.Animate), dotClass(props.Variant) }></span>
 		} else if props.Icon != "" {
-			<span class={ "iconify size-3", props.Icon, templ.KV("animate-pulse", props.Animate) }></span>
+			<span class={ "iconify size-3 shrink-0", props.Icon, templ.KV("animate-pulse", props.Animate) }></span>
 		}
-		{ props.Label }
+		<span class={ templ.KV("truncate", props.MaxWidth != "") }>{ props.Label }</span>
 	</span>
 }
 

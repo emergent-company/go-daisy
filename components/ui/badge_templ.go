@@ -46,13 +46,14 @@ const (
 
 // BadgeProps configures a Badge component.
 type BadgeProps struct {
-	Label   string
-	Variant BadgeIntent
-	Style   BadgeStyle
-	Size    BadgeSize
-	Icon    string // Lucide icon suffix, e.g. "lucide--circle-check"
-	Dot     bool   // when true, renders a status dot prefix (uses Variant to colour it)
-	Animate bool   // when true, adds animate-pulse to the icon/dot span
+	Label    string
+	Variant  BadgeIntent
+	Style    BadgeStyle
+	Size     BadgeSize
+	Icon     string // Lucide icon suffix, e.g. "lucide--circle-check"
+	Dot      bool   // when true, renders a status dot prefix (uses Variant to colour it)
+	Animate  bool   // when true, adds animate-pulse to the icon/dot span
+	MaxWidth string // optional Tailwind max-width class (e.g. "max-w-24"); enables truncation with ellipsis
 }
 
 // StatusIntentFor maps a status string to a BadgeIntent.
@@ -75,6 +76,7 @@ func StatusIntentFor(status string) BadgeIntent {
 // Badge renders a DaisyUI badge.
 // Set Dot=true to show a coloured status dot prefix (colour matches Variant).
 // Set Icon to show a Lucide icon prefix instead of (or in addition to) a dot.
+// Set MaxWidth to a Tailwind max-width class (e.g. "max-w-24") to enable label truncation.
 func Badge(props BadgeProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -96,7 +98,7 @@ func Badge(props BadgeProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{"badge gap-1", string(props.Variant), string(props.Style), string(props.Size)}
+		var templ_7745c5c3_Var2 = []any{"badge gap-1", string(props.Variant), string(props.Style), string(props.Size), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -150,7 +152,7 @@ func Badge(props BadgeProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else if props.Icon != "" {
-			var templ_7745c5c3_Var6 = []any{"iconify size-3", props.Icon, templ.KV("animate-pulse", props.Animate)}
+			var templ_7745c5c3_Var6 = []any{"iconify size-3 shrink-0", props.Icon, templ.KV("animate-pulse", props.Animate)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -173,16 +175,38 @@ func Badge(props BadgeProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		var templ_7745c5c3_Var8 string
-		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 77, Col: 15}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+		var templ_7745c5c3_Var8 = []any{templ.KV("truncate", props.MaxWidth != "")}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var8...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<span class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var9 string
+		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var8).String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 1, Col: 0}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var10 string
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 79, Col: 74}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</span></span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -230,9 +254,9 @@ func StatusBadge(status string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var9 == nil {
-			templ_7745c5c3_Var9 = templ.NopComponent
+		templ_7745c5c3_Var11 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var11 == nil {
+			templ_7745c5c3_Var11 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = Badge(BadgeProps{Label: status, Variant: StatusIntentFor(status), Size: BadgeSizeSM}).Render(ctx, templ_7745c5c3_Buffer)
