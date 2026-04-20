@@ -9,5 +9,5 @@ import (
 // gallery:token entries
 // gallery:hint entries:slice(4)
 func LogsTableWithBoundary(entries []LogEntry) templ.Component {
-	return devmode.ComponentBoundary("LogsTable", map[string]any{"entryCount": len(entries)}, LogsTable(entries))
+	return devmode.ComponentBoundary("LogsTable", LogsTable(entries), map[string]any{"entryCount": len(entries)})
 }

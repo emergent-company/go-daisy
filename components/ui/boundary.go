@@ -12,7 +12,7 @@ import (
 // gallery:token variant,size,typ,shape,icon,loading
 // gallery:hint href:default(#)
 func ButtonWithBoundary(href string, variant ButtonVariant, size ButtonSize, typ ButtonType, shape ButtonShape, icon string, loading bool) templ.Component {
-	return devmode.ComponentBoundary("Button", map[string]any{
+	return devmode.ComponentBoundary("Button", Button(href, variant, size, typ, shape, icon, loading), map[string]any{
 		"href":    href,
 		"variant": string(variant),
 		"size":    string(size),
@@ -20,7 +20,7 @@ func ButtonWithBoundary(href string, variant ButtonVariant, size ButtonSize, typ
 		"shape":   string(shape),
 		"icon":    icon,
 		"loading": loading,
-	}, Button(href, variant, size, typ, shape, icon, loading))
+	})
 }
 
 // BadgeWithBoundary wraps Badge with a dev-mode component boundary annotation.
@@ -28,14 +28,14 @@ func ButtonWithBoundary(href string, variant ButtonVariant, size ButtonSize, typ
 // gallery:hint label:default(Active)
 func BadgeWithBoundary(variant BadgeIntent, style BadgeStyle, size BadgeSize, dot bool, icon string, label string) templ.Component {
 	props := BadgeProps{Label: label, Variant: variant, Style: style, Size: size, Dot: dot, Icon: icon}
-	return devmode.ComponentBoundary("Badge", props, Badge(props))
+	return devmode.ComponentBoundary("Badge", Badge(props), props)
 }
 
 // StatusBadgeWithBoundary wraps StatusBadge with a dev-mode component boundary annotation.
 // gallery:token status
 // gallery:hint status:default(active)
 func StatusBadgeWithBoundary(status string) templ.Component {
-	return devmode.ComponentBoundary("StatusBadge", map[string]any{"status": status}, StatusBadge(status))
+	return devmode.ComponentBoundary("StatusBadge", StatusBadge(status), map[string]any{"status": status})
 }
 
 // AvatarWithBoundary wraps Avatar with a dev-mode component boundary annotation.
@@ -43,19 +43,19 @@ func StatusBadgeWithBoundary(status string) templ.Component {
 // gallery:hint name:default(Jane Smith)
 // gallery:hint icon:default()
 func AvatarWithBoundary(name string, src string, icon string, size AvatarSize) templ.Component {
-	return devmode.ComponentBoundary("Avatar", map[string]any{
+	return devmode.ComponentBoundary("Avatar", Avatar(name, src, icon, size), map[string]any{
 		"name": name,
 		"src":  src,
 		"icon": icon,
 		"size": string(size),
-	}, Avatar(name, src, icon, size))
+	})
 }
 
 // CardWithBoundary wraps Card with a dev-mode component boundary annotation.
 // gallery:token title
 // gallery:hint title:default(Card Title)
 func CardWithBoundary(title string) templ.Component {
-	return devmode.ComponentBoundary("Card", map[string]any{"title": title}, Card(title))
+	return devmode.ComponentBoundary("Card", Card(title), map[string]any{"title": title})
 }
 
 // AlertWithBoundary wraps Alert with a dev-mode component boundary annotation.
@@ -63,11 +63,11 @@ func CardWithBoundary(title string) templ.Component {
 // gallery:hint message:default(Operation completed successfully.)
 // gallery:hint icon:default(lucide--circle-check)
 func AlertWithBoundary(typ AlertType, icon string, message string) templ.Component {
-	return devmode.ComponentBoundary("Alert", map[string]any{
+	return devmode.ComponentBoundary("Alert", Alert(typ, icon, message), map[string]any{
 		"type":    string(typ),
 		"icon":    icon,
 		"message": message,
-	}, Alert(typ, icon, message))
+	})
 }
 
 // AlertWithIconBoundary is a backwards-compatible alias for AlertWithBoundary.
@@ -80,10 +80,10 @@ func AlertWithIconBoundary(typ AlertType, icon string, message string) templ.Com
 // gallery:token typ,message
 // gallery:hint message:default(Action completed successfully.)
 func ToastWithBoundary(typ ToastType, message string) templ.Component {
-	return devmode.ComponentBoundary("Toast", map[string]any{
+	return devmode.ComponentBoundary("Toast", Toast(typ, message), map[string]any{
 		"type":    string(typ),
 		"message": message,
-	}, Toast(typ, message))
+	})
 }
 
 // PaginationWithBoundary wraps Pagination with a dev-mode component boundary annotation.
@@ -91,17 +91,17 @@ func ToastWithBoundary(typ ToastType, message string) templ.Component {
 // gallery:hint currentPage:range(1,20,1)
 // gallery:hint totalPages:range(1,20,1)
 func PaginationWithBoundary(currentPage int, totalPages int, baseURL string, targetID string) templ.Component {
-	return devmode.ComponentBoundary("Pagination", map[string]any{
+	return devmode.ComponentBoundary("Pagination", Pagination(currentPage, totalPages, baseURL, targetID), map[string]any{
 		"currentPage": currentPage,
 		"totalPages":  totalPages,
 		"baseURL":     baseURL,
 		"targetID":    targetID,
-	}, Pagination(currentPage, totalPages, baseURL, targetID))
+	})
 }
 
 // StatCardWithBoundary wraps StatCard with a dev-mode component boundary annotation.
 func StatCardWithBoundary(p StatCardProps) templ.Component {
-	return devmode.ComponentBoundary("StatCard", p, StatCard(p))
+	return devmode.ComponentBoundary("StatCard", StatCard(p), p)
 }
 
 // EmptyWithBoundary wraps Empty with a dev-mode component boundary annotation.
@@ -109,29 +109,29 @@ func StatCardWithBoundary(p StatCardProps) templ.Component {
 // gallery:hint title:default(Nothing here yet)
 // gallery:hint description:default(Add some items to get started.)
 func EmptyWithBoundary(icon string, title string, description string) templ.Component {
-	return devmode.ComponentBoundary("Empty", map[string]any{
+	return devmode.ComponentBoundary("Empty", Empty(icon, title, description), map[string]any{
 		"icon":        icon,
 		"title":       title,
 		"description": description,
-	}, Empty(icon, title, description))
+	})
 }
 
 // LoaderWithBoundary wraps Loader with a dev-mode component boundary annotation.
 // gallery:token variant
 func LoaderWithBoundary(variant LoaderVariant) templ.Component {
-	return devmode.ComponentBoundary("Loader", map[string]any{"variant": string(variant)}, Loader(variant))
+	return devmode.ComponentBoundary("Loader", Loader(variant), map[string]any{"variant": string(variant)})
 }
 
 // ActionMenuWithBoundary wraps ActionMenu with a dev-mode component boundary annotation.
 // gallery:token items
 // gallery:hint items:slice(3)
 func ActionMenuWithBoundary(items []ActionMenuItem) templ.Component {
-	return devmode.ComponentBoundary("ActionMenu", map[string]any{"itemCount": len(items)}, ActionMenu(items))
+	return devmode.ComponentBoundary("ActionMenu", ActionMenu(items), map[string]any{"itemCount": len(items)})
 }
 
 // FilterCardWithBoundary wraps FilterCard with a dev-mode component boundary annotation.
 func FilterCardWithBoundary(props FilterCardProps) templ.Component {
-	return devmode.ComponentBoundary("FilterCard", props, FilterCard(props))
+	return devmode.ComponentBoundary("FilterCard", FilterCard(props), props)
 }
 
 // ProgressWithBoundary wraps Progress with a dev-mode component boundary annotation.
@@ -141,40 +141,40 @@ func FilterCardWithBoundary(props FilterCardProps) templ.Component {
 // gallery:hint max:range(1,200,1)
 // gallery:hint max:default(100)
 func ProgressWithBoundary(color ProgressColor, value int, max int) templ.Component {
-	return devmode.ComponentBoundary("Progress", map[string]any{
+	return devmode.ComponentBoundary("Progress", Progress(color, value, max), map[string]any{
 		"color": string(color),
 		"value": value,
 		"max":   max,
-	}, Progress(color, value, max))
+	})
 }
 
 // SkeletonWithBoundary wraps Skeleton with a dev-mode component boundary annotation.
 // gallery:token classes
 // gallery:hint classes:default(h-4 w-full)
 func SkeletonWithBoundary(classes string) templ.Component {
-	return devmode.ComponentBoundary("Skeleton", map[string]any{"classes": classes}, Skeleton(classes))
+	return devmode.ComponentBoundary("Skeleton", Skeleton(classes), map[string]any{"classes": classes})
 }
 
 // SectionHeaderWithBoundary wraps SectionHeader with a dev-mode component boundary annotation.
 // gallery:token title
 // gallery:hint title:default(Personal Information)
 func SectionHeaderWithBoundary(title string) templ.Component {
-	return devmode.ComponentBoundary("SectionHeader", map[string]any{"title": title}, SectionHeader(title))
+	return devmode.ComponentBoundary("SectionHeader", SectionHeader(title), map[string]any{"title": title})
 }
 
 // NoPermissionsWithBoundary wraps NoPermissions with a dev-mode component boundary annotation.
 func NoPermissionsWithBoundary() templ.Component {
-	return devmode.ComponentBoundary("NoPermissions", nil, NoPermissions())
+	return devmode.ComponentBoundary("NoPermissions", NoPermissions())
 }
 
 // StatusDotWithBoundary wraps StatusDot with a dev-mode component boundary annotation.
 // gallery:token color,animate
 // gallery:hint color:default(status-success)
 func StatusDotWithBoundary(color StatusColor, animate bool) templ.Component {
-	return devmode.ComponentBoundary("StatusDot", map[string]any{
+	return devmode.ComponentBoundary("StatusDot", StatusDot(color, animate), map[string]any{
 		"color":   string(color),
 		"animate": animate,
-	}, StatusDot(color, animate))
+	})
 }
 
 // DividerWithBoundary wraps Divider with a dev-mode component boundary annotation.
@@ -188,11 +188,11 @@ func DividerWithBoundary(color DividerColor, vertical bool, label string) templ.
 	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return Divider(color, vertical).Render(templ.WithChildren(ctx, child), w)
 	})
-	return devmode.ComponentBoundary("Divider", map[string]any{
+	return devmode.ComponentBoundary("Divider", inner, map[string]any{
 		"color":    string(color),
 		"vertical": vertical,
 		"label":    label,
-	}, inner)
+	})
 }
 
 // KbdWithBoundary wraps Kbd with a dev-mode component boundary annotation.
@@ -206,10 +206,10 @@ func KbdWithBoundary(size KbdSize, key string) templ.Component {
 	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return Kbd(size).Render(templ.WithChildren(ctx, child), w)
 	})
-	return devmode.ComponentBoundary("Kbd", map[string]any{
+	return devmode.ComponentBoundary("Kbd", inner, map[string]any{
 		"size": string(size),
 		"key":  key,
-	}, inner)
+	})
 }
 
 // CountdownWithBoundary wraps Countdown with a dev-mode component boundary annotation.
@@ -223,22 +223,22 @@ func KbdWithBoundary(size KbdSize, key string) templ.Component {
 // gallery:hint minutes:default(24)
 // gallery:hint seconds:default(45)
 func CountdownWithBoundary(days, hours, minutes, seconds int) templ.Component {
-	return devmode.ComponentBoundary("Countdown", map[string]any{
+	return devmode.ComponentBoundary("Countdown", Countdown(days, hours, minutes, seconds), map[string]any{
 		"days":    days,
 		"hours":   hours,
 		"minutes": minutes,
 		"seconds": seconds,
-	}, Countdown(days, hours, minutes, seconds))
+	})
 }
 
 // TagWithBoundary wraps Tag with a dev-mode component boundary annotation.
 // gallery:token label
 // gallery:hint label:default(Contract Law)
 func TagWithBoundary(label string, removeHref string) templ.Component {
-	return devmode.ComponentBoundary("Tag", map[string]any{
+	return devmode.ComponentBoundary("Tag", Tag(label, removeHref), map[string]any{
 		"label":      label,
 		"removeHref": removeHref,
-	}, Tag(label, removeHref))
+	})
 }
 
 // ChatBubbleWithBoundary wraps ChatBubble with a dev-mode component boundary annotation.
@@ -254,13 +254,13 @@ func ChatBubbleWithBoundary(sent bool, author, timestamp, bubbleClass, message s
 	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return ChatBubble(sent, author, timestamp, bubbleClass).Render(templ.WithChildren(ctx, child), w)
 	})
-	return devmode.ComponentBoundary("ChatBubble", map[string]any{
+	return devmode.ComponentBoundary("ChatBubble", inner, map[string]any{
 		"sent":        sent,
 		"author":      author,
 		"timestamp":   timestamp,
 		"bubbleClass": bubbleClass,
 		"message":     message,
-	}, inner)
+	})
 }
 
 // MockupBrowserWithBoundary wraps MockupBrowser with a dev-mode component boundary annotation.
@@ -270,7 +270,7 @@ func MockupBrowserWithBoundary(url string) templ.Component {
 	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return MockupBrowser(url).Render(templ.WithChildren(ctx, MockupBrowserPlaceholder()), w)
 	})
-	return devmode.ComponentBoundary("MockupBrowser", map[string]any{"url": url}, inner)
+	return devmode.ComponentBoundary("MockupBrowser", inner, map[string]any{"url": url})
 }
 
 // MockupPhoneWithBoundary wraps MockupPhone with a dev-mode component boundary annotation.
@@ -278,7 +278,7 @@ func MockupPhoneWithBoundary() templ.Component {
 	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return MockupPhone().Render(templ.WithChildren(ctx, MockupPhonePlaceholder()), w)
 	})
-	return devmode.ComponentBoundary("MockupPhone", nil, inner)
+	return devmode.ComponentBoundary("MockupPhone", inner)
 }
 
 // MockupWindowWithBoundary wraps MockupWindow with a dev-mode component boundary annotation.
@@ -286,7 +286,7 @@ func MockupWindowWithBoundary() templ.Component {
 	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return MockupWindow().Render(templ.WithChildren(ctx, MockupWindowPlaceholder()), w)
 	})
-	return devmode.ComponentBoundary("MockupWindow", nil, inner)
+	return devmode.ComponentBoundary("MockupWindow", inner)
 }
 
 // AccordionWithBoundary wraps Accordion + AccordionItem with a dev-mode component boundary annotation.
@@ -306,7 +306,7 @@ func AccordionWithBoundary(items []AccordionItemProps) templ.Component {
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return Accordion().Render(templ.WithChildren(ctx, children), w)
 	})
-	return devmode.ComponentBoundary("Accordion", map[string]any{"itemCount": len(items)}, outer)
+	return devmode.ComponentBoundary("Accordion", outer, map[string]any{"itemCount": len(items)})
 }
 
 // AccordionItemProps holds props for a single accordion item.
@@ -330,7 +330,7 @@ func StepsWithBoundary(steps []StepProps) templ.Component {
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return Steps().Render(templ.WithChildren(ctx, children), w)
 	})
-	return devmode.ComponentBoundary("Steps", map[string]any{"stepCount": len(steps)}, outer)
+	return devmode.ComponentBoundary("Steps", outer, map[string]any{"stepCount": len(steps)})
 }
 
 // StepProps holds props for a single step.
@@ -342,9 +342,9 @@ type StepProps struct {
 // SwapWithBoundary wraps Swap with a dev-mode component boundary annotation.
 // gallery:token rotate
 func SwapWithBoundary(rotate bool, onContent templ.Component, offContent templ.Component) templ.Component {
-	return devmode.ComponentBoundary("Swap", map[string]any{
+	return devmode.ComponentBoundary("Swap", Swap(rotate, onContent, offContent), map[string]any{
 		"rotate": rotate,
-	}, Swap(rotate, onContent, offContent))
+	})
 }
 
 // HeroWithBoundary wraps Hero + HeroContent with a dev-mode component boundary annotation.
@@ -363,12 +363,12 @@ func HeroWithBoundary(minHeight string, title string, subtitle string, ctaLabel 
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return HeroSection(minHeight).Render(templ.WithChildren(ctx, content), w)
 	})
-	return devmode.ComponentBoundary("Hero", map[string]any{
+	return devmode.ComponentBoundary("Hero", outer, map[string]any{
 		"title":     title,
 		"subtitle":  subtitle,
 		"ctaLabel":  ctaLabel,
 		"minHeight": minHeight,
-	}, outer)
+	})
 }
 
 // TooltipWithBoundary wraps Tooltip with a dev-mode component boundary annotation.
@@ -379,10 +379,10 @@ func TooltipWithBoundary(tip string, position string, trigger templ.Component) t
 	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return TooltipPositioned(tip, position).Render(templ.WithChildren(ctx, trigger), w)
 	})
-	return devmode.ComponentBoundary("Tooltip", map[string]any{
+	return devmode.ComponentBoundary("Tooltip", inner, map[string]any{
 		"tip":      tip,
 		"position": position,
-	}, inner)
+	})
 }
 
 // DropdownWithBoundary wraps Dropdown with a dev-mode component boundary annotation.
@@ -417,9 +417,9 @@ func DropdownWithBoundary(align DropdownAlign, trigger templ.Component, items []
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return Dropdown(align).Render(templ.WithChildren(ctx, content), w)
 	})
-	return devmode.ComponentBoundary("Dropdown", map[string]any{
+	return devmode.ComponentBoundary("Dropdown", outer, map[string]any{
 		"align": string(align),
-	}, outer)
+	})
 }
 
 // DropdownItemProps holds props for a single dropdown menu item.
@@ -443,7 +443,7 @@ func JoinWithBoundary(vertical bool, children ...templ.Component) templ.Componen
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return Join(vertical).Render(templ.WithChildren(ctx, content), w)
 	})
-	return devmode.ComponentBoundary("Join", map[string]any{"vertical": vertical}, outer)
+	return devmode.ComponentBoundary("Join", outer, map[string]any{"vertical": vertical})
 }
 
 // IndicatorWithBoundary wraps IndicatorWrapper with a dev-mode component boundary annotation.
@@ -460,9 +460,9 @@ func IndicatorWithBoundary(badgeClass string, badgeContent templ.Component, cont
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return IndicatorWrapper().Render(templ.WithChildren(ctx, inner), w)
 	})
-	return devmode.ComponentBoundary("Indicator", map[string]any{
+	return devmode.ComponentBoundary("Indicator", outer, map[string]any{
 		"badgeClass": badgeClass,
-	}, outer)
+	})
 }
 
 // StackWithBoundary wraps Stack with a dev-mode component boundary annotation.
@@ -478,7 +478,7 @@ func StackWithBoundary(children ...templ.Component) templ.Component {
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return Stack().Render(templ.WithChildren(ctx, content), w)
 	})
-	return devmode.ComponentBoundary("Stack", nil, outer)
+	return devmode.ComponentBoundary("Stack", outer)
 }
 
 // DiffWithBoundary wraps Diff with a dev-mode component boundary annotation.
@@ -498,10 +498,10 @@ func DiffWithBoundary(before string, after string) templ.Component {
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return DiffContainer().Render(templ.WithChildren(ctx, inner), w)
 	})
-	return devmode.ComponentBoundary("Diff", map[string]any{
+	return devmode.ComponentBoundary("Diff", outer, map[string]any{
 		"before": before,
 		"after":  after,
-	}, outer)
+	})
 }
 
 // MaskWithBoundary wraps Mask with a dev-mode component boundary annotation.
@@ -511,7 +511,7 @@ func MaskWithBoundary(shape MaskShape, content templ.Component) templ.Component 
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return Mask(shape).Render(templ.WithChildren(ctx, content), w)
 	})
-	return devmode.ComponentBoundary("Mask", map[string]any{"shape": string(shape)}, outer)
+	return devmode.ComponentBoundary("Mask", outer, map[string]any{"shape": string(shape)})
 }
 
 // CarouselWithBoundary wraps Carousel with a dev-mode component boundary annotation.
@@ -523,7 +523,7 @@ func CarouselWithBoundary(snap CarouselSnap, vertical bool, width string, items 
 			inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 				return CarouselItem(it.ID, it.ItemWidth).Render(templ.WithChildren(ctx, it.Content), w)
 			})
-			itemBoundary := devmode.ComponentBoundary("CarouselItem", map[string]any{"id": it.ID, "itemWidth": it.ItemWidth}, inner)
+			itemBoundary := devmode.ComponentBoundary("CarouselItem", inner, map[string]any{"id": it.ID, "itemWidth": it.ItemWidth})
 			if err := itemBoundary.Render(ctx, w); err != nil {
 				return err
 			}
@@ -533,7 +533,7 @@ func CarouselWithBoundary(snap CarouselSnap, vertical bool, width string, items 
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return Carousel(snap, vertical, width).Render(templ.WithChildren(ctx, children), w)
 	})
-	return devmode.ComponentBoundary("Carousel", map[string]any{"snap": string(snap), "vertical": vertical, "width": width, "itemCount": len(items)}, outer)
+	return devmode.ComponentBoundary("Carousel", outer, map[string]any{"snap": string(snap), "vertical": vertical, "width": width, "itemCount": len(items)})
 }
 
 // CarouselItemProps holds props for a single carousel slide.
@@ -557,7 +557,7 @@ func TimelineWithBoundary(items []TimelineItemProps) templ.Component {
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return Timeline().Render(templ.WithChildren(ctx, inner), w)
 	})
-	return devmode.ComponentBoundary("Timeline", map[string]any{"itemCount": len(items)}, outer)
+	return devmode.ComponentBoundary("Timeline", outer, map[string]any{"itemCount": len(items)})
 }
 
 // MockupCodeWithBoundary wraps MockupCode with a dev-mode component boundary annotation.
@@ -577,7 +577,7 @@ func MockupCodeWithBoundary(lines []MockupCodeLineProps) templ.Component {
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return MockupCode().Render(templ.WithChildren(ctx, children), w)
 	})
-	return devmode.ComponentBoundary("MockupCode", map[string]any{"lineCount": len(lines)}, outer)
+	return devmode.ComponentBoundary("MockupCode", outer, map[string]any{"lineCount": len(lines)})
 }
 
 // MockupCodeLineProps holds props for a single code mockup line.
@@ -600,16 +600,16 @@ func ListWithBoundary(props ListProps, items []ListRowProps) templ.Component {
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return List(props).Render(templ.WithChildren(ctx, children), w)
 	})
-	return devmode.ComponentBoundary("List", map[string]any{"itemCount": len(items), "header": props.Header}, outer)
+	return devmode.ComponentBoundary("List", outer, map[string]any{"itemCount": len(items), "header": props.Header})
 }
 
 // FilterTabsWithBoundary wraps FilterTabs with a dev-mode component boundary annotation.
 // gallery:token selected
 func FilterTabsWithBoundary(name string, selected string, tabs []string) templ.Component {
-	return devmode.ComponentBoundary("FilterTabs", map[string]any{
+	return devmode.ComponentBoundary("FilterTabs", FilterTabs(name, selected, tabs), map[string]any{
 		"name":     name,
 		"selected": selected,
-	}, FilterTabs(name, selected, tabs))
+	})
 }
 
 // FieldsetWithBoundary wraps Fieldset with a dev-mode component boundary annotation.
@@ -619,12 +619,12 @@ func FieldsetWithBoundary(legend string, content templ.Component) templ.Componen
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		return Fieldset(legend).Render(templ.WithChildren(ctx, content), w)
 	})
-	return devmode.ComponentBoundary("Fieldset", map[string]any{"legend": legend}, outer)
+	return devmode.ComponentBoundary("Fieldset", outer, map[string]any{"legend": legend})
 }
 
 // ProgressCardWithBoundary wraps ProgressCard with a dev-mode component boundary annotation.
 func ProgressCardWithBoundary(props ProgressCardProps) templ.Component {
-	return devmode.ComponentBoundary("ProgressCard", props, ProgressCard(props))
+	return devmode.ComponentBoundary("ProgressCard", ProgressCard(props), props)
 }
 
 // StatCardMinimalWithBoundary wraps StatCardMinimal with a dev-mode component boundary annotation.
@@ -632,12 +632,12 @@ func ProgressCardWithBoundary(props ProgressCardProps) templ.Component {
 // gallery:hint label:default(Total Users)
 // gallery:hint value:default(12,430)
 func StatCardMinimalWithBoundary(item StatCardMinimalItem) templ.Component {
-	return devmode.ComponentBoundary("StatCardMinimal", map[string]any{
+	return devmode.ComponentBoundary("StatCardMinimal", StatCardMinimal(item), map[string]any{
 		"label":      item.Label,
 		"value":      item.Value,
 		"trend":      string(item.Trend),
 		"trendLabel": item.TrendLabel,
-	}, StatCardMinimal(item))
+	})
 }
 
 // StatCardIconCornerWithBoundary wraps StatCardMinimal (icon-corner style) with a dev-mode component boundary annotation.
@@ -646,14 +646,14 @@ func StatCardMinimalWithBoundary(item StatCardMinimalItem) templ.Component {
 // gallery:hint label:default(Revenue)
 // gallery:hint value:default($48,290)
 func StatCardIconCornerWithBoundary(item StatCardIconCornerItem) templ.Component {
-	return devmode.ComponentBoundary("StatCardMinimal", map[string]any{
+	return devmode.ComponentBoundary("StatCardMinimal", StatCardMinimal(item), map[string]any{
 		"label":      item.Label,
 		"value":      item.Value,
 		"icon":       item.Icon,
 		"iconColor":  item.IconColor,
 		"trend":      string(item.Trend),
 		"trendLabel": item.TrendLabel,
-	}, StatCardMinimal(item))
+	})
 }
 
 // PersonCellWithBoundary wraps PersonCell with a dev-mode component boundary annotation.
@@ -661,50 +661,50 @@ func StatCardIconCornerWithBoundary(item StatCardIconCornerItem) templ.Component
 // gallery:hint name:default(Alice Johnson)
 // gallery:hint subtitle:default(alice@example.com)
 func PersonCellWithBoundary(p PersonCellProps) templ.Component {
-	return devmode.ComponentBoundary("PersonCell", map[string]any{
+	return devmode.ComponentBoundary("PersonCell", PersonCell(p), map[string]any{
 		"name":     p.Name,
 		"subtitle": p.Subtitle,
 		"src":      p.Src,
 		"icon":     p.Icon,
 		"size":     string(p.Size),
-	}, PersonCell(p))
+	})
 }
 
 // PersonChipWithBoundary wraps PersonChip with a dev-mode component boundary annotation.
 // gallery:token name,avatarColor,textColor
 // gallery:hint name:default(Jane Smith)
 func PersonChipWithBoundary(name string, avatarColor string, textColor string, gradientFrom string, gradientTo string, contact PersonChipContact) templ.Component {
-	return devmode.ComponentBoundary("PersonChip", map[string]any{
+	return devmode.ComponentBoundary("PersonChip", PersonChip(name, avatarColor, textColor, gradientFrom, gradientTo, contact), map[string]any{
 		"name":         name,
 		"avatarColor":  avatarColor,
 		"textColor":    textColor,
 		"gradientFrom": gradientFrom,
 		"gradientTo":   gradientTo,
-	}, PersonChip(name, avatarColor, textColor, gradientFrom, gradientTo, contact))
+	})
 }
 
 // NotificationPanelWithBoundary wraps NotificationPanel with a dev-mode component boundary annotation.
 func NotificationPanelWithBoundary(items []NotificationItem, unreadCount int, viewAllHref string) templ.Component {
-	return devmode.ComponentBoundary("NotificationPanel", map[string]any{
+	return devmode.ComponentBoundary("NotificationPanel", NotificationPanel(items, unreadCount, viewAllHref), map[string]any{
 		"itemCount":   len(items),
 		"unreadCount": unreadCount,
 		"viewAllHref": viewAllHref,
-	}, NotificationPanel(items, unreadCount, viewAllHref))
+	})
 }
 
 // FABWithBoundary wraps FAB with a dev-mode component boundary annotation.
 func FABWithBoundary(icon string, actions []FABAction) templ.Component {
-	return devmode.ComponentBoundary("FAB", map[string]any{
+	return devmode.ComponentBoundary("FAB", FAB(icon, actions), map[string]any{
 		"icon":        icon,
 		"actionCount": len(actions),
-	}, FAB(icon, actions))
+	})
 }
 
 // IconSpanColoredWithBoundary wraps IconSpanColored with a dev-mode component boundary annotation.
 func IconSpanColoredWithBoundary(name string, size string, color string) templ.Component {
-	return devmode.ComponentBoundary("IconSpanColored", map[string]any{
+	return devmode.ComponentBoundary("IconSpanColored", IconSpanColored(name, size, color), map[string]any{
 		"name":  name,
 		"size":  size,
 		"color": color,
-	}, IconSpanColored(name, size, color))
+	})
 }

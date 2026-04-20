@@ -9,11 +9,11 @@ import (
 // gallery:token label,required
 // gallery:hint label:default(Full Name)
 func TextInputWithBoundary(name string, label string, value string, errMsg string, required bool) templ.Component {
-	return devmode.ComponentBoundary("TextInput", map[string]any{
+	return devmode.ComponentBoundary("TextInput", TextInput(name, label, value, errMsg, required), map[string]any{
 		"name":     name,
 		"label":    label,
 		"required": required,
-	}, TextInput(name, label, value, errMsg, required))
+	})
 }
 
 // TextareaInputWithBoundary wraps TextareaInput with a dev-mode component boundary annotation.
@@ -21,49 +21,49 @@ func TextInputWithBoundary(name string, label string, value string, errMsg strin
 // gallery:hint rows:range(2,10,1)
 // gallery:hint label:default(Description)
 func TextareaInputWithBoundary(name string, label string, value string, errMsg string, rows int, required bool) templ.Component {
-	return devmode.ComponentBoundary("TextareaInput", map[string]any{
+	return devmode.ComponentBoundary("TextareaInput", TextareaInput(name, label, value, errMsg, rows, required), map[string]any{
 		"name":     name,
 		"label":    label,
 		"rows":     rows,
 		"required": required,
-	}, TextareaInput(name, label, value, errMsg, rows, required))
+	})
 }
 
 // CheckboxInputWithBoundary wraps CheckboxInput with a dev-mode component boundary annotation.
 // gallery:token label,checked
 // gallery:hint label:default(Accept terms and conditions)
 func CheckboxInputWithBoundary(name string, label string, checked bool, errMsg string) templ.Component {
-	return devmode.ComponentBoundary("CheckboxInput", map[string]any{
+	return devmode.ComponentBoundary("CheckboxInput", CheckboxInput(name, label, checked, errMsg), map[string]any{
 		"name":    name,
 		"label":   label,
 		"checked": checked,
-	}, CheckboxInput(name, label, checked, errMsg))
+	})
 }
 
 // SelectInputWithBoundary wraps SelectInput with a dev-mode component boundary annotation.
 // gallery:token label,required
 // gallery:hint label:default(Country)
 func SelectInputWithBoundary(name string, label string, selected string, options [][2]string, errMsg string, required bool) templ.Component {
-	return devmode.ComponentBoundary("SelectInput", map[string]any{
+	return devmode.ComponentBoundary("SelectInput", SelectInput(name, label, selected, options, errMsg, required), map[string]any{
 		"name":     name,
 		"label":    label,
 		"selected": selected,
 		"required": required,
-	}, SelectInput(name, label, selected, options, errMsg, required))
+	})
 }
 
 // SearchInputWithBoundary wraps SearchInput with a dev-mode component boundary annotation.
 func SearchInputWithBoundary(name string, value string, placeholder string, hxTarget string, hxGet string) templ.Component {
-	return devmode.ComponentBoundary("SearchInput", map[string]any{
+	return devmode.ComponentBoundary("SearchInput", SearchInput(name, value, placeholder, hxTarget, hxGet), map[string]any{
 		"name":        name,
 		"placeholder": placeholder,
 		"hxTarget":    hxTarget,
-	}, SearchInput(name, value, placeholder, hxTarget, hxGet))
+	})
 }
 
 // FormFieldWithBoundary wraps FormField with a dev-mode component boundary annotation.
 func FormFieldWithBoundary(props FormFieldProps) templ.Component {
-	return devmode.ComponentBoundary("FormField", props, FormField(props))
+	return devmode.ComponentBoundary("FormField", FormField(props), props)
 }
 
 // RangeInputWithBoundary wraps RangeInput with a dev-mode component boundary annotation.
@@ -73,24 +73,24 @@ func FormFieldWithBoundary(props FormFieldProps) templ.Component {
 // gallery:hint color:default(range-primary)
 // gallery:hint value:default(50)
 func RangeInputWithBoundary(name string, label string, value int, min int, max int, step int, color string) templ.Component {
-	return devmode.ComponentBoundary("RangeInput", map[string]any{
+	return devmode.ComponentBoundary("RangeInput", RangeInput(name, label, value, min, max, step, color), map[string]any{
 		"name":  name,
 		"label": label,
 		"min":   min,
 		"max":   max,
 		"step":  step,
-	}, RangeInput(name, label, value, min, max, step, color))
+	})
 }
 
 // RadioGroupWithBoundary wraps RadioGroup with a dev-mode component boundary annotation.
 // gallery:token color
 // gallery:hint color:default(radio-primary)
 func RadioGroupWithBoundary(name string, selected string, options [][2]string, color string) templ.Component {
-	return devmode.ComponentBoundary("RadioGroup", map[string]any{
+	return devmode.ComponentBoundary("RadioGroup", RadioGroup(name, selected, options, color), map[string]any{
 		"name":     name,
 		"selected": selected,
 		"color":    color,
-	}, RadioGroup(name, selected, options, color))
+	})
 }
 
 // RatingWithBoundary wraps Rating with a dev-mode component boundary annotation.
@@ -101,65 +101,65 @@ func RadioGroupWithBoundary(name string, selected string, options [][2]string, c
 // gallery:hint max:default(5)
 // gallery:hint color:default(bg-orange-400)
 func RatingWithBoundary(name string, value int, max int, shape RatingShape, color string, size string) templ.Component {
-	return devmode.ComponentBoundary("Rating", map[string]any{
+	return devmode.ComponentBoundary("Rating", Rating(name, value, max, shape, color, size), map[string]any{
 		"name":  name,
 		"value": value,
 		"max":   max,
 		"shape": string(shape),
 		"color": color,
 		"size":  size,
-	}, Rating(name, value, max, shape, color, size))
+	})
 }
 
 // FileInputWithBoundary wraps FileInput with a dev-mode component boundary annotation.
 // gallery:token label,accept
 // gallery:hint label:default(Upload file)
 func FileInputWithBoundary(name string, label string, accept string) templ.Component {
-	return devmode.ComponentBoundary("FileInput", map[string]any{
+	return devmode.ComponentBoundary("FileInput", FileInput(name, label, accept, ""), map[string]any{
 		"name":   name,
 		"label":  label,
 		"accept": accept,
-	}, FileInput(name, label, accept, ""))
+	})
 }
 
 // CheckboxWithBoundary wraps Checkbox with a dev-mode component boundary annotation.
 // gallery:token label,checked
 // gallery:hint label:default(Accept terms and conditions)
 func CheckboxWithBoundary(name string, checked bool, label string) templ.Component {
-	return devmode.ComponentBoundary("Checkbox", map[string]any{
+	return devmode.ComponentBoundary("Checkbox", Checkbox(name, checked, label), map[string]any{
 		"name":    name,
 		"checked": checked,
 		"label":   label,
-	}, Checkbox(name, checked, label))
+	})
 }
 
 // ToggleWithBoundary wraps Toggle with a dev-mode component boundary annotation.
 // gallery:token label,checked
 // gallery:hint label:default(Enable notifications)
 func ToggleWithBoundary(name string, checked bool, label string) templ.Component {
-	return devmode.ComponentBoundary("Toggle", map[string]any{
+	return devmode.ComponentBoundary("Toggle", Toggle(name, checked, label), map[string]any{
 		"name":    name,
 		"checked": checked,
 		"label":   label,
-	}, Toggle(name, checked, label))
+	})
 }
 
 // PromptBarWithBoundary wraps PromptBar with a dev-mode component boundary annotation.
 func PromptBarWithBoundary(props PromptBarProps) templ.Component {
-	return devmode.ComponentBoundary("PromptBar", props, PromptBar(props))
+	return devmode.ComponentBoundary("PromptBar", PromptBar(props), props)
 }
 
 // PromptBarActionWithBoundary wraps PromptBarAction with a dev-mode component boundary annotation.
 func PromptBarActionWithBoundary(placeholder string, actions []PromptBarActionItem) templ.Component {
-	return devmode.ComponentBoundary("PromptBarAction", map[string]any{
+	return devmode.ComponentBoundary("PromptBarAction", PromptBarAction(placeholder, actions), map[string]any{
 		"placeholder": placeholder,
 		"actionCount": len(actions),
-	}, PromptBarAction(placeholder, actions))
+	})
 }
 
 // InputSpinnerWithBoundary wraps InputSpinner with a dev-mode component boundary annotation.
 func InputSpinnerWithBoundary(id string, value, min, max int, hasMinMax bool, btnClass, inputClass string) templ.Component {
-	return devmode.ComponentBoundary("InputSpinner", map[string]any{
+	return devmode.ComponentBoundary("InputSpinner", InputSpinner(id, value, min, max, hasMinMax, btnClass, inputClass), map[string]any{
 		"id":         id,
 		"value":      value,
 		"min":        min,
@@ -167,14 +167,14 @@ func InputSpinnerWithBoundary(id string, value, min, max int, hasMinMax bool, bt
 		"hasMinMax":  hasMinMax,
 		"btnClass":   btnClass,
 		"inputClass": inputClass,
-	}, InputSpinner(id, value, min, max, hasMinMax, btnClass, inputClass))
+	})
 }
 
 // WizardStepperWithBoundary wraps WizardStepper with a dev-mode component boundary annotation.
 func WizardStepperWithBoundary(id string, steps []WizardStep, panels []WizardStepPanel) templ.Component {
-	return devmode.ComponentBoundary("WizardStepper", map[string]any{
+	return devmode.ComponentBoundary("WizardStepper", WizardStepper(id, steps, panels), map[string]any{
 		"id":         id,
 		"stepCount":  len(steps),
 		"panelCount": len(panels),
-	}, WizardStepper(id, steps, panels))
+	})
 }

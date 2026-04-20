@@ -99,12 +99,15 @@ devmode.IsDevMode(ctx) // bool
 devmode.Attrs(ctx, "package/ComponentName") // templ.Attributes
 
 // Wrap a component in a display:contents <div> with data-component
-// and data-props attributes (gallery hover overlay / component tree).
-devmode.ComponentBoundary("Button", props, ui.Button(props))
+// and optionally data-props attributes (gallery hover overlay / component tree).
+// props is optional — omit it to suppress data-props entirely.
+devmode.ComponentBoundary("Button", ui.Button(props))           // no props
+devmode.ComponentBoundary("Button", ui.Button(props), props)    // with props
 
-// Inject data-component/data-props directly onto the first opening tag
-// (use for table structural elements: thead, tbody, tr, td, th).
-devmode.ElementBoundary("TableRow", props, table.TableRow(id, hover))
+// Inject data-component and optionally data-props directly onto the first
+// opening tag (use for table structural elements: thead, tbody, tr, td, th).
+devmode.ElementBoundary("TableRow", table.TableRow(id, hover))                          // no props
+devmode.ElementBoundary("TableRow", table.TableRow(id, hover), map[string]any{...})    // with props
 ```
 
 `ComponentBoundary` and `ElementBoundary` are used by the gallery infrastructure. `Attrs` is used by every component internally and is the right primitive when adding annotations to your own components.

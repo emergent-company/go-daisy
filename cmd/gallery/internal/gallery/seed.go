@@ -3114,7 +3114,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Primary→secondary, success→info, and warning→error gradient examples.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return devmode.ComponentBoundary("GradientText", nil, rawHTML(`<div class="p-6 space-y-6">
+						return devmode.ComponentBoundary("GradientText", rawHTML(`<div class="p-6 space-y-6">
   <p class="inline-block bg-linear-to-r from-primary to-secondary bg-clip-text text-3xl font-black text-transparent">
     go-daisy — UI Component Library
   </p>
@@ -3152,7 +3152,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Cards and buttons with colored drop shadows.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return devmode.ComponentBoundary("ColoredShadows", nil, rawHTML(`<div class="p-8 space-y-6">
+						return devmode.ComponentBoundary("ColoredShadows", rawHTML(`<div class="p-8 space-y-6">
   <div class="flex flex-wrap gap-6">
     <div class="card bg-base-100 rounded-box shadow-lg shadow-primary/20 p-4 w-36 text-center">
       <p class="text-sm font-semibold">Primary</p>
@@ -3211,7 +3211,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Heading levels, body, muted, overline, and link styles.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return devmode.ComponentBoundary("Typography", nil, rawHTML(`<div class="p-6 space-y-3">
+						return devmode.ComponentBoundary("Typography", rawHTML(`<div class="p-6 space-y-3">
   <h1 class="text-3xl font-bold text-base-content">Heading 1</h1>
   <h2 class="text-2xl font-semibold text-base-content">Heading 2</h2>
   <h3 class="text-xl font-semibold text-base-content">Heading 3</h3>
@@ -3251,7 +3251,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Size scale from xs to 4xl and all font weights.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return devmode.ComponentBoundary("TypographyScale", nil, rawHTML(`<div class="space-y-6 p-6">
+						return devmode.ComponentBoundary("TypographyScale", rawHTML(`<div class="space-y-6 p-6">
   <div class="card card-border">
     <div class="bg-base-200/30 rounded-t-box px-5 py-3 font-medium">Sizes</div>
     <div class="flex flex-col gap-3 p-6">
@@ -3310,7 +3310,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Box shadow, inset shadow, and text shadow scales.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return devmode.ComponentBoundary("ShadowScale", nil, rawHTML(`<div class="space-y-6 p-6">
+						return devmode.ComponentBoundary("ShadowScale", rawHTML(`<div class="space-y-6 p-6">
   <div class="card card-border bg-base-200/20">
     <div class="bg-base-200/40 rounded-t-box px-5 py-3 font-medium">Box Shadow</div>
     <div class="grid grid-cols-2 gap-6 p-6 lg:grid-cols-4">
@@ -3374,7 +3374,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Image filter utility classes applied to sample images.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return devmode.ComponentBoundary("CSSFilters", nil, rawHTML(`<div class="p-6">
+						return devmode.ComponentBoundary("CSSFilters", rawHTML(`<div class="p-6">
   <div class="card card-border">
     <div class="bg-base-200/30 rounded-t-box px-5 py-3 font-medium">Image Filters</div>
     <div class="grid grid-cols-3 gap-6 p-6 lg:grid-cols-4">

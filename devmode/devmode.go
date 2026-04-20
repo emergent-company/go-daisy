@@ -13,8 +13,9 @@
 // Usage in the gallery server:
 //
 //	ctx = devmode.WithDevMode(ctx)   // inject once per request
-//	comp = devmode.ComponentBoundary("Button", props, ui.Button(props))
-//	comp = devmode.ElementBoundary("TableRow", props, table.TableRow(id, hover))
+//	comp = devmode.ComponentBoundary("Button", ui.Button(props), props)     // with props
+//	comp = devmode.ComponentBoundary("Button", ui.Button(props))            // without props
+//	comp = devmode.ElementBoundary("TableRow", table.TableRow(id, hover), props)
 //
 // In production (when [IsDevMode] returns false), both functions are a
 // zero-overhead passthrough — no wrapper element or extra attributes are emitted.
@@ -72,70 +73,86 @@ func Attrs(ctx context.Context, name string) templ.Attributes {
 }
 
 // ComponentBoundary wraps inner with a display:contents <div> annotated with
-// data-component (the component name) and data-props (the props as JSON).
+// data-component (the component name) and optionally data-props (the props as JSON).
 //
 // The wrapper is only emitted when [IsDevMode] returns true for the render
 // context — in all other cases the inner component is rendered unchanged.
 //
-// The props argument can be any JSON-serialisable value; nil is safe and
-// results in data-props="null". For best results pass a map[string]any or
+// The optional props argument can be any JSON-serialisable value. When omitted,
+// no data-props attribute is emitted. For best results pass a map[string]any or
 // the component's props struct.
-func ComponentBoundary(name string, props any, inner templ.Component) templ.Component {
+func ComponentBoundary(name string, inner templ.Component, props ...any) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		if !IsDevMode(ctx) {
 			return inner.Render(ctx, w)
 		}
 
-		propsJSON, err := json.Marshal(props)
-		if err != nil {
-			propsJSON = []byte("null")
-		}
-
 		// Emit the opening wrapper. display:contents makes the div invisible to
 		// layout engines (flexbox, grid) while preserving its presence in the DOM
 		// so DevTools and JavaScript can query [data-component] freely.
-		// Use HTML-escaped attribute values so JSON containing " characters is
-		// preserved correctly when read back via getAttribute() in the browser.
-		if _, err := fmt.Fprintf(w,
-			`<div data-component="%s" data-props="%s" style="display:contents">`,
-			html.EscapeString(name), html.EscapeString(string(propsJSON)),
-		); err != nil {
-			return err
+		if len(props) > 0 {
+			propsJSON, err := json.Marshal(props[0])
+			if err != nil {
+				propsJSON = []byte("null")
+			}
+			// Use HTML-escaped attribute values so JSON containing " characters is
+			// preserved correctly when read back via getAttribute() in the browser.
+			if _, err := fmt.Fprintf(w,
+				`<div data-component="%s" data-props="%s" style="display:contents">`,
+				html.EscapeString(name), html.EscapeString(string(propsJSON)),
+			); err != nil {
+				return err
+			}
+		} else {
+			if _, err := fmt.Fprintf(w,
+				`<div data-component="%s" style="display:contents">`,
+				html.EscapeString(name),
+			); err != nil {
+				return err
+			}
 		}
 
 		if err := inner.Render(ctx, w); err != nil {
 			return err
 		}
 
-		_, err = io.WriteString(w, `</div>`)
+		_, err := io.WriteString(w, `</div>`)
 		return err
 	})
 }
 
 // ElementBoundary annotates the first opening tag emitted by inner with
-// data-component and data-props attributes, without adding any wrapper element.
+// data-component and optionally data-props attributes, without adding any wrapper element.
 //
 // Use this for structural HTML elements that cannot legally contain a <div>
 // wrapper, such as <thead>, <tbody>, <tr>, <td>, and <th>. The browser's
 // HTML parser will strip a <div> placed directly inside a <table> or <tr>,
 // making [ComponentBoundary] ineffective for these elements.
 //
+// The optional props argument can be any JSON-serialisable value. When omitted,
+// no data-props attribute is emitted.
+//
 // Like [ComponentBoundary], this is a zero-overhead passthrough in production
 // (when [IsDevMode] returns false).
-func ElementBoundary(name string, props any, inner templ.Component) templ.Component {
+func ElementBoundary(name string, inner templ.Component, props ...any) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		if !IsDevMode(ctx) {
 			return inner.Render(ctx, w)
 		}
 
-		propsJSON, err := json.Marshal(props)
-		if err != nil {
-			propsJSON = []byte("null")
-		}
 		// Use HTML-escaped attribute values so JSON containing " characters is
 		// preserved correctly when read back via getAttribute() in the browser.
-		attrs := fmt.Sprintf(` data-component="%s" data-props="%s"`,
-			html.EscapeString(name), html.EscapeString(string(propsJSON)))
+		var attrs string
+		if len(props) > 0 {
+			propsJSON, err := json.Marshal(props[0])
+			if err != nil {
+				propsJSON = []byte("null")
+			}
+			attrs = fmt.Sprintf(` data-component="%s" data-props="%s"`,
+				html.EscapeString(name), html.EscapeString(string(propsJSON)))
+		} else {
+			attrs = fmt.Sprintf(` data-component="%s"`, html.EscapeString(name))
+		}
 
 		// Render the inner component into a buffer so we can inject attributes
 		// into the first opening tag before forwarding to the real writer.
@@ -150,8 +167,8 @@ func ElementBoundary(name string, props any, inner templ.Component) templ.Compon
 		idx := strings.Index(raw, ">")
 		if idx < 0 {
 			// Shouldn't happen for well-formed templ output; fall through.
-			_, err = io.WriteString(w, raw)
-			return err
+			_, writeErr := io.WriteString(w, raw)
+			return writeErr
 		}
 		// Handle self-closing tags: don't inject before '/>'
 		insert := idx
@@ -159,7 +176,7 @@ func ElementBoundary(name string, props any, inner templ.Component) templ.Compon
 			insert--
 		}
 		annotated := raw[:insert] + attrs + raw[insert:]
-		_, err = io.WriteString(w, annotated)
-		return err
+		_, writeErr := io.WriteString(w, annotated)
+		return writeErr
 	})
 }
