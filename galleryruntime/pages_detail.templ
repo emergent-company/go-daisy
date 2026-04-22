@@ -907,10 +907,14 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 
 			// ── Selector utilities ────────────────────────────────────────────────
 
+			var UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 			function selectorSegment(el) {
 				if (!el || el.nodeType !== 1) return '';
+				var dc = el.getAttribute('data-component');
+				if (dc) return dc;
 				var seg = el.tagName.toLowerCase();
-				if (el.id) {
+				if (el.id && !UUID_RE.test(el.id)) {
 					seg += '#' + el.id;
 				} else if (el.className && typeof el.className === 'string') {
 					var cls = el.className.trim().split(/\s+/).slice(0, 2).join('.');
@@ -924,6 +928,21 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 				var cur = el;
 				for (var i = 0; i < 4 && cur && cur.nodeType === 1 && cur.tagName !== 'BODY' && cur.tagName !== 'HTML'; i++) {
 					parts.unshift(selectorSegment(cur));
+					cur = cur.parentElement;
+				}
+				return parts.join(' > ');
+			}
+
+			// Walk up the DOM collecting data-component ancestors, innermost first.
+			// Returns a breadcrumb like "ui/Button" or "table/Table > ui/Button".
+			function componentAncestry(el) {
+				var parts = [];
+				var cur = el;
+				while (cur && cur.nodeType === 1 && cur.tagName !== 'BODY' && cur.tagName !== 'HTML') {
+					var dc = cur.getAttribute('data-component');
+					if (dc && (parts.length === 0 || parts[0] !== dc)) {
+						parts.unshift(dc);
+					}
 					cur = cur.parentElement;
 				}
 				return parts.join(' > ');
@@ -990,9 +1009,10 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 							var el = raw ? pickTarget(raw, fdoc.body) : null;
 							if (!el || el === fdoc.body) return;
 
-							var tag = el.tagName.toLowerCase();
-							var selector = computeSelectorPath(el);
-							var innerText = (el.innerText || el.textContent || '').trim().slice(0, 100);
+						var tag = el.tagName.toLowerCase();
+						var ancestry = componentAncestry(el);
+						var selector = ancestry || computeSelectorPath(el);
+						var innerText = (el.innerText || el.textContent || '').trim().slice(0, 100);
 
 							var tagIn = document.getElementById('fb-tag');
 							var selIn = document.getElementById('fb-selector');
