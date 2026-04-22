@@ -414,7 +414,10 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 			></textarea>
 			<div class="modal-action mt-3">
 				<button class="btn btn-sm btn-ghost" onclick="closeFeedbackDialog()">Cancel</button>
-				<button class="btn btn-sm btn-primary" onclick="submitFeedback()">Submit</button>
+				<button class="btn btn-sm btn-outline" onclick="submitFeedback()">Save</button>
+				if githubEnabled {
+					<button class="btn btn-sm btn-primary" onclick="sendToGithubFromDialog()">Send to GitHub</button>
+				}
 			</div>
 		</div>
 		<form method="dialog" class="modal-backdrop"><button>close</button></form>
@@ -1046,7 +1049,26 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 
 			// ── Feedback submission ───────────────────────────────────────────────
 
-			window.submitFeedback = function() {
+			// Show a toast with an anchor link that auto-dismisses after `duration` ms.
+			function showLinkToast(label, url, duration) {
+				var container = document.getElementById('toast-container');
+				if (!container) return;
+				var el = document.createElement('div');
+				el.className = 'alert alert-success text-sm shadow-md toast-auto-dismiss';
+				el.setAttribute('role', 'alert');
+				el.setAttribute('data-duration', String(duration || 5000));
+				var a = document.createElement('a');
+				a.href = url;
+				a.target = '_blank';
+				a.rel = 'noopener noreferrer';
+				a.textContent = label;
+				a.className = 'underline font-semibold';
+				el.appendChild(a);
+				container.appendChild(el);
+			}
+
+			// Saves feedback and calls onSaved(slugValue) when done.
+			function saveFeedback(onSaved) {
 				var slug = document.getElementById('fb-slug');
 				var tag = document.getElementById('fb-tag');
 				var sel = document.getElementById('fb-selector');
@@ -1068,17 +1090,48 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 					body: JSON.stringify({ comment: comment.value.trim(), context_json: contextJson })
 				}).then(function(resp) {
 					if (!resp.ok) { console.error('feedback submit failed', resp.status); return; }
-				var dialog = document.getElementById('feedback-dialog');
-				if (dialog) dialog.close();
-				// Auto-open feedback panel and refresh list
-				var col = document.getElementById('right-column');
-				if (col) { col.classList.remove('hidden'); col.style.display = 'flex'; }
-				var panel = document.getElementById('feedback-panel');
-				if (panel) panel.classList.remove('hidden');
+					var dialog = document.getElementById('feedback-dialog');
+					if (dialog) dialog.close();
+					// Auto-open feedback panel and refresh list
+					var col = document.getElementById('right-column');
+					if (col) { col.classList.remove('hidden'); col.style.display = 'flex'; }
+					var panel = document.getElementById('feedback-panel');
+					if (panel) panel.classList.remove('hidden');
 					htmx.trigger(document.body, 'feedbackCreated');
 					var badge = document.getElementById('feedback-count-' + slug.value);
 					if (badge) htmx.trigger(badge, 'load');
+					if (onSaved) onSaved(slug.value);
 				}).catch(function(err) { console.error('feedback submit error', err); });
+			}
+
+			window.submitFeedback = function() {
+				saveFeedback(null);
+			};
+
+			window.sendToGithubFromDialog = function() {
+				saveFeedback(function(slugValue) {
+					var btn = document.getElementById('export-issue-btn');
+					if (btn) { btn.disabled = true; btn.textContent = 'Creating…'; }
+					fetch('/gallery/' + slugValue + '/feedback/export-issue', {
+						method: 'POST',
+						headers: {'Content-Type': 'application/json'}
+					}).then(function(resp) {
+						return resp.json().then(function(data) {
+							if (!resp.ok) {
+								showLinkToast('Failed to create issue: ' + (data.error || resp.status), '#', 5000);
+								if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
+								return;
+							}
+							if (data.issue_url) {
+								showLinkToast('GitHub issue created — view issue', data.issue_url, 5000);
+							}
+							if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
+						});
+					}).catch(function(err) {
+						console.error('export issue error', err);
+						if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
+					});
+				});
 			};
 
 			window.closeFeedbackDialog = function() {
@@ -1095,19 +1148,18 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 				}).then(function(resp) {
 					return resp.json().then(function(data) {
 						if (!resp.ok) {
-							alert('Failed to create issue: ' + (data.error || resp.status));
-							if (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }
+							showLinkToast('Failed to create issue: ' + (data.error || resp.status), '#', 5000);
+							if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
 							return;
 						}
 						if (data.issue_url) {
-							window.open(data.issue_url, '_blank', 'noopener');
+							showLinkToast('GitHub issue created — view issue', data.issue_url, 5000);
 						}
-						if (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }
+						if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
 					});
 				}).catch(function(err) {
 					console.error('export issue error', err);
-					alert('Failed to create issue: ' + err.message);
-					if (btn) { btn.disabled = false; btn.innerHTML = 'Create GitHub Issue'; }
+					if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
 				});
 			};
 
