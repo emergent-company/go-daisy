@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os/exec"
+	"strings"
 
 	"github.com/a-h/templ"
 	"github.com/labstack/echo/v4"
@@ -11,6 +13,20 @@ import (
 
 	"github.com/emergent-company/go-daisy/staticfs"
 )
+
+// detectGitBranch returns the current git branch name, or an empty string
+// if it cannot be determined (e.g. detached HEAD, no git binary, not a repo).
+func detectGitBranch() string {
+	out, err := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
+	if err != nil {
+		return ""
+	}
+	branch := strings.TrimSpace(string(out))
+	if branch == "HEAD" { // detached HEAD state
+		return ""
+	}
+	return branch
+}
 
 // Options configures the gallery server.
 type Options struct {
@@ -103,7 +119,13 @@ func Serve(opts Options) error {
 	// Build the full list of static prefixes: always include "/static/", plus any extras.
 	staticPrefixes := append([]string{"/static/"}, opts.ExtraStaticPrefixes...)
 
-	h := newGalleryHandler(opts.Title, opts.Logo, opts.Components, store, gh, staticPrefixes, opts.DevMode)
+	// Detect current git branch for embedding in feedback context.
+	branch := detectGitBranch()
+	if branch != "" {
+		log.Printf("gallery detected git branch: %s", branch)
+	}
+
+	h := newGalleryHandler(opts.Title, opts.Logo, opts.Components, store, gh, staticPrefixes, opts.DevMode, branch)
 	h.register(e)
 
 	addr := fmt.Sprintf("0.0.0.0:%d", opts.Port)

@@ -103,7 +103,9 @@ func (c *GitHubClient) CreateIssue(ctx context.Context, title, body string, labe
 
 // BuildIssueContent constructs the GitHub issue title and markdown body
 // aggregating all provided open feedback items for a gallery component.
-func BuildIssueContent(comp GalleryComponent, items []Feedback, galleryBaseURL string) (title, body string) {
+// branch is the git branch the gallery was running on when the feedback was
+// collected; pass an empty string if unknown.
+func BuildIssueContent(comp GalleryComponent, items []Feedback, galleryBaseURL, branch string) (title, body string) {
 	n := len(items)
 	title = fmt.Sprintf("[Gallery Feedback] %s (%d item", comp.Name, n)
 	if n != 1 {
@@ -123,6 +125,9 @@ func BuildIssueContent(comp GalleryComponent, items []Feedback, galleryBaseURL s
 	}
 	if galleryBaseURL != "" {
 		sb.WriteString(fmt.Sprintf("**Gallery URL:** %s/gallery/%s\n", galleryBaseURL, comp.Slug))
+	}
+	if branch != "" {
+		sb.WriteString(fmt.Sprintf("**Branch:** `%s`\n", branch))
 	}
 	sb.WriteString("\n---\n\n### Feedback Items\n\n")
 
@@ -149,6 +154,10 @@ func BuildIssueContent(comp GalleryComponent, items []Feedback, galleryBaseURL s
 					trimmed = trimmed[:80] + "…"
 				}
 				sb.WriteString(fmt.Sprintf("- **Inner text:** %s\n", trimmed))
+			}
+			if b, _ := ctx["branch"].(string); b != "" && b != branch {
+				// Item was filed on a different branch than the current one — surface it.
+				sb.WriteString(fmt.Sprintf("- **Filed on branch:** `%s`\n", b))
 			}
 		}
 		sb.WriteString(fmt.Sprintf("- **Submitted:** %s\n\n", item.CreatedAt.Format(time.RFC3339)))

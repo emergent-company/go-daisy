@@ -25,10 +25,11 @@ type galleryHandler struct {
 	github         *GitHubClient
 	staticPrefixes []string // all CSS prefixes: default "/static/" + any ExtraStaticPrefixes
 	devMode        bool     // when true, component boundary annotations are injected
+	branch         string   // current git branch, empty if unknown
 }
 
 // newGalleryHandler creates a new gallery handler.
-func newGalleryHandler(title string, logo templ.Component, components []GalleryComponent, store *Store, gh *GitHubClient, staticPrefixes []string, devModeEnabled bool) *galleryHandler {
+func newGalleryHandler(title string, logo templ.Component, components []GalleryComponent, store *Store, gh *GitHubClient, staticPrefixes []string, devModeEnabled bool, branch string) *galleryHandler {
 	return &galleryHandler{
 		title:          title,
 		logo:           logo,
@@ -37,6 +38,7 @@ func newGalleryHandler(title string, logo templ.Component, components []GalleryC
 		github:         gh,
 		staticPrefixes: staticPrefixes,
 		devMode:        devModeEnabled,
+		branch:         branch,
 	}
 }
 
@@ -84,7 +86,7 @@ func (h *galleryHandler) handleDetail(c echo.Context) error {
 		feedbackCount, _ = h.store.Count(c.Request().Context(), slug)
 	}
 
-	content := ComponentDetail(comp, feedbackCount, h.github != nil)
+	content := ComponentDetail(comp, feedbackCount, h.github != nil, h.branch)
 	render.RenderAuto(c.Response().Writer, c.Request(),
 		GalleryPage(h.title, slug, categories, h.logo, content),
 		GalleryPageContent(h.title, slug, categories, h.logo, content),
@@ -290,6 +292,18 @@ func (h *galleryHandler) handleCreateFeedback(c echo.Context) error {
 		contextJSON = "{}"
 	}
 
+	// Inject server-side branch into context_json.
+	if h.branch != "" {
+		var ctx map[string]interface{}
+		if err := json.Unmarshal([]byte(contextJSON), &ctx); err != nil || ctx == nil {
+			ctx = map[string]interface{}{}
+		}
+		ctx["branch"] = h.branch
+		if b, err := json.Marshal(ctx); err == nil {
+			contextJSON = string(b)
+		}
+	}
+
 	record, err := h.store.Create(c.Request().Context(), CreateParams{
 		ComponentSlug: slug,
 		Comment:       req.Comment,
@@ -403,7 +417,7 @@ func (h *galleryHandler) handleExportIssue(c echo.Context) error {
 	}
 	baseURL := scheme + "://" + c.Request().Host
 
-	title, body := BuildIssueContent(comp, items, baseURL)
+	title, body := BuildIssueContent(comp, items, baseURL, h.branch)
 	issueURL, err := h.github.CreateIssue(c.Request().Context(), title, body, []string{"gallery-feedback"})
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("failed to create GitHub issue: %v", err))
