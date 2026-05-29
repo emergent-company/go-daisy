@@ -246,20 +246,46 @@ func TagWithBoundary(label string, removeHref string) templ.Component {
 // gallery:hint author:default(Alice)
 // gallery:hint timestamp:default(10:32 AM)
 // gallery:hint message:default(Hey! How are you doing?)
-func ChatBubbleWithBoundary(sent bool, author, timestamp, bubbleClass, message string) templ.Component {
+func ChatBubbleWithBoundary(sent bool, author, timestamp, avatarSrc string, botIcon bool, bubbleClass string, showActions bool, message string) templ.Component {
 	child := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		_, err := io.WriteString(w, message)
 		return err
 	})
 	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		return ChatBubble(sent, author, timestamp, bubbleClass).Render(templ.WithChildren(ctx, child), w)
+		return ChatBubble(sent, author, timestamp, avatarSrc, botIcon, bubbleClass, showActions, nil).Render(templ.WithChildren(ctx, child), w)
 	})
 	return devmode.ComponentBoundary("ChatBubble", inner, map[string]any{
 		"sent":        sent,
 		"author":      author,
 		"timestamp":   timestamp,
+		"avatarSrc":   avatarSrc,
+		"botIcon":     botIcon,
 		"bubbleClass": bubbleClass,
+		"showActions": showActions,
 		"message":     message,
+	})
+}
+
+// AIThinkingIndicatorWithBoundary wraps AIThinkingIndicator with a dev-mode component boundary annotation.
+func AIThinkingIndicatorWithBoundary() templ.Component {
+	return devmode.ComponentBoundary("AIThinkingIndicator", AIThinkingIndicator(), nil)
+}
+
+// ChatWindowWithBoundary wraps ChatWindow with a dev-mode component boundary annotation.
+func ChatWindowWithBoundary(heightClass string, children templ.Component) templ.Component {
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return ChatWindow(heightClass, nil).Render(templ.WithChildren(ctx, children), w)
+	})
+	return devmode.ComponentBoundary("ChatWindow", inner, map[string]any{"heightClass": heightClass})
+}
+
+// ChatInputWithBoundary wraps ChatInput with a dev-mode component boundary annotation.
+// gallery:token placeholder
+// gallery:hint placeholder:default(Type a message...)
+func ChatInputWithBoundary(showAttach bool, placeholder string) templ.Component {
+	return devmode.ComponentBoundary("ChatInput", ChatInput(showAttach, placeholder, nil), map[string]any{
+		"showAttach":  showAttach,
+		"placeholder": placeholder,
 	})
 }
 

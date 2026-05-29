@@ -159,7 +159,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Name:        "Chat Bubble",
 			Category:    galleryruntime.CategoryDataDisplay,
 			Subcategory: "Display",
-			Description: "Chat conversation bubbles (sent and received).",
+			Description: "Chat conversation bubbles (sent and received) with avatar, bot-icon, and hover action toolbar.",
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
@@ -178,22 +178,134 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						if message == "" {
 							message = "Hey! How are you doing?"
 						}
-						return ui.ChatBubbleWithBoundary(sent, author, timestamp, "", message)
+						return ui.ChatBubbleWithBoundary(sent, author, timestamp, "", false, "", false, message)
 					},
 					Tokens: ChatBubbleTokens(),
 				},
 				{
 					Name:        "Examples",
-					Description: "Sent and received bubbles together.",
+					Description: "Sent and received bubbles with avatars.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="flex flex-col gap-2 p-4 max-w-lg mx-auto">`); err != nil {
+								return err
+							}
+							if err := withText("Hey! How are you doing?", ui.ChatBubble(false, "Alice", "10:32 AM", "./images/avatars/2.png", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+								return err
+							}
+							if err := withText("Good thanks! How about you?", ui.ChatBubble(true, "You", "10:33 AM", "./images/avatars/1.png", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+								return err
+							}
+							if err := withText("Just finished a great book. Have any recommendations?", ui.ChatBubble(false, "Alice", "10:34 AM", "./images/avatars/2.png", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+								return err
+							}
+							if err := withText("I'd recommend 'The Silent Observer' — it's a must-read!", ui.ChatBubble(true, "You", "10:36 AM", "./images/avatars/1.png", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
+				{
+					Name:        "AI Conversation",
+					Description: "AI bot bubble with bot icon, hover actions, and thinking indicator.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="flex flex-col gap-3 p-4 max-w-xl mx-auto">`); err != nil {
+								return err
+							}
+							// User message
+							if err := withText("Can you provide an estimated timeline for completion?", ui.ChatBubble(true, "", "Weeks ago", "", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+								return err
+							}
+							// AI response with bot icon and hover actions
+							if err := withText("Certainly! Based on our current progress, we estimate the project will be completed within 4–6 weeks. Let me know if you'd like a detailed breakdown.", ui.ChatBubble(false, "", "Week ago", "", true, "bg-base-200", true, nil)).Render(ctx, w); err != nil {
+								return err
+							}
+							// Another user message
+							if err := withText("Can you generate a follow-up summary?", ui.ChatBubble(true, "", "now", "", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+								return err
+							}
+							// AI thinking indicator
+							if err := ui.AIThinkingIndicator().Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
+				{
+					Name:        "Bubble Colors",
+					Description: "Chat bubbles using DaisyUI color modifiers.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 							if _, err := io.WriteString(w, `<div class="flex flex-col gap-2 p-4 max-w-sm mx-auto">`); err != nil {
 								return err
 							}
-							if err := withText("Hey! How are you doing?", ui.ChatBubble(false, "Alice", "10:32 AM", "chat-bubble-primary")).Render(ctx, w); err != nil {
+							type bubble struct {
+								text  string
+								class string
+								sent  bool
+							}
+							bubbles := []bubble{
+								{"Primary message", "chat-bubble-primary", false},
+								{"Secondary reply", "chat-bubble-secondary", true},
+								{"Accent highlight", "chat-bubble-accent", false},
+								{"Success confirmation", "chat-bubble-success", true},
+								{"Warning notice", "chat-bubble-warning", false},
+								{"Error alert", "chat-bubble-error", true},
+							}
+							for _, b := range bubbles {
+								if err := withText(b.text, ui.ChatBubble(b.sent, "", "", "", false, b.class, false, nil)).Render(ctx, w); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
+			},
+		},
+		{
+			Slug:        "chat-input",
+			Name:        "Chat Input",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Display",
+			Description: "Compact single-line chat input bar with optional attach button and send button.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Chat input with attach button.",
+					RenderFunc: func(params url.Values) templ.Component {
+						placeholder := params.Get("placeholder")
+						if placeholder == "" {
+							placeholder = "Type a message..."
+						}
+						return ui.ChatInputWithBoundary(true, placeholder)
+					},
+					Tokens: ChatInputTokens(),
+				},
+				{
+					Name:        "Examples",
+					Description: "Chat input variants.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="space-y-4 max-w-lg mx-auto p-4">`); err != nil {
 								return err
 							}
-							if err := withText("Good thanks! How about you?", ui.ChatBubble(true, "You", "10:33 AM", "")).Render(ctx, w); err != nil {
+							if _, err := io.WriteString(w, `<p class="text-xs text-base-content/60 font-semibold uppercase">With attach button</p>`); err != nil {
+								return err
+							}
+							if err := ui.ChatInput(true, "Type a message...", nil).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<p class="text-xs text-base-content/60 font-semibold uppercase">Without attach button</p>`); err != nil {
+								return err
+							}
+							if err := ui.ChatInput(false, "Send a reply...", nil).Render(ctx, w); err != nil {
 								return err
 							}
 							_, err := io.WriteString(w, `</div>`)
@@ -3081,7 +3193,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							if err := form.PromptBarAction("Ask a question...", []form.PromptBarActionItem{
 								{Icon: "lucide--paperclip", Label: "Attach"},
 								{Icon: "lucide--mic", Label: "Record"},
-							}).Render(ctx, w); err != nil {
+							}, false, nil).Render(ctx, w); err != nil {
 								return err
 							}
 							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">With 3 actions</p>`); err != nil {
@@ -3091,6 +3203,162 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{Icon: "lucide--image", Label: "Image"},
 								{Icon: "lucide--paperclip", Label: "Attach"},
 								{Icon: "lucide--smile", Label: "Emoji"},
+							}, false, nil).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Loading state</p>`); err != nil {
+								return err
+							}
+							if err := form.PromptBarAction("Waiting for response...", []form.PromptBarActionItem{
+								{Icon: "lucide--circle-plus", Label: "Add File"},
+								{Icon: "lucide--brain", Label: "Deep Thinking"},
+								{Icon: "lucide--globe", Label: "Browsing"},
+							}, true, nil).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
+			},
+		},
+		{
+			Slug:        "prompt-bar-model",
+			Name:        "Prompt Bar — Model Selector",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "AI prompt bar with a model-selector dropdown and optional info banner.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Prompt bar with model selector and token counter.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarModelSelectorWithBoundary(form.PromptBarModelSelectorProps{
+							Placeholder:      "Type your request and select a model to process it",
+							SelectedModel:    "GPT-4o",
+							ShowTokenCounter: true,
+							TokenCurrent:     42,
+							TokenMax:         128,
+							Models: []form.PromptBarModelSelectorItem{
+								{Label: "GPT-4o", Value: "gpt-4o", Icon: "lucide--cpu"},
+								{Label: "GPT-4o Mini", Value: "gpt-4o-mini", Icon: "lucide--cpu"},
+								{Label: "Claude 3.5 Sonnet", Value: "claude-3-5-sonnet", Icon: "lucide--cpu"},
+								{Label: "Gemini 1.5 Pro", Value: "gemini-1.5-pro", Icon: "lucide--cpu"},
+							},
+						})
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Model selector with and without info banner.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Plain</p>`); err != nil {
+								return err
+							}
+							if err := form.PromptBarModelSelector(form.PromptBarModelSelectorProps{
+								Placeholder:   "Type your request and select a model…",
+								SelectedModel: "Claude 3.5 Sonnet",
+								Models: []form.PromptBarModelSelectorItem{
+									{Label: "Claude 3.5 Sonnet", Value: "claude-3-5-sonnet"},
+									{Label: "GPT-4o", Value: "gpt-4o"},
+								},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">With info banner</p>`); err != nil {
+								return err
+							}
+							if err := form.PromptBarModelSelector(form.PromptBarModelSelectorProps{
+								Placeholder:   "Type your request and select a model…",
+								SelectedModel: "GPT-4o",
+								InfoBanner:    "This tool lets you choose and prompt different models.",
+								Models: []form.PromptBarModelSelectorItem{
+									{Label: "GPT-4o", Value: "gpt-4o"},
+									{Label: "GPT-4o Mini", Value: "gpt-4o-mini"},
+								},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Loading</p>`); err != nil {
+								return err
+							}
+							if err := form.PromptBarModelSelector(form.PromptBarModelSelectorProps{
+								Placeholder:   "Waiting for response…",
+								SelectedModel: "GPT-4o",
+								Loading:       true,
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div></div>`)
+							return err
+						})
+					},
+				},
+			},
+		},
+		{
+			Slug:        "prompt-bar-ability",
+			Name:        "Prompt Bar — Ability",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "AI prompt bar with an ability-selector dropdown and a token budget header strip.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Prompt bar with ability selector and token counter header.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarAbilityWithBoundary(form.PromptBarAbilityProps{
+							Placeholder:     "Type your request and choose an ability to enhance it",
+							SelectedAbility: "Ability",
+							SavedLabel:      "Saved to Library",
+							TokensLeft:      58,
+							Abilities: []form.PromptBarAbilityItem{
+								{Label: "Write", Icon: "lucide--pen-line"},
+								{Label: "Summarise", Icon: "lucide--list"},
+								{Label: "Translate", Icon: "lucide--languages"},
+								{Label: "Code Review", Icon: "lucide--code"},
+							},
+						})
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Ability selector with and without header strip.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="p-6 space-y-6">`); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `<div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">With header strip</p>`); err != nil {
+								return err
+							}
+							if err := form.PromptBarAbility(form.PromptBarAbilityProps{
+								Placeholder:     "Write your prompt or select one from My Prompts",
+								SelectedAbility: "Write",
+								SavedLabel:      "Saved to Library",
+								TokensLeft:      58,
+								Abilities: []form.PromptBarAbilityItem{
+									{Label: "Write", Icon: "lucide--pen-line"},
+									{Label: "Summarise", Icon: "lucide--list"},
+								},
+							}).Render(ctx, w); err != nil {
+								return err
+							}
+							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Without header strip</p>`); err != nil {
+								return err
+							}
+							if err := form.PromptBarAbility(form.PromptBarAbilityProps{
+								Placeholder:     "Write your prompt…",
+								SelectedAbility: "Ability",
+								Abilities: []form.PromptBarAbilityItem{
+									{Label: "Translate", Icon: "lucide--languages"},
+									{Label: "Code Review", Icon: "lucide--code"},
+								},
 							}).Render(ctx, w); err != nil {
 								return err
 							}

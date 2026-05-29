@@ -154,10 +154,20 @@ func PromptBarWithBoundary(props PromptBarProps) templ.Component {
 
 // PromptBarActionWithBoundary wraps PromptBarAction with a dev-mode component boundary annotation.
 func PromptBarActionWithBoundary(placeholder string, actions []PromptBarActionItem) templ.Component {
-	return devmode.ComponentBoundary("PromptBarAction", PromptBarAction(placeholder, actions), map[string]any{
+	return devmode.ComponentBoundary("PromptBarAction", PromptBarAction(placeholder, actions, false, nil), map[string]any{
 		"placeholder": placeholder,
 		"actionCount": len(actions),
 	})
+}
+
+// PromptBarModelSelectorWithBoundary wraps PromptBarModelSelector with a dev-mode component boundary annotation.
+func PromptBarModelSelectorWithBoundary(props PromptBarModelSelectorProps) templ.Component {
+	return devmode.ComponentBoundary("PromptBarModelSelector", PromptBarModelSelector(props), props)
+}
+
+// PromptBarAbilityWithBoundary wraps PromptBarAbility with a dev-mode component boundary annotation.
+func PromptBarAbilityWithBoundary(props PromptBarAbilityProps) templ.Component {
+	return devmode.ComponentBoundary("PromptBarAbility", PromptBarAbility(props), props)
 }
 
 // InputSpinnerWithBoundary wraps InputSpinner with a dev-mode component boundary annotation.

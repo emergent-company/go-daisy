@@ -620,6 +620,19 @@ func ChatBubbleTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// ChatInputTokens returns the DesignToken slice for ChatInputWithBoundary.
+func ChatInputTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Placeholder",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Type a message...",
+			QueryParam: "placeholder",
+		},
+	}
+}
+
 // MockupBrowserTokens returns the DesignToken slice for MockupBrowserWithBoundary.
 func MockupBrowserTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
