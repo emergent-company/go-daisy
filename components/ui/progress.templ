@@ -18,15 +18,17 @@ const (
 )
 
 // Progress renders a DaisyUI progress bar. value=-1 for indeterminate.
-templ Progress(color ProgressColor, value int, max int) {
+// attrs is optional; pass nil when not needed.
+templ Progress(color ProgressColor, value int, max int, attrs templ.Attributes) {
 	if value < 0 {
-		<progress class={ "progress", string(color), "w-full" } { devmode.Attrs(ctx, "ui/Progress")... }></progress>
+		<progress class={ "progress", string(color), "w-full" } { devmode.Attrs(ctx, "ui/Progress")... } { attrs... }></progress>
 	} else {
 		<progress
 			class={ "progress", string(color), "w-full" }
 			value={ strconv.Itoa(value) }
 			max={ strconv.Itoa(max) }
 			{ devmode.Attrs(ctx, "ui/Progress")... }
+			{ attrs... }
 		></progress>
 	}
 }

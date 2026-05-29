@@ -49,9 +49,10 @@ func avatarInitials(name string) string {
 // Avatar renders a circular avatar.
 // Priority: src (image) > icon (icon placeholder) > name initials.
 // Set icon to a Lucide icon suffix, e.g. "lucide--building-2" for a company avatar.
-templ Avatar(name string, src string, icon string, size AvatarSize) {
+// attrs is optional; pass nil when not needed.
+templ Avatar(name string, src string, icon string, size AvatarSize, attrs templ.Attributes) {
 	{{ sc := avatarSizeClass(size) }}
-	<div class="avatar" { devmode.Attrs(ctx, "ui/Avatar")... }>
+	<div class="avatar" { devmode.Attrs(ctx, "ui/Avatar")... } { attrs... }>
 		if src != "" {
 			<div class={ sc + " rounded-full overflow-hidden" }>
 				<img src={ src } alt={ name } class="object-cover w-full h-full"/>
@@ -69,9 +70,9 @@ templ Avatar(name string, src string, icon string, size AvatarSize) {
 }
 
 // PlaceholderAvatar is a backwards-compatible alias for Avatar with an icon.
-// Deprecated: use Avatar("", "", icon, size) directly.
+// Deprecated: use Avatar("", "", icon, size, nil) directly.
 templ PlaceholderAvatar(icon string, size AvatarSize) {
-	@Avatar("", "", icon, size)
+	@Avatar("", "", icon, size, nil)
 }
 
 // PersonChipContact holds optional contact details shown in the PersonChip hover card.

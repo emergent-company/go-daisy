@@ -35,6 +35,8 @@ type ListRowProps struct {
 	// (e.g. buttons, badges, icons). They are each rendered as direct children
 	// of the list-row (not wrapped).
 	Trailing []templ.Component
+	// Attrs are optional extra HTML attributes on the <li> element, e.g. {"data-testid": "user-row-42"}.
+	Attrs templ.Attributes
 }
 
 // ListProps holds options for the List container.
@@ -42,11 +44,13 @@ type ListProps struct {
 	// Header is an optional label rendered as the first row of the list using
 	// the DaisyUI header-row style (plain <li> with muted text).
 	Header string
+	// Attrs are optional extra HTML attributes on the <ul> element, e.g. {"data-testid": "user-list"}.
+	Attrs templ.Attributes
 }
 
 // List renders a DaisyUI list container with an optional header row.
 templ List(p ListProps) {
-	<ul class="list bg-base-100 rounded-box border border-base-200" { devmode.Attrs(ctx, "ui/List")... }>
+	<ul class="list bg-base-100 rounded-box border border-base-200" { devmode.Attrs(ctx, "ui/List")... } { p.Attrs... }>
 		if p.Header != "" {
 			<li class="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">{ p.Header }</li>
 		}
@@ -56,7 +60,7 @@ templ List(p ListProps) {
 
 // ListRow renders a single row inside a List.
 templ ListRow(p ListRowProps) {
-	<li class="list-row" { devmode.Attrs(ctx, "ui/ListRow")... }>
+	<li class="list-row" { devmode.Attrs(ctx, "ui/ListRow")... } { p.Attrs... }>
 		if p.Leading != nil {
 			if p.LeadingGrow {
 				<div class="list-col-grow">

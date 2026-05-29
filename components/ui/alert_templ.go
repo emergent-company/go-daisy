@@ -23,7 +23,8 @@ const (
 // Alert renders a DaisyUI alert banner.
 // Set icon to a Lucide icon suffix (e.g. "lucide--circle-check") to show an icon.
 // Leave icon empty for a text-only alert.
-func Alert(typ AlertType, icon string, message string) templ.Component {
+// attrs is optional; pass nil when not needed.
+func Alert(typ AlertType, icon string, message string, attrs templ.Attributes) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -70,6 +71,10 @@ func Alert(typ AlertType, icon string, message string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, attrs)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -105,7 +110,7 @@ func Alert(typ AlertType, icon string, message string) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/alert.templ`, Line: 23, Col: 17}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/alert.templ`, Line: 24, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -120,7 +125,7 @@ func Alert(typ AlertType, icon string, message string) templ.Component {
 }
 
 // InlineAlert is a backwards-compatible alias for Alert without an icon.
-// Deprecated: use Alert(typ, "", message) directly.
+// Deprecated: use Alert(typ, "", message, nil) directly.
 func InlineAlert(typ AlertType, message string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -142,7 +147,7 @@ func InlineAlert(typ AlertType, message string) templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = Alert(typ, "", message).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Alert(typ, "", message, nil).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -151,7 +156,7 @@ func InlineAlert(typ AlertType, message string) templ.Component {
 }
 
 // InlineAlertWithIcon is a backwards-compatible alias for Alert with an icon.
-// Deprecated: use Alert(typ, icon, message) directly.
+// Deprecated: use Alert(typ, icon, message, nil) directly.
 func InlineAlertWithIcon(typ AlertType, icon string, message string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -173,7 +178,7 @@ func InlineAlertWithIcon(typ AlertType, icon string, message string) templ.Compo
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = Alert(typ, icon, message).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Alert(typ, icon, message, nil).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

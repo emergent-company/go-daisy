@@ -46,13 +46,15 @@ const (
 )
 
 // SimpleButton renders a DaisyUI button with a plain text label.
-templ SimpleButton(label string, variant ButtonVariant, size ButtonSize) {
+// attrs is optional; pass nil when not needed.
+templ SimpleButton(label string, variant ButtonVariant, size ButtonSize, attrs templ.Attributes) {
 	<button
 		type="button"
 		class={ "btn",
 			templ.KV(string(variant), variant != ""),
 			templ.KV(string(size), size != "") }
 		{ devmode.Attrs(ctx, "ui/SimpleButton")... }
+		{ attrs... }
 	>{ label }</button>
 }
 
@@ -69,9 +71,9 @@ templ IconSpanColored(name string, size string, color string) {
 
 // Button renders a full-featured DaisyUI button.
 // Set typ=ButtonTypeLink to get an <a> element using href; otherwise renders <button>.
-// Set shape to square/circle for icon-only buttons. Icon is always rendered
-// when non-empty; children are rendered for non-square/circle shapes only.
-templ Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType, shape ButtonShape, icon string, loading bool) {
+// Set shape to square/circle for icon-only buttons.
+// attrs is optional; pass nil when not needed.
+templ Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType, shape ButtonShape, icon string, loading bool, attrs templ.Attributes) {
 	if typ == ButtonTypeLink {
 		<a
 			href={ templ.URL(href) }
@@ -80,6 +82,7 @@ templ Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType
 				templ.KV(string(size), size != ""),
 				templ.KV(string(shape), shape != "") }
 			{ devmode.Attrs(ctx, "ui/Button")... }
+			{ attrs... }
 		>
 			if icon != "" {
 				<span class={ "iconify size-4 " + icon }></span>
@@ -96,6 +99,7 @@ templ Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType
 				templ.KV("loading loading-spinner", loading) }
 			disabled?={ loading }
 			{ devmode.Attrs(ctx, "ui/Button")... }
+			{ attrs... }
 		>
 			if icon != "" {
 				<span class={ "iconify size-4 " + icon }></span>

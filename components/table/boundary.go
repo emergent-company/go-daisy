@@ -45,12 +45,12 @@ func TableBodyWithBoundary() templ.Component {
 
 // TableRowWithBoundary wraps TableRow with a dev-mode element boundary annotation.
 func TableRowWithBoundary(id string, hover bool) templ.Component {
-	return devmode.ElementBoundary("TableRow", TableRow(id, hover), map[string]any{"id": id, "hover": hover})
+	return devmode.ElementBoundary("TableRow", TableRow(id, hover, nil), map[string]any{"id": id, "hover": hover})
 }
 
 // TableCellWithBoundary wraps TableCell with a dev-mode element boundary annotation.
 func TableCellWithBoundary(class string) templ.Component {
-	return devmode.ElementBoundary("TableCell", TableCell(class), map[string]any{"class": class})
+	return devmode.ElementBoundary("TableCell", TableCell(class, nil), map[string]any{"class": class})
 }
 
 // ListAreaWithBoundary wraps ListArea with a dev-mode component boundary annotation.

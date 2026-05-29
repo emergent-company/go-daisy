@@ -23,6 +23,8 @@ type TableProps struct {
 	PinCols bool
 	// Bordered wraps the table with a rounded border (rounded-box border border-base-content/5 bg-base-100).
 	Bordered bool
+	// Attrs are optional extra HTML attributes on the outer wrapper div, e.g. {"data-testid": "users-table"}.
+	Attrs templ.Attributes
 }
 
 // tableClasses builds the DaisyUI class string from TableProps.
@@ -62,13 +64,13 @@ templ Table() {
 // TableWithProps renders a DaisyUI table with a canonical wrapper.
 templ TableWithProps(props TableProps) {
 	if props.Bordered {
-		<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100" { devmode.Attrs(ctx, "table/TableWithProps")... }>
+		<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100" { devmode.Attrs(ctx, "table/TableWithProps")... } { props.Attrs... }>
 			<table class={ tableClasses(props) }>
 				{ children... }
 			</table>
 		</div>
 	} else {
-		<div class="overflow-x-auto" { devmode.Attrs(ctx, "table/TableWithProps")... }>
+		<div class="overflow-x-auto" { devmode.Attrs(ctx, "table/TableWithProps")... } { props.Attrs... }>
 			<table class={ tableClasses(props) }>
 				{ children... }
 			</table>
@@ -112,20 +114,23 @@ templ TableEmpty(colspan int, message string) {
 }
 
 // TableRow renders a <tr> with an optional id and hover highlight.
-templ TableRow(id string, hover bool) {
+// attrs is optional; pass nil when not needed.
+templ TableRow(id string, hover bool, attrs templ.Attributes) {
 	<tr
 		if id != "" {
 			id={ id }
 		}
 		class={ templ.KV("hover", hover) }
+		{ attrs... }
 	>
 		{ children... }
 	</tr>
 }
 
 // TableCell renders a <td> with an optional extra CSS class.
-templ TableCell(class string) {
-	<td class={ class }>
+// attrs is optional; pass nil when not needed.
+templ TableCell(class string, attrs templ.Attributes) {
+	<td class={ class } { attrs... }>
 		{ children... }
 	</td>
 }

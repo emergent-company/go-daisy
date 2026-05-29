@@ -31,11 +31,12 @@ type FormModalProps struct {
 	SubmitText  string
 	CancelText  string
 	Action      string
-	Method      string // "post", "put", "patch"
+	Method      string           // "post", "put", "patch"
 	Target      string
 	Swap        string
 	IndicatorID string
-	Variant     string // "error" for destructive modals
+	Variant     string           // "error" for destructive modals
+	Attrs       templ.Attributes // optional extra HTML attributes on the <dialog>, e.g. {"data-testid": "form-modal"}
 }
 
 // ModalHeader renders the title + close button row shared by all modal variants.
@@ -54,12 +55,14 @@ templ ModalHeader(title string, onClose templ.ComponentScript) {
 }
 
 // Modal renders a DaisyUI dialog modal with backdrop close.
-templ Modal(title string, size ModalSize) {
+// attrs is optional; pass nil when not needed.
+templ Modal(title string, size ModalSize, attrs templ.Attributes) {
 	<dialog
 		id="modal"
 		class="modal modal-open"
 		onclick="if(event.target===this){this.remove()}"
 		{ devmode.Attrs(ctx, "modal/Modal")... }
+		{ attrs... }
 	>
 		<div class={ "modal-box", templ.KV(string(size), size != "") }>
 			@ModalHeader(title, templ.JSUnsafeFuncCall("this.closest('dialog').remove()"))
@@ -79,7 +82,7 @@ templ FormModal(props FormModalProps) {
 	{{ if cancelText == "" { cancelText = "Cancel" } }}
 	{{ size := props.Size }}
 	{{ if size == "" { size = ModalSM } }}
-	<dialog id={ props.ID } class="modal" { devmode.Attrs(ctx, "modal/FormModal")... }>
+	<dialog id={ props.ID } class="modal" { devmode.Attrs(ctx, "modal/FormModal")... } { props.Attrs... }>
 		<div class={ "modal-box", templ.KV(string(size), size != "") }>
 			@ModalHeader(props.Title, closeModal(props.ID))
 			<form
@@ -123,14 +126,16 @@ templ FormModal(props FormModalProps) {
 }
 
 // OpenModalButton renders a primary button that opens a modal by id.
-templ OpenModalButton(modalID string, label string) {
-	<button type="button" class="btn btn-primary btn-sm" onclick={ openModal(modalID) } { devmode.Attrs(ctx, "modal/OpenModalButton")... }>
+// attrs is optional; pass nil when not needed.
+templ OpenModalButton(modalID string, label string, attrs templ.Attributes) {
+	<button type="button" class="btn btn-primary btn-sm" onclick={ openModal(modalID) } { devmode.Attrs(ctx, "modal/OpenModalButton")... } { attrs... }>
 		{ label }
 	</button>
 }
 
 // DeleteButton renders an error-styled button that sends hx-delete with confirmation.
-templ DeleteButton(url string, confirm string, target string, swap string, label string) {
+// attrs is optional; pass nil when not needed.
+templ DeleteButton(url string, confirm string, target string, swap string, label string, attrs templ.Attributes) {
 	{{ if label == "" { label = "Delete" } }}
 	<button
 		type="button"
@@ -146,6 +151,7 @@ templ DeleteButton(url string, confirm string, target string, swap string, label
 			hx-swap={ swap }
 		}
 		{ devmode.Attrs(ctx, "modal/DeleteButton")... }
+		{ attrs... }
 	>{ label }</button>
 }
 
@@ -159,8 +165,9 @@ templ LoaderModal() {
 }
 
 // ConfirmPopup renders a small confirmation modal with confirm/cancel buttons.
-templ ConfirmPopup(title string, message string, confirmLabel string, confirmURL string, confirmHXMethod string) {
-	<dialog id="modal" class="modal modal-open" { devmode.Attrs(ctx, "modal/ConfirmPopup")... }>
+// attrs is optional; pass nil when not needed.
+templ ConfirmPopup(title string, message string, confirmLabel string, confirmURL string, confirmHXMethod string, attrs templ.Attributes) {
+	<dialog id="modal" class="modal modal-open" { devmode.Attrs(ctx, "modal/ConfirmPopup")... } { attrs... }>
 		<div class="modal-box max-w-sm">
 			@ModalHeader(title, templ.JSUnsafeFuncCall("document.getElementById('modal').remove()"))
 			<p class="text-sm text-base-content/60 mb-6">{ message }</p>

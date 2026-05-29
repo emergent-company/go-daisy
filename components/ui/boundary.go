@@ -12,7 +12,7 @@ import (
 // gallery:token variant,size,typ,shape,icon,loading
 // gallery:hint href:default(#)
 func ButtonWithBoundary(href string, variant ButtonVariant, size ButtonSize, typ ButtonType, shape ButtonShape, icon string, loading bool) templ.Component {
-	return devmode.ComponentBoundary("Button", Button(href, variant, size, typ, shape, icon, loading), map[string]any{
+	return devmode.ComponentBoundary("Button", Button(href, variant, size, typ, shape, icon, loading, nil), map[string]any{
 		"href":    href,
 		"variant": string(variant),
 		"size":    string(size),
@@ -43,7 +43,7 @@ func StatusBadgeWithBoundary(status string) templ.Component {
 // gallery:hint name:default(Jane Smith)
 // gallery:hint icon:default()
 func AvatarWithBoundary(name string, src string, icon string, size AvatarSize) templ.Component {
-	return devmode.ComponentBoundary("Avatar", Avatar(name, src, icon, size), map[string]any{
+	return devmode.ComponentBoundary("Avatar", Avatar(name, src, icon, size, nil), map[string]any{
 		"name": name,
 		"src":  src,
 		"icon": icon,
@@ -55,7 +55,7 @@ func AvatarWithBoundary(name string, src string, icon string, size AvatarSize) t
 // gallery:token title
 // gallery:hint title:default(Card Title)
 func CardWithBoundary(title string) templ.Component {
-	return devmode.ComponentBoundary("Card", Card(title), map[string]any{"title": title})
+	return devmode.ComponentBoundary("Card", Card(title, nil), map[string]any{"title": title})
 }
 
 // AlertWithBoundary wraps Alert with a dev-mode component boundary annotation.
@@ -63,7 +63,7 @@ func CardWithBoundary(title string) templ.Component {
 // gallery:hint message:default(Operation completed successfully.)
 // gallery:hint icon:default(lucide--circle-check)
 func AlertWithBoundary(typ AlertType, icon string, message string) templ.Component {
-	return devmode.ComponentBoundary("Alert", Alert(typ, icon, message), map[string]any{
+	return devmode.ComponentBoundary("Alert", Alert(typ, icon, message, nil), map[string]any{
 		"type":    string(typ),
 		"icon":    icon,
 		"message": message,
@@ -141,7 +141,7 @@ func FilterCardWithBoundary(props FilterCardProps) templ.Component {
 // gallery:hint max:range(1,200,1)
 // gallery:hint max:default(100)
 func ProgressWithBoundary(color ProgressColor, value int, max int) templ.Component {
-	return devmode.ComponentBoundary("Progress", Progress(color, value, max), map[string]any{
+	return devmode.ComponentBoundary("Progress", Progress(color, value, max, nil), map[string]any{
 		"color": string(color),
 		"value": value,
 		"max":   max,
@@ -406,16 +406,16 @@ func DropdownWithBoundary(align DropdownAlign, trigger templ.Component, items []
 					_, err := io.WriteString(w3, it.Label)
 					return err
 				})
-				if err := DropdownItem(false, it.Danger).Render(templ.WithChildren(ctx2, li), w2); err != nil {
+				if err := DropdownItem(false, it.Danger, nil).Render(templ.WithChildren(ctx2, li), w2); err != nil {
 					return err
 				}
 			}
 			return nil
 		})
-		return DropdownMenu().Render(templ.WithChildren(ctx, menu), w)
+		return DropdownMenu(nil).Render(templ.WithChildren(ctx, menu), w)
 	})
 	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		return Dropdown(align).Render(templ.WithChildren(ctx, content), w)
+		return Dropdown(align, nil).Render(templ.WithChildren(ctx, content), w)
 	})
 	return devmode.ComponentBoundary("Dropdown", outer, map[string]any{
 		"align": string(align),

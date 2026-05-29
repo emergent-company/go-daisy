@@ -11,13 +11,15 @@ type Tab struct {
 	Label  string
 	Href   string
 	Active bool
-	Count  int // optional count badge shown next to the label; hidden when 0
+	Count  int              // optional count badge shown next to the label; hidden when 0
+	Attrs  templ.Attributes // optional extra HTML attributes on the <a> element, e.g. {"data-testid": "tab-overview"}
 }
 
 // TabMenu renders a tab strip. When HTMX is true (default) each tab uses
 // hx-get to swap content into target and pushes the URL; when false it renders
 // a lightweight DaisyUI tabs-lifted strip suitable for in-panel use (no HTMX).
-templ TabMenu(tabs []Tab, target ...string) {
+// attrs is optional extra HTML attributes on the outer wrapper; pass nil when not needed.
+templ TabMenu(tabs []Tab, attrs templ.Attributes, target ...string) {
 	{{
 		swapTarget := "#tab-content"
 		if len(target) > 0 && target[0] != "" {
@@ -26,7 +28,7 @@ templ TabMenu(tabs []Tab, target ...string) {
 		htmx := swapTarget != "-"
 	}}
 	if htmx {
-		<div class="border-b border-base-200 bg-base-100" { devmode.Attrs(ctx, "nav/TabMenu")... }>
+		<div class="border-b border-base-200 bg-base-100" { devmode.Attrs(ctx, "nav/TabMenu")... } { attrs... }>
 			<nav class="flex px-6 -mb-px" aria-label="Tabs">
 				for _, tab := range tabs {
 					<a
@@ -43,6 +45,7 @@ templ TabMenu(tabs []Tab, target ...string) {
 							}
 							return ""
 						}() }
+						{ tab.Attrs... }
 					>
 						{ tab.Label }
 					if tab.Count > 0 {
@@ -53,13 +56,14 @@ templ TabMenu(tabs []Tab, target ...string) {
 			</nav>
 		</div>
 	} else {
-		<div role="tablist" class="tabs tabs-lifted" { devmode.Attrs(ctx, "nav/TabMenu")... }>
+		<div role="tablist" class="tabs tabs-lifted" { devmode.Attrs(ctx, "nav/TabMenu")... } { attrs... }>
 			for _, tab := range tabs {
 				<a
 					role="tab"
 					href={ templ.URL(tab.Href) }
 					class={ "tab",
 						templ.KV("tab-active", tab.Active) }
+					{ tab.Attrs... }
 				>
 					{ tab.Label }
 				</a>
@@ -69,7 +73,7 @@ templ TabMenu(tabs []Tab, target ...string) {
 }
 
 // SimpleTabs is an alias for TabMenu with HTMX disabled (target="-").
-// Deprecated: use TabMenu(tabs, "-") instead.
+// Deprecated: use TabMenu(tabs, nil, "-") instead.
 templ SimpleTabs(tabs []Tab) {
-	@TabMenu(tabs, "-")
+	@TabMenu(tabs, nil, "-")
 }

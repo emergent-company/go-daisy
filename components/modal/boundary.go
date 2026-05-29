@@ -9,7 +9,7 @@ import (
 // gallery:token title,size
 // gallery:hint title:default(Modal Title)
 func ModalWithBoundary(title string, size ModalSize) templ.Component {
-	return devmode.ComponentBoundary("Modal", Modal(title, size), map[string]any{
+	return devmode.ComponentBoundary("Modal", Modal(title, size, nil), map[string]any{
 		"title": title,
 		"size":  string(size),
 	})
@@ -29,7 +29,7 @@ func FormModalWithBoundary(props FormModalProps) templ.Component {
 // gallery:hint title:default(Are you sure?)
 // gallery:hint message:default(This action cannot be undone.)
 func ConfirmPopupWithBoundary(title string, message string, confirmLabel string, confirmURL string, confirmHXMethod string) templ.Component {
-	return devmode.ComponentBoundary("ConfirmPopup", ConfirmPopup(title, message, confirmLabel, confirmURL, confirmHXMethod), map[string]any{
+	return devmode.ComponentBoundary("ConfirmPopup", ConfirmPopup(title, message, confirmLabel, confirmURL, confirmHXMethod, nil), map[string]any{
 		"title":   title,
 		"message": message,
 	})

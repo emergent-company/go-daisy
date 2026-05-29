@@ -10,8 +10,9 @@ import (
 type SidebarItem struct {
 	Label  string
 	Href   string
-	Icon   string // Lucide icon suffix, e.g. "lucide--monitor-dot"
+	Icon   string           // Lucide icon suffix, e.g. "lucide--monitor-dot"
 	Active bool
+	Attrs  templ.Attributes // optional extra HTML attributes, e.g. {"data-testid": "sidebar-home"}
 }
 
 // SidebarGroup represents a labeled group of nav items.
@@ -98,6 +99,7 @@ templ Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) {
 templ sidebarNavItem(item SidebarItem) {
 	<a
 		{ devmode.Attrs(ctx, "layout/sidebarNavItem")... }
+		{ item.Attrs... }
 		href={ templ.URL(item.Href) }
 		hx-get={ item.Href }
 		hx-target="#main-content"

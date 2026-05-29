@@ -50,10 +50,11 @@ type BadgeProps struct {
 	Variant  BadgeIntent
 	Style    BadgeStyle
 	Size     BadgeSize
-	Icon     string // Lucide icon suffix, e.g. "lucide--circle-check"
-	Dot      bool   // when true, renders a status dot prefix (uses Variant to colour it)
-	Animate  bool   // when true, adds animate-pulse to the icon/dot span
-	MaxWidth string // optional Tailwind max-width class (e.g. "max-w-24"); enables truncation with ellipsis
+	Icon     string           // Lucide icon suffix, e.g. "lucide--circle-check"
+	Dot      bool             // when true, renders a status dot prefix (uses Variant to colour it)
+	Animate  bool             // when true, adds animate-pulse to the icon/dot span
+	MaxWidth string           // optional Tailwind max-width class (e.g. "max-w-24"); enables truncation with ellipsis
+	Attrs    templ.Attributes // optional extra HTML attributes, e.g. {"data-testid": "status-badge"}
 }
 
 // StatusIntentFor maps a status string to a BadgeIntent.
@@ -121,6 +122,10 @@ func Badge(props BadgeProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "ui/Badge"))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, props.Attrs)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -200,7 +205,7 @@ func Badge(props BadgeProps) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 79, Col: 74}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/badge.templ`, Line: 80, Col: 74}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {

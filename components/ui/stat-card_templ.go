@@ -16,10 +16,11 @@ import (
 
 // StatCardProps configures a summary stat widget.
 type StatCardProps struct {
-	Label     string // short descriptor, e.g. "Active Sessions"
-	Value     string // e.g. "12"
-	Icon      string // Lucide icon suffix, e.g. "lucide--briefcase"
-	IconColor string // Tailwind classes for icon container, e.g. "bg-primary/10 text-primary"
+	Label     string           // short descriptor, e.g. "Active Sessions"
+	Value     string           // e.g. "12"
+	Icon      string           // Lucide icon suffix, e.g. "lucide--briefcase"
+	IconColor string           // Tailwind classes for icon container, e.g. "bg-primary/10 text-primary"
+	Attrs     templ.Attributes // optional extra HTML attributes, e.g. {"data-testid": "stat-sessions"}
 }
 
 // StatCard renders a compact summary widget: icon + big number + label.
@@ -89,7 +90,7 @@ func StatCard(p StatCardProps) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(p.Value)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 24, Col: 72}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 25, Col: 72}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -102,7 +103,7 @@ func StatCard(p StatCardProps) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(p.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 25, Col: 75}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 26, Col: 75}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -114,7 +115,7 @@ func StatCard(p StatCardProps) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = CardRaw("border border-base-content/10 shadow-sm h-full", "p-4 flex flex-row items-center gap-3 h-full").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = CardRaw("border border-base-content/10 shadow-sm h-full", "p-4 flex flex-row items-center gap-3 h-full", p.Attrs).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -183,8 +184,9 @@ type ProgressCardProps struct {
 	ProgressValue int    // 0–100
 	ProgressLabel string // text shown next to the progress bar
 	Stats         []ProgressStat
-	GradientClass string // optional Tailwind gradient utility classes for the header
-	Horizontal    bool   // if true, renders title+progress inline (compact row)
+	GradientClass string           // optional Tailwind gradient utility classes for the header
+	Horizontal    bool             // if true, renders title+progress inline (compact row)
+	Attrs         templ.Attributes // optional extra HTML attributes, e.g. {"data-testid": "progress-card"}
 }
 
 // ProgressCard renders a card with a progress bar and optional stats row.
@@ -230,7 +232,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 62, Col: 68}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 64, Col: 68}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -248,7 +250,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 					var templ_7745c5c3_Var11 string
 					templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(props.Subtitle)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 64, Col: 61}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 66, Col: 61}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 					if templ_7745c5c3_Err != nil {
@@ -266,7 +268,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 				var templ_7745c5c3_Var12 string
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(props.ProgressValue))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 68, Col: 94}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 70, Col: 94}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
@@ -279,7 +281,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(props.ProgressValue))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 69, Col: 112}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 71, Col: 112}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 				if templ_7745c5c3_Err != nil {
@@ -291,7 +293,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = CardRaw("shadow-sm border border-base-content/10 overflow-hidden", "px-4 py-3 flex items-center justify-between gap-3").Render(templ.WithChildren(ctx, templ_7745c5c3_Var9), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = CardRaw("shadow-sm border border-base-content/10 overflow-hidden", "px-4 py-3 flex items-center justify-between gap-3", props.Attrs).Render(templ.WithChildren(ctx, templ_7745c5c3_Var9), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -333,7 +335,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 75, Col: 71}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 77, Col: 71}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 				if templ_7745c5c3_Err != nil {
@@ -351,7 +353,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 					var templ_7745c5c3_Var18 string
 					templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(props.Subtitle)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 77, Col: 68}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 79, Col: 68}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 					if templ_7745c5c3_Err != nil {
@@ -369,7 +371,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 				var templ_7745c5c3_Var19 string
 				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(props.ProgressValue))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 84, Col: 47}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 86, Col: 47}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 				if templ_7745c5c3_Err != nil {
@@ -387,7 +389,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 					var templ_7745c5c3_Var20 string
 					templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(props.ProgressLabel)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 88, Col: 100}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 90, Col: 100}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 					if templ_7745c5c3_Err != nil {
@@ -415,7 +417,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 						var templ_7745c5c3_Var21 string
 						templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(s.Label)
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 95, Col: 60}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 97, Col: 60}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 						if templ_7745c5c3_Err != nil {
@@ -428,7 +430,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 						var templ_7745c5c3_Var22 string
 						templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(s.Value)
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 96, Col: 71}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/stat-card.templ`, Line: 98, Col: 71}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 						if templ_7745c5c3_Err != nil {
@@ -450,7 +452,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = CardRaw("shadow-sm border border-base-content/10 overflow-hidden", "p-0 gap-0").Render(templ.WithChildren(ctx, templ_7745c5c3_Var14), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = CardRaw("shadow-sm border border-base-content/10 overflow-hidden", "p-0 gap-0", props.Attrs).Render(templ.WithChildren(ctx, templ_7745c5c3_Var14), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -33,6 +33,7 @@ type FormFieldProps struct {
 	Options     []SelectOption
 	Rows        int
 	Class       string
+	Attrs       templ.Attributes // optional extra HTML attributes on the input element, e.g. {"data-testid": "email-input"}
 }
 
 // Field wraps a label + input + error message into a form group.
@@ -55,19 +56,20 @@ templ Field(label string, name string, errMsg string) {
 // FormField renders a form field based on FormFieldProps.
 templ FormField(props FormFieldProps) {
 	if props.Type == FieldHidden {
-		<input type="hidden" name={ props.Name } value={ props.Value } { devmode.Attrs(ctx, "form/FormField")... }/>
+		<input type="hidden" name={ props.Name } value={ props.Value } { devmode.Attrs(ctx, "form/FormField")... } { props.Attrs... }/>
 	} else if props.Type == FieldCheckbox {
 		<div class="form-control mb-3" { devmode.Attrs(ctx, "form/FormField")... }>
 			<label class="label cursor-pointer justify-start gap-3">
-				<input
-					id={ props.Name }
-					name={ props.Name }
-					type="checkbox"
-					checked?={ props.Value == "true" || props.Value == "1" || props.Value == "on" }
-					required?={ props.Required }
-					disabled?={ props.Disabled }
-					class={ "checkbox checkbox-sm", props.Class }
-				/>
+			<input
+				id={ props.Name }
+				name={ props.Name }
+				type="checkbox"
+				checked?={ props.Value == "true" || props.Value == "1" || props.Value == "on" }
+				required?={ props.Required }
+				disabled?={ props.Disabled }
+				class={ "checkbox checkbox-sm", props.Class }
+				{ props.Attrs... }
+			/>
 				if props.Label != "" {
 					<span class="label-text">{ props.Label }</span>
 				}
@@ -92,6 +94,7 @@ templ FormField(props FormFieldProps) {
 				class={ "textarea textarea-bordered w-full",
 					templ.KV("textarea-error", props.Error != ""),
 					props.Class }
+				{ props.Attrs... }
 			>{ props.Value }</textarea>
 		}
 	} else if props.Type == FieldSelect {
@@ -104,6 +107,7 @@ templ FormField(props FormFieldProps) {
 				class={ "select select-bordered w-full",
 					templ.KV("select-error", props.Error != ""),
 					props.Class }
+				{ props.Attrs... }
 			>
 				for _, opt := range props.Options {
 					<option value={ opt.Value } selected?={ opt.Value == props.Value }>{ opt.Label }</option>
@@ -125,6 +129,7 @@ templ FormField(props FormFieldProps) {
 				class={ "input input-bordered w-full",
 					templ.KV("input-error", props.Error != ""),
 					props.Class }
+				{ props.Attrs... }
 			/>
 		}
 	}

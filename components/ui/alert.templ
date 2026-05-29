@@ -15,8 +15,9 @@ const (
 // Alert renders a DaisyUI alert banner.
 // Set icon to a Lucide icon suffix (e.g. "lucide--circle-check") to show an icon.
 // Leave icon empty for a text-only alert.
-templ Alert(typ AlertType, icon string, message string) {
-	<div role="alert" class={ "alert", string(typ) } { devmode.Attrs(ctx, "ui/Alert")... }>
+// attrs is optional; pass nil when not needed.
+templ Alert(typ AlertType, icon string, message string, attrs templ.Attributes) {
+	<div role="alert" class={ "alert", string(typ) } { devmode.Attrs(ctx, "ui/Alert")... } { attrs... }>
 		if icon != "" {
 			<span class={ "iconify size-5 " + icon }></span>
 		}
@@ -25,13 +26,13 @@ templ Alert(typ AlertType, icon string, message string) {
 }
 
 // InlineAlert is a backwards-compatible alias for Alert without an icon.
-// Deprecated: use Alert(typ, "", message) directly.
+// Deprecated: use Alert(typ, "", message, nil) directly.
 templ InlineAlert(typ AlertType, message string) {
-	@Alert(typ, "", message)
+	@Alert(typ, "", message, nil)
 }
 
 // InlineAlertWithIcon is a backwards-compatible alias for Alert with an icon.
-// Deprecated: use Alert(typ, icon, message) directly.
+// Deprecated: use Alert(typ, icon, message, nil) directly.
 templ InlineAlertWithIcon(typ AlertType, icon string, message string) {
-	@Alert(typ, icon, message)
+	@Alert(typ, icon, message, nil)
 }

@@ -12,8 +12,9 @@ import (
 //
 //	@nav.PageHeader(nav.Crumbs("Sessions")) { ... }
 //	@nav.PageHeader(nav.Crumbs("Sessions", "/dashboard/sessions", "Detail")) { ... }
-templ PageHeader(steps []BreadcrumbStep) {
-	<div class="flex items-center justify-between px-6 py-0 h-16 bg-base-100 border-b border-base-200 shrink-0" { devmode.Attrs(ctx, "nav/PageHeader")... }>
+// attrs is optional; pass nil when not needed.
+templ PageHeader(steps []BreadcrumbStep, attrs templ.Attributes) {
+	<div class="flex items-center justify-between px-6 py-0 h-16 bg-base-100 border-b border-base-200 shrink-0" { devmode.Attrs(ctx, "nav/PageHeader")... } { attrs... }>
 		<!-- Breadcrumb -->
 		<nav class="flex items-center gap-2 text-xl font-semibold overflow-x-hidden min-w-0" aria-label="Breadcrumb">
 			for i, step := range steps {

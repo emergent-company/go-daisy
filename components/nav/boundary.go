@@ -12,14 +12,14 @@ import (
 // gallery:token steps
 // gallery:hint steps:slice(3)
 func PageHeaderWithBoundary(steps []BreadcrumbStep) templ.Component {
-	return devmode.ComponentBoundary("PageHeader", PageHeader(steps), map[string]any{"stepCount": len(steps)})
+	return devmode.ComponentBoundary("PageHeader", PageHeader(steps, nil), map[string]any{"stepCount": len(steps)})
 }
 
 // TabMenuWithBoundary wraps TabMenu with a dev-mode component boundary annotation.
 // gallery:token tabs
 // gallery:hint tabs:slice(3)
 func TabMenuWithBoundary(tabs []Tab, target ...string) templ.Component {
-	return devmode.ComponentBoundary("TabMenu", TabMenu(tabs, target...), map[string]any{"tabCount": len(tabs)})
+	return devmode.ComponentBoundary("TabMenu", TabMenu(tabs, nil, target...), map[string]any{"tabCount": len(tabs)})
 }
 
 // SimpleTabsWithBoundary wraps SimpleTabs with a dev-mode component boundary annotation.
@@ -33,7 +33,7 @@ func SimpleTabsWithBoundary(tabs []Tab) templ.Component {
 // gallery:token title
 // gallery:hint title:default(My Application)
 func TopBarWithBoundary(title string) templ.Component {
-	return devmode.ComponentBoundary("TopBar", TopBar(title), map[string]any{"title": title})
+	return devmode.ComponentBoundary("TopBar", TopBar(title, nil), map[string]any{"title": title})
 }
 
 // MenuWithBoundary wraps Menu with a dev-mode component boundary annotation.

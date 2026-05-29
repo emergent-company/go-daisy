@@ -788,7 +788,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Dropdown menu with configurable alignment.",
 					RenderFunc: func(params url.Values) templ.Component {
 						align := ui.DropdownAlign(params.Get("align"))
-						return ui.DropdownWithBoundary(align, ui.DropdownTrigger("Options", "btn-primary"), []ui.DropdownItemProps{
+						return ui.DropdownWithBoundary(align, ui.DropdownTrigger("Options", "btn-primary", nil), []ui.DropdownItemProps{
 							{Label: "Profile"},
 							{Label: "Settings"},
 							{Label: "Help"},
@@ -817,8 +817,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: "Delete", Danger: true},
 						}
 						return row(
-							withText("Align left", ui.DropdownWithBoundary("", ui.Button("", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false), items)),
-							withText("Align right", ui.DropdownWithBoundary(ui.DropdownEnd, ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false), items)),
+							withText("Align left", ui.DropdownWithBoundary("", ui.Button("", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, nil), items)),
+							withText("Align right", ui.DropdownWithBoundary(ui.DropdownEnd, ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, nil), items)),
 						)
 					},
 				},
@@ -840,7 +840,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							tip = "Helpful hint"
 						}
 						position := params.Get("position")
-						return ui.TooltipWithBoundary(tip, position, ui.SimpleButton("Hover me", ui.ButtonPrimary, ui.ButtonSM))
+						return ui.TooltipWithBoundary(tip, position, ui.SimpleButton("Hover me", ui.ButtonPrimary, ui.ButtonSM, nil))
 					},
 					Tokens: []galleryruntime.DesignToken{
 						{Label: "Tip", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Helpful hint", QueryParam: "tip"},
@@ -858,11 +858,11 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Tooltips in all four positions.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return row(
-							ui.TooltipWithBoundary("Default tooltip", "", ui.SimpleButton("Hover me", "", ui.ButtonSM)),
-							ui.TooltipWithBoundary("Top", "top", ui.SimpleButton("Top", ui.ButtonPrimary, ui.ButtonSM)),
-							ui.TooltipWithBoundary("Bottom", "bottom", ui.SimpleButton("Bottom", ui.ButtonSecondary, ui.ButtonSM)),
-							ui.TooltipWithBoundary("Left", "left", ui.SimpleButton("Left", "btn-accent", ui.ButtonSM)),
-							ui.TooltipWithBoundary("Right", "right", ui.SimpleButton("Right", ui.ButtonNeutral, ui.ButtonSM)),
+							ui.TooltipWithBoundary("Default tooltip", "", ui.SimpleButton("Hover me", "", ui.ButtonSM, nil)),
+							ui.TooltipWithBoundary("Top", "top", ui.SimpleButton("Top", ui.ButtonPrimary, ui.ButtonSM, nil)),
+							ui.TooltipWithBoundary("Bottom", "bottom", ui.SimpleButton("Bottom", ui.ButtonSecondary, ui.ButtonSM, nil)),
+							ui.TooltipWithBoundary("Left", "left", ui.SimpleButton("Left", "btn-accent", ui.ButtonSM, nil)),
+							ui.TooltipWithBoundary("Right", "right", ui.SimpleButton("Right", ui.ButtonNeutral, ui.ButtonSM, nil)),
 						)
 					},
 				},
@@ -901,10 +901,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								ui.IconSpan("lucide--sun", "size-8"),
 								ui.IconSpan("lucide--moon", "size-8"),
 							),
-							ui.SwapWithBoundary(false,
-								ui.SimpleButton("ON", "btn-success", ui.ButtonSM),
-								ui.SimpleButton("OFF", ui.ButtonGhost, ui.ButtonSM),
-							),
+						ui.SwapWithBoundary(false,
+							ui.SimpleButton("ON", "btn-success", ui.ButtonSM, nil),
+							ui.SimpleButton("OFF", ui.ButtonGhost, ui.ButtonSM, nil),
+						),
 						)
 					},
 				},
@@ -1026,8 +1026,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Examples",
 					Description: "All three list layout patterns: default, col-wrap description, and multiple trailing actions.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						editBtn := ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--pencil size-4", false)
-						deleteBtn := ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--trash-2 size-4", false)
+					editBtn := ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--pencil size-4", false, nil)
+					deleteBtn := ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--trash-2 size-4", false, nil)
 						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
 								return err
@@ -1143,7 +1143,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return ui.IndicatorWithBoundary(
 							"badge badge-sm "+badgeClass,
 							templ.Raw(count),
-							ui.Button("", ui.ButtonOutline, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--bell size-4", false),
+							ui.Button("", ui.ButtonOutline, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--bell size-4", false, nil),
 						)
 					},
 					Tokens: []galleryruntime.DesignToken{
@@ -1164,11 +1164,11 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return row(
 							ui.IndicatorWithBoundary("badge badge-error badge-sm",
 								templ.Raw("3"),
-								ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--bell size-5", false),
-							),
-							ui.IndicatorWithBoundary("badge badge-primary badge-xs",
-								templ.NopComponent,
-								ui.Avatar("AJ", "", "", ui.AvatarMD),
+						ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--bell size-5", false, nil),
+						),
+						ui.IndicatorWithBoundary("badge badge-primary badge-xs",
+							templ.NopComponent,
+							ui.Avatar("AJ", "", "", ui.AvatarMD, nil),
 							),
 							ui.IndicatorWithBoundary("badge badge-success badge-sm",
 								templ.Raw("New"),
@@ -1600,7 +1600,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						} else if align == ui.DropdownEnd {
 							label = "Options ⋮"
 						}
-						return ui.DropdownWithBoundary(align, ui.DropdownTrigger(label, "btn-primary"), []ui.DropdownItemProps{
+						return ui.DropdownWithBoundary(align, ui.DropdownTrigger(label, "btn-primary", nil), []ui.DropdownItemProps{
 							{Label: "Edit"},
 							{Label: "Duplicate"},
 							{Divider: true},
@@ -1625,10 +1625,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: "Item 2"},
 							{Label: "Item 3"},
 						}
-						return row(
-							ui.DropdownWithBoundary("", ui.DropdownTrigger("Bottom ▼", "btn-outline"), items),
-							ui.DropdownWithBoundary(ui.DropdownTop, ui.DropdownTrigger("Top ▲", "btn-outline"), items),
-							ui.DropdownWithBoundary(ui.DropdownEnd, ui.DropdownTrigger("Options ⋮", "btn-primary"), []ui.DropdownItemProps{
+					return row(
+						ui.DropdownWithBoundary("", ui.DropdownTrigger("Bottom ▼", "btn-outline", nil), items),
+						ui.DropdownWithBoundary(ui.DropdownTop, ui.DropdownTrigger("Top ▲", "btn-outline", nil), items),
+						ui.DropdownWithBoundary(ui.DropdownEnd, ui.DropdownTrigger("Options ⋮", "btn-primary", nil), []ui.DropdownItemProps{
 								{Label: "Edit"},
 								{Label: "Duplicate"},
 								{Divider: true},
@@ -2049,7 +2049,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								if _, err := io.WriteString(w, `<div class="flex flex-col items-center gap-2">`); err != nil {
 									return err
 								}
-								if err := ui.Avatar("", "", "lucide--building-2", s.size).Render(ctx, w); err != nil {
+								if err := ui.Avatar("", "", "lucide--building-2", s.size, nil).Render(ctx, w); err != nil {
 									return err
 								}
 								if _, err := io.WriteString(w, `<span class="text-xs text-base-content/60">`+s.label+`</span></div>`); err != nil {
@@ -2060,7 +2060,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							if _, err := io.WriteString(w, `<div class="flex flex-col items-center gap-2"><div class="flex items-center gap-2">`); err != nil {
 								return err
 							}
-							if err := ui.Avatar("", "", "lucide--building-2", ui.AvatarXS).Render(ctx, w); err != nil {
+							if err := ui.Avatar("", "", "lucide--building-2", ui.AvatarXS, nil).Render(ctx, w); err != nil {
 								return err
 							}
 							if _, err := io.WriteString(w, `<span class="text-sm font-medium">Acme Corp</span></div><span class="text-xs text-base-content/60">with name</span></div>`); err != nil {

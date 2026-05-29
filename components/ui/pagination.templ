@@ -13,8 +13,9 @@ type PaginationProps struct {
 	TotalPages  int
 	TotalItems  int64
 	PageSize    int
-	BaseURL     string // include all query params except "page", e.g. "/app/cases?status=active"
+	BaseURL     string           // include all query params except "page", e.g. "/app/cases?status=active"
 	TargetID    string
+	Attrs       templ.Attributes // optional extra HTML attributes on the outer wrapper, e.g. {"data-testid": "pagination"}
 }
 
 // StartItem returns the 1-based index of the first item on the current page.
@@ -91,7 +92,7 @@ templ Pagination(currentPage int, totalPages int, baseURL string, targetID strin
 // PaginationWithProps renders a pagination bar with item count summary.
 templ PaginationWithProps(props PaginationProps) {
 	if props.TotalPages > 1 {
-		<div class="border-base-200 flex flex-wrap items-center justify-between gap-2 border-t border-dashed p-5" { devmode.Attrs(ctx, "ui/PaginationWithProps")... }>
+		<div class="border-base-200 flex flex-wrap items-center justify-between gap-2 border-t border-dashed p-5" { devmode.Attrs(ctx, "ui/PaginationWithProps")... } { props.Attrs... }>
 			<p class="text-base-content/70 text-sm">
 				if props.TotalItems == 0 {
 					No entries
