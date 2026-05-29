@@ -1,6 +1,9 @@
 package form
 
 import (
+	"context"
+	"io"
+
 	"github.com/a-h/templ"
 	"github.com/emergent-company/go-daisy/devmode"
 )
@@ -176,5 +179,64 @@ func WizardStepperWithBoundary(id string, steps []WizardStep, panels []WizardSte
 		"id":         id,
 		"stepCount":  len(steps),
 		"panelCount": len(panels),
+	})
+}
+
+// LabelWithBoundary wraps Label with a dev-mode component boundary annotation.
+func LabelWithBoundary(props LabelProps, children templ.Component) templ.Component {
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return Label(props).Render(templ.WithChildren(ctx, children), w)
+	})
+	return devmode.ComponentBoundary("Label", inner, map[string]any{
+		"text":    props.Text,
+		"altText": props.AltText,
+		"for":     props.For,
+	})
+}
+
+// ValidatorInputWithBoundary wraps ValidatorInput with a dev-mode component boundary annotation.
+func ValidatorInputWithBoundary(children templ.Component) templ.Component {
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return ValidatorInput().Render(templ.WithChildren(ctx, children), w)
+	})
+	return devmode.ComponentBoundary("ValidatorInput", inner, map[string]any{})
+}
+
+// ValidatorHintWithBoundary wraps ValidatorHint with a dev-mode component boundary annotation.
+func ValidatorHintWithBoundary(text string) templ.Component {
+	return devmode.ComponentBoundary("ValidatorHint", ValidatorHint(text), map[string]any{"text": text})
+}
+
+// ValidatedFieldWithBoundary wraps ValidatedField with a dev-mode component boundary annotation.
+func ValidatedFieldWithBoundary(labelText string, hintText string, inputName string, children templ.Component) templ.Component {
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return ValidatedField(labelText, hintText, inputName).Render(templ.WithChildren(ctx, children), w)
+	})
+	return devmode.ComponentBoundary("ValidatedField", inner, map[string]any{
+		"labelText": labelText,
+		"hintText":  hintText,
+		"inputName": inputName,
+	})
+}
+
+// CalendarWrapperWithBoundary wraps CalendarWrapper with a dev-mode component boundary annotation.
+func CalendarWrapperWithBoundary(variant CalendarVariant, children templ.Component) templ.Component {
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return CalendarWrapper(variant).Render(templ.WithChildren(ctx, children), w)
+	})
+	return devmode.ComponentBoundary("CalendarWrapper", inner, map[string]any{
+		"variant": string(variant),
+	})
+}
+
+// CalendarDemoWithBoundary wraps CalendarDemo with a dev-mode component boundary annotation.
+func CalendarDemoWithBoundary(month string, year string, startWeekday int, daysInMonth int, today int, selected int) templ.Component {
+	return devmode.ComponentBoundary("CalendarDemo", CalendarDemo(month, year, startWeekday, daysInMonth, today, selected), map[string]any{
+		"month":        month,
+		"year":         year,
+		"startWeekday": startWeekday,
+		"daysInMonth":  daysInMonth,
+		"today":        today,
+		"selected":     selected,
 	})
 }

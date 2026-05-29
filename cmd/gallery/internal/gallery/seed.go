@@ -6121,6 +6121,345 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 
+		// ── Feedback / Radial Progress ───────────────────────────────────────────
+		{
+			Slug:        "radial-progress",
+			Name:        "Radial Progress",
+			Category:    galleryruntime.CategoryFeedback,
+			Subcategory: "Progress",
+			Description: "Circular radial progress indicator with configurable colour, size and thickness.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Adjust value, size and thickness with design tokens.",
+					RenderFunc: func(params url.Values) templ.Component {
+						val := 70
+						if v, err := parseInt(params.Get("value")); err == nil && v >= 0 && v <= 100 {
+							val = v
+						}
+						return row(
+							ui.RadialProgressWithBoundary(ui.ProgressPrimary, val, "6rem", "4px"),
+							ui.RadialProgressWithBoundary(ui.ProgressSecondary, val, "6rem", "4px"),
+							ui.RadialProgressWithBoundary(ui.ProgressSuccess, val, "6rem", "4px"),
+						)
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{
+							Label:      "Value",
+							Group:      "Progress",
+							Type:       galleryruntime.TokenTypeText,
+							QueryParam: "value",
+							Default:    "70",
+						},
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Various sizes and colours.",
+					Templ: row(
+						ui.RadialProgressWithBoundary(ui.ProgressPrimary, 25, "4rem", ""),
+						ui.RadialProgressWithBoundary(ui.ProgressSecondary, 50, "5rem", ""),
+						ui.RadialProgressWithBoundary(ui.ProgressSuccess, 75, "6rem", ""),
+						ui.RadialProgressWithBoundary(ui.ProgressWarning, 90, "7rem", "8px"),
+						ui.RadialProgressWithBoundary(ui.ProgressError, 100, "8rem", "10px"),
+					),
+				},
+			},
+		},
+
+		// ── Layout / Drawer ───────────────────────────────────────────────────────
+		{
+			Slug:        "drawer",
+			Name:        "Drawer Sidebar",
+			Category:    galleryruntime.CategoryLayout,
+			Subcategory: "Drawers",
+			Description: "Slide-in sidebar overlay driven by a hidden checkbox toggle.",
+			FrameHeight: "400px",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Left drawer",
+					Description: "Sidebar slides in from the left.",
+					FrameHeight: "400px",
+					Templ: ui.DrawerWithBoundary(
+						"drawer-left-demo",
+						ui.DrawerLeft,
+						rawHTML(`<div class="p-6 flex flex-col gap-4">
+							<label for="drawer-left-demo" class="btn btn-primary drawer-button w-fit">Open sidebar</label>
+							<p class="text-base-content/70">This is the main content area. Click the button to open the sidebar.</p>
+						</div>`),
+						rawHTML(`<ul class="menu gap-1"><li><a>Dashboard</a></li><li><a>Reports</a></li><li><a>Settings</a></li></ul>`),
+						"",
+					),
+				},
+				{
+					Name:        "Right drawer",
+					Description: "Sidebar slides in from the right.",
+					FrameHeight: "400px",
+					Templ: ui.DrawerWithBoundary(
+						"drawer-right-demo",
+						ui.DrawerRight,
+						rawHTML(`<div class="p-6 flex flex-col gap-4">
+							<label for="drawer-right-demo" class="btn btn-primary drawer-button w-fit">Open right sidebar</label>
+							<p class="text-base-content/70">This is the main content area.</p>
+						</div>`),
+						rawHTML(`<ul class="menu gap-1"><li><a>Profile</a></li><li><a>Preferences</a></li><li><a>Log out</a></li></ul>`),
+						"",
+					),
+				},
+			},
+		},
+
+		// ── Forms / Label ─────────────────────────────────────────────────────────
+		{
+			Slug:        "label",
+			Name:        "Label",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Layout",
+			Description: "DaisyUI label wrapper with primary text and optional alt/hint text slots.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Examples",
+					Description: "Label with top text, alt text and bottom hint row.",
+					Templ: rawHTML(`<div class="p-6 flex flex-col gap-6 max-w-sm">
+						<div class="form-control">
+							<div class="label">
+								<span class="label-text">Email address</span>
+								<span class="label-text-alt">Required</span>
+							</div>
+							<input type="email" class="input input-bordered w-full" placeholder="you@example.com"/>
+							<div class="label">
+								<span class="label-text-alt">We'll never share your email.</span>
+							</div>
+						</div>
+						<div class="form-control">
+							<div class="label">
+								<span class="label-text">Username</span>
+							</div>
+							<input type="text" class="input input-bordered w-full" placeholder="johndoe"/>
+						</div>
+					</div>`),
+				},
+			},
+		},
+
+		// ── Forms / Validator ─────────────────────────────────────────────────────
+		{
+			Slug:        "validator",
+			Name:        "Validator",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "DaisyUI validator class adds green/red colour feedback on HTML5 validation states.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Examples",
+					Description: "Inputs with built-in HTML5 validation feedback.",
+					FrameHeight: "300px",
+					Templ: rawHTML(`<div class="p-6 flex flex-col gap-6 max-w-sm">
+						<div class="form-control">
+							<div class="label"><span class="label-text">Email (required)</span></div>
+							<div class="validator">
+								<input type="email" required class="input input-bordered w-full" placeholder="you@example.com"/>
+							</div>
+							<p class="validator-hint">Please enter a valid email address.</p>
+						</div>
+						<div class="form-control">
+							<div class="label"><span class="label-text">Password (min 8 chars)</span></div>
+							<div class="validator">
+								<input type="password" minlength="8" required class="input input-bordered w-full" placeholder="••••••••"/>
+							</div>
+							<p class="validator-hint">Password must be at least 8 characters.</p>
+						</div>
+					</div>`),
+				},
+			},
+		},
+
+		// ── Foundation / Theme Controller ─────────────────────────────────────────
+		{
+			Slug:        "theme-controller",
+			Name:        "Theme Controller",
+			Category:    galleryruntime.CategoryFoundation,
+			Subcategory: "Display",
+			Description: "Checkbox or radio inputs with the theme-controller class change the page theme.",
+			FrameHeight: "500px",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Toggle (checkbox)",
+					Description: "A single checkbox that toggles between light and dark.",
+					Templ: rawHTML(`<div class="p-6 flex flex-col gap-4 items-start">
+						<p class="text-sm text-base-content/60">Check to switch theme:</p>
+						<label class="flex items-center gap-3 cursor-pointer">
+							<span class="label-text">Dark mode</span>
+							<input type="checkbox" value="dark" class="theme-controller toggle toggle-primary"/>
+						</label>
+					</div>`),
+				},
+				{
+					Name:        "Picker (radio)",
+					Description: "Radio buttons to pick from a list of DaisyUI themes.",
+					FrameHeight: "500px",
+					Templ: rawHTML(`<div class="p-6 flex flex-col gap-2 max-w-xs">
+						<p class="text-sm font-semibold mb-2">Choose a theme:</p>
+						` + func() string {
+						themes := []string{"light", "dark", "cupcake", "bumblebee", "emerald", "synthwave", "retro", "cyberpunk", "dracula", "nord"}
+						out := ""
+						for i, t := range themes {
+							checked := ""
+							if i == 0 {
+								checked = " checked"
+							}
+							out += `<label class="flex items-center gap-3 cursor-pointer">
+								<input type="radio" name="theme-controller" value="` + t + `" class="theme-controller radio radio-sm"` + checked + `/>
+								<span class="label-text capitalize">` + t + `</span>
+							</label>`
+						}
+						return out
+					}() + `
+					</div>`),
+				},
+			},
+		},
+
+		// ── Forms / Calendar ─────────────────────────────────────────────────────
+		{
+			Slug:        "calendar",
+			Name:        "Calendar",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "DaisyUI calendar CSS classes applied to a static HTML month calendar demo.",
+			FrameHeight: "350px",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Single month",
+					Description: "A styled month calendar built with plain HTML and DaisyUI calendar classes.",
+					Templ: form.CalendarDemoWithBoundary("June", "2025", 0, 30, 17, 23),
+				},
+				{
+					// Two months side by side for a range-picker layout demo.
+					// May 2025: starts Thursday (col 4), 31 days, 15th=today, 20th=selected.
+					// June 2025: starts Sunday (col 0), 30 days, no today, 5th=selected.
+					Name:        "Examples",
+					Description: "Two calendar months side by side (range picker layout).",
+					FrameHeight: "380px",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "May 2025",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.CalendarDemoWithBoundary("May", "2025", 4, 31, 15, 20)
+							},
+						},
+						{
+							Label: "June 2025",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.CalendarDemoWithBoundary("June", "2025", 0, 30, 0, 5)
+							},
+						},
+					},
+				},
+			},
+		},
+
+		// ── Data Display / Text Rotate ────────────────────────────────────────────
+		{
+			Slug:        "text-rotate",
+			Name:        "Text Rotate",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Display",
+			Description: "Animated component that cycles through text lines with an infinite loop.",
+			FrameHeight: "200px",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Cycling text with configurable duration.",
+					Templ: rawHTML(`<div class="p-8 flex flex-col items-center gap-4">
+						<h2 class="text-3xl font-bold flex gap-2">
+							We build
+							<span class="text-primary">
+								<div class="text-rotate">
+									<span>fast apps</span>
+									<span>great UIs</span>
+									<span>with Go</span>
+									<span>with HTMX</span>
+									<span>with DaisyUI</span>
+								</div>
+							</span>
+						</h2>
+					</div>`),
+				},
+				{
+					Name:        "Standalone",
+					Description: "TextRotate component on its own.",
+					Templ: seq(
+						rawHTML(`<div class="p-8 flex justify-center text-2xl font-semibold">`),
+						ui.TextRotateWithBoundary([]string{"First item", "Second item", "Third item", "Fourth item"}, "8s"),
+						rawHTML(`</div>`),
+					),
+				},
+			},
+		},
+
+		// ── Data Display / Hover 3D Card ──────────────────────────────────────────
+		{
+			Slug:        "hover-3d",
+			Name:        "Hover 3D Card",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Display",
+			Description: "Card that tilts and rotates in 3D space when hovered.",
+			FrameHeight: "300px",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Hover over the card to see the 3D tilt effect.",
+					Templ: rawHTML(`<div class="p-10 flex justify-center">
+						<div class="hover-3d rounded-2xl w-64 h-40 bg-primary text-primary-content shadow-xl">
+							<div class="hover-3d-layer flex flex-col items-center justify-center h-full p-4">
+								<h3 class="text-xl font-bold">3D Card</h3>
+								<p class="text-sm opacity-80 mt-1">Hover me!</p>
+							</div>
+						</div>
+					</div>`),
+				},
+				{
+					Name:        "Examples",
+					Description: "Multiple 3D cards side by side.",
+					FrameHeight: "300px",
+					Templ: rawHTML(`<div class="p-6 flex gap-4 justify-center flex-wrap">
+						<div class="hover-3d rounded-2xl w-44 h-36 bg-secondary text-secondary-content shadow-lg">
+							<div class="hover-3d-layer flex items-center justify-center h-full font-bold">Secondary</div>
+						</div>
+						<div class="hover-3d rounded-2xl w-44 h-36 bg-accent text-accent-content shadow-lg">
+							<div class="hover-3d-layer flex items-center justify-center h-full font-bold">Accent</div>
+						</div>
+						<div class="hover-3d rounded-2xl w-44 h-36 bg-neutral text-neutral-content shadow-lg">
+							<div class="hover-3d-layer flex items-center justify-center h-full font-bold">Neutral</div>
+						</div>
+					</div>`),
+				},
+			},
+		},
+
+		// ── Data Display / Hover Gallery ──────────────────────────────────────────
+		{
+			Slug:        "hover-gallery",
+			Name:        "Hover Gallery",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Display",
+			Description: "Horizontal hover image gallery — first image visible by default, others revealed on hover.",
+			FrameHeight: "280px",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Hover horizontally across the gallery to reveal images.",
+					Templ: ui.HoverGalleryWithBoundary([]ui.HoverGalleryImage{
+						{Src: "https://picsum.photos/seed/g1/400/240", Alt: "Gallery image 1"},
+						{Src: "https://picsum.photos/seed/g2/400/240", Alt: "Gallery image 2"},
+						{Src: "https://picsum.photos/seed/g3/400/240", Alt: "Gallery image 3"},
+						{Src: "https://picsum.photos/seed/g4/400/240", Alt: "Gallery image 4"},
+					}),
+				},
+			},
+		},
+
 		// layout.Navbar
 		{
 			Slug:        "navbar-real",

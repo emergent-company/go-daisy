@@ -708,3 +708,72 @@ func IconSpanColoredWithBoundary(name string, size string, color string) templ.C
 		"color": color,
 	})
 }
+
+// RadialProgressWithBoundary wraps RadialProgress with a dev-mode component boundary annotation.
+func RadialProgressWithBoundary(color ProgressColor, value int, size string, thickness string) templ.Component {
+	return devmode.ComponentBoundary("RadialProgress", RadialProgress(color, value, size, thickness), map[string]any{
+		"color":     string(color),
+		"value":     value,
+		"size":      size,
+		"thickness": thickness,
+	})
+}
+
+// DrawerWithBoundary wraps Drawer with a dev-mode component boundary annotation.
+func DrawerWithBoundary(id string, side DrawerSide, content templ.Component, sidebarContent templ.Component, sidebarWidth string) templ.Component {
+	return devmode.ComponentBoundary("Drawer", Drawer(id, side, content, sidebarContent, sidebarWidth), map[string]any{
+		"id":           id,
+		"side":         string(side),
+		"sidebarWidth": sidebarWidth,
+	})
+}
+
+// DrawerToggleWithBoundary wraps DrawerToggle with a dev-mode component boundary annotation.
+func DrawerToggleWithBoundary(drawerID string, label string, variant string) templ.Component {
+	return devmode.ComponentBoundary("DrawerToggle", DrawerToggle(drawerID, label, variant), map[string]any{
+		"drawerID": drawerID,
+		"label":    label,
+		"variant":  variant,
+	})
+}
+
+// ThemeControllerWithBoundary wraps ThemeController with a dev-mode component boundary annotation.
+func ThemeControllerWithBoundary(theme string, inputType ThemeInputType, label string, checked bool) templ.Component {
+	return devmode.ComponentBoundary("ThemeController", ThemeController(theme, inputType, label, checked), map[string]any{
+		"theme":     theme,
+		"inputType": string(inputType),
+		"label":     label,
+		"checked":   checked,
+	})
+}
+
+// ThemeControllerBtnWithBoundary wraps ThemeControllerBtn with a dev-mode component boundary annotation.
+func ThemeControllerBtnWithBoundary(theme string, checked bool) templ.Component {
+	return devmode.ComponentBoundary("ThemeControllerBtn", ThemeControllerBtn(theme, checked), map[string]any{
+		"theme":   theme,
+		"checked": checked,
+	})
+}
+
+// TextRotateWithBoundary wraps TextRotate with a dev-mode component boundary annotation.
+func TextRotateWithBoundary(items []string, duration string) templ.Component {
+	return devmode.ComponentBoundary("TextRotate", TextRotate(items, duration), map[string]any{
+		"itemCount": len(items),
+		"duration":  duration,
+	})
+}
+
+// Hover3DCardWithBoundary wraps Hover3DCard with a dev-mode component boundary annotation.
+func Hover3DCardWithBoundary(extraClass string, children templ.Component) templ.Component {
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return Hover3DCard(extraClass).Render(templ.WithChildren(ctx, children), w)
+	})
+	return devmode.ComponentBoundary("Hover3DCard", inner, map[string]any{"extraClass": extraClass})
+}
+
+// HoverGalleryWithBoundary wraps HoverGallery with a dev-mode component boundary annotation.
+func HoverGalleryWithBoundary(images []HoverGalleryImage) templ.Component {
+	return devmode.ComponentBoundary("HoverGallery", HoverGallery(images), map[string]any{
+		"imageCount": len(images),
+	})
+}
