@@ -130,6 +130,37 @@ The `<html>` element in `layout.Page` is also skipped intentionally.
 
 ---
 
+## AI agent skills
+
+go-daisy ships OpenCode skills that teach AI coding agents how to work with the library. The installer copies them into `.opencode/skills/` in your project automatically.
+
+### Skills included
+
+| Skill | Trigger phrases | What it covers |
+|---|---|---|
+| `gallery-install` | "install the gallery", "set up gallery", "init gallery" | Running the installer, generated files, Taskfile patching, port config |
+| `gallery-add-component` | "add a component to the gallery", "add a story for X", "register this component" | `GalleryComponent` schema, HTML snippets, Templ components, variants, design tokens |
+| `use-go-daisy` | "add a button/badge/table/modal", "create a page with sidebar", "render HTMX partial", "use go-daisy" | Full component API reference: layout, render helpers, ui primitives, nav, table, form, modal, logs |
+
+### Installing the skills manually
+
+The skills are installed automatically when you run the gallery installer:
+
+```bash
+go run github.com/emergent-company/go-daisy/cmd/install@latest
+```
+
+To install them without the gallery, copy them from `cmd/install/skills/` into `.opencode/skills/` in your project, or run the installer in a directory that already has a gallery:
+
+```bash
+# Re-run the installer to refresh skills (will skip non-empty gallery dir gracefully)
+go run github.com/emergent-company/go-daisy/cmd/install@latest
+```
+
+Once installed, any OpenCode session in the project can load a skill on demand, and the agent will automatically activate the right skill based on what you ask for.
+
+---
+
 ## Gallery
 
 A live showcase app is included at `cmd/gallery`. Run it with:
