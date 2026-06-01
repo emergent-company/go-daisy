@@ -190,6 +190,23 @@ func sortURL(base string, key string, currentKey string, currentDir SortDir) str
 	return base + "&sort=" + key + "&dir=" + dir
 }
 
+// FilterDate renders a date filter input that triggers HTMX on change.
+// Pass attrs for extra HTML attributes such as data-testid.
+templ FilterDate(name string, value string, hxTarget string, hxGet string, attrs templ.Attributes) {
+	<input
+		type="date"
+		name={ name }
+		value={ value }
+		class="input input-bordered input-sm w-36"
+		hx-get={ hxGet }
+		hx-target={ hxTarget }
+		hx-trigger="change"
+		hx-include="closest form"
+		{ devmode.Attrs(ctx, "table/FilterDate")... }
+		{ attrs... }
+	/>
+}
+
 // FilterText renders a text filter input that triggers HTMX on input.
 // Pass attrs for extra HTML attributes such as data-testid.
 templ FilterText(name string, value string, placeholder string, hxTarget string, hxGet string, attrs templ.Attributes) {
