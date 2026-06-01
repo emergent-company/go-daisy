@@ -15,8 +15,9 @@ const (
 )
 
 // Link renders a styled anchor link.
-templ Link(href string, variant LinkVariant) {
-	<a href={ templ.URL(href) } class={ string(variant) } { devmode.Attrs(ctx, "nav/Link")... }>
+// Pass attrs for extra HTML attributes such as data-testid, target, or hx-*.
+templ Link(href string, variant LinkVariant, attrs templ.Attributes) {
+	<a href={ templ.URL(href) } class={ string(variant) } { devmode.Attrs(ctx, "nav/Link")... } { attrs... }>
 		{ children... }
 	</a>
 }

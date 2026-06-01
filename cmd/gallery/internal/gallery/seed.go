@@ -2057,7 +2057,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{nav.LinkHover, "Hover only"},
 							}
 							for _, l := range links {
-								if err := withText(l.label, nav.Link("#", l.variant)).Render(ctx, w); err != nil {
+								if err := withText(l.label, nav.Link("#", l.variant, nil)).Render(ctx, w); err != nil {
 									return err
 								}
 							}

@@ -69,7 +69,7 @@ func LinkWithBoundary(href string, variant LinkVariant, label string) templ.Comp
 		return err
 	})
 	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		return Link(href, variant).Render(templ.WithChildren(ctx, child), w)
+		return Link(href, variant, nil).Render(templ.WithChildren(ctx, child), w)
 	})
 	return devmode.ComponentBoundary("Link", inner, map[string]any{
 		"href":    href,
