@@ -23,8 +23,9 @@ const (
 )
 
 // Link renders a styled anchor link.
+// extraClass appends additional Tailwind utility classes to the variant base (e.g. "text-xs break-all").
 // Pass attrs for extra HTML attributes such as data-testid, target, or hx-*.
-func Link(href string, variant LinkVariant, attrs templ.Attributes) templ.Component {
+func Link(href string, variant LinkVariant, extraClass string, attrs templ.Attributes) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -45,7 +46,7 @@ func Link(href string, variant LinkVariant, attrs templ.Attributes) templ.Compon
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{string(variant)}
+		var templ_7745c5c3_Var2 = []any{templ.Classes(string(variant), extraClass)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -57,7 +58,7 @@ func Link(href string, variant LinkVariant, attrs templ.Attributes) templ.Compon
 		var templ_7745c5c3_Var3 templ.SafeURL
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(href))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/link.templ`, Line: 20, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/link.templ`, Line: 21, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {

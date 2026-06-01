@@ -15,9 +15,10 @@ const (
 )
 
 // Link renders a styled anchor link.
+// extraClass appends additional Tailwind utility classes to the variant base (e.g. "text-xs break-all").
 // Pass attrs for extra HTML attributes such as data-testid, target, or hx-*.
-templ Link(href string, variant LinkVariant, attrs templ.Attributes) {
-	<a href={ templ.URL(href) } class={ string(variant) } { devmode.Attrs(ctx, "nav/Link")... } { attrs... }>
+templ Link(href string, variant LinkVariant, extraClass string, attrs templ.Attributes) {
+	<a href={ templ.URL(href) } class={ templ.Classes(string(variant), extraClass) } { devmode.Attrs(ctx, "nav/Link")... } { attrs... }>
 		{ children... }
 	</a>
 }
