@@ -191,7 +191,8 @@ func sortURL(base string, key string, currentKey string, currentDir SortDir) str
 }
 
 // FilterText renders a text filter input that triggers HTMX on input.
-templ FilterText(name string, value string, placeholder string, hxTarget string, hxGet string) {
+// Pass attrs for extra HTML attributes such as data-testid.
+templ FilterText(name string, value string, placeholder string, hxTarget string, hxGet string, attrs templ.Attributes) {
 	<input
 		type="search"
 		name={ name }
@@ -203,11 +204,13 @@ templ FilterText(name string, value string, placeholder string, hxTarget string,
 		hx-trigger="input delay:300ms, search"
 		hx-include="closest form"
 		{ devmode.Attrs(ctx, "table/FilterText")... }
+		{ attrs... }
 	/>
 }
 
 // FilterSelect renders a select filter that triggers HTMX on change.
-templ FilterSelect(name string, hxTarget string, hxGet string) {
+// Pass attrs for extra HTML attributes such as data-testid.
+templ FilterSelect(name string, hxTarget string, hxGet string, attrs templ.Attributes) {
 	<select
 		name={ name }
 		class="select select-bordered select-sm w-full max-w-xs"
@@ -216,6 +219,7 @@ templ FilterSelect(name string, hxTarget string, hxGet string) {
 		hx-trigger="change"
 		hx-include="closest form"
 		{ devmode.Attrs(ctx, "table/FilterSelect")... }
+		{ attrs... }
 	>
 		{ children... }
 	</select>
