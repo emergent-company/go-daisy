@@ -1,11 +1,14 @@
 package galleryruntime
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
-	"os/exec"
-	"strings"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/a-h/templ"
 	"github.com/labstack/echo/v4"
@@ -13,20 +16,6 @@ import (
 
 	"github.com/emergent-company/go-daisy/staticfs"
 )
-
-// detectGitBranch returns the current git branch name, or an empty string
-// if it cannot be determined (e.g. detached HEAD, no git binary, not a repo).
-func detectGitBranch() string {
-	out, err := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
-	if err != nil {
-		return ""
-	}
-	branch := strings.TrimSpace(string(out))
-	if branch == "HEAD" { // detached HEAD state
-		return ""
-	}
-	return branch
-}
 
 // Options configures the gallery server.
 type Options struct {
@@ -40,11 +29,6 @@ type Options struct {
 	Components []GalleryComponent
 	// Port is the TCP port to listen on. Defaults to 11000.
 	Port int
-	// StorePath is the path for the SQLite feedback database.
-	// Pass an empty string to disable feedback persistence.
-	StorePath string
-	// GitHubCfg enables GitHub issue export. Nil disables it.
-	GitHubCfg *GitHubConfig
 	// ExtraStaticPrefixes lists additional URL prefixes under which the
 	// embedded go-daisy static assets (CSS, JS) should also be served.
 	// Use this when your component shell templates reference a custom static
@@ -66,31 +50,6 @@ func Serve(opts Options) error {
 	}
 	if opts.Port == 0 {
 		opts.Port = 11000
-	}
-
-	// Optional SQLite store.
-	var store *Store
-	if opts.StorePath != "" {
-		var err error
-		store, err = Open(opts.StorePath)
-		if err != nil {
-			log.Printf("warning: could not open gallery SQLite store at %s: %v (feedback disabled)", opts.StorePath, err)
-		} else {
-			log.Printf("gallery SQLite store opened at %s", opts.StorePath)
-			defer store.Close()
-		}
-	}
-
-	// Optional GitHub client.
-	var gh *GitHubClient
-	if opts.GitHubCfg != nil {
-		var err error
-		gh, err = NewGitHubClient(*opts.GitHubCfg)
-		if err != nil {
-			log.Printf("warning: could not create GitHub client: %v — GitHub integration disabled", err)
-		} else {
-			log.Printf("GitHub App integration enabled for repo %s", opts.GitHubCfg.Repo)
-		}
 	}
 
 	e := echo.New()
@@ -119,16 +78,22 @@ func Serve(opts Options) error {
 	// Build the full list of static prefixes: always include "/static/", plus any extras.
 	staticPrefixes := append([]string{"/static/"}, opts.ExtraStaticPrefixes...)
 
-	// Detect current git branch for embedding in feedback context.
-	branch := detectGitBranch()
-	if branch != "" {
-		log.Printf("gallery detected git branch: %s", branch)
-	}
-
-	h := newGalleryHandler(opts.Title, opts.Logo, opts.Components, store, gh, staticPrefixes, opts.DevMode, branch)
+	h := newGalleryHandler(opts.Title, opts.Logo, opts.Components, staticPrefixes, opts.DevMode)
 	h.register(e)
 
 	addr := fmt.Sprintf("0.0.0.0:%d", opts.Port)
+
+	// Graceful shutdown on SIGINT/SIGTERM
+	go func() {
+		quit := make(chan os.Signal, 1)
+		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+		<-quit
+		log.Println("shutting down...")
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		e.Shutdown(ctx)
+	}()
+
 	log.Printf("gallery listening on %s", addr)
 	return e.Start(addr)
 }

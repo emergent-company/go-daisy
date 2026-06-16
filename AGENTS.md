@@ -145,6 +145,18 @@ CSS is compiled from `assets/app.css` → `staticfs/static/css/app.css` and serv
 
 ---
 
+## Agent rules
+
+- **Build only via `task`**: Never run `go build`, `templ generate`, or Tailwind directly. Use `task build` (full build) or `task build:ui` (templ + CSS only).
+- **Gallery server only via `task`**: Never run `go run ./cmd/gallery` or binary directly.
+  - `task gallery` — interactive run (stdout)
+  - `task gallery:start` — background daemon
+  - `task gallery:stop` — stop daemon
+  - `task gallery:restart` — stop + start (preferred after code changes)
+  - `task gallery:log` — tail daemon log
+- Only one gallery instance on port 11000. Use `task gallery:restart` rather than starting a second.
+- After editing `.templ` files, always run `task build:ui` to regenerate `*_templ.go` before committing.
+
 ## Conventions
 
 - All component functions return `templ.Component`.

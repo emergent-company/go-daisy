@@ -2,12 +2,10 @@ package galleryruntime
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/a-h/templ"
 	"github.com/labstack/echo/v4"
@@ -21,24 +19,18 @@ type galleryHandler struct {
 	title          string
 	logo           templ.Component // optional branded logo; nil falls back to title text
 	components     []GalleryComponent
-	store          *Store
-	github         *GitHubClient
 	staticPrefixes []string // all CSS prefixes: default "/static/" + any ExtraStaticPrefixes
 	devMode        bool     // when true, component boundary annotations are injected
-	branch         string   // current git branch, empty if unknown
 }
 
 // newGalleryHandler creates a new gallery handler.
-func newGalleryHandler(title string, logo templ.Component, components []GalleryComponent, store *Store, gh *GitHubClient, staticPrefixes []string, devModeEnabled bool, branch string) *galleryHandler {
+func newGalleryHandler(title string, logo templ.Component, components []GalleryComponent, staticPrefixes []string, devModeEnabled bool) *galleryHandler {
 	return &galleryHandler{
 		title:          title,
 		logo:           logo,
 		components:     components,
-		store:          store,
-		github:         gh,
 		staticPrefixes: staticPrefixes,
 		devMode:        devModeEnabled,
-		branch:         branch,
 	}
 }
 
@@ -48,14 +40,9 @@ func (h *galleryHandler) register(e *echo.Echo) {
 	e.GET("/gallery/render/:slug", h.handleRender)
 	e.GET("/gallery/render/:slug/examples", h.handleRenderSubExample)
 	e.GET("/gallery/render/:slug/:variant", h.handleRenderVariant)
+	e.GET("/gallery/group/:category/:subcategory", h.handleSubGroup)
+	e.GET("/gallery/group/:category", h.handleGroup)
 	e.GET("/gallery/:slug", h.handleDetail)
-
-	// Feedback routes
-	e.POST("/gallery/:slug/feedback", h.handleCreateFeedback)
-	e.GET("/gallery/:slug/feedback", h.handleListFeedback)
-	e.GET("/gallery/:slug/feedback/count", h.handleCountFeedback)
-	e.DELETE("/gallery/:slug/feedback/:id", h.handleDeleteFeedback)
-	e.POST("/gallery/:slug/feedback/export-issue", h.handleExportIssue)
 }
 
 // handleIndex renders the gallery landing page.
@@ -81,15 +68,77 @@ func (h *galleryHandler) handleDetail(c echo.Context) error {
 	all := h.components
 	categories := BuildCategoryGroups(all)
 
-	var feedbackCount int64
-	if h.store != nil {
-		feedbackCount, _ = h.store.Count(c.Request().Context(), slug)
-	}
-
-	content := ComponentDetail(comp, feedbackCount, h.github != nil, h.branch)
+	content := ComponentDetail(comp)
 	render.RenderAuto(c.Response().Writer, c.Request(),
 		GalleryPage(h.title, slug, categories, h.logo, content),
 		GalleryPageContent(h.title, slug, categories, h.logo, content),
+	)
+	return nil
+}
+
+// handleGroup renders the category group summary page.
+func (h *galleryHandler) handleGroup(c echo.Context) error {
+	slug := c.Param("category")
+	cat, ok := CategoryBySlug(slug)
+	if !ok {
+		return echo.NewHTTPError(http.StatusNotFound, "category not found")
+	}
+
+	all := h.components
+	categories := BuildCategoryGroups(all)
+	var subcategories []SubcategoryGroup
+	for _, cg := range categories {
+		if cg.Name == cat {
+			subcategories = cg.Subcategories
+			break
+		}
+	}
+	if subcategories == nil {
+		subcategories = []SubcategoryGroup{}
+	}
+	content := GalleryGroup(cat, subcategories)
+
+	render.RenderAuto(c.Response().Writer, c.Request(),
+		GalleryPage(h.title, "", categories, h.logo, content),
+		GalleryPageContent(h.title, "", categories, h.logo, content),
+	)
+	return nil
+}
+
+// handleSubGroup renders the subcategory summary page.
+func (h *galleryHandler) handleSubGroup(c echo.Context) error {
+	catSlug := c.Param("category")
+	subSlug := c.Param("subcategory")
+	cat, ok := CategoryBySlug(catSlug)
+	if !ok {
+		return echo.NewHTTPError(http.StatusNotFound, "category not found")
+	}
+
+	all := h.components
+	categories := BuildCategoryGroups(all)
+	var found *SubcategoryGroup
+	for _, cg := range categories {
+		if cg.Name != cat {
+			continue
+		}
+		for i := range cg.Subcategories {
+			if Slugify(cg.Subcategories[i].Name) == subSlug {
+				found = &cg.Subcategories[i]
+				break
+			}
+		}
+		if found != nil {
+			break
+		}
+	}
+	if found == nil {
+		return echo.NewHTTPError(http.StatusNotFound, "subcategory not found")
+	}
+
+	content := GallerySubGroup(cat, *found)
+	render.RenderAuto(c.Response().Writer, c.Request(),
+		GalleryPage(h.title, "", categories, h.logo, content),
+		GalleryPageContent(h.title, "", categories, h.logo, content),
 	)
 	return nil
 }
@@ -146,16 +195,36 @@ func (h *galleryHandler) handleRenderSubExample(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusNotFound, "component not found")
 	}
 
-	si, _ := strconv.Atoi(c.QueryParam("s"))
-	ei, _ := strconv.Atoi(c.QueryParam("e"))
+	si, siErr := strconv.Atoi(c.QueryParam("s"))
+	ei, eiErr := strconv.Atoi(c.QueryParam("e"))
 
 	variants := comp.EffectiveVariants()
-	if si < 0 || si >= len(variants) {
-		return echo.NewHTTPError(http.StatusNotFound, "story index out of range")
+
+	// When query params are missing or invalid, fall back to the first
+	// non-Interactive story that has SubExamples.
+	needsFallback := siErr != nil || eiErr != nil || si < 0 || si >= len(variants)
+	if needsFallback {
+		found := false
+		for i, v := range variants {
+			if v.Name != "Interactive" && len(v.SubExamples) > 0 {
+				si, ei = i, 0
+				found = true
+				break
+			}
+		}
+		if !found {
+			return echo.NewHTTPError(http.StatusNotFound, "no sub-examples available for this component")
+		}
 	}
+
 	story := variants[si]
 	if ei < 0 || ei >= len(story.SubExamples) {
-		return echo.NewHTTPError(http.StatusNotFound, "sub-example index out of range")
+		// Fall back to first sub-example if index is out of range.
+		if len(story.SubExamples) > 0 {
+			ei = 0
+		} else {
+			return echo.NewHTTPError(http.StatusNotFound, "no sub-examples available for this story")
+		}
 	}
 	sub := story.SubExamples[ei]
 
@@ -259,169 +328,4 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
 </html>`, cssLinks.String(), snippet, devScript)
 }
 
-// feedbackRequest is the JSON body for POST /gallery/:slug/feedback.
-type feedbackRequest struct {
-	Comment     string          `json:"comment"`
-	ContextJSON json.RawMessage `json:"context_json"`
-}
 
-// feedbackResponse is the JSON body returned after creating feedback.
-type feedbackResponse struct {
-	ID        int64     `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-}
-
-// handleCreateFeedback handles POST /gallery/:slug/feedback.
-func (h *galleryHandler) handleCreateFeedback(c echo.Context) error {
-	if h.store == nil {
-		return c.JSON(http.StatusServiceUnavailable, map[string]string{"error": "gallery database not available"})
-	}
-
-	slug := c.Param("slug")
-
-	var req feedbackRequest
-	if err := json.NewDecoder(c.Request().Body).Decode(&req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "invalid JSON body")
-	}
-	if req.Comment == "" {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "comment is required"})
-	}
-
-	contextJSON := string(req.ContextJSON)
-	if contextJSON == "" {
-		contextJSON = "{}"
-	}
-
-	// Inject server-side branch into context_json.
-	if h.branch != "" {
-		var ctx map[string]interface{}
-		if err := json.Unmarshal([]byte(contextJSON), &ctx); err != nil || ctx == nil {
-			ctx = map[string]interface{}{}
-		}
-		ctx["branch"] = h.branch
-		if b, err := json.Marshal(ctx); err == nil {
-			contextJSON = string(b)
-		}
-	}
-
-	record, err := h.store.Create(c.Request().Context(), CreateParams{
-		ComponentSlug: slug,
-		Comment:       req.Comment,
-		ContextJSON:   contextJSON,
-	})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("failed to save feedback: %v", err))
-	}
-
-	c.Response().WriteHeader(http.StatusCreated)
-	return c.JSON(http.StatusCreated, feedbackResponse{
-		ID:        record.ID,
-		CreatedAt: record.CreatedAt,
-	})
-}
-
-// handleListFeedback handles GET /gallery/:slug/feedback.
-func (h *galleryHandler) handleListFeedback(c echo.Context) error {
-	var items []Feedback
-	if h.store != nil {
-		slug := c.Param("slug")
-		var err error
-		items, err = h.store.List(c.Request().Context(), slug)
-		if err != nil {
-			items = []Feedback{}
-		}
-	}
-	if items == nil {
-		items = []Feedback{}
-	}
-
-	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
-	return FeedbackListPartial(items).Render(c.Request().Context(), c.Response().Writer)
-}
-
-// handleCountFeedback handles GET /gallery/:slug/feedback/count.
-func (h *galleryHandler) handleCountFeedback(c echo.Context) error {
-	count := int64(0)
-	slug := c.Param("slug")
-	if h.store != nil {
-		var err error
-		count, err = h.store.Count(c.Request().Context(), slug)
-		if err != nil {
-			count = 0
-		}
-	}
-
-	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
-	_, err := fmt.Fprintf(c.Response().Writer,
-		`<span id="feedback-count-%s" class="badge badge-xs badge-primary">%d</span>`,
-		slug, count)
-	return err
-}
-
-// handleDeleteFeedback handles DELETE /gallery/:slug/feedback/:id.
-func (h *galleryHandler) handleDeleteFeedback(c echo.Context) error {
-	if h.store == nil {
-		return echo.NewHTTPError(http.StatusServiceUnavailable, "gallery database not available")
-	}
-
-	slug := c.Param("slug")
-	idStr := c.Param("id")
-	id, err := strconv.ParseInt(idStr, 10, 64)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "invalid id")
-	}
-
-	if err := h.store.Delete(c.Request().Context(), id); err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, "feedback not found")
-	}
-
-	count, _ := h.store.Count(c.Request().Context(), slug)
-	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
-	_, err = fmt.Fprintf(c.Response().Writer,
-		`<span id="feedback-count-%s" class="badge badge-xs badge-primary">%d</span>`,
-		slug, count)
-	return err
-}
-
-// exportIssueResponse is the JSON body returned after creating a GitHub issue.
-type exportIssueResponse struct {
-	IssueURL string `json:"issue_url"`
-}
-
-// handleExportIssue handles POST /gallery/:slug/feedback/export-issue.
-func (h *galleryHandler) handleExportIssue(c echo.Context) error {
-	if h.github == nil {
-		return c.JSON(http.StatusServiceUnavailable, map[string]string{"error": "GitHub integration not configured"})
-	}
-	if h.store == nil {
-		return c.JSON(http.StatusServiceUnavailable, map[string]string{"error": "gallery database not available"})
-	}
-
-	slug := c.Param("slug")
-	comp, ok := ComponentBySlug(h.components, slug)
-	if !ok {
-		return echo.NewHTTPError(http.StatusNotFound, "component not found")
-	}
-
-	items, err := h.store.ListOpen(c.Request().Context(), slug)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("failed to list feedback: %v", err))
-	}
-	if len(items) == 0 {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "no open feedback items to export"})
-	}
-
-	scheme := "http"
-	if c.Request().TLS != nil {
-		scheme = "https"
-	}
-	baseURL := scheme + "://" + c.Request().Host
-
-	title, body := BuildIssueContent(comp, items, baseURL, h.branch)
-	issueURL, err := h.github.CreateIssue(c.Request().Context(), title, body, []string{"gallery-feedback"})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("failed to create GitHub issue: %v", err))
-	}
-
-	return c.JSON(http.StatusCreated, exportIssueResponse{IssueURL: issueURL})
-}

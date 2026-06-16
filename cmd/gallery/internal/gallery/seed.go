@@ -2737,9 +2737,12 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return ui.NotificationPanelWithBoundary(items, 2, "#")
 					},
 				},
+		{
+			Name:        "Examples",
+			Description: "Panel with unread and read notifications.",
+			SubExamples: []galleryruntime.GallerySubExample{
 				{
-					Name:        "Examples",
-					Description: "Panel with unread and read notifications.",
+					Label: "Data-driven",
 					RenderFunc: func(_ url.Values) templ.Component {
 						items := []ui.NotificationItem{
 							{Title: "Case assigned", Body: "Johnson v. Smith was assigned to you.", Time: "2 min ago", Unread: true},
@@ -2747,9 +2750,47 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Title: "Reminder", Body: "Court date in 3 days.", Time: "1 hour ago", Unread: false},
 							{Title: "Workflow complete", Body: "Document review workflow finished.", Time: "2 hours ago", Unread: false},
 						}
-						return ui.NotificationPanel(items, 2, "#")
+						return ui.NotificationPanelWithBoundary(items, 2, "#")
 					},
 				},
+				{
+					Label: "Composed via children",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							return ui.NotificationPanel(2, "#").Render(templ.WithChildren(ctx, seq(
+								ui.NotificationRowWithBoundary(ui.NotificationItem{
+									IconClass:     "bg-primary/10",
+									IconTextClass: "text-primary",
+									IconName:      "lucide--briefcase",
+									Title:         "New case assigned",
+									Body:          "Johnson v. Smith was assigned to you.",
+									Time:          "2 min ago",
+									Unread:        true,
+								}),
+								ui.NotificationRowWithBoundary(ui.NotificationItem{
+									IconClass:     "bg-warning/10",
+									IconTextClass: "text-warning",
+									IconName:      "lucide--check-square",
+									Title:         "Task deadline tomorrow",
+									Body:          "File motion for Johnson v. Smith due soon.",
+									Time:          "1 hour ago",
+									Unread:        true,
+								}),
+								ui.NotificationRowWithBoundary(ui.NotificationItem{
+									IconClass:     "bg-success/10",
+									IconTextClass: "text-success",
+									IconName:      "lucide--user",
+									Title:         "Client signed in",
+									Body:          "Alice Johnson accessed the client portal.",
+									Time:          "Yesterday",
+									Unread:        false,
+								}),
+							)), w)
+						})
+					},
+				},
+			},
+		},
 			},
 		},
 
@@ -6772,6 +6813,145 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 				},
 			},
+			},
+		},
+
+		// ── Forms / Form Control Wrappers ─────────────────────────────────────────
+		{
+			Slug:        "form-wrappers",
+			Name:        "Form Control Wrappers",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "Labeled form inputs with labelPosition (above / left), optional hint, error, and HTMX attrs.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "FormInput",
+					Description: "Text input with label, labelPosition, hint, and error support.",
+					RenderFunc: func(params url.Values) templ.Component {
+						label := params.Get("label")
+						if label == "" {
+							label = "Full Name"
+						}
+						pos := form.LabelPosition(params.Get("labelPosition"))
+						if pos == "" {
+							pos = form.LabelAbove
+						}
+						return form.FormInputWithBoundary("name", label, "", "Enter your name", pos, "", "", nil)
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Label", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Full Name", QueryParam: "label"},
+						{Label: "Label Position", Group: "Layout", Type: galleryruntime.TokenTypeSelect, Default: "above", QueryParam: "labelPosition", Options: []galleryruntime.TokenOption{
+							{Value: "above", Label: "Above"},
+							{Value: "left", Label: "Left"},
+						}},
+					},
+				},
+				{
+					Name:        "FormSelect",
+					Description: "Select dropdown with label, labelPosition, placeholder, and error support.",
+					RenderFunc: func(params url.Values) templ.Component {
+						label := params.Get("label")
+						if label == "" {
+							label = "Country"
+						}
+						pos := form.LabelPosition(params.Get("labelPosition"))
+						if pos == "" {
+							pos = form.LabelAbove
+						}
+						return form.FormSelectWithBoundary("country", label, "", [][2]string{
+							{"us", "United States"},
+							{"ca", "Canada"},
+							{"uk", "United Kingdom"},
+						}, "Select a country", pos, "", "", nil)
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Label", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Country", QueryParam: "label"},
+						{Label: "Label Position", Group: "Layout", Type: galleryruntime.TokenTypeSelect, Default: "above", QueryParam: "labelPosition", Options: []galleryruntime.TokenOption{
+							{Value: "above", Label: "Above"},
+							{Value: "left", Label: "Left"},
+						}},
+					},
+				},
+				{
+					Name:        "FormCheckbox",
+					Description: "Checkbox with inline label and HTMX attrs.",
+					RenderFunc: func(params url.Values) templ.Component {
+						checked := params.Get("checked") == "true"
+						label := params.Get("label")
+						if label == "" {
+							label = "Accept terms and conditions"
+						}
+						return form.FormCheckboxWithBoundary("terms", label, checked, "", nil)
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Checked", Group: "State", Type: galleryruntime.TokenTypeSelect, Default: "false", QueryParam: "checked", Options: []galleryruntime.TokenOption{
+							{Value: "false", Label: "Unchecked"},
+							{Value: "true", Label: "Checked"},
+						}},
+						{Label: "Label", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Accept terms and conditions", QueryParam: "label"},
+					},
+				},
+				{
+					Name:        "FormToggle",
+					Description: "Toggle switch with inline label and HTMX attrs.",
+					RenderFunc: func(params url.Values) templ.Component {
+						checked := params.Get("checked") == "true"
+						label := params.Get("label")
+						if label == "" {
+							label = "Enable notifications"
+						}
+						return form.FormToggleWithBoundary("notifications", label, checked, "", nil)
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Checked", Group: "State", Type: galleryruntime.TokenTypeSelect, Default: "false", QueryParam: "checked", Options: []galleryruntime.TokenOption{
+							{Value: "false", Label: "Unchecked"},
+							{Value: "true", Label: "Checked"},
+						}},
+						{Label: "Label", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Enable notifications", QueryParam: "label"},
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Above and left label positions, with and without errors.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Label above (default)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.FormInputWithBoundary("name-above", "Full Name", "", "Enter your name", form.LabelAbove, "", "", nil)
+							},
+						},
+						{
+							Label: "Label left",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.FormInputWithBoundary("name-left", "Full Name", "", "Enter your name", form.LabelLeft, "", "", nil)
+							},
+						},
+						{
+							Label: "With error",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.FormInputWithBoundary("email-err", "Email", "", "Enter your email", form.LabelAbove, "", "Invalid email address", nil)
+							},
+						},
+						{
+							Label: "With hint",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.FormInputWithBoundary("hint", "Username", "", "Choose a username", form.LabelAbove, "Must be 3-30 characters", "", nil)
+							},
+						},
+						{
+							Label: "Select above",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.FormSelectWithBoundary("sel-above", "Country", "us", [][2]string{{"us", "United States"}, {"ca", "Canada"}}, "Select", form.LabelAbove, "", "", nil)
+							},
+						},
+						{
+							Label: "Select left",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return form.FormSelectWithBoundary("sel-left", "Country", "us", [][2]string{{"us", "United States"}, {"ca", "Canada"}}, "Select", form.LabelLeft, "", "", nil)
+							},
+						},
+					},
+				},
 			},
 		},
 	}

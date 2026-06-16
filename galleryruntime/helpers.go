@@ -2,6 +2,7 @@ package galleryruntime
 
 import (
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -35,6 +36,32 @@ func TokenGroups(tokens []DesignToken) []TokenGroup {
 	return groups
 }
 
+// CategoryOrder defines the explicit display order of category groups in the
+// gallery sidebar. Categories not in this slice fall to the end in first-seen order.
+var CategoryOrder = []Category{
+	CategoryFoundation,
+	CategoryBasics,
+	CategoryNavigation,
+	CategoryLayout,
+	CategoryFeedback,
+	CategoryForms,
+	CategoryDataDisplay,
+	CategoryOverlays,
+}
+
+// SubcategoryOrder defines the explicit display order of subcategories within each
+// category. Subcategories not listed fall to the end in first-seen order.
+var SubcategoryOrder = map[Category][]string{
+	CategoryFoundation:  {"Typography", "Display", "Layout", "Effects"},
+	CategoryBasics:      {"Buttons", "Badges", "Tag", "Avatars"},
+	CategoryNavigation:  {"Menus", "Tabs", "Headers", "Filters", "Page Title", "Pagination", "Misc"},
+	CategoryLayout:      {"Drawers"},
+	CategoryFeedback:    {"Alerts", "States", "Loading", "Toasts", "Notifications", "Indicators", "Progress"},
+	CategoryForms:       {"Inputs", "Toggles", "Filters", "Layout", "Prompt Bar", "Wizard"},
+	CategoryDataDisplay: {"Display", "Lists", "Cards", "Tables", "Mockups"},
+	CategoryOverlays:    {"Dropdowns", "Modals"},
+}
+
 var reNonAlphaNum = regexp.MustCompile(`[^a-zA-Z0-9]+`)
 
 // SanitizeID converts a CSS variable name like "--btn-padding-x" to a safe HTML
@@ -62,18 +89,21 @@ func RangeDefaultValue(tok DesignToken) string {
 }
 
 // BuildCategoryGroups organises a flat list of components into CategoryGroups
-// with nested SubcategoryGroups, preserving first-seen order.
+// with nested SubcategoryGroups, ordered by CategoryOrder (explicit rank).
+// Categories not in CategoryOrder fall to the end, preserving first-seen order.
 func BuildCategoryGroups(all []GalleryComponent) []CategoryGroup {
-	catOrder := []Category{}
+	rank := map[Category]int{}
+	for i, cat := range CategoryOrder {
+		rank[cat] = i
+	}
+
 	catMap := map[Category]*CategoryGroup{}
 
 	for _, c := range all {
-		cg, exists := catMap[c.Category]
-		if !exists {
-			catOrder = append(catOrder, c.Category)
+		if _, exists := catMap[c.Category]; !exists {
 			catMap[c.Category] = &CategoryGroup{Name: c.Category}
-			cg = catMap[c.Category]
 		}
+		cg := catMap[c.Category]
 
 		// find or create subcategory
 		var sub *SubcategoryGroup
@@ -91,6 +121,48 @@ func BuildCategoryGroups(all []GalleryComponent) []CategoryGroup {
 		cg.Components = append(cg.Components, c)
 	}
 
+	// sort subcategories within each category group by SubcategoryOrder
+	for _, cg := range catMap {
+		subRank := map[string]int{}
+		for i, name := range SubcategoryOrder[cg.Name] {
+			subRank[name] = i
+		}
+		sort.Slice(cg.Subcategories, func(i, j int) bool {
+			ri, rj := subRank[cg.Subcategories[i].Name], subRank[cg.Subcategories[j].Name]
+			// ranked before unranked; among unranked, preserve order
+			_, iRanked := subRank[cg.Subcategories[i].Name]
+			_, jRanked := subRank[cg.Subcategories[j].Name]
+			if iRanked != jRanked {
+				return iRanked
+			}
+			return ri < rj
+		})
+	}
+
+	// collect seen categories preserving seed.go order for unranked cats
+	seen := []Category{}
+	seenSet := map[Category]bool{}
+	for _, c := range all {
+		if seenSet[c.Category] {
+			continue
+		}
+		seenSet[c.Category] = true
+		seen = append(seen, c.Category)
+	}
+
+	// split into ranked (by CategoryOrder) and unranked (first-seen order)
+	ranked := []Category{}
+	unranked := []Category{}
+	for _, cat := range seen {
+		if _, ok := rank[cat]; ok {
+			ranked = append(ranked, cat)
+		} else {
+			unranked = append(unranked, cat)
+		}
+	}
+	sort.Slice(ranked, func(i, j int) bool { return rank[ranked[i]] < rank[ranked[j]] })
+
+	catOrder := append(ranked, unranked...)
 	result := make([]CategoryGroup, 0, len(catOrder))
 	for _, cat := range catOrder {
 		result = append(result, *catMap[cat])
@@ -129,9 +201,51 @@ func SlugifyStoryName(name string) string {
 	return slugify(name)
 }
 
+// Slugify converts any string to a URL-safe slug (lowercase, hyphens).
+func Slugify(s string) string {
+	return slugify(s)
+}
+
 func slugify(s string) string {
 	s = strings.ToLower(s)
 	s = reNonAlphaNum.ReplaceAllString(s, "-")
 	s = strings.Trim(s, "-")
 	return s
+}
+
+// categorySlugMap maps URL-safe category slugs to Category constants.
+var categorySlugMap map[string]Category
+
+func initCategorySlugMap() {
+	categorySlugMap = make(map[string]Category, len(CategoryOrder))
+	for _, cat := range CategoryOrder {
+		categorySlugMap[slugify(string(cat))] = cat
+	}
+}
+
+// SlugifyCategory converts a category name to a URL-safe slug.
+// e.g. "Data Display" → "data-display"
+func SlugifyCategory(name string) string {
+	return slugify(name)
+}
+
+// CategoryBySlug looks up a Category by its URL-safe slug.
+// e.g. "data-display" → CategoryDataDisplay, true
+func CategoryBySlug(slug string) (Category, bool) {
+	if categorySlugMap == nil {
+		initCategorySlugMap()
+	}
+	cat, ok := categorySlugMap[slug]
+	return cat, ok
+}
+
+// ComponentsByCategory filters a component list to those belonging to the given category.
+func ComponentsByCategory(components []GalleryComponent, category Category) []GalleryComponent {
+	var out []GalleryComponent
+	for _, c := range components {
+		if c.Category == category {
+			out = append(out, c)
+		}
+	}
+	return out
 }

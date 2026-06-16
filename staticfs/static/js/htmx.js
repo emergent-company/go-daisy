@@ -1276,7 +1276,7 @@ var htmx = (() => {
             if (swapStyle === 'none') return;
             if (swapSpec.strip && fragment.firstElementChild) {
                 fragment = document.createDocumentFragment();
-                fragment.append(...(task.fragment.firstElementChild.content || task.fragment.firstElementChild).childNodes);
+                fragment.append(...(task.fragment.firstElementChild.content || task.fragment.firstElementChild).children);
             }
 
             this.#addClass(target, "htmx-swapping")

@@ -82,16 +82,17 @@ templ NavbarDropdown(currentLabel string, placeholder string, icon string, hxTar
 			>
 				for _, item := range items {
 					<li>
-						<a
-							class={ templ.KV("active", item.Active) }
-							href={ templ.SafeURL(item.Href) }
-							if hxTarget != "" {
-								hx-get={ item.Href }
-								hx-target={ hxTarget }
-								hx-swap="innerHTML"
-								hx-push-url="true"
-							}
-						>
+					<a
+						class={ templ.KV("active", item.Active) }
+						href={ templ.SafeURL(item.Href) }
+						onclick="this.blur()"
+						if hxTarget != "" {
+							hx-get={ item.Href }
+							hx-target={ hxTarget }
+							hx-swap="innerHTML"
+							hx-push-url="true"
+						}
+					>
 							if item.Icon != "" {
 								<span class={ "iconify size-4 " + item.Icon }></span>
 							}

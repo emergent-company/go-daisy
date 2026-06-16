@@ -709,9 +709,29 @@ func PersonChipWithBoundary(name string, avatarColor string, textColor string, g
 	})
 }
 
+// NotificationRowWithBoundary wraps NotificationRow with a dev-mode component boundary annotation.
+func NotificationRowWithBoundary(item NotificationItem) templ.Component {
+	return devmode.ComponentBoundary("NotificationRow", NotificationRow(item), map[string]any{
+		"title":  item.Title,
+		"unread": item.Unread,
+	})
+}
+
 // NotificationPanelWithBoundary wraps NotificationPanel with a dev-mode component boundary annotation.
+// It renders items as children so the panel can also be composed manually via children slot.
 func NotificationPanelWithBoundary(items []NotificationItem, unreadCount int, viewAllHref string) templ.Component {
-	return devmode.ComponentBoundary("NotificationPanel", NotificationPanel(items, unreadCount, viewAllHref), map[string]any{
+	children := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		for _, item := range items {
+			if err := NotificationRow(item).Render(ctx, w); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	outer := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return NotificationPanel(unreadCount, viewAllHref).Render(templ.WithChildren(ctx, children), w)
+	})
+	return devmode.ComponentBoundary("NotificationPanel", outer, map[string]any{
 		"itemCount":   len(items),
 		"unreadCount": unreadCount,
 		"viewAllHref": viewAllHref,

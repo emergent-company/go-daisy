@@ -88,6 +88,7 @@ const devOverlayScript = `
     'Dropdown':         'dropdown',
     'FAB':              'fab',
     'NotificationPanel':'notification-panel',
+    'NotificationRow':  'notification-panel',
     // Person / avatars
     'PersonCell':       'person-cell',
     // Forms
@@ -292,12 +293,28 @@ const devOverlayScript = `
     function walk(el, depth) {
       if (!el) return;
       if (el.hasAttribute && el.hasAttribute('data-component')) {
-        var name  = el.getAttribute('data-component');
-        var props = el.getAttribute('data-props') || 'null';
-        // Capture the inner HTML of the boundary wrapper (excluding the wrapper div itself).
-        var html  = el.innerHTML || '';
-        nodes.push({name: name, props: props, depth: depth, html: html});
-        depth++;
+        // Skip ComponentBoundary wrappers — they are <div style="display:contents">
+        // that exist only to annotate the real component beneath them.
+        var style = el.getAttribute('style') || '';
+        var isBoundary = el.tagName === 'DIV' && style.indexOf('display:contents') !== -1;
+        if (!isBoundary) {
+          var name  = el.getAttribute('data-component');
+          var props = el.getAttribute('data-props') || 'null';
+          // Strip package prefix (e.g. "ui/Progress" → "Progress") so names
+          // match the sidebar and COMPONENT_SLUGS entries.
+          var slash = name.indexOf('/');
+          if (slash !== -1) name = name.substring(slash + 1);
+          // For void elements (innerHTML is empty), use cleaned outerHTML.
+          var html  = el.innerHTML || '';
+          if (!html && el.outerHTML) {
+            var clone = el.cloneNode(true);
+            clone.removeAttribute('data-component');
+            clone.removeAttribute('data-props');
+            html = clone.outerHTML;
+          }
+          nodes.push({name: name, props: props, depth: depth, html: html});
+          depth++;
+        }
       }
       var children = el.children;
       for (var i = 0; i < children.length; i++) {

@@ -23,6 +23,7 @@ tasks:
   gallery:
     desc: Build UI then run gallery interactively (logs to stdout)
     cmds:
+      - task: "gallery:stop"
       - task: build:ui
       - go run ./cmd/gallery
 

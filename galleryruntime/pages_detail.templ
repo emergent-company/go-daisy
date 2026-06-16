@@ -3,7 +3,6 @@ package galleryruntime
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 )
 
 // isTemplPage returns true when the component uses templ.Component for rendering
@@ -43,10 +42,7 @@ func mustJSON(v any) []byte {
 
 // ComponentDetail renders the detail view for a single gallery component.
 // Includes the component name, description, category badge, and a sandboxed iframe preview.
-// feedbackCount is the pre-loaded count of feedback items for the badge.
-// githubEnabled controls whether the "Create GitHub Issue" button is shown.
-// branch is the git branch detected at server startup (empty if unknown).
-templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled bool, branch string) {
+templ ComponentDetail(c GalleryComponent) {
 	<div class="flex flex-col p-4 gap-3">
 		<!-- Header -->
 		<div class="flex items-start justify-between gap-3">
@@ -202,33 +198,11 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 							>
 								&#9728; Light
 							</button>
-						<!-- Feedback button with count badge -->
-						<button
-							id="feedback-mode-btn"
-							class="btn btn-xs btn-ghost border border-base-200 gap-1"
-							onclick="toggleFeedbackMode()"
-							title="Toggle feedback mode (or press Alt) — click any element in the preview to annotate it"
-						>
-							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-							Feedback
-							<span
-								id={ "feedback-count-" + c.Slug }
-								class="badge badge-xs badge-primary"
-								hx-get={ "/gallery/" + c.Slug + "/feedback/count" }
-								hx-trigger="load"
-								hx-swap="outerHTML"
-							>{ strconv.FormatInt(feedbackCount, 10) }</span>
-							</button>
 						</div>
 					</div>
 
 				<!-- Preview iframe -->
 				<div class="rounded-xl border border-base-200 overflow-hidden bg-base-100 shadow-sm relative">
-					<!-- Feedback mode banner (shown when feedback mode is active) -->
-					<div id="feedback-mode-banner" class="hidden absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-2 bg-pink-500 text-white text-xs font-semibold px-3 py-1.5 pointer-events-none select-none">
-						<span>Feedback mode active — click any element to annotate</span>
-						<kbd class="bg-white/20 rounded px-1.5 py-0.5 font-mono text-xs">Alt</kbd>
-					</div>
 					<iframe
 						id="preview-frame"
 						class="block w-full"
@@ -289,44 +263,6 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 				}
 
 			</div><!-- end left column -->
-
-		<!-- Right column: feedback panel only (shown by JS when feedback mode is active) -->
-		<div id="right-column" class="w-[30%] shrink-0 flex-col gap-3 sticky top-4 hidden">
-
-			<!-- Feedback panel (hidden by default, toggled by toolbar Feedback button) -->
-			<div id="feedback-panel" class="flex flex-col gap-2">
-				<div class="flex items-center justify-between">
-					<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Feedback</span>
-					<button
-						class="btn btn-xs btn-ghost"
-						onclick="toggleFeedbackMode()"
-					>✕</button>
-				</div>
-				<div
-					id={ "feedback-list-" + c.Slug }
-					class="rounded-xl border border-base-200 bg-base-100 shadow-sm overflow-hidden"
-					hx-get={ "/gallery/" + c.Slug + "/feedback" }
-					hx-trigger="load, feedbackCreated from:body"
-					hx-swap="innerHTML"
-				>
-					<p class="p-4 text-xs text-base-content/40">Loading...</p>
-				</div>
-				if githubEnabled {
-					<div class="flex justify-end">
-						<button
-							id="export-issue-btn"
-							class="btn btn-xs btn-outline gap-1"
-							data-slug={ c.Slug }
-							onclick="exportGitHubIssue(this.dataset.slug)"
-						>
-							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-							Create GitHub Issue
-						</button>
-					</div>
-				}
-			</div>
-
-		</div>
 
 		</div><!-- end two-column body -->
 
@@ -391,48 +327,6 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 			></iframe>
 		</div>
 	</div>
-
-	<!-- Feedback submission dialog -->
-	<dialog id="feedback-dialog" class="modal z-[9999]">
-		<div class="modal-box w-full max-w-md">
-			<h3 class="font-bold text-lg mb-3">Add Feedback</h3>
-			<!-- Read-only element context -->
-			<div class="mb-3 space-y-1">
-				<p class="text-xs text-base-content/50">
-					<span class="font-semibold">Element:</span>
-					<span id="fb-tag-display" class="font-mono"></span>
-				</p>
-				<p class="text-xs text-base-content/50">
-					<span class="font-semibold">Selector:</span>
-					<span id="fb-selector-display" class="font-mono break-all"></span>
-				</p>
-				<p class="text-xs text-base-content/50 hidden" id="fb-text-row">
-					<span class="font-semibold">Text:</span>
-					<span id="fb-text-display" class="italic"></span>
-				</p>
-			</div>
-			<!-- Hidden context inputs -->
-			<input type="hidden" id="fb-slug" value={ c.Slug }/>
-			<input type="hidden" id="fb-tag"/>
-			<input type="hidden" id="fb-selector"/>
-			<input type="hidden" id="fb-innertext"/>
-			<!-- Comment textarea -->
-			<textarea
-				id="fb-comment"
-				class="textarea textarea-bordered w-full text-sm"
-				rows="3"
-				placeholder="Describe the issue or suggestion..."
-			></textarea>
-			<div class="modal-action mt-3">
-				<button class="btn btn-sm btn-ghost" onclick="closeFeedbackDialog()">Cancel</button>
-				<button class="btn btn-sm btn-outline" onclick="submitFeedback()">Save</button>
-				if githubEnabled {
-					<button class="btn btn-sm btn-primary" onclick="sendToGithubFromDialog()">Send to GitHub</button>
-				}
-			</div>
-		</div>
-		<form method="dialog" class="modal-backdrop"><button>close</button></form>
-	</dialog>
 
 	<!-- Prism.js syntax highlighting (dev tool only) -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"/>
@@ -815,375 +709,6 @@ templ ComponentDetail(c GalleryComponent, feedbackCount int64, githubEnabled boo
 		})();
 	</script>
 
-	<!-- Crosshair feedback tool JS (press Alt or click Feedback button to toggle) -->
-	<script>
-		(function() {
-			var feedbackModeActive = false;
-			var hoveredEl = null;
-			var HIGHLIGHT_OUTLINE = '2px solid #f472b6';
-			var GALLERY_BRANCH = { string(mustJSON(branch)) };
-
-			// ── Toggle helpers ────────────────────────────────────────────────────
-
-			window.toggleFeedbackMode = function() {
-				var col = document.getElementById('right-column');
-				if (feedbackModeActive) {
-					deactivateFeedbackMode();
-					// Hide the feedback panel and right column when turning off feedback mode
-					var panel = document.getElementById('feedback-panel');
-					if (panel) panel.classList.add('hidden');
-					if (col) col.classList.add('hidden');
-					// Force flex reflow then re-measure iframe height
-					setTimeout(function() {
-						var twoCol = col && col.parentElement;
-						if (twoCol) { twoCol.style.display = 'none'; void twoCol.offsetHeight; twoCol.style.display = ''; }
-						resizePreviewFrame();
-					}, 0);
-				} else {
-					activateFeedbackMode();
-					// Show the right column + feedback panel
-					if (col) { col.classList.remove('hidden'); col.style.display = 'flex'; }
-					var panel = document.getElementById('feedback-panel');
-					if (panel) panel.classList.remove('hidden');
-					// Re-measure iframe after reflow
-					setTimeout(resizePreviewFrame, 50);
-				}
-			};
-
-			// Keep legacy toggleFeedbackPanel working (opens the list panel)
-			window.toggleFeedbackPanel = function() {
-				var panel = document.getElementById('feedback-panel');
-				if (!panel) return;
-				panel.classList.toggle('hidden');
-			};
-
-			function activateFeedbackMode() {
-				if (feedbackModeActive) return;
-				feedbackModeActive = true;
-
-				// Cursor
-				document.body.style.cursor = 'crosshair';
-				var frame = document.getElementById('preview-frame');
-				if (frame) {
-					try {
-						var fdoc = frame.contentDocument || frame.contentWindow.document;
-						if (fdoc && fdoc.body) fdoc.body.style.cursor = 'crosshair';
-					} catch(err) {}
-				}
-
-				// Banner
-				var banner = document.getElementById('feedback-mode-banner');
-				if (banner) banner.classList.remove('hidden');
-
-				// Button active state
-				var btn = document.getElementById('feedback-mode-btn');
-				if (btn) btn.classList.add('btn-primary', 'text-primary-content');
-			}
-
-			function deactivateFeedbackMode() {
-				if (!feedbackModeActive) return;
-				feedbackModeActive = false;
-
-				// Cursor
-				document.body.style.cursor = '';
-				if (hoveredEl) {
-					try { hoveredEl.style.outline = ''; } catch(err) {}
-					hoveredEl = null;
-				}
-				var frame = document.getElementById('preview-frame');
-				if (frame) {
-					try {
-						var fdoc = frame.contentDocument || frame.contentWindow.document;
-						if (fdoc && fdoc.body) fdoc.body.style.cursor = '';
-					} catch(err) {}
-				}
-
-				// Banner
-				var banner = document.getElementById('feedback-mode-banner');
-				if (banner) banner.classList.add('hidden');
-
-				// Button active state
-				var btn = document.getElementById('feedback-mode-btn');
-				if (btn) btn.classList.remove('btn-primary', 'text-primary-content');
-			}
-
-			// ── Keyboard: Alt toggles mode ────────────────────────────────────────
-			document.addEventListener('keyup', function(e) {
-				if (e.key === 'Alt' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-					e.preventDefault();
-					window.toggleFeedbackMode();
-				}
-				if (e.key === 'Escape') {
-					deactivateFeedbackMode();
-					var dialog = document.getElementById('feedback-dialog');
-					if (dialog && dialog.open) dialog.close();
-				}
-			});
-
-			// ── Selector utilities ────────────────────────────────────────────────
-
-			var UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-			function selectorSegment(el) {
-				if (!el || el.nodeType !== 1) return '';
-				var dc = el.getAttribute('data-component');
-				if (dc) return dc;
-				var seg = el.tagName.toLowerCase();
-				if (el.id && !UUID_RE.test(el.id)) {
-					seg += '#' + el.id;
-				} else if (el.className && typeof el.className === 'string') {
-					var cls = el.className.trim().split(/\s+/).slice(0, 2).join('.');
-					if (cls) seg += '.' + cls;
-				}
-				return seg;
-			}
-
-			function computeSelectorPath(el) {
-				var parts = [];
-				var cur = el;
-				for (var i = 0; i < 4 && cur && cur.nodeType === 1 && cur.tagName !== 'BODY' && cur.tagName !== 'HTML'; i++) {
-					parts.unshift(selectorSegment(cur));
-					cur = cur.parentElement;
-				}
-				return parts.join(' > ');
-			}
-
-			// Walk up the DOM collecting data-component ancestors, innermost first.
-			// Returns a breadcrumb like "ui/Button" or "table/Table > ui/Button".
-			function componentAncestry(el) {
-				var parts = [];
-				var cur = el;
-				while (cur && cur.nodeType === 1 && cur.tagName !== 'BODY' && cur.tagName !== 'HTML') {
-					var dc = cur.getAttribute('data-component');
-					if (dc && (parts.length === 0 || parts[0] !== dc)) {
-						parts.unshift(dc);
-					}
-					cur = cur.parentElement;
-				}
-				return parts.join(' > ');
-			}
-
-			var LAYOUT_TAGS = {
-				div: 1, section: 1, article: 1, main: 1, aside: 1,
-				header: 1, footer: 1, nav: 1, ul: 1, ol: 1, li: 1,
-				figure: 1, figcaption: 1, fieldset: 1, form: 1,
-				dl: 1, dt: 1, dd: 1, template: 1
-			};
-
-			function isMeaningful(el) {
-				if (!el || el.nodeType !== 1) return false;
-				var tag = el.tagName.toLowerCase();
-				if (!LAYOUT_TAGS[tag]) return true;
-				if (el.id) return true;
-				var attrs = el.attributes;
-				for (var i = 0; i < attrs.length; i++) {
-					if (attrs[i].name.indexOf('data-') === 0) return true;
-				}
-				if (!el.firstElementChild) return true;
-				return false;
-			}
-
-			function pickTarget(el, body) {
-				var cur = el;
-				while (cur && cur !== body) {
-					if (isMeaningful(cur)) return cur;
-					cur = cur.parentElement;
-				}
-				return body;
-			}
-
-			// ── Iframe listeners ──────────────────────────────────────────────────
-
-			function attachIframeListeners() {
-				var frame = document.getElementById('preview-frame');
-				if (!frame) return;
-				function tryAttach() {
-					try {
-						var fdoc = frame.contentDocument || frame.contentWindow.document;
-						if (!fdoc || !fdoc.body) return;
-
-						fdoc.addEventListener('mousemove', function(e) {
-							if (!feedbackModeActive) return;
-							var raw = fdoc.elementFromPoint(e.clientX, e.clientY);
-							var el = raw ? pickTarget(raw, fdoc.body) : null;
-							if (el === hoveredEl) return;
-							if (hoveredEl) { try { hoveredEl.style.outline = ''; } catch(err) {} }
-							hoveredEl = el;
-							if (el && el !== fdoc.body) { try { el.style.outline = HIGHLIGHT_OUTLINE; } catch(err) {} }
-						});
-
-						fdoc.addEventListener('mouseleave', function() {
-							if (hoveredEl) { try { hoveredEl.style.outline = ''; } catch(err) {} hoveredEl = null; }
-						});
-
-						fdoc.addEventListener('click', function(e) {
-							if (!feedbackModeActive) return;
-							e.preventDefault();
-							e.stopPropagation();
-							var raw = e.target;
-							var el = raw ? pickTarget(raw, fdoc.body) : null;
-							if (!el || el === fdoc.body) return;
-
-						var tag = el.tagName.toLowerCase();
-						var ancestry = componentAncestry(el);
-						var selector = ancestry || computeSelectorPath(el);
-						var innerText = (el.innerText || el.textContent || '').trim().slice(0, 100);
-
-							var tagIn = document.getElementById('fb-tag');
-							var selIn = document.getElementById('fb-selector');
-							var textIn = document.getElementById('fb-innertext');
-							var tagDisp = document.getElementById('fb-tag-display');
-							var selDisp = document.getElementById('fb-selector-display');
-							var textDisp = document.getElementById('fb-text-display');
-							var textRow = document.getElementById('fb-text-row');
-							var commentEl = document.getElementById('fb-comment');
-
-							if (tagIn) tagIn.value = tag;
-							if (selIn) selIn.value = selector;
-							if (textIn) textIn.value = innerText;
-							if (tagDisp) tagDisp.textContent = '<' + tag + '>';
-							if (selDisp) selDisp.textContent = selector;
-							if (textDisp) textDisp.textContent = innerText;
-							if (textRow) textRow.classList.toggle('hidden', !innerText);
-							if (commentEl) { commentEl.value = ''; commentEl.focus(); }
-
-							var dialog = document.getElementById('feedback-dialog');
-							if (dialog) dialog.showModal();
-						}, true);
-					} catch(err) {}
-				}
-				if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
-					tryAttach();
-				} else {
-					frame.addEventListener('load', tryAttach);
-				}
-			}
-
-			// ── Feedback submission ───────────────────────────────────────────────
-
-			// Show a toast with an anchor link that auto-dismisses after `duration` ms.
-			function showLinkToast(label, url, duration) {
-				var container = document.getElementById('toast-container');
-				if (!container) return;
-				var el = document.createElement('div');
-				el.className = 'alert alert-success text-sm shadow-md toast-auto-dismiss';
-				el.setAttribute('role', 'alert');
-				el.setAttribute('data-duration', String(duration || 5000));
-				var a = document.createElement('a');
-				a.href = url;
-				a.target = '_blank';
-				a.rel = 'noopener noreferrer';
-				a.textContent = label;
-				a.className = 'underline font-semibold';
-				el.appendChild(a);
-				container.appendChild(el);
-			}
-
-			// Saves feedback and calls onSaved(slugValue) when done.
-			function saveFeedback(onSaved) {
-				var slug = document.getElementById('fb-slug');
-				var tag = document.getElementById('fb-tag');
-				var sel = document.getElementById('fb-selector');
-				var text = document.getElementById('fb-innertext');
-				var comment = document.getElementById('fb-comment');
-				if (!slug || !comment || !comment.value.trim()) return;
-
-				var contextJson = {
-					tagName: tag ? tag.value : '',
-					selectorPath: sel ? sel.value : '',
-					innerText: text ? text.value : '',
-					componentSlug: slug.value,
-					pageURL: window.location.href,
-					branch: GALLERY_BRANCH
-				};
-
-				fetch('/gallery/' + slug.value + '/feedback', {
-					method: 'POST',
-					headers: {'Content-Type': 'application/json'},
-					body: JSON.stringify({ comment: comment.value.trim(), context_json: contextJson })
-				}).then(function(resp) {
-					if (!resp.ok) { console.error('feedback submit failed', resp.status); return; }
-					var dialog = document.getElementById('feedback-dialog');
-					if (dialog) dialog.close();
-					// Auto-open feedback panel and refresh list
-					var col = document.getElementById('right-column');
-					if (col) { col.classList.remove('hidden'); col.style.display = 'flex'; }
-					var panel = document.getElementById('feedback-panel');
-					if (panel) panel.classList.remove('hidden');
-					htmx.trigger(document.body, 'feedbackCreated');
-					var badge = document.getElementById('feedback-count-' + slug.value);
-					if (badge) htmx.trigger(badge, 'load');
-					if (onSaved) onSaved(slug.value);
-				}).catch(function(err) { console.error('feedback submit error', err); });
-			}
-
-			window.submitFeedback = function() {
-				saveFeedback(null);
-			};
-
-			window.sendToGithubFromDialog = function() {
-				saveFeedback(function(slugValue) {
-					var btn = document.getElementById('export-issue-btn');
-					if (btn) { btn.disabled = true; btn.textContent = 'Creating…'; }
-					fetch('/gallery/' + slugValue + '/feedback/export-issue', {
-						method: 'POST',
-						headers: {'Content-Type': 'application/json'}
-					}).then(function(resp) {
-						return resp.json().then(function(data) {
-							if (!resp.ok) {
-								showLinkToast('Failed to create issue: ' + (data.error || resp.status), '#', 5000);
-								if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
-								return;
-							}
-							if (data.issue_url) {
-								showLinkToast('GitHub issue created — view issue', data.issue_url, 5000);
-							}
-							if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
-						});
-					}).catch(function(err) {
-						console.error('export issue error', err);
-						if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
-					});
-				});
-			};
-
-			window.closeFeedbackDialog = function() {
-				var dialog = document.getElementById('feedback-dialog');
-				if (dialog) dialog.close();
-			};
-
-			window.exportGitHubIssue = function(slug) {
-				var btn = document.getElementById('export-issue-btn');
-				if (btn) { btn.disabled = true; btn.textContent = 'Creating…'; }
-				fetch('/gallery/' + slug + '/feedback/export-issue', {
-					method: 'POST',
-					headers: {'Content-Type': 'application/json'}
-				}).then(function(resp) {
-					return resp.json().then(function(data) {
-						if (!resp.ok) {
-							showLinkToast('Failed to create issue: ' + (data.error || resp.status), '#', 5000);
-							if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
-							return;
-						}
-						if (data.issue_url) {
-							showLinkToast('GitHub issue created — view issue', data.issue_url, 5000);
-						}
-						if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
-					});
-				}).catch(function(err) {
-					console.error('export issue error', err);
-					if (btn) { btn.disabled = false; btn.textContent = 'Create GitHub Issue'; }
-				});
-			};
-
-		document.addEventListener('htmx:afterSwap', function() {
-			setTimeout(attachIframeListeners, 0);
-		});
-		document.addEventListener('DOMContentLoaded', attachIframeListeners);
-		if (document.readyState !== 'loading') { attachIframeListeners(); }
-	})();
-</script>
-
 <!-- Component Tree panel JS: listens for postMessage from dev overlay in iframe -->
 <script>
 (function() {
@@ -1467,7 +992,7 @@ templ ComponentExamples(c GalleryComponent) {
 								id={ fmt.Sprintf("examples-sub-frame-%d-%d", si, ei) }
 								class="block w-full examples-sub-frame"
 								style="height:200px; border:none;"
-								src={ fmt.Sprintf("/gallery/render/%s/examples?s=%d&e=%d", c.Slug, si, ei) }
+								src={ templ.URL(fmt.Sprintf("/gallery/render/%s/examples?s=%d&e=%d", c.Slug, si, ei)) }
 								title={ sub.Label }
 								data-tree-panel={ fmt.Sprintf("examples-sub-tree-%d-%d", si, ei) }
 								data-tree-body={ fmt.Sprintf("examples-sub-tree-body-%d-%d", si, ei) }
@@ -1838,56 +1363,4 @@ templ ComponentExamples(c GalleryComponent) {
 	</script>
 }
 
-// FeedbackListPartial renders the feedback list HTML fragment for HTMX partial swaps.
-templ FeedbackListPartial(items []Feedback) {
-	if len(items) == 0 {
-		<p class="p-4 text-xs text-base-content/40 text-center">No feedback yet. Press <kbd class="kbd kbd-xs">Alt</kbd> or click the Feedback button to enter feedback mode, then click any element in the preview.</p>
-	} else {
-		<ul class="divide-y divide-base-200">
-			for _, item := range items {
-				<li class="flex flex-col gap-1 p-3 text-xs" id={ fmt.Sprintf("feedback-item-%d", item.ID) }>
-					<div class="flex items-start justify-between gap-2">
-						<div class="flex items-center gap-2 flex-1 min-w-0">
-							<span class="font-medium text-base-content break-words flex-1">{ item.Comment }</span>
-							if item.Status == StatusResolved {
-								<span class="badge badge-xs badge-success shrink-0">resolved</span>
-							} else if item.Status == StatusWontFix {
-								<span class="badge badge-xs badge-neutral shrink-0">won't fix</span>
-							}
-						</div>
-						<button
-							class="btn btn-xs btn-ghost text-error shrink-0"
-							hx-delete={ fmt.Sprintf("/gallery/%s/feedback/%d", item.ComponentSlug, item.ID) }
-							hx-target={ fmt.Sprintf("#feedback-item-%d", item.ID) }
-							hx-swap="outerHTML"
-							hx-on:htmx:after-request="htmx.trigger(document.body, 'feedbackCreated')"
-							title="Delete this feedback"
-						>✕</button>
-					</div>
-					if item.AgentResponse != "" {
-						<div class="bg-base-200 rounded p-2 text-base-content/70 text-xs italic">{ item.AgentResponse }</div>
-					}
-					if sel := feedbackSelectorPath(item.ContextJSON); sel != "" {
-						<code class="text-base-content/50 truncate">{ sel }</code>
-					}
-					<span class="text-base-content/30">{ item.CreatedAt.Format("2006-01-02 15:04") }</span>
-				</li>
-			}
-		</ul>
-	}
-}
 
-// feedbackSelectorPath extracts the selectorPath string from context_json.
-func feedbackSelectorPath(raw string) string {
-	if raw == "" || raw == "{}" {
-		return ""
-	}
-	var ctx map[string]interface{}
-	if err := json.Unmarshal([]byte(raw), &ctx); err != nil {
-		return ""
-	}
-	if sel, ok := ctx["selectorPath"].(string); ok {
-		return sel
-	}
-	return ""
-}

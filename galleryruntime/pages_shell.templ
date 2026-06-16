@@ -13,19 +13,36 @@ type searchItem struct {
 	Name        string `json:"name"`
 	Category    string `json:"category"`
 	Subcategory string `json:"sub"`
+	Type        string `json:"type"` // "component" or "group"
 }
 
-// gallerySearchIndex builds a JSON-encoded list of all components for client-side search.
+// gallerySearchIndex builds a JSON-encoded list of all components and category groups
+// for client-side search.
 func gallerySearchIndex(categories []CategoryGroup) string {
 	var items []searchItem
 	for _, group := range categories {
+		items = append(items, searchItem{
+			Slug:     "group/" + SlugifyCategory(string(group.Name)),
+			Name:     string(group.Name),
+			Category: string(group.Name),
+			Type:     "group",
+		})
 		for _, sub := range group.Subcategories {
+			if sub.Name != "" {
+				items = append(items, searchItem{
+					Slug:     "group/" + SlugifyCategory(string(group.Name)) + "/" + Slugify(sub.Name),
+					Name:     sub.Name,
+					Category: string(group.Name),
+					Type:     "subgroup",
+				})
+			}
 			for _, comp := range sub.Components {
 				items = append(items, searchItem{
 					Slug:        comp.Slug,
 					Name:        comp.Name,
 					Category:    string(group.Name),
 					Subcategory: sub.Name,
+					Type:        "component",
 				})
 			}
 		}
@@ -75,15 +92,29 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 				<div class="sidebar-menu grow overflow-y-auto px-2.5 py-2">
 					for _, group := range categories {
 						<div class="mb-2">
-							<div class="menu-label px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-base-content/50">
+							<a
+								href={ templ.URL("/gallery/group/" + SlugifyCategory(string(group.Name))) }
+								hx-get={ "/gallery/group/" + SlugifyCategory(string(group.Name)) }
+								hx-target="#gallery-content"
+								hx-swap="innerHTML"
+								hx-push-url="true"
+								class="menu-label px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-base-content/50 hover:text-base-content/80 transition-colors duration-150 block"
+							>
 								{ string(group.Name) }
-							</div>
+							</a>
 							<div class="space-y-0.5 ms-2">
 							for _, sub := range group.Subcategories {
 								if sub.Name != "" {
-									<div class="px-2.5 pt-2 pb-0.5 text-[11px] font-medium uppercase tracking-wide text-base-content/40">
+									<a
+										href={ templ.URL("/gallery/group/" + SlugifyCategory(string(group.Name)) + "/" + Slugify(sub.Name)) }
+										hx-get={ "/gallery/group/" + SlugifyCategory(string(group.Name)) + "/" + Slugify(sub.Name) }
+										hx-target="#gallery-content"
+										hx-swap="innerHTML"
+										hx-push-url="true"
+										class="px-2.5 pt-2 pb-0.5 text-[11px] font-medium uppercase tracking-wide text-base-content/50 hover:text-primary transition-colors duration-150 block"
+									>
 										{ sub.Name }
-									</div>
+									</a>
 									<div class="pl-3 space-y-0.5">
 										for _, comp := range sub.Components {
 											<a
@@ -206,6 +237,14 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 				} catch(e) {}
 			})();
 		</script>
+		<!-- feedback-overlay: element-level feedback tool -->
+		<script
+			src="https://feedback.emergent-company.ai/feedback-overlay.js"
+			data-api="https://feedback.emergent-company.ai"
+			data-repo="emergent-company/go-daisy"
+			data-label="gallery-feedback"
+			async
+		></script>
 	}
 }
 
@@ -304,23 +343,75 @@ templ gallerySearchModal(categories []CategoryGroup) {
 
 		function render(query) {
 			var q = query.toLowerCase();
-			var results = q === ''
+			var allResults = q === ''
 				? INDEX
 				: INDEX.filter(function (c) {
 					return c.name.toLowerCase().includes(q)
 						|| c.category.toLowerCase().includes(q)
-						|| c.sub.toLowerCase().includes(q);
+						|| (c.sub || '').toLowerCase().includes(q);
 				});
 
-			// Group by category
+			// Split groups, subgroups, and components
+			var groups = allResults.filter(function (c) { return c.type === 'group'; });
+			var subgroups = allResults.filter(function (c) { return c.type === 'subgroup'; });
+			var comps = allResults.filter(function (c) { return c.type === 'component'; });
+
+			// Group components by category
 			var grouped = {};
 			var order = [];
-			results.forEach(function (c) {
+			comps.forEach(function (c) {
 				if (!grouped[c.category]) { grouped[c.category] = []; order.push(c.category); }
 				grouped[c.category].push(c);
 			});
 
 			var html = '';
+
+			// Render groups section
+			if (groups.length > 0) {
+				html += '<li class="menu-title text-xs tracking-wide pb-0.5">Groups</li>';
+				groups.forEach(function (g) {
+					html += '<li data-si>'
+						+ '<a class="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-base-200"'
+						+ ' href="/gallery/' + esc(g.slug) + '"'
+						+ ' hx-get="/gallery/' + esc(g.slug) + '"'
+						+ ' hx-target="#gallery-content" hx-swap="innerHTML" hx-push-url="true"'
+						+ ' onclick="document.getElementById(\'gallery-search-modal\').close();"'
+						+ '>'
+						+ '<div class="border-base-300 bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border">'
+						+ '<span class="iconify lucide--layers size-4 text-primary"></span>'
+						+ '</div>'
+						+ '<div class="grow min-w-0">'
+						+ '<p class="truncate font-medium leading-none">' + esc(g.name) + '</p>'
+						+ '</div>'
+						+ '<span class="si-enter opacity-0 text-xs text-base-content/40 shrink-0">\u21B5</span>'
+						+ '</a></li>';
+				});
+			}
+
+			// Render subgroups section
+			if (subgroups.length > 0) {
+				html += '<li class="menu-title text-xs tracking-wide pb-0.5">Subcategories</li>';
+				subgroups.forEach(function (sg) {
+					html += '<li data-si>'
+						+ '<a class="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-base-200"'
+						+ ' href="/gallery/' + esc(sg.slug) + '"'
+						+ ' hx-get="/gallery/' + esc(sg.slug) + '"'
+						+ ' hx-target="#gallery-content" hx-swap="innerHTML" hx-push-url="true"'
+						+ ' onclick="document.getElementById(\'gallery-search-modal\').close();"'
+						+ '>'
+						+ '<div class="border-base-300 bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border">'
+						+ '<span class="iconify lucide--folder size-4 text-primary"></span>'
+						+ '</div>'
+						+ '<div class="grow min-w-0">'
+						+ '<p class="truncate font-medium leading-none">' + esc(sg.name) + '</p>'
+						+ '<p class="mt-0.5 text-xs opacity-60 leading-none">' + esc(sg.category) + '</p>'
+						+ '</div>'
+						+ '<span class="si-enter opacity-0 text-xs text-base-content/40 shrink-0">\u21B5</span>'
+						+ '</a></li>';
+				});
+			}
+
+			// Render components grouped by category
 			order.forEach(function (cat) {
 				html += '<li class="menu-title text-xs tracking-wide pb-0.5">' + esc(cat) + '</li>';
 				grouped[cat].forEach(function (c) {
@@ -339,16 +430,16 @@ templ gallerySearchModal(categories []CategoryGroup) {
 						+ '<p class="truncate font-medium leading-none">' + esc(c.name) + '</p>'
 						+ sub
 						+ '</div>'
-						+ '<span class="si-enter opacity-0 text-xs text-base-content/40 shrink-0">↵</span>'
+						+ '<span class="si-enter opacity-0 text-xs text-base-content/40 shrink-0">\u21B5</span>'
 						+ '</a></li>';
 				});
 			});
 
 			if (!html) {
-				html = '<li class="px-3 py-6 text-center text-sm text-base-content/40">No components found</li>';
+				html = '<li class="px-3 py-6 text-center text-sm text-base-content/40">No results found</li>';
 			}
 			list.innerHTML = html;
-			counter.textContent = results.length + ' component' + (results.length === 1 ? '' : 's');
+			counter.textContent = allResults.length + ' result' + (allResults.length === 1 ? '' : 's');
 		}
 
 		function activate(items, idx) {

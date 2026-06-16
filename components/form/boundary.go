@@ -147,6 +147,68 @@ func ToggleWithBoundary(name string, checked bool, label string) templ.Component
 	})
 }
 
+// FormControlWithBoundary wraps FormControl with a dev-mode component boundary annotation.
+func FormControlWithBoundary(name string, label string, labelPosition LabelPosition, hint string, errMsg string, children templ.Component) templ.Component {
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return FormControl(name, label, labelPosition, hint, errMsg, nil).Render(templ.WithChildren(ctx, children), w)
+	})
+	return devmode.ComponentBoundary("FormControl", inner, map[string]any{
+		"name":          name,
+		"label":         label,
+		"labelPosition": string(labelPosition),
+	})
+}
+
+// FormInputWithBoundary wraps FormInput with a dev-mode component boundary annotation.
+// gallery:token label,labelPosition,placeholder
+// gallery:hint label:default(Full Name)
+// gallery:hint labelPosition:default(above)
+func FormInputWithBoundary(name string, label string, value string, placeholder string, labelPosition LabelPosition, hint string, errMsg string, attrs templ.Attributes) templ.Component {
+	return devmode.ComponentBoundary("FormInput", FormInput(name, label, value, placeholder, labelPosition, hint, errMsg, attrs), map[string]any{
+		"name":          name,
+		"label":         label,
+		"value":         value,
+		"placeholder":   placeholder,
+		"labelPosition": string(labelPosition),
+	})
+}
+
+// FormSelectWithBoundary wraps FormSelect with a dev-mode component boundary annotation.
+// gallery:token label,labelPosition,placeholder
+// gallery:hint label:default(Country)
+// gallery:hint labelPosition:default(above)
+func FormSelectWithBoundary(name string, label string, selected string, options [][2]string, placeholder string, labelPosition LabelPosition, hint string, errMsg string, attrs templ.Attributes) templ.Component {
+	return devmode.ComponentBoundary("FormSelect", FormSelect(name, label, selected, options, placeholder, labelPosition, hint, errMsg, attrs), map[string]any{
+		"name":          name,
+		"label":         label,
+		"selected":      selected,
+		"placeholder":   placeholder,
+		"labelPosition": string(labelPosition),
+	})
+}
+
+// FormCheckboxWithBoundary wraps FormCheckbox with a dev-mode component boundary annotation.
+// gallery:token label,checked
+// gallery:hint label:default(Accept terms)
+func FormCheckboxWithBoundary(name string, label string, checked bool, errMsg string, attrs templ.Attributes) templ.Component {
+	return devmode.ComponentBoundary("FormCheckbox", FormCheckbox(name, label, checked, errMsg, attrs), map[string]any{
+		"name":    name,
+		"label":   label,
+		"checked": checked,
+	})
+}
+
+// FormToggleWithBoundary wraps FormToggle with a dev-mode component boundary annotation.
+// gallery:token label,checked
+// gallery:hint label:default(Enable notifications)
+func FormToggleWithBoundary(name string, label string, checked bool, errMsg string, attrs templ.Attributes) templ.Component {
+	return devmode.ComponentBoundary("FormToggle", FormToggle(name, label, checked, errMsg, attrs), map[string]any{
+		"name":    name,
+		"label":   label,
+		"checked": checked,
+	})
+}
+
 // PromptBarWithBoundary wraps PromptBar with a dev-mode component boundary annotation.
 func PromptBarWithBoundary(props PromptBarProps) templ.Component {
 	return devmode.ComponentBoundary("PromptBar", PromptBar(props), props)

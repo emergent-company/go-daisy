@@ -1,0 +1,122 @@
+package galleryruntime
+
+// CategoryDescription returns a short description for each category.
+func CategoryDescription(cat Category) string {
+	switch cat {
+	case CategoryFoundation:
+		return "Layout primitives and structural components."
+	case CategoryBasics:
+		return "Core building blocks: buttons, avatars, badges, tags."
+	case CategoryNavigation:
+		return "Menus, breadcrumbs, tabs, pagination, and navbars."
+	case CategoryLayout:
+		return "Sidebars, drawers, and page shell layouts."
+	case CategoryFeedback:
+		return "Alerts, loading states, skeleton screens, and status indicators."
+	case CategoryForms:
+		return "Form inputs, selects, checkboxes, toggles, and validators."
+	case CategoryDataDisplay:
+		return "Tables, lists, timelines, avatars, cards, and data visualizations."
+	case CategoryOverlays:
+		return "Modals, dropdowns, tooltips, and floating elements."
+	default:
+		return ""
+	}
+}
+
+func subcategoryTotal(subcategories []SubcategoryGroup) int {
+	total := 0
+	for _, sub := range subcategories {
+		total += len(sub.Components)
+	}
+	return total
+}
+
+// galleryGroupGrid renders a grid of component cards.
+templ galleryGroupGrid(components []GalleryComponent) {
+	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+		for _, comp := range components {
+			<a
+				href={ templ.URL("/gallery/" + comp.Slug) }
+				hx-get={ "/gallery/" + comp.Slug }
+				hx-target="#gallery-content"
+				hx-swap="innerHTML"
+				hx-push-url="true"
+				class="card card-border border-base-300 bg-base-100 hover:border-primary/40 hover:shadow-md transition-all duration-200 cursor-pointer"
+			>
+				<div class="card-body p-5">
+					<h3 class="card-title text-base font-semibold">{ comp.Name }</h3>
+					if comp.Description != "" {
+						<p class="text-sm text-base-content/60 mt-1 line-clamp-2">{ comp.Description }</p>
+					}
+					<div class="mt-2 flex items-center gap-1 text-xs text-primary font-medium">
+						<span>View component</span>
+						<span class="iconify lucide--arrow-right size-3.5"></span>
+					</div>
+				</div>
+			</a>
+		}
+	</div>
+}
+
+// GallerySubGroup renders the subcategory summary page showing all components
+// in a single subcategory as a card grid.
+templ GallerySubGroup(cat Category, sub SubcategoryGroup) {
+	<div class="p-6 sm:p-8 max-w-5xl mx-auto">
+		<!-- Breadcrumb -->
+		<div class="mb-6">
+			<a
+				href={ templ.URL("/gallery/group/" + SlugifyCategory(string(cat))) }
+				hx-get={ "/gallery/group/" + SlugifyCategory(string(cat)) }
+				hx-target="#gallery-content"
+				hx-swap="innerHTML"
+				hx-push-url="true"
+				class="text-sm text-base-content/40 hover:text-primary transition-colors"
+			>
+				{ string(cat) }
+			</a>
+		</div>
+		<!-- Header -->
+		<div class="mb-8">
+			<h1 class="text-3xl font-bold text-base-content">{ sub.Name }</h1>
+			<p class="mt-1 text-sm text-base-content/40">
+				if len(sub.Components) == 1 {
+					<span>1 component</span>
+				} else {
+					<span>{ len(sub.Components) } components</span>
+				}
+			</p>
+		</div>
+		@galleryGroupGrid(sub.Components)
+	</div>
+}
+
+// GalleryGroup renders the group/category summary page showing all components
+// in a category, grouped by subcategory with section headings.
+templ GalleryGroup(cat Category, subcategories []SubcategoryGroup) {
+	<div class="p-6 sm:p-8 max-w-5xl mx-auto">
+		<!-- Header -->
+		<div class="mb-8">
+			<h1 class="text-3xl font-bold text-base-content">{ string(cat) }</h1>
+			<p class="mt-2 text-base text-base-content/60">{ CategoryDescription(cat) }</p>
+			<p class="mt-1 text-sm text-base-content/40">
+				if subcategoryTotal(subcategories) == 1 {
+					<span>1 component</span>
+				} else {
+					<span>{ subcategoryTotal(subcategories) } components</span>
+				}
+			</p>
+		</div>
+		<!-- Subcategory sections -->
+		for _, sub := range subcategories {
+			if sub.Name != "" {
+				<div class="mb-6">
+					<h2 class="text-lg font-semibold text-base-content mb-3">{ sub.Name }</h2>
+					@galleryGroupGrid(sub.Components)
+				</div>
+			} else {
+				@galleryGroupGrid(sub.Components)
+			}
+		}
+	</div>
+}

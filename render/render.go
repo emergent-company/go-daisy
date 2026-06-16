@@ -2,6 +2,7 @@
 package render
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -9,10 +10,34 @@ import (
 	"github.com/a-h/templ"
 )
 
+// contextKey is used for request-scoped values in context.Context.
+type contextKey string
+
+const (
+	// HistoryRestoreKey is set on the request context when rendering for an HTMX
+	// history restore request (browser back/forward). Templates can check this to
+	// skip the outer HTML shell and render only the body content, preserving CSS
+	// <link> elements already in document.head from the initial page load.
+	HistoryRestoreKey contextKey = "htmx_history_restore"
+)
+
+// IsHistoryRestore returns true when HTMX is restoring history (browser back/forward).
+func IsHistoryRestore(r *http.Request) bool {
+	return r.Header.Get("HX-History-Restore-Request") == "true"
+}
+
+// IsHistoryRestoreFromContext returns true when the context has the history
+// restore flag set (by RenderAuto). Templates use this to conditionally skip
+// the outer HTML shell.
+func IsHistoryRestoreFromContext(ctx context.Context) bool {
+	v := ctx.Value(HistoryRestoreKey)
+	return v != nil && v.(bool)
+}
+
 // IsPartial returns true when the request was made by HTMX as an inline partial
 // swap (not a full-page navigation). Uses the HX-Request-Type header from HTMX v4.
 func IsPartial(r *http.Request) bool {
-	if r.Header.Get("HX-History-Restore-Request") == "true" {
+	if IsHistoryRestore(r) {
 		return false
 	}
 	ht := r.Header.Get("HX-Request-Type")
@@ -64,7 +89,16 @@ func RenderPartial(w http.ResponseWriter, r *http.Request, content templ.Compone
 }
 
 // RenderAuto renders the full page or a partial depending on HTMX state.
+// For history restore requests (browser back/forward), it sets HistoryRestoreKey
+// in the request context and renders the page template as a partial, allowing
+// templates to skip the outer HTML shell and preserve CSS in the original <head>.
 func RenderAuto(w http.ResponseWriter, r *http.Request, page, partial templ.Component) {
+	if IsHistoryRestore(r) {
+		ctx := context.WithValue(r.Context(), HistoryRestoreKey, true)
+		r = r.WithContext(ctx)
+		RenderPartial(w, r, page)
+		return
+	}
 	if IsPartial(r) {
 		RenderPartial(w, r, partial)
 	} else {
