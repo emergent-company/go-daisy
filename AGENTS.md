@@ -159,6 +159,61 @@ CSS is compiled from `assets/app.css` → `staticfs/static/css/app.css` and serv
 
 ## Conventions
 
+### int-to-string conversion
+
+Use `strconv.Itoa(n)` instead of custom helper functions. For `colspan`/`rowspan` where 0 is invalid, use `strconv.Itoa(max(n, 1))`. Go's built-in `max`/`min` (1.21+) are preferred over manual guards.
+
+### CSS class override pattern
+
+```templ
+class={ "base-class", templ.KV(class, class != ""), templ.KV("default-class", class == "") }
+```
+
+Use `class string` as last param. When non-empty, replaces defaults; when empty, uses built-in defaults. This keeps backward compat — existing callers pass `""`.
+
+### Conditional HTMX pattern
+
+Only emit HTMX attrs when both `hxGet` and `hxTarget` are non-empty:
+
+```templ
+if hxGet != "" && hxTarget != "" {
+    hx-get={ hxGet }
+    hx-target={ "#" + hxTarget }  // caller omits # prefix
+    hx-trigger="change"
+    hx-include="closest form"
+}
+```
+
+Prevents empty `hx-get="" hx-target=""` in rendered DOM.
+
+### Do NOT import `github.com/a-h/templ` in `.templ` files
+
+Templ auto-injects `import "github.com/a-h/templ"` in the generated `*_templ.go`. Adding it in the `.templ` file's import block causes a duplicate import compile error. Use `templ.Component`, `templ.Attributes`, etc. in `.templ` files without importing the package explicitly.
+
+### `form.FormField` as generic input
+
+For inputs with placeholder/rows/options/required, use `form.FormField(form.FormFieldProps{...})` instead of `form.TextInput`/`form.TextareaInput`/`form.SelectInput`. The props struct supports all edge cases (placeholder, SelectOption slice, rows, error, attrs, etc.) that the shorthand functions don't cover.
+
+### Dead code removal
+
+Before removing a component function, verify zero callers:
+```
+rg "FunctionName" --include '*.go' | grep -v '_templ.go' | grep -v '_test.go'
+```
+`grep -v '_templ.go'` filters generated-file matches (templ generates forwarder funcs). If only `_templ.go` matches remain, the component is dead.
+
+### Refactoring milestones
+
+| Phase | Status | Description |
+|-------|--------|-------------|
+| 1 — intStr cleanup | ✅ Done | Replaced all `intStr/sprintCount/promptIntStr/spinnerIntStr/intToStr` with `strconv.Itoa`; removed 6 custom functions |
+| 2 — IconSpan composition | ✅ Done | Replaced ~120 manual `<span class="iconify ...">` with `@ui.IconSpan(name, size)` across nav/layout/form; added `aria-hidden` to IconSpan |
+| 3 — Badge composition | ✅ Done | Replaced 9 manual `<div class="badge ...">` with `@ui.Badge(props)`; added `BadgeSizeXS` constant |
+| 4 — Button composition | ✅ Done | Refactored `ui.Button` to `ButtonProps` struct with `Style`, `Block`, `ExtraClass` fields; replaced ~31 manual `<button class="btn ...">` with `@ui.Button(props)` across nav/layout/form/modal; updated seed.go callers |
+| 5 — Card composition | ✅ Done | Made `ui.StatCardMinimal` (non-icon path) use `@CardRaw` instead of raw `<div class="card">` |
+
+No cross-package import issues: all packages that need `ui` already import it or can safely do so (no circular deps). `form/range.templ` was the reference for `strconv.Itoa` inside templ expressions.
+
 - All component functions return `templ.Component`.
 - Props are passed as plain Go structs or positional arguments — no global state.
 - Tailwind classes are written directly in `.templ` files; DaisyUI component classes (`btn`, `badge`, `card`, etc.) are preferred over raw utility classes.

@@ -114,3 +114,39 @@ func ProfileMenuWithBoundary(name, email, initials string, items []ProfileMenuIt
 		"signOutHref": signOutHref,
 	})
 }
+
+// FooterVariantWithBoundary wraps FooterVariant with a dev-mode boundary.
+func FooterVariantWithBoundary(style string, opts FooterVariantOpts) templ.Component {
+	return devmode.ComponentBoundary("FooterVariant", FooterVariant(style, opts), map[string]any{
+		"style":   style,
+		"version": 1,
+	})
+}
+
+// NotificationVariantWithBoundary wraps NotificationVariant with a dev-mode boundary.
+func NotificationVariantWithBoundary(style string, opts NotificationVariantOpts) templ.Component {
+	return devmode.ComponentBoundary("NotificationVariant", NotificationVariant(style, opts), map[string]any{
+		"style": style,
+	})
+}
+
+// SearchModalWithBoundary wraps SearchModal with a dev-mode boundary.
+func SearchModalWithBoundary(style string, opts SearchModalOpts) templ.Component {
+	return devmode.ComponentBoundary("SearchModal", SearchModal(style, opts), map[string]any{
+		"style": style,
+	})
+}
+
+// ProfileMenuVariantWithBoundary wraps ProfileMenuVariant with a dev-mode boundary.
+func ProfileMenuVariantWithBoundary(style string, opts ProfileMenuVariantOpts) templ.Component {
+	return devmode.ComponentBoundary("ProfileMenuVariant", ProfileMenuVariant(style, opts), map[string]any{
+		"style": style,
+	})
+}
+
+// PageTitleVariantWithBoundary wraps PageTitleVariant with a dev-mode boundary.
+func PageTitleVariantWithBoundary(style string, opts PageTitleVariantOpts) templ.Component {
+	return devmode.ComponentBoundary("PageTitleVariant", PageTitleVariant(style, opts), map[string]any{
+		"style": style,
+	})
+}

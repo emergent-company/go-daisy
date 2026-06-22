@@ -1,7 +1,10 @@
 package modal
 
 import (
+	"maps"
+
 	"github.com/emergent-company/go-daisy/components/form"
+	ui "github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
@@ -39,18 +42,21 @@ type FormModalProps struct {
 	Attrs       templ.Attributes // optional extra HTML attributes on the <dialog>, e.g. {"data-testid": "form-modal"}
 }
 
+// formModalSubmitVariant picks the error-colored variant for destructive modals.
+func formModalSubmitVariant(modalVariant string) ui.ButtonVariant {
+	if modalVariant == "error" {
+		return ui.ButtonError
+	}
+	return ui.ButtonPrimary
+}
+
 // ModalHeader renders the title + close button row shared by all modal variants.
 templ ModalHeader(title string, onClose templ.ComponentScript) {
 	<div class="flex items-center justify-between mb-4" { devmode.Attrs(ctx, "modal/ModalHeader")... }>
 		<h3 class="font-semibold text-lg text-base-content">{ title }</h3>
-		<button
-			type="button"
-			class="btn btn-ghost btn-sm btn-square"
-			onclick={ onClose }
-			aria-label="Close"
-		>
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, OnClick: onClose, Attrs: templ.Attributes{"aria-label": "Close"}}) {
 			<span class="iconify lucide--x size-5"></span>
-		</button>
+		}
 	</div>
 }
 
@@ -105,17 +111,12 @@ templ FormModal(props FormModalProps) {
 			>
 				{ children... }
 				@form.FormActions() {
-					<button
-						type="button"
-						class="btn btn-ghost btn-sm"
-						onclick={ closeModal(props.ID) }
-					>{ cancelText }</button>
-					<button
-						type="submit"
-						class={ "btn btn-sm",
-							templ.KV("btn-primary", props.Variant != "error"),
-							templ.KV("btn-error", props.Variant == "error") }
-					>{ submitText }</button>
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, OnClick: closeModal(props.ID)}) {
+						{ cancelText }
+					}
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Variant: formModalSubmitVariant(props.Variant), Size: ui.ButtonSM}) {
+						{ submitText }
+					}
 				}
 			</form>
 		</div>
@@ -128,31 +129,34 @@ templ FormModal(props FormModalProps) {
 // OpenModalButton renders a primary button that opens a modal by id.
 // attrs is optional; pass nil when not needed.
 templ OpenModalButton(modalID string, label string, attrs templ.Attributes) {
-	<button type="button" class="btn btn-primary btn-sm" onclick={ openModal(modalID) } { devmode.Attrs(ctx, "modal/OpenModalButton")... } { attrs... }>
+	@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, OnClick: openModal(modalID), Attrs: attrs}) {
 		{ label }
-	</button>
+	}
 }
 
 // DeleteButton renders an error-styled button that sends hx-delete with confirmation.
 // attrs is optional; pass nil when not needed.
 templ DeleteButton(url string, confirm string, target string, swap string, label string, attrs templ.Attributes) {
 	{{ if label == "" { label = "Delete" } }}
-	<button
-		type="button"
-		class="btn btn-error btn-sm"
-		hx-delete={ url }
-		if confirm != "" {
-			hx-confirm={ confirm }
-		}
-		if target != "" {
-			hx-target={ target }
-		}
-		if swap != "" {
-			hx-swap={ swap }
-		}
-		{ devmode.Attrs(ctx, "modal/DeleteButton")... }
-		{ attrs... }
-	>{ label }</button>
+	@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonError, Size: ui.ButtonSM, Attrs: deleteButtonAttrs(url, confirm, target, swap, attrs)}) {
+		{ label }
+	}
+}
+
+// deleteButtonAttrs merges the hx-delete attributes with any caller-supplied attrs.
+func deleteButtonAttrs(url, confirm, target, swap string, extra templ.Attributes) templ.Attributes {
+	attrs := templ.Attributes{"hx-delete": url}
+	if confirm != "" {
+		attrs["hx-confirm"] = confirm
+	}
+	if target != "" {
+		attrs["hx-target"] = target
+	}
+	if swap != "" {
+		attrs["hx-swap"] = swap
+	}
+	maps.Copy(attrs, extra)
+	return attrs
 }
 
 // LoaderModal renders a modal containing only a loading spinner.
@@ -164,6 +168,24 @@ templ LoaderModal() {
 	</dialog>
 }
 
+// confirmPopupAttrs builds the hx-* attributes for ConfirmPopup's confirm button.
+func confirmPopupAttrs(hxMethod string, url string) templ.Attributes {
+	attrs := templ.Attributes{
+		"hx-target": "#modal-container",
+		"hx-swap":   "innerHTML",
+		"onclick":   "document.getElementById('modal').remove()",
+	}
+	switch hxMethod {
+	case "delete":
+		attrs["hx-delete"] = url
+	case "patch":
+		attrs["hx-patch"] = url
+	default:
+		attrs["hx-post"] = url
+	}
+	return attrs
+}
+
 // ConfirmPopup renders a small confirmation modal with confirm/cancel buttons.
 // attrs is optional; pass nil when not needed.
 templ ConfirmPopup(title string, message string, confirmLabel string, confirmURL string, confirmHXMethod string, attrs templ.Attributes) {
@@ -172,29 +194,12 @@ templ ConfirmPopup(title string, message string, confirmLabel string, confirmURL
 			@ModalHeader(title, templ.JSUnsafeFuncCall("document.getElementById('modal').remove()"))
 			<p class="text-sm text-base-content/60 mb-6">{ message }</p>
 			@form.FormActions() {
-				<button
-					type="button"
-					class="btn btn-ghost btn-sm"
-					onclick="document.getElementById('modal').remove()"
-				>
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Attrs: templ.Attributes{"onclick": "document.getElementById('modal').remove()"}}) {
 					Cancel
-				</button>
-				<button
-					type="button"
-					class="btn btn-error btn-sm"
-					if confirmHXMethod == "delete" {
-						hx-delete={ confirmURL }
-					} else if confirmHXMethod == "patch" {
-						hx-patch={ confirmURL }
-					} else {
-						hx-post={ confirmURL }
-					}
-					hx-target="#modal-container"
-					hx-swap="innerHTML"
-					onclick="document.getElementById('modal').remove()"
-				>
+				}
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonError, Size: ui.ButtonSM, Attrs: confirmPopupAttrs(confirmHXMethod, confirmURL)}) {
 					{ confirmLabel }
-				</button>
+				}
 			}
 		</div>
 		<form method="dialog" class="modal-backdrop" onclick="document.getElementById('modal').remove()">

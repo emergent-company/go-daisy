@@ -56,11 +56,18 @@ func SelectInputWithBoundary(name string, label string, selected string, options
 }
 
 // SearchInputWithBoundary wraps SearchInput with a dev-mode component boundary annotation.
-func SearchInputWithBoundary(name string, value string, placeholder string, hxTarget string, hxGet string) templ.Component {
-	return devmode.ComponentBoundary("SearchInput", SearchInput(name, value, placeholder, hxTarget, hxGet), map[string]any{
+func SearchInputWithBoundary(name string, value string, placeholder string, hxTarget string, hxGet string, class string) templ.Component {
+	return devmode.ComponentBoundary("SearchInput", SearchInput(name, value, placeholder, hxTarget, hxGet, class), map[string]any{
 		"name":        name,
 		"placeholder": placeholder,
 		"hxTarget":    hxTarget,
+	})
+}
+
+// FilterSelectWithBoundary wraps FilterSelect with a dev-mode component boundary annotation.
+func FilterSelectWithBoundary(name string, hxTarget string, hxGet string, class string) templ.Component {
+	return devmode.ComponentBoundary("FilterSelect", FilterSelect(name, hxTarget, hxGet, class), map[string]any{
+		"name": name,
 	})
 }
 

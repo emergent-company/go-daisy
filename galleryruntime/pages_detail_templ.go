@@ -120,7 +120,7 @@ func ComponentDetail(c GalleryComponent) templ.Component {
 		// variant), fall back to all variants so the Interactive tab is always present.
 		interactiveVariants := make([]GalleryStory, 0, len(c.EffectiveVariants()))
 		for _, v := range c.EffectiveVariants() {
-			if v.Name != "Examples" {
+			if v.Name != "Examples" && (v.RenderFunc != nil || v.Templ != nil || v.HTML != "") {
 				interactiveVariants = append(interactiveVariants, v)
 			}
 		}

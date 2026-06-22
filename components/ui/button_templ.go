@@ -19,6 +19,7 @@ const (
 	ButtonAccent    ButtonVariant = "btn-accent"
 	ButtonGhost     ButtonVariant = "btn-ghost"
 	ButtonError     ButtonVariant = "btn-error"
+	ButtonSuccess   ButtonVariant = "btn-success"
 	ButtonOutline   ButtonVariant = "btn-outline"
 	ButtonNeutral   ButtonVariant = "btn-neutral"
 )
@@ -31,6 +32,16 @@ const (
 	ButtonSM ButtonSize = "btn-sm"
 	ButtonMD ButtonSize = ""
 	ButtonLG ButtonSize = "btn-lg"
+)
+
+// ButtonStyle controls the visual style variant of a button.
+type ButtonStyle string
+
+const (
+	ButtonStyleDefault ButtonStyle = ""
+	ButtonStyleOutline ButtonStyle = "btn-outline"
+	ButtonStyleSoft    ButtonStyle = "btn-soft"
+	ButtonStyleDash    ButtonStyle = "btn-dash"
 )
 
 // ButtonType controls the HTML element and type attribute rendered.
@@ -52,6 +63,22 @@ const (
 	ButtonShapeSquare  ButtonShape = "btn-square"
 	ButtonShapeCircle  ButtonShape = "btn-circle"
 )
+
+// ButtonProps configures a Button component.
+type ButtonProps struct {
+	Href       string
+	Variant    ButtonVariant
+	Size       ButtonSize
+	Style      ButtonStyle
+	Type       ButtonType
+	Shape      ButtonShape
+	Icon       string // lucide icon prefix e.g. "lucide--pencil"
+	Loading    bool
+	Block      bool                  // when true, adds btn-block
+	ExtraClass string                // additional CSS classes appended to the btn class list (e.g. "gap-2 me-3")
+	OnClick    templ.ComponentScript // optional script-backed onclick, e.g. a `script` block call or templ.JSFuncCall(...)
+	Attrs      templ.Attributes      // optional extra HTML attributes
+}
 
 // SimpleButton renders a DaisyUI button with a plain text label.
 // attrs is optional; pass nil when not needed.
@@ -115,7 +142,7 @@ func SimpleButton(label string, variant ButtonVariant, size ButtonSize, attrs te
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/button.templ`, Line: 58, Col: 9}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/button.templ`, Line: 85, Col: 9}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -170,7 +197,7 @@ func IconSpan(name string, size string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" aria-hidden=\"true\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -226,7 +253,7 @@ func IconSpanColored(name string, size string, color string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" aria-hidden=\"true\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -242,11 +269,11 @@ func IconSpanColored(name string, size string, color string) templ.Component {
 	})
 }
 
-// Button renders a full-featured DaisyUI button.
-// Set typ=ButtonTypeLink to get an <a> element using href; otherwise renders <button>.
-// Set shape to square/circle for icon-only buttons.
-// attrs is optional; pass nil when not needed.
-func Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType, shape ButtonShape, icon string, loading bool, attrs templ.Attributes) templ.Component {
+// Button renders a full-featured DaisyUI button using typed ButtonProps.
+// Set Type=ButtonTypeLink to get an <a> element using Href; otherwise renders <button>.
+// Set Shape=ButtonShapeSquare or ButtonShapeCircle for icon-only buttons.
+// Attrs is optional; pass nil when not needed.
+func Button(props ButtonProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -267,12 +294,19 @@ func Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType,
 			templ_7745c5c3_Var11 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		if typ == ButtonTypeLink {
+		if props.Type == ButtonTypeLink {
 			var templ_7745c5c3_Var12 = []any{"btn",
-				templ.KV(string(variant), variant != ""),
-				templ.KV(string(size), size != ""),
-				templ.KV(string(shape), shape != "")}
+				templ.KV(string(props.Variant), props.Variant != ""),
+				templ.KV(string(props.Size), props.Size != ""),
+				templ.KV(string(props.Shape), props.Shape != ""),
+				templ.KV(string(props.Style), props.Style != ButtonStyleDefault),
+				templ.KV("btn-block", props.Block),
+				props.ExtraClass}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var12...)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, props.OnClick)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -281,9 +315,9 @@ func Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType,
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var13 templ.SafeURL
-			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(href))
+			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(props.Href))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/button.templ`, Line: 79, Col: 25}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/button.templ`, Line: 106, Col: 31}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -306,38 +340,35 @@ func Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType,
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
+			if props.OnClick.Name != "" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, " onclick=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var15 templ.ComponentScript = props.OnClick
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15.Call)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
 			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "ui/Button"))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, attrs)
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, props.Attrs)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, ">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, ">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			if icon != "" {
-				var templ_7745c5c3_Var15 = []any{"iconify size-4 " + icon}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var15...)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<span class=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var16 string
-				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var15).String())
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/button.templ`, Line: 1, Col: 0}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\"></span>")
+			if props.Icon != "" {
+				templ_7745c5c3_Err = IconSpan(props.Icon, "size-4").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -351,12 +382,19 @@ func Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType,
 				return templ_7745c5c3_Err
 			}
 		} else {
-			var templ_7745c5c3_Var17 = []any{"btn",
-				templ.KV(string(variant), variant != ""),
-				templ.KV(string(size), size != ""),
-				templ.KV(string(shape), shape != ""),
-				templ.KV("loading loading-spinner", loading)}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var17...)
+			var templ_7745c5c3_Var16 = []any{"btn",
+				templ.KV(string(props.Variant), props.Variant != ""),
+				templ.KV(string(props.Size), props.Size != ""),
+				templ.KV(string(props.Shape), props.Shape != ""),
+				templ.KV(string(props.Style), props.Style != ButtonStyleDefault),
+				templ.KV("btn-block", props.Block),
+				templ.KV("loading loading-spinner", props.Loading),
+				props.ExtraClass}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var16...)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, props.OnClick)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -364,12 +402,12 @@ func Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType,
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var18 string
-			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue(string(typ))
+			var templ_7745c5c3_Var17 string
+			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue(string(props.Type))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/button.templ`, Line: 94, Col: 21}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/button.templ`, Line: 127, Col: 28}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -377,12 +415,12 @@ func Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType,
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var19 string
-			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var17).String())
+			var templ_7745c5c3_Var18 string
+			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var16).String())
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/button.templ`, Line: 1, Col: 0}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var19)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -390,8 +428,23 @@ func Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType,
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			if loading {
+			if props.Loading {
 				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, " disabled")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			if props.OnClick.Name != "" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, " onclick=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var19 templ.ComponentScript = props.OnClick
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var19.Call)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -400,43 +453,23 @@ func Button(href string, variant ButtonVariant, size ButtonSize, typ ButtonType,
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, attrs)
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, props.Attrs)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, ">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, ">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			if icon != "" {
-				var templ_7745c5c3_Var20 = []any{"iconify size-4 " + icon}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var20...)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<span class=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var21 string
-				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var20).String())
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/button.templ`, Line: 1, Col: 0}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var21)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\"></span> ")
+			if props.Icon != "" {
+				templ_7745c5c3_Err = IconSpan(props.Icon, "size-4").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			if shape == ButtonShapeDefault {
-				templ_7745c5c3_Err = templ_7745c5c3_Var11.Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
+			templ_7745c5c3_Err = templ_7745c5c3_Var11.Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
 			}
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</button>")
 			if templ_7745c5c3_Err != nil {

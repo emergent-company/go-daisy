@@ -314,7 +314,12 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
 %s  <script>
     try {
       var t = localStorage.getItem('gallery-preview-theme');
-      if (t) document.documentElement.setAttribute('data-theme', t);
+      if (t) {
+        var themes = { light: 'nord', dark: 'dracula' };
+        var theme = themes[t];
+        if (!theme) theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dracula' : 'nord';
+        document.documentElement.setAttribute('data-theme', theme);
+      }
     } catch(e) {}
   </script>
   <style>

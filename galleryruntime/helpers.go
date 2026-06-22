@@ -54,8 +54,8 @@ var CategoryOrder = []Category{
 var SubcategoryOrder = map[Category][]string{
 	CategoryFoundation:  {"Typography", "Display", "Layout", "Effects"},
 	CategoryBasics:      {"Buttons", "Badges", "Tag", "Avatars"},
-	CategoryNavigation:  {"Menus", "Tabs", "Headers", "Filters", "Page Title", "Pagination", "Misc"},
-	CategoryLayout:      {"Drawers"},
+	CategoryNavigation:  {"Menus", "Tabs", "Headers", "Filters", "Page Title", "Pagination", "Notifications", "Search", "Profile Menus", "Misc"},
+	CategoryLayout:      {"Sidebars", "Topbars", "Footers", "Page Titles", "Drawers", "Builder"},
 	CategoryFeedback:    {"Alerts", "States", "Loading", "Toasts", "Notifications", "Indicators", "Progress"},
 	CategoryForms:       {"Inputs", "Toggles", "Filters", "Layout", "Prompt Bar", "Wizard"},
 	CategoryDataDisplay: {"Display", "Lists", "Cards", "Tables", "Mockups"},

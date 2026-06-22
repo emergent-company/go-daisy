@@ -9,18 +9,21 @@ import (
 )
 
 // ButtonWithBoundary wraps Button with a dev-mode component boundary annotation.
-// gallery:token variant,size,typ,shape,icon,loading
+// gallery:token variant,size,style,typ,shape,icon,loading,block
 // gallery:hint href:default(#)
-func ButtonWithBoundary(href string, variant ButtonVariant, size ButtonSize, typ ButtonType, shape ButtonShape, icon string, loading bool) templ.Component {
-	return devmode.ComponentBoundary("Button", Button(href, variant, size, typ, shape, icon, loading, nil), map[string]any{
-		"href":    href,
-		"variant": string(variant),
-		"size":    string(size),
-		"type":    string(typ),
-		"shape":   string(shape),
-		"icon":    icon,
-		"loading": loading,
-	})
+func ButtonWithBoundary(href string, variant ButtonVariant, size ButtonSize, style ButtonStyle, typ ButtonType, shape ButtonShape, icon string, loading bool, block bool) templ.Component {
+	props := ButtonProps{
+		Href:    href,
+		Variant: variant,
+		Size:    size,
+		Style:   style,
+		Type:    typ,
+		Shape:   shape,
+		Icon:    icon,
+		Loading: loading,
+		Block:   block,
+	}
+	return devmode.ComponentBoundary("Button", Button(props), props)
 }
 
 // BadgeWithBoundary wraps Badge with a dev-mode component boundary annotation.
@@ -83,6 +86,19 @@ func ToastWithBoundary(typ ToastType, message string) templ.Component {
 	return devmode.ComponentBoundary("Toast", Toast(typ, message), map[string]any{
 		"type":    string(typ),
 		"message": message,
+	})
+}
+
+// PaginationCircleWithBoundary wraps PaginationCircle with a dev-mode component boundary annotation.
+// gallery:token currentPage,totalPages
+// gallery:hint currentPage:range(1,20,1)
+// gallery:hint totalPages:range(1,20,1)
+func PaginationCircleWithBoundary(currentPage int, totalPages int, baseURL string, targetID string) templ.Component {
+	return devmode.ComponentBoundary("PaginationCircle", PaginationCircle(currentPage, totalPages, baseURL, targetID), map[string]any{
+		"currentPage": currentPage,
+		"totalPages":  totalPages,
+		"baseURL":     baseURL,
+		"targetID":    targetID,
 	})
 }
 
@@ -801,6 +817,11 @@ func ThemeControllerBtnWithBoundary(theme string, checked bool) templ.Component 
 	})
 }
 
+// ThemeSwitcherWithBoundary wraps ThemeSwitcher with a dev-mode boundary annotation.
+func ThemeSwitcherWithBoundary() templ.Component {
+	return devmode.ComponentBoundary("ThemeSwitcher", ThemeSwitcher(), nil)
+}
+
 // TextRotateWithBoundary wraps TextRotate with a dev-mode component boundary annotation.
 func TextRotateWithBoundary(items []string, duration string) templ.Component {
 	return devmode.ComponentBoundary("TextRotate", TextRotate(items, duration), map[string]any{
@@ -823,3 +844,4 @@ func HoverGalleryWithBoundary(images []HoverGalleryImage) templ.Component {
 		"imageCount": len(images),
 	})
 }
+

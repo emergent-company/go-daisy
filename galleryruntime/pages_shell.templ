@@ -5,6 +5,7 @@ import (
 
 
 	"github.com/emergent-company/go-daisy/components/layout"
+	"github.com/emergent-company/go-daisy/components/ui"
 )
 
 // searchItem is the minimal shape serialised into the inline JS search index.
@@ -56,20 +57,20 @@ func gallerySearchIndex(categories []CategoryGroup) string {
 templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, logo templ.Component, content templ.Component) {
 	@layout.Page(title + " · Gallery", "") {
 		<div id="gallery-shell" class="flex h-screen overflow-hidden">
-			<!-- Sidebar toggle checkbox (hidden, CSS-driven) — must be sibling of #gallery-sidebar -->
+			<!-- Sidebar toggle checkbox (hidden, CSS-driven) — must be sibling of #_layout-sidebar -->
 			<input
 				type="checkbox"
-				id="layout-sidebar-toggle-trigger"
+				id="_layout-sidebar-toggle-trigger"
 				class="hidden"
 				aria-label="Toggle gallery sidebar"
 			/>
 			<!-- Mobile backdrop -->
 			<label
-				for="layout-sidebar-toggle-trigger"
-				id="layout-sidebar-backdrop"
+				for="_layout-sidebar-toggle-trigger"
+				id="_layout-sidebar-backdrop"
 			></label>
 			<!-- Sidebar -->
-			<div id="layout-sidebar" class="flex flex-col bg-base-100">
+			<div id="_layout-sidebar" class="flex flex-col bg-base-100">
 				<!-- Header: logo or title -->
 				<div class="flex min-h-10 items-center justify-between gap-3 px-5 py-3 shrink-0">
 					<a href="/gallery" class="truncate">
@@ -81,7 +82,7 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 					</a>
 					<!-- Fold / unfold toggle (desktop only) -->
 					<label
-						for="layout-sidebar-toggle-trigger"
+						for="_layout-sidebar-toggle-trigger"
 						title="Toggle sidebar"
 						class="btn btn-circle btn-ghost btn-sm text-base-content/50 max-lg:hidden"
 					>
@@ -162,12 +163,12 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 					role="navigation"
 					aria-label="Gallery topbar"
 					class="flex items-center justify-between px-4 bg-base-100"
-					id="layout-topbar"
+					id="_layout-topbar"
 				>
 					<!-- LEFT: hamburger + search -->
 					<div class="flex items-center gap-3">
 						<label
-							for="layout-sidebar-toggle-trigger"
+							for="_layout-sidebar-toggle-trigger"
 							class="btn btn-square btn-ghost btn-sm"
 							aria-label="Toggle sidebar"
 						>
@@ -195,23 +196,7 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 					</div>
 					<!-- RIGHT: theme switcher -->
 					<div class="flex items-center gap-1">
-						<button
-							id="theme-toggle"
-							class="btn btn-sm btn-circle btn-ghost"
-							aria-label="Toggle theme"
-							onclick="
-								var html = document.documentElement;
-								var current = html.getAttribute('data-theme') || 'light';
-								var next = current === 'dark' ? 'light' : 'dark';
-								html.setAttribute('data-theme', next);
-								document.getElementById('theme-icon-sun').style.display = next === 'dark' ? 'none' : '';
-								document.getElementById('theme-icon-moon').style.display = next === 'dark' ? '' : 'none';
-								try { localStorage.setItem('gallery-shell-theme', next); } catch(e) {}
-							"
-						>
-							<span id="theme-icon-sun" class="iconify lucide--sun size-4.5"></span>
-							<span id="theme-icon-moon" class="iconify lucide--moon size-4.5" style="display:none"></span>
-						</button>
+						@ui.ThemeSwitcher()
 					</div>
 				</div>
 				<!-- Scrollable content area -->
@@ -222,21 +207,6 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 		</div>
 		<!-- Gallery spotlight search modal -->
 		@gallerySearchModal(categories)
-		<!-- Restore shell theme from localStorage -->
-		<script>
-			(function() {
-				try {
-					var t = localStorage.getItem('gallery-shell-theme');
-					if (t) {
-						document.documentElement.setAttribute('data-theme', t);
-						var sun = document.getElementById('theme-icon-sun');
-						var moon = document.getElementById('theme-icon-moon');
-						if (sun) sun.style.display = t === 'dark' ? 'none' : '';
-						if (moon) moon.style.display = t === 'dark' ? '' : 'none';
-					}
-				} catch(e) {}
-			})();
-		</script>
 		<!-- feedback-overlay: element-level feedback tool -->
 		<script
 			src="https://feedback.emergent-company.ai/feedback-overlay.js"

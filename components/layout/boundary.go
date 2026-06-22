@@ -24,3 +24,24 @@ func SidebarWithBoundary(appName string, groups []SidebarGroup) templ.Component 
 func NavbarWithBoundary(appName string) templ.Component {
 	return devmode.ComponentBoundary("Navbar", Navbar(appName), map[string]any{"appName": appName})
 }
+
+// SidebarVariantWithBoundary wraps SidebarVariant with a dev-mode boundary.
+func SidebarVariantWithBoundary(variant string, opts SidebarVariantOpts) templ.Component {
+	return devmode.ComponentBoundary("SidebarVariant", SidebarVariant(variant, opts), map[string]any{
+		"variant": variant,
+		"appName": opts.AppName,
+	})
+}
+
+// TopbarVariantWithBoundary wraps TopbarVariant with a dev-mode boundary.
+func TopbarVariantWithBoundary(style string, opts TopbarVariantOpts) templ.Component {
+	return devmode.ComponentBoundary("TopbarVariant", TopbarVariant(style, opts), map[string]any{
+		"style":   style,
+		"appName": opts.AppName,
+	})
+}
+
+// LayoutBuilderWithBoundary wraps LayoutBuilder with a dev-mode component boundary annotation.
+func LayoutBuilderWithBoundary() templ.Component {
+	return devmode.ComponentBoundary("LayoutBuilder", LayoutBuilder(), map[string]any{})
+}

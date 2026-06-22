@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: nord --default, dark, flow;
+  themes: nord --default, dracula, flow;
 }
 
 @plugin "daisyui/theme" {
@@ -98,14 +98,14 @@ strong {
   }
 }
 
-#layout-sidebar {
+#_layout-sidebar {
   width: var(--layout-sidebar-width);
   min-width: var(--layout-sidebar-width);
   max-height: 100vh;
   @apply relative top-0 bottom-0 z-10 flex flex-col transition-[margin] duration-300;
 }
 
-#layout-topbar {
+#_layout-topbar {
   @apply sticky top-0 z-10 max-h-16 min-h-16;
 }
 
@@ -114,64 +114,68 @@ strong {
 }
 
 /* Desktop: sidebar hidden when checkbox checked */
-#layout-sidebar-toggle-trigger:checked ~ #layout-sidebar {
+#_layout-sidebar-toggle-trigger:checked ~ #_layout-sidebar {
   margin-inline-start: calc(var(--layout-sidebar-width) * -1);
 }
 
 /* Mobile: sidebar hidden by default, shown when checked */
 @media (max-width: theme(--breakpoint-lg)) {
-  #layout-sidebar {
+  #_layout-sidebar {
     @apply fixed z-[500];
   }
 
-  #layout-sidebar-toggle-trigger:not(:checked) ~ #layout-sidebar {
+  #_layout-sidebar-toggle-trigger:not(:checked) ~ #_layout-sidebar {
     margin-inline-start: calc(var(--layout-sidebar-width) * -1);
   }
 
-  #layout-sidebar-toggle-trigger:checked ~ #layout-sidebar {
+  #_layout-sidebar-toggle-trigger:checked ~ #_layout-sidebar {
     margin-inline-start: 0;
   }
 
-  #layout-sidebar-backdrop {
+  #_layout-sidebar-backdrop {
     display: none;
   }
 
-  #layout-sidebar-toggle-trigger:checked ~ #layout-sidebar-backdrop {
+  #_layout-sidebar-toggle-trigger:checked ~ #_layout-sidebar-backdrop {
     @apply bg-base-content/20 fixed inset-0 z-[499] transition-all;
     display: block;
   }
 }
 
 /* Border on sidebar and topbar */
-#layout-sidebar {
+#_layout-sidebar {
   @apply border-base-200 border-e;
 }
 
-#layout-topbar {
+#_layout-topbar {
   @apply border-base-200 border-b;
 }
 
 /* Topbar hamburger icon swap based on sidebar state */
 @media (min-width: theme(--breakpoint-lg)) {
-  #topbar-menu-icon {
+  #_topbar-menu-icon {
     display: none;
   }
-  #topbar-close-icon {
+  #_topbar-close-icon {
     display: inline-block;
   }
-  #layout-sidebar-toggle-trigger:checked ~ * #topbar-menu-icon {
+  #_layout-sidebar-toggle-trigger:checked ~ * #_topbar-menu-icon {
     display: inline-block;
   }
-  #layout-sidebar-toggle-trigger:checked ~ * #topbar-close-icon {
+  #_layout-sidebar-toggle-trigger:checked ~ * #_topbar-close-icon {
     display: none;
   }
 }
 
 @media (max-width: theme(--breakpoint-lg)) {
-  #topbar-menu-icon {
+  #_topbar-menu-icon {
     display: inline-block;
   }
-  #topbar-close-icon {
+  #_topbar-close-icon {
     display: none !important;
   }
+}
+
+[x-cloak] {
+  display: none !important;
 }

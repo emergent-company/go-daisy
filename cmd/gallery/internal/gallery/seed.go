@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/a-h/templ"
@@ -929,8 +930,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: "Delete", Danger: true},
 						}
 						return row(
-							withText("Align left", ui.DropdownWithBoundary("", ui.Button("", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, nil), items)),
-							withText("Align right", ui.DropdownWithBoundary(ui.DropdownEnd, ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, nil), items)),
+							withText("Align left", ui.DropdownWithBoundary("", ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault}), items)),
+							withText("Align right", ui.DropdownWithBoundary(ui.DropdownEnd, ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault}), items)),
 						)
 					},
 				},
@@ -1138,8 +1139,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Examples",
 					Description: "All three list layout patterns: default, col-wrap description, and multiple trailing actions.",
 					RenderFunc: func(_ url.Values) templ.Component {
-					editBtn := ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--pencil size-4", false, nil)
-					deleteBtn := ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--trash-2 size-4", false, nil)
+					editBtn := ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault, Icon: "lucide--pencil"})
+					deleteBtn := ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault, Icon: "lucide--trash-2"})
 						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
 								return err
@@ -1255,7 +1256,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return ui.IndicatorWithBoundary(
 							"badge badge-sm "+badgeClass,
 							templ.Raw(count),
-							ui.Button("", ui.ButtonOutline, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--bell size-4", false, nil),
+							ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonMD, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault, Icon: "lucide--bell"}),
 						)
 					},
 					Tokens: []galleryruntime.DesignToken{
@@ -1276,7 +1277,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return row(
 							ui.IndicatorWithBoundary("badge badge-error badge-sm",
 								templ.Raw("3"),
-						ui.Button("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--bell size-5", false, nil),
+						ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeSquare, Icon: "lucide--bell"}),
 						),
 						ui.IndicatorWithBoundary("badge badge-primary badge-xs",
 							templ.NopComponent,
@@ -3016,7 +3017,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "FilterCard (card style) and inline variant with sample search and status inputs.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						filterInputs := seq(
-							form.SearchInputWithBoundary("q", "", "Search cases…", "", "#"),
+							form.SearchInputWithBoundary("q", "", "Search cases…", "", "#", ""),
 							form.SelectInputWithBoundary("status", "Status", "", [][2]string{
 								{"", "All statuses"},
 								{"active", "Active"},
@@ -3025,7 +3026,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							}, "", false),
 						)
 						compactInputs := seq(
-							form.SearchInputWithBoundary("q", "", "Search…", "", "#"),
+							form.SearchInputWithBoundary("q", "", "Search…", "", "#", ""),
 							form.SelectInputWithBoundary("status", "", "", [][2]string{
 								{"", "All statuses"},
 								{"active", "Active"},
@@ -3055,7 +3056,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Filter card and compact bar variants.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						inputs := seq(
-							form.SearchInput("q", "", "Search cases…", "", "#"),
+							form.SearchInput("q", "", "Search cases…", "", "#", ""),
 							form.SelectInput("status", "Status", "", [][2]string{
 								{"", "All statuses"},
 								{"active", "Active"},
@@ -3903,41 +3904,73 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						panels := []form.WizardStepPanel{
 							{
 								Title: "Step 1 — Intake",
-								Content: `<div class="form-control mb-3">
-  <label class="label pb-1"><span class="label-text text-sm font-medium">Case title</span></label>
-  <input type="text" placeholder="e.g. Johnson v. Smith" class="input input-bordered w-full"/>
-</div>
-<div class="form-control">
-  <label class="label pb-1"><span class="label-text text-sm font-medium">Case type</span></label>
-  <select class="select select-bordered w-full"><option>Civil</option><option>Criminal</option><option>Family</option></select>
-</div>`,
+								Content: seq(
+									form.FormField(form.FormFieldProps{
+										Type:        form.FieldText,
+										Name:        "case-title",
+										Label:       "Case title",
+										Value:       "",
+										Placeholder: "e.g. Johnson v. Smith",
+										Required:    true,
+									}),
+									form.FormField(form.FormFieldProps{
+										Type: form.FieldSelect,
+										Name: "case-type",
+										Label: "Case type",
+										Options: []form.SelectOption{
+											{Value: "civil", Label: "Civil"},
+											{Value: "criminal", Label: "Criminal"},
+											{Value: "family", Label: "Family"},
+										},
+									}),
+								),
 							},
 							{
 								Title: "Step 2 — Details",
-								Content: `<div class="form-control mb-3">
-  <label class="label pb-1"><span class="label-text text-sm font-medium">Description</span></label>
-  <textarea class="textarea textarea-bordered w-full" rows="3" placeholder="Brief description of the case…"></textarea>
-</div>
-<div class="form-control">
-  <label class="label pb-1"><span class="label-text text-sm font-medium">Priority</span></label>
-  <select class="select select-bordered w-full"><option>Normal</option><option>High</option><option>Urgent</option></select>
-</div>`,
+								Content: seq(
+									form.FormField(form.FormFieldProps{
+										Type:        form.FieldTextarea,
+										Name:        "description",
+										Label:       "Description",
+										Placeholder: "Brief description of the case…",
+										Rows:        3,
+									}),
+									form.FormField(form.FormFieldProps{
+										Type: form.FieldSelect,
+										Name: "priority",
+										Label: "Priority",
+										Options: []form.SelectOption{
+											{Value: "normal", Label: "Normal"},
+											{Value: "high", Label: "High"},
+											{Value: "urgent", Label: "Urgent"},
+										},
+									}),
+								),
 							},
 							{
 								Title: "Step 3 — Team",
-								Content: `<div class="form-control">
-  <label class="label pb-1"><span class="label-text text-sm font-medium">Lead attorney</span></label>
-  <select class="select select-bordered w-full"><option>Alice Johnson</option><option>Bob Smith</option><option>Carol White</option></select>
-</div>`,
+								Content: form.FormField(form.FormFieldProps{
+									Type: form.FieldSelect,
+									Name: "lead-attorney",
+									Label: "Lead attorney",
+									Options: []form.SelectOption{
+										{Value: "alice", Label: "Alice Johnson"},
+										{Value: "bob", Label: "Bob Smith"},
+										{Value: "carol", Label: "Carol White"},
+									},
+								}),
 							},
 							{
 								Title: "Step 4 — Review",
-								Content: `<p class="text-sm text-base-content/60 mb-4">Review the case details before submitting.</p>
+								Content: templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									_, err := io.WriteString(w, `<p class="text-sm text-base-content/60 mb-4">Review the case details before submitting.</p>
 <div class="space-y-2 text-sm">
   <div class="flex gap-2"><span class="text-base-content/60 w-24">Title:</span><span class="font-medium">Johnson v. Smith</span></div>
   <div class="flex gap-2"><span class="text-base-content/60 w-24">Type:</span><span class="font-medium">Civil</span></div>
   <div class="flex gap-2"><span class="text-base-content/60 w-24">Attorney:</span><span class="font-medium">Alice Johnson</span></div>
-</div>`,
+</div>`)
+									return err
+								}),
 							},
 						}
 						return form.WizardStepperWithBoundary("wizard-demo", steps, panels)
@@ -3955,8 +3988,15 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								return err
 							}
 							if err := form.WizardStepper("wiz-2", []form.WizardStep{{Label: "Details"}, {Label: "Confirm"}}, []form.WizardStepPanel{
-								{Title: "Step 1 — Details", Content: `<input type="text" placeholder="Enter details" class="input input-bordered w-full"/>`},
-								{Title: "Step 2 — Confirm", Content: `<p class="text-sm text-base-content/70">Review and submit.</p>`},
+								{Title: "Step 1 — Details", Content: form.FormField(form.FormFieldProps{
+									Type:        form.FieldText,
+									Name:        "details",
+									Placeholder: "Enter details",
+								})},
+								{Title: "Step 2 — Confirm", Content: templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									_, err := io.WriteString(w, `<p class="text-sm text-base-content/70">Review and submit.</p>`)
+									return err
+								})},
 							}).Render(ctx, w); err != nil {
 								return err
 							}
@@ -4065,12 +4105,12 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						icon := params.Get("icon")
 						loading := params.Get("loading") == "true"
 						if shape == ui.ButtonShapeDefault && typ != ui.ButtonTypeLink {
-							return withText("Save changes", ui.ButtonWithBoundary(href, variant, size, typ, shape, icon, loading))
+							return withText("Save changes", ui.ButtonWithBoundary(href, variant, size, ui.ButtonStyleDefault, typ, shape, icon, loading, false))
 						}
 						if typ == ui.ButtonTypeLink {
-							return withText("Go to dashboard", ui.ButtonWithBoundary(href, variant, size, typ, shape, icon, loading))
+							return withText("Go to dashboard", ui.ButtonWithBoundary(href, variant, size, ui.ButtonStyleDefault, typ, shape, icon, loading, false))
 						}
-						return ui.ButtonWithBoundary(href, variant, size, typ, shape, icon, loading)
+						return ui.ButtonWithBoundary(href, variant, size, ui.ButtonStyleDefault, typ, shape, icon, loading, false)
 					},
 					Tokens: ButtonTokens(),
 				},
@@ -4081,67 +4121,67 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						{
 							Label: "Primary",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
 							},
 						},
 						{
 							Label: "Secondary",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
 							},
 						},
 						{
 							Label: "Accent",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
 							},
 						},
 						{
 							Label: "Neutral",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
 							},
 						},
 						{
 							Label: "Ghost",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonGhost, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonGhost, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
 							},
 						},
 						{
 							Label: "Outline",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonOutline, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonOutline, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
 							},
 						},
 						{
 							Label: "Error",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonError, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonError, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
 							},
 						},
 						{
 							Label: "Loading",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", true)
+								return ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", true, false)
 							},
 						},
 						{
 							Label: "Icon + Label",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Star", ui.ButtonWithBoundary("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--star", false))
+								return withText("Star", ui.ButtonWithBoundary("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--star", false, false))
 							},
 						},
 						{
 							Label: "Icon Only (Square)",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.ButtonWithBoundary("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--pencil", false)
+								return ui.ButtonWithBoundary("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--pencil", false, false)
 							},
 						},
 						{
 							Label: "Icon Only (Circle)",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.ButtonWithBoundary("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonTypeButton, ui.ButtonShapeCircle, "lucide--plus", false)
+								return ui.ButtonWithBoundary("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeCircle, "lucide--plus", false, false)
 							},
 						},
 					},
@@ -4449,6 +4489,12 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							Label: "Page 10 of 10",
 							RenderFunc: func(_ url.Values) templ.Component {
 								return ui.PaginationWithBoundary(10, 10, "#", "content")
+							},
+						},
+						{
+							Label: "Circle style",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.PaginationCircleWithBoundary(3, 7, "#", "content")
 							},
 						},
 					},
@@ -5249,7 +5295,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						if placeholder == "" {
 							placeholder = "Search..."
 						}
-						return form.SearchInputWithBoundary("q", value, placeholder, "", "")
+						return form.SearchInputWithBoundary("q", value, placeholder, "", "", "")
 					},
 					Tokens: []galleryruntime.DesignToken{
 						{
@@ -5275,13 +5321,13 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						{
 							Label: "Default",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return form.SearchInputWithBoundary("q1", "", "Search...", "", "")
+								return form.SearchInputWithBoundary("q1", "", "Search...", "", "", "")
 							},
 						},
 						{
 							Label: "Pre-filled value",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return form.SearchInputWithBoundary("q2", "Johnson v. Smith", "Search cases...", "", "")
+								return form.SearchInputWithBoundary("q2", "Johnson v. Smith", "Search cases...", "", "", "")
 							},
 						},
 					},
@@ -5541,8 +5587,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						size := modal.ModalSize(params.Get("size"))
 						body := seq(
 							rawHTML(`<p class="text-sm text-base-content/70 mb-6">Are you sure you want to proceed? This action will be applied immediately.</p><div class="flex justify-end gap-2">`),
-							withText("Cancel", ui.ButtonWithBoundary("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false)),
-							withText("Confirm", ui.ButtonWithBoundary("", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false)),
+							withText("Cancel", ui.ButtonWithBoundary("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false)),
+							withText("Confirm", ui.ButtonWithBoundary("", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false)),
 							rawHTML(`</div>`),
 						)
 						inner := withChildren(modal.ModalWithBoundary(title, size), body)
@@ -6816,6 +6862,506 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 
+		// ── Layout / Sidebar Variants ──────────────────────────────────────────────
+		{
+			Slug:        "sidebar-variant",
+			Name:        "Sidebar Variants",
+			Category:    galleryruntime.CategoryLayout,
+			Subcategory: "Sidebars",
+			Description: "Themed sidebar variants for different app contexts: ecommerce, payment, project, chat, documentation.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Ecommerce",
+					Description: "Full menu tree with collapsible sections, badges, trial promo card.",
+					Templ: layout.SidebarVariantWithBoundary("ecommerce", layout.SidebarVariantOpts{
+						AppName:   "ACME Inc",
+						AvatarSrc: "./images/avatars/1.png",
+					}),
+					FrameHeight: "100vh",
+				},
+				{
+					Name:        "Payment",
+					Description: "Simplified payment dashboard with test mode toggle and logout.",
+					Templ: layout.SidebarVariantWithBoundary("payment", layout.SidebarVariantOpts{
+						AppName: "PayFlow",
+					}),
+					FrameHeight: "100vh",
+				},
+				{
+					Name:        "Project",
+					Description: "Org brand, project switcher, favorites, channels, in-meeting bar.",
+					Templ: layout.SidebarVariantWithBoundary("project", layout.SidebarVariantOpts{
+						OrgName: "Design Studio",
+					}),
+					FrameHeight: "100vh",
+				},
+				{
+					Name:        "Chat",
+					Description: "AI agent theme with search, chat threads, token usage meter.",
+					Templ: layout.SidebarVariantWithBoundary("chat", layout.SidebarVariantOpts{
+						AppName:           "Chat",
+						SearchPlaceholder: "Search conversations...",
+						TokenUsed:         6500,
+						TokenMax:          10000,
+					}),
+					FrameHeight: "100vh",
+				},
+				{
+					Name:        "Documentation",
+					Description: "Learn theme with search, icon sections, tree menu, version switcher.",
+					Templ: layout.SidebarVariantWithBoundary("documentation", layout.SidebarVariantOpts{
+						AppName: "Docs",
+						Version: "v3.0.0",
+					}),
+					FrameHeight: "100vh",
+				},
+			},
+		},
+
+		// ── Layout / Topbar Variants ───────────────────────────────────────────────
+		{
+			Slug:        "topbar-variant",
+			Name:        "Topbar Variants",
+			Category:    galleryruntime.CategoryLayout,
+			Subcategory: "Topbars",
+			Description: "Topbar variants: classic, greeting, nav-menu, editor with different left and right zone content.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Classic",
+					Description: "Hamburger + search bar, right: notifications, apps, language, avatar dropdown.",
+					Templ: layout.TopbarVariantWithBoundary("classic", layout.TopbarVariantOpts{
+						ShowSearch:         true,
+						ShowNotifications:  true,
+						ShowApps:           true,
+						ShowLanguage:       true,
+						AvatarSrc:          "./images/avatars/1.png",
+					}),
+					FrameHeight: "64px",
+				},
+				{
+					Name:        "Greeting",
+					Description: "Greeting text with subtitle, right: avatar with name + handle dropdown.",
+					Templ: layout.TopbarVariantWithBoundary("greeting", layout.TopbarVariantOpts{
+						Greeting:  "Good Morning",
+						UserName:  "Denish",
+						Subtitle:  "Welcome back, great to see you again!",
+						AvatarSrc: "./images/avatars/1.png",
+					}),
+					FrameHeight: "64px",
+				},
+				{
+					Name:        "Nav Menu 1",
+					Description: "Horizontal nav links (Apps, Components, Pages) with active state.",
+					Templ: layout.TopbarVariantWithBoundary("nav-menu-1", layout.TopbarVariantOpts{
+						NavLinks: []layout.TopbarNavLink{
+							{Label: "Apps", Href: "#"},
+							{Label: "Components", Href: "#", Active: true},
+							{Label: "Pages", Href: "#"},
+						},
+						ShowSearch:        true,
+						ShowNotifications: true,
+						ShowLanguage:      true,
+						AvatarSrc:         "./images/avatars/1.png",
+					}),
+					FrameHeight: "64px",
+				},
+				{
+					Name:        "Nav Menu 2",
+					Description: "Extensive nav links (Dashboard, Analytics, Settings, etc.).",
+					Templ: layout.TopbarVariantWithBoundary("nav-menu-2", layout.TopbarVariantOpts{
+						ShowSearch:        true,
+						ShowNotifications: true,
+						ShowApps:          true,
+						AvatarSrc:         "./images/avatars/1.png",
+					}),
+					FrameHeight: "64px",
+				},
+				{
+					Name:        "Editor",
+					Description: "Breadcrumb-style title + search, right: save status, avatar group, Edit button.",
+					Templ: layout.TopbarVariantWithBoundary("editor", layout.TopbarVariantOpts{
+						ShowSearch:      true,
+						SearchPlaceholder: "Search files...",
+						SaveStatus:      "Saved just now",
+					}),
+					FrameHeight: "64px",
+				},
+			},
+		},
+
+		// ── Layout / Footer Variants ──────────────────────────────────────────────
+		{
+			Slug:        "footer-variant",
+			Name:        "Footer Variants",
+			Category:    galleryruntime.CategoryLayout,
+			Subcategory: "Footers",
+			Description: "9 footer styles: minimal, social, branding, legal, status, support, language pills, language+currency, custom background.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Minimal",
+					Description: "Single centered copyright line.",
+					Templ: nav.FooterVariantWithBoundary("minimal", nav.FooterVariantOpts{
+						Copyright: "© 2025 Nexus. All rights reserved.",
+					}),
+				},
+				{
+					Name:        "Social",
+					Description: "Brand left, copyright center, social icons right.",
+					Templ: nav.FooterVariantWithBoundary("social", nav.FooterVariantOpts{
+						Copyright:  "© 2025 Nexus. All rights reserved.",
+						BrandName:  "Nexus",
+						SocialLinks: []nav.SocialLink{
+							{Icon: "lucide--github", Href: "#"},
+							{Icon: "lucide--twitter", Href: "#"},
+							{Icon: "lucide--linkedin", Href: "#"},
+						},
+					}),
+				},
+				{
+					Name:        "Branding",
+					Description: "Copyright left, 'Built with ❤️ daisyUI' right.",
+					Templ: nav.FooterVariantWithBoundary("branding", nav.FooterVariantOpts{
+						Copyright: "© 2025 Nexus. All rights reserved.",
+					}),
+				},
+				{
+					Name:        "Legal",
+					Description: "Copyright left, legal links right.",
+					Templ: nav.FooterVariantWithBoundary("legal", nav.FooterVariantOpts{
+						Copyright: "© 2025 Nexus. All rights reserved.",
+						LegalLinks: []nav.FooterLink{
+							{Label: "Terms of Use", Href: "#"},
+							{Label: "Privacy Policy", Href: "#"},
+							{Label: "Legal & Compliance", Href: "#"},
+						},
+					}),
+				},
+				{
+					Name:        "Status",
+					Description: "System status badge left, copyright right.",
+					Templ: nav.FooterVariantWithBoundary("status", nav.FooterVariantOpts{
+						Copyright:   "© 2025 Nexus. All rights reserved.",
+						StatusLabel: "System running smoothly",
+						StatusOK:    true,
+					}),
+				},
+				{
+					Name:        "Support",
+					Description: "Phone number + headset icon left, Follow + social icons right.",
+					Templ: nav.FooterVariantWithBoundary("support", nav.FooterVariantOpts{
+						PhoneNumber: "+1 (555) 123-4567",
+						SocialLinks: []nav.SocialLink{
+							{Icon: "lucide--github", Href: "#"},
+							{Icon: "lucide--twitter", Href: "#"},
+							{Icon: "lucide--linkedin", Href: "#"},
+						},
+					}),
+				},
+				{
+					Name:        "Language Pills",
+					Description: "Copyright left, language quick-switch pills right.",
+					Templ: nav.FooterVariantWithBoundary("language-pills", nav.FooterVariantOpts{
+						Copyright: "© 2025 Nexus. All rights reserved.",
+						Languages: []nav.LangOption{
+							{Label: "English", Href: "#"},
+							{Label: "Spanish", Href: "#"},
+							{Label: "Chinese", Href: "#"},
+						},
+					}),
+				},
+				{
+					Name:        "Language + Currency",
+					Description: "Copyright left, language dropdown + currency dropdown right.",
+					Templ: nav.FooterVariantWithBoundary("language-currency", nav.FooterVariantOpts{
+						Copyright: "© 2025 Nexus. All rights reserved.",
+						Languages: []nav.LangOption{
+							{Label: "English", Href: "#"},
+							{Label: "Spanish", Href: "#"},
+							{Label: "Chinese", Href: "#"},
+						},
+						Currencies: []nav.CurrencyOption{
+							{Label: "USD", Symbol: "$", Href: "#"},
+							{Label: "EUR", Symbol: "€", Href: "#"},
+							{Label: "GBP", Symbol: "£", Href: "#"},
+						},
+					}),
+				},
+			},
+		},
+
+		// ── Layout / Page Title Variants ──────────────────────────────────────────
+		{
+			Slug:        "page-title-variant",
+			Name:        "Page Title Variants",
+			Category:    galleryruntime.CategoryLayout,
+			Subcategory: "Page Titles",
+			Description: "Page title variants: minimal, ecommerce, editor, task, stepper, analytics.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Minimal",
+					Description: "Title + breadcrumb on the right.",
+					Templ: nav.PageTitleVariantWithBoundary("minimal", nav.PageTitleVariantOpts{
+						Title: "Create New Tool",
+						Steps: []nav.BreadcrumbStep{
+							{Label: "Home", URL: "#"},
+							{Label: "Tools", URL: "#"},
+							{Label: "Create"},
+						},
+					}),
+				},
+				{
+					Name:        "Ecommerce",
+					Description: "Order summary with ID, date, status dropdown, Invoice + More buttons.",
+					Templ: nav.PageTitleVariantWithBoundary("ecommerce", nav.PageTitleVariantOpts{
+						Title:   "Order Summary",
+						OrderID: "#12541",
+						Date:    "Tue Jul 22 2025",
+						Status:  "Paid",
+					}),
+				},
+				{
+					Name:        "Editor",
+					Description: "Breadcrumbs + title + subtitle + Save/Preview/More actions.",
+					Templ: nav.PageTitleVariantWithBoundary("editor", nav.PageTitleVariantOpts{
+						Title:    "Smart Tool Builder",
+						Subtitle: "Type: Custom Workflow",
+						Date:     "Tue Jul 22 2025",
+						Steps: []nav.BreadcrumbStep{
+							{Label: "Dashboard", URL: "#"},
+							{Label: "Tools", URL: "#"},
+							{Label: "Builder"},
+						},
+						Actions: []nav.PageTitleEditorAction{
+							{Label: "Save Changes", Class: "btn-primary btn-sm"},
+							{Label: "Preview Tool", Class: "btn-outline btn-sm border-base-300"},
+						},
+					}),
+				},
+				{
+					Name:        "Task",
+					Description: "Schedule title with count badges + Sync/New Event buttons.",
+					Templ: nav.PageTitleVariantWithBoundary("task", nav.PageTitleVariantOpts{
+						Title:          "Today's Schedule",
+						DueCount:       2,
+						ProgressCount:  4,
+						DoneCount:      7,
+					}),
+				},
+				{
+					Name:        "Stepper",
+					Description: "Title + Preview button + 4-step progress indicator.",
+					Templ: nav.PageTitleVariantWithBoundary("stepper", nav.PageTitleVariantOpts{
+						Title:       "Build Your Smart Course",
+						StepCurrent: 2,
+						StepLabels:  []string{"Course Details", "Content Setup", "Appearance", "Launch Settings"},
+					}),
+				},
+				{
+					Name:        "Analytics",
+					Description: "Analytics title with breadcrumbs + Filter/Export/New Report buttons.",
+					Templ: nav.PageTitleVariantWithBoundary("analytics", nav.PageTitleVariantOpts{
+						Title: "Analytics Overview",
+						Steps: []nav.BreadcrumbStep{
+							{Label: "Home", URL: "#"},
+							{Label: "Analytics"},
+						},
+					}),
+				},
+			},
+		},
+
+		// ── Layout / Layout Builder ──────────────────────────────────────────────────
+		{
+			Slug:        "layout-builder",
+			Name:        "Layout Builder",
+			Category:    galleryruntime.CategoryLayout,
+			Subcategory: "Builder",
+			Description: "Interactive mix-and-match builder for sidebar, topbar, and footer variants.",
+			FrameHeight: "100vh",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Select sidebar, topbar, and footer variants to compose a live layout.",
+					Templ: layout.LayoutBuilderWithBoundary(),
+					FrameHeight: "100vh",
+				},
+			},
+		},
+
+		// ── Navigation / Notifications ─────────────────────────────────────────────
+		{
+			Slug:        "notification",
+			Name:        "Notification",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Notifications",
+			Description: "Notification dropdown/drawer variants: basic dropdown, tab dropdown, drawer side panel.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Basic",
+					Description: "Dropdown with Today/Seen groups, mark read + view all.",
+					Templ: nav.NotificationVariantWithBoundary("basic", nav.NotificationVariantOpts{
+						Items: []nav.NotificationItem{
+							{AvatarSrc: "./images/avatars/4.png", AvatarAlt: "User 4", Message: "Customer has requested a <span class=\"text-error\">return</span> for item", TimeAgo: "Now"},
+							{AvatarSrc: "./images/avatars/5.png", AvatarAlt: "User 5", Message: "A new <span class=\"underline\">review</span> has been submitted for product", TimeAgo: "15 min ago"},
+						},
+					}),
+				},
+				{
+					Name:        "Tab",
+					Description: "Dropdown with All/Team/AI/@mention tabs, richer items with inline actions.",
+					Templ: nav.NotificationVariantWithBoundary("tab", nav.NotificationVariantOpts{
+						Tabs: []nav.NotificationTab{
+							{Label: "All", Active: true, Badge: 4},
+							{Label: "Team"},
+							{Label: "AI"},
+							{Label: "@mention"},
+						},
+						Items: []nav.NotificationItem{
+							{AvatarSrc: "./images/avatars/2.png", AvatarAlt: "User 2", Message: "Lena submitted a draft for review.", TimeAgo: "15 min ago", Actions: []nav.NotificationAction{
+								{Label: "Approve", Class: "btn-primary"},
+								{Label: "Decline", Class: "btn-ghost"},
+							}},
+							{AvatarSrc: "./images/avatars/1.png", AvatarAlt: "User 1", Message: "Alex shared a new design file.", TimeAgo: "1 hour ago"},
+						},
+					}),
+				},
+				{
+					Name:        "Drawer",
+					Description: "Full-height side panel with tabs and notification list.",
+					Templ: nav.NotificationVariantWithBoundary("drawer", nav.NotificationVariantOpts{
+						Tabs: []nav.NotificationTab{
+							{Label: "All", Active: true, Badge: 4},
+							{Label: "Team"},
+							{Label: "AI"},
+						},
+						Items: []nav.NotificationItem{
+							{AvatarSrc: "./images/avatars/2.png", AvatarAlt: "User 2", Message: "New comment on your pull request.", TimeAgo: "5 min ago"},
+							{AvatarSrc: "./images/avatars/3.png", AvatarAlt: "User 3", Message: "Deployment completed successfully.", TimeAgo: "1 hour ago"},
+							{AvatarSrc: "./images/avatars/1.png", AvatarAlt: "User 1", Message: "You have a new follower.", TimeAgo: "2 hours ago"},
+						},
+					}),
+				},
+			},
+		},
+
+		// ── Navigation / Search Modal ─────────────────────────────────────────────
+		{
+			Slug:        "search-modal",
+			Name:        "Search Modal",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Search",
+			Description: "Command palette search dialog: minimal and split variants.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Minimal",
+					Description: "Search dialog with Actions and Quick Links menus.",
+					Templ: rawHTML(`<div class="p-6 flex justify-center">
+						<button class="btn btn-circle btn-soft" onclick="document.getElementById('search-modal-minimal').showModal()" aria-label="Search">
+							<span class="iconify lucide--search size-5"></span>
+						</button>` + func() string {
+						var buf strings.Builder
+						nav.SearchModal("minimal", nav.SearchModalOpts{
+							Actions: []nav.SearchAction{
+								{Label: "Create a new folder", Icon: "lucide--folder-plus"},
+								{Label: "Upload new document", Icon: "lucide--file-plus"},
+								{Label: "Invite to project", Icon: "lucide--user-plus"},
+							},
+							QuickLinks: []nav.SearchQuickLink{
+								{Label: "File Manager", Icon: "lucide--folders"},
+								{Label: "Profile", Icon: "lucide--user"},
+								{Label: "Dashboard", Icon: "lucide--layout-dashboard"},
+								{Label: "Support", Icon: "lucide--help-circle"},
+								{Label: "Keyboard Shortcuts", Icon: "lucide--keyboard"},
+							},
+						}).Render(context.Background(), &buf)
+						return buf.String()
+					}() + `</div>`),
+				},
+				{
+					Name:        "Split",
+					Description: "Larger search with keyboard hints, filter chips, and agent cards.",
+					Templ: rawHTML(`<div class="p-6 flex justify-center">
+						<button class="btn btn-circle btn-soft" onclick="document.getElementById('search-modal-split').showModal()" aria-label="Search">
+							<span class="iconify lucide--search size-5"></span>
+						</button>` + func() string {
+						var buf strings.Builder
+						nav.SearchModal("split", nav.SearchModalOpts{
+							FilterChips: []nav.SearchFilterChip{
+								{Label: "Writer", Active: true},
+								{Label: "Editor"},
+								{Label: "Explainer"},
+							},
+							AgentCards: []nav.SearchAgentCard{
+								{Name: "Research Buddy", Description: "Helps with research tasks", Icon: "lucide--search"},
+								{Name: "Task Planner", Description: "Organize your workflow", Icon: "lucide--list-checks"},
+								{Name: "Spark Ideas", Description: "Brainstorming assistant", Icon: "lucide--lightbulb"},
+							},
+						}).Render(context.Background(), &buf)
+						return buf.String()
+					}() + `</div>`),
+				},
+			},
+		},
+
+		// ── Navigation / Profile Menu Variants ─────────────────────────────────────
+		{
+			Slug:        "profile-menu-variant",
+			Name:        "Profile Menu Variants",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Profile Menus",
+			Description: "Profile menu variants: default dropdown, switch account overlay, referral menu.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Standard avatar dropdown with user info + menu items + sign-out.",
+					Templ: nav.ProfileMenuVariantWithBoundary("default", nav.ProfileMenuVariantOpts{
+						Name:       "Denish Navadiya",
+						Email:      "denish@example.com",
+						Initials:   "DN",
+						SignOutHref: "#",
+						Items: []nav.ProfileMenuItem{
+							{Label: "My Profile", Href: "#", Icon: "lucide--user"},
+							{Label: "Settings", Href: "#", Icon: "lucide--settings"},
+							{Label: "Help", Href: "#", Icon: "lucide--help-circle"},
+						},
+					}),
+				},
+				{
+					Name:        "Switch Account",
+					Description: "Multi-account switcher with current user card + account list + add new.",
+					Templ: nav.ProfileMenuVariantWithBoundary("switch-account", nav.ProfileMenuVariantOpts{
+						Name:       "Denish Navadiya",
+						Email:      "denish@example.com",
+						Initials:   "DN",
+						Role:       "Admin",
+						Accounts: []nav.ProfileAccount{
+							{Name: "Alex Johnson", Email: "alex@acme.com", Active: true},
+							{Name: "Sarah Chen", Email: "sarah@acme.com"},
+							{Name: "Mike Rivera", Email: "mike@acme.com"},
+						},
+					}),
+				},
+				{
+					Name:        "Overlay",
+					Description: "Profile overlay with avatar, verified badge, preferences/files/collections.",
+					Templ: nav.ProfileMenuVariantWithBoundary("overlay", nav.ProfileMenuVariantOpts{
+						Name:     "Denish Navadiya",
+						Email:    "denish@example.com",
+						Initials: "DN",
+					}),
+				},
+				{
+					Name:        "Referral",
+					Description: "Referral-focused profile menu with rewards and invite CTA.",
+					Templ: nav.ProfileMenuVariantWithBoundary("referral", nav.ProfileMenuVariantOpts{
+						Name:     "Denish Navadiya",
+						Email:    "denish@example.com",
+						Initials: "DN",
+					}),
+				},
+			},
+		},
+
 		// ── Forms / Form Control Wrappers ─────────────────────────────────────────
 		{
 			Slug:        "form-wrappers",
@@ -6954,10 +7500,730 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// table-card — rich card-based table with header/footer compositions
+		{
+			Slug:        "table-card",
+			Name:        "Table Card",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Tables",
+			Description: "Card-based table composition: TableCardWrapper, TableCardHeader, TableCardFooter, TableSearch, TableSelect, and PaginationCircle — build full ecommerce-style table cards.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Full Nexus-style orders table card with togglable sections.",
+					RenderFunc: func(params url.Values) templ.Component {
+						showHeader := params.Get("header") != "false"
+						showSearch := params.Get("search") != "false"
+						showSelect := params.Get("select") != "false"
+						showActions := params.Get("actions") != "false"
+						showFooter := params.Get("footer") != "false"
+						page := 1
+						if v, err := parseInt(params.Get("page")); err == nil && v > 0 && v <= 5 {
+							page = v
+						}
+						perPage := 10
+						if v, err := parseInt(params.Get("per_page")); err == nil && (v == 10 || v == 20 || v == 50 || v == 100) {
+							perPage = v
+						}
+						totalItems := int64(157)
+
+						orderRows := makeOrdersTableBody(7)
+
+						var pageComponents []templ.Component
+						if showHeader {
+							var headerChildren []templ.Component
+							if showSearch {
+								headerChildren = append(headerChildren, table.TableSearchWithBoundary("search", params.Get("search_q"), "Search orders", "#table-card-preview", "#"))
+							}
+							if showSelect {
+								sel := table.TableSelectWithBoundary("category", "#table-card-preview", "#")
+								sel = withChildren(sel, seq(
+									rawHTML(`<option value="" disabled="" selected="">Select Category</option>`),
+									rawHTML(`<option value="fashion">Fashion</option>`),
+									rawHTML(`<option value="daily">Daily Need</option>`),
+									rawHTML(`<option value="cosmetic">Cosmetic</option>`),
+									rawHTML(`<option value="electronics">Electronics</option>`),
+									rawHTML(`<option value="food">Food</option>`),
+								))
+								headerChildren = append(headerChildren, sel)
+							}
+							if showActions {
+								headerChildren = append(headerChildren, ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false))
+							}
+							if len(headerChildren) > 0 {
+								pageComponents = append(pageComponents, withChildren(table.TableCardHeaderWithBoundary(), seq(headerChildren...)))
+							}
+						}
+						tblProps := table.TableProps{Bordered: true, Size: "sm"}
+						tbl := withChildren(
+							table.TableWithPropsWithBoundary(tblProps),
+							seq(
+								withChildren(
+									table.TableHeadWithBoundary(),
+									withChildren(table.TableHeadRowWithBoundary(), seq(
+										table.TableHeadCellWithBoundary("ID"),
+										table.TableHeadCellWithBoundary("Customer"),
+										table.TableHeadCellWithBoundary("Price"),
+										table.TableHeadCellWithBoundary("Payment"),
+										table.TableHeadCellWithBoundary("Status"),
+										table.TableHeadCellWithBoundary("Action"),
+									)),
+								),
+								withChildren(table.TableBodyWithBoundary(), orderRows),
+							),
+						)
+						pageComponents = append(pageComponents, tbl)
+						if showFooter {
+							pageComponents = append(pageComponents, table.TableCardFooterWithBoundary(table.TableCardFooterProps{
+								CurrentPage: page,
+								TotalPages:  5,
+								TotalItems:  totalItems,
+								PageSize:    perPage,
+								BaseURL:     "#",
+								TargetID:    "table-card-preview",
+							}))
+						}
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div id="table-card-preview">`); err != nil {
+								return err
+							}
+							if err := withChildren(
+								table.TableCardWrapperWithBoundary(),
+								seq(pageComponents...),
+							).Render(ctx, w); err != nil {
+								return err
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Header", Group: "Sections", Type: galleryruntime.TokenTypeBool, Default: "true", QueryParam: "header"},
+						{Label: "Search", Group: "Sections", Type: galleryruntime.TokenTypeBool, Default: "true", QueryParam: "search"},
+						{Label: "Category select", Group: "Sections", Type: galleryruntime.TokenTypeBool, Default: "true", QueryParam: "select"},
+						{Label: "Action buttons", Group: "Sections", Type: galleryruntime.TokenTypeBool, Default: "true", QueryParam: "actions"},
+						{Label: "Footer", Group: "Sections", Type: galleryruntime.TokenTypeBool, Default: "true", QueryParam: "footer"},
+						{Label: "Page", Group: "Pagination", Type: galleryruntime.TokenTypeSelect, Default: "1", QueryParam: "page", Options: []galleryruntime.TokenOption{
+							{Value: "1", Label: "1"}, {Value: "2", Label: "2"}, {Value: "3", Label: "3"}, {Value: "4", Label: "4"}, {Value: "5", Label: "5"},
+						}},
+						{Label: "Per page", Group: "Pagination", Type: galleryruntime.TokenTypeSelect, Default: "10", QueryParam: "per_page", Options: []galleryruntime.TokenOption{
+							{Value: "10", Label: "10"}, {Value: "20", Label: "20"}, {Value: "50", Label: "50"}, {Value: "100", Label: "100"},
+						}},
+					},
+				},
+				{
+					Name:        "Compositions",
+					Description: "All composition patterns from minimal card to full ecommerce.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Card wrapper",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(
+									table.TableCardWrapperWithBoundary(),
+									withChildren(
+										table.TableWithPropsWithBoundary(table.TableProps{Bordered: true}),
+										seq(
+											withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+												table.TableHeadCellWithBoundary("Name"),
+												table.TableHeadCellWithBoundary("Role"),
+												table.TableHeadCellWithBoundary("Department"),
+											))),
+											withChildren(table.TableBodyWithBoundary(), seq(
+												withChildren(table.TableRowWithBoundary("", false), seq(
+													withChildren(table.TableCellWithBoundary(""), rawHTML("Alice Johnson")),
+													withChildren(table.TableCellWithBoundary(""), rawHTML("Admin")),
+													withChildren(table.TableCellWithBoundary(""), rawHTML("Engineering")),
+												)),
+												withChildren(table.TableRowWithBoundary("", false), seq(
+													withChildren(table.TableCellWithBoundary(""), rawHTML("Bob Martinez")),
+													withChildren(table.TableCellWithBoundary(""), rawHTML("Member")),
+													withChildren(table.TableCellWithBoundary(""), rawHTML("Legal")),
+												)),
+												withChildren(table.TableRowWithBoundary("", false), seq(
+													withChildren(table.TableCellWithBoundary(""), rawHTML("Carol White")),
+													withChildren(table.TableCellWithBoundary(""), rawHTML("Viewer")),
+													withChildren(table.TableCellWithBoundary(""), rawHTML("Finance")),
+												)),
+											)),
+										),
+									),
+								)
+							},
+						},
+						{
+							Label: "Header with search",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(
+									table.TableCardWrapperWithBoundary(),
+									seq(
+										withChildren(table.TableCardHeaderWithBoundary(),
+											table.TableSearchWithBoundary("search", "", "Search orders", "", ""),
+										),
+										withChildren(
+											table.TableWithPropsWithBoundary(table.TableProps{Bordered: true}),
+											makeOrdersTable(3),
+										),
+									),
+								)
+							},
+						},
+						{
+							Label: "Header with filters",
+							RenderFunc: func(_ url.Values) templ.Component {
+								sel := table.TableSelectWithBoundary("category", "", "")
+								sel = withChildren(sel, seq(
+									rawHTML(`<option value="" disabled="" selected="">All Categories</option>`),
+									rawHTML(`<option value="fashion">Fashion</option>`),
+									rawHTML(`<option value="electronics">Electronics</option>`),
+									rawHTML(`<option value="food">Food</option>`),
+								))
+								return withChildren(
+									table.TableCardWrapperWithBoundary(),
+									seq(
+										withChildren(table.TableCardHeaderWithBoundary(), seq(
+											table.TableSearchWithBoundary("search", "", "Search orders", "", ""),
+											sel,
+										)),
+										withChildren(
+											table.TableWithPropsWithBoundary(table.TableProps{Bordered: true}),
+											makeOrdersTable(3),
+										),
+									),
+								)
+							},
+						},
+						{
+							Label: "Header with actions",
+							RenderFunc: func(_ url.Values) templ.Component {
+								sel := table.TableSelectWithBoundary("category", "", "")
+								sel = withChildren(sel, seq(
+									rawHTML(`<option value="" disabled="" selected="">All Categories</option>`),
+									rawHTML(`<option value="fashion">Fashion</option>`),
+								))
+								return withChildren(
+									table.TableCardWrapperWithBoundary(),
+									seq(
+										withChildren(table.TableCardHeaderWithBoundary(), seq(
+											table.TableSearchWithBoundary("search", "", "Search orders", "", ""),
+											sel,
+											ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--plus", false, false),
+										)),
+										withChildren(
+											table.TableWithPropsWithBoundary(table.TableProps{Bordered: true}),
+											makeOrdersTable(3),
+										),
+									),
+								)
+							},
+						},
+						{
+							Label: "Circle pagination",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.PaginationCircleWithBoundary(3, 7, "#", "content")
+							},
+						},
+						{
+							Label: "Rich footer",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return table.TableCardFooterWithBoundary(table.TableCardFooterProps{
+									CurrentPage: 2,
+									TotalPages:  5,
+									TotalItems:  157,
+									PageSize:    20,
+									BaseURL:     "#",
+									TargetID:    "content",
+								})
+							},
+						},
+						{
+							Label: "Card with footer",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(
+									table.TableCardWrapperWithBoundary(),
+									seq(
+										withChildren(
+											table.TableWithPropsWithBoundary(table.TableProps{Bordered: true}),
+											makeOrdersTable(7),
+										),
+										table.TableCardFooterWithBoundary(table.TableCardFooterProps{
+											CurrentPage: 1,
+											TotalPages:  3,
+											TotalItems:  157,
+											PageSize:    10,
+											BaseURL:     "#",
+											TargetID:    "content",
+										}),
+									),
+								)
+							},
+						},
+						{
+							Label: "Card full ecommerce",
+							RenderFunc: func(_ url.Values) templ.Component {
+								sel := table.TableSelectWithBoundary("category", "", "")
+								sel = withChildren(sel, seq(
+									rawHTML(`<option value="" disabled="" selected="">Select Category</option>`),
+									rawHTML(`<option value="fashion">Fashion</option>`),
+									rawHTML(`<option value="daily">Daily Need</option>`),
+									rawHTML(`<option value="cosmetic">Cosmetic</option>`),
+									rawHTML(`<option value="electronics">Electronics</option>`),
+									rawHTML(`<option value="food">Food</option>`),
+								))
+								return withChildren(
+									table.TableCardWrapperWithBoundary(),
+									seq(
+										withChildren(table.TableCardHeaderWithBoundary(), seq(
+											table.TableSearchWithBoundary("search", "", "Search along orders", "", ""),
+											sel,
+											ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false),
+										)),
+										withChildren(
+											table.TableWithPropsWithBoundary(table.TableProps{Bordered: true, Size: "sm"}),
+											makeOrdersTable(10),
+										),
+										table.TableCardFooterWithBoundary(table.TableCardFooterProps{
+											CurrentPage: 1,
+											TotalPages:  5,
+											TotalItems:  157,
+											PageSize:    20,
+											BaseURL:     "#",
+											TargetID:    "content",
+										}),
+									),
+								)
+							},
+						},
+					},
+				},
+			},
+		},
+
+		// table-card-wrapper — standalone card container
+		{
+			Slug:        "table-card-wrapper",
+			Name:        "Table Card Wrapper",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Tables",
+			Description: "Card container for table compositions. Wraps content in a DaisyUI card with shadow and border.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Card wrapper with a basic 3-row table inside.",
+					RenderFunc: func(params url.Values) templ.Component {
+						return withChildren(
+							table.TableCardWrapperWithBoundary(),
+							withChildren(
+								table.TableWithPropsWithBoundary(table.TableProps{}),
+								makeOrdersTable(3),
+							),
+						)
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Wrapper with different content types.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Empty card",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return table.TableCardWrapperWithBoundary()
+							},
+						},
+						{
+							Label: "With table",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(
+									table.TableCardWrapperWithBoundary(),
+									withChildren(
+										table.TableWithPropsWithBoundary(table.TableProps{}),
+										makeOrdersTable(4),
+									),
+								)
+							},
+						},
+						{
+							Label: "With custom content",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(
+									table.TableCardWrapperWithBoundary(),
+									rawHTML(`<div class="p-6 text-center text-base-content/50">Custom content inside card wrapper</div>`),
+								)
+							},
+						},
+					},
+				},
+			},
+		},
+
+		// table-card-header — standalone header bar
+		{
+			Slug:        "table-card-header",
+			Name:        "Table Card Header",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Tables",
+			Description: "Header bar for table cards. Takes children for flexible composition: titles, search inputs, selects, and action buttons.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Header with togglable search input and action button.",
+					RenderFunc: func(params url.Values) templ.Component {
+						showSearch := params.Get("search") != "false"
+						showActions := params.Get("actions") != "false"
+						var children []templ.Component
+						children = append(children, rawHTML(`<h3 class="text-base font-semibold">Orders</h3>`))
+						if showSearch {
+							children = append(children, table.TableSearchWithBoundary("q", "", "Search...", "", ""))
+						}
+						if showActions {
+							children = append(children, ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false))
+						}
+						return withChildren(
+							table.TableCardHeaderWithBoundary(),
+							seq(children...),
+						)
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Search", Group: "Sections", Type: galleryruntime.TokenTypeBool, Default: "true", QueryParam: "search"},
+						{Label: "Actions", Group: "Sections", Type: galleryruntime.TokenTypeBool, Default: "true", QueryParam: "actions"},
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Header with different child content.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Title only",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(
+									table.TableCardHeaderWithBoundary(),
+									rawHTML(`<h3 class="text-base font-semibold">Orders</h3>`),
+								)
+							},
+						},
+						{
+							Label: "Title + search",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(
+									table.TableCardHeaderWithBoundary(),
+									seq(
+										rawHTML(`<h3 class="text-base font-semibold">Orders</h3>`),
+										table.TableSearchWithBoundary("q", "", "Search orders...", "", ""),
+									),
+								)
+							},
+						},
+						{
+							Label: "Title + search + actions",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return withChildren(
+									table.TableCardHeaderWithBoundary(),
+									seq(
+										rawHTML(`<h3 class="text-base font-semibold">Orders</h3>`),
+										table.TableSearchWithBoundary("q", "", "Search orders...", "", ""),
+										ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false),
+									),
+								)
+							},
+						},
+					},
+				},
+			},
+		},
+
+		// table-card-footer — standalone rich footer
+		{
+			Slug:        "table-card-footer",
+			Name:        "Table Card Footer",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Tables",
+			Description: "Rich footer for table cards: per-page selector, item range count, and circle-style pagination — matching the Nexus ecommerce orders pattern.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live page, total pages, page size, and total items controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						page := 1
+						if v, err := parseInt(params.Get("page")); err == nil && v > 0 {
+							page = v
+						}
+						totalPages := 5
+						if v, err := parseInt(params.Get("totalPages")); err == nil && v > 0 {
+							totalPages = v
+						}
+						pageSize := 10
+						if v, err := parseInt(params.Get("pageSize")); err == nil && (v == 10 || v == 20 || v == 50 || v == 100) {
+							pageSize = v
+						}
+						totalItems := int64(157)
+						if v, err := parseInt(params.Get("totalItems")); err == nil && v > 0 {
+							totalItems = int64(v)
+						}
+						return table.TableCardFooterWithBoundary(table.TableCardFooterProps{
+							CurrentPage: page,
+							TotalPages:  totalPages,
+							TotalItems:  totalItems,
+							PageSize:    pageSize,
+							BaseURL:     "#",
+							TargetID:    "content",
+						})
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Current Page", Group: "Pagination", Type: galleryruntime.TokenTypeRange, Default: "1", Min: 1, Max: 20, Step: 1, QueryParam: "page"},
+						{Label: "Total Pages", Group: "Pagination", Type: galleryruntime.TokenTypeRange, Default: "5", Min: 1, Max: 50, Step: 1, QueryParam: "totalPages"},
+						{Label: "Page Size", Group: "Pagination", Type: galleryruntime.TokenTypeSelect, Default: "10", QueryParam: "pageSize", Options: []galleryruntime.TokenOption{
+							{Value: "10", Label: "10"},
+							{Value: "20", Label: "20"},
+							{Value: "50", Label: "50"},
+							{Value: "100", Label: "100"},
+						}},
+						{Label: "Total Items", Group: "Pagination", Type: galleryruntime.TokenTypeRange, Default: "157", Min: 1, Max: 10000, Step: 1, QueryParam: "totalItems"},
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Footer at different page and dataset states.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Page 1 of 5",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return table.TableCardFooterWithBoundary(table.TableCardFooterProps{
+									CurrentPage: 1,
+									TotalPages:  5,
+									TotalItems:  157,
+									PageSize:    20,
+									BaseURL:     "#",
+									TargetID:    "content",
+								})
+							},
+						},
+						{
+							Label: "Page 3 of 5",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return table.TableCardFooterWithBoundary(table.TableCardFooterProps{
+									CurrentPage: 3,
+									TotalPages:  5,
+									TotalItems:  157,
+									PageSize:    20,
+									BaseURL:     "#",
+									TargetID:    "content",
+								})
+							},
+						},
+						{
+							Label: "Page 5 of 5",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return table.TableCardFooterWithBoundary(table.TableCardFooterProps{
+									CurrentPage: 5,
+									TotalPages:  5,
+									TotalItems:  157,
+									PageSize:    20,
+									BaseURL:     "#",
+									TargetID:    "content",
+								})
+							},
+						},
+						{
+							Label: "Large dataset",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return table.TableCardFooterWithBoundary(table.TableCardFooterProps{
+									CurrentPage: 42,
+									TotalPages:  500,
+									TotalItems:  9987,
+									PageSize:    20,
+									BaseURL:     "#",
+									TargetID:    "content",
+								})
+							},
+						},
+					},
+				},
+			},
+		},
+
+		// table-search — standalone search input
+		{
+			Slug:        "table-search",
+			Name:        "Table Search",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Tables",
+			Description: "Search input with magnifying glass icon, designed for table card headers. Supports HTMX-powered live search.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live value and placeholder controls.",
+					RenderFunc: func(params url.Values) templ.Component {
+						value := params.Get("value")
+						placeholder := params.Get("placeholder")
+						if placeholder == "" {
+							placeholder = "Search orders..."
+						}
+						return table.TableSearchWithBoundary("q", value, placeholder, "", "")
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Value", Group: "Component", Type: galleryruntime.TokenTypeText, Default: "", QueryParam: "value"},
+						{Label: "Placeholder", Group: "Component", Type: galleryruntime.TokenTypeText, Default: "Search orders...", QueryParam: "placeholder"},
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Search inputs with different placeholders and values.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Default placeholder",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return table.TableSearchWithBoundary("q", "", "Search orders...", "", "")
+							},
+						},
+						{
+							Label: "Pre-filled value",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return table.TableSearchWithBoundary("q", "Emily Johnson", "Search orders...", "", "")
+							},
+						},
+						{
+							Label: "Custom placeholder",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return table.TableSearchWithBoundary("q", "", "Filter by customer name...", "", "")
+							},
+						},
+					},
+				},
+			},
+		},
+
+		// table-select — standalone select filter
+		{
+			Slug:        "table-select",
+			Name:        "Table Select",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Tables",
+			Description: "Filter select for table card headers. Wraps a DaisyUI select-sm with HTMX change-triggered filtering.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Select filter with category options.",
+					RenderFunc: func(params url.Values) templ.Component {
+						sel := table.TableSelectWithBoundary("category", "", "")
+						return withChildren(sel, seq(
+							rawHTML(`<option value="" disabled="" selected="">All Categories</option>`),
+							rawHTML(`<option value="fashion">Fashion</option>`),
+							rawHTML(`<option value="electronics">Electronics</option>`),
+							rawHTML(`<option value="food">Food</option>`),
+						))
+					},
+				},
+				{
+					Name:        "Examples",
+					Description: "Select with different option sets.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Status filter",
+							RenderFunc: func(_ url.Values) templ.Component {
+								sel := table.TableSelectWithBoundary("status", "", "")
+								return withChildren(sel, seq(
+									rawHTML(`<option value="" disabled="" selected="">All Status</option>`),
+									rawHTML(`<option value="ordered">Ordered</option>`),
+									rawHTML(`<option value="accepted">Accepted</option>`),
+									rawHTML(`<option value="delivered">Delivered</option>`),
+								))
+							},
+						},
+						{
+							Label: "Category filter",
+							RenderFunc: func(_ url.Values) templ.Component {
+								sel := table.TableSelectWithBoundary("category", "", "")
+								return withChildren(sel, seq(
+									rawHTML(`<option value="" disabled="" selected="">Select Category</option>`),
+									rawHTML(`<option value="fashion">Fashion</option>`),
+									rawHTML(`<option value="daily">Daily Need</option>`),
+									rawHTML(`<option value="cosmetic">Cosmetic</option>`),
+									rawHTML(`<option value="electronics">Electronics</option>`),
+									rawHTML(`<option value="food">Food</option>`),
+								))
+							},
+						},
+						{
+							Label: "Sort by:",
+							RenderFunc: func(_ url.Values) templ.Component {
+								sel := table.TableSelectWithBoundary("sort", "", "")
+								return withChildren(sel, seq(
+									rawHTML(`<option value="" disabled="" selected="">Sort by</option>`),
+									rawHTML(`<option value="date">Date</option>`),
+									rawHTML(`<option value="name">Name</option>`),
+									rawHTML(`<option value="price">Price</option>`),
+								))
+							},
+						},
+					},
+				},
+			},
+		},
+
 	}
 }
 
 // ── helpers used by new real-component entries ────────────────────────────────
+
+type orderRow struct {
+	ID, Customer, Price, Payment, Status string
+}
+
+var sampleOrders = []orderRow{
+	{"#21001", "Emily Johnson", "$342", "Paid", "Ordered"},
+	{"#21002", "Alex Thompson", "$578", "Paid", "Accepted"},
+	{"#21003", "Sarah Davis", "$215", "Pending", "On the Way"},
+	{"#21004", "Michael Wilson", "$769", "Pending", "Delivered"},
+	{"#21005", "Jessica Miller", "$431", "Paid", "Accepted"},
+	{"#21006", "Brian Anderson", "$622", "Paid", "Ordered"},
+	{"#21007", "Olivia Smith", "$894", "Pending", "On the Way"},
+	{"#21008", "Daniel Robinson", "$156", "Paid", "Delivered"},
+	{"#21009", "Emma Garcia", "$497", "Pending", "Ordered"},
+	{"#21010", "Christopher Baker", "$783", "Paid", "Accepted"},
+}
+
+func makeOrdersTableBody(n int) templ.Component {
+	if n > len(sampleOrders) {
+		n = len(sampleOrders)
+	}
+	rows := make([]templ.Component, n)
+	for i, o := range sampleOrders[:n] {
+		o := o
+		paymentBadge := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+			cls := "badge badge-soft"
+			if o.Payment == "Paid" {
+				cls += " badge-success"
+			} else {
+				cls += " badge-error"
+			}
+			_, err := fmt.Fprintf(w, `<div aria-label="Badge" class="%s">%s</div>`, cls, o.Payment)
+			return err
+		})
+		rows[i] = withChildren(table.TableRowWithBoundary("", true), seq(
+			withChildren(table.TableCellWithBoundary("font-medium"), rawHTML(o.ID)),
+			withChildren(table.TableCellWithBoundary(""), rawHTML(o.Customer)),
+			withChildren(table.TableCellWithBoundary("text-sm font-medium"), rawHTML(o.Price)),
+			withChildren(table.TableCellWithBoundary(""), paymentBadge),
+			withChildren(table.TableCellWithBoundary("text-sm"), rawHTML(o.Status)),
+			withChildren(table.TableCellWithBoundary("text-right"), ui.ButtonWithBoundary("#", ui.ButtonGhost, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--eye", false, false)),
+		))
+	}
+	return seq(rows...)
+}
+
+func makeOrdersTable(n int) templ.Component {
+	return seq(
+		withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+			table.TableHeadCellWithBoundary("ID"),
+			table.TableHeadCellWithBoundary("Customer"),
+			table.TableHeadCellWithBoundary("Price"),
+			table.TableHeadCellWithBoundary("Payment"),
+			table.TableHeadCellWithBoundary("Status"),
+			table.TableHeadCellWithBoundary("Action"),
+		))),
+		withChildren(table.TableBodyWithBoundary(), makeOrdersTableBody(n)),
+	)
+}
 
 func parseInt(s string) (int, error) {
 	var n int

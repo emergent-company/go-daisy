@@ -119,17 +119,15 @@ templ StatCardMinimal(item StatCardMinimalItem) {
 		</div>
 		</div>
 	} else {
-		<div class="card bg-base-100 card-border" { devmode.Attrs(ctx, "ui/StatCardMinimal")... } { item.Attrs... }>
-			<div class="card-body">
-				<p class="text-base-content/60 text-xs font-medium tracking-wide uppercase">{ item.Label }</p>
-				<div class="mt-4 flex items-end justify-between gap-2 text-sm">
-					<p class="text-2xl/none font-semibold">{ item.Value }</p>
-				if item.TrendLabel != "" {
-					@BadgeWithBoundary(statTrendIntent(item.Trend), BadgeStyleSoft, BadgeSizeSM, false, statTrendIcon(item.Trend), item.TrendLabel)
-				}
-				</div>
+		@CardRaw("card-border", "", item.Attrs) {
+			<p class="text-base-content/60 text-xs font-medium tracking-wide uppercase">{ item.Label }</p>
+			<div class="mt-4 flex items-end justify-between gap-2 text-sm">
+				<p class="text-2xl/none font-semibold">{ item.Value }</p>
+			if item.TrendLabel != "" {
+				@BadgeWithBoundary(statTrendIntent(item.Trend), BadgeStyleSoft, BadgeSizeSM, false, statTrendIcon(item.Trend), item.TrendLabel)
+			}
 			</div>
-		</div>
+		}
 	}
 }
 
