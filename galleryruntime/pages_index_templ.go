@@ -8,6 +8,8 @@ package galleryruntime
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "github.com/emergent-company/go-daisy/components/ui"
+
 // GalleryIndex renders the gallery welcome/landing page.
 func GalleryIndex() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -30,7 +32,27 @@ func GalleryIndex() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col items-center justify-center h-full min-h-[60vh] gap-6 p-8 text-center\"><div class=\"flex flex-col items-center gap-3\"><div class=\"border-base-300 bg-base-100 rounded-2xl flex size-16 items-center justify-center border shadow-sm\"><span class=\"iconify lucide--component size-8 text-primary\"></span></div><h1 class=\"text-3xl font-bold text-base-content\">go-daisy</h1><p class=\"text-base text-base-content/50 max-w-md\">A Go UI component library for building HTMX-driven web interfaces. Type-safe, reusable Templ components styled with DaisyUI.</p></div><div class=\"flex flex-wrap gap-3 justify-center\"><div class=\"stats shadow border border-base-200\"><div class=\"stat place-items-center\"><div class=\"stat-title\">Components</div><div class=\"stat-value text-primary\">65+</div><div class=\"stat-desc\">DaisyUI targets</div></div><div class=\"stat place-items-center\"><div class=\"stat-title\">Framework</div><div class=\"stat-value text-secondary text-2xl\">Templ</div><div class=\"stat-desc\">Type-safe HTML</div></div><div class=\"stat place-items-center\"><div class=\"stat-title\">Interactivity</div><div class=\"stat-value text-accent text-2xl\">HTMX</div><div class=\"stat-desc\">No JS required</div></div></div></div><div class=\"flex flex-col items-center gap-2\"><p class=\"text-sm text-base-content/40\">Select a component from the sidebar, or press <kbd class=\"kbd kbd-sm\">⌘K</kbd> to search.</p></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col items-center justify-center h-full min-h-[60vh] gap-6 p-8 text-center\"><div class=\"flex flex-col items-center gap-3\"><div class=\"border-base-300 bg-base-100 rounded-2xl flex size-16 items-center justify-center border shadow-sm\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = ui.IconSpan("lucide--component", "size-8").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><h1 class=\"text-3xl font-bold text-base-content\">go-daisy</h1><p class=\"text-base text-base-content/50 max-w-md\">A Go UI component library for building HTMX-driven web interfaces. Type-safe, reusable Templ components styled with DaisyUI.</p></div><div class=\"flex flex-wrap gap-3 justify-center\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = ui.StatsGroup([]ui.StatsGroupItem{
+			{Title: "Components", Value: "65+", Desc: "DaisyUI targets", Color: "text-primary"},
+			{Title: "Framework", Value: "Templ", Desc: "Type-safe HTML", Color: "text-secondary"},
+			{Title: "Interactivity", Value: "HTMX", Desc: "No JS required", Color: "text-accent"},
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><div class=\"flex flex-col items-center gap-2\"><p class=\"text-sm text-base-content/40\">Select a component from the sidebar, or press <kbd class=\"kbd kbd-sm\">⌘K</kbd> to search.</p></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

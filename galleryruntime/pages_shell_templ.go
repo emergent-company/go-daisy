@@ -94,284 +94,441 @@ func GalleryPage(title string, activeSlug string, categories []CategoryGroup, lo
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"gallery-shell\" class=\"flex h-screen overflow-hidden\"><!-- Sidebar toggle checkbox (hidden, CSS-driven) — must be sibling of #_layout-sidebar --><input type=\"checkbox\" id=\"_layout-sidebar-toggle-trigger\" class=\"hidden\" aria-label=\"Toggle gallery sidebar\"><!-- Mobile backdrop --><label for=\"_layout-sidebar-toggle-trigger\" id=\"_layout-sidebar-backdrop\"></label><!-- Sidebar --><div id=\"_layout-sidebar\" class=\"flex flex-col bg-base-100\"><!-- Header: logo or title --><div class=\"flex min-h-10 items-center justify-between gap-3 px-5 py-3 shrink-0\"><a href=\"/gallery\" class=\"truncate\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if logo != nil {
-				templ_7745c5c3_Err = logo.Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<span class=\"text-xl font-semibold\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(title)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 80, Col: 50}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</span>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</a><!-- Fold / unfold toggle (desktop only) --><label for=\"_layout-sidebar-toggle-trigger\" title=\"Toggle sidebar\" class=\"btn btn-circle btn-ghost btn-sm text-base-content/50 max-lg:hidden\"><span class=\"iconify lucide--panel-left-close size-4.5\"></span></label></div><!-- Nav menu: 3-level hierarchy (Category > Subcategory > Component) --><div class=\"sidebar-menu grow overflow-y-auto px-2.5 py-2\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			for _, group := range categories {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"mb-2\"><a href=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var4 templ.SafeURL
-				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/group/" + SlugifyCategory(string(group.Name))))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 97, Col: 81}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" hx-get=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var5 string
-				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue("/gallery/group/" + SlugifyCategory(string(group.Name)))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 98, Col: 72}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"menu-label px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-base-content/50 hover:text-base-content/80 transition-colors duration-150 block\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var6 string
-				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(string(group.Name))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 104, Col: 28}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</a><div class=\"space-y-0.5 ms-2\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				for _, sub := range group.Subcategories {
-					if sub.Name != "" {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<a href=\"")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
+			templ_7745c5c3_Var3 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
 						}
-						var templ_7745c5c3_Var7 templ.SafeURL
-						templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/group/" + SlugifyCategory(string(group.Name)) + "/" + Slugify(sub.Name)))
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 110, Col: 109}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" hx-get=\"")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var8 string
-						templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue("/gallery/group/" + SlugifyCategory(string(group.Name)) + "/" + Slugify(sub.Name))
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 111, Col: 100}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"px-2.5 pt-2 pb-0.5 text-[11px] font-medium uppercase tracking-wide text-base-content/50 hover:text-primary transition-colors duration-150 block\">")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						var templ_7745c5c3_Var9 string
-						templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(sub.Name)
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 117, Col: 20}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</a><div class=\"pl-3 space-y-0.5\">")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						for _, comp := range sub.Components {
-							var templ_7745c5c3_Var10 = []any{"menu-item text-sm",
-								templ.KV("active", comp.Slug == activeSlug)}
-							templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var10...)
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!-- Sidebar --> <div id=\"_layout-sidebar\" class=\"flex flex-col bg-base-100\"><!-- Header: logo or title --><div class=\"flex min-h-10 items-center justify-between gap-3 px-5 py-3 shrink-0\"><a href=\"/gallery\" class=\"truncate\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if logo != nil {
+					templ_7745c5c3_Err = logo.Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<span class=\"text-xl font-semibold\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var4 string
+					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(title)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 67, Col: 50}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</span>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</a><!-- Fold / unfold toggle (desktop only) -->")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Var5 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = ui.IconSpan("lucide--panel-left-close", "size-4.5").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLabel, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeCircle, ExtraClass: "text-base-content/50 max-lg:hidden", Attrs: templ.Attributes{"for": "_layout-sidebar-toggle-trigger", "title": "Toggle sidebar"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><!-- Nav menu: 3-level hierarchy (Category > Subcategory > Component) --><div class=\"sidebar-menu grow overflow-y-auto px-2.5 py-2\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				for _, group := range categories {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"mb-2\"><a href=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var6 templ.SafeURL
+					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/group/" + SlugifyCategory(string(group.Name))))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 80, Col: 81}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" hx-get=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var7 string
+					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue("/gallery/group/" + SlugifyCategory(string(group.Name)))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 81, Col: 72}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"menu-label px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-base-content/50 hover:text-base-content/80 transition-colors duration-150 block\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var8 string
+					templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(string(group.Name))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 87, Col: 28}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</a><div class=\"space-y-0.5 ms-2\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					for _, sub := range group.Subcategories {
+						if sub.Name != "" {
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<a href=\"")
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<a href=\"")
+							var templ_7745c5c3_Var9 templ.SafeURL
+							templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/group/" + SlugifyCategory(string(group.Name)) + "/" + Slugify(sub.Name)))
+							if templ_7745c5c3_Err != nil {
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 93, Col: 109}
+							}
+							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
-							var templ_7745c5c3_Var11 templ.SafeURL
-							templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/" + comp.Slug))
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" hx-get=\"")
 							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 122, Col: 53}
+								return templ_7745c5c3_Err
+							}
+							var templ_7745c5c3_Var10 string
+							templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue("/gallery/group/" + SlugifyCategory(string(group.Name)) + "/" + Slugify(sub.Name))
+							if templ_7745c5c3_Err != nil {
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 94, Col: 100}
+							}
+							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"px-2.5 pt-2 pb-0.5 text-[11px] font-medium uppercase tracking-wide text-base-content/50 hover:text-primary transition-colors duration-150 block\">")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							var templ_7745c5c3_Var11 string
+							templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(sub.Name)
+							if templ_7745c5c3_Err != nil {
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 100, Col: 20}
 							}
 							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" hx-get=\"")
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</a><div class=\"pl-3 space-y-0.5\">")
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
-							var templ_7745c5c3_Var12 string
-							templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue("/gallery/" + comp.Slug)
-							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 123, Col: 44}
+							for _, comp := range sub.Components {
+								var templ_7745c5c3_Var12 = []any{"menu-item text-sm",
+									templ.KV("active", comp.Slug == activeSlug)}
+								templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var12...)
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<a href=\"")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								var templ_7745c5c3_Var13 templ.SafeURL
+								templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/" + comp.Slug))
+								if templ_7745c5c3_Err != nil {
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 105, Col: 53}
+								}
+								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" hx-get=\"")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								var templ_7745c5c3_Var14 string
+								templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue("/gallery/" + comp.Slug)
+								if templ_7745c5c3_Err != nil {
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 106, Col: 44}
+								}
+								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								var templ_7745c5c3_Var15 string
+								templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var12).String())
+								if templ_7745c5c3_Err != nil {
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 1, Col: 0}
+								}
+								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\">")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								var templ_7745c5c3_Var16 string
+								templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(comp.Name)
+								if templ_7745c5c3_Err != nil {
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 113, Col: 23}
+								}
+								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</a>")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
 							}
-							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div>")
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							var templ_7745c5c3_Var13 string
-							templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var10).String())
-							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 1, Col: 0}
-							}
-							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\">")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							var templ_7745c5c3_Var14 string
-							templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(comp.Name)
-							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 130, Col: 23}
-							}
-							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</a>")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div>")
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-					} else {
-						for _, comp := range sub.Components {
-							var templ_7745c5c3_Var15 = []any{"menu-item text-sm",
-								templ.KV("active", comp.Slug == activeSlug)}
-							templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var15...)
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<a href=\"")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							var templ_7745c5c3_Var16 templ.SafeURL
-							templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/" + comp.Slug))
-							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 137, Col: 52}
-							}
-							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" hx-get=\"")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							var templ_7745c5c3_Var17 string
-							templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue("/gallery/" + comp.Slug)
-							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 138, Col: 43}
-							}
-							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\" hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							var templ_7745c5c3_Var18 string
-							templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var15).String())
-							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 1, Col: 0}
-							}
-							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\">")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							var templ_7745c5c3_Var19 string
-							templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(comp.Name)
-							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 145, Col: 22}
-							}
-							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</a>")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
+						} else {
+							for _, comp := range sub.Components {
+								var templ_7745c5c3_Var17 = []any{"menu-item text-sm",
+									templ.KV("active", comp.Slug == activeSlug)}
+								templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var17...)
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<a href=\"")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								var templ_7745c5c3_Var18 templ.SafeURL
+								templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/" + comp.Slug))
+								if templ_7745c5c3_Err != nil {
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 120, Col: 52}
+								}
+								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\" hx-get=\"")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								var templ_7745c5c3_Var19 string
+								templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.ResolveAttributeValue("/gallery/" + comp.Slug)
+								if templ_7745c5c3_Err != nil {
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 121, Col: 43}
+								}
+								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var19)
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "\" hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								var templ_7745c5c3_Var20 string
+								templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var17).String())
+								if templ_7745c5c3_Err != nil {
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 1, Col: 0}
+								}
+								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var20)
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\">")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								var templ_7745c5c3_Var21 string
+								templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(comp.Name)
+								if templ_7745c5c3_Err != nil {
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 128, Col: 22}
+								}
+								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+								templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</a>")
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
 							}
 						}
 					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</div></div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</div></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<!-- SDK Documentation link --><div class=\"border-base-200 border-t pt-2 mt-2\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</div><!-- Footer note --><div class=\"border-base-200 px-3 py-3 border-t shrink-0\"><p class=\"text-xs text-base-content/40 text-center\">DaisyUI component gallery</p></div></div><!-- Right column: topbar + content --><div class=\"flex min-w-0 grow flex-col overflow-hidden\"><!-- Topbar --><div role=\"navigation\" aria-label=\"Gallery topbar\" class=\"flex items-center justify-between px-4 bg-base-100\" id=\"_layout-topbar\"><!-- LEFT: hamburger + search --><div class=\"flex items-center gap-3\"><label for=\"_layout-sidebar-toggle-trigger\" class=\"btn btn-square btn-ghost btn-sm\" aria-label=\"Toggle sidebar\"><span class=\"iconify lucide--menu size-5\"></span></label><!-- Search trigger (desktop) --><button id=\"gallery-search-trigger\" class=\"btn btn-sm btn-outline btn-ghost border-base-300 text-base-content/60 hidden h-9 w-72 justify-start gap-2 md:flex\" aria-label=\"Search components\" onclick=\"gallerySearchOpen();\"><span class=\"iconify lucide--search size-4 shrink-0\"></span> <span class=\"grow text-left text-sm\">Search components…</span> <kbd class=\"kbd kbd-xs shrink-0\">⌘K</kbd></button><!-- Search trigger (mobile icon only) --><button class=\"btn btn-sm btn-square btn-outline btn-ghost border-base-300 text-base-content/60 flex size-9 md:hidden\" aria-label=\"Search components\" onclick=\"gallerySearchOpen();\"><span class=\"iconify lucide--search size-4\"></span></button></div><!-- RIGHT: theme switcher --><div class=\"flex items-center gap-1\">")
+				var templ_7745c5c3_Var22 = []any{"menu-item text-sm",
+					templ.KV("active", activeSlug == "docs")}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var22...)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<a href=\"/gallery/docs\" hx-get=\"/gallery/docs\" hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var23 string
+				templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var22).String())
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 1, Col: 0}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var23)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--book-open", "size-4 mr-2").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "SDK Reference</a></div></div><!-- Footer note --><div class=\"border-base-200 px-3 py-3 border-t shrink-0\"><p class=\"text-xs text-base-content/40 text-center\">DaisyUI component gallery</p></div></div><!-- Right column: topbar + content --> <div class=\"flex min-w-0 grow flex-col overflow-hidden\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Var24 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<!-- Search trigger (desktop) --> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Var25 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Err = ui.IconSpan("lucide--search", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, " <span class=\"grow text-left text-sm\">Search components…</span> <kbd class=\"kbd kbd-xs shrink-0\">⌘K</kbd>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 text-base-content/60 hidden h-9 w-72 justify-start gap-2 md:flex", Attrs: templ.Attributes{"id": "gallery-search-trigger", "aria-label": "Search components", "onclick": "gallerySearchOpen();"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var25), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, " <!-- Search trigger (mobile icon only) --> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Var26 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Err = ui.IconSpan("lucide--search", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "border-base-300 text-base-content/60 flex size-9 md:hidden", Attrs: templ.Attributes{"aria-label": "Search components", "onclick": "gallerySearchOpen();"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var26), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, " ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = ui.ThemeSwitcher().Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = layout.Navbar("Gallery").Render(templ.WithChildren(ctx, templ_7745c5c3_Var24), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<!-- Scrollable content area --><main id=\"gallery-content\" class=\"grow overflow-y-auto p-0 sm:p-4\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = content.Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</main></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = layout.AppShell(title).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = ui.ThemeSwitcher().Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</div></div><!-- Scrollable content area --><main id=\"gallery-content\" class=\"grow overflow-y-auto p-0 sm:p-4\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = content.Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</main></div></div><!-- Gallery spotlight search modal --> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, " <!-- Gallery spotlight search modal --> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -379,7 +536,7 @@ func GalleryPage(title string, activeSlug string, categories []CategoryGroup, lo
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, " <!-- feedback-overlay: element-level feedback tool --> <script src=\"https://feedback.emergent-company.ai/feedback-overlay.js\" data-api=\"https://feedback.emergent-company.ai\" data-repo=\"emergent-company/go-daisy\" data-label=\"gallery-feedback\" async></script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, " <!-- feedback-overlay: element-level feedback tool --> <script src=\"https://feedback.emergent-company.ai/feedback-overlay.js\" data-api=\"https://feedback.emergent-company.ai\" data-repo=\"emergent-company/go-daisy\" data-label=\"gallery-feedback\" async></script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -410,25 +567,59 @@ func gallerySearchModal(categories []CategoryGroup) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var20 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var20 == nil {
-			templ_7745c5c3_Var20 = templ.NopComponent
+		templ_7745c5c3_Var27 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var27 == nil {
+			templ_7745c5c3_Var27 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<dialog id=\"gallery-search-modal\" class=\"modal p-0\"><div class=\"modal-box p-0 max-w-xl overflow-hidden\" role=\"dialog\" aria-label=\"Search components\"><!-- Search input row --><div class=\"border-base-300 flex w-full items-center gap-2 border-b px-4 py-3\"><span class=\"iconify lucide--search text-base-content/50 size-4.5 shrink-0\"></span> <input id=\"gallery-search-input\" class=\"grow bg-transparent outline-none focus:outline-none\" placeholder=\"Search components…\" aria-label=\"Search gallery components\" type=\"search\" autocomplete=\"off\"><form method=\"dialog\"><button class=\"btn btn-xs btn-circle btn-ghost\" aria-label=\"Close\"><span class=\"iconify lucide--x size-4\"></span></button></form></div><!-- Keyboard hint bar --><div class=\"border-base-300 bg-base-200/50 flex items-center gap-4 border-b px-4 py-1.5 text-xs text-base-content/50\"><span><kbd class=\"kbd kbd-xs\">↑</kbd><kbd class=\"kbd kbd-xs ml-0.5\">↓</kbd> Navigate</span> <span><kbd class=\"kbd kbd-xs\">↵</kbd> Open</span> <span><kbd class=\"kbd kbd-xs\">Esc</kbd> Close</span></div><!-- Results area --><div id=\"gallery-search-results\" class=\"max-h-[26rem] overflow-y-auto px-2 py-2\"><ul class=\"menu w-full gap-0.5\" id=\"gallery-search-list\"><!-- populated by JS --></ul></div><!-- Footer --><div class=\"border-base-300 flex items-center justify-between border-t px-4 py-2\"><span id=\"gallery-search-count\" class=\"text-xs text-base-content/40\"></span> <span class=\"text-xs text-base-content/30\">go-daisy</span></div></div><form method=\"dialog\" class=\"modal-backdrop\"><button>close</button></form></dialog><div id=\"gallery-search-index\" data-index=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<dialog id=\"gallery-search-modal\" class=\"modal p-0\"><div class=\"modal-box p-0 max-w-xl overflow-hidden\" role=\"dialog\" aria-label=\"Search components\"><!-- Search input row --><div class=\"border-base-300 flex w-full items-center gap-2 border-b px-4 py-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var21 string
-		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.ResolveAttributeValue(gallerySearchIndex(categories))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 262, Col: 75}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var21)
+		templ_7745c5c3_Err = ui.IconSpan("lucide--search", "size-4.5").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "\" hidden></div><script>\n\t(function () {\n\t\tvar INDEX = JSON.parse(document.getElementById('gallery-search-index').dataset.index);\n\n\t\tvar modal   = document.getElementById('gallery-search-modal');\n\t\tvar input   = document.getElementById('gallery-search-input');\n\t\tvar list    = document.getElementById('gallery-search-list');\n\t\tvar counter = document.getElementById('gallery-search-count');\n\t\tif (!modal) return;\n\n\t\t// Expose open function globally so onclick handlers and ⌘K can call it\n\t\twindow.gallerySearchOpen = function () {\n\t\t\trender('');\n\t\t\tmodal.showModal();\n\t\t\tsetTimeout(function () { input.focus(); }, 50);\n\t\t};\n\n\t\t// ⌘K / Ctrl+K global shortcut\n\t\tdocument.addEventListener('keydown', function (e) {\n\t\t\tif ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n\t\t\t\te.preventDefault();\n\t\t\t\twindow.gallerySearchOpen();\n\t\t\t}\n\t\t});\n\n\t\t// Filter on input\n\t\tinput.addEventListener('input', function () { render(input.value.trim()); });\n\n\t\t// Keyboard navigation inside modal\n\t\tmodal.addEventListener('keydown', function (e) {\n\t\t\tvar items = Array.from(list.querySelectorAll('[data-si]'));\n\t\t\tvar cur = items.findIndex(function (el) { return el.classList.contains('si-active'); });\n\t\t\tif (e.key === 'ArrowDown') {\n\t\t\t\te.preventDefault();\n\t\t\t\tactivate(items, cur < items.length - 1 ? cur + 1 : 0);\n\t\t\t} else if (e.key === 'ArrowUp') {\n\t\t\t\te.preventDefault();\n\t\t\t\tactivate(items, cur > 0 ? cur - 1 : items.length - 1);\n\t\t\t} else if (e.key === 'Enter' && cur >= 0) {\n\t\t\t\te.preventDefault();\n\t\t\t\titems[cur].querySelector('a').click();\n\t\t\t}\n\t\t});\n\n\t\t// Reset on close\n\t\tmodal.addEventListener('close', function () {\n\t\t\tinput.value = '';\n\t\t\tlist.innerHTML = '';\n\t\t\tcounter.textContent = '';\n\t\t});\n\n\t\tfunction render(query) {\n\t\t\tvar q = query.toLowerCase();\n\t\t\tvar allResults = q === ''\n\t\t\t\t? INDEX\n\t\t\t\t: INDEX.filter(function (c) {\n\t\t\t\t\treturn c.name.toLowerCase().includes(q)\n\t\t\t\t\t\t|| c.category.toLowerCase().includes(q)\n\t\t\t\t\t\t|| (c.sub || '').toLowerCase().includes(q);\n\t\t\t\t});\n\n\t\t\t// Split groups, subgroups, and components\n\t\t\tvar groups = allResults.filter(function (c) { return c.type === 'group'; });\n\t\t\tvar subgroups = allResults.filter(function (c) { return c.type === 'subgroup'; });\n\t\t\tvar comps = allResults.filter(function (c) { return c.type === 'component'; });\n\n\t\t\t// Group components by category\n\t\t\tvar grouped = {};\n\t\t\tvar order = [];\n\t\t\tcomps.forEach(function (c) {\n\t\t\t\tif (!grouped[c.category]) { grouped[c.category] = []; order.push(c.category); }\n\t\t\t\tgrouped[c.category].push(c);\n\t\t\t});\n\n\t\t\tvar html = '';\n\n\t\t\t// Render groups section\n\t\t\tif (groups.length > 0) {\n\t\t\t\thtml += '<li class=\"menu-title text-xs tracking-wide pb-0.5\">Groups</li>';\n\t\t\t\tgroups.forEach(function (g) {\n\t\t\t\t\thtml += '<li data-si>'\n\t\t\t\t\t\t+ '<a class=\"flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-base-200\"'\n\t\t\t\t\t\t+ ' href=\"/gallery/' + esc(g.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-get=\"/gallery/' + esc(g.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\"'\n\t\t\t\t\t\t+ ' onclick=\"document.getElementById(\\'gallery-search-modal\\').close();\"'\n\t\t\t\t\t\t+ '>'\n\t\t\t\t\t\t+ '<div class=\"border-base-300 bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border\">'\n\t\t\t\t\t\t+ '<span class=\"iconify lucide--layers size-4 text-primary\"></span>'\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<div class=\"grow min-w-0\">'\n\t\t\t\t\t\t+ '<p class=\"truncate font-medium leading-none\">' + esc(g.name) + '</p>'\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<span class=\"si-enter opacity-0 text-xs text-base-content/40 shrink-0\">\\u21B5</span>'\n\t\t\t\t\t\t+ '</a></li>';\n\t\t\t\t});\n\t\t\t}\n\n\t\t\t// Render subgroups section\n\t\t\tif (subgroups.length > 0) {\n\t\t\t\thtml += '<li class=\"menu-title text-xs tracking-wide pb-0.5\">Subcategories</li>';\n\t\t\t\tsubgroups.forEach(function (sg) {\n\t\t\t\t\thtml += '<li data-si>'\n\t\t\t\t\t\t+ '<a class=\"flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-base-200\"'\n\t\t\t\t\t\t+ ' href=\"/gallery/' + esc(sg.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-get=\"/gallery/' + esc(sg.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\"'\n\t\t\t\t\t\t+ ' onclick=\"document.getElementById(\\'gallery-search-modal\\').close();\"'\n\t\t\t\t\t\t+ '>'\n\t\t\t\t\t\t+ '<div class=\"border-base-300 bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border\">'\n\t\t\t\t\t\t+ '<span class=\"iconify lucide--folder size-4 text-primary\"></span>'\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<div class=\"grow min-w-0\">'\n\t\t\t\t\t\t+ '<p class=\"truncate font-medium leading-none\">' + esc(sg.name) + '</p>'\n\t\t\t\t\t\t+ '<p class=\"mt-0.5 text-xs opacity-60 leading-none\">' + esc(sg.category) + '</p>'\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<span class=\"si-enter opacity-0 text-xs text-base-content/40 shrink-0\">\\u21B5</span>'\n\t\t\t\t\t\t+ '</a></li>';\n\t\t\t\t});\n\t\t\t}\n\n\t\t\t// Render components grouped by category\n\t\t\torder.forEach(function (cat) {\n\t\t\t\thtml += '<li class=\"menu-title text-xs tracking-wide pb-0.5\">' + esc(cat) + '</li>';\n\t\t\t\tgrouped[cat].forEach(function (c) {\n\t\t\t\t\tvar sub = c.sub ? '<p class=\"mt-0.5 text-xs opacity-60 leading-none\">' + esc(c.sub) + '</p>' : '';\n\t\t\t\t\thtml += '<li data-si>'\n\t\t\t\t\t\t+ '<a class=\"flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-base-200\"'\n\t\t\t\t\t\t+ ' href=\"/gallery/' + esc(c.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-get=\"/gallery/' + esc(c.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\"'\n\t\t\t\t\t\t+ ' onclick=\"document.getElementById(\\'gallery-search-modal\\').close();\"'\n\t\t\t\t\t\t+ '>'\n\t\t\t\t\t\t+ '<div class=\"border-base-300 bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border\">'\n\t\t\t\t\t\t+ '<span class=\"iconify lucide--component size-4 text-primary\"></span>'\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<div class=\"grow min-w-0\">'\n\t\t\t\t\t\t+ '<p class=\"truncate font-medium leading-none\">' + esc(c.name) + '</p>'\n\t\t\t\t\t\t+ sub\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<span class=\"si-enter opacity-0 text-xs text-base-content/40 shrink-0\">\\u21B5</span>'\n\t\t\t\t\t\t+ '</a></li>';\n\t\t\t\t});\n\t\t\t});\n\n\t\t\tif (!html) {\n\t\t\t\thtml = '<li class=\"px-3 py-6 text-center text-sm text-base-content/40\">No results found</li>';\n\t\t\t}\n\t\t\tlist.innerHTML = html;\n\t\t\tcounter.textContent = allResults.length + ' result' + (allResults.length === 1 ? '' : 's');\n\t\t}\n\n\t\tfunction activate(items, idx) {\n\t\t\titems.forEach(function (el, i) {\n\t\t\t\tvar hint = el.querySelector('.si-enter');\n\t\t\t\tif (i === idx) {\n\t\t\t\t\tel.classList.add('si-active');\n\t\t\t\t\tel.querySelector('a').classList.add('bg-base-200');\n\t\t\t\t\tif (hint) { hint.classList.remove('opacity-0'); hint.classList.add('opacity-100'); }\n\t\t\t\t\tel.scrollIntoView({ block: 'nearest' });\n\t\t\t\t} else {\n\t\t\t\t\tel.classList.remove('si-active');\n\t\t\t\t\tel.querySelector('a').classList.remove('bg-base-200');\n\t\t\t\t\tif (hint) { hint.classList.remove('opacity-100'); hint.classList.add('opacity-0'); }\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\n\t\tfunction esc(s) {\n\t\t\treturn String(s)\n\t\t\t\t.replace(/&/g, '&amp;')\n\t\t\t\t.replace(/</g, '&lt;')\n\t\t\t\t.replace(/>/g, '&gt;')\n\t\t\t\t.replace(/\"/g, '&quot;')\n\t\t\t\t.replace(/'/g, '&#39;');\n\t\t}\n\t}());\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<input id=\"gallery-search-input\" class=\"grow bg-transparent outline-none focus:outline-none\" placeholder=\"Search components…\" aria-label=\"Search gallery components\" type=\"search\" autocomplete=\"off\"><form method=\"dialog\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var28 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+			if !templ_7745c5c3_IsBuffer {
+				defer func() {
+					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err == nil {
+						templ_7745c5c3_Err = templ_7745c5c3_BufErr
+					}
+				}()
+			}
+			ctx = templ.InitializeContext(ctx)
+			templ_7745c5c3_Err = ui.IconSpan("lucide--x", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			return nil
+		})
+		templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Shape: ui.ButtonShapeCircle, Variant: ui.ButtonGhost, Attrs: templ.Attributes{"aria-label": "Close"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var28), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</form></div><!-- Keyboard hint bar --><div class=\"border-base-300 bg-base-200/50 flex items-center gap-4 border-b px-4 py-1.5 text-xs text-base-content/50\"><span><kbd class=\"kbd kbd-xs\">↑</kbd><kbd class=\"kbd kbd-xs ml-0.5\">↓</kbd> Navigate</span> <span><kbd class=\"kbd kbd-xs\">↵</kbd> Open</span> <span><kbd class=\"kbd kbd-xs\">Esc</kbd> Close</span></div><!-- Results area --><div id=\"gallery-search-results\" class=\"max-h-[26rem] overflow-y-auto px-2 py-2\"><ul class=\"menu w-full gap-0.5\" id=\"gallery-search-list\"><!-- populated by JS --></ul></div><!-- Footer --><div class=\"border-base-300 flex items-center justify-between border-t px-4 py-2\"><span id=\"gallery-search-count\" class=\"text-xs text-base-content/40\"></span> <span class=\"text-xs text-base-content/30\">go-daisy</span></div></div><form method=\"dialog\" class=\"modal-backdrop\"><button>close</button></form></dialog><div id=\"gallery-search-index\" data-index=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var29 string
+		templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.ResolveAttributeValue(gallerySearchIndex(categories))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_shell.templ`, Line: 232, Col: 75}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var29)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "\" hidden></div><script>\n\t(function () {\n\t\tvar INDEX = JSON.parse(document.getElementById('gallery-search-index').dataset.index);\n\n\t\tvar modal   = document.getElementById('gallery-search-modal');\n\t\tvar input   = document.getElementById('gallery-search-input');\n\t\tvar list    = document.getElementById('gallery-search-list');\n\t\tvar counter = document.getElementById('gallery-search-count');\n\t\tif (!modal) return;\n\n\t\t// Expose open function globally so onclick handlers and ⌘K can call it\n\t\twindow.gallerySearchOpen = function () {\n\t\t\trender('');\n\t\t\tmodal.showModal();\n\t\t\tsetTimeout(function () { input.focus(); }, 50);\n\t\t};\n\n\t\t// ⌘K / Ctrl+K global shortcut\n\t\tdocument.addEventListener('keydown', function (e) {\n\t\t\tif ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n\t\t\t\te.preventDefault();\n\t\t\t\twindow.gallerySearchOpen();\n\t\t\t}\n\t\t});\n\n\t\t// Filter on input\n\t\tinput.addEventListener('input', function () { render(input.value.trim()); });\n\n\t\t// Keyboard navigation inside modal\n\t\tmodal.addEventListener('keydown', function (e) {\n\t\t\tvar items = Array.from(list.querySelectorAll('[data-si]'));\n\t\t\tvar cur = items.findIndex(function (el) { return el.classList.contains('si-active'); });\n\t\t\tif (e.key === 'ArrowDown') {\n\t\t\t\te.preventDefault();\n\t\t\t\tactivate(items, cur < items.length - 1 ? cur + 1 : 0);\n\t\t\t} else if (e.key === 'ArrowUp') {\n\t\t\t\te.preventDefault();\n\t\t\t\tactivate(items, cur > 0 ? cur - 1 : items.length - 1);\n\t\t\t} else if (e.key === 'Enter' && cur >= 0) {\n\t\t\t\te.preventDefault();\n\t\t\t\titems[cur].querySelector('a').click();\n\t\t\t}\n\t\t});\n\n\t\t// Reset on close\n\t\tmodal.addEventListener('close', function () {\n\t\t\tinput.value = '';\n\t\t\tlist.innerHTML = '';\n\t\t\tcounter.textContent = '';\n\t\t});\n\n\t\tfunction render(query) {\n\t\t\tvar q = query.toLowerCase();\n\t\t\tvar allResults = q === ''\n\t\t\t\t? INDEX\n\t\t\t\t: INDEX.filter(function (c) {\n\t\t\t\t\treturn c.name.toLowerCase().includes(q)\n\t\t\t\t\t\t|| c.category.toLowerCase().includes(q)\n\t\t\t\t\t\t|| (c.sub || '').toLowerCase().includes(q);\n\t\t\t\t});\n\n\t\t\t// Split groups, subgroups, and components\n\t\t\tvar groups = allResults.filter(function (c) { return c.type === 'group'; });\n\t\t\tvar subgroups = allResults.filter(function (c) { return c.type === 'subgroup'; });\n\t\t\tvar comps = allResults.filter(function (c) { return c.type === 'component'; });\n\n\t\t\t// Group components by category\n\t\t\tvar grouped = {};\n\t\t\tvar order = [];\n\t\t\tcomps.forEach(function (c) {\n\t\t\t\tif (!grouped[c.category]) { grouped[c.category] = []; order.push(c.category); }\n\t\t\t\tgrouped[c.category].push(c);\n\t\t\t});\n\n\t\t\tvar html = '';\n\n\t\t\t// Render groups section\n\t\t\tif (groups.length > 0) {\n\t\t\t\thtml += '<li class=\"menu-title text-xs tracking-wide pb-0.5\">Groups</li>';\n\t\t\t\tgroups.forEach(function (g) {\n\t\t\t\t\thtml += '<li data-si>'\n\t\t\t\t\t\t+ '<a class=\"flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-base-200\"'\n\t\t\t\t\t\t+ ' href=\"/gallery/' + esc(g.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-get=\"/gallery/' + esc(g.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\"'\n\t\t\t\t\t\t+ ' onclick=\"document.getElementById(\\'gallery-search-modal\\').close();\"'\n\t\t\t\t\t\t+ '>'\n\t\t\t\t\t\t+ '<div class=\"border-base-300 bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border\">'\n\t\t\t\t\t\t+ '<span class=\"iconify lucide--layers size-4 text-primary\"></span>'\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<div class=\"grow min-w-0\">'\n\t\t\t\t\t\t+ '<p class=\"truncate font-medium leading-none\">' + esc(g.name) + '</p>'\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<span class=\"si-enter opacity-0 text-xs text-base-content/40 shrink-0\">\\u21B5</span>'\n\t\t\t\t\t\t+ '</a></li>';\n\t\t\t\t});\n\t\t\t}\n\n\t\t\t// Render subgroups section\n\t\t\tif (subgroups.length > 0) {\n\t\t\t\thtml += '<li class=\"menu-title text-xs tracking-wide pb-0.5\">Subcategories</li>';\n\t\t\t\tsubgroups.forEach(function (sg) {\n\t\t\t\t\thtml += '<li data-si>'\n\t\t\t\t\t\t+ '<a class=\"flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-base-200\"'\n\t\t\t\t\t\t+ ' href=\"/gallery/' + esc(sg.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-get=\"/gallery/' + esc(sg.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\"'\n\t\t\t\t\t\t+ ' onclick=\"document.getElementById(\\'gallery-search-modal\\').close();\"'\n\t\t\t\t\t\t+ '>'\n\t\t\t\t\t\t+ '<div class=\"border-base-300 bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border\">'\n\t\t\t\t\t\t+ '<span class=\"iconify lucide--folder size-4 text-primary\"></span>'\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<div class=\"grow min-w-0\">'\n\t\t\t\t\t\t+ '<p class=\"truncate font-medium leading-none\">' + esc(sg.name) + '</p>'\n\t\t\t\t\t\t+ '<p class=\"mt-0.5 text-xs opacity-60 leading-none\">' + esc(sg.category) + '</p>'\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<span class=\"si-enter opacity-0 text-xs text-base-content/40 shrink-0\">\\u21B5</span>'\n\t\t\t\t\t\t+ '</a></li>';\n\t\t\t\t});\n\t\t\t}\n\n\t\t\t// Render components grouped by category\n\t\t\torder.forEach(function (cat) {\n\t\t\t\thtml += '<li class=\"menu-title text-xs tracking-wide pb-0.5\">' + esc(cat) + '</li>';\n\t\t\t\tgrouped[cat].forEach(function (c) {\n\t\t\t\t\tvar sub = c.sub ? '<p class=\"mt-0.5 text-xs opacity-60 leading-none\">' + esc(c.sub) + '</p>' : '';\n\t\t\t\t\thtml += '<li data-si>'\n\t\t\t\t\t\t+ '<a class=\"flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-base-200\"'\n\t\t\t\t\t\t+ ' href=\"/gallery/' + esc(c.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-get=\"/gallery/' + esc(c.slug) + '\"'\n\t\t\t\t\t\t+ ' hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\"'\n\t\t\t\t\t\t+ ' onclick=\"document.getElementById(\\'gallery-search-modal\\').close();\"'\n\t\t\t\t\t\t+ '>'\n\t\t\t\t\t\t+ '<div class=\"border-base-300 bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border\">'\n\t\t\t\t\t\t+ '<span class=\"iconify lucide--component size-4 text-primary\"></span>'\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<div class=\"grow min-w-0\">'\n\t\t\t\t\t\t+ '<p class=\"truncate font-medium leading-none\">' + esc(c.name) + '</p>'\n\t\t\t\t\t\t+ sub\n\t\t\t\t\t\t+ '</div>'\n\t\t\t\t\t\t+ '<span class=\"si-enter opacity-0 text-xs text-base-content/40 shrink-0\">\\u21B5</span>'\n\t\t\t\t\t\t+ '</a></li>';\n\t\t\t\t});\n\t\t\t});\n\n\t\t\tif (!html) {\n\t\t\t\thtml = '<li class=\"px-3 py-6 text-center text-sm text-base-content/40\">No results found</li>';\n\t\t\t}\n\t\t\tlist.innerHTML = html;\n\t\t\tcounter.textContent = allResults.length + ' result' + (allResults.length === 1 ? '' : 's');\n\t\t}\n\n\t\tfunction activate(items, idx) {\n\t\t\titems.forEach(function (el, i) {\n\t\t\t\tvar hint = el.querySelector('.si-enter');\n\t\t\t\tif (i === idx) {\n\t\t\t\t\tel.classList.add('si-active');\n\t\t\t\t\tel.querySelector('a').classList.add('bg-base-200');\n\t\t\t\t\tif (hint) { hint.classList.remove('opacity-0'); hint.classList.add('opacity-100'); }\n\t\t\t\t\tel.scrollIntoView({ block: 'nearest' });\n\t\t\t\t} else {\n\t\t\t\t\tel.classList.remove('si-active');\n\t\t\t\t\tel.querySelector('a').classList.remove('bg-base-200');\n\t\t\t\t\tif (hint) { hint.classList.remove('opacity-100'); hint.classList.add('opacity-0'); }\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\n\t\tfunction esc(s) {\n\t\t\treturn String(s)\n\t\t\t\t.replace(/&/g, '&amp;')\n\t\t\t\t.replace(/</g, '&lt;')\n\t\t\t\t.replace(/>/g, '&gt;')\n\t\t\t\t.replace(/\"/g, '&quot;')\n\t\t\t\t.replace(/'/g, '&#39;');\n\t\t}\n\t}());\n\t</script><script>\n\t(function() {\n\t\tfunction syncSidebarActive() {\n\t\t\tvar curPath = window.location.pathname;\n\t\t\tvar found = null;\n\t\t\tdocument.querySelectorAll('#_layout-sidebar .menu-item').forEach(function(el) {\n\t\t\t\tvar match = el.getAttribute('href') === curPath;\n\t\t\t\tel.classList.toggle('active', match);\n\t\t\t\tif (match) found = el;\n\t\t\t});\n\t\t\tif (found) {\n\t\t\t\tvar sidebar = document.getElementById('_layout-sidebar');\n\t\t\t\tif (!sidebar) return;\n\t\t\t\tvar sidebarRect = sidebar.getBoundingClientRect();\n\t\t\t\tvar itemRect = found.getBoundingClientRect();\n\t\t\t\tvar offset = itemRect.top - sidebarRect.top - 80;\n\t\t\t\tif (offset < 0 || itemRect.bottom > sidebarRect.bottom) {\n\t\t\t\t\tsidebar.scrollTop += offset - 20;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\twindow.syncSidebarActive = syncSidebarActive;\n\t\t// Monkey-patch pushState so sidebar active class syncs on HTMX URL updates.\n\t\tvar _pushState = history.pushState;\n\t\thistory.pushState = function() { _pushState.apply(this, arguments); syncSidebarActive(); };\n\t\tdocument.addEventListener('htmx:afterSwap', syncSidebarActive);\n\t\tdocument.addEventListener('DOMContentLoaded', syncSidebarActive);\n\t\twindow.addEventListener('popstate', syncSidebarActive);\n\t\tif (document.readyState !== 'loading') syncSidebarActive();\n\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -453,9 +644,9 @@ func GalleryPageContent(title string, activeSlug string, categories []CategoryGr
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var22 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var22 == nil {
-			templ_7745c5c3_Var22 = templ.NopComponent
+		templ_7745c5c3_Var30 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var30 == nil {
+			templ_7745c5c3_Var30 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = content.Render(ctx, templ_7745c5c3_Buffer)

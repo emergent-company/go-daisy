@@ -40,7 +40,7 @@
 }
 
 /* Safelist icons used by consumers of go-daisy (not directly in this repo's source files) */
-@source inline("{lucide--activity,lucide--alert-circle,lucide--app-window,lucide--archive,lucide--arrow-left,lucide--arrow-right,lucide--bar-chart-2,lucide--bell,lucide--bot,lucide--brain,lucide--briefcase,lucide--check,lucide--check-circle-2,lucide--chevron-down,lucide--chevron-right,lucide--chevron-up,lucide--circle,lucide--circle-check,lucide--circle-dashed,lucide--loader-circle,lucide--send,lucide--circle-dollar-sign,lucide--clock,lucide--code-2,lucide--container,lucide--copy,lucide--cpu,lucide--database,lucide--ellipsis,lucide--ellipsis-vertical,lucide--eye,lucide--file-text,lucide--folder,lucide--folder-open,lucide--form-input,lucide--git-branch,lucide--git-pull-request,lucide--github,lucide--globe,lucide--hash,lucide--info,lucide--layers,lucide--layout,lucide--layout-dashboard,lucide--layout-grid,lucide--lock,lucide--log-out,lucide--map,lucide--menu,lucide--message-square,lucide--monitor-dot,lucide--moon,lucide--mouse-pointer-click,lucide--navigation,lucide--panel-left-close,lucide--pencil,lucide--play,lucide--plug,lucide--plus,lucide--plus-circle,lucide--puzzle,lucide--refresh-cw,lucide--rocket,lucide--search,lucide--settings,lucide--square,lucide--sticky-note,lucide--sun,lucide--table,lucide--terminal,lucide--trash-2,lucide--user,lucide--x,lucide--x-circle,lucide--zap,lucide--bug,lucide--flask-conical,lucide--folder-git-2,lucide--key,lucide--list,lucide--list-ordered,lucide--rotate-ccw,lucide--save,lucide--settings-2,lucide--shield-check,lucide--sliders-horizontal,lucide--sparkles,lucide--alert-triangle,lucide--arrow-down,lucide--building,lucide--check-circle,lucide--component,lucide--file-code,lucide--link,lucide--link-2-off,lucide--minus,lucide--shield}");
+@source inline("{lucide--activity,lucide--alert-circle,lucide--align-center,lucide--app-window,lucide--archive,lucide--arrow-down,lucide--arrow-down-to-line,lucide--arrow-left,lucide--arrow-left-right,lucide--arrow-right,lucide--arrow-up,lucide--arrow-up-from-line,lucide--award,lucide--badge-help,lucide--bar-chart-2,lucide--bar-chart-big,lucide--bell,lucide--bell-dot,lucide--bell-ring,lucide--book-image,lucide--book-open-text,lucide--book-user,lucide--bot,lucide--brain,lucide--brain-circuit,lucide--briefcase,lucide--building,lucide--building-2,lucide--calendar-cog,lucide--check,lucide--check-circle,lucide--check-circle-2,lucide--chevron-down,lucide--chevron-right,lucide--chevron-up,lucide--circle,lucide--circle-check,lucide--circle-dashed,lucide--circle-dollar-sign,lucide--circle-help,lucide--circle-x,lucide--clock,lucide--code-2,lucide--component,lucide--container,lucide--copy,lucide--copy-plus,lucide--cpu,lucide--credit-card,lucide--database,lucide--disc,lucide--dollar-sign,lucide--download,lucide--download-cloud,lucide--ellipsis,lucide--ellipsis-vertical,lucide--eraser,lucide--external-link,lucide--eye,lucide--file,lucide--file-code,lucide--file-plus,lucide--file-text,lucide--file-up,lucide--flask-conical,lucide--folder,lucide--folder-archive,lucide--folder-git-2,lucide--folder-input,lucide--folder-kanban,lucide--folder-open,lucide--folder-plus,lucide--folder-up,lucide--folders,lucide--form-input,lucide--fullscreen,lucide--git-branch,lucide--git-pull-request,lucide--github,lucide--globe,lucide--globe-2,lucide--handshake,lucide--hard-drive,lucide--hash,lucide--help-circle,lucide--id-card,lucide--image,lucide--info,lucide--key,lucide--layers,lucide--layout,lucide--layout-dashboard,lucide--layout-grid,lucide--link,lucide--link-2-off,lucide--list,lucide--list-ordered,lucide--loader-circle,lucide--lock,lucide--log-in,lucide--log-out,lucide--mail,lucide--map,lucide--maximize,lucide--megaphone,lucide--menu,lucide--message-square,lucide--messages-square,lucide--mic-off,lucide--minimize,lucide--minus,lucide--monitor-dot,lucide--moon,lucide--more-horizontal,lucide--more-vertical,lucide--mouse-pointer-click,lucide--music,lucide--navigation,lucide--package,lucide--palette,lucide--panel-left-close,lucide--panel-left-dashed,lucide--paperclip,lucide--pause,lucide--pen-line,lucide--pencil,lucide--phone,lucide--pilcrow-left,lucide--pilcrow-right,lucide--pin,lucide--play,lucide--plug,lucide--plus,lucide--plus-circle,lucide--puzzle,lucide--question-mark,lucide--refresh-ccw,lucide--refresh-cw,lucide--rocket,lucide--rotate-ccw,lucide--rotate-cw,lucide--save,lucide--search,lucide--send,lucide--send-horizonal,lucide--server,lucide--settings,lucide--settings-2,lucide--shield,lucide--shield-check,lucide--shopping-bag,lucide--sliders-horizontal,lucide--smile,lucide--sparkles,lucide--square,lucide--square-check,lucide--square-user,lucide--sticky-note,lucide--store,lucide--sun,lucide--table,lucide--terminal,lucide--text,lucide--ticket-check,lucide--trash,lucide--trash-2,lucide--triangle-alert,lucide--unplug,lucide--upload,lucide--user,lucide--user-plus,lucide--user-round-plus,lucide--users,lucide--video,lucide--wand,lucide--wrench,lucide--x,lucide--x-circle,lucide--zap}");
 @source inline("border-base-content/{10,20}");
 @source inline("border-primary/{10,20,30}");
 @source inline("bg-primary/{5,10,20}");
@@ -94,8 +94,94 @@ strong {
 
     &.active {
       @apply bg-base-200 font-medium text-base-content;
+}
+
+/* ── Accessibility ───────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --border: 2px;
+  }
+}
+
+@media (forced-colors: active) {
+  .btn, .badge, .alert, .input, .select, .textarea, .tab, .card, .modal-box {
+    border: 1px solid ButtonText;
+  }
+  .btn-primary, .badge-primary {
+    forced-color-adjust: none;
     }
   }
+}
+
+ matches nexus.daisyui.com visual parity */
+#sidebar-menu {
+  .sidebar-menu-title {
+    color: oklch(var(--bc) / 0.7);
+    margin: 8px 10px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .sidebar-menu-item {
+    border-radius: var(--radius-box);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 14px;
+    color: oklch(var(--bc) / 0.8);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .sidebar-menu-item:hover {
+    background-color: var(--color-base-200);
+  }
+  .collapse {
+    .collapse-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 32px;
+      padding: 6px 12px;
+      font-size: 14px;
+      border-radius: var(--radius-box);
+      cursor: pointer;
+      color: oklch(var(--bc) / 0.8);
+    }
+    .collapse-title:hover {
+      background-color: var(--color-base-200);
+    }
+    .collapse-content {
+      margin-left: 24px;
+      padding: 0;
+      display: flex !important;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 2px;
+      position: relative;
+    }
+    .collapse-content::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: oklch(var(--bc) / 0.1);
+    }
+    .collapse-content .sidebar-menu-item {
+      margin-left: 0;
+    }
+  }
+}
 }
 
 #_layout-sidebar {
@@ -178,4 +264,147 @@ strong {
 
 [x-cloak] {
   display: none !important;
+}
+
+/* ── Animated Gradient Text ──────────────────────────────────── */
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+/* ── Sparkline SVG ───────────────────────────────────────────── */
+.sparkline-svg polyline {
+  vector-effect: non-scaling-stroke;
+}
+
+/* ── View Transitions ────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.2s;
+  }
+
+  @keyframes slide-from-right {
+    from { transform: translateX(30px); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes slide-to-left {
+    from { transform: translateX(0); opacity: 1; }
+    to   { transform: translateX(-30px); opacity: 0; }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+
+  [data-navigation-direction="forward"]::view-transition-old(root) {
+    animation: slide-to-left 0.15s ease-out, fade-out 0.15s ease-out;
+  }
+  [data-navigation-direction="forward"]::view-transition-new(root) {
+    animation: slide-from-right 0.2s ease-out, fade-in 0.2s ease-out;
+  }
+
+  [data-navigation-direction="back"]::view-transition-old(root) {
+    animation: slide-to-left 0.15s ease-out reverse, fade-out 0.15s ease-out reverse;
+  }
+  [data-navigation-direction="back"]::view-transition-new(root) {
+    animation: slide-from-right 0.2s ease-out reverse, fade-in 0.2s ease-out reverse;
+  }
+
+  [data-navigation-direction="replace"]::view-transition-new(root) {
+    animation: fade-in 0.15s ease-out;
+  }
+}
+
+/* Nexus-style sidebar refinements —
+
+/* Nexus sidebar overrides — must be at root level, not nested */
+#_layout-sidebar #sidebar-menu .sidebar-menu-title {
+  color: oklch(var(--bc) / 0.7);
+  margin: 8px 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+#_layout-sidebar #sidebar-menu .sidebar-menu-item {
+  border-radius: var(--radius-box);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 14px;
+  color: oklch(var(--bc) / 0.8);
+  text-decoration: none;
+  cursor: pointer;
+}
+#_layout-sidebar #sidebar-menu .sidebar-menu-item.active {
+  background-color: var(--color-base-200);
+  font-weight: 500;
+  color: oklch(var(--bc));
+}
+#_layout-sidebar #sidebar-menu .collapse .collapse-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: var(--radius-box);
+  cursor: pointer;
+  color: oklch(var(--bc) / 0.8);
+}
+#_layout-sidebar #sidebar-menu .collapse .collapse-title:hover {
+  background-color: var(--color-base-200);
+}
+#_layout-sidebar #sidebar-menu .collapse .collapse-content {
+  margin-left: 24px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5px;
+  margin-top: 1px;
+  position: relative;
+  overflow: visible;
+}
+#_layout-sidebar #sidebar-menu .collapse .collapse-content::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: oklch(var(--bc) / 0.12);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── Landing Page ───────────────────────────────────────────────── */
+.landing-gradient-underline {
+  background: linear-gradient(90deg, oklch(var(--p)), oklch(var(--s)));
+  height: 4px;
+  border-radius: 2px;
+  bottom: -4px;
+}
+@keyframes gradient-shift-landing {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.landing-animated-text {
+  background-size: 200% 200%;
+  animation: gradient-shift-landing 4s ease infinite;
 }

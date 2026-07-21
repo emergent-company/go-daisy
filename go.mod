@@ -8,6 +8,9 @@ require (
 )
 
 require (
+	github.com/Oudwins/tailwind-merge-go v0.2.2 // indirect
+	github.com/alecthomas/chroma/v2 v2.27.0 // indirect
+	github.com/dlclark/regexp2/v2 v2.2.1 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect

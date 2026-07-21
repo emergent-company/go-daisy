@@ -1,11 +1,9 @@
 package nav
 
 import (
-	"context"
-	"io"
-
 	"github.com/a-h/templ"
 	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/shared"
 )
 
 // PageHeaderWithBoundary wraps PageHeader with a dev-mode component boundary annotation.
@@ -64,17 +62,19 @@ func DockWithBoundary(items []DockItem) templ.Component {
 // gallery:token variant
 // gallery:hint variant:default(link)
 func LinkWithBoundary(href string, variant LinkVariant, label string) templ.Component {
-	child := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		_, err := io.WriteString(w, label)
-		return err
-	})
-	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		return Link(href, variant, "", nil).Render(templ.WithChildren(ctx, child), w)
-	})
+	inner := shared.RenderInto(Link(href, variant, "", nil), shared.StrComp(label))
 	return devmode.ComponentBoundary("Link", inner, map[string]any{
 		"href":    href,
 		"variant": string(variant),
 		"label":   label,
+	})
+}
+
+// PageHeadingWithBoundary wraps PageHeading with a dev-mode component boundary annotation.
+func PageHeadingWithBoundary(props PageHeadingProps) templ.Component {
+	return devmode.ComponentBoundary("PageHeading", PageHeading(props), map[string]any{
+		"title":         props.Title,
+		"breadcrumbCount": len(props.Breadcrumbs),
 	})
 }
 
@@ -148,5 +148,32 @@ func ProfileMenuVariantWithBoundary(style string, opts ProfileMenuVariantOpts) t
 func PageTitleVariantWithBoundary(style string, opts PageTitleVariantOpts) templ.Component {
 	return devmode.ComponentBoundary("PageTitleVariant", PageTitleVariant(style, opts), map[string]any{
 		"style": style,
+	})
+}
+
+// ScrollTopbarWithBoundary wraps ScrollTopbar with a dev-mode component boundary annotation.
+// gallery:token title
+// gallery:hint title:default(Dashboard)
+func ScrollTopbarWithBoundary(title string) templ.Component {
+	return devmode.ComponentBoundary("ScrollTopbar", ScrollTopbar(title, nil), map[string]any{
+		"title": title,
+	})
+}
+
+// MegamenuWithBoundary wraps Megamenu with a dev-mode component boundary annotation.
+func MegamenuWithBoundary(items []MegamenuItem) templ.Component {
+	return devmode.ComponentBoundary("Megamenu", Megamenu(items), map[string]any{
+		"itemCount": len(items),
+	})
+}
+
+// MenuSectionWithBoundary wraps MenuSection with a dev-mode component boundary annotation.
+// gallery:token title,items
+// gallery:hint title:default(Section)
+// gallery:hint items:slice(3)
+func MenuSectionWithBoundary(title string, items []MenuItem) templ.Component {
+	return devmode.ComponentBoundary("MenuSection", MenuSection(title, items), map[string]any{
+		"title":     title,
+		"itemCount": len(items),
 	})
 }

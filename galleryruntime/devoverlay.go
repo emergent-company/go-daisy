@@ -8,107 +8,8 @@ const devOverlayScript = `
 <script>
 (function() {
   // Map from data-component name → gallery slug for click-to-navigate.
-  // Table sub-primitives (TableHead, TableRow, TableCell, etc.) are intentionally
-  // omitted — they are layout elements with no standalone page; only TableWithProps
-  // links to the table page as the canonical root entry.
-  var COMPONENT_SLUGS = {
-    // Basics
-    'Button':           'button',
-    'Badge':            'badge',
-    'StatusBadge':      'status-badge-real',
-    'Avatar':           'avatar-real',
-    'Card':             'card-real',
-    'Tag':              'tag',
-    'Divider':          'divider',
-    'Kbd':              'kbd',
-    'IconSpanColored':  'button',
-    // Feedback
-    'Toast':            'toast-real',
-    'Alert':            'alert',
-    'Empty':            'empty-state-real',
-    'Loader':           'loader',
-    'NoPermissions':    'no-permissions',
-    'SectionHeader':    'section-header',
-    'Skeleton':         'skeleton',
-    // Data display
-    'StatCard':         'stat-card-real',
-    'StatCardMinimal':  'stat-card-minimal',
-    'ProgressCard':     'progress-card',
-    'Timeline':         'timeline',
-    'ChatBubble':       'chat-bubble',
-    'LogsTable':        'logs-table',
-    // Table (root only — sub-primitives have no standalone page)
-    'TableWithProps':   'table',
-    'Table':            'table',
-    'ListArea':         'list-basic',
-    // Navigation
-    'ActionMenu':       'action-menu-real',
-    'FilterTabs':       'filter-tabs',
-    'FilterCard':       'filter-bar',
-    'Pagination':       'pagination-real',
-    'TabMenu':          'tab-menu-real',
-    'SimpleTabs':       'tab-menu-real',
-    'PageHeader':       'page-header-real',
-    'Menu':             'menu-real',
-    'TopBar':           'top-bar-real',
-    'Navbar':           'navbar-real',
-    'Breadcrumbs':      'breadcrumbs',
-    'Dock':             'dock-nav',
-    'ProfileMenu':      'profile-menu',
-    'PageTitleMinimal': 'page-title-minimal',
-    'PageTitleEditor':  'page-title-editor',
-    'FooterMinimal':    'footer-minimal',
-    // Foundation / display
-    'Progress':         'progress',
-    'Steps':            'steps',
-    'Accordion':        'collapse',
-    'Swap':             'swap',
-    'Countdown':        'countdown',
-    'StatusDot':        'status-dots',
-    'Tooltip':          'tooltip',
-    'Indicator':        'indicator',
-    'Stack':            'stack',
-    'Diff':             'diff',
-    'Mask':             'mask',
-    'Carousel':         'carousel',
-    'Link':             'link-styles',
-    // Layout
-    'Hero':             'hero',
-    'Join':             'join',
-    'Fieldset':         'fieldset',
-    // Mockups
-    'MockupBrowser':    'mockup-browser',
-    'MockupCode':       'mockup-code',
-    'MockupPhone':      'mockup-phone',
-    'MockupWindow':     'mockup-window',
-    // Overlays
-    'Modal':            'modal-real',
-    'ConfirmPopup':     'confirm-popup',
-    'FormModal':        'form-modal-real',
-    'Dropdown':         'dropdown',
-    'FAB':              'fab',
-    'NotificationPanel':'notification-panel',
-    'NotificationRow':  'notification-panel',
-    // Person / avatars
-    'PersonCell':       'person-cell',
-    // Forms
-    'TextInput':        'text-input',
-    'TextareaInput':    'textarea-input',
-    'CheckboxInput':    'checkbox-input',
-    'SelectInput':      'select-input',
-    'RangeInput':       'range-input',
-    'SearchInput':      'search-input-real',
-    'FormField':        'form-field-real',
-    'RadioGroup':       'form-radio',
-    'Rating':           'form-rating',
-    'FileInput':        'form-file',
-    'Checkbox':         'form-checkbox',
-    'Toggle':           'form-checkbox',
-    'PromptBar':        'prompt-bar-minimal',
-    'PromptBarAction':  'prompt-bar-action',
-    'InputSpinner':     'input-spinner',
-    'WizardStepper':    'wizard-stepper',
-  };
+  // Injected at render time from ComponentSlugsJSON() — single source of truth.
+  var COMPONENT_SLUGS = __COMPONENT_SLUGS_JSON__;
 
   // Depth-indexed colour palette for nested component indicators.
   var DEPTH_COLORS = [
@@ -304,14 +205,10 @@ const devOverlayScript = `
           // match the sidebar and COMPONENT_SLUGS entries.
           var slash = name.indexOf('/');
           if (slash !== -1) name = name.substring(slash + 1);
-          // For void elements (innerHTML is empty), use cleaned outerHTML.
-          var html  = el.innerHTML || '';
-          if (!html && el.outerHTML) {
-            var clone = el.cloneNode(true);
-            clone.removeAttribute('data-component');
-            clone.removeAttribute('data-props');
-            html = clone.outerHTML;
-          }
+          var clone = el.cloneNode(true);
+          clone.removeAttribute('data-component');
+          clone.removeAttribute('data-props');
+          var html = clone.outerHTML;
           nodes.push({name: name, props: props, depth: depth, html: html});
           depth++;
         }

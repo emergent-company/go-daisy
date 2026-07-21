@@ -3,6 +3,8 @@ package galleryruntime
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/emergent-company/go-daisy/components/ui"
 )
 
 // isTemplPage returns true when the component uses templ.Component for rendering
@@ -49,7 +51,7 @@ templ ComponentDetail(c GalleryComponent) {
 			<div>
 				<div class="flex items-center gap-3 mb-1">
 					<h1 class="text-xl font-bold text-base-content">{ c.Name }</h1>
-					<span class="badge badge-neutral badge-sm">{ string(c.Category) }</span>
+				@ui.Badge(ui.BadgeProps{Variant: ui.BadgeNeutral, Size: ui.BadgeSizeSM, Label: string(c.Category)})
 				</div>
 				<p class="text-sm text-base-content/50">{ c.Description }</p>
 			</div>
@@ -177,27 +179,16 @@ templ ComponentDetail(c GalleryComponent) {
 									<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><line x1="8" y1="22" x2="16" y2="22"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
 								</button>
 							</div>
-							<!-- Fullscreen button -->
-							<button
-								class="btn btn-xs btn-ghost border border-base-200 gap-1"
-								onclick="openFullscreenPreview()"
-								title="Fullscreen preview"
-							>
-								<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-base-200 gap-1", Icon: "lucide--maximize-2", Attrs: templ.Attributes{"onclick": "openFullscreenPreview()", "title": "Fullscreen preview"}}) {
 								Fullscreen
-							</button>
-						<a href={ templ.URL("/gallery/render/" + c.Slug) } target="_blank" class="btn btn-xs btn-ghost border border-base-200 gap-1" title="Open in new tab">
-							<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-							Open
-						</a>
+							}
+							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-base-200 gap-1", Icon: "lucide--external-link", Href: "/gallery/render/" + c.Slug, Attrs: templ.Attributes{"title": "Open in new tab", "target": "_blank"}}) {
+								Open
+							}
 							<span class="text-xs text-base-content/40">Theme:</span>
-							<button
-								id="preview-theme-toggle"
-								class="btn btn-xs btn-ghost border border-base-200"
-								onclick="toggleGalleryTheme()"
-							>
+							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-base-200", Attrs: templ.Attributes{"id": "preview-theme-toggle", "onclick": "toggleGalleryTheme()"}}) {
 								&#9728; Light
-							</button>
+							}
 						</div>
 					</div>
 
@@ -217,14 +208,9 @@ templ ComponentDetail(c GalleryComponent) {
 		<div id="component-tree-panel" class="hidden flex flex-col gap-2">
 			<div class="flex items-center justify-between gap-2">
 				<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Component Tree</span>
-				<button
-					class="btn btn-xs btn-ghost border border-base-200 gap-1"
-					onclick="resetAllParams()"
-					title="Reset all props and parameters to defaults"
-				>
-					<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-base-200 gap-1", Icon: "lucide--rotate-ccw", Attrs: templ.Attributes{"onclick": "resetAllParams()", "title": "Reset all props and parameters to defaults"}}) {
 					Reset
-				</button>
+				}
 			</div>
 			<div id="component-tree-body" class="rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden">
 				<p class="p-4 text-xs text-base-content/40">Loading…</p>
@@ -243,22 +229,8 @@ templ ComponentDetail(c GalleryComponent) {
 					<div class="flex flex-col">
 						<div class="flex items-center justify-between mb-2">
 							<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">HTML Source</span>
-							<button
-								id="copy-html-btn"
-								class="btn btn-xs btn-ghost border border-base-200 gap-1"
-								onclick="copyGalleryHTML()"
-							>
-								<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-								Copy
-							</button>
 						</div>
-						<div class="rounded-xl border border-base-200 overflow-hidden shadow-sm">
-							<pre
-								id="gallery-html-source"
-								class="language-html"
-								style="margin:0; border-radius:0; font-size:0.78rem; line-height:1.6;"
-							><code class="language-html">{ c.HTML }</code></pre>
-						</div>
+						@ui.CodeBlock(ui.CodeBlockProps{Language: "html", Code: c.HTML, Label: "HTML", Highlight: ui.Highlight(c.HTML, "html")})
 					</div>
 				}
 
@@ -281,7 +253,7 @@ templ ComponentDetail(c GalleryComponent) {
 		<div class="flex items-center justify-between px-4 py-3 border-b border-base-200 shrink-0 bg-base-100">
 			<div class="flex items-center gap-3">
 				<h2 class="text-lg font-bold text-base-content">{ c.Name }</h2>
-				<span class="badge badge-neutral badge-sm">{ string(c.Category) }</span>
+				@ui.Badge(ui.BadgeProps{Variant: ui.BadgeNeutral, Size: ui.BadgeSizeSM, Label: string(c.Category)})
 			</div>
 			<div class="flex items-center gap-2">
 				<!-- Responsive breakpoint buttons -->
@@ -298,22 +270,13 @@ templ ComponentDetail(c GalleryComponent) {
 				</div>
 				<!-- Theme toggle -->
 				<span class="text-xs text-base-content/40">Theme:</span>
-				<button
-					id="fullscreen-theme-toggle"
-					class="btn btn-xs btn-ghost border border-base-200"
-					onclick="toggleFullscreenTheme()"
-				>
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-base-200", Attrs: templ.Attributes{"id": "fullscreen-theme-toggle", "onclick": "toggleFullscreenTheme()"}}) {
 					&#9728; Light
-				</button>
+				}
 				<!-- Exit button -->
-				<button
-					class="btn btn-sm btn-ghost gap-1"
-					onclick="closeFullscreenPreview()"
-					title="Exit fullscreen"
-				>
-					<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonSM, Variant: ui.ButtonGhost, ExtraClass: "gap-1", Icon: "lucide--minimize-2", Attrs: templ.Attributes{"onclick": "closeFullscreenPreview()", "title": "Exit fullscreen"}}) {
 					Exit
-				</button>
+				}
 			</div>
 		</div>
 		<!-- Fullscreen iframe -->
@@ -328,15 +291,12 @@ templ ComponentDetail(c GalleryComponent) {
 		</div>
 	</div>
 
-	<!-- Prism.js syntax highlighting (dev tool only) -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"/>
-	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
-
 	<!-- Theme toggle + copy + fullscreen script -->
 	<script>
 		(function() {
 			var STORAGE_KEY = 'gallery-preview-theme';
+		var THEMES = { light: 'nord', dark: 'dracula' };
+		function toDaisyTheme(m) { return THEMES[m] || 'nord'; }
 
 			function getSavedTheme() {
 				try { return localStorage.getItem(STORAGE_KEY) || 'light'; } catch(e) { return 'light'; }
@@ -363,8 +323,8 @@ templ ComponentDetail(c GalleryComponent) {
 
 			function applyStoredTheme() {
 				var theme = getSavedTheme();
-				applyThemeToFrame('preview-frame', theme);
-				applyThemeToFrame('fullscreen-preview-frame', theme);
+				applyThemeToFrame('preview-frame', toDaisyTheme(theme));
+				applyThemeToFrame('fullscreen-preview-frame', toDaisyTheme(theme));
 				updateThemeButton('preview-theme-toggle', theme);
 				updateThemeButton('fullscreen-theme-toggle', theme);
 			}
@@ -385,9 +345,9 @@ templ ComponentDetail(c GalleryComponent) {
 				var frame = document.getElementById(frameId);
 				if (!frame) return;
 				var theme = getSavedTheme();
-				applyThemeToFrame(frameId, theme);
+				applyThemeToFrame(frameId, toDaisyTheme(theme));
 				frame.addEventListener('load', function() {
-					applyThemeToFrame(frameId, theme);
+					applyThemeToFrame(frameId, toDaisyTheme(theme));
 					if (frameId === 'preview-frame') {
 						setTimeout(resizePreviewFrame, 100);
 					}
@@ -421,9 +381,9 @@ templ ComponentDetail(c GalleryComponent) {
 			window.toggleGalleryTheme = function() {
 				var theme = getSavedTheme() === 'dark' ? 'light' : 'dark';
 				saveTheme(theme);
-				applyThemeToFrame('preview-frame', theme);
+				applyThemeToFrame('preview-frame', toDaisyTheme(theme));
 				updateThemeButton('preview-theme-toggle', theme);
-				applyThemeToFrame('fullscreen-preview-frame', theme);
+				applyThemeToFrame('fullscreen-preview-frame', toDaisyTheme(theme));
 				updateThemeButton('fullscreen-theme-toggle', theme);
 				setTimeout(resizePreviewFrame, 50);
 			};
@@ -442,27 +402,14 @@ templ ComponentDetail(c GalleryComponent) {
 				setTimeout(resizePreviewFrame, 200);
 			};
 
-			window.copyGalleryHTML = function() {
-				var pre = document.getElementById('gallery-html-source');
-				if (!pre) return;
-				var text = pre.innerText || pre.textContent;
-				navigator.clipboard.writeText(text).then(function() {
-					var btn = document.getElementById('copy-html-btn');
-					if (btn) {
-						btn.textContent = '\u2713 Copied!';
-						setTimeout(function() { btn.innerHTML = '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy'; }, 2000);
-					}
-				});
-			};
-
-			window.openFullscreenPreview = function() {
+					window.openFullscreenPreview = function() {
 				var overlay = document.getElementById('fullscreen-preview-overlay');
 				if (overlay) {
 					overlay.classList.remove('hidden');
 					document.body.style.overflow = 'hidden';
 				}
 				var theme = getSavedTheme();
-				applyThemeToFrame('fullscreen-preview-frame', theme);
+				applyThemeToFrame('fullscreen-preview-frame', toDaisyTheme(theme));
 				updateThemeButton('fullscreen-theme-toggle', theme);
 			};
 
@@ -479,9 +426,9 @@ templ ComponentDetail(c GalleryComponent) {
 			window.toggleFullscreenTheme = function() {
 				var theme = getSavedTheme() === 'dark' ? 'light' : 'dark';
 				saveTheme(theme);
-				applyThemeToFrame('fullscreen-preview-frame', theme);
+				applyThemeToFrame('fullscreen-preview-frame', toDaisyTheme(theme));
 				updateThemeButton('fullscreen-theme-toggle', theme);
-				applyThemeToFrame('preview-frame', theme);
+				applyThemeToFrame('preview-frame', toDaisyTheme(theme));
 				updateThemeButton('preview-theme-toggle', theme);
 			};
 
@@ -497,16 +444,11 @@ templ ComponentDetail(c GalleryComponent) {
 
 			document.addEventListener('htmx:afterSwap', function() {
 				setTimeout(function() {
-					// After HTMX swaps innerHTML, iframes with src= don't auto-load.
-					// Reassign src to force the browser to navigate the iframe.
 					var frame = document.getElementById('preview-frame');
 					if (frame && frame.src && !frame.srcdoc) {
 						var src = frame.src;
-						frame.src = '';
-						frame.src = src;
-						// After the iframe loads, ask its devoverlay to re-post the
-						// component tree. This fixes the race where postTree() fires
-						// before the new handleTreeMessage listener is ready.
+						// Register load listener BEFORE changing src so the
+						// about:blank navigation doesn't consume it.
 						frame.addEventListener('load', function onFrameLoad() {
 							frame.removeEventListener('load', onFrameLoad);
 							try {
@@ -515,6 +457,8 @@ templ ComponentDetail(c GalleryComponent) {
 								}
 							} catch(e) {}
 						});
+						frame.src = '';
+						frame.src = src;
 					}
 					var fsFrame = document.getElementById('fullscreen-preview-frame');
 					if (fsFrame && fsFrame.src && !fsFrame.srcdoc) {
@@ -526,23 +470,36 @@ templ ComponentDetail(c GalleryComponent) {
 					applyThemeOnLoad('preview-frame');
 					applyThemeOnLoad('fullscreen-preview-frame');
 					attachPreviewResizeObserver();
-				}, 0);
-				if (window.Prism) Prism.highlightAll();
-			});
+			}, 0);
+		});
 
 			document.addEventListener('DOMContentLoaded', function() {
 				applyStoredTheme();
 				applyThemeOnLoad('preview-frame');
 				applyThemeOnLoad('fullscreen-preview-frame');
-				attachPreviewResizeObserver();
-				if (window.Prism) Prism.highlightAll();
+			attachPreviewResizeObserver();
+			// Retry postTree after a delay to catch the iframe load
+				// completion when the devoverlay script initialized before
+				// the parent's message listener was registered.
+				setTimeout(function() {
+					var frame = document.getElementById('preview-frame');
+					if (frame && frame.contentWindow && typeof frame.contentWindow.postTree === 'function') {
+						frame.contentWindow.postTree();
+					}
+				}, 600);
 			});
 			if (document.readyState !== 'loading') {
 				applyStoredTheme();
 				applyThemeOnLoad('preview-frame');
 				applyThemeOnLoad('fullscreen-preview-frame');
-				attachPreviewResizeObserver();
-				if (window.Prism) Prism.highlightAll();
+			attachPreviewResizeObserver();
+			// Same retry for non-DOMContentLoaded case
+				setTimeout(function() {
+					var frame = document.getElementById('preview-frame');
+					if (frame && frame.contentWindow && typeof frame.contentWindow.postTree === 'function') {
+						frame.contentWindow.postTree();
+					}
+				}, 600);
 			}
 		})();
 	</script>
@@ -709,67 +666,24 @@ templ ComponentDetail(c GalleryComponent) {
 		})();
 	</script>
 
+<!-- Single source of truth for component slugs (shared across main tree + sub-examples tree). -->
+@ComponentSlugsScript()
+
 <!-- Component Tree panel JS: listens for postMessage from dev overlay in iframe -->
 <script>
 (function() {
 	// Depth-indexed colour palette matching devOverlayScript.
 	var DEPTH_COLORS = ['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899'];
 
-	// Map component name → gallery slug (must stay in sync with devoverlay.go).
-	var COMPONENT_SLUGS = {
-		// Basics
-		'Button':'button','Badge':'badge','StatusBadge':'status-badge-real',
-		'Avatar':'avatar-real','Card':'card-real','Tag':'tag',
-		'Divider':'divider','Kbd':'kbd','IconSpanColored':'button',
-		// Feedback
-		'Toast':'toast-real','Alert':'alert','Empty':'empty-state-real',
-		'Loader':'loader','NoPermissions':'no-permissions','SectionHeader':'section-header','Skeleton':'skeleton',
-		// Data display
-		'StatCard':'stat-card-real','StatCardMinimal':'stat-card-minimal','ProgressCard':'progress-card',
-		'Timeline':'timeline','ChatBubble':'chat-bubble','ChatInput':'chat-input','AIThinkingIndicator':'chat-bubble','ChatWindow':'chat-bubble','PromptBarModelSelector':'prompt-bar-model','PromptBarAbility':'prompt-bar-ability','LogsTable':'logs-table',
-		// Table (root only — sub-primitives have no standalone page)
-		'TableWithProps':'table','Table':'table','ListArea':'list-basic',
-		// Navigation
-		'ActionMenu':'action-menu-real','FilterTabs':'filter-tabs','FilterCard':'filter-bar',
-		'Pagination':'pagination-real','TabMenu':'tab-menu-real','SimpleTabs':'tab-menu-real',
-		'PageHeader':'page-header-real','Menu':'menu-real','TopBar':'top-bar-real',
-		'Navbar':'navbar-real','Breadcrumbs':'breadcrumbs','Dock':'dock-nav',
-		'ProfileMenu':'profile-menu','PageTitleMinimal':'page-title-minimal',
-		'PageTitleEditor':'page-title-editor','FooterMinimal':'footer-minimal',
-		// Foundation / display
-		'Progress':'progress','Steps':'steps','Accordion':'collapse','Swap':'swap',
-		'Countdown':'countdown','StatusDot':'status-dots','Tooltip':'tooltip',
-		'Indicator':'indicator','Stack':'stack','Diff':'diff','Mask':'mask',
-		'Carousel':'carousel','Link':'link-styles',
-		// Layout
-		'Hero':'hero','Join':'join','Fieldset':'fieldset',
-		// Mockups
-		'MockupBrowser':'mockup-browser','MockupCode':'mockup-code',
-		'MockupPhone':'mockup-phone','MockupWindow':'mockup-window',
-		// Overlays
-		'Modal':'modal-real','ConfirmPopup':'confirm-popup','FormModal':'form-modal-real',
-		'Dropdown':'dropdown','FAB':'fab','NotificationPanel':'notification-panel',
-		// Person
-		'PersonCell':'person-cell',
-		// Forms
-		'TextInput':'text-input','TextareaInput':'textarea-input',
-		'CheckboxInput':'checkbox-input','SelectInput':'select-input',
-		'RangeInput':'range-input','SearchInput':'search-input-real',
-		'FormField':'form-field-real','RadioGroup':'form-radio','Rating':'form-rating',
-		'FileInput':'form-file','Checkbox':'form-checkbox','Toggle':'form-checkbox',
-		'PromptBar':'prompt-bar-minimal','PromptBarAction':'prompt-bar-action',
-		'InputSpinner':'input-spinner','WizardStepper':'wizard-stepper',
-	};
+	window.depthColor = function(d) { return DEPTH_COLORS[d % DEPTH_COLORS.length]; };
 
-	function depthColor(d) { return DEPTH_COLORS[d % DEPTH_COLORS.length]; }
-
-	function escHtml(s) {
+	window.escHtml = function(s) {
 		return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 	}
 
 	// Strip dev-only attributes (data-component, data-props, display:contents wrapper divs)
 	// from HTML before displaying it in the code preview.
-	function cleanHtml(raw) {
+	window.cleanHtml = function(raw) {
 		// Remove data-component="…" — value never contains escaped quotes.
 		var s = raw.replace(/\s*data-component="[^"]*"/g, '');
 		// Remove data-props="…" — value may contain \" escaped quotes inside JSON.
@@ -790,7 +704,7 @@ templ ComponentDetail(c GalleryComponent) {
 	}
 
 	// Pretty-print HTML with basic indentation.
-	function formatHtml(raw) {
+	window.formatHtml = function(raw) {
 		var indent = 0;
 		var TAB = '  ';
 		var result = '';
@@ -821,7 +735,7 @@ templ ComponentDetail(c GalleryComponent) {
 	// Returns an HTML string, or '' if no props worth showing.
 	// Bool props become toggle checkboxes; strings/numbers become text inputs.
 	// Each row has data-prop-key so applyAllQueryParamsToFrame can collect them.
-	function renderPropsTable(rawProps, coveredQPs) {
+	window.renderPropsTable = function(rawProps, coveredQPs) {
 		var obj;
 		try { obj = JSON.parse(rawProps); } catch(e) { return ''; }
 		if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return '';
@@ -858,7 +772,7 @@ templ ComponentDetail(c GalleryComponent) {
 			+ '<tbody>' + rows + '</tbody></table></div>';
 	}
 
-	function renderTree(nodes, coveredQPs) {
+	window.renderTree = function(nodes, coveredQPs) {
 		if (!nodes || nodes.length === 0) return '<p class="p-4 text-xs text-base-content/40">No component boundaries found.</p>';
 		var html = '<ul class="py-1">';
 		for (var i = 0; i < nodes.length; i++) {
@@ -897,12 +811,8 @@ templ ComponentDetail(c GalleryComponent) {
 	window.devTreeToggle = function(id) {
 		var el = document.getElementById(id);
 		if (!el) return;
-		var isHidden = el.classList.toggle('hidden');
-		if (!isHidden && window.Prism) {
-			var code = el.querySelector('code');
-			if (code) Prism.highlightElement(code);
-		}
-	};
+	var isHidden = el.classList.toggle('hidden');
+};
 
 	window._treeReceivedOnce = false;
 	function handleTreeMessage(e) {
@@ -924,8 +834,8 @@ templ ComponentDetail(c GalleryComponent) {
 			// This prevents prop editors from conflicting with Parameters section defaults.
 			var coveredQPs = {};
 			(tokens || []).filter(function(t){ return t.QueryParam; }).forEach(function(t){ coveredQPs[t.QueryParam] = 1; });
-			body.innerHTML = renderTree(tree, coveredQPs);
-			// On first tree receive per variant, apply all defaults so the iframe reflects them.
+		body.innerHTML = renderTree(tree, coveredQPs);
+		// On first tree receive per variant, apply all defaults so the iframe reflects them.
 			if (!window._treeReceivedOnce) {
 				window._treeReceivedOnce = true;
 				if (window.applyAllQueryParamsToFrame) window.applyAllQueryParamsToFrame('preview-frame');
@@ -965,25 +875,14 @@ templ ComponentExamples(c GalleryComponent) {
 								<span class="text-xs font-semibold text-base-content/60">{ sub.Label }</span>
 							</div>
 							<div class="flex items-center gap-2">
-								<!-- Open in new tab -->
-								<a
-									href={ templ.URL(fmt.Sprintf("/gallery/render/%s/examples?s=%d&e=%d", c.Slug, si, ei)) }
-									target="_blank"
-									class="btn btn-xs btn-ghost border border-base-200 gap-1"
-									title="Open in new tab"
-								>
-									<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-									Open
-								</a>
-								<!-- Theme toggle -->
-								<span class="text-xs text-base-content/40">Theme:</span>
-								<button
-									class="btn btn-xs btn-ghost border border-base-200 examples-theme-btn"
-									data-frame-id={ fmt.Sprintf("examples-sub-frame-%d-%d", si, ei) }
-									onclick={ templ.JSFuncCall("toggleExamplesSubTheme", fmt.Sprintf("examples-sub-frame-%d-%d", si, ei)) }
-								>
-									&#9728; Light
-								</button>
+								@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-base-200 gap-1", Icon: "lucide--external-link", Href: fmt.Sprintf("/gallery/render/%s/examples?s=%d&e=%d", c.Slug, si, ei), Attrs: templ.Attributes{"target": "_blank", "title": "Open in new tab"}}) {
+								Open
+							}
+							<!-- Theme toggle -->
+							<span class="text-xs text-base-content/40">Theme:</span>
+							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-base-200 examples-theme-btn", Attrs: templ.Attributes{"data-frame-id": fmt.Sprintf("examples-sub-frame-%d-%d", si, ei), "onclick": templ.JSFuncCall("toggleExamplesSubTheme", fmt.Sprintf("examples-sub-frame-%d-%d", si, ei))}}) {
+								&#9728; Light
+							}
 							</div>
 						</div>
 						<!-- Sub-example iframe -->
@@ -1020,34 +919,17 @@ templ ComponentExamples(c GalleryComponent) {
 							}
 						</div>
 						<div class="flex items-center gap-2">
-							<!-- Fullscreen -->
-							<button
-								class="btn btn-xs btn-ghost border border-base-200 gap-1"
-								onclick={ templ.JSFuncCall("openExamplesFullscreen", c.Slug, SlugifyStoryName(story.Name), si) }
-								title="Fullscreen preview"
-							>
-								<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-base-200 gap-1", Icon: "lucide--maximize-2", Attrs: templ.Attributes{"onclick": templ.JSFuncCall("openExamplesFullscreen", c.Slug, SlugifyStoryName(story.Name), si), "title": "Fullscreen preview"}}) {
 								Fullscreen
-							</button>
-							<!-- Open in new tab -->
-							<a
-								href={ templ.URL("/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name)) }
-								target="_blank"
-								class="btn btn-xs btn-ghost border border-base-200 gap-1"
-								title="Open in new tab"
-							>
-								<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+							}
+							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-base-200 gap-1", Icon: "lucide--external-link", Href: "/gallery/render/" + c.Slug + "/" + SlugifyStoryName(story.Name), Attrs: templ.Attributes{"target": "_blank", "title": "Open in new tab"}}) {
 								Open
-							</a>
+							}
 							<!-- Theme toggle -->
 							<span class="text-xs text-base-content/40">Theme:</span>
-							<button
-								class="btn btn-xs btn-ghost border border-base-200 examples-theme-btn"
-								data-frame-idx={ fmt.Sprintf("%d", si) }
-								onclick={ templ.JSFuncCall("toggleExamplesTheme", si) }
-							>
+							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-base-200 examples-theme-btn", Attrs: templ.Attributes{"data-frame-idx": fmt.Sprintf("%d", si), "onclick": templ.JSFuncCall("toggleExamplesTheme", si)}}) {
 								&#9728; Light
-							</button>
+							}
 						</div>
 					</div>
 					<!-- Story iframe -->
@@ -1074,6 +956,8 @@ templ ComponentExamples(c GalleryComponent) {
 		function getSavedTheme() {
 			try { return localStorage.getItem('gallery-preview-theme') || 'light'; } catch(e) { return 'light'; }
 		}
+		var THEMES = { light: 'nord', dark: 'dracula' };
+		function toDaisyTheme(m) { return THEMES[m] || 'nord'; }
 
 		function applyThemeToFrame(frame, theme) {
 			try {
@@ -1099,7 +983,7 @@ templ ComponentExamples(c GalleryComponent) {
 			var next = current === 'dark' ? 'light' : 'dark';
 			frameThemes[idx] = next;
 			var frame = document.getElementById('examples-frame-' + idx);
-			if (frame) applyThemeToFrame(frame, next);
+			if (frame) applyThemeToFrame(frame, toDaisyTheme(next));
 			updateThemeBtn(idx, next);
 		};
 
@@ -1109,7 +993,7 @@ templ ComponentExamples(c GalleryComponent) {
 			var next = current === 'dark' ? 'light' : 'dark';
 			frameThemes[frameId] = next;
 			var frame = document.getElementById(frameId);
-			if (frame) applyThemeToFrame(frame, next);
+			if (frame) applyThemeToFrame(frame, toDaisyTheme(next));
 			updateThemeBtnById(frameId, next);
 		};
 
@@ -1128,7 +1012,7 @@ templ ComponentExamples(c GalleryComponent) {
 					var applyTheme = function() {
 						try {
 							var doc = fsFrame.contentDocument || fsFrame.contentWindow.document;
-							if (doc && doc.documentElement) doc.documentElement.setAttribute('data-theme', theme);
+							if (doc && doc.documentElement) doc.documentElement.setAttribute('data-theme', toDaisyTheme(theme));
 						} catch(e) {}
 					};
 					if (fsFrame.contentDocument && fsFrame.contentDocument.readyState === 'complete') {
@@ -1171,7 +1055,7 @@ templ ComponentExamples(c GalleryComponent) {
 			frameThemes[idx] = theme;
 			updateThemeBtn(idx, theme);
 			function applyAndResize() {
-				applyThemeToFrame(frame, theme);
+				applyThemeToFrame(frame, toDaisyTheme(theme));
 				autoResizeFrame(frame);
 			}
 			if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
@@ -1187,7 +1071,7 @@ templ ComponentExamples(c GalleryComponent) {
 			frameThemes[frameId] = theme;
 			updateThemeBtnById(frameId, theme);
 			function applyAndResize() {
-				applyThemeToFrame(frame, theme);
+				applyThemeToFrame(frame, toDaisyTheme(theme));
 				autoResizeFrame(frame);
 			}
 			if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
@@ -1208,157 +1092,60 @@ templ ComponentExamples(c GalleryComponent) {
 		// Component tree rendering for sub-example iframes.
 		// Each sub-example iframe has data-tree-panel and data-tree-body attributes
 		// that point to its dedicated tree panel div.
-		(function() {
-			var DEPTH_COLORS = ['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899'];
-			var COMPONENT_SLUGS = {
-						// Basics
-						'Button':'button','Badge':'badge','StatusBadge':'status-badge-real',
-						'Avatar':'avatar-real','Card':'card-real','Tag':'tag',
-						'Divider':'divider','Kbd':'kbd','IconSpanColored':'button',
-						// Feedback
-						'Toast':'toast-real','Alert':'alert','Empty':'empty-state-real',
-						'Loader':'loader','NoPermissions':'no-permissions','SectionHeader':'section-header','Skeleton':'skeleton',
-						// Data display
-						'StatCard':'stat-card-real','StatCardMinimal':'stat-card-minimal','ProgressCard':'progress-card',
-						'Timeline':'timeline','ChatBubble':'chat-bubble','ChatInput':'chat-input','AIThinkingIndicator':'chat-bubble','ChatWindow':'chat-bubble','PromptBarModelSelector':'prompt-bar-model','PromptBarAbility':'prompt-bar-ability','LogsTable':'logs-table',
-						// Table (root only — sub-primitives have no standalone page)
-						'TableWithProps':'table','Table':'table','ListArea':'list-basic',
-						// Navigation
-						'ActionMenu':'action-menu-real','FilterTabs':'filter-tabs','FilterCard':'filter-bar',
-						'Pagination':'pagination-real','TabMenu':'tab-menu-real','SimpleTabs':'tab-menu-real',
-						'PageHeader':'page-header-real','Menu':'menu-real','TopBar':'top-bar-real',
-						'Navbar':'navbar-real','Breadcrumbs':'breadcrumbs','Dock':'dock-nav',
-						'ProfileMenu':'profile-menu','PageTitleMinimal':'page-title-minimal',
-						'PageTitleEditor':'page-title-editor','FooterMinimal':'footer-minimal',
-						// Foundation / display
-						'Progress':'progress','Steps':'steps','Accordion':'collapse','Swap':'swap',
-						'Countdown':'countdown','StatusDot':'status-dots','Tooltip':'tooltip',
-						'Indicator':'indicator','Stack':'stack','Diff':'diff','Mask':'mask',
-						'Carousel':'carousel','Link':'link-styles',
-						// Layout
-						'Hero':'hero','Join':'join','Fieldset':'fieldset',
-						// Mockups
-						'MockupBrowser':'mockup-browser','MockupCode':'mockup-code',
-						'MockupPhone':'mockup-phone','MockupWindow':'mockup-window',
-						// Overlays
-						'Modal':'modal-real','ConfirmPopup':'confirm-popup','FormModal':'form-modal-real',
-						'Dropdown':'dropdown','FAB':'fab','NotificationPanel':'notification-panel',
-						// Person
-						'PersonCell':'person-cell',
-						// Forms
-						'TextInput':'text-input','TextareaInput':'textarea-input',
-						'CheckboxInput':'checkbox-input','SelectInput':'select-input',
-						'RangeInput':'range-input','SearchInput':'search-input-real',
-						'FormField':'form-field-real','RadioGroup':'form-radio','Rating':'form-rating',
-						'FileInput':'form-file','Checkbox':'form-checkbox','Toggle':'form-checkbox',
-						'PromptBar':'prompt-bar-minimal','PromptBarAction':'prompt-bar-action',
-						'InputSpinner':'input-spinner','WizardStepper':'wizard-stepper',
-			};
-			function depthColor(d) { return DEPTH_COLORS[d % DEPTH_COLORS.length]; }
-		function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-		function cleanHtml(raw) {
-			var s = raw.replace(/\s*data-component="[^"]*"/g, '');
-			s = s.replace(/\s*data-props="(?:[^"\\]|\\.)*"/g, '');
-			s = s.replace(/\s*=""(?=[\s>])/g, '');
-			var prev;
-			do { prev = s; s = s.replace(/<div\s+style="display:contents"\s*>([\s\S]*?)<\/div>/g, '$1'); } while (s !== prev);
-			return s.trim();
-		}
-		function formatHtml(raw) {
-			var indent = 0, TAB = '  ', result = '';
-			var parts = raw.replace(/>\s*</g, '>\n<').split('\n');
-			for (var i = 0; i < parts.length; i++) {
-				var line = parts[i].trim();
-				if (!line) continue;
-				if (/^<\//.test(line)) indent = Math.max(0, indent - 1);
-				result += TAB.repeat(indent) + line + '\n';
-				if (/^<[^/!][^>]*[^/]>$/.test(line) && !/^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/.test(line)) indent++;
-			}
-			return result.trim();
-		}
-		function renderPropsTable(rawProps) {
-			var obj; try { obj = JSON.parse(rawProps); } catch(e) { return ''; }
-			if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return '';
-			var skip = {class:1,style:1,id:1,Class:1,Style:1,ID:1};
-			var rows = '', count = 0, keys = Object.keys(obj);
-			for (var i = 0; i < keys.length; i++) {
-				var k = keys[i]; if (skip[k]) continue;
-				var v = obj[k];
-				var defVal = (v === null || v === undefined) ? '' : String(v);
-				var vs;
-				if (v === null || v === undefined) vs = '<span style="color:#94a3b8">null</span>';
-				else if (v === true)  vs = '<span style="color:#22c55e">true</span>';
-				else if (v === false) vs = '<span style="color:#f87171">false</span>';
-				else if (typeof v === 'number') vs = '<span style="color:#fb923c">' + escHtml(String(v)) + '</span>';
-				else { var str = String(v); vs = str === '' ? '<span style="color:#94a3b8">(empty)</span>' : '<span style="color:#e2e8f0">' + escHtml(str.length > 60 ? str.slice(0,57)+'…' : str) + '</span>'; }
-				rows += '<tr><td style="padding:2px 8px 2px 0;white-space:nowrap;color:#94a3b8;font-size:0.68rem;vertical-align:top">' + escHtml(k) + '</td><td style="padding:2px 0;font-size:0.68rem;word-break:break-all">' + vs + '</td></tr>';
-				count++;
-			}
-			if (!count) return '';
-			return '<div style="padding:4px 8px 4px 16px"><table style="border-collapse:collapse;width:100%;font-family:ui-monospace,monospace"><tbody>' + rows + '</tbody></table></div>';
-		}
-		// Unique counter for sub-tree node IDs to avoid collisions across multiple trees.
+		// Sub-examples component tree: uses shared globals from main tree (depthColor, escHtml, etc.)
 		var _subNodeSeq = 0;
 		window.subDevTreeToggle = function(id) {
 			var el = document.getElementById(id);
 			if (!el) return;
-			var isHidden = el.classList.toggle('hidden');
-			if (!isHidden && window.Prism) {
-				var code = el.querySelector('code');
-				if (code) Prism.highlightElement(code);
-			}
-		};
-		function renderSubTree(nodes) {
+		var isHidden = el.classList.toggle('hidden');
+	};
+	function renderSubTree(nodes) {
 			if (!nodes || nodes.length === 0) return '<p class="p-4 text-xs text-base-content/40">No component boundaries found.</p>';
 			var html = '<ul class="py-1">';
 			for (var i = 0; i < nodes.length; i++) {
-				var n = nodes[i], col = depthColor(n.depth), indent = n.depth * 12;
+				var n = nodes[i], col = window.depthColor(n.depth), indent = n.depth * 12;
 				var seq = ++_subNodeSeq;
 				var nodeId = 'sub-tree-node-' + seq;
 				var codeId = 'sub-tree-code-' + seq;
 				var slug = COMPONENT_SLUGS[n.name] || '';
-				var propsHtml = renderPropsTable(n.props);
+				var propsHtml = window.renderPropsTable(n.props);
 				html += '<li style="padding-left:' + (8 + indent) + 'px" class="py-0.5">';
 				html += '<div class="flex items-center gap-1.5 w-full rounded px-1 py-0.5 group hover:bg-base-200">';
 				html += '<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:' + col + ';flex-shrink:0"></span>';
 				if (slug) {
-					html += '<a href="/gallery/' + slug + '" class="font-mono text-xs font-semibold text-base-content hover:underline" style="cursor:pointer">' + escHtml(n.name) + '</a>';
+					html += '<a href="/gallery/' + slug + '" class="font-mono text-xs font-semibold text-base-content hover:underline" style="cursor:pointer">' + window.escHtml(n.name) + '</a>';
 				} else {
-					html += '<span class="font-mono text-xs font-semibold text-base-content">' + escHtml(n.name) + '</span>';
+					html += '<span class="font-mono text-xs font-semibold text-base-content">' + window.escHtml(n.name) + '</span>';
 				}
 				html += '<button onclick="subDevTreeToggle(\'' + nodeId + '\')" class="ml-auto text-base-content/20 group-hover:text-base-content/50 text-xs pr-1 hover:text-base-content/80" style="flex-shrink:0">\u2039/\u203a</button>';
 				html += '</div>';
-				// Props table (always visible)
 				if (propsHtml) html += propsHtml;
-				// Expanded by default
 				html += '<div id="' + nodeId + '" class="mt-1 mb-1" style="padding-left:8px">';
-				html += '<pre id="' + codeId + '" class="language-html" style="margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px"><code class="language-html">' + escHtml(formatHtml(cleanHtml(n.html))) + '</code></pre>';
+				html += '<pre id="' + codeId + '" class="language-html" style="margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px"><code class="language-html">' + window.escHtml(window.formatHtml(window.cleanHtml(n.html))) + '</code></pre>';
 				html += '</div>';
 				html += '</li>';
 			}
 			html += '</ul>';
 			return html;
 		}
-			window.addEventListener('message', function(e) {
-				if (!e.data || e.data.type !== '__dev_component_tree__') return;
-				var tree = e.data.tree || [];
-				// Find which sub-example frame sent this message
-				var frames = document.querySelectorAll('.examples-sub-frame');
-				var panelId = null, bodyId = null;
-				frames.forEach(function(f) {
-					if (f.contentWindow === e.source) {
-						panelId = f.dataset.treePanel;
-						bodyId = f.dataset.treeBody;
-					}
-				});
-				if (!bodyId) return;
-				var panel = document.getElementById(panelId);
-				var body = document.getElementById(bodyId);
-				if (!body) return;
-				body.innerHTML = renderSubTree(tree);
-				if (panel) panel.classList.toggle('hidden', tree.length === 0);
+		window.addEventListener('message', function(e) {
+			if (!e.data || e.data.type !== '__dev_component_tree__') return;
+			var tree = e.data.tree || [];
+			var frames = document.querySelectorAll('.examples-sub-frame');
+			var panelId = null, bodyId = null;
+			frames.forEach(function(f) {
+				if (f.contentWindow === e.source) {
+					panelId = f.dataset.treePanel;
+					bodyId = f.dataset.treeBody;
+				}
 			});
-		})();
+			if (!bodyId) return;
+			var panel = document.getElementById(panelId);
+			var body = document.getElementById(bodyId);
+			if (!body) return;
+	body.innerHTML = renderSubTree(tree);
+		if (panel) panel.classList.toggle('hidden', tree.length === 0);
+		});
 	})();
 	</script>
 }

@@ -92,3 +92,16 @@ func TableSearchWithBoundary(name string, value string, placeholder string, hxTa
 func TableSelectWithBoundary(name string, hxTarget string, hxGet string) templ.Component {
 	return devmode.ComponentBoundary("TableSelect", TableSelect(name, hxTarget, hxGet), map[string]any{"name": name})
 }
+
+// DataTableWithBoundary wraps DataTable with a dev-mode component boundary annotation.
+// gallery:token searchable,sortable,striped,compact,pageSize
+// gallery:hint pageSize:range(1,100,1)
+func DataTableWithBoundary(props DataTableProps) templ.Component {
+	return devmode.ComponentBoundary("DataTable", DataTable(props), map[string]any{
+		"searchable": props.Searchable,
+		"sortable":   props.Sortable,
+		"striped":    props.Striped,
+		"compact":    props.Compact,
+		"pageSize":   props.PageSize,
+	})
+}

@@ -20,13 +20,15 @@ Components live under `components/` and are organized by package:
 
 | Package | Contents |
 |---|---|
-| `components/ui` | Primitives: Button, Badge, Card, Avatar, Toast, Alert, Pagination, etc. |
-| `components/form` | Form field wrappers, inputs, selects, wizards |
-| `components/layout` | Full-page shell, sidebar, navbar |
-| `components/nav` | PageHeader, TabMenu, TopBar, breadcrumbs, menus |
+| `components/ui` | Primitives: Button, Badge, Card, Avatar, Toast, Alert, Pagination, Chart, ProgressBar, Frame, Dashboard, Aura, etc. |
+| `components/form` | Form field wrappers, inputs, selects, wizards, OTP, ColorInput, DatalistInput |
+| `components/layout` | Full-page shell, sidebar, navbar, LayoutCustomizer |
+| `components/nav` | PageHeader, TabMenu, TopBar, Megamenu, breadcrumbs, menus |
 | `components/table` | Table, ListArea (infinite-scroll), ScrollRows |
-| `components/modal` | Modal dialogs |
+| `components/modal` | Modal dialogs (CSS, Alpine.js, Stimulus.js variants) |
 | `components/logs` | Log stream display |
+| `components/alpine` | Alpine.js attribute helpers + pre-built data states |
+| `components/stimulus` | Stimulus.js attribute helpers + 6 pre-built controllers |
 
 All component functions return `templ.Component`. Props are passed as plain Go structs or positional arguments — no global state.
 
@@ -44,6 +46,107 @@ Use helpers from the `render` package in every HTTP handler instead of calling `
 | `render.RenderTriple` | Full shell / sidebar nav swap / tab swap |
 | `render.RedirectAfterMutation` | HX-Redirect for HTMX, 303 for plain requests |
 | `render.AppendToast` | Out-of-band toast fragment into `#toast-container` |
+| `render.SetMorph` | Enable DOM morphing for this swap (HTMX + idiomorph) |
+| `render.RenderAutoMorph` | RenderAuto with DOM morphing |
+| `render.Preserve` | Mark element as hx-preserve (survives any swap) |
+| `render.OnAfterRequest` | hx-on::after-request handler |
+| `render.OnAfterSettle` | hx-on::after-settle handler |
+| `render.CacheFrame` | Set cache headers for frame response |
+| `render.ForceReload` | Meta tag forcing full page reload |
+
+---
+
+## Micro-Interactions (Alpine.js / Stimulus.js)
+
+Every interactive component has three render modes: CSS-only (default), Alpine.js, and Stimulus.js. Pick one per page.
+
+### Alpine.js (recommended)
+
+```go
+import "github.com/emergent-company/go-daisy/components/alpine"
+
+// Use pre-built state generators + attribute helpers
+<div { alpine.XData(alpine.ModalState(false))... }>
+    <div x-show="open" { alpine.Transition()... } { alpine.Trap("open")... }>
+        ...
+    </div>
+</div>
+```
+
+Or use the ready-made Alpine variants:
+
+```go
+@modal.AlpineModal("Edit Profile", modal.ModalMD) {
+    <p>Content here</p>
+}
+@ui.AlpineTabs(ui.TabsProps{...})
+@ui.AlpineDropdown(ui.DropdownBottom) { ... }
+@ui.AlpineAccordionItem("Section", false) { ... }
+@ui.AlpineThemeToggle()
+```
+
+### Stimulus.js (explicit controller pattern)
+
+```go
+import "github.com/emergent-company/go-daisy/components/stimulus"
+
+<div { stimulus.Controller("modal")... }>
+    <button { stimulus.Action("click", "modal", "open")... }>Open</button>
+</div>
+```
+
+Pre-built controllers: `ModalController`, `DropdownController`, `TabsController`, `AccordionController`, `ThemeController`, `ClipboardController`.
+
+### Real-Time Updates
+
+```go
+import "github.com/emergent-company/go-daisy/stream"
+import "github.com/emergent-company/go-daisy/streamhub"
+
+hub := streamhub.New()
+e.GET("/events", streamhub.EchoHandler(hub))
+hub.BroadcastAppend("#messages", MessageRow(msg))
+hub.BroadcastRefresh()
+```
+
+```go
+stream.Append("#list", ItemRow(item))
+stream.Morph("#detail", DetailView(data))
+```
+
+### DOM Morphing
+
+```go
+render.RenderAutoMorph(w, r, page, partial)
+render.SetMorph(w, r)
+```
+
+Requires `layout.PageFull(layout.PageProps{Morph: true, ...})`.
+
+### View Transitions
+
+```go
+layout.PageFull(layout.PageProps{ViewTransitions: true, ...})
+```
+
+Browser-native crossfade + slide animations between page navigations. Zero JS.
+
+### Charts
+
+```go
+ui.Chart(ui.ChartProps{
+    ID: "revenue", Type: ui.ChartBar, Stacked: true,
+    Series: []ui.ChartSeries{
+        {Name: "Revenue", Data: []float64{30, 40, 45, 50}},
+        {Name: "Cost",    Data: []float64{20, 25, 30, 35}},
+    },
+    Categories: []string{"Q1", "Q2", "Q3", "Q4"},
+    FillType: "gradient", FillOpacity: 0.9,
+    ForecastCount: 2, GoalValues: []float64{55},
+})
+```
+
+ApexCharts 4.5.0 (lazy-loaded from CDN). Supports area, bar, column, line, pie, donut, radial, rangeBar, heatmap. Stacking, gradients, annotations, forecasts, synced groups.
 
 ---
 
@@ -200,7 +303,11 @@ task dev:ui
 |---|---|
 | HTTP framework | Echo v4 |
 | Templating | Templ |
-| CSS | DaisyUI + Tailwind CSS |
-| Interactivity | HTMX |
+| CSS | DaisyUI 5 + Tailwind CSS 4 |
+| Interactivity | HTMX v4 |
+| Micro-interactions | Alpine.js 3 or Stimulus 3 (optional, pick one) |
+| DOM morphing | idiomorph (optional) |
+| Real-time | HTMX SSE / WebSocket extensions (optional) |
+| Charts | ApexCharts 4 (lazy-loaded CDN) |
 | Static assets | Go `embed` (`staticfs/`) |
 | Build | go-task (`Taskfile.yml`) |

@@ -37,6 +37,7 @@ func newGalleryHandler(title string, logo templ.Component, components []GalleryC
 // register mounts all gallery routes on the Echo instance.
 func (h *galleryHandler) register(e *echo.Echo) {
 	e.GET("/gallery", h.handleIndex)
+	e.GET("/gallery/docs", h.handleDocs)
 	e.GET("/gallery/render/:slug", h.handleRender)
 	e.GET("/gallery/render/:slug/examples", h.handleRenderSubExample)
 	e.GET("/gallery/render/:slug/:variant", h.handleRenderVariant)
@@ -53,6 +54,18 @@ func (h *galleryHandler) handleIndex(c echo.Context) error {
 	render.RenderAuto(c.Response().Writer, c.Request(),
 		GalleryPage(h.title, "", categories, h.logo, content),
 		GalleryPageContent(h.title, "", categories, h.logo, content),
+	)
+	return nil
+}
+
+// handleDocs renders the SDK documentation reference page.
+func (h *galleryHandler) handleDocs(c echo.Context) error {
+	all := h.components
+	categories := BuildCategoryGroups(all)
+	content := DocsContent()
+	render.RenderAuto(c.Response().Writer, c.Request(),
+		GalleryPage(h.title, "docs", categories, h.logo, content),
+		GalleryPageContent(h.title, "docs", categories, h.logo, content),
 	)
 	return nil
 }
@@ -213,7 +226,16 @@ func (h *galleryHandler) handleRenderSubExample(c echo.Context) error {
 			}
 		}
 		if !found {
-			return echo.NewHTTPError(http.StatusNotFound, "no sub-examples available for this component")
+			// No story with SubExamples — try RenderFunc fallback
+			// (same logic as handleRenderVariant for components where
+			//  "examples" is a named variant, not a sub-example list).
+			for _, v := range variants {
+				if v.Name != "Interactive" && v.RenderFunc != nil {
+					c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
+					return h.renderTemplPage(c, h.baseURL(c), v.RenderFunc(c.Request().URL.Query()))
+				}
+			}
+			return echo.NewHTTPError(http.StatusNotFound, "no sub-examples or renderable variants available for this component")
 		}
 	}
 
@@ -303,7 +325,7 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
 
 	devScript := ""
 	if devMode {
-		devScript = devOverlayScript
+		devScript = strings.Replace(devOverlayScript, "__COMPONENT_SLUGS_JSON__", ComponentSlugsJSON(), 1)
 	}
 
 	return fmt.Sprintf(`<!DOCTYPE html>

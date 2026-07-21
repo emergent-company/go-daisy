@@ -70,6 +70,7 @@ const (
 	CategoryNavigation  Category = "Navigation"
 	CategoryForms       Category = "Forms"
 	CategoryLayout      Category = "Layout"
+	CategoryDocs        Category = "Documentation"
 )
 
 // GallerySubExample is a single labeled sub-example shown in the Examples tab.

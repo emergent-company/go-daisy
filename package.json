@@ -5,10 +5,15 @@
   "private": true,
   "type": "commonjs",
   "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
     "@iconify-json/lucide": "^1.2.98",
     "@iconify/tailwind4": "^1.2.3",
+    "alpinejs": "^3.15.12",
     "daisyui": "^5.5.19",
-    "frappe-gantt": "^1.2.2"
+    "frappe-gantt": "^1.2.2",
+    "htmx-ext-sse": "^2.2.4",
+    "htmx-ext-ws": "^2.0.4",
+    "idiomorph": "^0.7.4"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.2"

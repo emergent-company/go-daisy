@@ -34,3 +34,32 @@ func ConfirmPopupWithBoundary(title string, message string, confirmLabel string,
 		"message": message,
 	})
 }
+
+// LoaderModalWithBoundary wraps LoaderModal with a dev-mode component boundary annotation.
+func LoaderModalWithBoundary() templ.Component {
+	return devmode.ComponentBoundary("LoaderModal", LoaderModal(), nil)
+}
+
+// OpenModalButtonWithBoundary wraps OpenModalButton with a dev-mode component boundary annotation.
+// gallery:token modalID,label
+// gallery:hint modalID:default(my-modal)
+// gallery:hint label:default(Open Modal)
+func OpenModalButtonWithBoundary(modalID string, label string) templ.Component {
+	return devmode.ComponentBoundary("OpenModalButton", OpenModalButton(modalID, label, nil), map[string]any{
+		"modalID": modalID,
+		"label":   label,
+	})
+}
+
+// DeleteButtonWithBoundary wraps DeleteButton with a dev-mode component boundary annotation.
+// gallery:token url,confirm,label
+// gallery:hint url:default(#)
+// gallery:hint confirm:default(Are you sure?)
+// gallery:hint label:default(Delete)
+func DeleteButtonWithBoundary(url string, confirm string, label string) templ.Component {
+	return devmode.ComponentBoundary("DeleteButton", DeleteButton(url, confirm, "", "", label, nil), map[string]any{
+		"url":     url,
+		"confirm": confirm,
+		"label":   label,
+	})
+}

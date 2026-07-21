@@ -20,6 +20,11 @@ tasks:
       - task: build:ui
       - go build ./...
 
+  lint:
+    desc: Run golangci-lint
+    cmds:
+      - golangci-lint run ./...
+
   gallery:
     desc: Build UI then run gallery interactively (logs to stdout)
     cmds:
@@ -68,3 +73,30 @@ tasks:
     desc: Watch and recompile CSS
     cmds:
       - "{{.TAILWIND}} -i {{.CSS_IN}} -o {{.CSS_OUT}} --watch"
+
+  "gallery:e2e:start":
+    desc: Start gallery on e2e test port
+    cmds:
+      - task: build:ui
+      - task: "gallery:e2e:stop"
+      - >-
+        sh -c 'GALLERY_PORT=11001 nohup go run ./cmd/gallery > /tmp/go-daisy-e2e.log 2>&1 &
+        echo $! > /tmp/go-daisy-e2e.pid &&
+        echo "e2e gallery started (pid $(cat /tmp/go-daisy-e2e.pid))"'
+
+  "gallery:e2e:stop":
+    desc: Stop e2e gallery
+    cmds:
+      - >-
+        sh -c 'if [ -f /tmp/go-daisy-e2e.pid ]; then
+        kill $(cat /tmp/go-daisy-e2e.pid) 2>/dev/null && echo "e2e gallery stopped" || echo "e2e gallery was not running";
+        rm -f /tmp/go-daisy-e2e.pid;
+        else lsof -ti:11001 | xargs kill -9 2>/dev/null || true; fi'
+
+  "test:e2e":
+    desc: Run Playwright E2E tests
+    cmds:
+      - task: build:ui
+      - cd tests/e2e && npm ci
+      - cd tests/e2e && npx playwright install chromium 2>/dev/null || true
+      - cd tests/e2e && npx playwright test

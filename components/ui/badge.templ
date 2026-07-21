@@ -34,7 +34,6 @@ const (
 	BadgeSizeXS BadgeSize = "badge-xs"
 	BadgeSizeSM BadgeSize = "badge-sm"
 	BadgeSizeMD BadgeSize = "badge-md"
-	BadgeSizeLG BadgeSize = "badge-lg"
 )
 
 // BadgeProps configures a Badge component.
@@ -76,7 +75,7 @@ templ Badge(props BadgeProps) {
 		if props.Dot {
 			<span class={ templ.KV("animate-pulse", props.Animate), dotClass(props.Variant) }></span>
 		} else if props.Icon != "" {
-			<span class={ "iconify size-3 shrink-0", props.Icon, templ.KV("animate-pulse", props.Animate) }></span>
+			@IconSpan(props.Icon, "size-3 shrink-0")
 		}
 		<span class={ templ.KV("truncate", props.MaxWidth != "") }>{ props.Label }</span>
 	</span>

@@ -15,7 +15,6 @@ const (
 	ModalSM ModalSize = "modal-sm"
 	ModalMD ModalSize = ""
 	ModalLG ModalSize = "modal-lg"
-	ModalXL ModalSize = "modal-xl"
 )
 
 script openModal(id string) {
@@ -51,27 +50,33 @@ func formModalSubmitVariant(modalVariant string) ui.ButtonVariant {
 }
 
 // ModalHeader renders the title + close button row shared by all modal variants.
-templ ModalHeader(title string, onClose templ.ComponentScript) {
+templ ModalHeader(id string, title string, onClose templ.ComponentScript) {
 	<div class="flex items-center justify-between mb-4" { devmode.Attrs(ctx, "modal/ModalHeader")... }>
-		<h3 class="font-semibold text-lg text-base-content">{ title }</h3>
+		<h3 id={ "modal-title-" + id } class="font-semibold text-lg text-base-content">{ title }</h3>
 		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, OnClick: onClose, Attrs: templ.Attributes{"aria-label": "Close"}}) {
-			<span class="iconify lucide--x size-5"></span>
+			@ui.IconSpan("lucide--x", "size-5")
 		}
 	</div>
 }
 
 // Modal renders a DaisyUI dialog modal with backdrop close.
 // attrs is optional; pass nil when not needed.
-templ Modal(title string, size ModalSize, attrs templ.Attributes) {
+// id overrides the default dialog id ("modal"); pass "" to use default.
+templ Modal(title string, size ModalSize, attrs templ.Attributes, id ...string) {
+	{{ dialogID := "modal"
+		if len(id) > 0 && id[0] != "" { dialogID = id[0] } }}
 	<dialog
-		id="modal"
+		id={ dialogID }
 		class="modal modal-open"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby={ "modal-title-" + dialogID }
 		onclick="if(event.target===this){this.remove()}"
 		{ devmode.Attrs(ctx, "modal/Modal")... }
 		{ attrs... }
 	>
 		<div class={ "modal-box", templ.KV(string(size), size != "") }>
-			@ModalHeader(title, templ.JSUnsafeFuncCall("this.closest('dialog').remove()"))
+			@ModalHeader(dialogID, title, templ.JSUnsafeFuncCall("this.closest('dialog').remove()"))
 			{ children... }
 		</div>
 		<form method="dialog" class="modal-backdrop" onclick="document.getElementById('modal').remove()">
@@ -82,15 +87,10 @@ templ Modal(title string, size ModalSize, attrs templ.Attributes) {
 
 // FormModal renders a modal containing a form that submits via HTMX.
 templ FormModal(props FormModalProps) {
-	{{ submitText := props.SubmitText }}
-	{{ if submitText == "" { submitText = "Save" } }}
-	{{ cancelText := props.CancelText }}
-	{{ if cancelText == "" { cancelText = "Cancel" } }}
-	{{ size := props.Size }}
-	{{ if size == "" { size = ModalSM } }}
-	<dialog id={ props.ID } class="modal" { devmode.Attrs(ctx, "modal/FormModal")... } { props.Attrs... }>
+	{{ submitText, cancelText, size := modalDefaults(props) }}
+	<dialog id={ props.ID } class="modal" role="dialog" aria-modal="true" aria-labelledby={ "modal-title-" + props.ID } { devmode.Attrs(ctx, "modal/FormModal")... } { props.Attrs... }>
 		<div class={ "modal-box", templ.KV(string(size), size != "") }>
-			@ModalHeader(props.Title, closeModal(props.ID))
+			@ModalHeader(props.ID, props.Title, closeModal(props.ID))
 			<form
 				if props.Method == "put" {
 					hx-put={ props.Action }
@@ -161,7 +161,7 @@ func deleteButtonAttrs(url, confirm, target, swap string, extra templ.Attributes
 
 // LoaderModal renders a modal containing only a loading spinner.
 templ LoaderModal() {
-	<dialog id="modal" class="modal modal-open" { devmode.Attrs(ctx, "modal/LoaderModal")... }>
+	<dialog id="modal" class="modal modal-open" role="dialog" aria-modal="true" aria-label="Loading" { devmode.Attrs(ctx, "modal/LoaderModal")... }>
 		<div class="modal-box flex items-center justify-center py-12">
 			<span class="loading loading-spinner loading-lg text-primary"></span>
 		</div>
@@ -189,9 +189,9 @@ func confirmPopupAttrs(hxMethod string, url string) templ.Attributes {
 // ConfirmPopup renders a small confirmation modal with confirm/cancel buttons.
 // attrs is optional; pass nil when not needed.
 templ ConfirmPopup(title string, message string, confirmLabel string, confirmURL string, confirmHXMethod string, attrs templ.Attributes) {
-	<dialog id="modal" class="modal modal-open" { devmode.Attrs(ctx, "modal/ConfirmPopup")... } { attrs... }>
+	<dialog id="modal" class="modal modal-open" role="dialog" aria-modal="true" aria-labelledby="modal-title-modal" { devmode.Attrs(ctx, "modal/ConfirmPopup")... } { attrs... }>
 		<div class="modal-box max-w-sm">
-			@ModalHeader(title, templ.JSUnsafeFuncCall("document.getElementById('modal').remove()"))
+			@ModalHeader("modal", title, templ.JSUnsafeFuncCall("document.getElementById('modal').remove()"))
 			<p class="text-sm text-base-content/60 mb-6">{ message }</p>
 			@form.FormActions() {
 				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Attrs: templ.Attributes{"onclick": "document.getElementById('modal').remove()"}}) {

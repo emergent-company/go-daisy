@@ -1,0 +1,340 @@
+package galleryruntime
+
+import (
+	"github.com/emergent-company/go-daisy/components/layout"
+	"github.com/emergent-company/go-daisy/components/table"
+	"github.com/emergent-company/go-daisy/components/ui"
+)
+
+type docSection struct {
+	ID          string
+	Title       string
+	Description string
+	Code        string
+	Lang        string
+}
+
+type docRefRow struct {
+	Topic    string
+	Desc     string
+	Usage    string
+	Category string
+}
+
+var docSections = []docSection{
+	{
+		ID: "installation", Title: "Installation",
+		Description: "Add go-daisy to your Go module and configure Tailwind CSS with DaisyUI.",
+		Lang: "bash",
+		Code: `# Add the Go module
+go get github.com/emergent-company/go-daisy
+
+# Install Tailwind CSS and DaisyUI
+npm install tailwindcss @tailwindcss/cli daisyui@latest
+
+# Configure tailwind.config.js:
+#   module.exports = {
+#     plugins: [require("daisyui")],
+#   }
+
+# Build CSS:
+#   npx @tailwindcss/cli -i assets/app.css -o static/css/app.css`,
+	},
+	{
+		ID: "quickstart", Title: "Quickstart",
+		Description: "Minimal Echo app rendering a go-daisy page shell.",
+		Lang: "go",
+		Code: `package main
+
+import (
+    "github.com/labstack/echo/v4"
+    "github.com/emergent-company/go-daisy/components/layout"
+    "github.com/emergent-company/go-daisy/render"
+)
+
+func main() {
+    e := echo.New()
+    e.GET("/", func(c echo.Context) error {
+        page := layout.Page("My App", "nord",
+            layout.PageContent("Hello, go-daisy!"),
+        )
+        render.RenderPage(c.Response().Writer, c.Request(), page)
+        return nil
+    })
+    e.Logger.Fatal(e.Start(":8080"))
+}`,
+	},
+	{
+		ID: "buttons", Title: "Buttons",
+		Description: "Use the ui.Button component with style variants, block mode, and HTMX attrs.",
+		Lang: "go",
+		Code: `import "github.com/emergent-company/go-daisy/components/ui"
+
+// Primary button
+ui.Button(ui.ButtonProps{Label: "Submit", Style: ui.ButtonPrimary})
+
+// Outlined button with HTMX
+ui.Button(ui.ButtonProps{
+    Label:    "Load",
+    Style:    ui.ButtonOutline,
+    Block:    true,
+    HxGet:    "/api/data",
+    HxTarget: "results",
+})
+
+// Ghost small button
+ui.Button(ui.ButtonProps{
+    Label:      "Edit",
+    Style:      ui.ButtonGhost,
+    ExtraClass: "btn-sm",
+})`,
+	},
+	{
+		ID: "badges", Title: "Badges",
+		Description: "Badge component with size and color intent variants.",
+		Lang: "go",
+		Code: `ui.Badge(ui.BadgeProps{
+    Label:   "Active",
+    Variant: ui.BadgeSuccess,
+    Size:    ui.BadgeSizeSM,
+})
+
+ui.Badge(ui.BadgeProps{
+    Label:   "Beta",
+    Variant: ui.BadgeWarning,
+    Size:    ui.BadgeSizeMD,
+})`,
+	},
+	{
+		ID: "cards", Title: "Cards",
+		Description: "Card component with optional icon stats display.",
+		Lang: "go",
+		Code: `ui.Card(ui.CardProps{
+    Title:    "Total Users",
+    Value:    "1,234",
+    Icon:     "lucide--users",
+    IconBg:   "bg-primary/10",
+    IconColor:"text-primary",
+})
+
+ui.StatCardMinimal("CPU", "45%", "lucide--cpu")`,
+	},
+	{
+		ID: "tables", Title: "Tables",
+		Description: "Data tables with size, border, and sorting options.",
+		Lang: "go",
+		Code: `table.TableWithProps(table.TableProps{
+    Size:     "sm",
+    Bordered: true,
+}) {
+    table.TableHead() {
+        table.TableHeadRow() {
+            table.TableHeadCell("Name")
+            table.TableHeadCell("Role")
+        }
+    }
+    table.TableBody() {
+        table.TableRow() {
+            table.TableCell("Alice")
+            table.TableCell("Admin")
+        }
+    }
+}`,
+	},
+	{
+		ID: "forms", Title: "Forms",
+		Description: "Form inputs, textareas, and selects via the generic FormField.",
+		Lang: "go",
+		Code: `form.FormField(form.FormFieldProps{
+    Label:       "Email",
+    Name:        "email",
+    Type:        "email",
+    Placeholder: "user@example.com",
+    Required:    true,
+})
+
+form.FormField(form.FormFieldProps{
+    Label:   "Role",
+    Name:    "role",
+    Type:    "select",
+    Options: []form.SelectOption{
+        {Value: "admin", Label: "Admin"},
+        {Value: "user",  Label: "User"},
+    },
+})`,
+	},
+	{
+		ID: "htmx-rendering", Title: "HTMX Rendering",
+		Description: "Render helpers for HTMX-aware page serving: full HTML vs. partial fragment.",
+		Lang: "go",
+		Code: `import "github.com/emergent-company/go-daisy/render"
+
+// RenderAuto — chooses full page vs. fragment based on HX-Request header.
+render.RenderAuto(w, r, fullPage, partialContent)
+
+// RenderTriple — three-tier: full shell / sidebar swap / tab swap.
+render.RenderTriple(w, r, shellContent, sidebarContent, tabContent)
+
+// RenderPage — always renders the full HTML shell.
+render.RenderPage(w, r, pageComponent)
+
+// RenderPartial — always renders the content fragment only.
+render.RenderPartial(w, r, contentComponent)
+
+// RedirectAfterMutation — HX-Redirect for HTMX, 303 for plain.
+render.RedirectAfterMutation(w, r, "/new-path")
+
+// AppendToast — writes an hx-swap-oob toast fragment.
+render.AppendToast(w, r,
+    ui.Toast(ui.ToastProps{Message: "Saved!", Type: "alert-success"}),
+)`,
+	},
+	{
+		ID: "styling", Title: "Styling & Themes",
+		Description: "go-daisy uses DaisyUI themes. Switch themes via data-theme attribute on <html>.",
+		Lang: "go",
+		Code: `// In your layout shell:
+layout.Page("My App", "nord") {   // "nord" = light theme
+    // children...
+}
+
+// Or pass "" to use the browser/OS default.
+layout.Page("My App", "") { ... }
+
+// ThemeSwitcher component for user toggle:
+ui.ThemeSwitcher()
+
+// Available DaisyUI themes: light, dark, nord, dracula, cupcake, etc.
+// Configure in tailwind.config.js under daisyui.themes.`,
+	},
+	{
+		ID: "dev-guide", Title: "Development Guide",
+		Description: "How to add new components to go-daisy and run the build pipeline.",
+		Lang: "bash",
+		Code: `# 1. Create component file
+touch components/ui/<name>.templ
+
+# 2. Write your Templ component — see existing files for conventions
+
+# 3. Run the build pipeline
+task build:ui    # generates *_templ.go + compiles Tailwind CSS
+task build       # full build: templ + CSS + Go binary
+
+# 4. Add a gallery showcase entry in
+#    cmd/gallery/internal/gallery/seed.go
+#    as a GalleryComponent with variants and tokens
+
+# 5. Run the gallery
+task gallery     # http://localhost:11000
+
+# Conventions:
+# - Return templ.Component from Go funcs
+# - Use DaisyUI classes (btn, badge, card, etc.)
+# - class string as last param for CSS override
+# - strconv.Itoa for int-to-string
+# - No explicit import of "github.com/a-h/templ" in .templ files`,
+	},
+}
+
+var docRefTable = []docRefRow{
+	{Topic: "components/ui", Desc: "Primitive UI components: Button, Badge, Card, Avatar, Toast, Alert, Pagination, etc.", Usage: `import "github.com/emergent-company/go-daisy/components/ui"`, Category: "UI"},
+	{Topic: "components/layout", Desc: "Page shell, sidebar, navbar, ViewMenu, layout builder.", Usage: `import "github.com/emergent-company/go-daisy/components/layout"`, Category: "Layout"},
+	{Topic: "components/nav", Desc: "PageHeader, TabMenu, SimpleTabs, TopBar.", Usage: `import "github.com/emergent-company/go-daisy/components/nav"`, Category: "Nav"},
+	{Topic: "components/form", Desc: "Form inputs, FormField wrapper, selects, textareas.", Usage: `import "github.com/emergent-company/go-daisy/components/form"`, Category: "Forms"},
+	{Topic: "components/table", Desc: "Table, ListArea, ScrollRows for data display.", Usage: `import "github.com/emergent-company/go-daisy/components/table"`, Category: "Data Display"},
+	{Topic: "components/modal", Desc: "Modal dialog components with HTMX support.", Usage: `import "github.com/emergent-company/go-daisy/components/modal"`, Category: "Overlays"},
+	{Topic: "components/logs", Desc: "Log stream display components.", Usage: `import "github.com/emergent-company/go-daisy/components/logs"`, Category: "Data Display"},
+	{Topic: "render", Desc: "HTMX-aware RenderAuto/RenderTriple/RenderPage/RenderPartial helpers.", Usage: `import "github.com/emergent-company/go-daisy/render"`, Category: "Core"},
+	{Topic: "galleryruntime", Desc: "Embeddable gallery server. Import and call Serve(Options).", Usage: `import "github.com/emergent-company/go-daisy/galleryruntime"`, Category: "Core"},
+}
+
+func sectionID(id string) string { return "docs-" + id }
+
+templ DocsPage() {
+	<div class="grid grid-cols-[14rem_1fr] gap-6 items-start">
+		@layout.ViewMenu() {
+			@layout.ViewMenuLabel("Guides")
+			for _, s := range docSections {
+				<a class="menu-item" href={ "#" + sectionID(s.ID) }><span class="grow truncate">{ s.Title }</span></a>
+			}
+			@layout.ViewMenuLabel("Reference")
+			<a class="menu-item" href="#docs-packages"><span class="grow truncate">Packages</span></a>
+		}
+		<div class="min-w-0">
+			<h1 class="text-2xl font-bold mb-2">SDK Reference</h1>
+			<p class="text-base-content/60 mb-8">Code examples and usage patterns for every go-daisy package. Click ▼ to expand details.</p>
+			for _, s := range docSections {
+				<div id={ sectionID(s.ID) } class="mb-8 pb-6 px-4 border-b border-base-200 scroll-mt-4">
+					<div class="mb-3">
+						<h2 class="text-base font-semibold">{ s.Title }</h2>
+						<p class="text-xs text-base-content/50 mt-0.5">{ s.Description }</p>
+					</div>
+					<div class="grid grid-cols-1 lg:grid-cols-1 gap-4">
+						@ui.CodeBlock(ui.CodeBlockProps{Language: s.Lang, Label: s.Lang, Code: s.Code, Highlight: ui.Highlight(s.Code, s.Lang)})
+					</div>
+				</div>
+			}
+			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-base-content/10 scroll-mt-4">
+				<h2 class="text-md font-semibold mb-2">Packages Reference</h2>
+				<p class="text-sm text-base-content/60 mb-4">All go-daisy packages and their import paths.</p>
+				@docsRefTable()
+			</div>
+		</div>
+	</div>
+}
+
+templ DocsContent() {
+	<div class="grid grid-cols-[14rem_1fr] gap-6 items-start">
+		@layout.ViewMenu() {
+			@layout.ViewMenuLabel("Guides")
+			for _, s := range docSections {
+				<a class="menu-item" href={ "#" + sectionID(s.ID) }><span class="grow truncate">{ s.Title }</span></a>
+			}
+			@layout.ViewMenuLabel("Reference")
+			<a class="menu-item" href="#docs-packages"><span class="grow truncate">Packages</span></a>
+		}
+		<div class="min-w-0">
+			<h1 class="text-2xl font-bold mb-2">SDK Reference</h1>
+			<p class="text-base-content/60 mb-4">Code examples and usage patterns for every go-daisy package.</p>
+			for _, s := range docSections {
+				<div id={ sectionID(s.ID) } class="mb-8 pb-6 px-4 border-b border-base-200 scroll-mt-4">
+					<div class="mb-3">
+						<h2 class="text-base font-semibold">{ s.Title }</h2>
+						<p class="text-xs text-base-content/50 mt-0.5">{ s.Description }</p>
+					</div>
+					<div class="grid grid-cols-1 lg:grid-cols-1 gap-4">
+						@ui.CodeBlock(ui.CodeBlockProps{Language: s.Lang, Label: s.Lang, Code: s.Code, Highlight: ui.Highlight(s.Code, s.Lang)})
+					</div>
+				</div>
+			}
+			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-base-content/10 scroll-mt-4">
+				<h2 class="text-md font-semibold mb-2">Packages Reference</h2>
+				<p class="text-sm text-base-content/60 mb-4">All go-daisy packages and their import paths.</p>
+				@docsRefTable()
+			</div>
+		</div>
+	</div>
+}
+
+templ docsRefTable() {
+	@table.TableWithProps(table.TableProps{Size: "sm", Bordered: true}) {
+		@table.TableHead() {
+			@table.TableHeadRow() {
+				@table.TableHeadCell("Package")
+				@table.TableHeadCell("Description")
+				@table.TableHeadCell("Import Path")
+				@table.TableHeadCell("Category")
+			}
+		}
+		@table.TableBody() {
+			for _, r := range docRefTable {
+				<tr class="hover hover:bg-base-200 transition-colors">
+					<td class="font-mono text-sm font-semibold">{ r.Topic }</td>
+					<td class="text-sm">{ r.Desc }</td>
+					<td class="text-xs font-mono text-base-content/60">{ r.Usage }</td>
+					<td><span class="badge badge-ghost badge-xs">{ r.Category }</span></td>
+				</tr>
+			}
+		}
+	}
+}

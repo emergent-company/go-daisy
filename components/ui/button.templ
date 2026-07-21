@@ -45,6 +45,7 @@ const (
 	ButtonTypeSubmit ButtonType = "submit"
 	ButtonTypeReset  ButtonType = "reset"
 	ButtonTypeLink   ButtonType = "link"
+	ButtonTypeLabel  ButtonType = "label"
 )
 
 // ButtonShape controls whether the button is normal, square, or circle.
@@ -69,6 +70,7 @@ type ButtonProps struct {
 	Block   bool             // when true, adds btn-block
 	ExtraClass string        // additional CSS classes appended to the btn class list (e.g. "gap-2 me-3")
 	OnClick templ.ComponentScript // optional script-backed onclick, e.g. a `script` block call or templ.JSFuncCall(...)
+	AriaLabel string         // optional aria-label for accessibility
 	Attrs   templ.Attributes // optional extra HTML attributes
 }
 
@@ -111,6 +113,9 @@ templ Button(props ButtonProps) {
 				templ.KV(string(props.Style), props.Style != ButtonStyleDefault),
 				templ.KV("btn-block", props.Block),
 				props.ExtraClass }
+			if props.AriaLabel != "" {
+				aria-label={ props.AriaLabel }
+			}
 			if props.OnClick.Name != "" {
 				onclick={ props.OnClick }
 			}
@@ -122,6 +127,26 @@ templ Button(props ButtonProps) {
 			}
 			{ children... }
 		</a>
+	} else if props.Type == ButtonTypeLabel {
+		<label
+			class={ "btn",
+				templ.KV(string(props.Variant), props.Variant != ""),
+				templ.KV(string(props.Size), props.Size != ""),
+				templ.KV(string(props.Shape), props.Shape != ""),
+				templ.KV(string(props.Style), props.Style != ButtonStyleDefault),
+				templ.KV("btn-block", props.Block),
+				props.ExtraClass }
+			if props.AriaLabel != "" {
+				aria-label={ props.AriaLabel }
+			}
+			{ devmode.Attrs(ctx, "ui/Button")... }
+			{ props.Attrs... }
+		>
+			if props.Icon != "" {
+				@IconSpan(props.Icon, "size-4")
+			}
+			{ children... }
+		</label>
 	} else {
 		<button
 			type={ string(props.Type) }
@@ -134,6 +159,9 @@ templ Button(props ButtonProps) {
 				templ.KV("loading loading-spinner", props.Loading),
 				props.ExtraClass }
 			disabled?={ props.Loading }
+			if props.AriaLabel != "" {
+				aria-label={ props.AriaLabel }
+			}
 			if props.OnClick.Name != "" {
 				onclick={ props.OnClick }
 			}

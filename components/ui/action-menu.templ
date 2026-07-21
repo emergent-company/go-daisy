@@ -20,8 +20,8 @@ type ActionMenuItem struct {
 // ActionMenu renders a DaisyUI dropdown with an ellipsis trigger.
 templ ActionMenu(items []ActionMenuItem) {
 	<div class="dropdown dropdown-end" { devmode.Attrs(ctx, "ui/ActionMenu")... }>
-		@Button(ButtonProps{Type: ButtonTypeButton, Variant: ButtonGhost, Size: ButtonSM, Shape: ButtonShapeSquare, Attrs: templ.Attributes{"tabindex": "0"}}) {
-			<span class="iconify lucide--ellipsis-vertical size-5"></span>
+		@Button(ButtonProps{Type: ButtonTypeButton, Variant: ButtonGhost, Size: ButtonSM, Shape: ButtonShapeSquare, Attrs: templ.Attributes{"tabindex": "0", "aria-label": "Actions menu"}}) {
+			@IconSpan("lucide--ellipsis-vertical", "size-5")
 		}
 		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-200 z-50 w-44 p-1 mt-1">
 		for _, item := range items {
