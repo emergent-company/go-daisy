@@ -46,14 +46,14 @@ func Page(title string, themeAttr string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"group/html\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"><meta name=\"htmx-config\" content='{\"implicitInheritance\":true,\"noSwap\":[204,304]}'><title>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"group/html\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"><!-- implicitInheritance intentionally OMITTED: htmx v4's own default is\n\t\t     explicit-only inheritance (false). The non-default true mode makes a\n\t\t     container's hx-trigger/verb leak into descendants and caused three\n\t\t     production bugs in assetfront-phoenix before it flipped (see its\n\t\t     htmx-explicit-inheritance change / PR #661). An ancestor's hx-*\n\t\t     attribute applies to descendants only when published with the\n\t\t     \":inherited\" suffix. --><meta name=\"htmx-config\" content='{\"noSwap\":[204,304]}'><title>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 14, Col: 16}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 21, Col: 16}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {

@@ -10,7 +10,14 @@ templ Page(title string, themeAttr string) {
 	<head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-		<meta name="htmx-config" content='{"implicitInheritance":true,"noSwap":[204,304]}'/>
+		<!-- implicitInheritance intentionally OMITTED: htmx v4's own default is
+		     explicit-only inheritance (false). The non-default true mode makes a
+		     container's hx-trigger/verb leak into descendants and caused three
+		     production bugs in assetfront-phoenix before it flipped (see its
+		     htmx-explicit-inheritance change / PR #661). An ancestor's hx-*
+		     attribute applies to descendants only when published with the
+		     ":inherited" suffix. -->
+		<meta name="htmx-config" content='{"noSwap":[204,304]}'/>
 		<title>{ title }</title>
 		<link rel="stylesheet" href="/static/css/app.css"/>
 	</head>
