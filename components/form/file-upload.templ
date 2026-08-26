@@ -1,0 +1,67 @@
+package form
+
+import (
+	"strconv"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+// FileUploadStyle represents the FilePond style.
+type FileUploadStyle string
+
+const (
+	FileUploadDefault      FileUploadStyle = "default"
+	FileUploadAvatar       FileUploadStyle = "avatar"
+	FileUploadImagePreview FileUploadStyle = "image-preview"
+)
+
+// FileUploadProps configures a FilePond file upload.
+type FileUploadProps struct {
+	Name        string
+	Label       string
+	Accept      string // comma-separated MIME types, e.g. "image/*"
+	Multiple    bool
+	MaxFiles    int
+	MaxFileSize string // e.g. "5MB"
+	Style       FileUploadStyle
+	Required    bool
+	Error       string
+	Attrs       templ.Attributes
+}
+
+// FileUpload renders a FilePond file upload area.
+templ FileUpload(props FileUploadProps) {
+	<div class="form-control w-full" { devmode.Attrs(ctx, "form/FileUpload")... }>
+		if props.Label != "" {
+			<label class="label" for={ props.Name }>
+				<span class="label-text">{ props.Label }</span>
+			</label>
+		}
+		<input
+			type="file"
+			id={ props.Name }
+			name={ props.Name }
+			accept={ props.Accept }
+			multiple?={ props.Multiple }
+			required?={ props.Required }
+			data-filepond
+			data-max-files={ ternary(props.MaxFiles > 0, strconv.Itoa(props.MaxFiles), "null") }
+			data-max-file-size={ props.MaxFileSize }
+			data-style={ string(props.Style) }
+			class={ templ.KV("filepond-avatar", props.Style == FileUploadAvatar) }
+			{ props.Attrs... }
+		/>
+		if props.Error != "" {
+			<span class="text-error text-xs mt-1">{ props.Error }</span>
+		}
+	</div>
+	@LazyLoadScript(LazyLoadConfig{
+		GuardName:  "_filepond",
+		LibVarName: "FilePond",
+		ScriptURL:  "https://cdn.jsdelivr.net/npm/filepond@4.32.6/dist/filepond.min.js",
+		StyleURL:   "'https://cdn.jsdelivr.net/npm/filepond@4.32.6/dist/filepond.min.css'",
+		Selector:   "[data-filepond]",
+		InitFunc:   "FilePond.create(el, {allowMultiple: el.hasAttribute('multiple'), maxFiles: parseInt(el.dataset.maxFiles) || null, maxFileSize: el.dataset.maxFileSize || null, labelIdle: el.dataset.style === 'avatar' ? 'Drag & drop your photo or <span class=\"filepond--label-action\">Browse</span>' : 'Drag & drop files or <span class=\"filepond--label-action\">Browse</span>', store: null})",
+		FnSuffix:   "FilePond",
+	})
+}

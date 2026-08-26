@@ -1,0 +1,39 @@
+package pages
+
+import (
+	"github.com/emergent-company/go-daisy/components/layout"
+	"github.com/emergent-company/go-daisy/components/table"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+// DataGridPageProps configures a full-page DataGrid view.
+type DataGridPageProps struct {
+	Title    string
+	Subtitle string
+
+	// DataGrid config
+	GridProps table.DataGridProps
+
+	// Page-level
+	Class string
+	Attrs templ.Attributes
+}
+
+// DataGridPage renders a full HTML page with a title, subtitle, and DataGrid.
+templ DataGridPage(props DataGridPageProps) {
+	@layout.PageFull(layout.PageProps{Title: props.Title, Alpine: true}) {
+		<div
+			class={ "container mx-auto p-6", props.Class }
+			{ devmode.Attrs(ctx, "pages/DataGridPage")... }
+			{ props.Attrs... }
+		>
+			<div class="mb-6">
+				<h1 class="text-2xl font-bold">{ props.Title }</h1>
+				if props.Subtitle != "" {
+					<p class="text-base-content/60 mt-1">{ props.Subtitle }</p>
+				}
+			</div>
+			@table.DataGrid(props.GridProps)
+		</div>
+	}
+}

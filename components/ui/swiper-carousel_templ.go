@@ -14,6 +14,10 @@ import (
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
+// SwiperCarousel is a SwiperJS-powered carousel with navigation, pagination, autoplay,
+// loop, multi-slide views, and transition effects. Lazy-loads SwiperJS ~200KB from CDN.
+// For a lightweight CSS scroll-snap alternative with zero JS dependencies, see Carousel in carousel.templ.
+
 var swiperScriptOnce = templ.NewOnceHandle()
 
 // SwiperEffect represents a Swiper transition effect.
@@ -77,7 +81,7 @@ func SwiperCarousel(props SwiperCarouselProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 46, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 50, Col: 15}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -90,7 +94,7 @@ func SwiperCarousel(props SwiperCarouselProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues("height:" + props.Height)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 48, Col: 34}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 52, Col: 34}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -103,7 +107,7 @@ func SwiperCarousel(props SwiperCarouselProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(string(props.Effect))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 50, Col: 36}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 54, Col: 36}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 		if templ_7745c5c3_Err != nil {
@@ -116,7 +120,7 @@ func SwiperCarousel(props SwiperCarouselProps) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(ternary(props.Navigation, "true", "false"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 51, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 55, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
@@ -129,7 +133,7 @@ func SwiperCarousel(props SwiperCarouselProps) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(ternary(props.Pagination, "true", "false"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 52, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 56, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 		if templ_7745c5c3_Err != nil {
@@ -142,7 +146,7 @@ func SwiperCarousel(props SwiperCarouselProps) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(ternary(props.Autoplay, "true", "false"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 53, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 57, Col: 58}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 		if templ_7745c5c3_Err != nil {
@@ -155,7 +159,7 @@ func SwiperCarousel(props SwiperCarouselProps) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(strconv.Itoa(props.AutoplayDelay))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 54, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 58, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
@@ -168,7 +172,7 @@ func SwiperCarousel(props SwiperCarouselProps) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(ternary(props.Loop, "true", "false"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 55, Col: 50}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 59, Col: 50}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 		if templ_7745c5c3_Err != nil {
@@ -181,7 +185,7 @@ func SwiperCarousel(props SwiperCarouselProps) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(strconv.Itoa(max(props.SlidesPerView, 1)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 56, Col: 66}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 60, Col: 66}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
@@ -194,7 +198,7 @@ func SwiperCarousel(props SwiperCarouselProps) templ.Component {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(strconv.Itoa(props.SpaceBetween))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 57, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/swiper-carousel.templ`, Line: 61, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 		if templ_7745c5c3_Err != nil {

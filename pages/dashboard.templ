@@ -1,0 +1,113 @@
+package pages
+
+import (
+	"github.com/emergent-company/go-daisy/components/form"
+	"github.com/emergent-company/go-daisy/components/nav"
+	ui "github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+// DashboardPage renders a full dashboard page with stats, charts, and tables.
+templ DashboardPage(props DashboardProps) {
+	<div class="space-y-6" { devmode.Attrs(ctx, "pages/DashboardPage")... }>
+		// Page header
+		@nav.PageTitleMinimal("Dashboard", []nav.BreadcrumbItem{
+			{Label: "Home", Href: "#", Icon: "lucide--home"},
+			{Label: "Dashboard"},
+		})
+
+		// Stat cards
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+			@ui.StatCardSparkline(ui.StatCardSparklineProps{
+				Label: "Revenue", Value: "$48,290", Trend: ui.StatTrendUp, TrendLabel: "12.5%",
+				Data: []int{12, 19, 15, 22, 28, 24, 35, 42, 38, 48, 45, 52},
+			})
+			@ui.StatCardSparkline(ui.StatCardSparklineProps{
+				Label: "Users", Value: "12,430", Trend: ui.StatTrendUp, TrendLabel: "8.3%",
+				Data: []int{50, 55, 62, 58, 70, 68, 75, 82, 78, 88, 92, 95},
+			})
+			@ui.StatCardSparkline(ui.StatCardSparklineProps{
+				Label: "Bounce Rate", Value: "24.1%", Trend: ui.StatTrendDown, TrendLabel: "3.2%",
+				Data: []int{30, 28, 25, 22, 20, 18, 16, 15, 14, 13, 12, 11},
+			})
+			@ui.StatCard(ui.StatCardProps{
+				Label: "Active Sessions", Value: "2,847", Icon: "lucide--activity",
+				IconColor: "bg-primary/10 text-primary",
+			})
+		</div>
+
+		// Charts row
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+			<div class="card bg-base-100 shadow-sm border border-base-200">
+				<div class="card-body p-4">
+					<h3 class="text-sm font-semibold text-base-content mb-2">Monthly Revenue</h3>
+					@ui.Chart(ui.ChartProps{
+						ID: "rev-chart", Type: ui.ChartArea, Height: "250",
+						Series: []ui.ChartSeries{{Name: "Revenue", Data: []float64{30, 40, 35, 50, 49, 60, 70, 91, 125}}},
+						Categories: []string{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"},
+					})
+				</div>
+			</div>
+			<div class="card bg-base-100 shadow-sm border border-base-200">
+				<div class="card-body p-4">
+					<h3 class="text-sm font-semibold text-base-content mb-2">Sales by Category</h3>
+					@ui.Chart(ui.ChartProps{
+						ID: "cat-chart", Type: ui.ChartDonut, Height: "250",
+						Series: []ui.ChartSeries{{Data: []float64{44, 55, 41, 17, 15}}},
+						Categories: []string{"Electronics", "Fashion", "Food", "Books", "Other"},
+					})
+				</div>
+			</div>
+		</div>
+
+		// Recent orders table
+		<div class="card bg-base-100 shadow-sm border border-base-200">
+			<div class="card-body p-0">
+				<div class="flex items-center justify-between px-5 pt-5">
+					<h3 class="text-sm font-semibold text-base-content">Recent Orders</h3>
+					<div class="flex items-center gap-2">
+						@form.SearchInput("order-search", "", "Search orders...", "", "#", "input-xs")
+						<a href="#" class="link link-primary text-sm">View all</a>
+					</div>
+				</div>
+				<div class="overflow-x-auto mt-3">
+					<table class="table table-sm w-full">
+						<thead>
+							<tr>
+								<th class="text-xs uppercase tracking-wider text-base-content/50">ID</th>
+								<th class="text-xs uppercase tracking-wider text-base-content/50">Customer</th>
+								<th class="text-xs uppercase tracking-wider text-base-content/50">Price</th>
+								<th class="text-xs uppercase tracking-wider text-base-content/50">Payment</th>
+								<th class="text-xs uppercase tracking-wider text-base-content/50">Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							@orderRow("#21001", "Emily Johnson", "$342", true, "Ordered")
+							@orderRow("#21002", "Alex Thompson", "$578", true, "Accepted")
+							@orderRow("#21003", "Sarah Davis", "$215", false, "On the Way")
+							@orderRow("#21004", "Michael Wilson", "$769", false, "Delivered")
+							@orderRow("#21005", "Jessica Miller", "$431", true, "Accepted")
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ orderRow(id, customer, price string, paid bool, status string) {
+	<tr class="hover">
+		<td class="text-sm font-medium">{ id }</td>
+		<td class="text-sm">{ customer }</td>
+		<td class="text-sm">{ price }</td>
+		<td>
+			if paid {
+				<span class="badge badge-success badge-soft badge-sm">Paid</span>
+			} else {
+				<span class="badge badge-error badge-soft badge-sm">Pending</span>
+			}
+		</td>
+		<td class="text-sm text-base-content/60">{ status }</td>
+	</tr>
+}
+

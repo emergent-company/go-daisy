@@ -96,6 +96,17 @@ func TopBarTokens() []galleryruntime.DesignToken {
 			Default:    "My Application",
 			QueryParam: "title",
 		},
+		{
+			Label:      "Scroll Aware",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "scrollAware",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
 	}
 }
 
@@ -109,7 +120,6 @@ func MenuTokens() []galleryruntime.DesignToken {
 			Default:    "",
 			QueryParam: "size",
 			Options: []galleryruntime.TokenOption{
-				{Value: "menu-lg", Label: "LG"},
 				{Value: "", Label: "MD"},
 				{Value: "menu-sm", Label: "SM"},
 			},
@@ -223,6 +233,40 @@ func LinkTokens() []galleryruntime.DesignToken {
 				{Value: "link link-primary", Label: "Primary"},
 				{Value: "link link-secondary", Label: "Secondary"},
 			},
+		},
+	}
+}
+
+// MenuSectionTokens returns the DesignToken slice for MenuSectionWithBoundary.
+func MenuSectionTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Title",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Section",
+			QueryParam: "title",
+		},
+		{
+			Label:      "Items 1",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 1",
+			QueryParam: "items1",
+		},
+		{
+			Label:      "Items 2",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 2",
+			QueryParam: "items2",
+		},
+		{
+			Label:      "Items 3",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 3",
+			QueryParam: "items3",
 		},
 	}
 }

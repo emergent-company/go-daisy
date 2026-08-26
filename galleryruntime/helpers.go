@@ -40,9 +40,10 @@ func TokenGroups(tokens []DesignToken) []TokenGroup {
 // gallery sidebar. Categories not in this slice fall to the end in first-seen order.
 var CategoryOrder = []Category{
 	CategoryFoundation,
-	CategoryBasics,
+	CategoryComponents,
 	CategoryNavigation,
 	CategoryLayout,
+	CategoryPageTemplates,
 	CategoryFeedback,
 	CategoryForms,
 	CategoryDataDisplay,
@@ -52,14 +53,15 @@ var CategoryOrder = []Category{
 // SubcategoryOrder defines the explicit display order of subcategories within each
 // category. Subcategories not listed fall to the end in first-seen order.
 var SubcategoryOrder = map[Category][]string{
-	CategoryFoundation:  {"Typography", "Display", "Layout", "Effects"},
-	CategoryBasics:      {"Buttons", "Badges", "Tag", "Avatars"},
-	CategoryNavigation:  {"Menus", "Tabs", "Headers", "Filters", "Page Title", "Pagination", "Notifications", "Search", "Profile Menus", "Misc"},
-	CategoryLayout:      {"Sidebars", "Topbars", "Footers", "Page Titles", "Drawers", "Builder"},
-	CategoryFeedback:    {"Alerts", "States", "Loading", "Toasts", "Notifications", "Indicators", "Progress"},
-	CategoryForms:       {"Inputs", "Toggles", "Filters", "Layout", "Prompt Bar", "Wizard"},
-	CategoryDataDisplay: {"Display", "Lists", "Cards", "Tables", "Mockups"},
-	CategoryOverlays:    {"Dropdowns", "Modals"},
+	CategoryFoundation:    {"Typography", "Layout", "Effects"},
+	CategoryComponents:    {"Buttons", "Badges", "Tag", "Avatars", "Display", "Cards", "Chat", "Links", "FAB"},
+	CategoryNavigation:    {"Menus", "Tabs", "Headers", "Filters", "Page Title", "Pagination", "Notifications", "Search", "Profile Menus", "Misc"},
+	CategoryLayout:        {"Sidebars", "Topbars", "Footers", "Page Titles", "Drawers", "Builder", "Hero", "Mockups"},
+	CategoryPageTemplates: {"Pages"},
+	CategoryFeedback:      {"Alerts", "States", "Loading", "Toasts", "Notifications", "Indicators", "Progress"},
+	CategoryForms:         {"Inputs", "Toggles", "Filters", "Layout", "Prompt Bar", "Wizard"},
+	CategoryDataDisplay:   {"Display", "Lists", "Tables"},
+	CategoryOverlays:      {"Dropdowns", "Modals", "Popovers", "Panels"},
 }
 
 var reNonAlphaNum = regexp.MustCompile(`[^a-zA-Z0-9]+`)

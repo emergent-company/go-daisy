@@ -17,3 +17,70 @@ func NavbarTokens() []galleryruntime.DesignToken {
 		},
 	}
 }
+
+// AppShellWithNavTokens returns the DesignToken slice for AppShellWithNavWithBoundary.
+func AppShellWithNavTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "App Name",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "MyApp",
+			QueryParam: "appName",
+		},
+		{
+			Label:      "Groups 1",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 1",
+			QueryParam: "groups1",
+		},
+		{
+			Label:      "Groups 2",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 2",
+			QueryParam: "groups2",
+		},
+		{
+			Label:      "Groups 3",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 3",
+			QueryParam: "groups3",
+		},
+	}
+}
+
+// PageTokens returns the DesignToken slice for PageWithBoundary.
+func PageTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Title",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "go-daisy",
+			QueryParam: "title",
+		},
+		{
+			Label:      "Theme Attr",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "themeAttr",
+		},
+	}
+}
+
+// ViewMenuLabelTokens returns the DesignToken slice for ViewMenuLabelWithBoundary.
+func ViewMenuLabelTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Navigation",
+			QueryParam: "label",
+		},
+	}
+}

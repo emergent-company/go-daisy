@@ -1,0 +1,63 @@
+package main
+
+import (
+	"github.com/emergent-company/go-daisy/components/ui"
+)
+
+templ DashboardPage() {
+	<!DOCTYPE html>
+	<html lang="en" data-theme="light">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>go-daisy Dashboard</title>
+		<link rel="stylesheet" href="/static/css/app.css"/>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.3.0/apexcharts.min.js"></script>
+	</head>
+	<body class="bg-base-200 p-6">
+		<div class="max-w-6xl mx-auto">
+			<h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+			<div class="grid grid-cols-3 gap-4 mb-6">
+				@Stat("Total Revenue", "$24,500", "↑ 12%")
+				@Stat("Active Users", "1,234", "↑ 8%")
+				@Stat("Conversion", "3.2%", "↓ 0.5%")
+			</div>
+			<div class="grid grid-cols-2 gap-6">
+				<div class="card bg-base-100 shadow-sm p-4">
+					@ui.Chart(ui.ChartProps{
+						ID:     "revenue-chart",
+						Type:   ui.ChartArea,
+						Height: "300",
+						Series: []ui.ChartSeries{
+							{Name: "Revenue", Data: []float64{31, 40, 28, 51, 42, 82, 56}},
+						},
+						Categories: []string{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"},
+						Colors:     []string{"#167bff"},
+					})
+				</div>
+				<div class="card bg-base-100 shadow-sm p-4">
+					@ui.Chart(ui.ChartProps{
+						ID:     "users-chart",
+						Type:   ui.ChartBar,
+						Height: "300",
+						Series: []ui.ChartSeries{
+							{Name: "New Users", Data: []float64{44, 55, 41, 67, 22, 43, 21}},
+						},
+						Categories: []string{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"},
+						Colors:     []string{"#00ba9d"},
+					})
+				</div>
+			</div>
+		</div>
+		<script src="/static/js/htmx.js"></script>
+	</body>
+	</html>
+}
+
+templ Stat(label, value, change string) {
+	<div class="card bg-base-100 shadow-sm p-4">
+		<p class="text-sm text-base-content/60">{ label }</p>
+		<p class="text-2xl font-bold mt-1">{ value }</p>
+		<p class="text-sm mt-1">{ change }</p>
+	</div>
+}

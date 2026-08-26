@@ -61,7 +61,7 @@ func CodeBlock(props CodeBlockProps) templ.Component {
 		if label == "" {
 			label = "Code"
 		}
-		var templ_7745c5c3_Var2 = []any{"code-block-root relative border border-base-200 rounded-box overflow-hidden", props.Class}
+		var templ_7745c5c3_Var2 = []any{"code-block-root relative border border-base-200 rounded-box overflow-hidden", templ.KV(props.Class, props.Class != "")}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -140,12 +140,20 @@ func CodeBlock(props CodeBlockProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if props.Highlight != "" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div style=\"background:#0d1117;padding:16px\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 			templ_7745c5c3_Err = templ.Raw(props.Highlight).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<pre class=\"text-sm p-4 m-0 bg-base-300/30\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<pre class=\"text-sm p-4 m-0 bg-base-300/30\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -154,12 +162,12 @@ func CodeBlock(props CodeBlockProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<code")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<code")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if props.ID != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " id=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, " id=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -172,13 +180,13 @@ func CodeBlock(props CodeBlockProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 			if props.Language != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, " class=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, " class=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -191,12 +199,12 @@ func CodeBlock(props CodeBlockProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, ">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, ">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -209,12 +217,12 @@ func CodeBlock(props CodeBlockProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</code></pre>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</code></pre>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -230,7 +238,7 @@ func CodeBlock(props CodeBlockProps) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<script>\n\tif (!window._copyBlockCode) {\n\t  window._copyBlockCode = true;\n\t  window.copyBlockCode = function(el) {\n\t    var pre = el.closest('.code-block-root');\n\t    var code = pre ? pre.querySelector('pre') || pre.querySelector('code') : null;\n\t    var text = code ? code.textContent : '';\n\t    if (navigator.clipboard && navigator.clipboard.writeText) {\n\t      navigator.clipboard.writeText(text).then(function() {\n\t        el.dataset.tip = 'Copied!';\n\t        setTimeout(function() { el.dataset.tip = 'Copy'; }, 1500);\n\t      }).catch(function() {});\n\t    }\n\t  };\n\t}\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<script>\n\tif (!window._copyBlockCode) {\n\t  window._copyBlockCode = true;\n\t  window.copyBlockCode = function(el) {\n\t    var pre = el.closest('.code-block-root');\n\t    var code = pre ? pre.querySelector('pre') || pre.querySelector('code') : null;\n\t    var text = code ? code.textContent : '';\n\t    if (navigator.clipboard && navigator.clipboard.writeText) {\n\t      navigator.clipboard.writeText(text).then(function() {\n\t        el.dataset.tip = 'Copied!';\n\t        setTimeout(function() { el.dataset.tip = 'Copy'; }, 1500);\n\t      }).catch(function() {});\n\t    }\n\t  };\n\t}\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

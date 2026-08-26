@@ -14,21 +14,23 @@ import "github.com/emergent-company/go-daisy/components/ui"
 func CategoryDescription(cat Category) string {
 	switch cat {
 	case CategoryFoundation:
-		return "Layout primitives and structural components."
-	case CategoryBasics:
-		return "Core building blocks: buttons, avatars, badges, tags."
+		return "Design tokens, typography, effects, icons, and theme primitives."
+	case CategoryComponents:
+		return "Buttons, badges, avatars, tags, cards, chat, and interactive elements."
 	case CategoryNavigation:
-		return "Menus, breadcrumbs, tabs, pagination, and navbars."
+		return "Menus, breadcrumbs, tabs, pagination, search, and navbars."
 	case CategoryLayout:
-		return "Sidebars, drawers, and page shell layouts."
+		return "Sidebars, drawers, page shells, hero sections, mockups, and layout primitives."
+	case CategoryPageTemplates:
+		return "Full-page layout templates: auth, dashboard, chat, settings, landing."
 	case CategoryFeedback:
-		return "Alerts, loading states, skeleton screens, and status indicators."
+		return "Alerts, loading states, skeleton screens, toasts, banners, and status indicators."
 	case CategoryForms:
-		return "Form inputs, selects, checkboxes, toggles, and validators."
+		return "Form inputs, selects, checkboxes, toggles, editors, pickers, and validators."
 	case CategoryDataDisplay:
-		return "Tables, lists, timelines, avatars, cards, and data visualizations."
+		return "Tables, lists, timelines, charts, carousels, code blocks, and data visualizations."
 	case CategoryOverlays:
-		return "Modals, dropdowns, tooltips, and floating elements."
+		return "Modals, dropdowns, tooltips, popovers, sheets, and floating elements."
 	default:
 		return ""
 	}
@@ -88,7 +90,7 @@ func galleryGroupGrid(components []GalleryComponent) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(comp.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 48, Col: 62}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 50, Col: 62}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -106,7 +108,7 @@ func galleryGroupGrid(components []GalleryComponent) templ.Component {
 					var templ_7745c5c3_Var4 string
 					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(comp.Description)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 50, Col: 81}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 52, Col: 81}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 					if templ_7745c5c3_Err != nil {
@@ -180,7 +182,7 @@ func GallerySubGroup(cat Category, sub SubcategoryGroup) templ.Component {
 		var templ_7745c5c3_Var6 templ.SafeURL
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/gallery/group/" + SlugifyCategory(string(cat))))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 68, Col: 70}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 70, Col: 70}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -193,7 +195,7 @@ func GallerySubGroup(cat Category, sub SubcategoryGroup) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue("/gallery/group/" + SlugifyCategory(string(cat)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 69, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 71, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 		if templ_7745c5c3_Err != nil {
@@ -206,7 +208,7 @@ func GallerySubGroup(cat Category, sub SubcategoryGroup) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(string(cat))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 75, Col: 17}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 77, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -219,7 +221,7 @@ func GallerySubGroup(cat Category, sub SubcategoryGroup) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(sub.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 80, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 82, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -242,7 +244,7 @@ func GallerySubGroup(cat Category, sub SubcategoryGroup) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(len(sub.Components))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 85, Col: 32}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 87, Col: 32}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -299,7 +301,7 @@ func GalleryGroup(cat Category, subcategories []SubcategoryGroup) templ.Componen
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(string(cat))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 99, Col: 65}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 101, Col: 65}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -312,7 +314,7 @@ func GalleryGroup(cat Category, subcategories []SubcategoryGroup) templ.Componen
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(CategoryDescription(cat))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 100, Col: 76}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 102, Col: 76}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
@@ -335,7 +337,7 @@ func GalleryGroup(cat Category, subcategories []SubcategoryGroup) templ.Componen
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(subcategoryTotal(subcategories))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 105, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 107, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -359,7 +361,7 @@ func GalleryGroup(cat Category, subcategories []SubcategoryGroup) templ.Componen
 				var templ_7745c5c3_Var15 string
 				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(sub.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 113, Col: 72}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_group.templ`, Line: 115, Col: 72}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 				if templ_7745c5c3_Err != nil {

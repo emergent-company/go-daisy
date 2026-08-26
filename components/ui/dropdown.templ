@@ -15,7 +15,7 @@ const (
 // Dropdown wraps a trigger + dropdown-content menu.
 // attrs is optional; pass nil when not needed.
 templ Dropdown(align DropdownAlign, attrs templ.Attributes) {
-	<div class={ "dropdown", string(align) } aria-expanded="false" aria-haspopup="true" { devmode.Attrs(ctx, "ui/Dropdown")... } { attrs... }>
+	<div class={ "dropdown", templ.KV(string(align), align != "") } aria-expanded="false" aria-haspopup="true" { devmode.Attrs(ctx, "ui/Dropdown")... } { attrs... }>
 		{ children... }
 	</div>
 }

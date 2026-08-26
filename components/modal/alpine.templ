@@ -1,0 +1,21 @@
+package modal
+
+// AlpineModal is deprecated. Use Modal with Driver: ModalDriverAlpine instead.
+templ AlpineModal(title string, size ModalSize) {
+	@Modal(ModalProps{Title: title, Size: size, Driver: ModalDriverAlpine}) {
+		{ children... }
+	}
+}
+
+// AlpineOpenModalButton is deprecated. Use OpenModalButton with Driver: ModalDriverAlpine instead.
+templ AlpineOpenModalButton(label string) {
+	@OpenModalButton("", label, nil, ModalDriverAlpine)
+}
+
+// AlpineFormModal is deprecated. Use FormModal with Driver: ModalDriverAlpine instead.
+templ AlpineFormModal(props FormModalProps) {
+	{{ p := props; p.Driver = ModalDriverAlpine }}
+	@FormModal(p) {
+		{ children... }
+	}
+}

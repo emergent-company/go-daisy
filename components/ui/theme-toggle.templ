@@ -1,6 +1,14 @@
 package ui
 
-import "github.com/emergent-company/go-daisy/devmode"
+import (
+	"github.com/emergent-company/go-daisy/components/alpine"
+	"github.com/emergent-company/go-daisy/components/stimulus"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+type ThemeToggleProps struct {
+	Driver string // "" = vanilla, "alpine" = AlpineJS, "stimulus" = StimulusJS
+}
 
 // themeToggleVisual renders the shared visual: two Iconify icons (sun/moon)
 // inside a DaisyUI swap component.
@@ -9,14 +17,78 @@ templ themeToggleVisual() {
 	@IconSpan("lucide--moon", "size-5 swap-off")
 }
 
-// ThemeToggle renders an animated sun/moon theme toggle using Swap + inline JS.
-// Uses document.documentElement.getAttribute('data-theme') to detect current theme.
-templ ThemeToggle() {
+// ThemeToggle renders an animated sun/moon theme toggle.
+// Use Driver to select implementation: "" (vanilla inline JS), "alpine" (AlpineJS), "stimulus" (StimulusJS).
+templ ThemeToggle(props ThemeToggleProps) {
+	if props.Driver == "alpine" {
+		@alpineThemeToggle()
+	} else if props.Driver == "stimulus" {
+		@stimulusThemeToggle()
+	} else {
+		@vanillaThemeToggle()
+	}
+}
+
+// AlpineThemeToggle renders a sun/moon theme toggle using Alpine.js.
+//
+// Deprecated: use ThemeToggle(ThemeToggleProps{Driver: "alpine"}) instead.
+templ AlpineThemeToggle() {
+	@alpineThemeToggle()
+}
+
+// StimulusThemeToggle renders a sun/moon theme toggle using Stimulus controller.
+//
+// Deprecated: use ThemeToggle(ThemeToggleProps{Driver: "stimulus"}) instead.
+templ StimulusThemeToggle() {
+	@stimulusThemeToggle()
+}
+
+// vanillaThemeToggle renders the vanilla inline-JS theme toggle.
+templ vanillaThemeToggle() {
 	<label class="swap swap-rotate cursor-pointer" { devmode.Attrs(ctx, "ui/ThemeToggle")... }>
 		<input type="checkbox" class="theme-controller hidden" value="dracula" onclick="themeToggleAnimated(this)" />
 		@themeToggleVisual()
 	</label>
 	@themeToggleScript()
+}
+
+// alpineThemeToggle renders the Alpine.js theme toggle.
+templ alpineThemeToggle() {
+	<div
+		{ alpine.XData(alpine.ThemeState(false))... }
+		x-init="
+			var t = localStorage.getItem('go-daisy-theme') || document.documentElement.getAttribute('data-theme') || 'nord';
+			dark = (t === 'dracula' || t === 'dim' || t === 'sunset');
+			$watch('dark', function(v) {
+				var theme = v ? 'dracula' : 'nord';
+				document.documentElement.setAttribute('data-theme', theme);
+				localStorage.setItem('go-daisy-theme', theme);
+			})
+		"
+		{ devmode.Attrs(ctx, "ui/ThemeToggle")... }
+	>
+		<label class="swap swap-rotate cursor-pointer">
+			<input type="checkbox" class="hidden" { alpine.BooleanBinding("checked", "dark")... } { alpine.On("change", "dark = $el.checked")... }/>
+			@themeToggleVisual()
+		</label>
+	</div>
+}
+
+// stimulusThemeToggle renders the Stimulus.js theme toggle.
+templ stimulusThemeToggle() {
+	<div
+		{ stimulus.Controller("theme")... }
+		{ devmode.Attrs(ctx, "ui/ThemeToggle")... }
+	>
+		<label
+			class="swap swap-rotate cursor-pointer"
+			aria-label="Toggle theme"
+			{ stimulus.Action("click", "theme", "toggle")... }
+		>
+			<input type="checkbox" class="hidden" data-theme-target="checkbox"/>
+			@themeToggleVisual()
+		</label>
+	</div>
 }
 
 var themeToggleScriptOnce = templ.NewOnceHandle()

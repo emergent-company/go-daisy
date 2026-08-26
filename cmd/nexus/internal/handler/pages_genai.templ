@@ -1,0 +1,23 @@
+package handler
+
+import (
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+templ GenAIHome() {
+	<div { devmode.Attrs(ctx, "nexus/GenAIHome")... }>
+		<div class="text-center py-8">
+			<h1 class="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Hi there, Denish</h1>
+			<p class="text-lg text-base-content/60 mt-2">How can I assist you today?</p>
+		</div>
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+			<div class="card bg-primary text-primary-content shadow-sm cursor-pointer"><div class="card-body p-4"><span class="iconify lucide--sparkles size-5"></span><h4 class="font-semibold">Blog Post Ideas</h4><p class="text-sm opacity-80">Explore Ideas</p></div></div>
+			<div class="card bg-secondary text-secondary-content shadow-sm cursor-pointer"><div class="card-body p-4"><span class="iconify lucide--mail size-5"></span><h4 class="font-semibold">Email Campaigns</h4><p class="text-sm opacity-80">Start Campaign</p></div></div>
+			<div class="card bg-success text-success-content shadow-sm cursor-pointer"><div class="card-body p-4"><span class="iconify lucide--text size-5"></span><h4 class="font-semibold">Social Media Captions</h4><p class="text-sm opacity-80">Generate Captions</p></div></div>
+		</div>
+	</div>
+}
+templ GenAIContentCreator() { <div class="flex items-center justify-between"><h3 class="text-lg font-medium">Content Creator</h3></div><div class="card bg-base-100 mt-6"><div class="card-body"><p>Content Creator — stub</p></div></div> }
+templ GenAIImageGen() { <div class="flex items-center justify-between"><h3 class="text-lg font-medium">Image Gen</h3></div><div class="card bg-base-100 mt-6"><div class="card-body"><p>Image Gen — stub</p></div></div> }
+templ GenAILibrary() { <div class="card bg-base-100"><div class="card-body"><p>Library — stub</p></div></div> }
+

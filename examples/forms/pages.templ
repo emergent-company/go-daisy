@@ -1,0 +1,57 @@
+package main
+
+import (
+	"github.com/emergent-company/go-daisy/components/form"
+	"github.com/emergent-company/go-daisy/components/ui"
+)
+
+templ FormPage(name, errorMsg string) {
+	<!DOCTYPE html>
+	<html lang="en" data-theme="light">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>go-daisy Forms</title>
+		<link rel="stylesheet" href="/static/css/app.css"/>
+	</head>
+	<body class="bg-base-200 flex items-center justify-center min-h-screen">
+		<div class="card bg-base-100 shadow-sm w-full max-w-md p-8">
+			<h2 class="card-title text-2xl mb-4">Contact Form</h2>
+			<form hx-post="/submit" hx-swap="outerHTML"
+			      hx-target="closest body > div" class="space-y-4">
+				@form.FormField(form.FormFieldProps{
+					Label:       "Name",
+					Name:        "name",
+					Type:        form.FieldText,
+					Placeholder: "Your name",
+					Required:    true,
+				})
+				@form.FormField(form.FormFieldProps{
+					Label:       "Email",
+					Name:        "email",
+					Type:        form.FieldEmail,
+					Placeholder: "you@example.com",
+					Required:    true,
+				})
+				if errorMsg != "" {
+					@ui.Alert(ui.AlertProps{Type: ui.AlertError, Message: errorMsg})
+				}
+				<div class="card-actions justify-end mt-4">
+					@ui.Button(ui.ButtonProps{
+						Variant: ui.ButtonPrimary,
+						Type:    ui.ButtonTypeSubmit,
+					}) {
+						Submit
+					}
+				</div>
+			</form>
+			if name != "" && errorMsg == "" {
+				<div class="mt-4">
+					@ui.Alert(ui.AlertProps{Type: ui.AlertSuccess, Message: "Welcome, " + name + "!"})
+				</div>
+			}
+		</div>
+		<script src="/static/js/htmx.js"></script>
+	</body>
+	</html>
+}

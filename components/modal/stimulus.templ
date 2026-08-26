@@ -1,0 +1,21 @@
+package modal
+
+// StimulusModal is deprecated. Use Modal with Driver: ModalDriverStimulus instead.
+templ StimulusModal(title string, size ModalSize) {
+	@Modal(ModalProps{Title: title, Size: size, Driver: ModalDriverStimulus}) {
+		{ children... }
+	}
+}
+
+// StimulusOpenModalButton is deprecated. Use OpenModalButton with Driver: ModalDriverStimulus instead.
+templ StimulusOpenModalButton(label string) {
+	@OpenModalButton("", label, nil, ModalDriverStimulus)
+}
+
+// StimulusFormModal is deprecated. Use FormModal with Driver: ModalDriverStimulus instead.
+templ StimulusFormModal(props FormModalProps) {
+	{{ p := props; p.Driver = ModalDriverStimulus }}
+	@FormModal(p) {
+		{ children... }
+	}
+}

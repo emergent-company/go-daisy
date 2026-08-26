@@ -54,7 +54,8 @@ func gallerySearchIndex(categories []CategoryGroup) string {
 // GalleryPage renders the full gallery shell with sidebar and content area.
 // Use for direct browser navigation (non-HTMX requests).
 templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, logo templ.Component, content templ.Component) {
-	@layout.Page(title + " · Gallery", "") {
+	@layout.Page(title+" · Gallery", "") {
+		<style>@media all { .hidden { display: none !important; } }</style>
 		@layout.AppShell(title) {
 			<!-- Sidebar -->
 			<div id="_layout-sidebar" class="flex flex-col bg-base-100">

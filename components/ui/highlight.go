@@ -36,7 +36,7 @@ func Highlight(src, lang string) string {
 		return html.EscapeString(src)
 	}
 
-	formatter := chromahtml.New(chromahtml.WithClasses(false), chromahtml.TabWidth(2))
+	formatter := chromahtml.New(chromahtml.WithClasses(false), chromahtml.TabWidth(2), chromahtml.Standalone(false))
 	var buf bytes.Buffer
 	if err := formatter.Format(&buf, highlightStyle, it); err != nil {
 		return html.EscapeString(src)

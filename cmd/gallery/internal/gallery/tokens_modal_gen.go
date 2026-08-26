@@ -25,7 +25,36 @@ func ModalTokens() []galleryruntime.DesignToken {
 				{Value: "modal-lg", Label: "LG"},
 				{Value: "", Label: "MD"},
 				{Value: "modal-sm", Label: "SM"},
-				{Value: "modal-xl", Label: "XL"},
+			},
+		},
+		{
+			Label:      "Driver",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "alpine",
+			QueryParam: "driver",
+			Options: []galleryruntime.TokenOption{
+				{Value: "alpine", Label: "Alpine"},
+				{Value: "stimulus", Label: "Stimulus"},
+				{Value: "", Label: "Vanilla"},
+			},
+		},
+	}
+}
+
+// FormModalTokens returns the DesignToken slice for FormModalWithBoundary.
+func FormModalTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Driver",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "alpine",
+			QueryParam: "driver",
+			Options: []galleryruntime.TokenOption{
+				{Value: "alpine", Label: "Alpine"},
+				{Value: "stimulus", Label: "Stimulus"},
+				{Value: "", Label: "Vanilla"},
 			},
 		},
 	}
@@ -47,6 +76,65 @@ func ConfirmPopupTokens() []galleryruntime.DesignToken {
 			Type:       galleryruntime.TokenTypeText,
 			Default:    "This action cannot be undone.",
 			QueryParam: "message",
+		},
+	}
+}
+
+// OpenModalButtonTokens returns the DesignToken slice for OpenModalButtonWithBoundary.
+func OpenModalButtonTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Modal ID",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "my-modal",
+			QueryParam: "modalID",
+		},
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Open Modal",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Driver",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "alpine",
+			QueryParam: "driver",
+			Options: []galleryruntime.TokenOption{
+				{Value: "alpine", Label: "Alpine"},
+				{Value: "stimulus", Label: "Stimulus"},
+				{Value: "", Label: "Vanilla"},
+			},
+		},
+	}
+}
+
+// DeleteButtonTokens returns the DesignToken slice for DeleteButtonWithBoundary.
+func DeleteButtonTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Url",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "#",
+			QueryParam: "url",
+		},
+		{
+			Label:      "Confirm",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Are you sure?",
+			QueryParam: "confirm",
+		},
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Delete",
+			QueryParam: "label",
 		},
 	}
 }

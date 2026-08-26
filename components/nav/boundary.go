@@ -9,7 +9,7 @@ import (
 // PageHeaderWithBoundary wraps PageHeader with a dev-mode component boundary annotation.
 // gallery:token steps
 // gallery:hint steps:slice(3)
-func PageHeaderWithBoundary(steps []BreadcrumbStep) templ.Component {
+func PageHeaderWithBoundary(steps []BreadcrumbItem) templ.Component {
 	return devmode.ComponentBoundary("PageHeader", PageHeader(steps, nil), map[string]any{"stepCount": len(steps)})
 }
 
@@ -17,7 +17,10 @@ func PageHeaderWithBoundary(steps []BreadcrumbStep) templ.Component {
 // gallery:token tabs
 // gallery:hint tabs:slice(3)
 func TabMenuWithBoundary(tabs []Tab, target ...string) templ.Component {
-	return devmode.ComponentBoundary("TabMenu", TabMenu(tabs, nil, target...), map[string]any{"tabCount": len(tabs)})
+	if len(target) > 0 {
+		return devmode.ComponentBoundary("TabMenu", TabMenu(tabs, nil, target[0]), map[string]any{"tabCount": len(tabs)})
+	}
+	return devmode.ComponentBoundary("TabMenu", TabMenu(tabs, nil, ""), map[string]any{"tabCount": len(tabs)})
 }
 
 // SimpleTabsWithBoundary wraps SimpleTabs with a dev-mode component boundary annotation.
@@ -28,10 +31,15 @@ func SimpleTabsWithBoundary(tabs []Tab) templ.Component {
 }
 
 // TopBarWithBoundary wraps TopBar with a dev-mode component boundary annotation.
-// gallery:token title
+// gallery:token title,scrollAware
 // gallery:hint title:default(My Application)
-func TopBarWithBoundary(title string) templ.Component {
-	return devmode.ComponentBoundary("TopBar", TopBar(title, nil), map[string]any{"title": title})
+// gallery:hint scrollAware:default(false)
+func TopBarWithBoundary(title string, scrollAware bool) templ.Component {
+	props := TopBarProps{Title: title, ScrollAware: scrollAware}
+	return devmode.ComponentBoundary("TopBar", TopBar(props), map[string]any{
+		"title":       title,
+		"scrollAware": scrollAware,
+	})
 }
 
 // MenuWithBoundary wraps Menu with a dev-mode component boundary annotation.
@@ -47,8 +55,8 @@ func MenuWithBoundary(size MenuSize, items []MenuItem) templ.Component {
 // BreadcrumbsWithBoundary wraps Breadcrumbs with a dev-mode component boundary annotation.
 // gallery:token items
 // gallery:hint items:slice(3)
-func BreadcrumbsWithBoundary(items []BreadcrumbItem) templ.Component {
-	return devmode.ComponentBoundary("Breadcrumbs", Breadcrumbs(items), map[string]any{"itemCount": len(items)})
+func BreadcrumbsWithBoundary(items []BreadcrumbItem, divider BreadcrumbsDivider) templ.Component {
+	return devmode.ComponentBoundary("Breadcrumbs", Breadcrumbs(items, divider), map[string]any{"itemCount": len(items), "divider": string(divider)})
 }
 
 // DockWithBoundary wraps Dock with a dev-mode component boundary annotation.
@@ -78,21 +86,21 @@ func PageHeadingWithBoundary(props PageHeadingProps) templ.Component {
 	})
 }
 
-// PageTitleMinimalWithBoundary wraps PageTitleMinimal with a dev-mode component boundary annotation.
-func PageTitleMinimalWithBoundary(title string, steps []PageTitleStep) templ.Component {
-	return devmode.ComponentBoundary("PageTitleMinimal", PageTitleMinimal(title, steps), map[string]any{
-		"title":     title,
-		"stepCount": len(steps),
+// Deprecated: use PageTitleVariantWithBoundary("minimal", opts) instead.
+func PageTitleMinimalWithBoundary(title string, steps []BreadcrumbItem) templ.Component {
+	return PageTitleVariantWithBoundary("minimal", PageTitleVariantOpts{
+		Title: title,
+		Steps: steps,
 	})
 }
 
-// PageTitleEditorWithBoundary wraps PageTitleEditor with a dev-mode component boundary annotation.
-func PageTitleEditorWithBoundary(steps []BreadcrumbStep, title, subtitle string, actions []PageTitleEditorAction) templ.Component {
-	return devmode.ComponentBoundary("PageTitleEditor", PageTitleEditor(steps, title, subtitle, actions), map[string]any{
-		"title":       title,
-		"subtitle":    subtitle,
-		"stepCount":   len(steps),
-		"actionCount": len(actions),
+// Deprecated: use PageTitleVariantWithBoundary("editor", opts) instead.
+func PageTitleEditorWithBoundary(steps []BreadcrumbItem, title, subtitle string, actions []PageTitleEditorAction) templ.Component {
+	return PageTitleVariantWithBoundary("editor", PageTitleVariantOpts{
+		Title:    title,
+		Subtitle: subtitle,
+		Steps:    steps,
+		Actions:  actions,
 	})
 }
 
@@ -148,15 +156,6 @@ func ProfileMenuVariantWithBoundary(style string, opts ProfileMenuVariantOpts) t
 func PageTitleVariantWithBoundary(style string, opts PageTitleVariantOpts) templ.Component {
 	return devmode.ComponentBoundary("PageTitleVariant", PageTitleVariant(style, opts), map[string]any{
 		"style": style,
-	})
-}
-
-// ScrollTopbarWithBoundary wraps ScrollTopbar with a dev-mode component boundary annotation.
-// gallery:token title
-// gallery:hint title:default(Dashboard)
-func ScrollTopbarWithBoundary(title string) templ.Component {
-	return devmode.ComponentBoundary("ScrollTopbar", ScrollTopbar(title, nil), map[string]any{
-		"title": title,
 	})
 }
 

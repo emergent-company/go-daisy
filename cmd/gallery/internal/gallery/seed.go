@@ -1,11 +1,11 @@
 package gallery
 
-//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/ui    -out tokens_ui_gen.go     -out-pkg gallery ../../../../../../components/ui/boundary.go
-//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/form   -out tokens_form_gen.go   -out-pkg gallery ../../../../../../components/form/boundary.go
-//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/nav    -out tokens_nav_gen.go    -out-pkg gallery ../../../../../../components/nav/boundary.go
-//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/modal  -out tokens_modal_gen.go  -out-pkg gallery ../../../../../../components/modal/boundary.go
-//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/layout -out tokens_layout_gen.go -out-pkg gallery ../../../../../../components/layout/boundary.go
-//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/logs   -out tokens_logs_gen.go   -out-pkg gallery ../../../../../../components/logs/boundary.go
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/ui    -out tokens_ui_gen.go     -out-pkg gallery ../../../../components/ui/boundary.go
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/form   -out tokens_form_gen.go   -out-pkg gallery ../../../../components/form/boundary.go
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/nav    -out tokens_nav_gen.go    -out-pkg gallery ../../../../components/nav/boundary.go
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/modal  -out tokens_modal_gen.go  -out-pkg gallery ../../../../components/modal/boundary.go
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/layout -out tokens_layout_gen.go -out-pkg gallery ../../../../components/layout/boundary.go
+//go:generate go run github.com/emergent-company/go-daisy/cmd/boundarytoken -pkg github.com/emergent-company/go-daisy/components/logs   -out tokens_logs_gen.go   -out-pkg gallery ../../../../components/logs/boundary.go
 
 import (
 	"context"
@@ -158,9 +158,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Chat ───────────────────────────────────────────────────
 		{
-			Slug:        "chat-bubble",
-			Name:        "Chat Bubble",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "chat-bubble",
+		Name:        "Chat Bubble",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Chat conversation bubbles (sent and received) with avatar, bot-icon, and hover action toolbar.",
 			Variants: []galleryruntime.GalleryStory{
@@ -273,9 +273,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-			Slug:        "chat-input",
-			Name:        "Chat Input",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "chat-input",
+		Name:        "Chat Input",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Compact single-line chat input bar with optional attach button and send button.",
 			Variants: []galleryruntime.GalleryStory{
@@ -321,9 +321,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Mockups ────────────────────────────────────────────────
 		{
-			Slug:        "mockup-code",
-			Name:        "Mockup Code",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "mockup-code",
+		Name:        "Mockup Code",
+		Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Mockups",
 			Description: "Code block mockup with terminal-style prefix lines.",
 			Variants: []galleryruntime.GalleryStory{
@@ -354,9 +354,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-			Slug:        "mockup-browser",
-			Name:        "Mockup Browser",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "mockup-browser",
+		Name:        "Mockup Browser",
+		Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Mockups",
 			Description: "Browser window mockup for UI showcasing.",
 			Variants: []galleryruntime.GalleryStory{
@@ -650,7 +650,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "divider",
 			Name:        "Divider",
-			Category:    galleryruntime.CategoryFoundation,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Horizontal and vertical dividers with optional label.",
 			Variants: []galleryruntime.GalleryStory{
@@ -694,7 +694,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "kbd",
 			Name:        "Keyboard Keys",
-			Category:    galleryruntime.CategoryFoundation,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Keyboard shortcut display using DaisyUI kbd.",
 			Variants: []galleryruntime.GalleryStory{
@@ -746,7 +746,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "progress",
 			Name:        "Progress",
-			Category:    galleryruntime.CategoryFoundation,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "A DaisyUI linear progress bar with configurable color, value, and max.",
 			Variants: []galleryruntime.GalleryStory{
@@ -817,7 +817,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "steps",
 			Name:        "Steps",
-			Category:    galleryruntime.CategoryFoundation,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Step progress indicator for multi-step flows.",
 			Variants: []galleryruntime.GalleryStory{
@@ -864,9 +864,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-			Slug:        "collapse",
-			Name:        "Collapse / Accordion",
-			Category:    galleryruntime.CategoryFoundation,
+		Slug:        "collapse",
+		Name:        "Collapse / Accordion",
+		Category:    galleryruntime.CategoryDataDisplay,
 			Subcategory: "Display",
 			Description: "Collapsible sections using DaisyUI collapse.",
 			Variants: []galleryruntime.GalleryStory{
@@ -895,9 +895,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-			Slug:        "dropdown",
-			Name:        "Dropdown",
-			Category:    galleryruntime.CategoryFoundation,
+		Slug:        "dropdown",
+		Name:        "Dropdown",
+		Category:    galleryruntime.CategoryOverlays,
 			Subcategory: "Display",
 			Description: "Dropdown menu triggered by a button.",
 			Variants: []galleryruntime.GalleryStory{
@@ -943,9 +943,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-			Slug:        "swap",
-			Name:        "Swap",
-			Category:    galleryruntime.CategoryFoundation,
+		Slug:        "swap",
+		Name:        "Swap",
+		Category:    galleryruntime.CategoryOverlays,
 			Subcategory: "Display",
 			Description: "Toggle between two visual states on click.",
 			Variants: []galleryruntime.GalleryStory{
@@ -976,8 +976,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								ui.IconSpan("lucide--moon", "size-8"),
 							),
 						ui.SwapWithBoundary(false,
-							ui.SimpleButton("ON", "btn-success", ui.ButtonSM, nil),
-							ui.SimpleButton("OFF", ui.ButtonGhost, ui.ButtonSM, nil),
+						ui.SimpleButton("ON", "btn-success", ui.ButtonSM, false, nil),
+						ui.SimpleButton("OFF", ui.ButtonGhost, ui.ButtonSM, false, nil),
 						),
 						)
 					},
@@ -985,9 +985,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-			Slug:        "hero",
-			Name:        "Hero",
-			Category:    galleryruntime.CategoryFoundation,
+		Slug:        "hero",
+		Name:        "Hero",
+		Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Layout",
 			Description: "Full-width hero section with headline and CTA button.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1257,9 +1257,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Stack ──────────────────────────────────────────────────
 		{
-			Slug:        "stack",
-			Name:        "Stack",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "stack",
+		Name:        "Stack",
+		Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Display",
 			Description: "Overlapping stacked card effect.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1347,9 +1347,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Mask ───────────────────────────────────────────────────
 		{
-			Slug:        "mask",
-			Name:        "Mask",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "mask",
+		Name:        "Mask",
+		Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Display",
 			Description: "CSS mask shapes applied to images and elements.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1544,9 +1544,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Mockup Phone & Window ──────────────────────────────────
 		{
-			Slug:        "mockup-phone",
-			Name:        "Mockup Phone",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "mockup-phone",
+		Name:        "Mockup Phone",
+		Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Mockups",
 			Description: "Phone frame mockup for mobile UI display.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1568,9 +1568,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-			Slug:        "mockup-window",
-			Name:        "Mockup Window",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "mockup-window",
+		Name:        "Mockup Window",
+		Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Mockups",
 			Description: "Desktop window frame mockup.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1743,7 +1743,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: item1, Href: "#"},
 							{Label: item2, Href: "#"},
 							{Label: item3},
-						})
+						}, nav.BreadcrumbsDividerDefault)
 					},
 					Tokens: BreadcrumbsTokens(),
 				},
@@ -1761,7 +1761,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							if err := nav.BreadcrumbsWithBoundary([]nav.BreadcrumbItem{
 								{Label: "Home", Href: "#"},
 								{Label: "Cases"},
-							}).Render(ctx, w); err != nil {
+							}, nav.BreadcrumbsDividerDefault).Render(ctx, w); err != nil {
 								return err
 							}
 							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-3 font-semibold uppercase">Four levels</p>`); err != nil {
@@ -1772,7 +1772,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{Label: "Cases", Href: "#"},
 								{Label: "Johnson v. Smith", Href: "#"},
 								{Label: "Documents"},
-							}).Render(ctx, w); err != nil {
+							}, nav.BreadcrumbsDividerDefault).Render(ctx, w); err != nil {
 								return err
 							}
 							_, err := io.WriteString(w, `</div></div>`)
@@ -1783,10 +1783,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-			Slug:        "dock-nav",
-			Name:        "Dock",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Misc",
+		Slug:        "dock-nav",
+		Name:        "Dock",
+		Category:    galleryruntime.CategoryLayout,
+		Subcategory: "Layout",
 			Description: "Bottom dock navigation bar for mobile-style UIs.",
 			Variants: []galleryruntime.GalleryStory{
 				{
@@ -1913,9 +1913,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Foundation / Join, Link ───────────────────────────────────────────────
 		{
-			Slug:        "join",
-			Name:        "Join",
-			Category:    galleryruntime.CategoryFoundation,
+		Slug:        "join",
+		Name:        "Join",
+		Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Layout",
 			Description: "Join fuses children into a single rounded group.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1981,9 +1981,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-			Slug:        "link-styles",
-			Name:        "Links",
-			Category:    galleryruntime.CategoryFoundation,
+		Slug:        "link-styles",
+		Name:        "Links",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "DaisyUI link styles with color variants and hover.",
 			Variants: []galleryruntime.GalleryStory{
@@ -2034,7 +2034,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "tag",
 			Name:        "Tag",
-			Category:    galleryruntime.CategoryBasics,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Tag",
 			Description: "Tag renders a removable chip badge used in multi-select fields. Clicking the × removes the tag.",
 			Variants: []galleryruntime.GalleryStory{
@@ -2073,7 +2073,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "company-avatar",
 			Name:        "Company Avatar",
-			Category:    galleryruntime.CategoryBasics,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Avatars",
 			Description: "Circular avatar with a building icon placeholder for companies. Same sizes as Avatar. Use alongside a company name in tables and detail views.",
 			Variants: []galleryruntime.GalleryStory{
@@ -2151,7 +2151,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "person-avatar",
 			Name:        "Person Avatar",
-			Category:    galleryruntime.CategoryBasics,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Avatars",
 			Description: "Inline avatar + name chip with a hover card that reveals contact details. Pure CSS — no JS required.",
 			Variants: []galleryruntime.GalleryStory{
@@ -2230,9 +2230,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display extras ────────────────────────────────────────────────
 		{
-			Slug:        "person-cell",
-			Name:        "Person Cell",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "person-cell",
+		Name:        "Person Cell",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Compact avatar + name + subtitle identity block for use in lists, tables, and flex rows.",
 			Variants: []galleryruntime.GalleryStory{
@@ -2326,9 +2326,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		},
 
 		{
-			Slug:        "progress-card",
-			Name:        "Progress Card",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "progress-card",
+		Name:        "Progress Card",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Cards",
 			Description: "Card with a gradient header, a progress bar, and an optional stats row.",
 			Variants: []galleryruntime.GalleryStory{
@@ -2758,9 +2758,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Overlays extras ───────────────────────────────────────────────────
 		{
-			Slug:        "fab",
-			Name:        "FAB",
-			Category:    galleryruntime.CategoryOverlays,
+		Slug:        "fab",
+		Name:        "FAB",
+		Category:    galleryruntime.CategoryComponents,
 			Description: "CSS-only floating action button with an expandable sub-menu of quick actions. No JS required.",
 			Variants: []galleryruntime.GalleryStory{
 				{
@@ -2824,12 +2824,12 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Compact title bar with inline breadcrumb trail.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						steps := []nav.PageTitleStep{
-							{Label: "", Href: "#", Icon: "lucide--home"},
+						steps := []nav.BreadcrumbItem{
+							{Label: "Home", Href: "#", Icon: "lucide--home"},
 							{Label: "Cases", Href: "#", Icon: "lucide--briefcase"},
 							{Label: "New"},
 						}
-						return nav.PageTitleMinimalWithBoundary("Create New Case", steps)
+						return nav.PageTitleVariantWithBoundary("minimal", nav.PageTitleVariantOpts{Title: "Create New Case", Steps: steps})
 					},
 				},
 				{
@@ -2849,7 +2849,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							if _, err := io.WriteString(w, `</div><div><p class="text-xs text-base-content/60 mb-1 font-semibold uppercase px-4">With breadcrumbs</p>`); err != nil {
 								return err
 							}
-							if err := nav.PageTitleMinimal("Edit Record", []nav.PageTitleStep{
+							if err := nav.PageTitleMinimal("Edit Record", []nav.BreadcrumbItem{
 								{Label: "Cases", Href: "#"},
 								{Label: "Johnson v. Smith", Href: "#"},
 							}).Render(ctx, w); err != nil {
@@ -2873,9 +2873,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Editor title with breadcrumbs, subtitle, and action buttons.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						steps := []nav.BreadcrumbStep{
-							{Label: "Dashboard", URL: "#"},
-							{Label: "Cases", URL: "#"},
+						steps := []nav.BreadcrumbItem{
+							{Label: "Dashboard", Href: "#"},
+							{Label: "Cases", Href: "#"},
 							{Label: "Johnson v. Smith"},
 						}
 						actions := []nav.PageTitleEditorAction{
@@ -2883,7 +2883,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: "Preview", Class: "btn-outline btn-sm border-base-300"},
 							{Icon: "lucide--ellipsis-vertical", Class: "btn-outline btn-sm border-base-300 btn-square", AriaLabel: "More options"},
 						}
-						return nav.PageTitleEditorWithBoundary(steps, "Johnson v. Smith", "Type: Civil Litigation", actions)
+						return nav.PageTitleVariantWithBoundary("editor", nav.PageTitleVariantOpts{Title: "Johnson v. Smith", Subtitle: "Type: Civil Litigation", Steps: steps, Actions: actions})
 					},
 				},
 				{
@@ -2891,7 +2891,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Editor title bar with actions.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return nav.PageTitleEditor(
-							[]nav.BreadcrumbStep{{Label: "Cases", URL: "#"}, {Label: "Johnson v. Smith", URL: "#"}},
+							[]nav.BreadcrumbItem{{Label: "Cases", Href: "#"}, {Label: "Johnson v. Smith", Href: "#"}},
 							"Edit Document",
 							"Last edited 2 minutes ago",
 							[]nav.PageTitleEditorAction{
@@ -2968,9 +2968,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Forms extras ──────────────────────────────────────────────────────
 		{
-			Slug:        "filter-bar",
-			Name:        "Filter Bar",
-			Category:    galleryruntime.CategoryForms,
+		Slug:        "filter-bar",
+		Name:        "Filter Bar",
+		Category:    galleryruntime.CategoryNavigation,
 			Subcategory: "Filters",
 			Description: "FilterCard wraps filter inputs in a card with Filter/Clear buttons. Set Inline=true for a bare horizontal bar (used above tables).",
 			Variants: []galleryruntime.GalleryStory{
@@ -3477,97 +3477,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Name:        "Typography",
 			Category:    galleryruntime.CategoryFoundation,
 			Subcategory: "Typography",
-			Description: "Heading and body text scale used across the application.",
+			Description: "Semantic hierarchy, size scale (xs→4xl), font weights (thin→black), and prose layout examples.",
+			Templ:       ui.TypographyTypeWithBoundary(),
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
-					Description: "Heading levels, body, muted, overline, and link styles.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return devmode.ComponentBoundary("Typography", rawHTML(`<div class="p-6 space-y-3">
-  <h1 class="text-3xl font-bold text-base-content">Heading 1</h1>
-  <h2 class="text-2xl font-semibold text-base-content">Heading 2</h2>
-  <h3 class="text-xl font-semibold text-base-content">Heading 3</h3>
-  <h4 class="text-base font-semibold text-base-content">Heading 4</h4>
-  <p class="text-base text-base-content/80">Body text — regular paragraph content used in cards and detail views.</p>
-  <p class="text-sm text-base-content/60">Small / muted text — used for labels, hints, and secondary information.</p>
-  <p class="text-xs text-base-content/50 uppercase tracking-wide font-semibold">Overline / label text</p>
-  <a href="#" class="link link-primary text-sm">Link text</a>
-</div>`))
-					},
+					Description: "Semantic hierarchy, size scale, and font weight scales.",
+					Templ:       ui.TypographyTypeWithBoundary(),
 				},
 				{
-					Name:        "Examples",
-					Description: "Typography hierarchy showcase.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return rawHTML(`<div class="p-6 space-y-3">
-	<h1 class="text-4xl font-bold">Heading 1</h1>
-	<h2 class="text-3xl font-semibold">Heading 2</h2>
-	<h3 class="text-2xl font-semibold">Heading 3</h3>
-	<h4 class="text-xl font-medium">Heading 4</h4>
-	<p class="text-base">Body text — the quick brown fox jumps over the lazy dog.</p>
-	<p class="text-sm text-base-content/70">Small muted text for secondary information.</p>
-	<p class="text-xs text-base-content/50 uppercase tracking-wider font-semibold">Label / Caption</p>
-</div>`)
-					},
-				},
-			},
-		},
-		{
-			Slug:        "typography-scale",
-			Name:        "Typography Scale",
-			Category:    galleryruntime.CategoryFoundation,
-			Subcategory: "Typography",
-			Description: "Text size scale (xs→6xl) and font weight scale (thin→black).",
-			Variants: []galleryruntime.GalleryStory{
-				{
-					Name:        "Interactive",
-					Description: "Size scale from xs to 4xl and all font weights.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return devmode.ComponentBoundary("TypographyScale", rawHTML(`<div class="space-y-6 p-6">
-  <div class="card card-border">
-    <div class="bg-base-200/30 rounded-t-box px-5 py-3 font-medium">Sizes</div>
-    <div class="flex flex-col gap-3 p-6">
-      <p class="text-xs">The quick brown fox jumps… <span class="text-base-content/40">text-xs</span></p>
-      <p class="text-sm">The quick brown fox jumps… <span class="text-base-content/40">text-sm</span></p>
-      <p class="text-base">The quick brown fox jumps… <span class="text-base-content/40">text-base</span></p>
-      <p class="text-lg">The quick brown fox jumps… <span class="text-base-content/40">text-lg</span></p>
-      <p class="text-xl">The quick brown fox jumps… <span class="text-base-content/40">text-xl</span></p>
-      <p class="text-2xl">The quick brown fox jumps… <span class="text-base-content/40">text-2xl</span></p>
-      <p class="text-3xl">The quick brown fox jumps… <span class="text-base-content/40">text-3xl</span></p>
-      <p class="text-4xl">The quick brown fox…  <span class="text-base-content/40">text-4xl</span></p>
-    </div>
-  </div>
-  <div class="card card-border">
-    <div class="bg-base-200/30 rounded-t-box px-5 py-3 font-medium">Weights</div>
-    <div class="flex flex-col gap-3 p-6">
-      <p class="font-thin">The quick brown fox jumps… <span class="text-base-content/40 font-normal">font-thin</span></p>
-      <p class="font-light">The quick brown fox jumps… <span class="text-base-content/40 font-normal">font-light</span></p>
-      <p class="font-normal">The quick brown fox jumps… <span class="text-base-content/40">font-normal</span></p>
-      <p class="font-medium">The quick brown fox jumps… <span class="text-base-content/40">font-medium</span></p>
-      <p class="font-semibold">The quick brown fox jumps… <span class="text-base-content/40">font-semibold</span></p>
-      <p class="font-bold">The quick brown fox jumps… <span class="text-base-content/40">font-bold</span></p>
-      <p class="font-extrabold">The quick brown fox jumps… <span class="text-base-content/40">font-extrabold</span></p>
-      <p class="font-black">The quick brown fox jumps… <span class="text-base-content/40">font-black</span></p>
-    </div>
-  </div>
-</div>`))
-					},
-				},
-				{
-					Name:        "Examples",
-					Description: "Full Tailwind font-size scale.",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return rawHTML(`<div class="p-6 space-y-2">
-	<p class="text-xs">xs — 12px</p>
-	<p class="text-sm">sm — 14px</p>
-	<p class="text-base">base — 16px</p>
-	<p class="text-lg">lg — 18px</p>
-	<p class="text-xl">xl — 20px</p>
-	<p class="text-2xl">2xl — 24px</p>
-	<p class="text-3xl">3xl — 30px</p>
-	<p class="text-4xl">4xl — 36px</p>
-</div>`)
-					},
+					Name:        "Prose Layout",
+					Description: "Full prose layout with headings, lists, blockquote, and scale reference.",
+					Templ:       ui.TypographyLayoutExampleWithBoundary(),
+					FrameHeight: "700px",
 				},
 			},
 		},
@@ -4042,7 +3964,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "button",
 			Name:        "Button",
-			Category:    galleryruntime.CategoryBasics,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Buttons",
 			Description: "A DaisyUI button with configurable variant, size, type, shape, icon, and loading state.",
 			Variants: []galleryruntime.GalleryStory{
@@ -4067,12 +3989,12 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						icon := params.Get("icon")
 						loading := params.Get("loading") == "true"
 						if shape == ui.ButtonShapeDefault && typ != ui.ButtonTypeLink {
-							return withText("Save changes", ui.ButtonWithBoundary(href, variant, size, ui.ButtonStyleDefault, typ, shape, icon, loading, false))
+							return withText("Save changes", ui.ButtonWithBoundary(href, variant, size, ui.ButtonStyleDefault, typ, shape, icon, loading, false, false))
 						}
 						if typ == ui.ButtonTypeLink {
-							return withText("Go to dashboard", ui.ButtonWithBoundary(href, variant, size, ui.ButtonStyleDefault, typ, shape, icon, loading, false))
+							return withText("Go to dashboard", ui.ButtonWithBoundary(href, variant, size, ui.ButtonStyleDefault, typ, shape, icon, loading, false, false))
 						}
-						return ui.ButtonWithBoundary(href, variant, size, ui.ButtonStyleDefault, typ, shape, icon, loading, false)
+						return ui.ButtonWithBoundary(href, variant, size, ui.ButtonStyleDefault, typ, shape, icon, loading, false, false)
 					},
 					Tokens: ButtonTokens(),
 				},
@@ -4083,67 +4005,67 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						{
 							Label: "Primary",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, false))
 							},
 						},
 						{
 							Label: "Secondary",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, false))
 							},
 						},
 						{
 							Label: "Accent",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, false))
 							},
 						},
 						{
 							Label: "Neutral",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, false))
 							},
 						},
 						{
 							Label: "Ghost",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonGhost, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonGhost, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, false))
 							},
 						},
 						{
 							Label: "Outline",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonOutline, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonOutline, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, false))
 							},
 						},
 						{
 							Label: "Error",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonError, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false))
+								return withText("Save changes", ui.ButtonWithBoundary("#", ui.ButtonError, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, false))
 							},
 						},
 						{
 							Label: "Loading",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", true, false)
+								return ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", true, false, false)
 							},
 						},
 						{
 							Label: "Icon + Label",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return withText("Star", ui.ButtonWithBoundary("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--star", false, false))
+								return withText("Star", ui.ButtonWithBoundary("#", ui.ButtonSecondary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--star", false, false, false))
 							},
 						},
 						{
 							Label: "Icon Only (Square)",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.ButtonWithBoundary("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--pencil", false, false)
+								return ui.ButtonWithBoundary("#", ui.ButtonAccent, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--pencil", false, false, false)
 							},
 						},
 						{
 							Label: "Icon Only (Circle)",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.ButtonWithBoundary("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeCircle, "lucide--plus", false, false)
+								return ui.ButtonWithBoundary("#", ui.ButtonNeutral, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeCircle, "lucide--plus", false, false, false)
 							},
 						},
 					},
@@ -4155,7 +4077,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "badge",
 			Name:        "Badge",
-			Category:    galleryruntime.CategoryBasics,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Badges",
 			Description: "A DaisyUI badge with configurable intent, style, size, and optional icon.",
 			Variants: []galleryruntime.GalleryStory{
@@ -4240,7 +4162,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "status-badge-real",
 			Name:        "Status Badge",
-			Category:    galleryruntime.CategoryBasics,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Badges",
 			Description: "Maps a string status to an appropriate intent badge automatically.",
 			Variants: []galleryruntime.GalleryStory{
@@ -4301,9 +4223,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ui.Card
 		{
-			Slug:        "card-real",
-			Name:        "Card",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "card-real",
+		Name:        "Card",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Cards",
 			Description: "A DaisyUI card container with a title.",
 			Variants: []galleryruntime.GalleryStory{
@@ -4366,7 +4288,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						if message == "" {
 							message = "Action completed successfully."
 						}
-						return ui.ToastWithBoundary(typ, message)
+						return ui.ToastWithBoundary(typ, message, "")
 					},
 					Tokens: ToastTokens(),
 				},
@@ -4377,25 +4299,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						{
 							Label: "Success",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.ToastWithBoundary(ui.ToastSuccess, "Record saved successfully.")
+								return ui.ToastWithBoundary(ui.ToastSuccess, "Record saved successfully.", "")
 							},
 						},
 						{
 							Label: "Error",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.ToastWithBoundary(ui.ToastError, "Something went wrong. Please try again.")
+								return ui.ToastWithBoundary(ui.ToastError, "Something went wrong. Please try again.", "")
 							},
 						},
 						{
 							Label: "Warning",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.ToastWithBoundary(ui.ToastWarning, "Your session will expire in 5 minutes.")
+								return ui.ToastWithBoundary(ui.ToastWarning, "Your session will expire in 5 minutes.", "")
 							},
 						},
 						{
 							Label: "Info",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.ToastWithBoundary(ui.ToastInfo, "A new version is available.")
+								return ui.ToastWithBoundary(ui.ToastInfo, "A new version is available.", "")
 							},
 						},
 					},
@@ -4427,7 +4349,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								totalPages = v
 							}
 						}
-						return ui.PaginationWithBoundary(page, totalPages, "#", "main-content")
+						return ui.PaginationWithBoundary(page, totalPages, "#", "main-content", ui.PaginationStyleSquare)
 					},
 					Tokens: PaginationTokens(),
 				},
@@ -4438,25 +4360,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						{
 							Label: "Page 1 of 10",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.PaginationWithBoundary(1, 10, "#", "content")
+								return ui.PaginationWithBoundary(1, 10, "#", "content", ui.PaginationStyleSquare)
 							},
 						},
 						{
 							Label: "Page 5 of 10",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.PaginationWithBoundary(5, 10, "#", "content")
+								return ui.PaginationWithBoundary(5, 10, "#", "content", ui.PaginationStyleSquare)
 							},
 						},
 						{
 							Label: "Page 10 of 10",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.PaginationWithBoundary(10, 10, "#", "content")
+								return ui.PaginationWithBoundary(10, 10, "#", "content", ui.PaginationStyleSquare)
 							},
 						},
 						{
 							Label: "Circle style",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.PaginationCircleWithBoundary(3, 7, "#", "content")
+								return ui.PaginationWithBoundary(3, 7, "#", "content", ui.PaginationStyleCircle)
 							},
 						},
 					},
@@ -4558,9 +4480,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ui.StatCard
 		{
-			Slug:        "stat-card-real",
-			Name:        "Stat Card",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "stat-card-real",
+		Name:        "Stat Card",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Cards",
 			Description: "A compact summary stat widget with icon, value, and label.",
 			Variants: []galleryruntime.GalleryStory{
@@ -4741,7 +4663,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "avatar-real",
 			Name:        "Avatar",
-			Category:    galleryruntime.CategoryBasics,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Avatars",
 			Description: "An avatar with initials fallback and configurable size.",
 			Variants: []galleryruntime.GalleryStory{
@@ -5303,7 +5225,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Name:        "Top Bar",
 			Category:    galleryruntime.CategoryNavigation,
 			Subcategory: "Page Title",
-			Description: "A top navigation bar with a title.",
+			Description: "A top navigation bar with a title. Toggle scrollAware for sticky hide-on-scroll behavior.",
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
@@ -5313,7 +5235,20 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						if title == "" {
 							title = "Dashboard"
 						}
-						return nav.TopBarWithBoundary(title)
+						scrollAware := params.Get("scrollAware") == "true"
+						return nav.TopBarWithBoundary(title, scrollAware)
+					},
+					Tokens: TopBarTokens(),
+				},
+				{
+					Name:        "Scroll-Aware",
+					Description: "Sticky topbar that hides on scroll down, reveals on scroll up.",
+					RenderFunc: func(params url.Values) templ.Component {
+						title := params.Get("title")
+						if title == "" {
+							title = "Dashboard"
+						}
+						return nav.TopBarWithBoundary(title, true)
 					},
 					Tokens: TopBarTokens(),
 				},
@@ -5324,25 +5259,25 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						{
 							Label: "Dashboard",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return nav.TopBarWithBoundary("Dashboard")
+								return nav.TopBarWithBoundary("Dashboard", false)
 							},
 						},
 						{
 							Label: "Cases",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return nav.TopBarWithBoundary("Cases")
+								return nav.TopBarWithBoundary("Cases", false)
 							},
 						},
 						{
 							Label: "Contacts",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return nav.TopBarWithBoundary("Contacts")
+								return nav.TopBarWithBoundary("Contacts", false)
 							},
 						},
 						{
 							Label: "Settings",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return nav.TopBarWithBoundary("Settings")
+								return nav.TopBarWithBoundary("Settings", false)
 							},
 						},
 					},
@@ -5350,17 +5285,62 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 
-		// nav.TabMenu / nav.SimpleTabs (unified)
+		// ui.Tabs (general-purpose DaisyUI tabs with content switching)
 		{
-			Slug:        "tab-menu-real",
+			Slug:        "tabs",
 			Name:        "Tabs",
 			Category:    galleryruntime.CategoryNavigation,
 			Subcategory: "Tabs",
-			Description: "Tab strip component. Full HTMX variant for page-level navigation; pass target=\"-\" for an in-panel lifted strip without HTMX.",
+			Description: "Content-switching tabs (CSS radio or Alpine.js) and HTMX navigation tab strips. Supports lift/border/box styles, all sizes, bottom placement, icons, disabled tabs, and custom colors.",
 			Variants: []galleryruntime.GalleryStory{
 				{
-					Name:        "Interactive",
-					Description: "HTMX tab strip with configurable labels.",
+					Name:        "Content Tabs",
+					Description: "Content-switching tabs with configurable style, size, placement, and mode (server CSS vs client Alpine).",
+					RenderFunc: func(params url.Values) templ.Component {
+						style := parseTabsStyle(params.Get("style"))
+						size := parseTabsSize(params.Get("size"))
+						bottom := params.Get("bottom") == "true"
+						mode := parseTabMode(params.Get("mode"))
+						props := ui.TabsProps{
+							Style:  style,
+							Size:   size,
+							Bottom: bottom,
+							Mode:   mode,
+							Name:   "demo-tabs",
+							Items: []ui.TabItem{
+								{Label: "Overview", Active: true, Content: tabsContent("Overview tab content — showing the overview details for this item.")},
+								{Label: "Activity", Content: tabsContent("Activity tab content — recent activity and event history.")},
+								{Label: "Settings", Content: tabsContent("Settings tab content — configuration and preferences.")},
+							},
+						}
+						return ui.TabsWithBoundary(props)
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Style", Group: "Appearance", Type: galleryruntime.TokenTypeSelect, Default: "lift", QueryParam: "style", Options: []galleryruntime.TokenOption{
+							{Value: "lift", Label: "Lift"},
+							{Value: "border", Label: "Border"},
+							{Value: "box", Label: "Box"},
+						}},
+						{Label: "Size", Group: "Appearance", Type: galleryruntime.TokenTypeSelect, Default: "md", QueryParam: "size", Options: []galleryruntime.TokenOption{
+							{Value: "xs", Label: "XS"},
+							{Value: "sm", Label: "SM"},
+							{Value: "md", Label: "MD"},
+							{Value: "lg", Label: "LG"},
+							{Value: "xl", Label: "XL"},
+						}},
+						{Label: "Mode", Group: "Behavior", Type: galleryruntime.TokenTypeSelect, Default: "server", QueryParam: "mode", Options: []galleryruntime.TokenOption{
+							{Value: "server", Label: "Server (CSS)"},
+							{Value: "client", Label: "Client (Alpine)"},
+						}},
+						{Label: "Bottom", Group: "Placement", Type: galleryruntime.TokenTypeSelect, Default: "false", QueryParam: "bottom", Options: []galleryruntime.TokenOption{
+							{Value: "false", Label: "Top"},
+							{Value: "true", Label: "Bottom"},
+						}},
+					},
+				},
+				{
+					Name:        "Nav Strips",
+					Description: "HTMX navigation tab strip with configurable labels.",
 					RenderFunc: func(params url.Values) templ.Component {
 						tab1 := params.Get("tabs1")
 						if tab1 == "" {
@@ -5385,83 +5365,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				},
 				{
 					Name:        "Examples",
-					Description: "HTMX full-page strip and lifted in-panel strip.",
-					SubExamples: []galleryruntime.GallerySubExample{
-						{
-							Label: "HTMX (TabMenu)",
-							RenderFunc: func(_ url.Values) templ.Component {
-								return nav.TabMenuWithBoundary([]nav.Tab{
-									{Label: "Overview", Href: "#", Active: true},
-									{Label: "Activity", Href: "#"},
-									{Label: "Settings", Href: "#"},
-								})
-							},
-						},
-						{
-							Label: "Lifted in-panel (SimpleTabs)",
-							RenderFunc: func(_ url.Values) templ.Component {
-								return nav.SimpleTabsWithBoundary([]nav.Tab{
-									{Label: "All", Href: "#", Active: true},
-									{Label: "Open", Href: "#"},
-									{Label: "Closed", Href: "#"},
-								})
-							},
-						},
-					},
-				},
-			},
-		},
-
-		// ui.Tabs (general-purpose DaisyUI tabs with content switching)
-		{
-			Slug:        "tabs",
-			Name:        "Tabs (DaisyUI)",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Tabs",
-			Description: "General-purpose DaisyUI tabs with radio-based content switching. Supports lift/border/box styles, all sizes, bottom placement, icons, disabled tabs, and custom colors.",
-			Variants: []galleryruntime.GalleryStory{
-				{
-					Name:        "Interactive",
-					Description: "Tabs with configurable style, size, and placement.",
-					RenderFunc: func(params url.Values) templ.Component {
-						style := parseTabsStyle(params.Get("style"))
-						size := parseTabsSize(params.Get("size"))
-						bottom := params.Get("bottom") == "true"
-						props := ui.TabsProps{
-							Style:  style,
-							Size:   size,
-							Bottom: bottom,
-							Name:   "demo-tabs",
-							Items: []ui.TabItem{
-								{Label: "Overview", Active: true, Content: tabsContent("Overview tab content — showing the overview details for this item.")},
-								{Label: "Activity", Content: tabsContent("Activity tab content — recent activity and event history.")},
-								{Label: "Settings", Content: tabsContent("Settings tab content — configuration and preferences.")},
-							},
-						}
-						return ui.TabsWithBoundary(props)
-					},
-					Tokens: []galleryruntime.DesignToken{
-						{Label: "Style", Group: "Appearance", Type: galleryruntime.TokenTypeSelect, Default: "lift", QueryParam: "style", Options: []galleryruntime.TokenOption{
-							{Value: "lift", Label: "Lift"},
-							{Value: "border", Label: "Border"},
-							{Value: "box", Label: "Box"},
-						}},
-						{Label: "Size", Group: "Appearance", Type: galleryruntime.TokenTypeSelect, Default: "md", QueryParam: "size", Options: []galleryruntime.TokenOption{
-							{Value: "xs", Label: "XS"},
-							{Value: "sm", Label: "SM"},
-							{Value: "md", Label: "MD"},
-							{Value: "lg", Label: "LG"},
-							{Value: "xl", Label: "XL"},
-						}},
-						{Label: "Bottom", Group: "Placement", Type: galleryruntime.TokenTypeSelect, Default: "false", QueryParam: "bottom", Options: []galleryruntime.TokenOption{
-							{Value: "false", Label: "Top"},
-							{Value: "true", Label: "Bottom"},
-						}},
-					},
-				},
-				{
-					Name:        "Examples",
-					Description: "All DaisyUI tab variants with content.",
+					Description: "All tab variants — content tabs and navigation strips.",
 					SubExamples: []galleryruntime.GallerySubExample{
 						{
 							Label: "Lift style",
@@ -5587,6 +5491,26 @@ func AllComponents() []galleryruntime.GalleryComponent {
 										{Label: "Open"},
 										{Label: "Closed"},
 									},
+								})
+							},
+						},
+						{
+							Label: "HTMX (TabMenu)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.TabMenuWithBoundary([]nav.Tab{
+									{Label: "Overview", Href: "#", Active: true},
+									{Label: "Activity", Href: "#"},
+									{Label: "Settings", Href: "#"},
+								})
+							},
+						},
+						{
+							Label: "Lifted in-panel (SimpleTabs)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.SimpleTabsWithBoundary([]nav.Tab{
+									{Label: "All", Href: "#", Active: true},
+									{Label: "Open", Href: "#"},
+									{Label: "Closed", Href: "#"},
 								})
 							},
 						},
@@ -5732,11 +5656,11 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						size := modal.ModalSize(params.Get("size"))
 						body := seq(
 							rawHTML(`<p class="text-sm text-base-content/70 mb-6">Are you sure you want to proceed? This action will be applied immediately.</p><div class="flex justify-end gap-2">`),
-							withText("Cancel", ui.ButtonWithBoundary("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false)),
-							withText("Confirm", ui.ButtonWithBoundary("", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false)),
+							withText("Cancel", ui.ButtonWithBoundary("", ui.ButtonGhost, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, false)),
+							withText("Confirm", ui.ButtonWithBoundary("", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, false)),
 							rawHTML(`</div>`),
 						)
-						inner := withChildren(modal.ModalWithBoundary(title, size), body)
+						inner := withChildren(modal.ModalWithBoundary(title, size, modal.ModalDriverVanilla), body)
 						// Wrap in a min-height container so the iframe auto-resize picks up the dialog height.
 						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 							if _, err := io.WriteString(w, `<div style="min-height:280px;position:relative;">`); err != nil {
@@ -5762,7 +5686,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								if _, err := io.WriteString(w, `<div style="min-height:240px;position:relative;">`); err != nil {
 									return err
 								}
-								if err := withChildren(modal.ModalWithBoundary("Confirm — SM", modal.ModalSM), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
+								if err := withChildren(modal.ModalWithBoundary("Confirm — SM", modal.ModalSM, modal.ModalDriverVanilla), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
 									return err
 								}
 								_, err := io.WriteString(w, `</div>`)
@@ -5777,7 +5701,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								if _, err := io.WriteString(w, `<div style="min-height:280px;position:relative;">`); err != nil {
 									return err
 								}
-								if err := withChildren(modal.ModalWithBoundary("Confirm — MD", modal.ModalMD), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
+								if err := withChildren(modal.ModalWithBoundary("Confirm — MD", modal.ModalMD, modal.ModalDriverVanilla), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
 									return err
 								}
 								_, err := io.WriteString(w, `</div>`)
@@ -5792,7 +5716,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								if _, err := io.WriteString(w, `<div style="min-height:280px;position:relative;">`); err != nil {
 									return err
 								}
-								if err := withChildren(modal.ModalWithBoundary("Confirm — LG", modal.ModalLG), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
+								if err := withChildren(modal.ModalWithBoundary("Confirm — LG", modal.ModalLG, modal.ModalDriverVanilla), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
 									return err
 								}
 								_, err := io.WriteString(w, `</div>`)
@@ -5971,7 +5895,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								}
 								if err := modal.FormModalWithBoundary(modal.FormModalProps{
 									ID: "ex-form-sm", Title: "New Case", Size: modal.ModalSM, SubmitText: "Create", Action: "#", Method: "post",
-								}).Render(ctx, w); err != nil {
+								}, modal.ModalDriverVanilla).Render(ctx, w); err != nil {
 									return err
 								}
 								_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('ex-form-sm');if(d&&d.showModal)d.showModal();});</script>`)
@@ -5986,16 +5910,16 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								if _, err := io.WriteString(w, `<div style="min-height:300px;position:relative;">`); err != nil {
 									return err
 								}
-								if err := modal.FormModalWithBoundary(modal.FormModalProps{
+							if err := modal.FormModalWithBoundary(modal.FormModalProps{
 									ID: "ex-form-err", Title: "Delete Case", Size: modal.ModalSM, SubmitText: "Delete", CancelText: "Keep", Action: "#", Method: "post", Variant: "error",
-								}).Render(ctx, w); err != nil {
-									return err
-								}
-								_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('ex-form-err');if(d&&d.showModal)d.showModal();});</script>`)
+								}, modal.ModalDriverVanilla).Render(ctx, w); err != nil {
 								return err
-							})
-						},
+							}
+							_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('ex-form-err');if(d&&d.showModal)d.showModal();});</script>`)
+							return err
+						})
 					},
+				},
 				},
 			},
 			},
@@ -6088,7 +6012,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							if _, err := fmt.Fprintf(w, `<div class="flex items-center justify-between mt-4"><p class="text-sm text-base-content/60">Showing %d of 47 entries</p>`, rowCount); err != nil {
 								return err
 							}
-							if err := ui.PaginationWithBoundary(page, totalPages, "#", "main-content").Render(ctx, w); err != nil {
+							if err := ui.PaginationWithBoundary(page, totalPages, "#", "main-content", ui.PaginationStyleSquare).Render(ctx, w); err != nil {
 								return err
 							}
 							_, err := io.WriteString(w, `</div></div>`)
@@ -6788,7 +6712,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "theme-controller",
 			Name:        "Theme Controller",
-			Category:    galleryruntime.CategoryFoundation,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Checkbox or radio inputs with the theme-controller class change the page theme.",
 			FrameHeight: "500px",
@@ -6871,9 +6795,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Text Rotate ────────────────────────────────────────────
 		{
-			Slug:        "text-rotate",
-			Name:        "Text Rotate",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "text-rotate",
+		Name:        "Text Rotate",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Animated component that cycles through text lines with an infinite loop.",
 			FrameHeight: "200px",
@@ -6910,9 +6834,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Hover 3D Card ──────────────────────────────────────────
 		{
-			Slug:        "hover-3d",
-			Name:        "Hover 3D Card",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "hover-3d",
+		Name:        "Hover 3D Card",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Card that tilts and rotates in 3D space when hovered.",
 			FrameHeight: "300px",
@@ -6950,9 +6874,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Hover Gallery ──────────────────────────────────────────
 		{
-			Slug:        "hover-gallery",
-			Name:        "Hover Gallery",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "hover-gallery",
+		Name:        "Hover Gallery",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Horizontal hover image gallery — first image visible by default, others revealed on hover.",
 			FrameHeight: "280px",
@@ -7257,9 +7181,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Title + breadcrumb on the right.",
 					Templ: nav.PageTitleVariantWithBoundary("minimal", nav.PageTitleVariantOpts{
 						Title: "Create New Tool",
-						Steps: []nav.BreadcrumbStep{
-							{Label: "Home", URL: "#"},
-							{Label: "Tools", URL: "#"},
+						Steps: []nav.BreadcrumbItem{
+							{Label: "Home", Href: "#"},
+							{Label: "Tools", Href: "#"},
 							{Label: "Create"},
 						},
 					}),
@@ -7281,9 +7205,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						Title:    "Smart Tool Builder",
 						Subtitle: "Type: Custom Workflow",
 						Date:     "Tue Jul 22 2025",
-						Steps: []nav.BreadcrumbStep{
-							{Label: "Dashboard", URL: "#"},
-							{Label: "Tools", URL: "#"},
+						Steps: []nav.BreadcrumbItem{
+							{Label: "Dashboard", Href: "#"},
+							{Label: "Tools", Href: "#"},
 							{Label: "Builder"},
 						},
 						Actions: []nav.PageTitleEditorAction{
@@ -7316,8 +7240,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Analytics title with breadcrumbs + Filter/Export/New Report buttons.",
 					Templ: nav.PageTitleVariantWithBoundary("analytics", nav.PageTitleVariantOpts{
 						Title: "Analytics Overview",
-						Steps: []nav.BreadcrumbStep{
-							{Label: "Home", URL: "#"},
+						Steps: []nav.BreadcrumbItem{
+							{Label: "Home", Href: "#"},
 							{Label: "Analytics"},
 						},
 					}),
@@ -7345,9 +7269,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Navigation / Notifications ─────────────────────────────────────────────
 		{
-			Slug:        "notification",
-			Name:        "Notification",
-			Category:    galleryruntime.CategoryNavigation,
+		Slug:        "notification",
+		Name:        "Notification",
+		Category:    galleryruntime.CategoryFeedback,
 			Subcategory: "Notifications",
 			Description: "Notification dropdown/drawer variants: basic dropdown, tab dropdown, drawer side panel.",
 			Variants: []galleryruntime.GalleryStory{
@@ -7662,7 +7586,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			Name:        "Table Card",
 			Category:    galleryruntime.CategoryDataDisplay,
 			Subcategory: "Tables",
-			Description: "Card-based table composition: TableCardWrapper, TableCardHeader, TableCardFooter, TableSearch, TableSelect, and PaginationCircle — build full ecommerce-style table cards.",
+			Description: "Card-based table composition: TableCardWrapper, TableCardHeader, TableCardFooter, TableSearch, TableSelect, and Pagination — build full ecommerce-style table cards.",
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
@@ -7704,7 +7628,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								headerChildren = append(headerChildren, sel)
 							}
 							if showActions {
-								headerChildren = append(headerChildren, ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false))
+								headerChildren = append(headerChildren, ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false, false))
 							}
 							if len(headerChildren) > 0 {
 								pageComponents = append(pageComponents, withChildren(table.TableCardHeaderWithBoundary(), seq(headerChildren...)))
@@ -7862,7 +7786,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 										withChildren(table.TableCardHeaderWithBoundary(), seq(
 											table.TableSearchWithBoundary("search", "", "Search orders", "", ""),
 											sel,
-											ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--plus", false, false),
+											ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--plus", false, false, false),
 										)),
 										withChildren(
 											table.TableWithPropsWithBoundary(table.TableProps{Bordered: true}),
@@ -7875,7 +7799,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						{
 							Label: "Circle pagination",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.PaginationCircleWithBoundary(3, 7, "#", "content")
+								return ui.PaginationWithBoundary(3, 7, "#", "content", ui.PaginationStyleCircle)
 							},
 						},
 						{
@@ -7931,7 +7855,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 										withChildren(table.TableCardHeaderWithBoundary(), seq(
 											table.TableSearchWithBoundary("search", "", "Search along orders", "", ""),
 											sel,
-											ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false),
+											ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false, false),
 										)),
 										withChildren(
 											table.TableWithPropsWithBoundary(table.TableProps{Bordered: true, Size: "sm"}),
@@ -8031,7 +7955,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							children = append(children, table.TableSearchWithBoundary("q", "", "Search...", "", ""))
 						}
 						if showActions {
-							children = append(children, ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false))
+							children = append(children, ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false, false))
 						}
 						return withChildren(
 							table.TableCardHeaderWithBoundary(),
@@ -8076,7 +8000,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 									seq(
 										rawHTML(`<h3 class="text-base font-semibold">Orders</h3>`),
 										table.TableSearchWithBoundary("q", "", "Search orders...", "", ""),
-										ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false),
+										ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeSubmit, ui.ButtonShapeDefault, "lucide--monitor-dot", false, false, false),
 									),
 								)
 							},
@@ -8319,7 +8243,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "button-glow",
 			Name:        "Button — Glow",
-			Category:    galleryruntime.CategoryBasics,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Buttons",
 			Description: "Button with a colored glow shadow effect for CTAs and hero sections.",
 			Variants: []galleryruntime.GalleryStory{
@@ -8343,7 +8267,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						case "outline":
 							variant = ui.ButtonOutline
 						}
-						return ui.ButtonGlowWithBoundary("#", variant, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false)
+						return ui.ButtonWithBoundary("#", variant, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, true)
 					},
 					Tokens: []galleryruntime.DesignToken{
 						{Label: "Variant", Group: "Style", Type: galleryruntime.TokenTypeSelect, Default: "primary", QueryParam: "variant", Options: []galleryruntime.TokenOption{
@@ -8375,7 +8299,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{ui.ButtonError, "Error"},
 								{ui.ButtonNeutral, "Neutral"},
 							} {
-								if err := ui.ButtonGlow(ui.ButtonProps{Variant: v.variant, Size: ui.ButtonMD, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault}).Render(templ.WithChildren(ctx, templ.ComponentFunc(func(_ context.Context, w2 io.Writer) error {
+								if err := ui.Button(ui.ButtonProps{Variant: v.variant, Size: ui.ButtonMD, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault, Glow: true}).Render(templ.WithChildren(ctx, templ.ComponentFunc(func(_ context.Context, w2 io.Writer) error {
 									_, err := io.WriteString(w2, v.label)
 									return err
 								})), w); err != nil {
@@ -8414,7 +8338,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						if toColor == "" {
 							toColor = "to-secondary"
 						}
-						return ui.AnimatedGradientTextWithBoundary(text, fromColor, toColor, "text-3xl", "font-black")
+						return ui.GradientTextWithBoundary(text, fromColor, toColor, "text-3xl", "font-black")
 					},
 					FrameHeight: "100px",
 					Tokens: []galleryruntime.DesignToken{
@@ -8454,9 +8378,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Cards — Testimonial ──────────────────────────────────
 		{
-			Slug:        "testimonial-card",
-			Name:        "Testimonial Card",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "testimonial-card",
+		Name:        "Testimonial Card",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Cards",
 			Description: "Quote card with star rating, avatar, name, and role. Composes existing Card, Avatar, and Rating primitives.",
 			Variants: []galleryruntime.GalleryStory{
@@ -8520,9 +8444,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Cards — Sparkline Stat Card ──────────────────────────
 		{
-			Slug:        "stat-card-sparkline",
-			Name:        "Stat Card — Sparkline",
-			Category:    galleryruntime.CategoryDataDisplay,
+		Slug:        "stat-card-sparkline",
+		Name:        "Stat Card — Sparkline",
+		Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Cards",
 			Description: "KPI stat card with inline SVG sparkline chart showing trend data.",
 			Variants: []galleryruntime.GalleryStory{
@@ -8704,7 +8628,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "theme-toggle",
 			Name:        "Theme Toggle",
-			Category:    galleryruntime.CategoryFoundation,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Animated sun/moon theme toggle that persists the selection to localStorage. Uses the swap-rotate animation for smooth icon transition.",
 			Variants: []galleryruntime.GalleryStory{
@@ -8712,7 +8636,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Theme toggle — click to switch between light and dark themes.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return ui.ThemeToggleWithBoundary()
+						return ui.ThemeToggleWithBoundary("")
 					},
 					FrameHeight: "80px",
 					Tokens:      []galleryruntime.DesignToken{},
@@ -8728,7 +8652,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							if _, err := io.WriteString(w, `<span class="text-sm text-base-content/60">Light</span>`); err != nil {
 								return err
 							}
-							if err := ui.ThemeToggle().Render(ctx, w); err != nil {
+							if err := ui.ThemeToggle(ui.ThemeToggleProps{}).Render(ctx, w); err != nil {
 								return err
 							}
 							if _, err := io.WriteString(w, `<span class="text-sm text-base-content/60">Dark</span>`); err != nil {
@@ -9276,9 +9200,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Layout / Pages — Auth ──────────────────────────────────────────────
 		{
-			Slug:        "page-auth",
-			Name:        "Auth Page",
-			Category:    galleryruntime.CategoryLayout,
+		Slug:        "page-auth",
+		Name:        "Auth Page",
+		Category:    galleryruntime.CategoryPageTemplates,
 			Subcategory: "Pages",
 			Description: "Full authentication pages with split layout: login, register, forgot password, and reset password.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9319,9 +9243,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Layout / Pages — Dashboard ──────────────────────────────────────────
 		{
-			Slug:        "page-dashboard",
-			Name:        "Dashboard Page",
-			Category:    galleryruntime.CategoryLayout,
+		Slug:        "page-dashboard",
+		Name:        "Dashboard Page",
+		Category:    galleryruntime.CategoryPageTemplates,
 			Subcategory: "Pages",
 			Description: "CRM dashboard with stat cards, sparklines, charts, and a recent orders table.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9340,9 +9264,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Layout / Pages — Chat ──────────────────────────────────────────────
 		{
-			Slug:        "page-chat",
-			Name:        "Chat Layout",
-			Category:    galleryruntime.CategoryLayout,
+		Slug:        "page-chat",
+		Name:        "Chat Layout",
+		Category:    galleryruntime.CategoryPageTemplates,
 			Subcategory: "Pages",
 			Description: "Full chat interface with conversation sidebar, message list, AI thinking indicator, and chat input.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9361,9 +9285,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Layout / Pages — Settings ───────────────────────────────────────────
 		{
-			Slug:        "page-settings",
-			Name:        "Settings Page",
-			Category:    galleryruntime.CategoryLayout,
+		Slug:        "page-settings",
+		Name:        "Settings Page",
+		Category:    galleryruntime.CategoryPageTemplates,
 			Subcategory: "Pages",
 			Description: "Tabbed settings page with Profile, Account, Appearance, and Notification sections.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9380,9 +9304,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Layout / Pages — Landing ───────────────────────────────────────────
 		{
-			Slug:        "page-landing",
-			Name:        "Landing Page",
-			Category:    galleryruntime.CategoryLayout,
+		Slug:        "page-landing",
+		Name:        "Landing Page",
+		Category:    galleryruntime.CategoryPageTemplates,
 			Subcategory: "Pages",
 			Description: "Marketing landing page with animated gradient hero, feature cards, testimonials, and pricing tiers.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9402,31 +9326,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					FrameHeight: "800px",
 					Tokens: []galleryruntime.DesignToken{
 						{Label: "Brand", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "go-daisy", QueryParam: "brandName"},
-					},
-				},
-			},
-		},
-
-		// ── Navigation / Headers — Scroll Topbar ───────────────────────────────
-		{
-			Slug:        "scroll-topbar",
-			Name:        "Scroll-Aware Topbar",
-			Category:    galleryruntime.CategoryNavigation,
-			Subcategory: "Headers",
-			Description: "Topbar that hides on scroll down and reveals on scroll up. Uses requestAnimationFrame for performant scroll detection.",
-			Variants: []galleryruntime.GalleryStory{
-				{
-					Name:        "Interactive",
-					Description: "Scroll-aware topbar.",
-					RenderFunc: func(params url.Values) templ.Component {
-						title := params.Get("title")
-						if title == "" {
-							title = "Dashboard"
-						}
-						return nav.ScrollTopbarWithBoundary(title)
-					},
-					Tokens: []galleryruntime.DesignToken{
-						{Label: "Title", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Dashboard", QueryParam: "title"},
 					},
 				},
 			},
@@ -9464,9 +9363,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Overlays — Command Palette ──────────────────────────────────────────
 		{
-			Slug:        "command-palette",
-			Name:        "Command Palette",
-			Category:    galleryruntime.CategoryOverlays,
+		Slug:        "command-palette",
+		Name:        "Command Palette",
+		Category:    galleryruntime.CategoryNavigation,
 			Subcategory: "Dropdowns",
 			Description: "⌘K command palette modal with search filtering. Opens with Cmd+K or Ctrl+K keyboard shortcut.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9559,7 +9458,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "aspect-ratio",
 			Name:        "Aspect Ratio",
-			Category:    galleryruntime.CategoryFoundation,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Container that maintains a fixed aspect ratio for its content.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9588,7 +9487,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "separator",
 			Name:        "Separator",
-			Category:    galleryruntime.CategoryFoundation,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Visual divider between content sections.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9674,9 +9573,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Foundation / Collapsible ───────────────────────────────────────
 		{
-			Slug:        "collapsible",
-			Name:        "Collapsible",
-			Category:    galleryruntime.CategoryFoundation,
+		Slug:        "collapsible",
+		Name:        "Collapsible",
+		Category:    galleryruntime.CategoryDataDisplay,
 			Subcategory: "Display",
 			Description: "Single-item animated collapse/expand panel with optional icon.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9701,7 +9600,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		{
 			Slug:        "icon",
 			Name:        "Icon",
-			Category:    galleryruntime.CategoryFoundation,
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Accessible Iconify icon with colon-format names and size presets.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9803,7 +9702,7 @@ func makeOrdersTableBody(n int) templ.Component {
 			withChildren(table.TableCellWithBoundary("text-sm font-medium"), rawHTML(o.Price)),
 			withChildren(table.TableCellWithBoundary(""), paymentBadge),
 			withChildren(table.TableCellWithBoundary("text-sm"), rawHTML(o.Status)),
-			withChildren(table.TableCellWithBoundary("text-right"), ui.ButtonWithBoundary("#", ui.ButtonGhost, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--eye", false, false)),
+			withChildren(table.TableCellWithBoundary("text-right"), ui.ButtonWithBoundary("#", ui.ButtonGhost, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeSquare, "lucide--eye", false, false, false)),
 		))
 	}
 	return seq(rows...)
@@ -9840,6 +9739,13 @@ func sampleDataTableRows() []table.DataTableRow {
 		{"id": "#21007", "customer": "Olivia Smith", "price": "$894", "payment": "Pending", "status": "On the Way"},
 		{"id": "#21008", "customer": "Daniel Robinson", "price": "$156", "payment": "Paid", "status": "Delivered"},
 	}
+}
+
+func parseTabMode(s string) ui.TabMode {
+	if s == "client" {
+		return ui.ClientTab
+	}
+	return ui.ServerTab
 }
 
 func parseTabsStyle(s string) ui.TabsStyle {

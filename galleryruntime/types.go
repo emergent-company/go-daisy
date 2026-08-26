@@ -62,16 +62,21 @@ type TokenOption struct {
 type Category string
 
 const (
-	CategoryFoundation  Category = "Foundation"
-	CategoryBasics      Category = "Basics"
-	CategoryDataDisplay Category = "Data Display"
-	CategoryFeedback    Category = "Feedback"
-	CategoryOverlays    Category = "Overlays"
-	CategoryNavigation  Category = "Navigation"
-	CategoryForms       Category = "Forms"
-	CategoryLayout      Category = "Layout"
-	CategoryDocs        Category = "Documentation"
+	CategoryFoundation    Category = "Foundation"
+	CategoryComponents    Category = "Components"
+	CategoryDataDisplay   Category = "Data Display"
+	CategoryFeedback      Category = "Feedback"
+	CategoryOverlays      Category = "Overlays"
+	CategoryNavigation    Category = "Navigation"
+	CategoryForms         Category = "Forms"
+	CategoryLayout        Category = "Layout"
+	CategoryPageTemplates Category = "Page Templates"
+	CategoryDocs          Category = "Documentation"
 )
+
+// CategoryBasics is a deprecated alias for CategoryComponents.
+// Deprecated: Use CategoryComponents instead.
+const CategoryBasics = CategoryComponents
 
 // GallerySubExample is a single labeled sub-example shown in the Examples tab.
 // When a GalleryStory has SubExamples set, each sub-example is rendered with

@@ -1,0 +1,256 @@
+{
+  "id": "backstop_default",
+  "viewports": [
+    {
+      "label": "desktop",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "scenarios": [
+    {
+      "label": "auth-login",
+      "url": "http://localhost:11001/auth/login",
+      "referenceUrl": "http://localhost:11002/auth-login.html",
+      "misMatchThreshold": 25.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "auth-register",
+      "url": "http://localhost:11001/auth/register",
+      "referenceUrl": "http://localhost:11002/auth-register.html",
+      "misMatchThreshold": 25.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "auth-forgot",
+      "url": "http://localhost:11001/auth/forgot-password",
+      "referenceUrl": "http://localhost:11002/auth-forgot-password.html",
+      "misMatchThreshold": 25.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "auth-reset",
+      "url": "http://localhost:11001/auth/reset-password",
+      "referenceUrl": "http://localhost:11002/auth-reset-password.html",
+      "misMatchThreshold": 25.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "dash-ecommerce",
+      "url": "http://localhost:11001/dashboards/ecommerce",
+      "referenceUrl": "http://localhost:11002/dashboards-ecommerce.html",
+      "misMatchThreshold": 15.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "dash-crm",
+      "url": "http://localhost:11001/dashboards/crm",
+      "referenceUrl": "http://localhost:11002/dashboards-crm.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-products",
+      "url": "http://localhost:11001/apps/ecommerce/products",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-products.html",
+      "misMatchThreshold": 15.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-products-create",
+      "url": "http://localhost:11001/apps/ecommerce/products/create",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-products-create.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-products-edit",
+      "url": "http://localhost:11001/apps/ecommerce/products/1",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-products-edit.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-orders",
+      "url": "http://localhost:11001/apps/ecommerce/orders",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-orders.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-order-detail",
+      "url": "http://localhost:11001/apps/ecommerce/orders/1",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-order-details.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-sellers",
+      "url": "http://localhost:11001/apps/ecommerce/sellers",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-sellers.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-sellers-create",
+      "url": "http://localhost:11001/apps/ecommerce/sellers/create",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-sellers-create.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-sellers-edit",
+      "url": "http://localhost:11001/apps/ecommerce/sellers/1",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-sellers-edit.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-customers",
+      "url": "http://localhost:11001/apps/ecommerce/customers",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-customers.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-customers-create",
+      "url": "http://localhost:11001/apps/ecommerce/customers/create",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-customers-create.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-customers-edit",
+      "url": "http://localhost:11001/apps/ecommerce/customers/1",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-customers-edit.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-shops",
+      "url": "http://localhost:11001/apps/ecommerce/shops",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-shops.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-shops-create",
+      "url": "http://localhost:11001/apps/ecommerce/shops/create",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-shops-create.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "eco-shops-edit",
+      "url": "http://localhost:11001/apps/ecommerce/shops/1",
+      "referenceUrl": "http://localhost:11002/apps-ecommerce-shops-edit.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "genai-home",
+      "url": "http://localhost:11001/apps/gen-ai/home",
+      "referenceUrl": "http://localhost:11002/apps-gen-ai-home.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "genai-content",
+      "url": "http://localhost:11001/apps/gen-ai/content",
+      "referenceUrl": "http://localhost:11002/apps-gen-ai-content.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "genai-image",
+      "url": "http://localhost:11001/apps/gen-ai/image",
+      "referenceUrl": "http://localhost:11002/apps-gen-ai-image.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "genai-library",
+      "url": "http://localhost:11001/apps/gen-ai/library",
+      "referenceUrl": "http://localhost:11002/apps-gen-ai-library.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "app-file-manager",
+      "url": "http://localhost:11001/apps/file-manager",
+      "referenceUrl": "http://localhost:11002/apps-file-manager.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "app-chat",
+      "url": "http://localhost:11001/apps/chat",
+      "referenceUrl": "http://localhost:11002/apps-chat.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "page-settings",
+      "url": "http://localhost:11001/pages/settings",
+      "referenceUrl": "http://localhost:11002/pages-settings.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "page-help",
+      "url": "http://localhost:11001/pages/get-help",
+      "referenceUrl": "http://localhost:11002/pages-get-help.html",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "ui-components",
+      "url": "http://localhost:11001/ui/components",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "ui-forms",
+      "url": "http://localhost:11001/ui/forms",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "ui-charts",
+      "url": "http://localhost:11001/ui/charts",
+      "misMatchThreshold": 20.0,
+      "requireSameDimensions": false
+    },
+    {
+      "label": "landing",
+      "url": "http://localhost:11001/landing",
+      "referenceUrl": "http://localhost:11002/landing.html",
+      "misMatchThreshold": 45.0,
+      "requireSameDimensions": false
+    }
+  ],
+  "paths": {
+    "bitmaps_reference": "backstop_data/bitmaps_reference",
+    "bitmaps_test": "backstop_data/bitmaps_test",
+    "engine_scripts": "backstop_data/engine_scripts",
+    "html_report": "backstop_data/html_report",
+    "ci_report": "backstop_data/ci_report"
+  },
+  "report": [
+    "browser"
+  ],
+  "engine": "puppeteer",
+  "engineOptions": {
+    "args": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ],
+    "executablePath": "/usr/sbin/chromium"
+  },
+  "asyncCaptureLimit": 5,
+  "asyncCompareLimit": 50,
+  "debug": false,
+  "debugWindow": false,
+  "onReadyScript": "puppeteer/onReady.js"
+}

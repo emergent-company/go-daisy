@@ -1,0 +1,159 @@
+package pages
+
+import (
+	"github.com/emergent-company/go-daisy/components/form"
+	"github.com/emergent-company/go-daisy/components/nav"
+	ui "github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+// SettingsPage renders a tabbed settings page with Profile, Account, Appearance, and Notifications tabs.
+templ SettingsPage() {
+	<div class="space-y-6" { devmode.Attrs(ctx, "pages/SettingsPage")... }>
+		@nav.PageTitleMinimal("Settings", []nav.BreadcrumbItem{
+			{Label: "Home", Href: "#", Icon: "lucide--home"},
+			{Label: "Settings"},
+		})
+
+		<div class="card bg-base-100 shadow-sm border border-base-200">
+			<div class="card-body p-6">
+				// DaisyUI tabs-lift for tabbed sections
+				<div class="tabs tabs-lift">
+					<input type="radio" name="settings-tabs" class="tab" aria-label="Profile" checked />
+					<div class="tab-content p-4">
+						@profileTab()
+					</div>
+
+					<input type="radio" name="settings-tabs" class="tab" aria-label="Account" />
+					<div class="tab-content p-4">
+						@accountTab()
+					</div>
+
+					<input type="radio" name="settings-tabs" class="tab" aria-label="Appearance" />
+					<div class="tab-content p-4">
+						@appearanceTab()
+					</div>
+
+					<input type="radio" name="settings-tabs" class="tab" aria-label="Notifications" />
+					<div class="tab-content p-4">
+						@notificationsTab()
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ profileTab() {
+	<div class="max-w-lg space-y-6">
+		@ui.SectionHeader("Personal Information")
+		<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+			@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "first_name", Label: "First name", Value: "Jane", Required: true})
+			@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "last_name", Label: "Last name", Value: "Doe", Required: true})
+		</div>
+		@form.FormField(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Value: "jane@example.com", Required: true})
+		@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "phone", Label: "Phone", Value: "+1 (555) 123-4567"})
+		@form.FormField(form.FormFieldProps{Type: form.FieldTextarea, Name: "bio", Label: "Bio", Value: "Full-stack developer passionate about Go and HTMX.", Rows: 3})
+
+		@ui.SectionHeader("Avatar")
+		@form.FileUpload(form.FileUploadProps{Name: "avatar", Label: "Profile photo", Accept: "image/*", Style: form.FileUploadAvatar, MaxFiles: 1})
+
+		<div class="flex items-center gap-3 pt-4">
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Variant: ui.ButtonPrimary, Size: ui.ButtonSM}) {
+				Save changes
+			}
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM}) {
+				Cancel
+			}
+		</div>
+	</div>
+}
+
+templ accountTab() {
+	<div class="max-w-lg space-y-6">
+		@ui.SectionHeader("Account Details")
+		@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "username", Label: "Username", Value: "janedoe", Required: true})
+		@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "company", Label: "Company", Value: "Acme Corp"})
+
+		@ui.SectionHeader("Change Password")
+		@form.PasswordMeter(form.PasswordMeterProps{Name: "current_pw", Label: "Current password", ShowToggle: true, Required: true})
+		@form.PasswordMeter(form.PasswordMeterProps{Name: "new_pw", Label: "New password", ShowToggle: true, Required: true, MinLength: 8})
+		@form.PasswordField(form.PasswordFieldProps{Name: "confirm_pw", Label: "Confirm new password", ShowToggle: true, Required: true})
+
+		@ui.SectionHeader("Danger Zone")
+		<div class="rounded-box border border-error/20 bg-error/5 p-4 space-y-3">
+			<p class="text-sm text-base-content/70">Permanently delete your account and all associated data. This action cannot be undone.</p>
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonError, Size: ui.ButtonSM, Style: ui.ButtonStyleOutline}) {
+				Delete account
+			}
+		</div>
+	</div>
+}
+
+templ appearanceTab() {
+	<div class="max-w-lg space-y-6">
+		@ui.SectionHeader("Theme")
+		<div class="flex items-center justify-between">
+			<div>
+				<p class="text-sm font-medium text-base-content">Dark mode</p>
+				<p class="text-xs text-base-content/50">Toggle between light and dark themes</p>
+			</div>
+			@ui.ThemeToggle(ui.ThemeToggleProps{})
+		</div>
+
+		@ui.SectionHeader("Layout")
+		<div class="space-y-4">
+			<div class="flex items-center justify-between">
+				<div>
+					<p class="text-sm font-medium text-base-content">Compact view</p>
+					<p class="text-xs text-base-content/50">Use tighter spacing throughout the UI</p>
+				</div>
+			@form.Toggle("compact", true, "")
+		</div>
+		<div class="flex items-center justify-between">
+			<div>
+				<p class="text-sm font-medium text-base-content">Reduced motion</p>
+				<p class="text-xs text-base-content/50">Minimize animations and transitions</p>
+			</div>
+			@form.Toggle("reduced-motion", false, "")
+		</div>
+		</div>
+
+		@ui.SectionHeader("Font Size")
+		@form.RadioGroup("font-size", "md", []form.SelectOption{{Value: "sm", Label: "Small"}, {Value: "md", Label: "Medium"}, {Value: "lg", Label: "Large"}}, "radio-primary")
+	</div>
+}
+
+templ notificationsTab() {
+	<div class="max-w-lg space-y-6">
+		@ui.SectionHeader("Email Notifications")
+		<div class="space-y-4">
+			@notificationToggle("marketing", "Marketing emails", "Receive updates about new features and offers", false)
+			@notificationToggle("comments", "Comments & replies", "Get notified when someone replies to your comment", true)
+			@notificationToggle("mentions", "Mentions", "Get notified when someone mentions you", true)
+		</div>
+
+		@ui.SectionHeader("Push Notifications")
+		<div class="space-y-4">
+			@notificationToggle("push-orders", "Order updates", "Receive push notifications about your orders", false)
+			@notificationToggle("push-security", "Security alerts", "Important security notifications about your account", true)
+			@notificationToggle("push-system", "System updates", "Service status and maintenance notifications", true)
+		</div>
+
+		<div class="pt-4">
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Variant: ui.ButtonPrimary, Size: ui.ButtonSM}) {
+				Save preferences
+			}
+		</div>
+	</div>
+}
+
+templ notificationToggle(name, label, description string, checked bool) {
+	<div class="flex items-start justify-between gap-4 py-2">
+		<div>
+			<p class="text-sm font-medium text-base-content">{ label }</p>
+			<p class="text-xs text-base-content/50">{ description }</p>
+		</div>
+		@form.Toggle(name, checked, "")
+	</div>
+}

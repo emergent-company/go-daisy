@@ -224,3 +224,272 @@ func FileInputTokens() []galleryruntime.DesignToken {
 		},
 	}
 }
+
+// CheckboxTokens returns the DesignToken slice for CheckboxWithBoundary.
+func CheckboxTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Accept terms and conditions",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Checked",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "checked",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
+}
+
+// ToggleTokens returns the DesignToken slice for ToggleWithBoundary.
+func ToggleTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Enable notifications",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Checked",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "checked",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
+}
+
+// FormInputTokens returns the DesignToken slice for FormInputWithBoundary.
+func FormInputTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Full Name",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Label Position",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "above",
+			QueryParam: "labelPosition",
+			Options: []galleryruntime.TokenOption{
+				{Value: "above", Label: "LabelAbove"},
+				{Value: "left", Label: "LabelLeft"},
+			},
+		},
+		{
+			Label:      "Placeholder",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "placeholder",
+		},
+	}
+}
+
+// FormSelectTokens returns the DesignToken slice for FormSelectWithBoundary.
+func FormSelectTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Country",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Label Position",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "above",
+			QueryParam: "labelPosition",
+			Options: []galleryruntime.TokenOption{
+				{Value: "above", Label: "LabelAbove"},
+				{Value: "left", Label: "LabelLeft"},
+			},
+		},
+		{
+			Label:      "Placeholder",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "placeholder",
+		},
+	}
+}
+
+// FormCheckboxTokens returns the DesignToken slice for FormCheckboxWithBoundary.
+func FormCheckboxTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Accept terms",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Checked",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "checked",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
+}
+
+// FormToggleTokens returns the DesignToken slice for FormToggleWithBoundary.
+func FormToggleTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Enable notifications",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Checked",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "checked",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
+}
+
+// PasswordFieldTokens returns the DesignToken slice for PasswordFieldWithBoundary.
+func PasswordFieldTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// PasswordMeterTokens returns the DesignToken slice for PasswordMeterWithBoundary.
+func PasswordMeterTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// EnhancedSelectTokens returns the DesignToken slice for EnhancedSelectWithBoundary.
+func EnhancedSelectTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// DatePickerTokens returns the DesignToken slice for DatePickerWithBoundary.
+func DatePickerTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// RichTextEditorTokens returns the DesignToken slice for RichTextEditorWithBoundary.
+func RichTextEditorTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// FileUploadTokens returns the DesignToken slice for FileUploadWithBoundary.
+func FileUploadTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// FormValidationTokens returns the DesignToken slice for FormValidationWithBoundary.
+func FormValidationTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// PaletteTokens returns the DesignToken slice for PaletteWithBoundary.
+func PaletteTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// FormFieldsetTokens returns the DesignToken slice for FormFieldsetWithBoundary.
+func FormFieldsetTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// SelectShellTokens returns the DesignToken slice for SelectShellWithBoundary.
+func SelectShellTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// FormActionsWithLoadingTokens returns the DesignToken slice for FormActionsWithLoadingWithBoundary.
+func FormActionsWithLoadingTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Submit Text",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Save Changes",
+			QueryParam: "submitText",
+		},
+	}
+}
+
+// DateInputTokens returns the DesignToken slice for DateInputWithBoundary.
+func DateInputTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Name",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "name",
+		},
+		{
+			Label:      "Value",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "value",
+		},
+	}
+}
+
+// ComboboxTokens returns the DesignToken slice for ComboboxWithBoundary.
+func ComboboxTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// StructuredInputTokens returns the DesignToken slice for StructuredInputWithBoundary.
+func StructuredInputTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// TagListTokens returns the DesignToken slice for TagListWithBoundary.
+func TagListTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}

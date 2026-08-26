@@ -1,0 +1,428 @@
+package handler
+
+import (
+	"github.com/emergent-company/go-daisy/components/ui"
+)
+
+templ EcommerceDashboard() {
+	<div class="flex items-center justify-between">
+		<h3 class="text-lg font-medium">Business Overview</h3>
+		<div class="breadcrumbs hidden p-0 text-sm sm:inline">
+			<ul>
+				<li><a href="/dashboards/ecommerce">Nexus</a></li>
+				<li>Dashboards</li>
+				<li class="opacity-80">Ecommerce</li>
+			</ul>
+		</div>
+	</div>
+	<div class="mt-6">
+		<div class="grid gap-5 lg:grid-cols-2 xl:grid-cols-4">
+			@ecomStatCard("Revenue", "$587.54", "10.8%", "badge-success", "lucide--arrow-up", "lucide--circle-dollar-sign", "$494.16")
+			@ecomStatCard("Sales", "4500", "21.2%", "badge-success", "lucide--arrow-up", "lucide--package", "3845")
+			@ecomStatCard("Customers", "2242", "-6.8%", "badge-error", "lucide--arrow-down", "lucide--users", "2448")
+			@ecomStatCard("Spending", "$112.54", "8.5%", "badge-success", "lucide--arrow-up", "lucide--eraser", "$98.14")
+		</div>
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-12">
+			<div class="xl:col-span-7">
+				<div class="card bg-base-100 shadow">
+					<div class="card-body px-0 pb-0">
+						<div class="px-6">
+			<div class="flex items-start justify-between gap-2 text-sm">
+								<span class="font-medium">Revenue Statistics</span>
+								<div class="tabs tabs-box tabs-xs hidden sm:block">
+									<div class="tab false px-3">Day</div>
+									<div class="tab false px-3">Month</div>
+									<div class="tab tab-active px-3">Year</div>
+								</div>
+							</div>
+							<div class="mt-3">
+								<div class="flex items-center gap-3">
+									<span class="text-4xl font-semibold">$184.78K</span>
+									<span class="text-success font-medium">+3.24%</span>
+								</div>
+								<span class="text-base-content/60 text-sm">Total income in this year</span>
+							</div>
+						</div>
+						<div>
+						@ui.Chart(ui.ChartProps{ID: "revenue-statics-chart", Type: ui.ChartColumn, RawConfigJSON: nxRevenueStatsConfig})
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="xl:col-span-5">
+				<div class="card bg-base-100 shadow">
+					<div class="card-body p-0">
+						<div class="flex items-center justify-between px-5 pt-5">
+							<span class="font-medium">Customer Acquisition</span>
+							<div class="inline-flex items-center gap-2">
+								<div class="text-base-content/60 w-6 border border-dashed"></div>
+								<span class="text-base-content/80 text-xs">Prediction</span>
+							</div>
+						</div>
+						<div class="mt-4 py-3">
+							<div class="divide-base-300 grid grid-cols-2 gap-5 px-5 sm:grid-cols-3 sm:divide-x">
+								<div class="text-center">
+									<p>Advertise</p>
+									<p class="mt-0.5 text-xl font-medium">$148</p>
+									<div class="text-success mt-0.5 inline-flex items-center gap-1">
+										<span class="iconify lucide--arrow-up size-3"></span>
+										<p class="text-xs">4.78%</p>
+									</div>
+								</div>
+								<div class="hidden text-center sm:block">
+									<p>Customers</p>
+									<p class="mt-0.5 text-xl font-medium">427</p>
+									<div class="text-success mt-0.5 inline-flex items-center gap-1">
+										<span class="iconify lucide--arrow-up size-3"></span>
+										<p class="text-xs">3.15%</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="-mt-25 sm:mx-5">
+						@ui.Chart(ui.ChartProps{ID: "customer-acquisition-chart", Type: ui.ChartLine, RawConfigJSON: nxCustomerAcqConfig})
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-5 2xl:grid-cols-12">
+			<div class="xl:col-span-3 2xl:col-span-5">
+				<div aria-label="Card" class="card bg-base-100 shadow">
+					<div class="card-body p-0">
+						<div class="flex items-center gap-3 px-5 pt-5">
+							<span class="iconify lucide--shopping-bag size-4.5"></span>
+							<span class="font-medium">Recent Orders</span>
+							<button class="btn btn-outline border-base-300 btn-sm ms-auto">
+								<span class="iconify lucide--download size-3.5"></span>
+								Report
+							</button>
+						</div>
+						<div class="mt-2 overflow-auto">
+							<table class="table *:text-nowrap">
+								<thead><tr><th><input aria-label="checked-all-order" class="checkbox checkbox-sm" type="checkbox"/></th><th>Product</th><th>Price</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+								<tbody>
+									@ecomOrderRow("1", "Men's tracking shoes", "$99", "25 Jun 2024", "Delivered", "badge-success")
+									@ecomOrderRow("2", "Cocooil body oil", "$75", "22 Jun 2024", "On Going", "badge-info")
+									@ecomOrderRow("3", "Freeze Air", "$47", "17 Jun 2024", "Confirmed", "badge-primary")
+									@ecomOrderRow("4", "Ladies's shoes", "$52", "23 Jun 2024", "Canceled", "badge-error")
+									@ecomOrderRow("10", "Choco's cookie", "$24", "21 Jun 2024", "Waiting", "badge-secondary")
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="xl:col-span-2 2xl:col-span-3">
+				<div class="card bg-base-100 shadow">
+					<div class="card-body pb-3">
+						<div class="flex items-center gap-3">
+							<span class="iconify lucide--messages-square size-4.5"></span>
+							<span class="font-medium">Quick Chat</span>
+							<a href="/apps/chat" class="btn btn-outline btn-sm border-base-300 ms-auto">Go To Chat</a>
+						</div>
+						<div class="-mx-2 mt-2 space-y-0.5">
+							@ecomChatItem("1", "Mia Johnson", "11:35 AM", "It's called 'Dreamscape.' A must-watch!")
+							@ecomChatItem("2", "Ethan Patel", "09:58 AM", "Just got a new book. Excited to start reading.")
+							@ecomChatItem("3", "Sophia Nguyen", "08:20 AM", "How's your day going?")
+							@ecomChatItem("4", "Emily Chen", "06:21 PM", "Did you see that amazing sunset yesterday?")
+							@ecomChatItem("5", "Kelvin S.", "08:15 AM", "Not sure, what you talking about...")
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="xl:col-span-3 2xl:col-span-4">
+				<div class="card bg-base-100 shadow">
+					<div class="card-body gap-0 p-0">
+						<div class="flex items-center gap-3 px-5 pt-5">
+							<span class="iconify lucide--globe-2 size-4.5"></span>
+							<span class="font-medium">Global Sales (%)</span>
+							<button class="btn btn-ghost btn-outline border-base-300 btn-sm z-1 ms-auto">
+								<span class="iconify lucide--eye size-4"></span>
+								Overview
+							</button>
+						</div>
+						@ui.Chart(ui.ChartProps{ID: "global-sales-chart", Type: ui.ChartBar, Horizontal: true, RawConfigJSON: nxGlobalSalesConfig})
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ ecomStatCard(label, value, trend, trendColor, arrowIcon, icon, comparison string) {
+	<div class="card bg-base-100 shadow">
+		<div class="card-body gap-2">
+			<div class="flex items-start justify-between gap-2 text-sm">
+				<div>
+					<p class="text-base-content/80 font-medium">{ label }</p>
+					<div class="mt-3 flex items-center gap-2">
+						<p class="inline text-2xl font-semibold">{ value }</p>
+						<div class={ "badge badge-soft", trendColor, "badge-sm gap-0.5 px-1 font-medium" }>
+							<span class={ "iconify", arrowIcon, "size-3.5" }></span>
+							{ trend }
+						</div>
+					</div>
+				</div>
+				<div class="bg-base-200 rounded-box flex items-center p-2">
+					<span class={ "iconify", icon, "size-5" }></span>
+				</div>
+			</div>
+			<p class="text-base-content/60 text-sm">
+				vs.
+				<span class="mx-1">{ comparison }</span>
+				last period
+			</p>
+		</div>
+	</div>
+}
+
+templ ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string) {
+	<tr>
+		<th><input aria-label="checked-order" class="checkbox checkbox-sm" type="checkbox"/></th>
+		<td class="flex items-center space-x-3 truncate">
+			<img alt="order image" class="mask mask-squircle bg-base-200 size-7.5" src={ "./images/apps/ecommerce/products/" + imgNum + ".jpg" }/>
+			<p>{ product }</p>
+		</td>
+		<td class="font-medium">{ price }</td>
+		<td class="text-xs">{ date }</td>
+		<td><div class={ "badge badge-sm badge-soft", statusClass }>{ statusLabel }</div></td>
+		<td>
+			<div class="flex items-center gap-1">
+				<button aria-label="Show product" class="btn btn-square btn-ghost btn-xs"><span class="iconify lucide--eye text-base-content/60 size-4"></span></button>
+				<button aria-label="Show product" class="btn btn-square btn-error btn-outline btn-xs border-transparent"><span class="iconify lucide--trash size-4"></span></button>
+			</div>
+		</td>
+	</tr>
+}
+
+templ ecomChatItem(imgNum, name, time, message string) {
+	<div class="rounded-box hover:bg-base-200 flex cursor-pointer items-center gap-3 px-2 py-2 transition-all active:scale-[.98]">
+		<img alt="chat" class="bg-base-200 mask mask-squircle size-11" src={ "./images/avatars/" + imgNum + ".png" }/>
+		<div class="grow">
+			<div class="flex gap-1">
+				<p class="grow">{ name }</p>
+				<span class="text-base-content/60 text-xs">{ time }</span>
+			</div>
+			<p class="text-base-content/80 line-clamp-1 text-sm text-ellipsis">{ message }</p>
+		</div>
+	</div>
+}
+
+templ quickChatItem(name, time, message string) {
+	<div class="hover:bg-base-200 rounded-btn flex items-center gap-2 px-2 py-1.5 transition">
+		<div class="avatar"><div class="mask mask-squircle w-7 p-0.5"><div class="bg-primary text-primary-content flex size-full items-center justify-center text-[10px] font-semibold">{ initials(name) }</div></div></div>
+		<div class="grow min-w-0">
+			<div class="flex items-center justify-between gap-1"><p class="truncate text-sm font-medium">{ name }</p><span class="text-xs text-base-content/60">{ time }</span></div>
+			<p class="truncate text-xs text-base-content/60">{ message }</p>
+		</div>
+	</div>
+}
+
+templ orderRow(checked bool, name, price, date, status string) {
+	{{
+		bagClass := "badge-success"
+		bagLabel := "Delivered"
+		switch status {
+		case "on_going":
+			bagClass, bagLabel = "badge-info", "On Going"
+		case "confirmed":
+			bagClass, bagLabel = "badge-primary", "Confirmed"
+		case "canceled":
+			bagClass, bagLabel = "badge-error", "Canceled"
+		case "waiting":
+			bagClass, bagLabel = "badge-secondary", "Waiting"
+		}
+	}}
+	<tr>
+		<td><input aria-label={ name } type="checkbox" class="checkbox checkbox-sm" checked?={ checked }/></td>
+		<td><div class="flex items-center gap-3"><div class="avatar"><div class="mask mask-squircle w-8"><div class="bg-base-300 w-full h-full flex items-center justify-center"><span class="iconify lucide--package size-3"></span></div></div></div><span class="text-sm">{ name }</span></div></td>
+		<td class="text-sm">{ price }</td>
+		<td class="text-sm">{ date }</td>
+		<td><div class={ "badge", bagClass, "badge-sm badge-soft" }>{ bagLabel }</div></td>
+		<td><div class="flex items-center gap-1">@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Preview"}}){ @ui.IconSpan("lucide--eye", "size-4") }@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Delete"}}){ @ui.IconSpan("lucide--trash-2", "size-4") }</div></td>
+	</tr>
+}
+templ CRMDashboard() {
+	<div class="flex items-center justify-between">
+		<h3 class="text-lg font-medium">CRM Overview</h3>
+		<div class="breadcrumbs hidden p-0 text-sm sm:inline">
+			<ul>
+				<li><a href="/dashboards/ecommerce">Nexus</a></li>
+				<li>Dashboards</li>
+				<li class="opacity-80">CRM</li>
+			</ul>
+		</div>
+	</div>
+	<div class="mt-6 grid grid-cols-12 gap-5">
+		<div class="col-span-12 xl:col-span-8">
+			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-1">
+				@crmStatCard("lucide--users", "Customers", "4,235", "8.04%", "badge-success", "")
+				@crmStatCard("lucide--dollar-sign", "Revenue", "$75,400", "15.3%", "badge-success", "active")
+				@crmStatCard("lucide--handshake", "Closed Deals", "574", "-2.4%", "badge-error", "")
+				@crmStatCard("lucide--smile", "Satisfaction", "93%", "2.3%", "badge-success", "")
+			</div>
+			<div class="mt-5">
+				<div class="card bg-base-100 shadow">
+					<div class="card-body pb-0">
+						<div class="flex items-center justify-between">
+							<h5 class="text-base font-semibold">Sale Metrics</h5>
+							<div class="tabs tabs-box tabs-sm gap-1 bg-base-200 rounded-box"><a class="tab tab-active">2024 vs. 2025</a></div>
+						</div>
+						@ui.Chart(ui.ChartProps{ID: "sale-metrics-chart", Type: ui.ChartColumn, RawConfigJSON: nxCRMSaleMetricsConfig})
+					</div>
+				</div>
+			</div>
+			<div class="mt-5 grid grid-cols-3 gap-5">
+				<div class="card bg-base-100 shadow"><div class="card-body p-4">
+					<p class="text-sm text-base-content/60">Realtime Sales</p>
+					<div class="mt-2 flex items-baseline gap-2"><span class="text-2xl font-bold">541</span></div>
+					<p class="text-xs text-base-content/60 mt-1">494 last hour</p>
+				</div></div>
+				<div class="card bg-base-100 shadow"><div class="card-body p-4">
+					<p class="text-sm text-base-content/60">Revenue</p>
+					<div class="mt-2 flex items-baseline gap-2"><span class="text-2xl font-bold">$51,474</span></div>
+					<p class="text-xs text-base-content/60 mt-1">$49,162 last month</p>
+				</div></div>
+				<div class="card bg-base-100 shadow"><div class="card-body p-4">
+					<p class="text-sm text-base-content/60">Customer Retention</p>
+					<div class="mt-2 flex items-baseline gap-2"><span class="text-2xl font-bold">3.14%</span></div>
+					<p class="text-xs text-base-content/60 mt-1">2.16% last week</p>
+				</div></div>
+			</div>
+			<div class="mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5">
+				<div class="xl:col-span-2">
+					<div class="card bg-base-100 shadow"><div class="card-body">
+						<p class="font-semibold mb-2">Customer Acquisition</p>
+						@ui.Chart(ui.ChartProps{
+							ID: "crm-cust-acq-chart", Type: ui.ChartLine, Height: "300",
+							Series: []ui.ChartSeries{
+								{Name: "Acquired", Data: []float64{31,40,28,51,42,109,100}},
+							},
+							Categories: []string{"2016","2017","2018","2019","2020","2021","2025"},
+							Colors: []string{"#167bff"}})
+					</div></div>
+				</div>
+				<div>
+					<div class="card bg-base-100 shadow bg-gradient-to-tr from-primary to-primary/85 text-primary-content"><div class="card-body">
+						<h3 class="font-semibold italic">Upgrade to premium</h3>
+						<p class="text-sm opacity-80">Make the better business analytics with Premium Dashboard</p>
+						<div class="avatar-group -space-x-3 mt-3">
+							<div class="avatar placeholder"><div class="bg-neutral text-neutral-content w-8"><span>DN</span></div></div>
+							<div class="avatar placeholder"><div class="bg-neutral text-neutral-content w-8"><span>JS</span></div></div>
+							<div class="avatar placeholder"><div class="bg-neutral text-neutral-content w-8"><span>RK</span></div></div>
+						</div>
+						<button class="btn btn-neutral btn-sm btn-block mt-4">Pay Monthly $29</button>
+					</div></div>
+				</div>
+			</div>
+			<div class="mt-5 grid grid-cols-1 xl:grid-cols-2 gap-5">
+				<div class="card bg-base-100 shadow"><div class="card-body">
+					<p class="font-semibold">Goal Status</p>
+					<p class="text-xs text-base-content/60">(Nearly Finished)</p>
+					<div class="mt-3 flex items-center gap-6">
+						@ui.RadialProgress(ui.ProgressColor("primary"), 76, "w-32 h-32", "10px")
+						<div><p class="text-2xl font-bold">76%</p><p class="text-sm text-base-content/60">You're completed 80% of yearly goal</p></div>
+					</div>
+					<div class="mt-4">
+						<div class="flex items-center justify-between text-sm"><span>Budget Spent</span><span class="font-semibold">$22500<span class="text-base-content/60 font-normal">/$30000</span></span></div>
+						@ui.Progress(ui.ProgressColor("primary"), 75, 100, nil)
+					</div>
+					<div class="mt-4 text-end"><a href="#" class="btn btn-ghost btn-sm">Change Goal</a></div>
+				</div></div>
+				<div class="card bg-base-100 shadow"><div class="card-body">
+					<p class="font-semibold">Social Acquisition</p>
+					@ui.Chart(ui.ChartProps{
+						ID: "crm-social-chart", Type: ui.ChartBar, Height: "300", Horizontal: true,
+						Series: []ui.ChartSeries{
+							{Name: "Sales", Data: []float64{48,35,10,7}},
+						},
+						Categories: []string{"Facebook","Instagram","Whatsapp","LinkedIn"},
+						Colors: []string{"#167bff","#a855f7","#06b6d4","#22c55e"},
+						StrokeWidth: 0, FillOpacity: 1.0})
+				</div></div>
+			</div>
+			<div class="mt-5">
+				<div class="card bg-base-100 shadow"><div class="card-body">
+					<div class="flex items-center justify-between mb-4">
+						<p class="font-semibold text-base">Customer Deals</p>
+						<a href="#" class="btn btn-primary btn-sm">Make a Deal</a>
+					</div>
+					<div class="overflow-x-auto">
+						<table class="table">
+							<thead><tr><th>Customer</th><th>Value</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+							<tbody>
+								<tr><td class="flex items-center space-x-3 truncate"><img class="mask mask-squircle bg-base-200 size-7" src="/images/avatars/1.png" alt="John Doe"/><p>John Doe</p></td><td>$50,000</td><td><div class="badge badge-success badge-sm badge-soft">Completed</div></td><td>16 Dec</td><td><button class="btn btn-square btn-ghost btn-xs" aria-label="View"><span class="iconify lucide--eye text-base-content/80 size-4"></span></button></td></tr>
+								<tr><td class="flex items-center space-x-3 truncate"><img class="mask mask-squircle bg-base-200 size-7" src="/images/avatars/2.png" alt="Jane Smith"/><p>Jane Smith</p></td><td>$12,240</td><td><div class="badge badge-warning badge-sm badge-soft">Pending</div></td><td>21 June</td><td><button class="btn btn-square btn-ghost btn-xs" aria-label="View"><span class="iconify lucide--eye text-base-content/80 size-4"></span></button></td></tr>
+								<tr><td class="flex items-center space-x-3 truncate"><img class="mask mask-squircle bg-base-200 size-7" src="/images/avatars/3.png" alt="Rahul Kumar"/><p>Rahul Kumar</p></td><td>$87,452</td><td><div class="badge badge-success badge-sm badge-soft">Completed</div></td><td>15 Aug</td><td><button class="btn btn-square btn-ghost btn-xs" aria-label="View"><span class="iconify lucide--eye text-base-content/80 size-4"></span></button></td></tr>
+								<tr><td class="flex items-center space-x-3 truncate"><img class="mask mask-squircle bg-base-200 size-7" src="/images/avatars/4.png" alt="Emily Davis"/><p>Emily Davis</p></td><td>$65,357</td><td><div class="badge badge-success badge-sm badge-soft">Completed</div></td><td>17 Nov</td><td><button class="btn btn-square btn-ghost btn-xs" aria-label="View"><span class="iconify lucide--eye text-base-content/80 size-4"></span></button></td></tr>
+								<tr><td class="flex items-center space-x-3 truncate"><img class="mask mask-squircle bg-base-200 size-7" src="/images/avatars/5.png" alt="Akash Singh"/><p>Akash Singh</p></td><td>$35,769</td><td><div class="badge badge-error badge-sm badge-soft">Canceled</div></td><td>30 Jan</td><td><button class="btn btn-square btn-ghost btn-xs" aria-label="View"><span class="iconify lucide--eye text-base-content/80 size-4"></span></button></td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div></div>
+			</div>
+			<div class="mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5">
+				<div class="col-span-1">
+					<div class="card bg-base-100 shadow"><div class="card-body">
+						<div class="flex items-center gap-2">
+							<span class="iconify lucide--unplug text-base-content/80 size-4.5"></span>
+							<p class="grow font-medium">Quick Integration</p>
+							<button class="btn btn-ghost btn-sm border-base-300"><span class="iconify lucide--settings-2 size-3.5"></span> Manage</button>
+						</div>
+						<div class="mt-4 space-y-3.5">
+							<div class="flex items-center gap-3">
+								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="./images/brand-logo/salesforce.svg"/>
+								<div class="grow"><p class="leading-none font-medium">Salesforce</p><p class="text-base-content/80 line-clamp-1 text-sm">Salesforce provides customer relationship management software and application focused on sales</p></div>
+								<button class="btn btn-xs btn-soft btn-primary">Connect</button>
+							</div>
+							<div class="flex items-center gap-3">
+								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="./images/brand-logo/asana.svg"/>
+								<div class="grow"><p class="leading-none font-medium">Asana</p><p class="text-base-content/80 line-clamp-1 text-sm">Track, manage and connect your project across any team.</p></div>
+								<button class="btn btn-xs btn-soft btn-primary">Disconnect</button>
+							</div>
+							<div class="flex items-center gap-3">
+								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="./images/brand-logo/slack.svg"/>
+								<div class="grow"><p class="leading-none font-medium">Slack</p><p class="text-base-content/80 line-clamp-1 text-sm">Slack is a new way to communicate with your team.</p></div>
+								<button class="btn btn-xs btn-soft btn-primary">Connect</button>
+							</div>
+							<div class="flex items-center gap-3">
+								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="./images/brand-logo/notion.svg"/>
+								<div class="grow"><p class="leading-none font-medium">Notion</p><p class="text-base-content/80 line-clamp-1 text-sm">Notion is a freemium productivity and note-taking web application developed by Notion Lab Inc.</p></div>
+								<button class="btn btn-xs btn-soft btn-primary">Disconnect</button>
+							</div>
+							<div class="flex items-center gap-3">
+								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="./images/brand-logo/hubspot.svg"/>
+								<div class="grow"><p class="leading-none font-medium">Hubspot</p><p class="text-base-content/80 line-clamp-1 text-sm">Hubspot is a CRM platform with all the software, integrations and resources you need to connect</p></div>
+								<button class="btn btn-xs btn-soft btn-primary">Disconnect</button>
+							</div>
+						</div>
+					</div></div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ crmStatCard(icon, label, value, trend, trendClass, active string) {
+	<div class="cursor-pointer">
+		<div class="card bg-base-100 false shadow">
+			<div class="card-body gap-2 p-4 2xl:p-5">
+				<div class="flex items-center gap-3">
+					<div class="bg-base-200 rounded-box false flex items-center p-1.5"><span class={ "iconify", icon, "size-4.5" }></span></div>
+					<p class="line-clamp-1 font-medium text-sm">{ label }</p>
+				</div>
+				<div class="mt-5 mb-0.5 flex items-center gap-2 text-sm 2xl:gap-3">
+					<p class="text-lg font-medium">{ value }</p>
+					<div class={ "badge badge-soft", trendClass, "badge-sm gap-0.5 px-1.5" }>
+						<span class="iconify lucide--arrow-up size-3"></span>
+						{ trend }
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+
+

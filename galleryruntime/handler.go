@@ -315,12 +315,11 @@ func (h *galleryHandler) renderTemplPage(c echo.Context, baseURL string, comp te
 // with all CSS links injected. When devMode is true, the hover overlay script
 // for component boundary visualisation is injected into the document.
 func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, devMode bool) string {
-	var cssLinks strings.Builder
+	var headExtras strings.Builder
 	for _, prefix := range staticPrefixes {
-		// Ensure prefix ends with /
 		p := strings.TrimRight(prefix, "/") + "/"
-		fmt.Fprintf(&cssLinks, `  <link href="%s%scss/app.css" rel="stylesheet" type="text/css"/>`, baseURL, p)
-		cssLinks.WriteString("\n")
+		fmt.Fprintf(&headExtras, `  <link href="%s%scss/app.css" rel="stylesheet" type="text/css"/>`, baseURL, p)
+		headExtras.WriteString("\n")
 	}
 
 	devScript := ""
@@ -352,7 +351,7 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
 <body>
 %s%s
 </body>
-</html>`, cssLinks.String(), snippet, devScript)
+</html>`, headExtras.String(), snippet, devScript)
 }
 
 

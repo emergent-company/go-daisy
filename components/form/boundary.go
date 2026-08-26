@@ -7,6 +7,7 @@ import (
 )
 
 // TextInputWithBoundary wraps TextInput with a dev-mode component boundary annotation.
+// Deprecated: use FormInputWithBoundary(name, label, value, placeholder, "", "", "", nil) instead.
 // gallery:token label,required
 // gallery:hint label:default(Full Name)
 func TextInputWithBoundary(name string, label string, value string, errMsg string, required bool) templ.Component {
@@ -18,6 +19,7 @@ func TextInputWithBoundary(name string, label string, value string, errMsg strin
 }
 
 // TextareaInputWithBoundary wraps TextareaInput with a dev-mode component boundary annotation.
+// Deprecated: use FormInputWithBoundary(name, label, value, placeholder, "", "", "", nil) instead.
 // gallery:token label,rows,required
 // gallery:hint rows:range(2,10,1)
 // gallery:hint label:default(Description)
@@ -31,6 +33,7 @@ func TextareaInputWithBoundary(name string, label string, value string, errMsg s
 }
 
 // CheckboxInputWithBoundary wraps CheckboxInput with a dev-mode component boundary annotation.
+// Deprecated: use FormCheckboxWithBoundary(name, label, checked, "", nil) instead.
 // gallery:token label,checked
 // gallery:hint label:default(Accept terms and conditions)
 func CheckboxInputWithBoundary(name string, label string, checked bool, errMsg string) templ.Component {
@@ -42,6 +45,7 @@ func CheckboxInputWithBoundary(name string, label string, checked bool, errMsg s
 }
 
 // SelectInputWithBoundary wraps SelectInput with a dev-mode component boundary annotation.
+// Deprecated: use FormSelectWithBoundary(name, label, selected, options, "", "", "", "", nil) instead.
 // gallery:token label,required
 // gallery:hint label:default(Country)
 func SelectInputWithBoundary(name string, label string, selected string, options [][2]string, errMsg string, required bool) templ.Component {
@@ -131,6 +135,7 @@ func FileInputWithBoundary(name string, label string, accept string) templ.Compo
 }
 
 // CheckboxWithBoundary wraps Checkbox with a dev-mode component boundary annotation.
+// Deprecated: use FormCheckboxWithBoundary(name, label, checked, "", nil) instead.
 // gallery:token label,checked
 // gallery:hint label:default(Accept terms and conditions)
 func CheckboxWithBoundary(name string, checked bool, label string) templ.Component {
@@ -142,6 +147,7 @@ func CheckboxWithBoundary(name string, checked bool, label string) templ.Compone
 }
 
 // ToggleWithBoundary wraps Toggle with a dev-mode component boundary annotation.
+// Deprecated: use FormToggleWithBoundary(name, label, checked, "", nil) instead.
 // gallery:token label,checked
 // gallery:hint label:default(Enable notifications)
 func ToggleWithBoundary(name string, checked bool, label string) templ.Component {
@@ -426,7 +432,7 @@ func DatalistInputWithBoundary(id string, placeholder string, options []Datalist
 // FieldsetWithBoundary wraps Fieldset with a dev-mode component boundary annotation.
 // gallery:token legend
 // gallery:hint legend:default(Settings)
-func FieldsetWithBoundary(props FieldsetProps) templ.Component {
+func FormFieldsetWithBoundary(props FieldsetProps) templ.Component {
 	return devmode.ComponentBoundary("Fieldset", Fieldset(props), map[string]any{
 		"legend": props.Legend,
 	})
@@ -444,7 +450,7 @@ func SelectShellWithBoundary(props SelectShellProps) templ.Component {
 
 // FormActionsWithBoundary wraps FormActions with a dev-mode component boundary annotation.
 func FormActionsWithBoundary() templ.Component {
-	inner := shared.RenderInto(FormActions(), shared.StrComp(`<button class="btn btn-primary">Save</button>`))
+	inner := shared.RenderInto(FormActions("", ""), shared.StrComp(`<button class="btn btn-primary">Save</button>`))
 	return devmode.ComponentBoundary("FormActions", inner, nil)
 }
 

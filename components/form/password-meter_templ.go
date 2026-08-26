@@ -79,7 +79,7 @@ func PasswordMeter(props PasswordMeterProps) templ.Component {
 			}
 			var templ_7745c5c3_Var3 = []any{"input input-bordered join-item flex-1",
 				templ.KV("input-error", props.Error != ""),
-				props.Class}
+				templ.KV(props.Class, props.Class != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

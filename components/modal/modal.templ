@@ -3,7 +3,9 @@ package modal
 import (
 	"maps"
 
+	"github.com/emergent-company/go-daisy/components/alpine"
 	"github.com/emergent-company/go-daisy/components/form"
+	"github.com/emergent-company/go-daisy/components/stimulus"
 	ui "github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
@@ -16,6 +18,24 @@ const (
 	ModalMD ModalSize = ""
 	ModalLG ModalSize = "modal-lg"
 )
+
+// ModalDriver selects the JavaScript framework used for show/hide behaviour.
+type ModalDriver string
+
+const (
+	ModalDriverVanilla  ModalDriver = ""
+	ModalDriverAlpine   ModalDriver = "alpine"
+	ModalDriverStimulus ModalDriver = "stimulus"
+)
+
+// ModalProps configures a Modal component.
+type ModalProps struct {
+	Title  string
+	Size   ModalSize
+	Attrs  templ.Attributes
+	ID     string
+	Driver ModalDriver
+}
 
 script openModal(id string) {
 	document.getElementById(id).showModal()
@@ -39,6 +59,7 @@ type FormModalProps struct {
 	IndicatorID string
 	Variant     string           // "error" for destructive modals
 	Attrs       templ.Attributes // optional extra HTML attributes on the <dialog>, e.g. {"data-testid": "form-modal"}
+	Driver      ModalDriver      // JS framework driver: "" (vanilla), "alpine", "stimulus"
 }
 
 // formModalSubmitVariant picks the error-colored variant for destructive modals.
@@ -59,38 +80,100 @@ templ ModalHeader(id string, title string, onClose templ.ComponentScript) {
 	</div>
 }
 
-// Modal renders a DaisyUI dialog modal with backdrop close.
-// attrs is optional; pass nil when not needed.
-// id overrides the default dialog id ("modal"); pass "" to use default.
-templ Modal(title string, size ModalSize, attrs templ.Attributes, id ...string) {
-	{{ dialogID := "modal"
-		if len(id) > 0 && id[0] != "" { dialogID = id[0] } }}
-	<dialog
-		id={ dialogID }
-		class="modal modal-open"
-		role="dialog"
-		aria-modal="true"
-		aria-labelledby={ "modal-title-" + dialogID }
-		onclick="if(event.target===this){this.remove()}"
-		{ devmode.Attrs(ctx, "modal/Modal")... }
-		{ attrs... }
-	>
-		<div class={ "modal-box", templ.KV(string(size), size != "") }>
-			@ModalHeader(dialogID, title, templ.JSUnsafeFuncCall("this.closest('dialog').remove()"))
-			{ children... }
+// modalDialogID returns the dialog element id for a Modal, using a sensible
+// default when none is provided.
+func modalDialogID(props ModalProps) string {
+	if props.ID != "" {
+		return props.ID
+	}
+	if props.Driver == ModalDriverAlpine {
+		return "alpine-modal"
+	}
+	if props.Driver == ModalDriverStimulus {
+		return "stimulus-modal"
+	}
+	return "modal"
+}
+
+// Modal renders a DaisyUI dialog modal.
+// Driver field selects the JS framework: "" (vanilla), "alpine", "stimulus".
+templ Modal(props ModalProps) {
+	{{ dialogID := modalDialogID(props) }}
+	if props.Driver == ModalDriverAlpine {
+		<div
+			{ alpine.XData(alpine.Toggle(false))... }
+			{ alpine.Escape("open = false")... }
+			{ devmode.Attrs(ctx, "modal/AlpineModal")... }
+		>
+			<div x-show="open" x-trap="open" x-transition class="modal modal-open" style="display:none" role="dialog" aria-modal="true" :aria-hidden="!open">
+				<div class={ "modal-box", templ.KV(string(props.Size), props.Size != "") } @click.outside="open = false">
+					@ModalHeader(dialogID, props.Title, templ.JSUnsafeFuncCall("open = false"))
+					{ children... }
+				</div>
+				<div class="modal-backdrop" @click="open = false"></div>
+			</div>
 		</div>
-		<form method="dialog" class="modal-backdrop" onclick="document.getElementById('modal').remove()">
-			<button>close</button>
-		</form>
-	</dialog>
+	} else if props.Driver == ModalDriverStimulus {
+		<div
+			{ stimulus.Controller("modal")... }
+			{ devmode.Attrs(ctx, "modal/StimulusModal")... }
+		>
+			<dialog
+				data-modal-target="dialog"
+				class={ "modal", templ.KV(string(props.Size), props.Size != "") }
+				{ stimulus.Action("click", "modal", "backdropClose")... }
+				{ stimulus.Action("keydown.escape", "modal", "escapeClose")... }
+			>
+				<div class="modal-box">
+					@ModalHeader(dialogID, props.Title, templ.JSUnsafeFuncCall("this.closest('[data-controller=modal]').__stimulusController.close()"))
+					{ children... }
+				</div>
+				<form method="dialog" class="modal-backdrop">
+					<button>close</button>
+				</form>
+			</dialog>
+		</div>
+	} else {
+		<dialog
+			id={ dialogID }
+			class="modal modal-open"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby={ "modal-title-" + dialogID }
+			onclick="if(event.target===this){this.remove()}"
+			{ devmode.Attrs(ctx, "modal/Modal")... }
+			{ props.Attrs... }
+		>
+			<div class={ "modal-box", templ.KV(string(props.Size), props.Size != "") }>
+				@ModalHeader(dialogID, props.Title, templ.JSUnsafeFuncCall("this.closest('dialog').remove()"))
+				{ children... }
+			</div>
+			<form method="dialog" class="modal-backdrop" onclick="document.getElementById('modal').remove()">
+				<button>close</button>
+			</form>
+		</dialog>
+	}
 }
 
 // FormModal renders a modal containing a form that submits via HTMX.
+// Driver field selects the JS framework: "" (vanilla), "alpine", "stimulus".
 templ FormModal(props FormModalProps) {
+	if props.Driver == ModalDriverAlpine {
+		@formModalAlpine(props)
+	} else if props.Driver == ModalDriverStimulus {
+		@formModalStimulus(props)
+	} else {
+		@formModalVanilla(props)
+	}
+}
+
+// formModalVanilla renders the vanilla (no JS framework) FormModal markup.
+templ formModalVanilla(props FormModalProps) {
 	{{ submitText, cancelText, size := modalDefaults(props) }}
+	{{ closeFn := closeModal(props.ID) }}
 	<dialog id={ props.ID } class="modal" role="dialog" aria-modal="true" aria-labelledby={ "modal-title-" + props.ID } { devmode.Attrs(ctx, "modal/FormModal")... } { props.Attrs... }>
 		<div class={ "modal-box", templ.KV(string(size), size != "") }>
-			@ModalHeader(props.ID, props.Title, closeModal(props.ID))
+			@ModalHeader(props.ID, props.Title, closeFn)
 			<form
 				if props.Method == "put" {
 					hx-put={ props.Action }
@@ -110,8 +193,8 @@ templ FormModal(props FormModalProps) {
 				}
 			>
 				{ children... }
-				@form.FormActions() {
-					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, OnClick: closeModal(props.ID)}) {
+				@form.FormActions("", "") {
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, OnClick: closeFn}) {
 						{ cancelText }
 					}
 					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Variant: formModalSubmitVariant(props.Variant), Size: ui.ButtonSM}) {
@@ -126,12 +209,136 @@ templ FormModal(props FormModalProps) {
 	</dialog>
 }
 
-// OpenModalButton renders a primary button that opens a modal by id.
-// attrs is optional; pass nil when not needed.
-templ OpenModalButton(modalID string, label string, attrs templ.Attributes) {
-	@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, OnClick: openModal(modalID), Attrs: attrs}) {
-		{ label }
+// formModalAlpine renders the Alpine.js FormModal markup.
+templ formModalAlpine(props FormModalProps) {
+	{{ submitText, cancelText, size := modalDefaults(props) }}
+	<div
+		{ alpine.XData(alpine.ModalState(false))... }
+		{ alpine.Escape("open = false")... }
+		{ devmode.Attrs(ctx, "modal/AlpineFormModal")... }
+	>
+		<div x-show="open" x-trap="open" x-transition class="modal" style="display:none">
+			<div class={ "modal-box", templ.KV(string(size), size != "") } @click.outside="open = false">
+				@ModalHeader(props.ID, props.Title, templ.JSUnsafeFuncCall("open = false"))
+				<form
+					id={ props.ID }
+					if props.Method == "put" {
+						hx-put={ props.Action }
+					} else if props.Method == "patch" {
+						hx-patch={ props.Action }
+					} else {
+						hx-post={ props.Action }
+					}
+					if props.Target != "" {
+						hx-target={ props.Target }
+					}
+					if props.Swap != "" {
+						hx-swap={ props.Swap }
+					}
+					if props.IndicatorID != "" {
+						hx-indicator={ "#" + props.IndicatorID }
+					}
+					hx-on--after-request="if (event.detail.successful) open = false"
+				>
+					{ children... }
+					@form.FormActions("", "") {
+						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Attrs: alpine.On("click", "open = false")}) {
+							{ cancelText }
+						}
+						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Variant: formModalSubmitVariant(props.Variant), Size: ui.ButtonSM}) {
+							{ submitText }
+						}
+					}
+				</form>
+			</div>
+			<div class="modal-backdrop" @click="open = false"></div>
+		</div>
+	</div>
+}
+
+// formModalStimulus renders the Stimulus.js FormModal markup.
+templ formModalStimulus(props FormModalProps) {
+	{{ submitText, cancelText, size := modalDefaults(props) }}
+	<div
+		{ stimulus.Controller("modal")... }
+		{ devmode.Attrs(ctx, "modal/StimulusFormModal")... }
+	>
+		<dialog
+			data-modal-target="dialog"
+			class="modal"
+			{ stimulus.Action("click", "modal", "backdropClose")... }
+		>
+			<div class={ "modal-box", templ.KV(string(size), size != "") }>
+				@ModalHeader(props.ID, props.Title, templ.JSUnsafeFuncCall("this.closest('[data-controller=modal]').__stimulusController.close()"))
+				<form
+					id={ props.ID }
+					if props.Method == "put" {
+						hx-put={ props.Action }
+					} else if props.Method == "patch" {
+						hx-patch={ props.Action }
+					} else {
+						hx-post={ props.Action }
+					}
+					if props.Target != "" {
+						hx-target={ props.Target }
+					}
+					if props.Swap != "" {
+						hx-swap={ props.Swap }
+					}
+					if props.IndicatorID != "" {
+						hx-indicator={ "#" + props.IndicatorID }
+					}
+					hx-on--after-request="this.closest('[data-controller=modal]').__stimulusController.close()"
+				>
+					{ children... }
+					@form.FormActions("", "") {
+						@ui.Button(ui.ButtonProps{
+							Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM,
+							Attrs: stimulus.Action("click", "modal", "close"),
+						}) {
+							{ cancelText }
+						}
+						@ui.Button(ui.ButtonProps{
+							Type: ui.ButtonTypeSubmit, Variant: formModalSubmitVariant(props.Variant), Size: ui.ButtonSM,
+						}) {
+							{ submitText }
+						}
+					}
+				</form>
+			</div>
+			<form method="dialog" class="modal-backdrop">
+				<button>close</button>
+			</form>
+		</dialog>
+	</div>
+}
+
+// OpenModalButton renders a button that opens a modal.
+// Driver selects the JS mechanism: "" (vanilla, by dialog id), "alpine" (x-on:click),
+// "stimulus" (data-action). attrs is optional; pass nil when not needed.
+templ OpenModalButton(modalID string, label string, attrs templ.Attributes, driver ModalDriver) {
+	if driver == ModalDriverAlpine {
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Attrs: mergeAttrs(alpine.On("click", "open = true"), attrs)}) {
+			{ label }
+		}
+	} else if driver == ModalDriverStimulus {
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Attrs: mergeAttrs(stimulus.Action("click", "modal", "show"), attrs)}) {
+			{ label }
+		}
+	} else {
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, OnClick: openModal(modalID), Attrs: attrs}) {
+			{ label }
+		}
 	}
+}
+
+// mergeAttrs merges framework attrs with caller-supplied attrs.
+func mergeAttrs(fw templ.Attributes, extra templ.Attributes) templ.Attributes {
+	if extra == nil {
+		return fw
+	}
+	maps.Copy(fw, extra)
+	return fw
 }
 
 // DeleteButton renders an error-styled button that sends hx-delete with confirmation.
@@ -193,7 +400,7 @@ templ ConfirmPopup(title string, message string, confirmLabel string, confirmURL
 		<div class="modal-box max-w-sm">
 			@ModalHeader("modal", title, templ.JSUnsafeFuncCall("document.getElementById('modal').remove()"))
 			<p class="text-sm text-base-content/60 mb-6">{ message }</p>
-			@form.FormActions() {
+			@form.FormActions("", "") {
 				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Attrs: templ.Attributes{"onclick": "document.getElementById('modal').remove()"}}) {
 					Cancel
 				}

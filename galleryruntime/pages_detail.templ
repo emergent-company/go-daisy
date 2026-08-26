@@ -197,7 +197,7 @@ templ ComponentDetail(c GalleryComponent) {
 					<iframe
 						id="preview-frame"
 						class="block w-full"
-						style={ "height:" + effectiveFrameHeight(c) + "; border:none; transition:width 0.2s, height 0.15s;" }
+						style="height:300px; border:none; transition:width 0.2s;"
 						src={ func() string { if len(c.EffectiveVariants()) > 1 { return "/gallery/render/" + c.Slug + "/" + SlugifyStoryName(c.EffectiveVariants()[0].Name) }; return "/gallery/render/" + c.Slug }() }
 						title={ fmt.Sprintf("Preview: %s", c.Name) }
 					></iframe>
@@ -212,13 +212,13 @@ templ ComponentDetail(c GalleryComponent) {
 					Reset
 				}
 			</div>
-			<div id="component-tree-body" class="rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden">
+			<div id="component-tree-body" class="rounded-xl border border-base-200 bg-base-200 shadow-sm overflow-hidden">
 				<p class="p-4 text-xs text-base-content/40">Loading…</p>
 			</div>
 			<!-- Parameters section: query-param tokens rendered by JS below the tree -->
 			<div id="tree-params-panel" class="hidden flex flex-col gap-2">
 				<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Parameters</span>
-				<div id="tree-params-body" class="rounded-xl border border-base-200 bg-base-50 shadow-sm overflow-hidden">
+				<div id="tree-params-body" class="rounded-xl border border-base-200 bg-base-200 shadow-sm overflow-hidden">
 					<div class="p-4 space-y-3"></div>
 				</div>
 			</div>
@@ -327,80 +327,41 @@ templ ComponentDetail(c GalleryComponent) {
 				applyThemeToFrame('fullscreen-preview-frame', toDaisyTheme(theme));
 				updateThemeButton('preview-theme-toggle', theme);
 				updateThemeButton('fullscreen-theme-toggle', theme);
-			}
+		}
 
-			function resizePreviewFrame() {
-				var frame = document.getElementById('preview-frame');
-				if (!frame) return;
-				try {
-					var doc = frame.contentDocument || frame.contentWindow.document;
-					if (doc && doc.body) {
-						var h = doc.body.scrollHeight;
-						if (h > 0) frame.style.height = h + 'px';
-					}
-				} catch(e) {}
-			}
-
-			function applyThemeOnLoad(frameId) {
-				var frame = document.getElementById(frameId);
-				if (!frame) return;
-				var theme = getSavedTheme();
+		function applyThemeOnLoad(frameId) {
+			var frame = document.getElementById(frameId);
+			if (!frame) return;
+			var theme = getSavedTheme();
+			applyThemeToFrame(frameId, toDaisyTheme(theme));
+			frame.addEventListener('load', function() {
 				applyThemeToFrame(frameId, toDaisyTheme(theme));
-				frame.addEventListener('load', function() {
-					applyThemeToFrame(frameId, toDaisyTheme(theme));
-					if (frameId === 'preview-frame') {
-						setTimeout(resizePreviewFrame, 100);
-					}
-				});
+			});
+		}
+
+		window.toggleGalleryTheme
+
+		window.toggleGalleryTheme = function() {
+			var theme = getSavedTheme() === 'dark' ? 'light' : 'dark';
+			saveTheme(theme);
+			applyThemeToFrame('preview-frame', toDaisyTheme(theme));
+			updateThemeButton('preview-theme-toggle', theme);
+			applyThemeToFrame('fullscreen-preview-frame', toDaisyTheme(theme));
+			updateThemeButton('fullscreen-theme-toggle', theme);
+		};
+
+		window.setPreviewWidth = function(w) {
+			var frame = document.getElementById('preview-frame');
+			if (!frame) return;
+			var container = frame.parentElement;
+			if (w === '100%') {
+				frame.style.width = '100%';
+				if (container) container.style.justifyContent = '';
+			} else {
+				frame.style.width = w;
+				if (container) container.style.justifyContent = 'center';
 			}
-
-			function attachPreviewResizeObserver() {
-				var frame = document.getElementById('preview-frame');
-				if (!frame) return;
-				function observe() {
-					try {
-						var doc = frame.contentDocument || frame.contentWindow.document;
-						if (!doc || !doc.body) return;
-						function measure() {
-							return Math.max(doc.body.scrollHeight, 40);
-						}
-						var ro = new ResizeObserver(function() {
-							frame.style.height = measure() + 'px';
-						});
-						ro.observe(doc.body);
-						frame.style.height = measure() + 'px';
-					} catch(e) {}
-				}
-				if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
-					observe();
-				} else {
-					frame.addEventListener('load', observe);
-				}
-			}
-
-			window.toggleGalleryTheme = function() {
-				var theme = getSavedTheme() === 'dark' ? 'light' : 'dark';
-				saveTheme(theme);
-				applyThemeToFrame('preview-frame', toDaisyTheme(theme));
-				updateThemeButton('preview-theme-toggle', theme);
-				applyThemeToFrame('fullscreen-preview-frame', toDaisyTheme(theme));
-				updateThemeButton('fullscreen-theme-toggle', theme);
-				setTimeout(resizePreviewFrame, 50);
-			};
-
-			window.setPreviewWidth = function(w) {
-				var frame = document.getElementById('preview-frame');
-				if (!frame) return;
-				var container = frame.parentElement;
-				if (w === '100%') {
-					frame.style.width = '100%';
-					if (container) container.style.justifyContent = '';
-				} else {
-					frame.style.width = w;
-					if (container) container.style.justifyContent = 'center';
-				}
-				setTimeout(resizePreviewFrame, 200);
-			};
+		};
 
 					window.openFullscreenPreview = function() {
 				var overlay = document.getElementById('fullscreen-preview-overlay');
@@ -438,46 +399,42 @@ templ ComponentDetail(c GalleryComponent) {
 				frame.style.width = w;
 			};
 
-			document.addEventListener('keydown', function(e) {
-				if (e.key === 'Escape') { closeFullscreenPreview(); }
-			});
+		if (window.__detailKeyHandler) document.removeEventListener('keydown', window.__detailKeyHandler);
+		window.__detailKeyHandler = function(e) {
+			if (e.key === 'Escape') { closeFullscreenPreview(); }
+		};
+		document.addEventListener('keydown', window.__detailKeyHandler);
 
-			document.addEventListener('htmx:afterSwap', function() {
-				setTimeout(function() {
-					var frame = document.getElementById('preview-frame');
-					if (frame && frame.src && !frame.srcdoc) {
-						var src = frame.src;
-						// Register load listener BEFORE changing src so the
-						// about:blank navigation doesn't consume it.
-						frame.addEventListener('load', function onFrameLoad() {
-							frame.removeEventListener('load', onFrameLoad);
-							try {
-								if (frame.contentWindow && typeof frame.contentWindow.postTree === 'function') {
-									frame.contentWindow.postTree();
-								}
-							} catch(e) {}
-						});
-						frame.src = '';
-						frame.src = src;
-					}
-					var fsFrame = document.getElementById('fullscreen-preview-frame');
-					if (fsFrame && fsFrame.src && !fsFrame.srcdoc) {
-						var fsSrc = fsFrame.src;
-						fsFrame.src = '';
-						fsFrame.src = fsSrc;
-					}
-					applyStoredTheme();
-					applyThemeOnLoad('preview-frame');
-					applyThemeOnLoad('fullscreen-preview-frame');
-					attachPreviewResizeObserver();
-			}, 0);
-		});
+		var swapHandler = window.__detailSwapHandler;
+		if (swapHandler) document.removeEventListener('htmx:afterSwap', swapHandler);
+		window.__detailSwapHandler = function() {
+			setTimeout(function() {
+				var frame = document.getElementById('preview-frame');
+				if (frame && frame.contentWindow && typeof frame.contentWindow.postTree === 'function') {
+					try { frame.contentWindow.postTree(); } catch(e) {}
+				}
+				// Retry after delay for slow-loading iframes (race with devoverlay init).
+				if (frame) {
+					setTimeout(function() {
+						try {
+							if (frame.contentWindow && typeof frame.contentWindow.postTree === 'function') {
+								frame.contentWindow.postTree();
+							}
+						} catch(e) {}
+					}, 600);
+				}
+			applyStoredTheme();
+			applyThemeOnLoad('preview-frame');
+			applyThemeOnLoad('fullscreen-preview-frame');
+		}, 0);
+		};
+		document.addEventListener('htmx:afterSwap', window.__detailSwapHandler);
 
+			if (document.readyState === 'loading') {
 			document.addEventListener('DOMContentLoaded', function() {
 				applyStoredTheme();
 				applyThemeOnLoad('preview-frame');
 				applyThemeOnLoad('fullscreen-preview-frame');
-			attachPreviewResizeObserver();
 			// Retry postTree after a delay to catch the iframe load
 				// completion when the devoverlay script initialized before
 				// the parent's message listener was registered.
@@ -488,12 +445,12 @@ templ ComponentDetail(c GalleryComponent) {
 					}
 				}, 600);
 			});
+		}
 			if (document.readyState !== 'loading') {
 				applyStoredTheme();
 				applyThemeOnLoad('preview-frame');
-				applyThemeOnLoad('fullscreen-preview-frame');
-			attachPreviewResizeObserver();
-			// Same retry for non-DOMContentLoaded case
+		applyThemeOnLoad('fullscreen-preview-frame');
+		// Same retry for non-DOMContentLoaded case
 				setTimeout(function() {
 					var frame = document.getElementById('preview-frame');
 					if (frame && frame.contentWindow && typeof frame.contentWindow.postTree === 'function') {
@@ -585,7 +542,8 @@ templ ComponentDetail(c GalleryComponent) {
 				});
 
 				body.innerHTML = '<div class="p-3 space-y-1">' + html + '</div>';
-				panel.classList.remove('hidden');
+		panel.classList.remove('hidden');
+			panel.style.display = ''; // Clear any inline display:none (FOUC guard)
 			};
 
 			// handleParamChange: fires when a parameter control changes.
@@ -622,9 +580,11 @@ templ ComponentDetail(c GalleryComponent) {
 					params.set(qp, val);
 				});
 
-				var qs = params.toString();
-				frame.src = qs ? baseSrc + '?' + qs : baseSrc;
-			}
+		var qs = params.toString();
+		var newSrc = qs ? baseSrc + '?' + qs : baseSrc;
+		// Only update if URL actually changes — prevents redundant reload
+		if (newSrc !== frame.src) frame.src = newSrc;
+	}
 
 			// Expose for callers in other scopes (handleTreeMessage, switchVariant, etc.)
 			window.applyAllQueryParamsToFrame = applyAllQueryParamsToFrame;
@@ -681,6 +641,51 @@ templ ComponentDetail(c GalleryComponent) {
 		return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 	}
 
+	window.highlightHtml = function(raw) {
+		var esc = function(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+		var G = '#7ee787', R = '#ff7b72', B = '#a5d6ff';
+		var tagS = function(s) { return '<span style="color:'+G+'">'+esc(s)+'</span>'; };
+		var attrS = function(s) { return '<span style="color:'+R+'">'+esc(s)+'</span>'; };
+		var valS  = function(s) { return '<span style="color:'+B+'">'+esc(s)+'</span>'; };
+
+		var out = '', n = raw.length, i = 0;
+		while (i < n) {
+			if (raw[i] !== '<') { out += esc(raw[i]); i++; continue; }
+			var end = raw.indexOf('>', i);
+			if (end === -1) { out += esc(raw[i]); i++; continue; }
+			var tag = raw.substring(i, end + 1), tlen = tag.length;
+			i = end + 1;
+			if (tag[1] === '/') {
+				out += tagS('</') + tagS(tag.substring(2, tlen-1)) + tagS('>');
+			} else {
+				var j = 1, s;
+				s = j; while (j < tlen-1 && tag[j] !== ' ' && tag[j] !== '\n') j++;
+				out += tagS('<') + tagS(tag.substring(s, j));
+				while (j < tlen - 1) {
+					while (j < tlen-1 && (tag[j] === ' ' || tag[j] === '\n')) { out += esc(tag[j]); j++; }
+					if (j >= tlen-1) break;
+					s = j;
+					while (j < tlen-1 && tag[j] !== '=' && tag[j] !== ' ' && tag[j] !== '\n') j++;
+					var aname = tag.substring(s, j);
+					if (tag[j] === '=') {
+						out += attrS(aname) + esc('='); j++;
+						if (tag[j] === '"') {
+							s = ++j; while (j < tlen && tag[j] !== '"') j++;
+							out += valS('"'+tag.substring(s, j)+'"'); j++;
+						} else {
+							s = j; while (j < tlen-1 && tag[j] !== ' ' && tag[j] !== '\n') j++;
+							out += valS(tag.substring(s, j));
+						}
+					} else {
+						out += tagS(aname);
+					}
+				}
+				out += tagS('>');
+			}
+		}
+		return out;
+	}
+
 	// Strip dev-only attributes (data-component, data-props, display:contents wrapper divs)
 	// from HTML before displaying it in the code preview.
 	window.cleanHtml = function(raw) {
@@ -703,24 +708,113 @@ templ ComponentDetail(c GalleryComponent) {
 		return s.trim();
 	}
 
-	// Pretty-print HTML with basic indentation.
+	// Pretty-print HTML with consistent indentation using the browser's native
+	// DOMParser. Parses the DOM tree and recursively walks nodes so indent tracking
+	// is always balanced — no regex edge cases around inline elements or text nodes.
+	// Also strips dev-only attributes (data-component, data-props) and skips
+	// display:contents boundary wrappers during the walk.
 	window.formatHtml = function(raw) {
-		var indent = 0;
 		var TAB = '  ';
-		var result = '';
-		// Split on tags while keeping them.
-		var parts = raw.replace(/>\s*</g, '>\n<').split('\n');
-		for (var i = 0; i < parts.length; i++) {
-			var line = parts[i].trim();
-			if (!line) continue;
-			// Closing tag — dedent first.
-			if (/^<\//.test(line)) indent = Math.max(0, indent - 1);
-			result += TAB.repeat(indent) + line + '\n';
-			// Opening tag (not self-closing, not void) — indent next.
-			if (/^<[^/!][^>]*[^/]>$/.test(line) && !/^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)/.test(line)) {
-				indent++;
-			}
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(raw, 'text/html');
+		var body = doc.body;
+		if (!body) return raw; // fallback
+
+		// ---------- helpers ----------
+		function esc(text) {
+			return String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 		}
+
+		function renderAttrs(el) {
+			// Don't print dev-only attributes.
+			var skip = { 'data-component': 1, 'data-props': 1 };
+			// Ignore style="display:contents" — that's the boundary wrapper.
+			var s = '';
+			if (!el.attributes) return s;
+			for (var i = 0; i < el.attributes.length; i++) {
+				var a = el.attributes[i];
+				if (skip[a.name]) continue;
+				if (a.name === 'style' && a.value === 'display:contents') continue;
+				s += ' ' + a.name + '="' + a.value + '"';
+			}
+			return s;
+		}
+
+		function isBoundaryDiv(el) {
+			if (el.tagName !== 'DIV') return false;
+			if (!el.attributes) return false;
+			for (var i = 0; i < el.attributes.length; i++) {
+				var a = el.attributes[i];
+				if (a.name === 'style' && a.value === 'display:contents') return true;
+			}
+			return false;
+		}
+
+		function isVoid(tag) {
+			return ({area:1, base:1, br:1, col:1, embed:1, hr:1, img:1,
+				input:1, link:1, meta:1, param:1, source:1, track:1, wbr:1})[tag] || false;
+		}
+
+		// Collect non-empty children (skip whitespace-only text nodes).
+		function realChildren(el) {
+			var kids = [];
+			if (!el.childNodes) return kids;
+			for (var i = 0; i < el.childNodes.length; i++) {
+				var n = el.childNodes[i];
+				if (n.nodeType === 1) {
+					kids.push(n);
+				} else if (n.nodeType === 3 && n.textContent.trim()) {
+					kids.push(n);
+				}
+			}
+			return kids;
+		}
+
+		// ---------- walk ----------
+		function walk(node, depth) {
+			// Skip display:contents boundary wrappers — walk into their children.
+			if (node.nodeType === 1 && isBoundaryDiv(node)) {
+				var out = '';
+				var kids = realChildren(node);
+				for (var i = 0; i < kids.length; i++) out += walk(kids[i], depth);
+				return out;
+			}
+
+			// Text node.
+			if (node.nodeType === 3) {
+				var t = node.textContent.replace(/[\t\n\r]+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+				return t ? TAB.repeat(depth) + esc(t) + '\n' : '';
+			}
+
+			if (node.nodeType !== 1) return '';
+
+			var tag = node.tagName.toLowerCase();
+			var attrStr = renderAttrs(node);
+			var kids = realChildren(node);
+
+			// Void element.
+			if (isVoid(tag)) return TAB.repeat(depth) + '<' + tag + attrStr + '>\n';
+
+			// Empty element.
+			if (kids.length === 0) return TAB.repeat(depth) + '<' + tag + attrStr + '></' + tag + '>\n';
+
+			// Inline: single short text child — keep on one line.
+			if (kids.length === 1 && kids[0].nodeType === 3 && kids[0].textContent.trim().length < 80) {
+				var t = kids[0].textContent.replace(/[\t\n\r]+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+				return TAB.repeat(depth) + '<' + tag + attrStr + '>' + esc(t) + '</' + tag + '>\n';
+			}
+
+			// Multi-child — recurse.
+			var out = TAB.repeat(depth) + '<' + tag + attrStr + '>\n';
+			for (var i = 0; i < kids.length; i++) out += walk(kids[i], depth + 1);
+			out += TAB.repeat(depth) + '</' + tag + '>\n';
+			return out;
+		}
+
+		// ---------- build ----------
+		var result = '';
+		var topKids = realChildren(body);
+		for (var i = 0; i < topKids.length; i++) result += walk(topKids[i], 0);
 		return result.trim();
 	}
 
@@ -800,7 +894,7 @@ templ ComponentDetail(c GalleryComponent) {
 			if (propsHtml) html += propsHtml;
 			// Collapsible HTML block (expanded by default)
 			html += '<div id="' + nodeId + '" class="mt-1 mb-1" style="padding-left:8px">';
-			html += '<pre id="' + codeId + '" class="language-html" style="margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px"><code class="language-html">' + escHtml(formatHtml(cleanHtml(n.html))) + '</code></pre>';
+			html += '<pre id="' + codeId + '" style="margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px;background:#0d1117;color:#c9d1d9;padding:12px;white-space:pre;font-family:ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace" class="language-html"><code class="language-html">' + highlightHtml(formatHtml(cleanHtml(n.html))) + '</code></pre>';
 			html += '</div>';
 			html += '</li>';
 		}
@@ -817,6 +911,9 @@ templ ComponentDetail(c GalleryComponent) {
 	window._treeReceivedOnce = false;
 	function handleTreeMessage(e) {
 		if (!e.data || e.data.type !== '__dev_component_tree__') return;
+		// Only process messages from the preview iframe, not from examples/fullscreen iframes.
+		var previewFrame = document.getElementById('preview-frame');
+		if (!previewFrame || e.source !== previewFrame.contentWindow) return;
 		var tree = e.data.tree || [];
 		var panel = document.getElementById('component-tree-panel');
 		var body  = document.getElementById('component-tree-body');
@@ -830,6 +927,26 @@ templ ComponentDetail(c GalleryComponent) {
 				try { tokens = JSON.parse(activeTab.getAttribute('data-tokens') || '[]') || []; } catch(e) {}
 			}
 			if (window.renderParamsSection) window.renderParamsSection(tokens);
+			// Restore current param values from iframe URL after renderParamsSection resets them.
+			if (window._treeReceivedOnce) {
+				var previewFrame = document.getElementById('preview-frame');
+				if (previewFrame && previewFrame.src) {
+					try {
+						var currentParams = new URLSearchParams((previewFrame.src || '').split('?')[1] || '');
+						currentParams.forEach(function(val, key) {
+							var row = document.querySelector('#tree-params-body [data-query-param="' + key + '"]');
+							if (!row) return;
+							var input = row.querySelector('input, select');
+							if (!input) return;
+							if (input.type === 'checkbox') {
+								input.checked = val === 'true';
+							} else {
+								input.value = val;
+							}
+						});
+					} catch(e) {}
+				}
+			}
 			// Build set of query params already covered by the Parameters section.
 			// This prevents prop editors from conflicting with Parameters section defaults.
 			var coveredQPs = {};
@@ -845,7 +962,9 @@ templ ComponentDetail(c GalleryComponent) {
 		}
 	}
 
-	window.addEventListener('message', handleTreeMessage);
+	if (window.__treeMsgHandler) window.removeEventListener('message', window.__treeMsgHandler);
+	window.__treeMsgHandler = handleTreeMessage;
+	window.addEventListener('message', window.__treeMsgHandler);
 })();
 </script>
 }
@@ -1050,6 +1169,8 @@ templ ComponentExamples(c GalleryComponent) {
 		}
 
 		function attachFrameHandlers(frame) {
+			if (frame.dataset.frameInit) return;
+			frame.dataset.frameInit = '1';
 			var idx = frame.id.replace('examples-frame-', '');
 			var theme = frameThemes[idx] || getSavedTheme();
 			frameThemes[idx] = theme;
@@ -1066,6 +1187,8 @@ templ ComponentExamples(c GalleryComponent) {
 		}
 
 		function attachSubFrameHandlers(frame) {
+			if (frame.dataset.frameInit) return;
+			frame.dataset.frameInit = '1';
 			var frameId = frame.id;
 			var theme = frameThemes[frameId] || getSavedTheme();
 			frameThemes[frameId] = theme;
@@ -1085,8 +1208,13 @@ templ ComponentExamples(c GalleryComponent) {
 			document.querySelectorAll('.examples-frame').forEach(attachFrameHandlers);
 			document.querySelectorAll('.examples-sub-frame').forEach(attachSubFrameHandlers);
 		}
-		document.addEventListener('DOMContentLoaded', initFrames);
-		document.addEventListener('htmx:afterSwap', initFrames);
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initFrames);
+		}
+		var initHandler = window.__initFramesHandler;
+		if (initHandler) document.removeEventListener('htmx:afterSwap', initHandler);
+		window.__initFramesHandler = initFrames;
+		document.addEventListener('htmx:afterSwap', window.__initFramesHandler);
 		if (document.readyState !== 'loading') initFrames();
 
 		// Component tree rendering for sub-example iframes.
@@ -1121,14 +1249,15 @@ templ ComponentExamples(c GalleryComponent) {
 				html += '</div>';
 				if (propsHtml) html += propsHtml;
 				html += '<div id="' + nodeId + '" class="mt-1 mb-1" style="padding-left:8px">';
-				html += '<pre id="' + codeId + '" class="language-html" style="margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px"><code class="language-html">' + window.escHtml(window.formatHtml(window.cleanHtml(n.html))) + '</code></pre>';
+				html += '<pre id="' + codeId + '" style="margin:0;font-size:0.7rem;line-height:1.5;border-radius:6px;overflow-x:auto;max-height:240px;background:#0d1117;color:#c9d1d9;padding:12px;white-space:pre;font-family:ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace" class="language-html"><code class="language-html">' + window.highlightHtml(window.formatHtml(window.cleanHtml(n.html))) + '</code></pre>';
 				html += '</div>';
 				html += '</li>';
 			}
 			html += '</ul>';
 			return html;
 		}
-		window.addEventListener('message', function(e) {
+		if (window.__subTreeMsgHandler) window.removeEventListener('message', window.__subTreeMsgHandler);
+		window.__subTreeMsgHandler = function(e) {
 			if (!e.data || e.data.type !== '__dev_component_tree__') return;
 			var tree = e.data.tree || [];
 			var frames = document.querySelectorAll('.examples-sub-frame');
@@ -1144,8 +1273,9 @@ templ ComponentExamples(c GalleryComponent) {
 			var body = document.getElementById(bodyId);
 			if (!body) return;
 	body.innerHTML = renderSubTree(tree);
-		if (panel) panel.classList.toggle('hidden', tree.length === 0);
-		});
+		if (panel) { panel.classList.toggle('hidden', tree.length === 0); panel.style.display = ''; }
+		};
+		window.addEventListener('message', window.__subTreeMsgHandler);
 	})();
 	</script>
 }

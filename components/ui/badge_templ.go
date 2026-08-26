@@ -99,7 +99,7 @@ func Badge(props BadgeProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{"badge gap-1", string(props.Variant), string(props.Style), string(props.Size), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth}
+		var templ_7745c5c3_Var2 = []any{"badge gap-1", templ.KV(string(props.Variant), props.Variant != ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

@@ -1,0 +1,119 @@
+package pages
+
+import (
+	"github.com/emergent-company/go-daisy/components/form"
+	ui "github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+// AuthPage renders a full auth page (login/register/forgot/reset) with split layout.
+templ AuthPage(props AuthPageProps) {
+	<div class="flex min-h-screen" { devmode.Attrs(ctx, "pages/AuthPage")... }>
+		// Left: form panel
+		<div class="flex flex-1 items-center justify-center px-6 py-12 lg:px-12">
+			<div class="w-full max-w-sm">
+				// Logo + brand
+				<div class="mb-8 text-center">
+					<img src={ templ.URL(props.LogoURL) } alt={ props.BrandName } class="mx-auto h-8 mb-2" />
+					<h1 class="text-xl font-semibold text-base-content">{ props.BrandName }</h1>
+				</div>
+
+				if props.SuccessMsg != "" {
+					<div class="alert alert-success mb-4 text-sm">{ props.SuccessMsg }</div>
+				}
+				if props.ErrorMsg != "" {
+					<div class="alert alert-error mb-4 text-sm">{ props.ErrorMsg }</div>
+				}
+
+				if props.Style == AuthLogin {
+					@loginForm()
+				} else if props.Style == AuthRegister {
+					@registerForm()
+				} else if props.Style == AuthForgot {
+					@forgotForm()
+				} else if props.Style == AuthReset {
+					@resetForm()
+				}
+			</div>
+		</div>
+
+		// Right: testimonial panel (hidden on mobile)
+		<div class="hidden lg:flex flex-1 bg-base-200 items-center justify-center p-12">
+			<div class="max-w-sm text-center">
+				<div class="text-6xl mb-6">🚀</div>
+				<h2 class="text-2xl font-bold text-base-content mb-3">Build faster with go-daisy</h2>
+				<p class="text-base-content/60 mb-6">Type-safe Templ components styled with DaisyUI for HTMX-driven web applications.</p>
+				<div class="border-t border-base-300 pt-6 mt-6">
+					<p class="text-sm text-base-content/50 italic">"The component library that makes Go web development a joy."</p>
+					<p class="text-sm font-semibold text-base-content mt-2">— Team go-daisy</p>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ loginForm() {
+	<form class="space-y-4">
+		@form.FormField(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Placeholder: "you@example.com", Required: true})
+		@form.PasswordField(form.PasswordFieldProps{Name: "password", Label: "Password", ShowToggle: true, Required: true})
+		<div class="flex items-center justify-between text-sm">
+			<label class="flex items-center gap-2">
+				<input type="checkbox" class="checkbox checkbox-xs" checked />
+				<span class="text-base-content/60">Remember me</span>
+			</label>
+			<a href="#" class="link link-primary text-sm">Forgot password?</a>
+		</div>
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Variant: ui.ButtonPrimary, Size: ui.ButtonMD, Block: true}) {
+			Sign in
+		}
+	</form>
+	<p class="text-center text-sm text-base-content/50 mt-6">
+		Don't have an account? <a href="#" class="link link-primary">Sign up</a>
+	</p>
+}
+
+templ registerForm() {
+	<form class="space-y-4">
+		@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "name", Label: "Full name", Placeholder: "Jane Doe", Required: true})
+		@form.FormField(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Placeholder: "you@example.com", Required: true})
+		@form.PasswordMeter(form.PasswordMeterProps{Name: "password", Label: "Password", ShowToggle: true, Required: true, MinLength: 8})
+		@form.PasswordField(form.PasswordFieldProps{Name: "confirm", Label: "Confirm password", ShowToggle: true, Required: true})
+		<label class="flex items-start gap-2 text-sm">
+			<input type="checkbox" class="checkbox checkbox-xs mt-0.5" required />
+			<span class="text-base-content/60">I agree to the <a href="#" class="link link-primary">Terms of Service</a> and <a href="#" class="link link-primary">Privacy Policy</a></span>
+		</label>
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Variant: ui.ButtonPrimary, Size: ui.ButtonMD, Block: true}) {
+			Create account
+		}
+	</form>
+	<p class="text-center text-sm text-base-content/50 mt-6">
+		Already have an account? <a href="#" class="link link-primary">Sign in</a>
+	</p>
+}
+
+templ forgotForm() {
+	<form class="space-y-4">
+		<p class="text-sm text-base-content/60 mb-4">Enter your email address and we'll send you a link to reset your password.</p>
+		@form.FormField(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Placeholder: "you@example.com", Required: true})
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Variant: ui.ButtonPrimary, Size: ui.ButtonMD, Block: true}) {
+			Send reset link
+		}
+	</form>
+	<p class="text-center text-sm text-base-content/50 mt-6">
+		<a href="#" class="link link-primary">Back to sign in</a>
+	</p>
+}
+
+templ resetForm() {
+	<form class="space-y-4">
+		<p class="text-sm text-base-content/60 mb-4">Enter your new password below.</p>
+		@form.PasswordMeter(form.PasswordMeterProps{Name: "password", Label: "New password", ShowToggle: true, Required: true, MinLength: 8})
+		@form.PasswordField(form.PasswordFieldProps{Name: "confirm", Label: "Confirm new password", ShowToggle: true, Required: true})
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Variant: ui.ButtonPrimary, Size: ui.ButtonMD, Block: true}) {
+			Reset password
+		}
+	</form>
+	<p class="text-center text-sm text-base-content/50 mt-6">
+		<a href="#" class="link link-primary">Back to sign in</a>
+	</p>
+}

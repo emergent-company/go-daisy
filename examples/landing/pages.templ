@@ -1,0 +1,49 @@
+package main
+
+import "github.com/emergent-company/go-daisy/components/ui"
+
+templ LandingPage() {
+	<!DOCTYPE html>
+	<html lang="en" data-theme="light">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>go-daisy</title>
+		<link rel="stylesheet" href="/static/css/app.css"/>
+	</head>
+	<body>
+		<div class="hero min-h-screen bg-base-200">
+			<div class="hero-content text-center">
+				<div class="max-w-2xl">
+					<h1 class="text-5xl font-bold mb-4">go-daisy</h1>
+					<p class="text-lg text-base-content/70 mb-8 max-w-lg mx-auto">
+						Server-rendered UI components for Go + HTMX + DaisyUI.
+						Type-safe. Zero build step. HTMX-aware rendering.
+					</p>
+					<div class="flex gap-4 justify-center mb-12">
+						@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Size: ui.ButtonLG}) {
+							Get Started
+						}
+						@ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonLG}) {
+							View Gallery
+						}
+					</div>
+					<div class="grid grid-cols-3 gap-6 mt-12">
+						@FeatureCard("Type-Safe", "Go structs for every prop. No magic strings.")
+						@FeatureCard("HTMX Native", "RenderAuto, RenderTriple, morphing — built in.")
+						@FeatureCard("Zero JS Build", "Vanilla HTMX + Alpine. No webpack, no npm.")
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="/static/js/htmx.js"></script>
+	</body>
+	</html>
+}
+
+templ FeatureCard(title, description string) {
+	<div class="card bg-base-100 shadow-sm p-6 text-left">
+		<h3 class="card-title text-lg mb-2">{ title }</h3>
+		<p class="text-sm text-base-content/60">{ description }</p>
+	</div>
+}

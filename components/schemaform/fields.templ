@@ -1,0 +1,100 @@
+package schemaform
+
+import (
+	"github.com/emergent-company/go-daisy/components/form"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+// FieldsProps configures the form field renderer.
+type FieldsProps struct {
+	Fields     []Field
+	NamePrefix string
+	Class      string
+	Attrs      templ.Attributes
+}
+
+// Fields renders generated schema form fields as go-daisy form controls.
+// Supports nested objects via Fieldset grouping.
+templ Fields(props FieldsProps) {
+	{{ prefix := props.NamePrefix
+		if prefix == "" { prefix = "values" } }}
+	<div class={ "space-y-4", templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "schemaform/Fields")... } { props.Attrs... }>
+		for _, field := range props.Fields {
+			@renderField(field, prefix)
+		}
+	</div>
+}
+
+templ renderField(field Field, prefix string) {
+	{{ name := prefix + "." + field.Path }}
+	switch field.Kind {
+	case KindObject:
+		if len(field.Children) > 0 {
+			@form.Fieldset(form.FieldsetProps{Legend: field.Label}) {
+				for _, child := range field.Children {
+					@renderField(child, prefix)
+				}
+			}
+		}
+	case KindBoolean:
+		@form.FormField(form.FormFieldProps{
+			Type:     form.FieldCheckbox,
+			Name:     name,
+			Label:    field.Label,
+			Checked:  field.Value == "true",
+			Disabled: field.Managed,
+		})
+	case KindEnum:
+		{{ opts := make([]form.SelectOption, len(field.Options))
+			for i, o := range field.Options {
+				opts[i] = form.SelectOption{Value: o, Label: humanize(o)}
+			} }}
+		@form.FormField(form.FormFieldProps{
+			Type:     form.FieldSelect,
+			Name:     name,
+			Label:    field.Label,
+			Value:    field.Value,
+			Options:  opts,
+			Disabled: field.Managed,
+		})
+	case KindInteger, KindNumber:
+		@form.FormField(form.FormFieldProps{
+			Type:        form.FieldNumber,
+			Name:        name,
+			Label:       field.Label,
+			Value:       field.Value,
+			Placeholder: field.Default,
+			Disabled:    field.Managed,
+		})
+	case KindArray:
+		{{ arrayVal := field.Value
+			if arrayVal == field.Default && arrayVal != "" {
+				arrayVal = ""
+			} }}
+		@form.FormField(form.FormFieldProps{
+			Type:        form.FieldText,
+			Name:        name,
+			Label:       field.Label,
+			Value:       arrayVal,
+			Placeholder: "comma-separated values",
+			Disabled:    field.Managed,
+		})
+	default:
+		@form.FormField(form.FormFieldProps{
+			Type:        form.FieldText,
+			Name:        name,
+			Label:       field.Label,
+			Value:       field.Value,
+			Placeholder: field.Default,
+			Disabled:    field.Managed,
+		})
+	}
+	if field.Managed {
+		<div class="mt-1">
+			<span class="badge badge-ghost badge-xs">managed</span>
+		</div>
+	}
+	if field.HelperText != "" {
+		<span class="text-xs text-base-content/50">{ field.HelperText }</span>
+	}
+}

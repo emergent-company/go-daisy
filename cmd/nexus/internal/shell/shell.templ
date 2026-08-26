@@ -1,0 +1,305 @@
+package shell
+
+import (
+	"github.com/emergent-company/go-daisy/components/layout"
+	"github.com/emergent-company/go-daisy/components/nav"
+	"github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+templ NexusShell(content templ.Component, activeSlug string) {
+	@layout.PageFull(layout.PageProps{Title: "Nexus - Admin Dashboard", ThemeAttr: ""}) {
+		<style>
+		#_layout-sidebar { width: var(--layout-sidebar-width); min-width: var(--layout-sidebar-width); max-height: 100vh; position: relative; top: 0; bottom: 0; display: flex; flex-direction: column; transition: margin .3s; }
+		#_layout-sidebar-toggle-trigger:checked~#_layout-sidebar { margin-inline-start: calc(var(--layout-sidebar-width) * -1); }
+		@media(max-width:1024px){#_layout-sidebar{position:fixed;z-index:500}#_layout-sidebar-toggle-trigger:not(:checked)~#_layout-sidebar{margin-inline-start:calc(var(--layout-sidebar-width)*-1)}#_layout-sidebar-toggle-trigger:checked~#_layout-sidebar{margin-inline-start:0}#_layout-sidebar-toggle-trigger:checked~#_layout-sidebar-backdrop{background:oklch(var(--bc)/.05);position:fixed;inset:0;z-index:499}}
+		#_layout-topbar { position: sticky; top: 0; z-index: 50; max-height: 64px; min-height: 64px; border-bottom: 1px solid var(--color-base-200); background-color: var(--color-base-100); }
+		#sidebar-menu { margin-bottom: 16px; width: 100%; height: 100%; padding: 0 8px; display: flex; flex-direction: column; gap: 2px; }
+		#_layout-sidebar { border-right: 1px solid var(--color-base-200); }
+		#main-content { padding: 24px; }
+		</style>
+		<div class="flex h-screen overflow-hidden" { devmode.Attrs(ctx, "shell/NexusShell")... }>
+			<input type="checkbox" id="_layout-sidebar-toggle-trigger" class="hidden" aria-label="Toggle layout sidebar"/>
+			<label for="_layout-sidebar-toggle-trigger" id="_layout-sidebar-backdrop"></label>
+
+			@nexusSidebar(activeSlug)
+
+			<div class="flex min-w-0 grow flex-col overflow-auto">
+				@nexusTopbar()
+				<div id="layout-content">
+					@content
+				</div>
+			</div>
+		</div>
+
+		@nexusRightbar()
+	}
+}
+
+templ nexusSidebar(activeSlug string) {
+	<div id="_layout-sidebar" class="flex flex-col bg-base-100" { devmode.Attrs(ctx, "shell/nexusSidebar")... }>
+		<div class="flex min-h-16 items-center justify-center">
+			<img id="logo-dark" alt="Nexus" class="h-5.5" src="/images/logo/logo-dark.png" style="display:none"/>
+			<img id="logo-light" alt="Nexus" class="h-5.5" src="/images/logo/logo-light.png"/>
+		</div>
+		<div class="relative min-h-0 grow">
+			<div class="size-full">
+				<div id="sidebar-menu">
+					@sc(activeSlug, "lucide--monitor-dot", "Dashboard", []templ.Component{
+						mi(activeSlug, "Ecommerce", "/dashboards/ecommerce", ""),
+						mi(activeSlug, "CRM", "/dashboards/crm", ""),
+					})
+					@layout.SidebarMenuLabelNexus("Apps")
+					@sc(activeSlug, "lucide--store", "Ecommerce", []templ.Component{
+						emptyItem(activeSlug, "Orders", "/apps/ecommerce/orders"),
+						emptyItem(activeSlug, "Products", "/apps/ecommerce/products"),
+						emptyItem(activeSlug, "Sellers", "/apps/ecommerce/sellers"),
+						emptyItem(activeSlug, "Customers", "/apps/ecommerce/customers"),
+						emptyItem(activeSlug, "Shops", "/apps/ecommerce/shops"),
+					})
+					@sc(activeSlug, "lucide--brain-circuit", "Gen AI", []templ.Component{
+						emptyItem(activeSlug, "Home", "/apps/gen-ai/home"),
+						emptyItem(activeSlug, "Content", "/apps/gen-ai/content"),
+						emptyItem(activeSlug, "Image", "/apps/gen-ai/image"),
+						emptyItem(activeSlug, "Library", "/apps/gen-ai/library"),
+					})
+					@mi(activeSlug, "File Manager", "/apps/file-manager", "lucide--server")
+					@mi(activeSlug, "Chat", "/apps/chat", "lucide--messages-square")
+				@layout.SidebarMenuLabelNexus("Pages")
+					@mi(activeSlug, "Landing", "/landing", "lucide--file")
+					@sc(activeSlug, "lucide--shield-check", "Auth", []templ.Component{
+						emptyItem(activeSlug, "Login", "/auth/login"),
+						emptyItem(activeSlug, "Register", "/auth/register"),
+						emptyItem(activeSlug, "Forgot Password", "/auth/forgot-password"),
+						emptyItem(activeSlug, "Reset Password", "/auth/reset-password"),
+					})
+					@layout.SidebarMenuLabelNexus("UI Showcase")
+					@sc(activeSlug, "lucide--package", "Components", []templ.Component{
+						emptyItem(activeSlug, "Accordion", "/ui/components/accordion"),
+						emptyItem(activeSlug, "Alert", "/ui/components/alert"),
+						emptyItem(activeSlug, "Avatar", "/ui/components/avatar"),
+						emptyItem(activeSlug, "Badge", "/ui/components/badge"),
+						emptyItem(activeSlug, "Breadcrumb", "/ui/components/breadcrumb"),
+						emptyItem(activeSlug, "Button", "/ui/components/button"),
+						emptyItem(activeSlug, "Countdown", "/ui/components/countdown"),
+						emptyItem(activeSlug, "Drawer", "/ui/components/drawer"),
+						emptyItem(activeSlug, "Dropdown", "/ui/components/dropdown"),
+						emptyItem(activeSlug, "Indicator", "/ui/components/indicator"),
+						emptyItem(activeSlug, "Loading", "/ui/components/loading"),
+						emptyItem(activeSlug, "Menu", "/ui/components/menu"),
+						emptyItem(activeSlug, "Modal", "/ui/components/modal"),
+						emptyItem(activeSlug, "Pagination", "/ui/components/pagination"),
+						emptyItem(activeSlug, "Progress", "/ui/components/progress"),
+						emptyItem(activeSlug, "Step", "/ui/components/step"),
+						emptyItem(activeSlug, "Tab", "/ui/components/tab"),
+						emptyItem(activeSlug, "Table", "/ui/components/table"),
+						emptyItem(activeSlug, "Timeline", "/ui/components/timeline"),
+						emptyItem(activeSlug, "Toast", "/ui/components/toast"),
+						emptyItem(activeSlug, "Tooltip", "/ui/components/tooltip"),
+					})
+					@sc(activeSlug, "lucide--file-text", "Forms", []templ.Component{
+						emptyItem(activeSlug, "Checkbox", "/ui/forms/checkbox"),
+						emptyItem(activeSlug, "Fieldset", "/ui/forms/fieldset"),
+						emptyItem(activeSlug, "File Input", "/ui/forms/file-input"),
+						emptyItem(activeSlug, "Input", "/ui/forms/input"),
+						emptyItem(activeSlug, "Label", "/ui/forms/label"),
+						emptyItem(activeSlug, "Radio", "/ui/forms/radio"),
+						emptyItem(activeSlug, "Range", "/ui/forms/range"),
+						emptyItem(activeSlug, "Rating", "/ui/forms/rating"),
+						emptyItem(activeSlug, "Select", "/ui/forms/select"),
+						emptyItem(activeSlug, "Textarea", "/ui/forms/textarea"),
+						emptyItem(activeSlug, "Toggle", "/ui/forms/toggle"),
+						emptyItem(activeSlug, "Validator", "/ui/forms/validator"),
+					})
+					@sc(activeSlug, "lucide--bar-chart-big", "Charts", []templ.Component{
+						emptyItem(activeSlug, "Area", "/ui/charts/area"),
+						emptyItem(activeSlug, "Bar", "/ui/charts/bar"),
+						emptyItem(activeSlug, "Column", "/ui/charts/column"),
+						emptyItem(activeSlug, "Line", "/ui/charts/line"),
+						emptyItem(activeSlug, "Pie", "/ui/charts/pie"),
+					})
+				@layout.SidebarMenuLabelNexus("Other")
+					@sc(activeSlug, "lucide--align-center", "Menu Levels", []templ.Component{
+						mi(activeSlug, "Level 1a", "#", ""),
+						sc(activeSlug, "", "Level 1b", []templ.Component{
+							mi(activeSlug, "Level 2a", "#", ""),
+							sc(activeSlug, "", "Level 2b", []templ.Component{
+								mi(activeSlug, "Level 3a", "#", ""),
+								mi(activeSlug, "Level 3b", "#", ""),
+							}),
+						}),
+					})
+					<a class="sidebar-menu-item" href="https://google.com" target="_blank">
+						@ui.IconSpan("lucide--external-link", "size-4")
+						External Links
+					</a>
+					<a class="sidebar-menu-item" href="#">
+						@ui.IconSpan("lucide--award", "size-4")
+						Label
+						<div class="bg-secondary text-secondary-content rounded-box px-1.5 text-[12px] leading-normal ml-auto">+8</div>
+					</a>
+					<a class="sidebar-menu-item" href="https://nexus.daisyui.com/docs" target="_blank">
+						@ui.IconSpan("lucide--book-open-text", "size-4")
+						Documentation
+					</a>
+				</div>
+			</div>
+			<div class="pointer-events-none absolute start-0 end-0 bottom-0 h-7 bg-gradient-to-t from-base-100/60 to-transparent"></div>
+		</div>
+		<div class="mb-2">
+			<hr class="border-base-300"/>
+			<ul class="menu w-full">
+				<li><a href="/pages/settings" class="flex items-center gap-2"><span class="iconify lucide--settings-2 size-4"></span>Settings<div class="border-primary/20 bg-primary/5 text-primary rounded-box ms-auto border px-1 text-[11px]">New</div></a></li>
+				<li><a href="/pages/get-help" class="flex items-center gap-2"><span class="iconify lucide--circle-help size-4"></span>Get Help<div class="border-primary/20 bg-primary/5 text-primary rounded-box ms-auto border px-1 text-[11px]">New</div></a></li>
+			</ul>
+			<div class="dropdown dropdown-top dropdown-end w-full">
+				<div tabindex="0" role="button" class="bg-base-200 hover:bg-base-300 rounded-box mx-2 mt-0 flex cursor-pointer items-center gap-2.5 px-3 py-2 transition-all">
+					<div class="avatar"><div class="mask mask-squircle bg-base-200 w-8"><img src="/images/avatars/1.png" alt="Avatar"/></div></div>
+					<div class="grow -space-y-0.5"><p class="text-sm font-medium">Denish N</p><p class="text-base-content/60 text-xs">{ "@withden" }</p></div>
+					@ui.IconSpan("lucide--chevrons-up-down", "text-base-content/60 size-4")
+				</div>
+				<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box mb-1 w-48 p-1 shadow-lg border border-base-200 z-50">
+					<li><a href="/pages/settings">@ui.IconSpan("lucide--user", "size-4")  My Profile</a></li>
+					<li><a href="/pages/settings">@ui.IconSpan("lucide--settings", "size-4")  Settings</a></li>
+					<li><a href="/pages/get-help">@ui.IconSpan("lucide--help-circle", "size-4")  Help</a></li>
+					<li><div>@ui.IconSpan("lucide--bell", "size-4")  Notification</div></li>
+					<li><div>@ui.IconSpan("lucide--arrow-left-right", "size-4")  Switch Account</div></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+}
+
+templ nexusTopbar() {
+	<div role="navigation" aria-label="Navbar" id="_layout-topbar" class="flex items-center justify-between px-3" style="background-color: var(--color-base-100)" { devmode.Attrs(ctx, "shell/nexusTopbar")... }>
+		<div class="inline-flex items-center gap-3">
+			<label class="btn btn-square btn-ghost btn-sm" aria-label="Leftmenu toggle" for="_layout-sidebar-toggle-trigger">
+				@ui.IconSpan("lucide--menu", "size-5")
+			</label>
+			<button class="btn btn-outline btn-sm btn-ghost border-base-300 text-base-content/70 hidden h-9 w-48 justify-start gap-2 !text-sm md:flex" onclick="document.querySelector('#topbar-search-modal')?.showModal()">
+				<span class="iconify lucide--search size-4"></span>Search
+			</button>
+			<button class="btn btn-outline btn-sm btn-square btn-ghost border-base-300 text-base-content/70 flex size-9 md:hidden" aria-label="Search" onclick="document.querySelector('#topbar-search-modal')?.showModal()">
+				@ui.IconSpan("lucide--search", "size-4")
+			</button>
+		</div>
+		<div class="inline-flex items-center gap-1.5">
+			@ui.ThemeSwitcher()
+			<label for="layout-rightbar-drawer" class="btn btn-circle btn-ghost btn-sm drawer-button" aria-label="Settings">
+				@ui.IconSpan("lucide--settings-2", "size-4.5")
+			</label>
+			@nav.NotificationVariant("basic", nav.NotificationVariantOpts{Tabs: []nav.NotificationTab{
+				{Label: "All", Active: true, Badge: 12},
+				{Label: "Unread", Active: false, Badge: 5},
+			}, Items: nexusNotifications()})
+			<div class="dropdown dropdown-bottom dropdown-end">
+				<div tabindex="0" role="button" class="btn btn-ghost rounded-btn px-1.5">
+					<div class="flex items-center gap-2">
+					<div class="avatar"><img alt="Avatar" class="mask mask-squircle bg-base-200 w-8" src="/images/avatars/1.png"/></div>
+						<div class="-space-y-0.5 text-start"><p class="text-sm">Denish</p><p class="text-base-content/60 text-xs">Profile</p></div>
+					</div>
+				</div>
+				<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-4 w-44 shadow-lg border border-base-200 z-50">
+					<ul class="menu w-full p-2">
+						<li><a href="/pages/settings">@ui.IconSpan("lucide--user", "size-4")  My Profile</a></li>
+						<li><a href="/pages/settings">@ui.IconSpan("lucide--settings", "size-4")  Settings</a></li>
+						<li><a href="/pages/get-help">@ui.IconSpan("lucide--help-circle", "size-4")  Help</a></li>
+					</ul>
+					<hr class="border-base-300"/>
+					<ul class="menu w-full p-2">
+						<li><div>@ui.IconSpan("lucide--arrow-left-right", "size-4")  Switch Account</div></li>
+						<li><a class="text-error hover:bg-error/10" href="/auth/login">@ui.IconSpan("lucide--log-out", "size-4")  Logout</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	@nexusSearchModal()
+}
+
+templ nexusSearchModal() {
+	<dialog id="topbar-search-modal" class="modal p-0">
+		<div class="modal-box p-0">
+			<div class="input border-base-300 w-full rounded-none border-0 border-b focus:!outline-0">
+				@ui.IconSpan("lucide--search", "text-base-content/60 size-4.5")
+				<input type="search" class="grow" placeholder="Search" aria-label="Search"/>
+				<form method="dialog"><button class="btn btn-sm btn-circle btn-ghost" aria-label="Close">@ui.IconSpan("lucide--x", "text-base-content/80 size-4")</button></form>
+			</div>
+			<ul class="menu w-full pt-0">
+				<li class="menu-title">Actions</li>
+				<li><div>@ui.IconSpan("lucide--folder-plus", "size-4.5")<p class="grow text-sm">Create a new folder</p></div></li>
+				<li><div>@ui.IconSpan("lucide--file-plus", "size-4.5")<p class="grow text-sm">Upload new document</p></div></li>
+				<li><div>@ui.IconSpan("lucide--user-plus", "size-4.5")<p class="grow text-sm">Invite to project</p></div></li>
+			</ul>
+			<hr class="border-base-300 h-px"/>
+			<ul class="menu w-full pt-0">
+				<li class="menu-title">Quick Links</li>
+				<li><div>@ui.IconSpan("lucide--folders", "size-4.5")<p class="grow text-sm">File Manager</p></div></li>
+				<li><div>@ui.IconSpan("lucide--user", "size-4.5")<p class="grow text-sm">Profile</p></div></li>
+				<li><div>@ui.IconSpan("lucide--layout-dashboard", "size-4.5")<p class="grow text-sm">Dashboard</p></div></li>
+				<li><div>@ui.IconSpan("lucide--help-circle", "size-4.5")<p class="grow text-sm">Support</p></div></li>
+				<li><div>@ui.IconSpan("lucide--keyboard", "size-4.5")<p class="grow text-sm">Keyboard Shortcuts</p></div></li>
+			</ul>
+		</div>
+		<form method="dialog" class="modal-backdrop"><button>close</button></form>
+	</dialog>
+}
+
+templ nexusRightbar() {
+	<div class="drawer drawer-end">
+		<input id="layout-rightbar-drawer" type="checkbox" class="drawer-toggle"/>
+		<div class="drawer-content"></div>
+		<div class="drawer-side z-50">
+			<label for="layout-rightbar-drawer" aria-label="close sidebar" class="drawer-overlay" aria-hidden="true"/>
+			<div class="bg-base-100 text-base-content h-full w-72 sm:w-96">
+				<div class="bg-base-200 flex justify-between px-5 py-4">
+					<p class="text-lg font-medium">Customization</p>
+					<div class="inline-flex gap-1">
+						<button class="btn-ghost btn btn-sm btn-circle relative" aria-label="Reset">@ui.IconSpan("lucide--rotate-cw", "size-5")</button>
+						<button class="btn btn-ghost btn-sm btn-circle" aria-label="Full Screen" onclick="document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()">@ui.IconSpan("lucide--maximize", "size-5")</button>
+						<label for="layout-rightbar-drawer" aria-label="close sidebar" class="btn btn-ghost btn-sm btn-circle">@ui.IconSpan("lucide--x", "size-5")</label>
+					</div>
+				</div>
+				<div class="p-5">
+					<p class="font-medium">Theme</p>
+					<div class="mt-3 grid grid-cols-3 gap-3">
+						<div class="rounded-box group relative cursor-pointer" data-theme-btn="nord"><div class="bg-base-200 rounded-box pt-5 pb-3 text-center"><div class="flex items-center justify-center gap-1"><span class="rounded-box bg-primary h-6 w-2"></span><span class="rounded-box bg-secondary h-6 w-2"></span><span class="rounded-box bg-accent h-6 w-2"></span><span class="rounded-box bg-success h-6 w-2"></span></div><p class="mt-1.5 text-sm">Light</p></div></div>
+						<div class="rounded-box group relative cursor-pointer" data-theme-btn="contrast"><div class="bg-base-200 rounded-box pt-5 pb-3 text-center"><div class="flex items-center justify-center gap-1"><span class="rounded-box bg-primary h-6 w-2"></span><span class="rounded-box bg-secondary h-6 w-2"></span><span class="rounded-box bg-accent h-6 w-2"></span><span class="rounded-box bg-success h-6 w-2"></span></div><p class="mt-1.5 text-sm">Contrast</p></div></div>
+						<div class="rounded-box group relative cursor-pointer" data-theme-btn="material"><div class="bg-base-200 rounded-box pt-5 pb-3 text-center"><div class="flex items-center justify-center gap-1"><span class="rounded-box bg-primary h-6 w-2"></span><span class="rounded-box bg-secondary h-6 w-2"></span><span class="rounded-box bg-accent h-6 w-2"></span><span class="rounded-box bg-success h-6 w-2"></span></div><p class="mt-1.5 text-sm">Material</p></div></div>
+						<div class="rounded-box group relative cursor-pointer" data-theme-btn="dracula"><div class="bg-base-200 rounded-box pt-5 pb-3 text-center"><div class="flex items-center justify-center gap-1"><span class="rounded-box bg-primary h-6 w-2"></span><span class="rounded-box bg-secondary h-6 w-2"></span><span class="rounded-box bg-accent h-6 w-2"></span><span class="rounded-box bg-success h-6 w-2"></span></div><p class="mt-1.5 text-sm">Dark</p></div></div>
+						<div class="rounded-box group relative cursor-pointer" data-theme-btn="flow"><div class="bg-base-200 rounded-box pt-5 pb-3 text-center"><div class="flex items-center justify-center gap-1"><span class="rounded-box bg-primary h-6 w-2"></span><span class="rounded-box bg-secondary h-6 w-2"></span><span class="rounded-box bg-accent h-6 w-2"></span><span class="rounded-box bg-success h-6 w-2"></span></div><p class="mt-1.5 text-sm">Flow</p></div></div>
+						<div class="rounded-box group relative cursor-pointer" data-theme-btn="system"><div class="bg-base-200 rounded-box pt-5 pb-3 text-center"><div class="flex items-center justify-center gap-1"><span class="rounded-box bg-primary h-6 w-2"></span><span class="rounded-box bg-secondary h-6 w-2"></span><span class="rounded-box bg-accent h-6 w-2"></span><span class="rounded-box bg-success h-6 w-2"></span></div><p class="mt-1.5 text-sm">System</p></div></div>
+					</div>
+					<p class="mt-6 font-medium">Sidebar</p>
+					<div class="mt-3 grid grid-cols-2 gap-3">
+						<div class="border-base-300 hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.getElementById('_layout-sidebar').dataset.theme='light'"><span class="iconify lucide--sun size-4.5"></span>Light</div>
+						<div class="border-base-300 hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.getElementById('_layout-sidebar').dataset.theme='dark'"><span class="iconify lucide--moon size-4.5"></span>Dark</div>
+					</div>
+					<p class="mt-6 font-medium">Direction</p>
+					<div class="mt-3 grid grid-cols-2 gap-3">
+						<div class="border-base-300 hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.documentElement.dir='ltr'"><span class="iconify lucide--pilcrow-left size-4.5"></span>LTR</div>
+						<div class="border-base-300 hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.documentElement.dir='rtl'"><span class="iconify lucide--pilcrow-right size-4.5"></span>RTL</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	(function(){if(window._nexusThemeInit)return;window._nexusThemeInit=true;
+	function updateTheme(){var t=document.documentElement.getAttribute('data-theme');var isDark=t==='dracula'||t==='dim'||t==='dark';var el;el=document.getElementById('logo-dark');if(el)el.style.display=isDark?'':'none';el=document.getElementById('logo-light');if(el)el.style.display=isDark?'none':'';el=document.getElementById('hero-dark');if(el)el.style.display=isDark?'':'none';el=document.getElementById('hero-light');if(el)el.style.display=isDark?'none':''}
+	updateTheme();
+	document.querySelectorAll('[data-theme-btn]').forEach(function(el){el.addEventListener('click',function(){var t=this.getAttribute('data-theme-btn');if(t==='system'){document.documentElement.removeAttribute('data-theme');localStorage.removeItem('theme')}else{document.documentElement.setAttribute('data-theme',t);localStorage.setItem('theme',t)}setTimeout(updateTheme,50)})})})();
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.3.0/apexcharts.min.js"></script>
+	<script>
+	if(!window._apexChartInit){window._apexChartInit=true;
+	function initApexChart(el){try{var o=JSON.parse(el.dataset.options);el._chart=new ApexCharts(el,o);el._chart.render()}catch(e){console.warn('Chart init failed:',e)}}
+	document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('[data-chart]').forEach(initApexChart)});
+	if(document.readyState==='complete'||document.readyState==='interactive'){document.querySelectorAll('[data-chart]').forEach(initApexChart)}
+	document.addEventListener('htmx:afterSettle',function(e){e.detail.target.querySelectorAll('[data-chart]:not(._ac-initialized)').forEach(function(el){el.classList.add('_ac-initialized');initApexChart(el)})})}
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/simplebar/6.2.7/simplebar.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/filepond/4.32.6/filepond.min.css"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/filepond/4.32.6/filepond.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/filepond-plugin-image-preview@4.6.12/dist/filepond-plugin-image-preview.min.js"></script>
+}

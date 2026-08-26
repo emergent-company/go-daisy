@@ -77,7 +77,7 @@ templ FormField(props FormFieldProps) {
 				disabled?={ props.Disabled }
 				class={ "textarea textarea-bordered w-full",
 					templ.KV("textarea-error", props.Error != ""),
-					props.Class }
+					templ.KV(props.Class, props.Class != "") }
 				{ props.Attrs... }
 			>{ props.Value }</textarea>
 		}
@@ -90,7 +90,7 @@ templ FormField(props FormFieldProps) {
 				disabled?={ props.Disabled }
 				class={ "select select-bordered w-full",
 					templ.KV("select-error", props.Error != ""),
-					props.Class }
+					templ.KV(props.Class, props.Class != "") }
 				{ props.Attrs... }
 			>
 				for _, opt := range props.Options {
@@ -112,7 +112,7 @@ templ FormField(props FormFieldProps) {
 				disabled?={ props.Disabled }
 				class={ "input input-bordered w-full",
 					templ.KV("input-error", props.Error != ""),
-					props.Class }
+					templ.KV(props.Class, props.Class != "") }
 				{ props.Attrs... }
 			/>
 		}

@@ -1,0 +1,24 @@
+package head
+
+import "github.com/emergent-company/go-daisy/staticfs"
+
+templ Dependencies(props DepsProps) {
+	@templ.Raw(staticfs.Stylesheet("/css/app.css"))
+	@templ.Raw(staticfs.Script("/js/htmx.js"))
+	if props.Alpine {
+		@templ.Raw(staticfs.Script("/js/alpine.js"))
+	}
+	if props.Morph {
+		@templ.Raw(staticfs.Script("/js/morph.js"))
+	}
+	if props.Stimulus {
+		@templ.Raw(staticfs.Script("/js/stimulus.js"))
+		@templ.Raw(staticfs.Script("/js/stimulus-controllers.js"))
+	}
+	if props.SSE {
+		@templ.Raw(staticfs.Script("/js/htmx-sse.js"))
+	}
+	if props.WS {
+		@templ.Raw(staticfs.Script("/js/htmx-ws.js"))
+	}
+}

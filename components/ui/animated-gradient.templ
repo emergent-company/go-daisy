@@ -1,0 +1,29 @@
+package ui
+
+import "github.com/emergent-company/go-daisy/devmode"
+
+// GradientTextProps configures a GradientText component.
+type GradientTextProps struct {
+	Text      string
+	FromColor string
+	ToColor   string
+	Size      string
+	Weight    string
+	Animate   bool
+}
+
+// GradientText renders text with a linear gradient fill. Set Animate=true for a shifting gradient animation.
+// fromColor / toColor: Tailwind gradient color stops, e.g. "from-primary" "to-secondary"
+// size: Tailwind text size class, e.g. "text-3xl", "text-lg"
+// weight: Tailwind font weight, e.g. "font-bold", "font-black"
+templ GradientText(props GradientTextProps) {
+	<span
+		class={ "bg-linear-to-r bg-clip-text text-transparent",
+			templ.KV("animate-gradient-shift", props.Animate),
+			props.FromColor,
+			props.ToColor,
+			props.Size,
+			props.Weight }
+		{ devmode.Attrs(ctx, "ui/GradientText")... }
+	>{ props.Text }</span>
+}

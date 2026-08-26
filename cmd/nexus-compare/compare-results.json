@@ -1,0 +1,58 @@
+[
+  {
+    "name": "ecommerce",
+    "mismatched": 118034,
+    "pct": "9.11",
+    "width": 1440,
+    "height": 900,
+    "status": "✗"
+  },
+  {
+    "name": "crm",
+    "mismatched": 238412,
+    "pct": "18.40",
+    "width": 1440,
+    "height": 900,
+    "status": "✗"
+  },
+  {
+    "name": "comp-sidebar-header",
+    "mismatched": 773,
+    "pct": "4.72",
+    "width": 256,
+    "height": 64,
+    "status": "⚠"
+  },
+  {
+    "name": "comp-sidebar-menu",
+    "mismatched": 7779,
+    "pct": "4.37",
+    "width": 256,
+    "height": 695,
+    "status": "⚠"
+  },
+  {
+    "name": "comp-topbar",
+    "mismatched": 2821,
+    "pct": "3.72",
+    "width": 1184,
+    "height": 64,
+    "status": "⚠"
+  },
+  {
+    "name": "comp-statcards",
+    "mismatched": 324213,
+    "pct": "88.98",
+    "width": 653,
+    "height": 558,
+    "status": "✗"
+  },
+  {
+    "name": "comp-revenue",
+    "mismatched": 138872,
+    "pct": "38.11",
+    "width": 653,
+    "height": 558,
+    "status": "✗"
+  }
+]

@@ -71,7 +71,7 @@ func StatusIntentFor(status string) BadgeIntent {
 // Set Icon to show a Lucide icon prefix instead of (or in addition to) a dot.
 // Set MaxWidth to a Tailwind max-width class (e.g. "max-w-24") to enable label truncation.
 templ Badge(props BadgeProps) {
-	<span class={ "badge gap-1", string(props.Variant), string(props.Style), string(props.Size), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth } { devmode.Attrs(ctx, "ui/Badge")... } { props.Attrs... }>
+	<span class={ "badge gap-1", templ.KV(string(props.Variant), props.Variant != ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth } { devmode.Attrs(ctx, "ui/Badge")... } { props.Attrs... }>
 		if props.Dot {
 			<span class={ templ.KV("animate-pulse", props.Animate), dotClass(props.Variant) }></span>
 		} else if props.Icon != "" {

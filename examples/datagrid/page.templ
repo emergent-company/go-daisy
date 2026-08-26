@@ -1,0 +1,22 @@
+package main
+
+import (
+	"github.com/emergent-company/go-daisy/components/layout"
+	"github.com/emergent-company/go-daisy/components/table"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+templ datagridPage(title string, gridProps table.DataGridProps) {
+	@layout.PageFull(layout.PageProps{Title: title, Alpine: true}) {
+		<div
+			class="container mx-auto p-6"
+			{ devmode.Attrs(ctx, "datagrid/Page")... }
+		>
+			<div class="mb-6">
+				<h1 class="text-2xl font-bold">{ title }</h1>
+				<p class="text-base-content/60 mt-1">Manage user accounts and permissions</p>
+			</div>
+			@table.DataGrid(gridProps)
+		</div>
+	}
+}
