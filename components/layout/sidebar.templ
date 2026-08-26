@@ -60,9 +60,9 @@ templ Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) {
 	</div>
 	@sidebarScriptOnce.Once() {
 		<script>
-		if (window._sidebarInit) return;
-		window._sidebarInit = true;
 		(function() {
+			if (window._sidebarInit) return;
+			window._sidebarInit = true;
 			var sidebar = document.getElementById('_layout-sidebar');
 			if (!sidebar) return;
 
