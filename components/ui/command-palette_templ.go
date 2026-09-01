@@ -24,6 +24,9 @@ type CommandPaletteItem struct {
 	Shortcut    string
 	Href        string
 	Group       string
+	// Attrs are optional extra HTML attributes on the item's <a>, e.g.
+	// htmx navigation attributes or an onclick to close the palette.
+	Attrs templ.Attributes
 }
 
 // CommandPaletteProps configures a ⌘K command palette modal.
@@ -66,7 +69,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-toggle")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 34, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 37, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -109,7 +112,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-input")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 41, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 44, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -127,7 +130,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Placeholder)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 44, Col: 36}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 47, Col: 36}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 			if templ_7745c5c3_Err != nil {
@@ -150,7 +153,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-toggle")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 51, Col: 37}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 54, Col: 37}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
@@ -163,7 +166,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-results")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 53, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 56, Col: 71}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 		if templ_7745c5c3_Err != nil {
@@ -181,7 +184,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ItemsURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 55, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 58, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
@@ -215,7 +218,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-toggle")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 66, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 69, Col: 58}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
@@ -278,7 +281,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(group)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 86, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 89, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
@@ -296,7 +299,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(group)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 88, Col: 106}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 91, Col: 106}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -316,7 +319,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 				var templ_7745c5c3_Var12 templ.SafeURL
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(item.Href))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 93, Col: 36}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 96, Col: 36}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
@@ -329,7 +332,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 95, Col: 28}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 98, Col: 28}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
 				if templ_7745c5c3_Err != nil {
@@ -342,13 +345,21 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 				var templ_7745c5c3_Var14 string
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.Group)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 96, Col: 28}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 99, Col: 28}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, item.Attrs)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, ">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -358,7 +369,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<span class=\"")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<span class=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -371,77 +382,77 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\"></span>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\"></span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<div class=\"flex-1 min-w-0\"><p class=\"text-sm font-medium text-base-content truncate\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div class=\"flex-1 min-w-0\"><p class=\"text-sm font-medium text-base-content truncate\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 102, Col: 76}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 106, Col: 76}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				if item.Description != "" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<p class=\"text-xs text-base-content/40 truncate\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<p class=\"text-xs text-base-content/40 truncate\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var18 string
 					templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(item.Description)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 104, Col: 74}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 108, Col: 74}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "</p>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</p>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				if item.Shortcut != "" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<kbd class=\"kbd kbd-xs\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<kbd class=\"kbd kbd-xs\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var19 string
 					templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(item.Shortcut)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 108, Col: 45}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 112, Col: 45}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</kbd>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</kbd>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</a>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</a>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -482,7 +493,7 @@ func commandPaletteTrigger(paletteID string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<script>\n\tif (!window._paletteTriggerInit) {\n\t  window._paletteTriggerInit = true;\n\n\t  document.addEventListener('keydown', function(e) {\n\t    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n\t      e.preventDefault();\n\t      var cb = document.getElementById('{ paletteID }-toggle');\n\t      if (cb) cb.checked = !cb.checked;\n\t    }\n\t  });\n\n\t  document.addEventListener('htmx:after:settle', function() {\n\t    // Re-bind keyboard shortcut after HTMX swaps\n\t    if (!window._paletteKeydownBound) {\n\t      window._paletteKeydownBound = true;\n\t    }\n\t  });\n\t}\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<script>\n\tif (!window._paletteTriggerInit) {\n\t  window._paletteTriggerInit = true;\n\n\t  document.addEventListener('keydown', function(e) {\n\t    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {\n\t      e.preventDefault();\n\t      var cb = document.getElementById('{ paletteID }-toggle');\n\t      if (cb) {\n\t        cb.checked = !cb.checked;\n\t        if (cb.checked) {\n\t          var input = document.getElementById('{ paletteID }-input');\n\t          if (input) input.focus();\n\t        }\n\t      }\n\t    } else if (e.key === 'Escape') {\n\t      var toggle = document.getElementById('{ paletteID }-toggle');\n\t      if (toggle && toggle.checked) toggle.checked = false;\n\t    }\n\t  });\n\n\t  document.addEventListener('htmx:after:settle', function() {\n\t    // Re-bind keyboard shortcut after HTMX swaps\n\t    if (!window._paletteKeydownBound) {\n\t      window._paletteKeydownBound = true;\n\t    }\n\t  });\n\t}\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -529,7 +540,7 @@ func commandPaletteScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<script>\n\tif (!window._paletteFilterInit) {\n\t  window._paletteFilterInit = true;\n\n\t  window.filterPaletteItems = function(input) {\n\t    var q = input.value.toLowerCase().trim();\n\t    var modal = input.closest('.modal');\n\t    var results = modal ? modal.querySelector('[id$=\"-results\"]') : document.getElementById(input.id.replace('-input', '-results'));\n\t    if (!results) return;\n\n\t    if (results.dataset.itemsUrl && !window['_paletteFetched' + results.id]) {\n\t      window['_paletteFetched' + results.id] = true;\n\t      var xhr = new XMLHttpRequest();\n\t      xhr.open('GET', results.dataset.itemsUrl);\n\t      xhr.onload = function() {\n\t        if (xhr.status === 200) {\n\t          try {\n\t            var data = JSON.parse(xhr.responseText);\n\t            window['_paletteRemote' + results.id] = data;\n\t          } catch(e) {}\n\t        }\n\t        filterResults(q, results);\n\t      };\n\t      xhr.send();\n\t      return;\n\t    }\n\t    filterResults(q, results);\n\t  };\n\n\t  function filterResults(q, results) {\n\t    var remote = window['_paletteRemote' + results.id] || [];\n\t    if (remote.length) {\n\t      var existing = results.querySelector('[data-remote-results]');\n\t      if (existing) existing.remove();\n\t      var div = document.createElement('div');\n\t      div.setAttribute('data-remote-results', '');\n\t      var found = 0;\n\t      remote.forEach(function(item) {\n\t        var label = (item.label || item.title || '').toLowerCase();\n\t        var desc = (item.description || '').toLowerCase();\n\t        var section = (item.section || item.group || '').toLowerCase();\n\t        if (q && !label.includes(q) && !desc.includes(q) && !section.includes(q)) return;\n\t        found++;\n\t        var a = document.createElement('a');\n\t        a.className = 'flex items-center gap-3 px-3 py-2.5 rounded-box hover:bg-base-200 cursor-pointer transition-colors';\n\t        a.href = item.href || '#';\n\t        if (item.icon) {\n\t          var icon = document.createElement('span');\n\t          icon.className = 'iconify size-4 shrink-0 text-base-content/50 ' + item.icon;\n\t          a.appendChild(icon);\n\t        }\n\t        var body = document.createElement('div');\n\t        body.className = 'flex-1 min-w-0';\n\t        var title = document.createElement('p');\n\t        title.className = 'text-sm font-medium text-base-content truncate';\n\t        title.textContent = item.label || item.title;\n\t        body.appendChild(title);\n\t        if (item.description) {\n\t          var d = document.createElement('p');\n\t          d.className = 'text-xs text-base-content/40 truncate';\n\t          d.textContent = item.description;\n\t          body.appendChild(d);\n\t        }\n\t        a.appendChild(body);\n\t        div.appendChild(a);\n\t      });\n\t      if (found === 0 && q) {\n\t        var empty = document.createElement('p');\n\t        empty.className = 'text-sm text-base-content/40 text-center py-4';\n\t        empty.textContent = 'No results found.';\n\t        div.appendChild(empty);\n\t      }\n\t      results.appendChild(div);\n\t    }\n\t    results.querySelectorAll('[data-palette-group]').forEach(function(group) {\n\t      var items = group.querySelectorAll('[data-label]');\n\t      var hasVisible = false;\n\t      items.forEach(function(item) {\n\t        var text = (item.dataset.label || '').toLowerCase();\n\t        var match = !q || text.includes(q);\n\t        item.style.display = match ? '' : 'none';\n\t        if (match) hasVisible = true;\n\t      });\n\t      var header = group.querySelector('p');\n\t      if (header) header.style.display = hasVisible ? '' : 'none';\n\t    });\n\t  }\n\t}\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "<script>\n\tif (!window._paletteFilterInit) {\n\t  window._paletteFilterInit = true;\n\n\t  window.filterPaletteItems = function(input) {\n\t    var q = input.value.toLowerCase().trim();\n\t    var modal = input.closest('.modal');\n\t    var results = modal ? modal.querySelector('[id$=\"-results\"]') : document.getElementById(input.id.replace('-input', '-results'));\n\t    if (!results) return;\n\n\t    if (results.dataset.itemsUrl && !window['_paletteFetched' + results.id]) {\n\t      window['_paletteFetched' + results.id] = true;\n\t      var xhr = new XMLHttpRequest();\n\t      xhr.open('GET', results.dataset.itemsUrl);\n\t      xhr.onload = function() {\n\t        if (xhr.status === 200) {\n\t          try {\n\t            var data = JSON.parse(xhr.responseText);\n\t            window['_paletteRemote' + results.id] = data;\n\t          } catch(e) {}\n\t        }\n\t        filterResults(q, results);\n\t      };\n\t      xhr.send();\n\t      return;\n\t    }\n\t    filterResults(q, results);\n\t  };\n\n\t  function filterResults(q, results) {\n\t    var remote = window['_paletteRemote' + results.id] || [];\n\t    if (remote.length) {\n\t      var existing = results.querySelector('[data-remote-results]');\n\t      if (existing) existing.remove();\n\t      var div = document.createElement('div');\n\t      div.setAttribute('data-remote-results', '');\n\t      var found = 0;\n\t      remote.forEach(function(item) {\n\t        var label = (item.label || item.title || '').toLowerCase();\n\t        var desc = (item.description || '').toLowerCase();\n\t        var section = (item.section || item.group || '').toLowerCase();\n\t        if (q && !label.includes(q) && !desc.includes(q) && !section.includes(q)) return;\n\t        found++;\n\t        var a = document.createElement('a');\n\t        a.className = 'flex items-center gap-3 px-3 py-2.5 rounded-box hover:bg-base-200 cursor-pointer transition-colors';\n\t        a.href = item.href || '#';\n\t        if (item.icon) {\n\t          var icon = document.createElement('span');\n\t          icon.className = 'iconify size-4 shrink-0 text-base-content/50 ' + item.icon;\n\t          a.appendChild(icon);\n\t        }\n\t        var body = document.createElement('div');\n\t        body.className = 'flex-1 min-w-0';\n\t        var title = document.createElement('p');\n\t        title.className = 'text-sm font-medium text-base-content truncate';\n\t        title.textContent = item.label || item.title;\n\t        body.appendChild(title);\n\t        if (item.description) {\n\t          var d = document.createElement('p');\n\t          d.className = 'text-xs text-base-content/40 truncate';\n\t          d.textContent = item.description;\n\t          body.appendChild(d);\n\t        }\n\t        a.appendChild(body);\n\t        div.appendChild(a);\n\t      });\n\t      if (found === 0 && q) {\n\t        var empty = document.createElement('p');\n\t        empty.className = 'text-sm text-base-content/40 text-center py-4';\n\t        empty.textContent = 'No results found.';\n\t        div.appendChild(empty);\n\t      }\n\t      results.appendChild(div);\n\t    }\n\t    results.querySelectorAll('[data-palette-group]').forEach(function(group) {\n\t      var items = group.querySelectorAll('[data-label]');\n\t      var hasVisible = false;\n\t      items.forEach(function(item) {\n\t        var text = (item.dataset.label || '').toLowerCase();\n\t        var match = !q || text.includes(q);\n\t        item.style.display = match ? '' : 'none';\n\t        if (match) hasVisible = true;\n\t      });\n\t      var header = group.querySelector('p');\n\t      if (header) header.style.display = hasVisible ? '' : 'none';\n\t    });\n\t  }\n\t}\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
