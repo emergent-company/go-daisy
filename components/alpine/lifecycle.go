@@ -17,8 +17,14 @@ func TabsHistoryInit() string {
 
 // ToastQueueInit returns the x-init expression for toast queue management:
 // add(toast), dismiss(id), and auto-remove after timeout.
+//
+// Starts with "let" (not "var") so Alpine wraps the multi-statement body as an
+// IIFE — a leading "var" is rejected by Alpine's expression evaluator
+// ("Unexpected token 'var'"). The queue is grabbed from $data (not this) so the
+// methods land on the component's data object, where Alpine.$data() and the
+// x-data scope both find them.
 func ToastQueueInit() string {
-	return `var queue=this;queue.add=function(t){var item=Object.assign({id:'t'+Date.now(),type:'info',message:'',duration:4000},t);queue.toasts.push(item);if(item.duration>0){setTimeout(function(){queue.dismiss(item.id)},item.duration)}};queue.dismiss=function(id){queue.toasts=queue.toasts.filter(function(t){return t.id!==id})}}`
+	return `let queue=$data;queue.add=function(t){var item=Object.assign({id:'t'+Date.now(),type:'info',message:'',duration:4000},t);queue.toasts.push(item);if(item.duration>0){setTimeout(function(){queue.dismiss(item.id)},item.duration)}};queue.dismiss=function(id){queue.toasts=queue.toasts.filter(function(t){return t.id!==id})}`
 }
 
 // ComboboxInit returns the x-init expression for combobox keyboard navigation,

@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/a-h/templ"
+	"github.com/emergent-company/go-daisy/components/alpine"
 	"github.com/emergent-company/go-daisy/devmode"
 	"github.com/emergent-company/go-daisy/shared"
 )
@@ -107,8 +108,8 @@ func ToastWithBoundary(typ ToastType, message string, driver string) templ.Compo
 }
 
 // ToastQueueWithBoundary wraps ToastQueue with a dev-mode component boundary annotation.
-func ToastQueueWithBoundary() templ.Component {
-	return devmode.ComponentBoundary("ToastQueue", ToastQueue())
+func ToastQueueWithBoundary(seed ...alpine.ToastItem) templ.Component {
+	return devmode.ComponentBoundary("ToastQueue", ToastQueue(seed...))
 }
 
 // BannerWithBoundary wraps Banner with a dev-mode component boundary annotation.

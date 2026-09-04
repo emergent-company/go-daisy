@@ -1,5 +1,7 @@
 package alpine
 
+import "strconv"
+
 // ── Pre-built Alpine data states ──────────────────────────────────────────
 
 // toggleState is the x-data state for show/hide toggles (dropdowns, modals, drawers).
@@ -97,8 +99,13 @@ func ModalState(open bool) State {
 	return modalState{Open: open}
 }
 
-// toastItemState is a single toast in the queue.
-type toastItemState struct {
+// ToastItem is a single toast in the queue.
+//
+// Type is the DaisyUI alert modifier suffix ("success", "info", "warning",
+// "error") — the queue renders it as "alert-" + Type. Duration is the
+// auto-dismiss timeout in milliseconds; 0 (or negative) keeps the toast until
+// dismissed.
+type ToastItem struct {
 	ID       string `json:"id"`
 	Type     string `json:"type"`
 	Message  string `json:"message"`
@@ -108,12 +115,28 @@ type toastItemState struct {
 
 // toastQueueState is the x-data state for a toast notification queue.
 type toastQueueState struct {
-	Toasts []toastItemState `json:"toasts"`
+	Toasts []ToastItem `json:"toasts"`
 }
 
 // ToastQueue returns an x-data state for a toast notification queue.
-func ToastQueueState() State {
-	return toastQueueState{}
+// Optional seed items are rendered on initial load (persistent — auto-dismiss
+// timers only run for toasts added via add()).
+//
+// Seed items with an empty ID get a unique "seed-N" ID assigned, because
+// Alpine's x-for :key requires unique keys — duplicate (empty) keys cause the
+// template to render nothing.
+//
+// The toasts slice is always a non-nil slice so it marshals to JSON [] rather
+// than null — Alpine can't push onto a null array.
+func ToastQueueState(seed ...ToastItem) State {
+	toasts := make([]ToastItem, 0, len(seed))
+	for i, t := range seed {
+		if t.ID == "" {
+			t.ID = "seed-" + strconv.Itoa(i)
+		}
+		toasts = append(toasts, t)
+	}
+	return toastQueueState{Toasts: toasts}
 }
 
 // comboboxState is the x-data state for a searchable combobox with keyboard nav.

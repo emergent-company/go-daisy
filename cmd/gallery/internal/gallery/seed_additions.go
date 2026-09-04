@@ -3,13 +3,14 @@ package gallery
 import (
 	"net/url"
 
+	"github.com/a-h/templ"
+	"github.com/emergent-company/go-daisy/components/alpine"
 	"github.com/emergent-company/go-daisy/components/form"
 	"github.com/emergent-company/go-daisy/components/head"
 	"github.com/emergent-company/go-daisy/components/nav"
 	"github.com/emergent-company/go-daisy/components/schemaform"
 	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/galleryruntime"
-	"github.com/a-h/templ"
 )
 
 func additionalComponents() []galleryruntime.GalleryComponent {
@@ -326,7 +327,11 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 					Name:        "Interactive",
 					Description: "Toast queue container.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return ui.ToastQueueWithBoundary()
+						return ui.ToastQueueWithBoundary(
+							alpine.ToastItem{Type: "success", Message: "Changes saved", Action: "Undo"},
+							alpine.ToastItem{Type: "info", Message: "New update available", Action: "View"},
+							alpine.ToastItem{Type: "error", Message: "Upload failed — file too large"},
+						)
 					},
 					FrameHeight: "300px",
 				},
@@ -416,11 +421,11 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 					Description: "All dependencies enabled.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return head.DependenciesWithBoundary(head.DepsProps{
-							Alpine:  true,
-							Morph:   true,
+							Alpine:   true,
+							Morph:    true,
 							Stimulus: true,
-							SSE:     true,
-							WS:      true,
+							SSE:      true,
+							WS:       true,
 						})
 					},
 					FrameHeight: "100px",

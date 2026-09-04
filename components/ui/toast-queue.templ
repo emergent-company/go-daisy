@@ -21,13 +21,13 @@ import (
 //
 //	var q = document.querySelector('[x-data]')._x_dataStack[0];
 //	q.add({type:'error', message:'Failed.', duration:6000});
-templ ToastQueue() {
+templ ToastQueue(seed ...alpine.ToastItem) {
 	<div
 		id="toast-container"
 		class="fixed top-4 right-4 z-70 flex flex-col-reverse gap-2 w-80 max-w-[calc(100vw-2rem)]"
 		aria-live="polite"
 		aria-atomic="false"
-		{ alpine.XData(alpine.ToastQueueState())... }
+		{ alpine.XData(alpine.ToastQueueState(seed...))... }
 		x-init={ alpine.ToastQueueInit() }
 		{ devmode.Attrs(ctx, "ui/ToastQueue")... }
 	>
@@ -47,7 +47,7 @@ templ ToastQueue() {
 			>
 				<span x-text="t.message"></span>
 				<template x-if="t.action">
-					<a class="btn btn-xs btn-ghost" x-text="t.action"
+					<a class="btn btn-xs btn-ghost ml-auto" x-text="t.action"
 					   @click.stop></a>
 				</template>
 			</div>

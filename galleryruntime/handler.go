@@ -12,6 +12,7 @@ import (
 
 	"github.com/emergent-company/go-daisy/devmode"
 	"github.com/emergent-company/go-daisy/render"
+	"github.com/emergent-company/go-daisy/staticfs"
 )
 
 // galleryHandler holds gallery route handlers and dependencies.
@@ -322,6 +323,19 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
 		headExtras.WriteString("\n")
 	}
 
+	// JS dependencies so Alpine/HTMX/Stimulus components are interactive in the
+	// preview iframe. The full page shell (layout.PageFull) loads these
+	// conditionally; the standalone preview document has no shell, so inject the
+	// core set here. Served from the default "/static/" prefix, which is always
+	// mounted by Serve.
+	var jsDeps strings.Builder
+	jsBase := baseURL + "/static/js/"
+	hash := staticfs.Hash()
+	for _, path := range []string{"htmx.js", "morph.js", "stimulus.js", "stimulus-controllers.js"} {
+		fmt.Fprintf(&jsDeps, `<script src="%s%s?v=%s"></script>`, jsBase, path, hash)
+	}
+	fmt.Fprintf(&jsDeps, `<script defer src="%salpine.js?v=%s"></script>`, jsBase, hash)
+
 	devScript := ""
 	if devMode {
 		devScript = strings.Replace(devOverlayScript, "__COMPONENT_SLUGS_JSON__", ComponentSlugsJSON(), 1)
@@ -349,9 +363,7 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
   </style>
 </head>
 <body>
-%s%s
+%s%s%s
 </body>
-</html>`, headExtras.String(), snippet, devScript)
+</html>`, headExtras.String(), snippet, jsDeps.String(), devScript)
 }
-
-

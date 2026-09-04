@@ -29,7 +29,7 @@ import (
 //
 //	var q = document.querySelector('[x-data]')._x_dataStack[0];
 //	q.add({type:'error', message:'Failed.', duration:6000});
-func ToastQueue() templ.Component {
+func ToastQueue(seed ...alpine.ToastItem) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -54,7 +54,7 @@ func ToastQueue() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, alpine.XData(alpine.ToastQueueState()))
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, alpine.XData(alpine.ToastQueueState(seed...)))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -79,7 +79,7 @@ func ToastQueue() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "><template x-for=\"t in toasts\" :key=\"t.id\"><div class=\"alert shadow-lg cursor-pointer\" :class=\"'alert-' + t.type\" x-show=\"true\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0 -translate-y-2\" x-transition:enter-end=\"opacity-100 translate-y-0\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100 translate-y-0\" x-transition:leave-end=\"opacity-0 -translate-y-2\" @click=\"dismiss(t.id)\" role=\"alert\"><span x-text=\"t.message\"></span><template x-if=\"t.action\"><a class=\"btn btn-xs btn-ghost\" x-text=\"t.action\" @click.stop></a></template></div></template><div id=\"toast-queue-dispatch\" style=\"display:none\"></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "><template x-for=\"t in toasts\" :key=\"t.id\"><div class=\"alert shadow-lg cursor-pointer\" :class=\"'alert-' + t.type\" x-show=\"true\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0 -translate-y-2\" x-transition:enter-end=\"opacity-100 translate-y-0\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100 translate-y-0\" x-transition:leave-end=\"opacity-0 -translate-y-2\" @click=\"dismiss(t.id)\" role=\"alert\"><span x-text=\"t.message\"></span><template x-if=\"t.action\"><a class=\"btn btn-xs btn-ghost ml-auto\" x-text=\"t.action\" @click.stop></a></template></div></template><div id=\"toast-queue-dispatch\" style=\"display:none\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

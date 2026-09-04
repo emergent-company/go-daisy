@@ -31,7 +31,7 @@ templ breadcrumbItem(item BreadcrumbItem) {
 // Breadcrumbs renders a DaisyUI breadcrumb navigation trail.
 templ Breadcrumbs(items []BreadcrumbItem, divider BreadcrumbsDivider) {
 	<div class="breadcrumbs text-sm"
-		style={ templ.KV("--breadcrumbs-separator: '/'", divider == BreadcrumbsDividerSlash), "width: 100%", true }
+		style={ templ.KV("--breadcrumbs-separator: '/'", divider == BreadcrumbsDividerSlash), "width: 100%" }
 		{ devmode.Attrs(ctx, "nav/Breadcrumbs")... }>
 		<ul>
 			for _, item := range items {

@@ -1,16 +1,17 @@
 root = "."
 testdata_dir = "testdata"
-tmp_dir = "/tmp/air-nexus"
+tmp_dir = "/tmp/air-gallery"
 
 [build]
-  bin = "/tmp/air-nexus/server"
-  cmd = "go build -o /tmp/air-nexus/server ./cmd/nexus"
+  bin = "/tmp/air-gallery/gallery"
+  cmd = "go build -o /tmp/air-gallery/gallery ./cmd/gallery"
+  pre_cmd = ["/root/go/bin/templ generate ./...", "./node_modules/.bin/tailwindcss -i ./assets/app.css -o ./staticfs/static/css/app.css --minify"]
   delay = 500
-  exclude_dir = ["node_modules", "cmd/gallery", "cmd/install", "cmd/boundarytoken", "cmd/nexus/visual-tests", "cmd/nexus-compare", "staticfs", "galleryruntime"]
+  exclude_dir = ["node_modules", "tmp", "testdata", "staticfs/static", "cmd/nexus", "cmd/nexus-compare", "cmd/install", "cmd/boundarytoken"]
   exclude_regex = ["_test.go", "_templ.go"]
   include_ext = ["go", "templ", "css"]
   kill_delay = "2s"
-  include_dir = ["cmd/nexus", "components", "assets"]
+  include_dir = []
   stop_on_error = false
 
 [log]
