@@ -5,9 +5,11 @@ import (
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
-// TagListProps configures an Alpine-managed tag input with add/remove.
-// Submits as name[0], name[1], ... hidden inputs. Suggestions optionally
-// wires a <datalist> of existing values onto the text input for autocomplete.
+// TagListProps configures an Alpine-managed tags-input combobox: inline chips
+// with add/remove plus a suggestion dropdown (filtered as you type, keyboard
+// navigable). Submits as name[0], name[1], ... hidden inputs. Suggestions
+// feeds the dropdown listbox; without it the input stays a plain free-form
+// chip input.
 type TagListProps struct {
 	ID             string
 	Name           string
@@ -30,16 +32,11 @@ templ TagList(props TagListProps) {
 		if addLabel == "" {
 			addLabel = "Add"
 		}
-		// Autocomplete: point the input at a <datalist> of suggestions (only
-		// emitted when suggestions are present).
-		inputAttrs := templ.Attributes{}
-		if len(props.Suggestions) > 0 {
-			inputAttrs["list"] = props.ID + "-suggestions"
-		}
 	}}
 	<div
-		x-data={ alpine.TagListData(props.Values) }
+		x-data={ alpine.TagListData(props.Values, props.Suggestions) }
 		class={ templ.KV(props.Class, props.Class != "") }
+		@click.outside="open = false"
 		{ devmode.Attrs(ctx, "form/TagList")... }
 		{ props.Attrs... }
 	>
@@ -58,29 +55,44 @@ templ TagList(props TagListProps) {
 			</template>
 		</div>
 		if !props.Disabled {
-			<div class="flex gap-2">
-				<input
-					type="text"
-					id={ props.ID }
-					class="input input-bordered input-sm flex-1"
-					x-model="input"
-					placeholder={ placeholder }
-					@keydown="handleKeydown($event)"
-					{ inputAttrs... }
-				/>
-				<button
-					type="button"
-					class="btn btn-sm btn-outline"
-					@click="addTag()"
-				>{ addLabel }</button>
+			<div class="relative">
+				<div class="flex gap-2">
+					<input
+						type="text"
+						id={ props.ID }
+						class="input input-bordered input-sm flex-1"
+						x-model="input"
+						placeholder={ placeholder }
+						@focus="open = true"
+						@input="open = true; activeIndex = -1"
+						@keydown="handleKeydown($event)"
+					/>
+					<button
+						type="button"
+						class="btn btn-sm btn-outline"
+						@click="addTag()"
+					>{ addLabel }</button>
+				</div>
+				if len(props.Suggestions) > 0 {
+					<div
+						class="absolute z-50 mt-1 w-full bg-base-100 border border-base-300 rounded-box shadow-lg max-h-60 overflow-auto p-1"
+						role="listbox"
+						x-show="open && filteredSuggestions.length > 0"
+						style="display:none"
+					>
+						<template x-for="(s, i) in filteredSuggestions" :key="s">
+							<div
+								role="option"
+								class="px-3 py-2 text-sm cursor-pointer hover:bg-base-200"
+								:class={ "{ 'bg-base-200': activeIndex === i }" }
+								@click="selectSuggestion(s)"
+								@mouseenter="activeIndex = i"
+								x-text="s"
+							></div>
+						</template>
+					</div>
+				}
 			</div>
-			if len(props.Suggestions) > 0 {
-				<datalist id={ props.ID + "-suggestions" }>
-					for _, s := range props.Suggestions {
-						<option value={ s }/>
-					}
-				</datalist>
-			}
 		}
 	</div>
 }

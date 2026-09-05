@@ -13,9 +13,11 @@ import (
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
-// TagListProps configures an Alpine-managed tag input with add/remove.
-// Submits as name[0], name[1], ... hidden inputs. Suggestions optionally
-// wires a <datalist> of existing values onto the text input for autocomplete.
+// TagListProps configures an Alpine-managed tags-input combobox: inline chips
+// with add/remove plus a suggestion dropdown (filtered as you type, keyboard
+// navigable). Submits as name[0], name[1], ... hidden inputs. Suggestions
+// feeds the dropdown listbox; without it the input stays a plain free-form
+// chip input.
 type TagListProps struct {
 	ID             string
 	Name           string
@@ -57,12 +59,6 @@ func TagList(props TagListProps) templ.Component {
 		if addLabel == "" {
 			addLabel = "Add"
 		}
-		// Autocomplete: point the input at a <datalist> of suggestions (only
-		// emitted when suggestions are present).
-		inputAttrs := templ.Attributes{}
-		if len(props.Suggestions) > 0 {
-			inputAttrs["list"] = props.ID + "-suggestions"
-		}
 		var templ_7745c5c3_Var2 = []any{templ.KV(props.Class, props.Class != "")}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
@@ -73,9 +69,9 @@ func TagList(props TagListProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(alpine.TagListData(props.Values))
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(alpine.TagListData(props.Values, props.Suggestions))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 41, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 37, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -94,7 +90,7 @@ func TagList(props TagListProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" @click.outside=\"open = false\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -113,7 +109,7 @@ func TagList(props TagListProps) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue("`" + props.Name + "[${idx}]`")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 56, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 53, Col: 64}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
@@ -124,14 +120,14 @@ func TagList(props TagListProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if !props.Disabled {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"flex gap-2\"><input type=\"text\" id=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"relative\"><div class=\"flex gap-2\"><input type=\"text\" id=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 64, Col: 18}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 62, Col: 19}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 			if templ_7745c5c3_Err != nil {
@@ -144,81 +140,54 @@ func TagList(props TagListProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(placeholder)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 67, Col: 30}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 65, Col: 31}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" @keydown=\"handleKeydown($event)\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, inputAttrs)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "> <button type=\"button\" class=\"btn btn-sm btn-outline\" @click=\"addTag()\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" @focus=\"open = true\" @input=\"open = true; activeIndex = -1\" @keydown=\"handleKeydown($event)\"> <button type=\"button\" class=\"btn btn-sm btn-outline\" @click=\"addTag()\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(addLabel)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 75, Col: 15}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 74, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</button></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</button></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if len(props.Suggestions) > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<datalist id=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"absolute z-50 mt-1 w-full bg-base-100 border border-base-300 rounded-box shadow-lg max-h-60 overflow-auto p-1\" role=\"listbox\" x-show=\"open && filteredSuggestions.length > 0\" style=\"display:none\"><template x-for=\"(s, i) in filteredSuggestions\" :key=\"s\"><div role=\"option\" class=\"px-3 py-2 text-sm cursor-pointer hover:bg-base-200\" :class=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var9 string
-				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-suggestions")
+				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue("{ 'bg-base-200': activeIndex === i }")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 78, Col: 44}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 87, Col: 55}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				for _, s := range props.Suggestions {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<option value=\"")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var10 string
-					templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(s)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/tags-list.templ`, Line: 80, Col: 23}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\"></option>")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</datalist>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" @click=\"selectSuggestion(s)\" @mouseenter=\"activeIndex = i\" x-text=\"s\"></div></template></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -183,13 +183,15 @@ func TagListState(tags []string) State {
 }
 
 // TagListData returns a self-contained Alpine x-data expression for an
-// editable tag list: the reactive state (tags, input) plus addTag/removeTag/
+// editable tag list with suggestion autocomplete: the reactive state (tags,
+// input, open, activeIndex, suggestions) plus addTag/removeTag/selectSuggestion/
 // handleKeydown methods inlined so they are accessible to @click/@keydown.
 //
 // The legacy "x-init = var root=this; root.addTag=..." pattern does NOT bind
 // methods into the directive scope on Alpine 3.15+, so state and methods are
 // emitted together as a single x-data object literal instead.
-func TagListData(tags []string) string {
-	js, _ := json.Marshal(tags)
-	return `{ tags: ` + string(js) + `, input: '', addTag() { var v = this.input.trim(); if (!v) return; var parts = v.split(','); for (var i = 0; i < parts.length; i++) { var t = parts[i].trim(); if (t && this.tags.indexOf(t) < 0) this.tags.push(t); } this.input = ''; }, removeTag(idx) { this.tags.splice(idx, 1); }, handleKeydown(e) { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); this.addTag(); } if (e.key === 'Backspace' && !this.input && this.tags.length) { this.removeTag(this.tags.length - 1); } } }`
+func TagListData(tags, suggestions []string) string {
+	tj, _ := json.Marshal(tags)
+	sj, _ := json.Marshal(suggestions)
+	return `{ tags: ` + string(tj) + `, input: '', open: false, activeIndex: -1, suggestions: ` + string(sj) + `, get filteredSuggestions() { var q = this.input.trim().toLowerCase(); var out = []; for (var i = 0; i < this.suggestions.length; i++) { var s = this.suggestions[i]; if (this.tags.indexOf(s) >= 0) continue; if (!q || s.toLowerCase().indexOf(q) >= 0) out.push(s); } return out; }, addTag() { var v = this.input.trim(); if (!v) return; var parts = v.split(','); for (var i = 0; i < parts.length; i++) { var t = parts[i].trim(); if (t && this.tags.indexOf(t) < 0) this.tags.push(t); } this.input = ''; this.activeIndex = -1; this.open = false; }, selectSuggestion(v) { if (!v || this.tags.indexOf(v) >= 0) return; this.tags.push(v); this.input = ''; this.activeIndex = -1; this.open = false; }, removeTag(idx) { this.tags.splice(idx, 1); }, handleKeydown(e) { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { var list = this.filteredSuggestions; if (!list.length) return; e.preventDefault(); this.open = true; var n = list.length; if (this.activeIndex < 0 || this.activeIndex >= n) this.activeIndex = e.key === 'ArrowDown' ? -1 : n; this.activeIndex = e.key === 'ArrowDown' ? (this.activeIndex + 1) % n : (this.activeIndex - 1 + n) % n; return; } if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); if (this.activeIndex >= 0 && this.activeIndex < this.filteredSuggestions.length) { this.selectSuggestion(this.filteredSuggestions[this.activeIndex]); } else { this.addTag(); } return; } if (e.key === 'Escape') { this.open = false; this.activeIndex = -1; return; } if (e.key === 'Backspace' && !this.input && this.tags.length) { this.removeTag(this.tags.length - 1); } } }`
 }
