@@ -1,6 +1,9 @@
 package alpine
 
-import "strconv"
+import (
+	"encoding/json"
+	"strconv"
+)
 
 // ── Pre-built Alpine data states ──────────────────────────────────────────
 
@@ -177,4 +180,16 @@ func TagListState(tags []string) State {
 		tags = []string{}
 	}
 	return tagListState{Tags: tags}
+}
+
+// TagListData returns a self-contained Alpine x-data expression for an
+// editable tag list: the reactive state (tags, input) plus addTag/removeTag/
+// handleKeydown methods inlined so they are accessible to @click/@keydown.
+//
+// The legacy "x-init = var root=this; root.addTag=..." pattern does NOT bind
+// methods into the directive scope on Alpine 3.15+, so state and methods are
+// emitted together as a single x-data object literal instead.
+func TagListData(tags []string) string {
+	js, _ := json.Marshal(tags)
+	return `{ tags: ` + string(js) + `, input: '', addTag() { var v = this.input.trim(); if (!v) return; var parts = v.split(','); for (var i = 0; i < parts.length; i++) { var t = parts[i].trim(); if (t && this.tags.indexOf(t) < 0) this.tags.push(t); } this.input = ''; }, removeTag(idx) { this.tags.splice(idx, 1); }, handleKeydown(e) { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); this.addTag(); } if (e.key === 'Backspace' && !this.input && this.tags.length) { this.removeTag(this.tags.length - 1); } } }`
 }

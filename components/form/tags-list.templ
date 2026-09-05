@@ -6,11 +6,13 @@ import (
 )
 
 // TagListProps configures an Alpine-managed tag input with add/remove.
-// Submits as name[0], name[1], ... hidden inputs.
+// Submits as name[0], name[1], ... hidden inputs. Suggestions optionally
+// wires a <datalist> of existing values onto the text input for autocomplete.
 type TagListProps struct {
 	ID             string
 	Name           string
 	Values         []string
+	Suggestions    []string
 	Placeholder    string
 	AddActionLabel string
 	Disabled       bool
@@ -28,10 +30,15 @@ templ TagList(props TagListProps) {
 		if addLabel == "" {
 			addLabel = "Add"
 		}
+		// Autocomplete: point the input at a <datalist> of suggestions (only
+		// emitted when suggestions are present).
+		inputAttrs := templ.Attributes{}
+		if len(props.Suggestions) > 0 {
+			inputAttrs["list"] = props.ID + "-suggestions"
+		}
 	}}
 	<div
-		{ alpine.XData(alpine.TagListState(props.Values))... }
-		x-init={ alpine.TagListInit() }
+		x-data={ alpine.TagListData(props.Values) }
 		class={ templ.KV(props.Class, props.Class != "") }
 		{ devmode.Attrs(ctx, "form/TagList")... }
 		{ props.Attrs... }
@@ -46,7 +53,7 @@ templ TagList(props TagListProps) {
 						@click="removeTag(idx)"
 						aria-label="Remove tag"
 					>&times;</button>
-					<input type="hidden" x-bind:name={ props.Name + "[idx]" } x-model="tag"/>
+					<input type="hidden" :name={ "`" + props.Name + "[${idx}]`" } x-model="tag"/>
 				</span>
 			</template>
 		</div>
@@ -59,6 +66,7 @@ templ TagList(props TagListProps) {
 					x-model="input"
 					placeholder={ placeholder }
 					@keydown="handleKeydown($event)"
+					{ inputAttrs... }
 				/>
 				<button
 					type="button"
@@ -66,6 +74,13 @@ templ TagList(props TagListProps) {
 					@click="addTag()"
 				>{ addLabel }</button>
 			</div>
+			if len(props.Suggestions) > 0 {
+				<datalist id={ props.ID + "-suggestions" }>
+					for _, s := range props.Suggestions {
+						<option value={ s }/>
+					}
+				</datalist>
+			}
 		}
 	</div>
 }
