@@ -107,7 +107,7 @@ func TagList(props TagListProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if !props.Disabled {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"relative\"><div class=\"flex flex-wrap items-center gap-1.5 border border-base-300 rounded-box bg-base-100 px-2 py-1.5 focus-within:border-primary\"><template x-for=\"(tag, idx) in tags\" :key=\"idx\"><span class=\"badge badge-sm gap-1 pr-0.5\" :class=\"tagColor(tag)\"><span x-text=\"tag\"></span> <button type=\"button\" class=\"btn btn-xs btn-ghost btn-square p-0 w-4 h-4 min-h-0\" @click=\"removeTag(idx)\" aria-label=\"Remove tag\">&times;</button> <input type=\"hidden\" :name=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"relative\"><div class=\"flex flex-wrap items-center gap-1.5 border border-base-300 rounded-box bg-base-100 px-2 py-1.5 focus-within:border-primary\"><template x-for=\"(tag, idx) in tags\" :key=\"idx\"><span class=\"badge badge-sm gap-1 pr-0.5\" :style=\"tagColor(tag)\"><span x-text=\"tag\"></span> <button type=\"button\" class=\"btn btn-xs btn-ghost btn-square p-0 w-4 h-4 min-h-0\" @click=\"removeTag(idx)\" aria-label=\"Remove tag\">&times;</button> <input type=\"hidden\" :name=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -187,7 +187,7 @@ func TagList(props TagListProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"flex flex-wrap gap-1.5\"><template x-for=\"(tag, idx) in tags\" :key=\"idx\"><span class=\"badge badge-sm gap-1 pr-0.5\" :class=\"tagColor(tag)\"><span x-text=\"tag\"></span> <input type=\"hidden\" :name=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"flex flex-wrap gap-1.5\"><template x-for=\"(tag, idx) in tags\" :key=\"idx\"><span class=\"badge badge-sm gap-1 pr-0.5\" :style=\"tagColor(tag)\"><span x-text=\"tag\"></span> <input type=\"hidden\" :name=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
