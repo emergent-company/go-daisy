@@ -1,0 +1,335 @@
+/* ── Layout: Sidebar ─────────────────────────────────────────── */
+
+:root {
+  --layout-sidebar-width: 256px;
+}
+
+.sidebar-menu {
+  .menu-label {
+    @apply text-base-content/70 text-xs font-semibold uppercase tracking-wider;
+  }
+
+  .menu-item {
+    @apply rounded-box flex h-8 items-center gap-2 px-2.5 text-sm;
+  }
+
+  a.menu-item,
+  .menu-item-link.menu-item {
+    @apply cursor-pointer hover:bg-base-200 text-base-content/80;
+
+    &.active {
+      @apply bg-base-200 font-medium text-base-content;
+}
+
+/* ── Accessibility ───────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --border: 2px;
+  }
+}
+
+@media (forced-colors: active) {
+  .btn, .badge, .alert, .input, .select, .textarea, .tab, .card, .modal-box {
+    border: 1px solid ButtonText;
+  }
+  .btn-primary, .badge-primary {
+    forced-color-adjust: none;
+    }
+  }
+}
+
+ matches nexus.daisyui.com visual parity */
+#sidebar-menu {
+  .sidebar-menu-title {
+    color: oklch(var(--bc) / 0.7);
+    margin: 8px 10px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .sidebar-menu-item {
+    border-radius: var(--radius-box);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 14px;
+    color: oklch(var(--bc) / 0.8);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .sidebar-menu-item:hover {
+    background-color: var(--color-base-200);
+  }
+  .collapse {
+    .collapse-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 32px;
+      padding: 6px 12px;
+      font-size: 14px;
+      border-radius: var(--radius-box);
+      cursor: pointer;
+      color: oklch(var(--bc) / 0.8);
+    }
+    .collapse-title:hover {
+      background-color: var(--color-base-200);
+    }
+    .collapse-content {
+      margin-left: 24px;
+      padding: 0;
+      display: flex !important;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 2px;
+      position: relative;
+    }
+    .collapse-content::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: oklch(var(--bc) / 0.1);
+    }
+    .collapse-content .sidebar-menu-item {
+      margin-left: 0;
+    }
+  }
+}
+}
+
+#_layout-sidebar {
+  width: var(--layout-sidebar-width);
+  min-width: var(--layout-sidebar-width);
+  max-height: 100vh;
+  @apply relative top-0 bottom-0 z-10 flex flex-col transition-[margin] duration-300;
+}
+
+#_layout-topbar {
+  @apply sticky top-0 z-10 max-h-16 min-h-16;
+}
+
+#layout-content {
+  @apply grow p-6;
+}
+
+/* Desktop: sidebar hidden when checkbox checked */
+#_layout-sidebar-toggle-trigger:checked ~ #_layout-sidebar {
+  margin-inline-start: calc(var(--layout-sidebar-width) * -1);
+}
+
+/* Mobile: sidebar hidden by default, shown when checked */
+@media (max-width: theme(--breakpoint-lg)) {
+  #_layout-sidebar {
+    @apply fixed z-[500];
+  }
+
+  #_layout-sidebar-toggle-trigger:not(:checked) ~ #_layout-sidebar {
+    margin-inline-start: calc(var(--layout-sidebar-width) * -1);
+  }
+
+  #_layout-sidebar-toggle-trigger:checked ~ #_layout-sidebar {
+    margin-inline-start: 0;
+  }
+
+  #_layout-sidebar-backdrop {
+    display: none;
+  }
+
+  #_layout-sidebar-toggle-trigger:checked ~ #_layout-sidebar-backdrop {
+    @apply bg-base-content/20 fixed inset-0 z-[499] transition-all;
+    display: block;
+  }
+}
+
+/* Border on sidebar and topbar */
+#_layout-sidebar {
+  @apply border-base-200 border-e;
+}
+
+#_layout-topbar {
+  @apply border-base-200 border-b;
+}
+
+/* Topbar hamburger icon swap based on sidebar state */
+@media (min-width: theme(--breakpoint-lg)) {
+  #_topbar-menu-icon {
+    display: none;
+  }
+  #_topbar-close-icon {
+    display: inline-block;
+  }
+  #_layout-sidebar-toggle-trigger:checked ~ * #_topbar-menu-icon {
+    display: inline-block;
+  }
+  #_layout-sidebar-toggle-trigger:checked ~ * #_topbar-close-icon {
+    display: none;
+  }
+}
+
+@media (max-width: theme(--breakpoint-lg)) {
+  #_topbar-menu-icon {
+    display: inline-block;
+  }
+  #_topbar-close-icon {
+    display: none !important;
+  }
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+/* ── Animated Gradient Text ──────────────────────────────────── */
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+/* ── Sparkline SVG ───────────────────────────────────────────── */
+.sparkline-svg polyline {
+  vector-effect: non-scaling-stroke;
+}
+
+/* ── View Transitions ────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.2s;
+  }
+
+  @keyframes slide-from-right {
+    from { transform: translateX(30px); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes slide-to-left {
+    from { transform: translateX(0); opacity: 1; }
+    to   { transform: translateX(-30px); opacity: 0; }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+
+  [data-navigation-direction="forward"]::view-transition-old(root) {
+    animation: slide-to-left 0.15s ease-out, fade-out 0.15s ease-out;
+  }
+  [data-navigation-direction="forward"]::view-transition-new(root) {
+    animation: slide-from-right 0.2s ease-out, fade-in 0.2s ease-out;
+  }
+
+  [data-navigation-direction="back"]::view-transition-old(root) {
+    animation: slide-to-left 0.15s ease-out reverse, fade-out 0.15s ease-out reverse;
+  }
+  [data-navigation-direction="back"]::view-transition-new(root) {
+    animation: slide-from-right 0.2s ease-out reverse, fade-in 0.2s ease-out reverse;
+  }
+
+  [data-navigation-direction="replace"]::view-transition-new(root) {
+    animation: fade-in 0.15s ease-out;
+  }
+}
+
+/* Nexus-style sidebar refinements —
+
+/* Nexus sidebar overrides — must be at root level, not nested */
+#_layout-sidebar #sidebar-menu .sidebar-menu-title {
+  color: oklch(var(--bc) / 0.7);
+  margin: 8px 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+#_layout-sidebar #sidebar-menu .sidebar-menu-item {
+  border-radius: var(--radius-box);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 14px;
+  color: oklch(var(--bc) / 0.8);
+  text-decoration: none;
+  cursor: pointer;
+}
+#_layout-sidebar #sidebar-menu .sidebar-menu-item.active {
+  background-color: var(--color-base-200);
+  font-weight: 500;
+  color: oklch(var(--bc));
+}
+#_layout-sidebar #sidebar-menu .collapse .collapse-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: var(--radius-box);
+  cursor: pointer;
+  color: oklch(var(--bc) / 0.8);
+}
+#_layout-sidebar #sidebar-menu .collapse .collapse-title:hover {
+  background-color: var(--color-base-200);
+}
+#_layout-sidebar #sidebar-menu .collapse .collapse-content {
+  margin-left: 24px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5px;
+  margin-top: 1px;
+  position: relative;
+  overflow: visible;
+}
+#_layout-sidebar #sidebar-menu .collapse .collapse-content::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: oklch(var(--bc) / 0.12);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── Landing Page ───────────────────────────────────────────────── */
+.landing-gradient-underline {
+  background: linear-gradient(90deg, oklch(var(--p)), oklch(var(--s)));
+  height: 4px;
+  border-radius: 2px;
+  bottom: -4px;
+}
+@keyframes gradient-shift-landing {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.landing-animated-text {
+  background-size: 200% 200%;
+  animation: gradient-shift-landing 4s ease infinite;
+}
