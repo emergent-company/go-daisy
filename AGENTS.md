@@ -82,10 +82,10 @@ HTMX-aware rendering helpers. Use these in every HTTP handler instead of calling
 | `ForceReload` | Returns a `<meta>` that forces full page reload |
 | `CacheFrame(w, maxAge)` | Set private cache headers for frame responses |
 | `CacheSharedFrame(w, maxAge)` | Set public cache headers for frame responses |
-| `OnAfterRequest(js)` | Returns `hx-on::after-request` attribute |
-| `OnAfterSettle(js)` | Returns `hx-on::after-settle` attribute |
-| `OnResponseError(js)` | Returns `hx-on::response-error` attribute |
-| `OnBeforeRequest(js)` | Returns `hx-on::before-request` attribute |
+| `OnAfterRequest(js)` | Returns `hx-on::after:request` attribute |
+| `OnAfterSettle(js)` | Returns `hx-on::after:settle` attribute |
+| `OnResponseError(js)` | Returns `hx-on::response:error` attribute |
+| `OnBeforeRequest(js)` | Returns `hx-on::before:request` attribute |
 
 Detection helpers: `IsHTMX`, `IsPartial`, `IsMainContentTarget`, `IsHistoryRestore`, `IsHistoryRestoreFromContext`, `IsScrollLoad`, `HXTarget`.
 
@@ -101,7 +101,7 @@ Embedded static assets with cache-busting content hashes.
 | `Hash()` | 12-char content hash for cache busting |
 | `FS()` | Embedded `fs.FS` rooted at `static/` |
 
-**Bundled JS (11 files):** `htmx.js`, `morph.js`, `alpine.js`, `htmx-sse.js`, `htmx-ws.js`, `hx-head.js`, `stimulus.js`, `stimulus-controllers.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`.
+**Bundled JS (11 files):** `htmx.js`, `morph.js`, `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `stimulus.js`, `stimulus-controllers.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`.
 
 **Bundled CSS:** `app.css` (compiled Tailwind + DaisyUI), `frappe-gantt.css`.
 
@@ -178,7 +178,7 @@ Log stream display (1 component).
 | Templating | Templ (`github.com/a-h/templ v0.3.1020`) |
 | CSS | DaisyUI + Tailwind CSS (via Node CLI) |
 | Interactivity | HTMX, Alpine.js, Stimulus.js |
-| Client-side JS | idiomorph (DOM morphing), htmx extensions (SSE, WS, head) |
+| Client-side JS | htmx 4 (morphing in core), idiomorph global, htmx extensions (hx-sse, hx-ws, hx-head) |
 | Real-time | `stream/` (Turbo-Stream-style), `streamhub/` (SSE/WS pub/sub) |
 | Static assets | Go `embed` package (`staticfs/`) |
 | Build orchestration | go-task (`Taskfile.yml`) |
@@ -291,7 +291,7 @@ Both need `*WithBoundary` wrappers. The demo variant is only for gallery registr
 
 CSS is compiled from `assets/app.css` → `staticfs/static/css/app.css` and served at `/static/css/app.css`. The `staticfs` package embeds this file into the binary. Do not edit the output file directly; edit `assets/app.css` and re-run `task build:ui`.
 
-**Bundled JavaScript** lives in `staticfs/static/js/` — 11 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `htmx-sse.js`, `htmx-ws.js`, `hx-head.js`, `stimulus.js`, `stimulus-controllers.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
+**Bundled JavaScript** lives in `staticfs/static/js/` — 11 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `stimulus.js`, `stimulus-controllers.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
 
 **Cache busting**: `staticfs.Hash()` returns a 12-char content hash updated via `go generate`. `Stylesheet()` and `Script()` helpers append `?v={hash}` query params automatically. Use `data-asset-track="reload"` on tags to trigger full reload on version mismatch.
 

@@ -84,13 +84,7 @@ templ ThemeSwitcher() {
 				if (cur === 'system') applyTheme('system');
 			});
 
-			document.addEventListener('htmx:historyRestore', function() {
-				var restored = null;
-				try { restored = localStorage.getItem(STORAGE_KEY); } catch(e) {}
-				if (restored) applyTheme(restored);
-			});
-
-			document.addEventListener('htmx:afterSettle', function() {
+			document.addEventListener('htmx:after:settle', function() {
 				var cur = null;
 				try { cur = localStorage.getItem(STORAGE_KEY); } catch(e) {}
 				if (cur) syncPreviewIframes(cur);

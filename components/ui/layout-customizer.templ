@@ -212,7 +212,7 @@ templ LayoutCustomizer() {
 			}
 
 			// Re-apply after HTMX swap (on sidebar nav etc.)
-			document.addEventListener('htmx:afterSettle', function() {
+			document.addEventListener('htmx:after:settle', function() {
 				cfg = load();
 				apply(cfg);
 			});

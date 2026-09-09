@@ -434,7 +434,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 		// Monkey-patch pushState so sidebar active class syncs on HTMX URL updates.
 		var _pushState = history.pushState;
 		history.pushState = function() { _pushState.apply(this, arguments); syncSidebarActive(); };
-		document.addEventListener('htmx:afterSwap', syncSidebarActive);
+		document.addEventListener('htmx:after:swap', syncSidebarActive);
 		document.addEventListener('DOMContentLoaded', syncSidebarActive);
 		window.addEventListener('popstate', syncSidebarActive);
 		if (document.readyState !== 'loading') syncSidebarActive();

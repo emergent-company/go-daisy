@@ -66,13 +66,13 @@ func Dependencies(props DepsProps) templ.Component {
 			}
 		}
 		if props.SSE {
-			templ_7745c5c3_Err = templ.Raw(staticfs.Script("/js/htmx-sse.js")).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = templ.Raw(staticfs.Script("/js/hx-sse.js")).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
 		if props.WS {
-			templ_7745c5c3_Err = templ.Raw(staticfs.Script("/js/htmx-ws.js")).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = templ.Raw(staticfs.Script("/js/hx-ws.js")).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

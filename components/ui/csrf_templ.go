@@ -111,7 +111,7 @@ func CSRFAutoInject() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, ">\n\tdocument.addEventListener('htmx:configRequest', function(event) {\n\t\tvar token = document.querySelector('meta[name=\"csrf-token\"]')?.content;\n\t\tif (token) event.detail.headers['X-CSRF-TOKEN'] = token;\n\t});\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, ">\n\tdocument.addEventListener('htmx:config:request', function(event) {\n\t\tvar token = document.querySelector('meta[name=\"csrf-token\"]')?.content;\n\t\tif (token && event.detail?.ctx) event.detail.ctx.request.headers['X-CSRF-TOKEN'] = token;\n\t});\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

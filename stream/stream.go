@@ -155,12 +155,12 @@ func actionString(action Action, target, method string, comp templ.Component) (s
 
 // TagSSE returns a script tag loading the HTMX SSE extension.
 func TagSSE() templ.Component {
-	return scriptTag("/static/js/htmx-sse.js")
+	return scriptTag("/static/js/hx-sse.js")
 }
 
 // TagWS returns a script tag loading the HTMX WebSocket extension.
 func TagWS() templ.Component {
-	return scriptTag("/static/js/htmx-ws.js")
+	return scriptTag("/static/js/hx-ws.js")
 }
 
 func scriptTag(src string) templ.Component {
