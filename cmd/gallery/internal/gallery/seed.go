@@ -4434,6 +4434,38 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						},
 					},
 				},
+				{
+					Name:        "Compact empty state with CTA",
+					Description: "Bordered in-card empty state (compact scale) with a convenience action button in the guaranteed action gap.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.EmptyStateWithBoundary(ui.EmptyStateProps{
+							Icon:        "lucide--folder-open",
+							Title:       "No cases yet",
+							Description: "Create your first case to get started.",
+							Bordered:    true,
+							ActionHref:  "#",
+							ActionLabel: "Create case",
+							ActionIcon:  "lucide--plus",
+						})
+					},
+				},
+				{
+					Name:        "Hero CTA",
+					Description: "Large page-level call to action (hero scale) with a tinted icon tile and a primary action.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.EmptyStateWithBoundary(ui.EmptyStateProps{
+							Icon:        "lucide--server",
+							Title:       "Connect your first LLM provider",
+							Description: "LLM providers are the AI services that generate responses and embeddings. Add one and agents can start running.",
+							Variant:     ui.EmptyStateHero,
+							IconStyle:   ui.EmptyStateIconTile,
+							Bordered:    true,
+							ActionHref:  "#",
+							ActionLabel: "Add your first provider",
+							ActionIcon:  "lucide--plus",
+						})
+					},
+				},
 			},
 		},
 

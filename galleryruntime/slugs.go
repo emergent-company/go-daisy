@@ -26,6 +26,7 @@ var ComponentSlugs = map[string]string{
 	"Toast":           "toast-real",
 	"Alert":           "alert",
 	"Empty":           "empty-state-real",
+	"EmptyState":      "empty-state-real",
 	"Loader":          "loader",
 	"NoPermissions":   "no-permissions",
 	"SectionHeader":   "section-header",

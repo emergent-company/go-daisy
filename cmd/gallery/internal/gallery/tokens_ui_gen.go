@@ -441,6 +441,12 @@ func EmptyTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// EmptyStateTokens returns the DesignToken slice for EmptyStateWithBoundary.
+func EmptyStateTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
 // LoaderTokens returns the DesignToken slice for LoaderWithBoundary.
 func LoaderTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{

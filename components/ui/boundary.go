@@ -225,6 +225,32 @@ func EmptyWithBoundary(icon string, title string, description string) templ.Comp
 	})
 }
 
+// EmptyStateWithBoundary wraps EmptyState with a dev-mode component boundary annotation.
+// gallery:token variant,iconStyle,heading,bordered,title,description,actionlabel,actionicon
+// gallery:hint variant:default(hero)
+// gallery:hint iconStyle:default(tile)
+// gallery:hint heading:default(h2)
+// gallery:hint title:default(Connect your first provider)
+// gallery:hint description:default(LLM providers power your agents — add one to get started.)
+// gallery:hint actionlabel:default(Add your first provider)
+// gallery:hint actionicon:default(lucide--plus)
+// gallery:hint actionhref:default(#)
+func EmptyStateWithBoundary(props EmptyStateProps) templ.Component {
+	return devmode.ComponentBoundary("EmptyState", EmptyState(props), map[string]any{
+		"icon":        props.Icon,
+		"title":       props.Title,
+		"description": props.Description,
+		"variant":     string(props.Variant),
+		"iconStyle":   string(props.IconStyle),
+		"heading":     string(props.Heading),
+		"bordered":    props.Bordered,
+		"actionHref":  props.ActionHref,
+		"actionLabel": props.ActionLabel,
+		"actionIcon":  props.ActionIcon,
+		"class":       props.Class,
+	})
+}
+
 // LoaderWithBoundary wraps Loader with a dev-mode component boundary annotation.
 // gallery:token variant
 func LoaderWithBoundary(variant LoaderVariant) templ.Component {
