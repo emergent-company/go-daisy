@@ -31,6 +31,19 @@ const (
 	PopoverBottom PopoverPlacement = "bottom"
 	PopoverLeft   PopoverPlacement = "left"
 	PopoverRight  PopoverPlacement = "right"
+
+	// Corner placements align the popover with the trigger's start (left/top)
+	// or end (right/bottom) edge on the secondary axis instead of centering —
+	// e.g. bottom-end drops the popover below the trigger, right-aligned to
+	// its right edge (the classic row-action dropdown).
+	PopoverBottomStart PopoverPlacement = "bottom-start"
+	PopoverBottomEnd   PopoverPlacement = "bottom-end"
+	PopoverTopStart    PopoverPlacement = "top-start"
+	PopoverTopEnd      PopoverPlacement = "top-end"
+	PopoverLeftStart   PopoverPlacement = "left-start"
+	PopoverLeftEnd     PopoverPlacement = "left-end"
+	PopoverRightStart  PopoverPlacement = "right-start"
+	PopoverRightEnd    PopoverPlacement = "right-end"
 )
 
 // PopoverRootProps configures the root container for a popover.
@@ -171,7 +184,7 @@ func PopoverTrigger(props ...PopoverTriggerProps) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(string(p.TriggerType))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/popover.templ`, Line: 75, Col: 46}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/popover.templ`, Line: 88, Col: 46}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 		if templ_7745c5c3_Err != nil {
@@ -266,7 +279,7 @@ func PopoverContent(props ...PopoverContentProps) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(string(p.Placement))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/popover.templ`, Line: 95, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/popover.templ`, Line: 108, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
@@ -279,7 +292,7 @@ func PopoverContent(props ...PopoverContentProps) templ.Component {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(strconv.Itoa(p.Offset))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/popover.templ`, Line: 96, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/popover.templ`, Line: 109, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 		if templ_7745c5c3_Err != nil {

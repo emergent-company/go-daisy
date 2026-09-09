@@ -23,6 +23,19 @@ const (
 	PopoverBottom PopoverPlacement = "bottom"
 	PopoverLeft   PopoverPlacement = "left"
 	PopoverRight  PopoverPlacement = "right"
+
+	// Corner placements align the popover with the trigger's start (left/top)
+	// or end (right/bottom) edge on the secondary axis instead of centering —
+	// e.g. bottom-end drops the popover below the trigger, right-aligned to
+	// its right edge (the classic row-action dropdown).
+	PopoverBottomStart PopoverPlacement = "bottom-start"
+	PopoverBottomEnd   PopoverPlacement = "bottom-end"
+	PopoverTopStart    PopoverPlacement = "top-start"
+	PopoverTopEnd      PopoverPlacement = "top-end"
+	PopoverLeftStart   PopoverPlacement = "left-start"
+	PopoverLeftEnd     PopoverPlacement = "left-end"
+	PopoverRightStart  PopoverPlacement = "right-start"
+	PopoverRightEnd    PopoverPlacement = "right-end"
 )
 
 // PopoverRootProps configures the root container for a popover.
