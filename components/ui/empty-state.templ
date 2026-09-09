@@ -64,22 +64,31 @@ type EmptyStateProps struct {
 //   - EmptyStateHero: larger padding and title (h2 by default), typically with
 //     EmptyStateIconTile for a tinted icon tile, for page-level CTA heroes.
 //
-// Children land in the action area below the description, spaced automatically.
-templ EmptyState(props EmptyStateProps, children ...templ.Component) {
+// Callers pass a trailing element block (buttons, links, badges) which lands in
+// the action area below the description, spaced automatically. Children flow
+// through the templ children context (like every other go-daisy component), so
+// EmptyState itself declares no children parameter. The action area is hidden
+// when empty so plain empty states render no stray gap.
+templ EmptyState(props EmptyStateProps) {
 	{{ pad := emptyStatePadding(props) }}
 	if props.Bordered {
 		@CardRaw("card-border", "px-0 py-0", props.Attrs) {
-			@emptyStateColumn(props, pad, nil, children)
+			@emptyStateBody(props, pad, nil) {
+				{ children... }
+			}
 		}
 	} else {
-		@emptyStateColumn(props, pad, props.Attrs, children)
+		@emptyStateBody(props, pad, props.Attrs) {
+			{ children... }
+		}
 	}
 }
 
-// emptyStateColumn is the shared centered content column. Spacing classes come
-// from the scale helpers so icon → title → description → action rhythm is
-// identical no matter which chrome or scale is used.
-templ emptyStateColumn(props EmptyStateProps, pad string, attrs templ.Attributes, children []templ.Component) {
+// emptyStateBody is the shared centered content column rendered by both
+// chrome branches of EmptyState. Spacing classes come from the scale helpers
+// so icon → title → description → action rhythm is identical no matter which
+// chrome or scale is used.
+templ emptyStateBody(props EmptyStateProps, pad string, attrs templ.Attributes) {
 	{{ hero := props.Variant == EmptyStateHero
 		iconMB := emptyStateIconMargin(props.Variant)
 		titleMB := emptyStateTitleMargin(props.Variant)
@@ -92,8 +101,7 @@ templ emptyStateColumn(props EmptyStateProps, pad string, attrs templ.Attributes
 		if heading == "" {
 			if hero { heading = EmptyStateHeadingH2 } else { heading = EmptyStateHeadingH3 }
 		}
-		hasAction := (props.ActionLabel != "" && props.ActionHref != "") || len(children) > 0
-		titleSpaced := props.Description != "" || hasAction }}
+		titleSpaced := props.Description != "" || (props.ActionLabel != "" && props.ActionHref != "") }}
 	<div class={ "flex flex-col items-center text-center", pad, props.Class }
 		{ devmode.Attrs(ctx, "ui/EmptyState")... }
 		{ attrs... }>
@@ -118,24 +126,22 @@ templ emptyStateColumn(props EmptyStateProps, pad string, attrs templ.Attributes
 		if props.Description != "" {
 			<p class={ descClass }>{ props.Description }</p>
 		}
-		if hasAction {
-			<div class={ "flex flex-wrap items-center justify-center gap-2", ctaMT }>
-				if props.ActionLabel != "" && props.ActionHref != "" {
-					@Button(ButtonProps{
-						Type:    ButtonTypeLink,
-						Href:    props.ActionHref,
-						Variant: ButtonPrimary,
-						Size:    emptyStateActionSize(props.Variant),
-						Icon:    props.ActionIcon,
-					}) {
-						{ props.ActionLabel }
-					}
+		// Action area: always present so trailing children keep the guaranteed
+		// gap; hidden when nothing renders inside it.
+		<div class={ "flex flex-wrap items-center justify-center gap-2 [&:empty]:hidden", ctaMT }>
+			if props.ActionLabel != "" && props.ActionHref != "" {
+				@Button(ButtonProps{
+					Type:    ButtonTypeLink,
+					Href:    props.ActionHref,
+					Variant: ButtonPrimary,
+					Size:    emptyStateActionSize(props.Variant),
+					Icon:    props.ActionIcon,
+				}) {
+					{ props.ActionLabel }
 				}
-				for _, c := range children {
-					@c
-				}
-			</div>
-		}
+			}
+			{ children... }
+		</div>
 	</div>
 }
 
