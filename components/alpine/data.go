@@ -144,15 +144,23 @@ func ToastQueueState(seed ...ToastItem) State {
 
 // comboboxState is the x-data state for a searchable combobox with keyboard nav.
 type comboboxState struct {
-	Open        bool     `json:"open"`
-	ActiveIndex int      `json:"activeIndex"`
-	Search      string   `json:"search"`
-	Selected    []string `json:"selected"`
+	Open        bool              `json:"open"`
+	ActiveIndex int               `json:"activeIndex"`
+	Search      string            `json:"search"`
+	Selected    []string          `json:"selected"`
+	Labels      map[string]string `json:"labels,omitempty"`
 }
 
-// Combobox returns an x-data state for a combobox.
-func ComboboxState(selected []string) State {
-	return comboboxState{Open: false, ActiveIndex: -1, Selected: selected}
+// Combobox returns an x-data state for a combobox. labels maps option values to
+// their display labels so the trigger can show the label instead of the raw value.
+func ComboboxState(selected []string, labels map[string]string) State {
+	if selected == nil {
+		selected = []string{}
+	}
+	if labels == nil {
+		labels = map[string]string{}
+	}
+	return comboboxState{Open: false, ActiveIndex: -1, Selected: selected, Labels: labels}
 }
 
 // structuredInputState is the x-data state for repeatable key-value rows.

@@ -49,6 +49,14 @@ func comboboxPlaceholder(p string) string {
 	return p
 }
 
+func comboboxLabels(opts []ComboboxOption) map[string]string {
+	m := make(map[string]string, len(opts))
+	for _, o := range opts {
+		m[o.Value] = o.Label
+	}
+	return m
+}
+
 func comboboxSearchFilter(opt ComboboxOption) string {
 	return `search === '' || ` + "`" + opt.Label + "`.toLowerCase().includes(search.toLowerCase())"
 }
@@ -66,7 +74,7 @@ templ comboboxTrigger(props ComboboxProps) {
 		if props.Mode == ComboboxSingle {
 			<span
 				class={ "text-sm truncate", templ.KV("text-base-content/50", len(props.Selected) == 0) }
-				x-text={ "selected.length ? selected[0] : '" + comboboxPlaceholder(props.Placeholder) + "'" }
+				x-text={ "selected.length ? (labels[selected[0]] || selected[0]) : '" + comboboxPlaceholder(props.Placeholder) + "'" }
 			>{ comboboxPlaceholder(props.Placeholder) }</span>
 		} else {
 			<span
@@ -188,7 +196,7 @@ templ comboboxLazyOptions(props ComboboxProps) {
 templ Combobox(props ComboboxProps) {
 	<div
 		class={ "form-control w-full", templ.KV(props.Class, props.Class != "") }
-		x-data={ alpine.XData(alpine.ComboboxState(props.Selected)) }
+		{ alpine.XData(alpine.ComboboxState(props.Selected, comboboxLabels(props.Source.Static)))... }
 		x-init={ alpine.ComboboxInit(props.Mode == ComboboxMultiple) }
 		{ devmode.Attrs(ctx, "form/Combobox")... }
 		{ props.Attrs... }

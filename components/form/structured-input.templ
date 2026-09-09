@@ -105,7 +105,7 @@ templ structuredInputHiddenInputs(props StructuredInputProps) {
 templ StructuredInput(props StructuredInputProps) {
 	<div
 		class={ "form-control w-full space-y-2", templ.KV(props.Class, props.Class != "") }
-		x-data={ alpine.XData(alpine.StructuredInputState(entriesToMaps(props.Entries))) }
+		{ alpine.XData(alpine.StructuredInputState(entriesToMaps(props.Entries)))... }
 		x-init={ alpine.StructuredInputInit() }
 		{ devmode.Attrs(ctx, "form/StructuredInput")... }
 		{ props.Attrs... }

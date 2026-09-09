@@ -57,6 +57,14 @@ func comboboxPlaceholder(p string) string {
 	return p
 }
 
+func comboboxLabels(opts []ComboboxOption) map[string]string {
+	m := make(map[string]string, len(opts))
+	for _, o := range opts {
+		m[o.Value] = o.Label
+	}
+	return m
+}
+
 func comboboxSearchFilter(opt ComboboxOption) string {
 	return `search === '' || ` + "`" + opt.Label + "`.toLowerCase().includes(search.toLowerCase())"
 }
@@ -133,9 +141,9 @@ func comboboxTrigger(props ComboboxProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue("selected.length ? selected[0] : '" + comboboxPlaceholder(props.Placeholder) + "'")
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue("selected.length ? (labels[selected[0]] || selected[0]) : '" + comboboxPlaceholder(props.Placeholder) + "'")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 69, Col: 95}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 77, Col: 120}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 			if templ_7745c5c3_Err != nil {
@@ -148,7 +156,7 @@ func comboboxTrigger(props ComboboxProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(comboboxPlaceholder(props.Placeholder))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 70, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 78, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -184,7 +192,7 @@ func comboboxTrigger(props ComboboxProps) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue("selected.length ? selected.length + ' selected' : '" + comboboxPlaceholder(props.Placeholder) + "'")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 74, Col: 113}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 82, Col: 113}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 			if templ_7745c5c3_Err != nil {
@@ -197,7 +205,7 @@ func comboboxTrigger(props ComboboxProps) templ.Component {
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(comboboxPlaceholder(props.Placeholder))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 75, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 83, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -273,7 +281,7 @@ func comboboxHiddenInputs(props ComboboxProps) templ.Component {
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue(`'` + props.Name + `[]'`)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 97, Col: 56}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 105, Col: 56}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
 			if templ_7745c5c3_Err != nil {
@@ -291,7 +299,7 @@ func comboboxHiddenInputs(props ComboboxProps) templ.Component {
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 100, Col: 40}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 108, Col: 40}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
 			if templ_7745c5c3_Err != nil {
@@ -341,7 +349,7 @@ func comboboxPopoverSearch(props ComboboxProps) templ.Component {
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Source.LazyEndpoint)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 115, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 123, Col: 37}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
 			if templ_7745c5c3_Err != nil {
@@ -354,7 +362,7 @@ func comboboxPopoverSearch(props ComboboxProps) templ.Component {
 			var templ_7745c5c3_Var19 string
 			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.ResolveAttributeValue("next .combobox-options-inner")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 116, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 124, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var19)
 			if templ_7745c5c3_Err != nil {
@@ -409,7 +417,7 @@ func comboboxStaticOption(opt ComboboxOption, props ComboboxProps) templ.Compone
 			var templ_7745c5c3_Var22 string
 			templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.ResolveAttributeValue(opt.Value)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 134, Col: 25}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 142, Col: 25}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var22)
 			if templ_7745c5c3_Err != nil {
@@ -435,7 +443,7 @@ func comboboxStaticOption(opt ComboboxOption, props ComboboxProps) templ.Compone
 			var templ_7745c5c3_Var24 string
 			templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.ResolveAttributeValue(comboboxSearchFilter(opt))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 138, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 146, Col: 37}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var24)
 			if templ_7745c5c3_Err != nil {
@@ -448,7 +456,7 @@ func comboboxStaticOption(opt ComboboxOption, props ComboboxProps) templ.Compone
 			var templ_7745c5c3_Var25 string
 			templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.ResolveAttributeValue(comboboxSelectExpr(opt.Value))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 139, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 147, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var25)
 			if templ_7745c5c3_Err != nil {
@@ -461,7 +469,7 @@ func comboboxStaticOption(opt ComboboxOption, props ComboboxProps) templ.Compone
 			var templ_7745c5c3_Var26 string
 			templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(opt.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 141, Col: 20}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 149, Col: 20}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 			if templ_7745c5c3_Err != nil {
@@ -479,7 +487,7 @@ func comboboxStaticOption(opt ComboboxOption, props ComboboxProps) templ.Compone
 				var templ_7745c5c3_Var27 string
 				templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.ResolveAttributeValue("isSelected('" + opt.Value + "')")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 143, Col: 52}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 151, Col: 52}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var27)
 				if templ_7745c5c3_Err != nil {
@@ -508,7 +516,7 @@ func comboboxStaticOption(opt ComboboxOption, props ComboboxProps) templ.Compone
 			var templ_7745c5c3_Var29 string
 			templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.ResolveAttributeValue(opt.Value)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 151, Col: 25}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 159, Col: 25}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var29)
 			if templ_7745c5c3_Err != nil {
@@ -534,7 +542,7 @@ func comboboxStaticOption(opt ComboboxOption, props ComboboxProps) templ.Compone
 			var templ_7745c5c3_Var31 string
 			templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.ResolveAttributeValue(comboboxSelectExpr(opt.Value))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 155, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 163, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var31)
 			if templ_7745c5c3_Err != nil {
@@ -547,7 +555,7 @@ func comboboxStaticOption(opt ComboboxOption, props ComboboxProps) templ.Compone
 			var templ_7745c5c3_Var32 string
 			templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(opt.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 157, Col: 20}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 165, Col: 20}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 			if templ_7745c5c3_Err != nil {
@@ -565,7 +573,7 @@ func comboboxStaticOption(opt ComboboxOption, props ComboboxProps) templ.Compone
 				var templ_7745c5c3_Var33 string
 				templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.ResolveAttributeValue("isSelected('" + opt.Value + "')")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 159, Col: 52}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 167, Col: 52}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var33)
 				if templ_7745c5c3_Err != nil {
@@ -652,7 +660,7 @@ func comboboxLazyOptions(props ComboboxProps) templ.Component {
 		var templ_7745c5c3_Var36 string
 		templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Source.LazyEndpoint)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 178, Col: 36}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 186, Col: 36}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var36)
 		if templ_7745c5c3_Err != nil {
@@ -707,29 +715,24 @@ func Combobox(props ComboboxProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "\" x-data=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, alpine.XData(alpine.ComboboxState(props.Selected, comboboxLabels(props.Source.Static))))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, " x-init=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var40 string
-		templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.ResolveAttributeValue(alpine.XData(alpine.ComboboxState(props.Selected)))
+		templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.ResolveAttributeValue(alpine.ComboboxInit(props.Mode == ComboboxMultiple))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 191, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 200, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var40)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "\" x-init=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var41 string
-		templ_7745c5c3_Var41, templ_7745c5c3_Err = templ.ResolveAttributeValue(alpine.ComboboxInit(props.Mode == ComboboxMultiple))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 192, Col: 62}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var41)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -754,12 +757,12 @@ func Combobox(props ComboboxProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var42 string
-			templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
+			var templ_7745c5c3_Var41 string
+			templ_7745c5c3_Var41, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 197, Col: 38}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 205, Col: 38}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var42)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var41)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -767,12 +770,12 @@ func Combobox(props ComboboxProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var43 string
-			templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
+			var templ_7745c5c3_Var42 string
+			templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 198, Col: 42}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/combobox.templ`, Line: 206, Col: 42}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var43))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

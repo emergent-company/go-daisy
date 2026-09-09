@@ -34,7 +34,7 @@ func ComboboxInit(multi bool) string {
 	if multi {
 		selFn = `root.selectItem=function(v){var i=root.selected.indexOf(v);if(i>=0)root.selected.splice(i,1);else root.selected.push(v)};`
 	}
-	return `var root=this;root.toggle=function(){root.open=!root.open;if(root.open){root.activeIndex=-1;var s=root.$el.querySelector('input[type=text]');if(s)s.focus()}};` +
+	return `let root=$data;root.toggle=function(){root.open=!root.open;if(root.open){root.activeIndex=-1;var s=root.$el.querySelector('input[type=text]');if(s)s.focus()}};` +
 		selFn +
 		`root.clearAll=function(){root.selected=[]};` +
 		`root.isSelected=function(v){return root.selected.indexOf(v)>=0};` +
@@ -44,11 +44,11 @@ func ComboboxInit(multi bool) string {
 
 // StructuredInputInit returns the x-init expression for repeatable row add/remove.
 func StructuredInputInit() string {
-	return `var root=this;root.addRow=function(){root.rows.push({})};root.removeRow=function(idx){root.rows.splice(idx,1)};`
+	return `let root=$data;root.addRow=function(){root.rows.push({})};root.removeRow=function(idx){root.rows.splice(idx,1)};`
 }
 
 // TagListInit returns the x-init expression for tag list add/remove.
 // Tags added via Enter/comma/space; Backspace on empty removes last.
 func TagListInit() string {
-	return `var root=this;root.addTag=function(){var v=root.input.trim();if(!v)return;var parts=v.split(',');for(var i=0;i<parts.length;i++){var t=parts[i].trim();if(t&&root.tags.indexOf(t)<0)root.tags.push(t)}root.input=''};root.removeTag=function(idx){root.tags.splice(idx,1)};root.handleKeydown=function(e){if(e.key==='Enter'||e.key===','){e.preventDefault();root.addTag()}if(e.key==='Backspace'&&!root.input&&root.tags.length){root.removeTag(root.tags.length-1)}};`
+	return `let root=$data;root.addTag=function(){var v=root.input.trim();if(!v)return;var parts=v.split(',');for(var i=0;i<parts.length;i++){var t=parts[i].trim();if(t&&root.tags.indexOf(t)<0)root.tags.push(t)}root.input=''};root.removeTag=function(idx){root.tags.splice(idx,1)};root.handleKeydown=function(e){if(e.key==='Enter'||e.key===','){e.preventDefault();root.addTag()}if(e.key==='Backspace'&&!root.input&&root.tags.length){root.removeTag(root.tags.length-1)}};`
 }
