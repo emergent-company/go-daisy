@@ -296,7 +296,7 @@ templ nexusRightbar() {
 	function initApexChart(el){try{var o=JSON.parse(el.dataset.options);el._chart=new ApexCharts(el,o);el._chart.render()}catch(e){console.warn('Chart init failed:',e)}}
 	document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('[data-chart]').forEach(initApexChart)});
 	if(document.readyState==='complete'||document.readyState==='interactive'){document.querySelectorAll('[data-chart]').forEach(initApexChart)}
-	document.addEventListener('htmx:afterSettle',function(e){e.detail.target.querySelectorAll('[data-chart]:not(._ac-initialized)').forEach(function(el){el.classList.add('_ac-initialized');initApexChart(el)})})}
+	document.addEventListener('htmx:after:settle',function(e){e.target.querySelectorAll('[data-chart]:not(._ac-initialized)').forEach(function(el){el.classList.add('_ac-initialized');initApexChart(el)})})}
 	</script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/simplebar/6.2.7/simplebar.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/filepond/4.32.6/filepond.min.css"/>

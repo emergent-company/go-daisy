@@ -16,9 +16,9 @@ templ Dependencies(props DepsProps) {
 		@templ.Raw(staticfs.Script("/js/stimulus-controllers.js"))
 	}
 	if props.SSE {
-		@templ.Raw(staticfs.Script("/js/htmx-sse.js"))
+		@templ.Raw(staticfs.Script("/js/hx-sse.js"))
 	}
 	if props.WS {
-		@templ.Raw(staticfs.Script("/js/htmx-ws.js"))
+		@templ.Raw(staticfs.Script("/js/hx-ws.js"))
 	}
 }

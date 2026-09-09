@@ -248,17 +248,17 @@ stream.Send(c, stream.Refresh(method: "morph", scroll: "preserve"))
 ```
 
 ```html
-<!-- Client: connect to SSE stream -->
-<div hx-ext="sse" sse-connect="/events" sse-swap="message" hx-swap="beforeend">
+<!-- Client: connect to SSE stream (htmx 4: hx-sse extension, no hx-ext attr needed) -->
+<div hx-sse:connect="/events" hx-sse:swap="message" hx-swap="beforeend">
   <!-- Messages stream in here -->
 </div>
 ```
 
 ```html
-<!-- Client: WebSocket for bidirectional chat -->
-<div hx-ext="ws" ws-connect="/chat/room/42">
+<!-- Client: WebSocket for bidirectional chat (htmx 4: hx-ws extension, no hx-ext attr needed) -->
+<div hx-ws:connect="/chat/room/42">
   <div id="messages">...</div>
-  <form ws-send>
+  <form hx-ws:send>
     <input name="message">
     <button>Send</button>
   </form>
@@ -274,7 +274,7 @@ streamMsg := stream.Append("#items", table.TableRow(item))
 ```
 
 **Implementation plan:**
-1. Add `htmx-sse` and `htmx-ws` extensions to bundled JS
+1. Add `hx-sse` and `hx-ws` extensions to bundled JS
 2. Create `stream/` package:
    ```go
    stream.Append(target, comp)    // AppendBeforeEnd
@@ -293,7 +293,7 @@ streamMsg := stream.Append("#items", table.TableRow(item))
 5. Auto-reconnect on connection loss (HTMX handles this)
 6. Gallery demo: live counter, live notification panel, live chat
 
-**Size cost:** ~8KB gzipped for htmx-sse + htmx-ws extensions.
+**Size cost:** ~8KB gzipped for hx-sse + hx-ws extensions.
 
 **Breaking change:** None. New package, additive.
 
@@ -400,11 +400,11 @@ layout.Page(layout.PageProps{
 
 ```js
 // Bundled JS (~2KB): progress bar logic
-document.addEventListener("htmx:beforeRequest", () => {
+document.addEventListener("htmx:before:request", () => {
   document.documentElement.setAttribute("aria-busy", "true")
   showProgressBar()
 })
-document.addEventListener("htmx:afterSettle", () => {
+document.addEventListener("htmx:after:settle", () => {
   document.documentElement.removeAttribute("aria-busy")
   hideProgressBar()
 })
@@ -695,40 +695,40 @@ func DashboardHandler(c echo.Context) error {
 
 ### P3.4 `hx-on` Integration + Inline Event Handlers
 
-**What:** Leverage HTMX 2.x `hx-on` attribute for inline event handlers. Respond to HTMX lifecycle events (`htmx:afterRequest`, `htmx:responseError`, etc.) directly in HTML without writing global JS listeners.
+**What:** Leverage HTMX `hx-on` attribute for inline event handlers. Respond to HTMX lifecycle events (`htmx:after:request`, `htmx:response:error`, etc.) directly in HTML without writing global JS listeners.
 
 **Why P3:** Currently, JS behaviors that react to HTMX events require `document.addEventListener(...)` in external JS files. `hx-on` moves these inline — co-located with the HTML they affect. More maintainable, easier to delete when component is removed.
 
 **Benefits:**
 - Event handlers co-located with HTML (no hidden listeners)
 - Auto-cleaned when element is removed from DOM
-- Supports any HTMX event: `htmx:afterRequest`, `htmx:responseError`, `htmx:validation:failed`
+- Supports any HTMX event: `htmx:after:request`, `htmx:response:error`, `htmx:validation:failed`
 - Can call Alpine methods or vanilla JS
 
 **Examples:**
 
 ```html
-<!-- Reset form after successful HTMX POST -->
-<form hx-post="/items" hx-on::after-request="if (event.detail.successful) this.reset()">
+<!-- Reset form after successful HTMX POST (htmx 4: colon event names + ctx detail) -->
+<form hx-post="/items" hx-on::after:request="if (event.detail.ctx.response.status < 400) this.reset()">
   <input name="name">
   <button>Submit</button>
 </form>
 
 <!-- Show toast on error -->
 <form hx-post="/items"
-      hx-on::response-error="Alpine.store('toasts').add('Failed!', 'error')">
+      hx-on::response:error="Alpine.store('toasts').add('Failed!', 'error')">
   ...
 </form>
 
 <!-- Focus input after swap -->
 <input hx-get="/search" hx-trigger="keyup changed delay:500ms"
-       hx-on::after-settle="this.focus()">
+       hx-on::after:settle="this.focus()">
 ```
 
 ```go
 // Go helper: generate hx-on attrs
-render.OnAfterRequest("if (event.detail.successful) this.reset()")
-render.OnResponseError("showError(event.detail.xhr.response)")
+render.OnAfterRequest("if (event.detail.ctx.response.status < 400) this.reset()")
+render.OnResponseError("showError(event.detail.ctx.response.raw)")
 
 // In Templ:
 <div { render.OnAfterRequest("...") }>
@@ -1097,7 +1097,7 @@ go-daisy's current `RedirectAfterMutation` already does this, but it's not woven
 templ FormModal(props FormModalProps) {
   <form hx-post={ props.Action } hx-target={ "#" + props.ID }
         hx-swap="outerHTML"
-        hx-on::after-request="if (event.detail.successful && event.detail.xhr.status === 200) {
+        hx-on::after:request="if (event.detail.ctx.response.status === 200) {
             // 303 redirect handled by HTMX. 200 means server forgot to redirect.
             console.warn('Form submitted with 200, expected 303 redirect');
         }">
@@ -1303,9 +1303,9 @@ func CSRFToken(next echo.HandlerFunc) echo.HandlerFunc {
 
 ```js
 // Bundled JS (~500 bytes): auto-inject CSRF token into HTMX requests
-document.addEventListener("htmx:configRequest", (event) => {
+document.addEventListener("htmx:config:request", (event) => {
   const token = document.querySelector('meta[name="csrf-token"]')?.content
-  if (token) event.detail.headers["X-CSRF-TOKEN"] = token
+  if (token) event.detail.ctx.request.headers["X-CSRF-TOKEN"] = token
 })
 ```
 
@@ -1317,7 +1317,7 @@ document.addEventListener("htmx:configRequest", (event) => {
 
 | Turbo/Stimulus concept | go-daisy action | Priority |
 |---|---|---|
-| DOM Morphing + idiomorph | P0.2 — core feature | P0 |
+| DOM Morphing | htmx 4 core `innerMorph` — P0.2, implemented | P0 |
 | Stimulus controllers | Optional alternative to Alpine, `data-controller`/`data-action` helpers | P2 |
 | `data-turbo-permanent` | `hx-preserve` + `render.Permanent()` helper | P0.2 |
 | Turbo Frames (scoped nav) | `Frame` component + inherited `hx-target` | P2 |
@@ -1469,7 +1469,7 @@ Current go-daisy has individual `ThemeToggle`, `ThemeSwitcher`, `ThemeController
 | Rewrite Templ components as Web Components | Server-rendered Templ is the right layer. Web Components only for JS-heavy widgets. |
 | Adopt Turbo.js wholesale | HTMX already serves the same role. Borrow patterns, not the library. |
 | Build a React/Vue/Svelte competitor | go-daisy is HTML-over-the-wire. That's the architecture. |
-| Add a JS build pipeline (esbuild/webpack) | HTMX + Alpine + idiomorph are vanilla JS. No build step needed. |
+| Add a JS build pipeline (esbuild/webpack) | HTMX + Alpine are vanilla JS; morphing is built into htmx core. No build step needed. |
 | Abstract HTMX attributes behind Go wrappers | `hx-get`, `hx-target`, `hx-swap` are HTML attributes — write them in Templ. Wrap only complex patterns (streams, morph, SSE). |
 | Recreate shadcn/ui's `cn()` class merger | DaisyUI + Tailwind v4 handle class conflicts. No utility needed. |
 | Server-side JS rendering (React SSR, etc.) | go-daisy is Go-native. Templ IS the SSR. |
@@ -1482,7 +1482,7 @@ Current go-daisy has individual `ThemeToggle`, `ThemeSwitcher`, `ThemeController
 | Component | Size (gzipped) | Required |
 |---|---|---|
 | HTMX | 14KB | Always |
-| idiomorph | 5KB | P0 (opt-in per page) |
+| idiomorph | 5KB | opt-in (Alpine-morph consumers; htmx morph is core) |
 | Alpine.js core | 15KB | P0 (opt-in per page) |
 | Alpine persist plugin | 1KB | P0 |
 | Alpine focus plugin | 1KB | P2 |

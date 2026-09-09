@@ -69,7 +69,7 @@ templ DataGrid(props DataGridProps) {
 		class={ "card bg-base-100 shadow-sm border border-base-200", props.Class }
 		x-data="dataGridStore()"
 		x-init="init()"
-		hx-on::after-settle="initTree()"
+		hx-on::after:settle="initTree()"
 		{ devmode.Attrs(ctx, "table/DataGrid")... }
 		{ props.Attrs... }
 	>

@@ -177,7 +177,7 @@ func PageFull(props PageProps) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<script>\n\t\t\t(function() {\n\t\t\tdocument.addEventListener('htmx:beforeRequest', function() {\n\t\t\t\tdocument.documentElement.setAttribute('aria-busy', 'true');\n\t\t\t});\n\t\t\tdocument.addEventListener('htmx:afterSettle', function() {\n\t\t\t\tdocument.documentElement.removeAttribute('aria-busy');\n\t\t\t});\n\t\t})();\n\t\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<script>\n\t\t\t(function() {\n\t\t\tdocument.addEventListener('htmx:before:request', function() {\n\t\t\t\tdocument.documentElement.setAttribute('aria-busy', 'true');\n\t\t\t});\n\t\t\tdocument.addEventListener('htmx:after:settle', function() {\n\t\t\t\tdocument.documentElement.removeAttribute('aria-busy');\n\t\t\t});\n\t\t})();\n\t\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -263,9 +263,9 @@ func PageFull(props PageProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var13 string
-			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/js/htmx-sse.js?v=" + staticfs.Hash())
+			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/js/hx-sse.js?v=" + staticfs.Hash())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 69, Col: 62}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 69, Col: 60}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
 			if templ_7745c5c3_Err != nil {
@@ -282,9 +282,9 @@ func PageFull(props PageProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var14 string
-			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/js/htmx-ws.js?v=" + staticfs.Hash())
+			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/js/hx-ws.js?v=" + staticfs.Hash())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 72, Col: 61}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 72, Col: 59}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 			if templ_7745c5c3_Err != nil {
@@ -332,7 +332,7 @@ func PageFull(props PageProps) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<script>\n\t\t\t\t(function() {\n\t\t\t\tdocument.addEventListener('htmx:beforeHistorySave', function() {\n\t\t\t\t\tdocument.documentElement.setAttribute('data-navigation-direction', 'forward');\n\t\t\t\t});\n\t\t\t\twindow.addEventListener('popstate', function() {\n\t\t\t\t\tdocument.documentElement.setAttribute('data-navigation-direction', 'back');\n\t\t\t\t});\n\t\t\t\tdocument.addEventListener('htmx:afterSettle', function() {\n\t\t\t\t\tsetTimeout(function() {\n\t\t\t\t\t\tdocument.documentElement.removeAttribute('data-navigation-direction');\n\t\t\t\t\t}, 300);\n\t\t\t\t});\n\t\t\t})();\n\t\t\t\t</script>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<script>\n\t\t\t\t(function() {\n\t\t\t\tdocument.addEventListener('htmx:before:history:update', function() {\n\t\t\t\t\tdocument.documentElement.setAttribute('data-navigation-direction', 'forward');\n\t\t\t\t});\n\t\t\t\twindow.addEventListener('popstate', function() {\n\t\t\t\t\tdocument.documentElement.setAttribute('data-navigation-direction', 'back');\n\t\t\t\t});\n\t\t\t\tdocument.addEventListener('htmx:after:settle', function() {\n\t\t\t\t\tsetTimeout(function() {\n\t\t\t\t\t\tdocument.documentElement.removeAttribute('data-navigation-direction');\n\t\t\t\t\t}, 300);\n\t\t\t\t});\n\t\t\t})();\n\t\t\t\t</script>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

@@ -135,12 +135,12 @@ func RedirectAfterMutation(w http.ResponseWriter, r *http.Request, path string) 
 	http.Redirect(w, r, path, http.StatusSeeOther)
 }
 
-// SetMorph instructs HTMX to swap the response using DOM morphing (idiomorph).
-// The page must include the morph.js bundle and idiomorph must be loaded.
-// Has no effect on non-HTMX requests.
+// SetMorph instructs HTMX to swap the response using DOM morphing. Morphing is
+// built into htmx 4 core (innerMorph swap style), so no morph.js/idiomorph
+// bundle is required. Has no effect on non-HTMX requests.
 func SetMorph(w http.ResponseWriter, r *http.Request) {
 	if IsHTMX(r) {
-		w.Header().Set("HX-Reswap", "morph")
+		w.Header().Set("HX-Reswap", "innerMorph")
 	}
 }
 
@@ -184,28 +184,28 @@ func CacheSharedFrame(w http.ResponseWriter, maxAge int) {
 	w.Header().Add("Vary", "HX-Request-Type, HX-Request")
 }
 
-// OnAfterRequest returns {"hx-on::after-request": js} for spreading into a Templ element.
+// OnAfterRequest returns {"hx-on::after:request": js} for spreading into a Templ element.
 func OnAfterRequest(js string) templ.Attributes {
-	return templ.Attributes{"hx-on::after-request": js}
+	return templ.Attributes{"hx-on::after:request": js}
 }
 
-// OnAfterSettle returns {"hx-on::after-settle": js} for spreading into a Templ element.
+// OnAfterSettle returns {"hx-on::after:settle": js} for spreading into a Templ element.
 func OnAfterSettle(js string) templ.Attributes {
-	return templ.Attributes{"hx-on::after-settle": js}
+	return templ.Attributes{"hx-on::after:settle": js}
 }
 
-// OnResponseError returns {"hx-on::response-error": js} for spreading into a Templ element.
+// OnResponseError returns {"hx-on::response:error": js} for spreading into a Templ element.
 func OnResponseError(js string) templ.Attributes {
-	return templ.Attributes{"hx-on::response-error": js}
+	return templ.Attributes{"hx-on::response:error": js}
 }
 
-// OnBeforeRequest returns {"hx-on::before-request": js} for spreading into a Templ element.
+// OnBeforeRequest returns {"hx-on::before:request": js} for spreading into a Templ element.
 func OnBeforeRequest(js string) templ.Attributes {
-	return templ.Attributes{"hx-on::before-request": js}
+	return templ.Attributes{"hx-on::before:request": js}
 }
 
 // RenderAutoMorph is like RenderAuto but enables DOM morphing for HTMX swaps.
-// Requires morph.js to be loaded on the page.
+// Morphing is built into htmx 4 core (innerMorph) — no morph.js required.
 func RenderAutoMorph(w http.ResponseWriter, r *http.Request, page, partial templ.Component) {
 	SetMorph(w, r)
 	RenderAuto(w, r, page, partial)

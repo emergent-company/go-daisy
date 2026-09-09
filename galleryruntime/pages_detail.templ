@@ -406,7 +406,7 @@ templ ComponentDetail(c GalleryComponent) {
 		document.addEventListener('keydown', window.__detailKeyHandler);
 
 		var swapHandler = window.__detailSwapHandler;
-		if (swapHandler) document.removeEventListener('htmx:afterSwap', swapHandler);
+		if (swapHandler) document.removeEventListener('htmx:after:swap', swapHandler);
 		window.__detailSwapHandler = function() {
 			setTimeout(function() {
 				var frame = document.getElementById('preview-frame');
@@ -428,7 +428,7 @@ templ ComponentDetail(c GalleryComponent) {
 			applyThemeOnLoad('fullscreen-preview-frame');
 		}, 0);
 		};
-		document.addEventListener('htmx:afterSwap', window.__detailSwapHandler);
+		document.addEventListener('htmx:after:swap', window.__detailSwapHandler);
 
 			if (document.readyState === 'loading') {
 			document.addEventListener('DOMContentLoaded', function() {
@@ -1212,9 +1212,9 @@ templ ComponentExamples(c GalleryComponent) {
 			document.addEventListener('DOMContentLoaded', initFrames);
 		}
 		var initHandler = window.__initFramesHandler;
-		if (initHandler) document.removeEventListener('htmx:afterSwap', initHandler);
+		if (initHandler) document.removeEventListener('htmx:after:swap', initHandler);
 		window.__initFramesHandler = initFrames;
-		document.addEventListener('htmx:afterSwap', window.__initFramesHandler);
+		document.addEventListener('htmx:after:swap', window.__initFramesHandler);
 		if (document.readyState !== 'loading') initFrames();
 
 		// Component tree rendering for sub-example iframes.

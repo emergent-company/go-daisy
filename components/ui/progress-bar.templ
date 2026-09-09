@@ -10,8 +10,8 @@ var progressBarScriptOnce = templ.NewOnceHandle()
 // auto-shows during slow HTMX requests (>500ms). Include this inside the
 // <body> of layout.Page.
 //
-// Controlled by inline JS: listens for htmx:beforeRequest (starts timer) and
-// htmx:afterSettle (hides bar). After 500ms without a response, the bar slides
+// Controlled by inline JS: listens for htmx:before:request (starts timer) and
+// htmx:after:settle (hides bar). After 500ms without a response, the bar slides
 // in and animates to 90% width until the response arrives.
 templ ProgressBar() {
 	<div
@@ -54,7 +54,7 @@ templ ProgressBar() {
 				}, 200);
 			}
 
-			document.addEventListener('htmx:beforeRequest', function(e) {
+			document.addEventListener('htmx:before:request', function(e) {
 				if (e.target === document.body || e.target.matches('body *')) {
 					bar.classList.add('htmx-request');
 					clearTimeout(timer);
@@ -62,7 +62,7 @@ templ ProgressBar() {
 				}
 			});
 
-			document.addEventListener('htmx:afterSettle', function(e) {
+			document.addEventListener('htmx:after:settle', function(e) {
 				clearTimeout(timer);
 				cancelAnimationFrame(animFrame);
 				if (bar.classList.contains('htmx-request')) {

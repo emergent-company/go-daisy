@@ -46,10 +46,10 @@ templ PageFull(props PageProps) {
 		@layoutAriaBusyOnce.Once() {
 			<script>
 			(function() {
-			document.addEventListener('htmx:beforeRequest', function() {
+			document.addEventListener('htmx:before:request', function() {
 				document.documentElement.setAttribute('aria-busy', 'true');
 			});
-			document.addEventListener('htmx:afterSettle', function() {
+			document.addEventListener('htmx:after:settle', function() {
 				document.documentElement.removeAttribute('aria-busy');
 			});
 		})();
@@ -66,10 +66,10 @@ templ PageFull(props PageProps) {
 			<script src={ "/static/js/stimulus-controllers.js?v=" + staticfs.Hash() }></script>
 		}
 		if props.SSE {
-			<script src={ "/static/js/htmx-sse.js?v=" + staticfs.Hash() }></script>
+			<script src={ "/static/js/hx-sse.js?v=" + staticfs.Hash() }></script>
 		}
 		if props.WS {
-			<script src={ "/static/js/htmx-ws.js?v=" + staticfs.Hash() }></script>
+			<script src={ "/static/js/hx-ws.js?v=" + staticfs.Hash() }></script>
 		}
 		if props.Prefetch {
 			@layoutPrefetchOnce.Once() {
@@ -98,13 +98,13 @@ templ PageFull(props PageProps) {
 			@layoutViewTransitionsOnce.Once() {
 				<script>
 				(function() {
-				document.addEventListener('htmx:beforeHistorySave', function() {
+				document.addEventListener('htmx:before:history:update', function() {
 					document.documentElement.setAttribute('data-navigation-direction', 'forward');
 				});
 				window.addEventListener('popstate', function() {
 					document.documentElement.setAttribute('data-navigation-direction', 'back');
 				});
-				document.addEventListener('htmx:afterSettle', function() {
+				document.addEventListener('htmx:after:settle', function() {
 					setTimeout(function() {
 						document.documentElement.removeAttribute('data-navigation-direction');
 					}, 300);

@@ -16,7 +16,7 @@ test.describe('Form component render', () => {
       });
 
       await test.step('page shell is visible', async () => {
-        await expect(page.locator('#gallery-shell')).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('#gallery-content')).toBeVisible({ timeout: 10000 });
       });
 
       await test.step('component name heading is visible', async () => {

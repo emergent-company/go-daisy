@@ -46,11 +46,11 @@ Use helpers from the `render` package in every HTTP handler instead of calling `
 | `render.RenderTriple` | Full shell / sidebar nav swap / tab swap |
 | `render.RedirectAfterMutation` | HX-Redirect for HTMX, 303 for plain requests |
 | `render.AppendToast` | Out-of-band toast fragment into `#toast-container` |
-| `render.SetMorph` | Enable DOM morphing for this swap (HTMX + idiomorph) |
+| `render.SetMorph` | Enable DOM morphing for this swap (htmx 4 core `innerMorph`, no idiomorph needed) |
 | `render.RenderAutoMorph` | RenderAuto with DOM morphing |
 | `render.Preserve` | Mark element as hx-preserve (survives any swap) |
-| `render.OnAfterRequest` | hx-on::after-request handler |
-| `render.OnAfterSettle` | hx-on::after-settle handler |
+| `render.OnAfterRequest` | hx-on::after:request handler |
+| `render.OnAfterSettle` | hx-on::after:settle handler |
 | `render.CacheFrame` | Set cache headers for frame response |
 | `render.ForceReload` | Meta tag forcing full page reload |
 
@@ -121,7 +121,7 @@ render.RenderAutoMorph(w, r, page, partial)
 render.SetMorph(w, r)
 ```
 
-Requires `layout.PageFull(layout.PageProps{Morph: true, ...})`.
+Morphing is built into htmx 4 core (`innerMorph` swap style) — no idiomorph bundle needed. `layout.PageFull(layout.PageProps{Morph: true, ...})` only adds the standalone idiomorph global, which you still need for Alpine-morph style consumers.
 
 ### View Transitions
 
@@ -306,8 +306,8 @@ task dev:ui
 | CSS | DaisyUI 5 + Tailwind CSS 4 |
 | Interactivity | HTMX v4 |
 | Micro-interactions | Alpine.js 3 or Stimulus 3 (optional, pick one) |
-| DOM morphing | idiomorph (optional) |
-| Real-time | HTMX SSE / WebSocket extensions (optional) |
+| DOM morphing | htmx 4 core morphing (`innerMorph`) |
+| Real-time | HTMX hx-sse / hx-ws extensions (optional) |
 | Charts | ApexCharts 4 (lazy-loaded CDN) |
 | Static assets | Go `embed` (`staticfs/`) |
 | Build | go-task (`Taskfile.yml`) |

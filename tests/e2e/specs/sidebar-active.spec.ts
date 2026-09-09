@@ -37,7 +37,7 @@ test.describe('Sidebar active state', () => {
 
     await test.step('navigate to index page', async () => {
       await page.goto('/gallery');
-      await expect(page.locator('#gallery-shell')).toBeVisible();
+      await expect(page.locator('h1')).toContainText('go-daisy', { timeout: 5000 });
     });
     await test.step('verify no sidebar items are active on index', async () => {
       await expect(page.locator('#_layout-sidebar .menu-item.active')).toHaveCount(0);

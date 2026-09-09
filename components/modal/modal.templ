@@ -238,7 +238,7 @@ templ formModalAlpine(props FormModalProps) {
 					if props.IndicatorID != "" {
 						hx-indicator={ "#" + props.IndicatorID }
 					}
-					hx-on--after-request="if (event.detail.successful) open = false"
+					hx-on::after:request="if (event.detail.ctx.response.status < 400) open = false"
 				>
 					{ children... }
 					@form.FormActions("", "") {
@@ -288,7 +288,7 @@ templ formModalStimulus(props FormModalProps) {
 					if props.IndicatorID != "" {
 						hx-indicator={ "#" + props.IndicatorID }
 					}
-					hx-on--after-request="this.closest('[data-controller=modal]').__stimulusController.close()"
+					hx-on::after:request="this.closest('[data-controller=modal]').__stimulusController.close()"
 				>
 					{ children... }
 					@form.FormActions("", "") {
