@@ -75,7 +75,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"modal-toggle\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" data-command-palette=\"true\" class=\"modal-toggle\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -228,7 +228,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = commandPaletteTrigger(props.ID).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = commandPaletteTrigger().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -460,7 +460,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 	})
 }
 
-func commandPaletteTrigger(paletteID string) templ.Component {
+func commandPaletteTrigger() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -493,7 +493,7 @@ func commandPaletteTrigger(paletteID string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<script>\n\tif (!window._paletteTriggerInit) {\n\t  window._paletteTriggerInit = true;\n\n\t  document.addEventListener('keydown', function(e) {\n\t    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {\n\t      e.preventDefault();\n\t      var cb = document.getElementById('{ paletteID }-toggle');\n\t      if (cb) {\n\t        cb.checked = !cb.checked;\n\t        if (cb.checked) {\n\t          var input = document.getElementById('{ paletteID }-input');\n\t          if (input) input.focus();\n\t        }\n\t      }\n\t    } else if (e.key === 'Escape') {\n\t      var toggle = document.getElementById('{ paletteID }-toggle');\n\t      if (toggle && toggle.checked) toggle.checked = false;\n\t    }\n\t  });\n\n\t  document.addEventListener('htmx:after:settle', function() {\n\t    // Re-bind keyboard shortcut after HTMX swaps\n\t    if (!window._paletteKeydownBound) {\n\t      window._paletteKeydownBound = true;\n\t    }\n\t  });\n\t}\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<script>\n\tif (!window._paletteTriggerInit) {\n\t  window._paletteTriggerInit = true;\n\n\t  // Templ does not interpolate Go expressions inside <script>, so palette\n\t  // ids cannot be baked into this handler. Palette toggles are instead\n\t  // marked with data-command-palette and resolved at runtime: ⌘K opens the\n\t  // first command palette on the page, Escape closes any open one. This\n\t  // keeps a single global listener while supporting any palette id.\n\t  document.addEventListener('keydown', function(e) {\n\t    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {\n\t      e.preventDefault();\n\t      var cb = document.querySelector('input.modal-toggle[data-command-palette]');\n\t      if (cb) {\n\t        cb.checked = !cb.checked;\n\t        if (cb.checked) {\n\t          var modal = cb.nextElementSibling;\n\t          var input = modal ? modal.querySelector('input[type=\"text\"]') : null;\n\t          if (input) input.focus();\n\t        }\n\t      }\n\t    } else if (e.key === 'Escape') {\n\t      var toggles = document.querySelectorAll('input.modal-toggle[data-command-palette]');\n\t      for (var i = 0; i < toggles.length; i++) {\n\t        if (toggles[i].checked) toggles[i].checked = false;\n\t      }\n\t    }\n\t  });\n\t}\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

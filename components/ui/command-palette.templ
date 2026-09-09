@@ -34,7 +34,7 @@ type CommandPaletteProps struct {
 
 // CommandPalette renders a ⌘K-style command palette modal.
 templ CommandPalette(props CommandPaletteProps) {
-	<input type="checkbox" id={ props.ID + "-toggle" } class="modal-toggle" checked?={ props.Open } />
+	<input type="checkbox" id={ props.ID + "-toggle" } data-command-palette="true" class="modal-toggle" checked?={ props.Open } />
 	<div class="modal" role="dialog" { devmode.Attrs(ctx, "ui/CommandPalette")... } { props.Attrs... }>
 		<div class="modal-box p-0 max-w-lg">
 			<div class="flex items-center gap-3 px-4 py-3 border-b border-base-200">
@@ -68,7 +68,7 @@ templ CommandPalette(props CommandPaletteProps) {
 		</div>
 		<label class="modal-backdrop" for={ props.ID + "-toggle" }></label>
 	</div>
-	@commandPaletteTrigger(props.ID)
+	@commandPaletteTrigger()
 	@commandPaletteScript()
 }
 
@@ -117,33 +117,34 @@ templ paletteGroup(paletteID, group string, items []CommandPaletteItem) {
 	</div>
 }
 
-templ commandPaletteTrigger(paletteID string) {
+templ commandPaletteTrigger() {
 	@commandPaletteTriggerOnce.Once() {
 		<script>
 	if (!window._paletteTriggerInit) {
 	  window._paletteTriggerInit = true;
 
+	  // Templ does not interpolate Go expressions inside <script>, so palette
+	  // ids cannot be baked into this handler. Palette toggles are instead
+	  // marked with data-command-palette and resolved at runtime: ⌘K opens the
+	  // first command palette on the page, Escape closes any open one. This
+	  // keeps a single global listener while supporting any palette id.
 	  document.addEventListener('keydown', function(e) {
 	    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
 	      e.preventDefault();
-	      var cb = document.getElementById('{ paletteID }-toggle');
+	      var cb = document.querySelector('input.modal-toggle[data-command-palette]');
 	      if (cb) {
 	        cb.checked = !cb.checked;
 	        if (cb.checked) {
-	          var input = document.getElementById('{ paletteID }-input');
+	          var modal = cb.nextElementSibling;
+	          var input = modal ? modal.querySelector('input[type="text"]') : null;
 	          if (input) input.focus();
 	        }
 	      }
 	    } else if (e.key === 'Escape') {
-	      var toggle = document.getElementById('{ paletteID }-toggle');
-	      if (toggle && toggle.checked) toggle.checked = false;
-	    }
-	  });
-
-	  document.addEventListener('htmx:after:settle', function() {
-	    // Re-bind keyboard shortcut after HTMX swaps
-	    if (!window._paletteKeydownBound) {
-	      window._paletteKeydownBound = true;
+	      var toggles = document.querySelectorAll('input.modal-toggle[data-command-palette]');
+	      for (var i = 0; i < toggles.length; i++) {
+	        if (toggles[i].checked) toggles[i].checked = false;
+	      }
 	    }
 	  });
 	}
