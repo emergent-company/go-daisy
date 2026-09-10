@@ -89,3 +89,13 @@ func ViewMenuWithBoundary() templ.Component {
 func ViewMenuLabelWithBoundary(label string) templ.Component {
 	return devmode.ComponentBoundary("ViewMenuLabel", ViewMenuLabel(label), map[string]any{"label": label})
 }
+
+// ContainerWithBoundary wraps Container with a dev-mode component boundary annotation.
+func ContainerWithBoundary(size ContainerSize) templ.Component {
+	return devmode.ComponentBoundary("Container", Container(size, nil), map[string]any{"size": string(size)})
+}
+
+// RailWithBoundary wraps Rail with a dev-mode component boundary annotation.
+func RailWithBoundary(nav templ.Component) templ.Component {
+	return devmode.ComponentBoundary("Rail", Rail(nav, nil))
+}
