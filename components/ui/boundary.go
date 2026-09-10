@@ -57,6 +57,18 @@ func AvatarWithBoundary(name string, src string, icon string, size AvatarSize) t
 	})
 }
 
+// AvatarFullWithBoundary wraps AvatarFull with a dev-mode component boundary annotation.
+func AvatarFullWithBoundary(props AvatarProps) templ.Component {
+	return devmode.ComponentBoundary("Avatar", AvatarFull(props), map[string]any{
+		"name":     props.Name,
+		"src":      props.Src,
+		"icon":     props.Icon,
+		"size":     string(props.Size),
+		"tone":     string(props.Tone),
+		"fallback": string(props.Fallback),
+	})
+}
+
 // CardWithBoundary wraps Card with a dev-mode component boundary annotation.
 // gallery:token title
 // gallery:hint title:default(Card Title)
