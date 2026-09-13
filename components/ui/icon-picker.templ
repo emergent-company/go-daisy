@@ -76,7 +76,7 @@ templ IconPicker(props IconPickerProps) {
 				Offset:    4,
 				Exclusive: true,
 				Class:     "w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] p-2 max-h-64 overflow-y-auto overscroll-contain sm:w-72",
-				Attrs:     templ.Attributes{"id": p.PanelID},
+				Attrs:     templ.Attributes{"id": p.PanelID, "data-gd-icon-panel": "1"},
 			}) {
 				<div class="sticky top-0 z-10 -mx-2 -mt-2 mb-2 border-b border-base-200 bg-base-100 px-2 py-2">
 					<div class="relative">
