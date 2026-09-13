@@ -1,0 +1,227 @@
+package ui
+
+import (
+	"strconv"
+	"strings"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+// ColorPickerProps configures a colour picker that pairs a real text input
+// (the submitted form control) with a native colour swatch and optional presets.
+type ColorPickerProps struct {
+	ID          string
+	Name        string
+	Value       string   // CSS colour, e.g. "#4F46E5"
+	Presets     []string // optional swatch palette
+	Placeholder string   // default "#4F46E5"
+	AllowEmpty  bool     // show a clear affordance; empty submits an empty value
+	Class       string
+	Attrs       templ.Attributes
+}
+
+// colorPickerResolved is ColorPickerProps after defaults are applied and the
+// native swatch value (which must be a #rrggbb hex) is normalised.
+type colorPickerResolved struct {
+	ColorPickerProps
+	Swatch string
+}
+
+// colorPickerResolve applies zero-value defaults and normalises the swatch value.
+func colorPickerResolve(p ColorPickerProps) colorPickerResolved {
+	if p.ID == "" {
+		p.ID = "gd-color-picker"
+	}
+	if p.Placeholder == "" {
+		p.Placeholder = "#4F46E5"
+	}
+	return colorPickerResolved{ColorPickerProps: p, Swatch: colorPickerSwatchHex(p.Value)}
+}
+
+// colorPickerSwatchHex normalises a colour string for the native <input
+// type="color">, which only accepts #rrggbb. It expands #rgb, trims an 8-digit
+// #rrggbbaa alpha channel, lowercases 6-digit hex, and falls back to black for
+// anything it cannot represent (the text input still carries the real value).
+func colorPickerSwatchHex(value string) string {
+	v := strings.TrimSpace(value)
+	if strings.HasPrefix(v, "#") {
+		h := v[1:]
+		switch len(h) {
+		case 3:
+			if isHexString(h) {
+				return "#" + strings.ToLower(string([]byte{h[0], h[0], h[1], h[1], h[2], h[2]}))
+			}
+		case 6:
+			if isHexString(h) {
+				return "#" + strings.ToLower(h)
+			}
+		case 8:
+			if isHexString(h) {
+				return "#" + strings.ToLower(h[:6])
+			}
+		}
+	}
+	return "#000000"
+}
+
+// isHexString reports whether every byte is a hexadecimal digit.
+func isHexString(s string) bool {
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if (c < '0' || c > '9') && (c < 'a' || c > 'f') && (c < 'A' || c > 'F') {
+			return false
+		}
+	}
+	return len(s) > 0
+}
+
+// ColorPicker renders a text colour field plus a native swatch and optional
+// preset row. The text input is a real named <input> so the form posts without
+// JS; a small singleton script keeps text, swatch and presets in step.
+templ ColorPicker(props ColorPickerProps) {
+	{{ p := colorPickerResolve(props) }}
+	<div
+		data-gd-color-picker
+		class={ "w-full min-w-0 space-y-2", p.Class }
+		{ devmode.Attrs(ctx, "ui/ColorPicker")... }
+		{ p.Attrs... }
+	>
+		<div class="join w-full">
+			<input
+				type="color"
+				data-gd-color-swatch
+				value={ p.Swatch }
+				class="input input-bordered join-item h-10 w-14 cursor-pointer p-1"
+				aria-label="Pick a color"
+				tabindex="-1"
+			/>
+			<input
+				type="text"
+				id={ p.ID }
+				data-gd-color-text
+				value={ p.Value }
+				placeholder={ p.Placeholder }
+				class="input input-bordered join-item min-w-0 flex-1 font-mono"
+				autocomplete="off"
+				spellcheck="false"
+				aria-label="Color value"
+				if p.Name != "" {
+					name={ p.Name }
+				}
+			/>
+			if p.AllowEmpty {
+				<button
+					type="button"
+					data-gd-color-clear
+					class="btn btn-ghost join-item btn-square"
+					aria-label="Clear color"
+					title="Clear color"
+				>
+					@IconSpan("lucide--x", "size-4")
+				</button>
+			}
+		</div>
+		if len(p.Presets) > 0 {
+			<div class="flex flex-wrap gap-1.5" role="group" aria-label="Preset colors">
+				for _, preset := range p.Presets {
+					{{ preset := preset
+					active := strings.EqualFold(strings.TrimSpace(preset), strings.TrimSpace(p.Value)) }}
+					<button
+						type="button"
+						data-gd-color-preset
+						data-gd-color-value={ preset }
+						aria-pressed={ strconv.FormatBool(active) }
+						class={ "size-6 rounded border border-base-content/20 transition-transform hover:scale-110 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none", templ.KV("ring-2 ring-primary ring-offset-1 ring-offset-base-100", active) }
+						style={ "background-color:" + preset }
+						aria-label={ "Use color " + preset }
+						title={ preset }
+					></button>
+				}
+			</div>
+		}
+	</div>
+	@ColorPickerScript()
+}
+
+var colorPickerScriptOnce = templ.NewOnceHandle()
+
+// ColorPickerScript loads the colour picker sync runtime once per page.
+// Deduplicated via OnceHandle; safe across HTMX swaps and multiple instances.
+templ ColorPickerScript() {
+	@colorPickerScriptOnce.Once() {
+		<script>
+			if (!window._gdColorPickerInit) {
+				window._gdColorPickerInit = true;
+				(function () {
+					function rootOf(node) {
+						return node && node.closest ? node.closest("[data-gd-color-picker]") : null;
+					}
+					function toHex(value) {
+						var v = (value || "").trim();
+						if (v.charAt(0) !== "#") return null;
+						var h = v.slice(1);
+						if (/^[0-9a-fA-F]{3}$/.test(h)) return "#" + h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+						if (/^[0-9a-fA-F]{6}$/.test(h)) return "#" + h.toLowerCase();
+						if (/^[0-9a-fA-F]{8}$/.test(h)) return "#" + h.slice(0, 6).toLowerCase();
+						return null;
+					}
+					function markPresets(root, value) {
+						var v = (value || "").trim().toLowerCase();
+						var presets = root.querySelectorAll("[data-gd-color-preset]");
+						for (var i = 0; i < presets.length; i++) {
+							var pv = (presets[i].getAttribute("data-gd-color-value") || "").trim().toLowerCase();
+							var active = v !== "" && pv === v;
+							presets[i].classList.toggle("ring-2", active);
+							presets[i].classList.toggle("ring-primary", active);
+							presets[i].classList.toggle("ring-offset-1", active);
+							presets[i].classList.toggle("ring-offset-base-100", active);
+							presets[i].setAttribute("aria-pressed", active ? "true" : "false");
+						}
+					}
+					document.addEventListener("input", function (ev) {
+						var t = ev.target;
+						if (!t || !t.hasAttribute) return;
+						var root = rootOf(t);
+						if (!root) return;
+						var text = root.querySelector("[data-gd-color-text]");
+						var swatch = root.querySelector("[data-gd-color-swatch]");
+						if (t.hasAttribute("data-gd-color-swatch")) {
+							if (text) text.value = t.value;
+							markPresets(root, t.value);
+						} else if (t.hasAttribute("data-gd-color-text")) {
+							var h = toHex(t.value);
+							if (h && swatch) swatch.value = h;
+							markPresets(root, t.value);
+						}
+					});
+					document.addEventListener("click", function (ev) {
+						var preset = ev.target.closest ? ev.target.closest("[data-gd-color-preset]") : null;
+						if (preset) {
+							var root = rootOf(preset);
+							if (!root) return;
+							var v = preset.getAttribute("data-gd-color-value") || "";
+							var text = root.querySelector("[data-gd-color-text]");
+							var swatch = root.querySelector("[data-gd-color-swatch]");
+							if (text) text.value = v;
+							var h = toHex(v);
+							if (h && swatch) swatch.value = h;
+							markPresets(root, v);
+							return;
+						}
+						var clear = ev.target.closest ? ev.target.closest("[data-gd-color-clear]") : null;
+						if (clear) {
+							var r = rootOf(clear);
+							if (!r) return;
+							var t = r.querySelector("[data-gd-color-text]");
+							if (t) {
+								t.value = "";
+								t.focus();
+							}
+							markPresets(r, "");
+						}
+					});
+				})();
+			}
+		</script>
+	}
+}
