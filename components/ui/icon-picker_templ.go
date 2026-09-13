@@ -749,7 +749,7 @@ func IconPicker(props IconPickerProps) templ.Component {
 				Offset:    4,
 				Exclusive: true,
 				Class:     "w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] p-2 max-h-64 overflow-y-auto overscroll-contain sm:w-72",
-				Attrs:     templ.Attributes{"id": p.PanelID},
+				Attrs:     templ.Attributes{"id": p.PanelID, "data-gd-icon-panel": "1"},
 			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var19), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

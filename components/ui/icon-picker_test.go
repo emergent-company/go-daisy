@@ -56,6 +56,27 @@ func TestIconPickerRendersOptionsAndHiddenInput(t *testing.T) {
 			t.Errorf("missing %q", want)
 		}
 	}
+
+	// Every hook the bundled go-daisy-icon-picker.js resolves via querySelector
+	// must be present, or the runtime silently no-ops (popover opens but search
+	// filtering, keyboard nav and committing a choice all die). This guards the
+	// regression where data-gd-icon-panel was omitted from the PopoverContent.
+	for _, hook := range []string{
+		"data-gd-icon-panel",
+		"data-gd-icon-search",
+		"data-gd-icon-input",
+		"data-gd-icon-empty",
+		"data-gd-icon-reset",
+		"data-gd-icon-glyph",
+		"data-gd-icon-label",
+		"data-gd-icon-option",
+		"data-gd-popover-content",
+		"data-gd-popover-trigger",
+	} {
+		if !strings.Contains(html, hook) {
+			t.Errorf("missing runtime hook %q", hook)
+		}
+	}
 }
 
 func TestIconPickerNoHiddenInputWithoutName(t *testing.T) {
