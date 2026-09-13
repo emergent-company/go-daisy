@@ -465,5 +465,73 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// ── Forms / Icon Pick ──────────────────────────────────────────────────
+		{
+			Slug:        "icon-picker",
+			Name:        "Icon Picker",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "Searchable Popover icon listbox with roving-tabindex keyboard navigation, a default/reset tile, and a hidden form input. Catalog-agnostic: the caller injects the options.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "A small Lucide catalog with a default tile.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.IconPickerWithBoundary(ui.IconPickerProps{
+							ID:           "demo-icon-picker",
+							Name:         "icon",
+							Value:        "lucide--file-text",
+							DefaultValue: "",
+							DefaultLabel: "Default icon",
+							DefaultClass: "lucide--box",
+							Options: []ui.IconPickerOption{
+								{Name: "file-text", Label: "File Text", Class: "lucide--file-text"},
+								{Name: "database", Label: "Database", Class: "lucide--database"},
+								{Name: "braces", Label: "Braces", Class: "lucide--braces"},
+								{Name: "user", Label: "User", Class: "lucide--user"},
+								{Name: "calendar", Label: "Calendar", Class: "lucide--calendar"},
+								{Name: "mail", Label: "Mail", Class: "lucide--mail"},
+								{Name: "tag", Label: "Tag", Class: "lucide--tag"},
+								{Name: "settings", Label: "Settings", Class: "lucide--settings"},
+								{Name: "git-branch", Label: "Git Branch", Class: "lucide--git-branch"},
+								{Name: "package", Label: "Package", Class: "lucide--package"},
+								{Name: "image", Label: "Image", Class: "lucide--image"},
+								{Name: "link", Label: "Link", Class: "lucide--link"},
+							},
+						})
+					},
+					FrameHeight: "300px",
+				},
+			},
+		},
+
+		// ── Forms / Color Picker ───────────────────────────────────────────────
+		{
+			Slug:        "color-picker",
+			Name:        "Color Picker",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "Text colour field paired with a native colour swatch and optional preset palette. Submits as a normal named input and works without JS.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Presets, native swatch, and a clear affordance.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ColorPickerWithBoundary(ui.ColorPickerProps{
+							ID:         "demo-color-picker",
+							Name:       "color",
+							Value:      "#4F46E5",
+							AllowEmpty: true,
+							Presets: []string{
+								"#4F46E5", "#0EA5E9", "#10B981",
+								"#F59E0B", "#EF4444", "#8B5CF6",
+							},
+						})
+					},
+					FrameHeight: "160px",
+				},
+			},
+		},
 	}
 }

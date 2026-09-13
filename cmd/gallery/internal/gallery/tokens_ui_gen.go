@@ -234,6 +234,9 @@ func AvatarTokens() []galleryruntime.DesignToken {
 				{Value: "avatar-lg", Label: "LG"},
 				{Value: "avatar-md", Label: "MD"},
 				{Value: "avatar-sm", Label: "SM"},
+				{Value: "size-14", Label: "14"},
+				{Value: "size-6", Label: "6"},
+				{Value: "size-7", Label: "7"},
 				{Value: "avatar-xs", Label: "XS"},
 			},
 		},
@@ -1592,9 +1595,17 @@ func PopoverTokens() []galleryruntime.DesignToken {
 			QueryParam: "placement",
 			Options: []galleryruntime.TokenOption{
 				{Value: "bottom", Label: "PopoverBottom"},
+				{Value: "bottom-end", Label: "PopoverBottomEnd"},
+				{Value: "bottom-start", Label: "PopoverBottomStart"},
 				{Value: "left", Label: "PopoverLeft"},
+				{Value: "left-end", Label: "PopoverLeftEnd"},
+				{Value: "left-start", Label: "PopoverLeftStart"},
 				{Value: "right", Label: "PopoverRight"},
+				{Value: "right-end", Label: "PopoverRightEnd"},
+				{Value: "right-start", Label: "PopoverRightStart"},
 				{Value: "top", Label: "PopoverTop"},
+				{Value: "top-end", Label: "PopoverTopEnd"},
+				{Value: "top-start", Label: "PopoverTopStart"},
 			},
 		},
 		{
@@ -1746,5 +1757,17 @@ func SheetTokens() []galleryruntime.DesignToken {
 				{Value: "true", Label: "Yes"},
 			},
 		},
+	}
+}
+
+// IconPickerTokens returns the DesignToken slice for IconPickerWithBoundary.
+func IconPickerTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// ColorPickerTokens returns the DesignToken slice for ColorPickerWithBoundary.
+func ColorPickerTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
 	}
 }

@@ -1,0 +1,154 @@
+package ui
+
+import (
+	"strconv"
+
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/staticfs"
+)
+
+// IconPickerOption is one selectable entry in an IconPicker.
+type IconPickerOption struct {
+	// Name is the stable value submitted with the form (and the primary key the
+	// picker uses to match the current selection).
+	Name string
+	// Label is the human-readable name shown in the search results and trigger.
+	Label string
+	// Class is the Iconify class rendered as the tile glyph, e.g. "lucide--box".
+	Class string
+}
+
+// IconPickerProps configures a catalog-agnostic icon picker. The caller injects
+// the option catalog; the component itself knows nothing about Lucide.
+type IconPickerProps struct {
+	ID                string
+	Name              string // hidden-input name; when empty, no hidden input is emitted
+	Value             string // currently selected option value (matches Name, or Class as a fallback)
+	Options           []IconPickerOption
+	DefaultValue      string // reset target value (may be "")
+	DefaultLabel      string // e.g. "Default"
+	DefaultClass      string // e.g. "lucide--box"
+	SearchPlaceholder string // default "Search icons"
+	EmptyLabel        string // default "No icons match"
+	ResetLabel        string // default "Reset to default"
+	Class             string
+	Attrs             templ.Attributes
+}
+
+// IconPicker renders a Popover-triggered searchable icon listbox. A hidden
+// input (when Name is set) carries the committed value; the bundled runtime
+// owns search filtering, roving-tabindex keyboard navigation, committing a
+// choice into the hidden input, and resetting to the default tile.
+templ IconPicker(props IconPickerProps) {
+	{{ p := iconPickerResolve(props) }}
+	<div
+		data-gd-icon-picker
+		data-gd-icon-picker-default-value={ p.DefaultValue }
+		data-gd-icon-picker-default-label={ p.DefaultLabel }
+		data-gd-icon-picker-default-class={ p.DefaultClass }
+		class={ "w-full min-w-0", p.Class }
+		{ devmode.Attrs(ctx, "ui/IconPicker")... }
+		{ p.Attrs... }
+	>
+		@Popover(PopoverRootProps{Class: "w-full min-w-0"}) {
+			if p.Name != "" {
+				<input type="hidden" id={ p.ID } data-gd-icon-input name={ p.Name } value={ p.Value }/>
+			}
+			@PopoverTrigger(PopoverTriggerProps{
+				Class: "btn w-full min-w-0 justify-between gap-2 font-normal",
+				Attrs: templ.Attributes{
+					"id":            p.TriggerID,
+					"aria-haspopup": "listbox",
+					"aria-expanded": "false",
+					"aria-controls": p.PanelID,
+				},
+			}) {
+				<span class="flex min-w-0 flex-1 items-center gap-2">
+					<span id={ p.GlyphID } data-gd-icon-glyph class="contents">
+						<span class={ "iconify size-5", p.GlyphClass } aria-hidden="true"></span>
+					</span>
+					<span id={ p.LabelID } data-gd-icon-label class={ "truncate text-left", templ.KV("text-base-content/50", p.IsDefault) }>{ p.Label }</span>
+				</span>
+				@IconSpan("lucide--chevron-down", "size-4 shrink-0 opacity-60")
+			}
+			@PopoverContent(PopoverContentProps{
+				Placement: PopoverBottomStart,
+				Offset:    4,
+				Exclusive: true,
+				Class:     "w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] p-2 max-h-64 overflow-y-auto overscroll-contain sm:w-72",
+				Attrs:     templ.Attributes{"id": p.PanelID},
+			}) {
+				<div class="sticky top-0 z-10 -mx-2 -mt-2 mb-2 border-b border-base-200 bg-base-100 px-2 py-2">
+					<div class="relative">
+						@IconSpan("lucide--search", "pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 opacity-50")
+						<input
+							id={ p.SearchID }
+							data-gd-icon-search
+							type="search"
+							class="input input-sm w-full pl-8"
+							placeholder={ p.SearchPlaceholder }
+							aria-label={ p.SearchPlaceholder }
+							autocomplete="off"
+						/>
+					</div>
+				</div>
+				<div role="listbox" aria-label="Icon" class="grid grid-cols-6 gap-1 sm:gap-1.5">
+					<button
+						type="button"
+						role="option"
+						data-gd-icon-option
+						data-gd-icon-default="1"
+						data-gd-icon-name={ p.DefaultLabel }
+						data-gd-icon-value={ p.DefaultValue }
+						data-gd-icon-label={ p.DefaultLabel }
+						data-gd-icon-class={ p.DefaultClass }
+						aria-selected={ strconv.FormatBool(p.IsDefault) }
+						aria-label={ p.DefaultLabel }
+						title={ p.DefaultLabel }
+						tabindex={ iconPickerTabindex(p.IsDefault) }
+						class={ "grid size-11 place-items-center rounded-lg border border-dashed border-base-content/25 text-base-content/70 transition-colors hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:size-9", templ.KV("bg-primary/10 text-primary ring-1 ring-primary/30 ring-inset", p.IsDefault) }
+					>
+						<span class={ "iconify size-5", p.DefaultClass } aria-hidden="true"></span>
+					</button>
+					for i, opt := range p.Options {
+						{{ active := p.ActiveIndex == i }}
+						<button
+							type="button"
+							role="option"
+							data-gd-icon-option
+							data-gd-icon-name={ opt.Name }
+							data-gd-icon-value={ opt.Name }
+							data-gd-icon-label={ opt.Label }
+							data-gd-icon-class={ opt.Class }
+							aria-selected={ strconv.FormatBool(active) }
+							aria-label={ opt.Label }
+							title={ opt.Label }
+							tabindex={ iconPickerTabindex(active) }
+							class={ "grid size-11 place-items-center rounded-lg border border-transparent text-base-content/70 transition-colors hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:size-9", templ.KV("bg-primary/10 text-primary ring-1 ring-primary/30 ring-inset", active) }
+						>
+							<span class={ "iconify size-5", opt.Class } aria-hidden="true"></span>
+						</button>
+					}
+				</div>
+				<p id={ p.EmptyID } data-gd-icon-empty class="text-base-content/50 hidden px-2 py-6 text-center text-xs">{ p.EmptyLabel }</p>
+				<div class="mt-2 border-t border-base-200 pt-2">
+					<button type="button" data-gd-icon-reset class="btn btn-ghost btn-xs w-full" style={ iconPickerResetStyle(p.IsDefault) }>
+						{ p.ResetLabel }
+					</button>
+				</div>
+			}
+		}
+	</div>
+	@PopoverScript()
+	@IconPickerScript()
+}
+
+var iconPickerScriptOnce = templ.NewOnceHandle()
+
+// IconPickerScript loads the go-daisy-icon-picker.js runtime once per page.
+// Call it wherever an IconPicker is used; deduplicated via OnceHandle.
+templ IconPickerScript() {
+	@iconPickerScriptOnce.Once() {
+		@templ.Raw(staticfs.Script("/js/go-daisy-icon-picker.js"))
+	}
+}

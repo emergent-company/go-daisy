@@ -1130,7 +1130,7 @@ func LayoutCustomizerWithBoundary() templ.Component {
 // gallery:hint sections:slice(2)
 func SearchDropdownWithBoundary(placeholder string, sections []SearchDropdownSection) templ.Component {
 	return devmode.ComponentBoundary("SearchDropdown", SearchDropdown(placeholder, sections), map[string]any{
-		"placeholder":   placeholder,
+		"placeholder":  placeholder,
 		"sectionCount": len(sections),
 	})
 }
@@ -1298,11 +1298,19 @@ func SheetWithBoundary(side string, open bool) templ.Component {
 	panelContent := shared.Compose(
 		templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 			_, err := io.WriteString(w, `<div class="p-4"><h3 class="text-lg font-semibold mb-2">`)
-			if err != nil { return err }
-			if err := panelTitle.Render(ctx, w); err != nil { return err }
+			if err != nil {
+				return err
+			}
+			if err := panelTitle.Render(ctx, w); err != nil {
+				return err
+			}
 			_, err = io.WriteString(w, `</h3><p class="text-sm text-base-content/70">`)
-			if err != nil { return err }
-			if err := panelBody.Render(ctx, w); err != nil { return err }
+			if err != nil {
+				return err
+			}
+			if err := panelBody.Render(ctx, w); err != nil {
+				return err
+			}
 			_, err = io.WriteString(w, `</p></div>`)
 			return err
 		}),
@@ -1340,3 +1348,19 @@ func AlpineToastWithBoundary(typ ToastType, message string) templ.Component {
 	return ToastWithBoundary(typ, message, "alpine")
 }
 
+// IconPickerWithBoundary wraps IconPicker with a dev-mode component boundary annotation.
+// gallery:token value,searchPlaceholder,defaultLabel
+// gallery:hint value:default()
+// gallery:hint searchPlaceholder:default(Search icons)
+// gallery:hint defaultLabel:default(Default)
+func IconPickerWithBoundary(props IconPickerProps) templ.Component {
+	return devmode.ComponentBoundary("IconPicker", IconPicker(props), props)
+}
+
+// ColorPickerWithBoundary wraps ColorPicker with a dev-mode component boundary annotation.
+// gallery:token value,placeholder,allowEmpty
+// gallery:hint value:default(#4F46E5)
+// gallery:hint placeholder:default(#4F46E5)
+func ColorPickerWithBoundary(props ColorPickerProps) templ.Component {
+	return devmode.ComponentBoundary("ColorPicker", ColorPicker(props), props)
+}

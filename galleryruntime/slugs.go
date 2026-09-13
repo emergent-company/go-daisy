@@ -102,6 +102,8 @@ var ComponentSlugs = map[string]string{
 	// Person
 	"PersonCell": "person-cell",
 	// Forms
+	"IconPicker":      "icon-picker",
+	"ColorPicker":     "color-picker",
 	"TextInput":      "text-input",
 	"TextareaInput":  "textarea-input",
 	"CheckboxInput":  "checkbox-input",
