@@ -29,7 +29,12 @@ type CommandPaletteProps struct {
 	ItemsURL    string // JSON endpoint for remote results (fetched client-side)
 	Groups      []string
 	Open        bool
-	Attrs       templ.Attributes
+	// FullScreenMobile renders the full-viewport mobile sheet behaviour: on
+	// <768px the modal-box fills the viewport edge-to-edge, the input row pins
+	// to the top (clear of safe-area insets), the results fill and scroll, and
+	// the "Esc" label swaps to a tap-sized ✕. CSS selectors are derived from ID.
+	FullScreenMobile bool
+	Attrs            templ.Attributes
 }
 
 // CommandPalette renders a ⌘K-style command palette modal.
@@ -68,6 +73,9 @@ templ CommandPalette(props CommandPaletteProps) {
 		</div>
 		<label class="modal-backdrop" for={ props.ID + "-toggle" }></label>
 	</div>
+	if props.FullScreenMobile {
+		@templ.Raw("<style>" + commandPaletteMobileCSS(props.ID) + "</style>")
+	}
 	@commandPaletteTrigger()
 	@commandPaletteScript()
 }

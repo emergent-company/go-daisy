@@ -14,15 +14,28 @@ import "github.com/emergent-company/go-daisy/devmode"
 type IconTileProps struct {
 	// Tone is the daisyUI color token used for the tile's background, text
 	// and border, e.g. "primary", "secondary" or "error". Default "primary".
+	// Ignored when Color is set.
 	Tone string
 	// Size is the tile size class, e.g. "size-9". Default "size-9".
 	Size string
+	// Color is an arbitrary CSS colour applied via inline style (text + a
+	// translucent background/border via color-mix). When set it replaces the
+	// Tone classes, matching the reference typeColorStyle behaviour.
+	Color string
+	// Glyph renders a text/emoji glyph instead of the IconSpan when non-empty
+	// (e.g. "📝"). Sized with a text-size class so emoji scale with the font.
+	Glyph string
 }
 
 // IconTile renders a colored rounded-square icon tile: a bordered, tinted
 // square holding an IconSpan at "size-4.5".
 //
 //	@ui.IconTile("lucide--box", ui.IconTileProps{Tone: "secondary", Size: "size-8"})
+//
+// With Color/Glyph it renders a schema-declared accent (arbitrary colour +
+// text glyph) instead of the default tone+icon:
+//
+//	@ui.IconTile("📝", ui.IconTileProps{Color: "#4F46E5", Glyph: "📝"})
 func IconTile(name string, props ...IconTileProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -56,7 +69,7 @@ func IconTile(name string, props ...IconTileProps) templ.Component {
 		if size == "" {
 			size = "size-9"
 		}
-		var templ_7745c5c3_Var2 = []any{"grid shrink-0 place-items-center rounded-lg border bg-" + tone + "/10 text-" + tone + " border-" + tone + "/15", size}
+		var templ_7745c5c3_Var2 = []any{"grid shrink-0 place-items-center rounded-lg border", templ.KV("bg-"+tone+"/10 text-"+tone+" border-"+tone+"/15", p.Color == ""), size}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -78,19 +91,58 @@ func IconTile(name string, props ...IconTileProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
+		if p.Color != "" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, " style=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(accentStyle(p.Color))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/icon-tile.templ`, Line: 40, Col: 31}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
 		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "ui/IconTile"))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconSpan(name, "size-4.5").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		if p.Glyph != "" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<span class=\"shrink-0 leading-none text-lg\" aria-hidden=\"true\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(p.Glyph)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/icon-tile.templ`, Line: 44, Col: 75}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = IconSpan(name, "size-4.5").Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

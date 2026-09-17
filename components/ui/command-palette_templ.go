@@ -37,7 +37,12 @@ type CommandPaletteProps struct {
 	ItemsURL    string // JSON endpoint for remote results (fetched client-side)
 	Groups      []string
 	Open        bool
-	Attrs       templ.Attributes
+	// FullScreenMobile renders the full-viewport mobile sheet behaviour: on
+	// <768px the modal-box fills the viewport edge-to-edge, the input row pins
+	// to the top (clear of safe-area insets), the results fill and scroll, and
+	// the "Esc" label swaps to a tap-sized ✕. CSS selectors are derived from ID.
+	FullScreenMobile bool
+	Attrs            templ.Attributes
 }
 
 // CommandPalette renders a ⌘K-style command palette modal.
@@ -69,7 +74,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-toggle")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 37, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 42, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -112,7 +117,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-input")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 44, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 49, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -130,7 +135,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Placeholder)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 47, Col: 36}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 52, Col: 36}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 			if templ_7745c5c3_Err != nil {
@@ -153,7 +158,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-toggle")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 54, Col: 37}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 59, Col: 37}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
@@ -166,7 +171,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-results")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 56, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 61, Col: 71}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 		if templ_7745c5c3_Err != nil {
@@ -184,7 +189,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ItemsURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 58, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 63, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
@@ -218,7 +223,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-toggle")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 69, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 74, Col: 58}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
@@ -227,6 +232,12 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "\"></label></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
+		}
+		if props.FullScreenMobile {
+			templ_7745c5c3_Err = templ.Raw("<style>"+commandPaletteMobileCSS(props.ID)+"</style>").Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
 		templ_7745c5c3_Err = commandPaletteTrigger().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -281,7 +292,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(group)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 89, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 97, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
@@ -299,7 +310,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(group)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 91, Col: 106}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 99, Col: 106}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -319,7 +330,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 				var templ_7745c5c3_Var12 templ.SafeURL
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(item.Href))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 96, Col: 36}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 104, Col: 36}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
@@ -332,7 +343,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 98, Col: 28}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 106, Col: 28}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
 				if templ_7745c5c3_Err != nil {
@@ -345,7 +356,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 				var templ_7745c5c3_Var14 string
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.Group)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 99, Col: 28}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 107, Col: 28}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 				if templ_7745c5c3_Err != nil {
@@ -394,7 +405,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 106, Col: 76}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 114, Col: 76}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 				if templ_7745c5c3_Err != nil {
@@ -412,7 +423,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 					var templ_7745c5c3_Var18 string
 					templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(item.Description)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 108, Col: 74}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 116, Col: 74}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 					if templ_7745c5c3_Err != nil {
@@ -435,7 +446,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 					var templ_7745c5c3_Var19 string
 					templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(item.Shortcut)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 112, Col: 45}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 120, Col: 45}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 					if templ_7745c5c3_Err != nil {

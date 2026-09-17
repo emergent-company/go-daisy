@@ -26,6 +26,12 @@ type SectionProps struct {
 	// wrapper — for sections whose branches are not carded (e.g. an error
 	// Alert). Ignored when Empty is true.
 	Raw bool
+	// Rows wraps the children in a divide-y divide-base-200 container inside the
+	// card body, for list rows separated by hairlines.
+	Rows bool
+	// Titleless skips the <h2> heading, rendering only the card body (and any
+	// empty state). Useful for bare list sections with no title.
+	Titleless bool
 }
 
 // Section renders a titled card section: an <h2> header followed by a DaisyUI
@@ -43,7 +49,9 @@ type SectionProps struct {
 // When Empty is true the section renders ui.Empty instead of its children.
 templ Section(title string, props SectionProps) {
 	<section class={ templ.KV(props.Margin, props.Margin != "") } { devmode.Attrs(ctx, "ui/Section")... }>
-		<h2 class="mb-3 text-lg font-semibold tracking-tight">{ title }</h2>
+		if !props.Titleless {
+			<h2 class="mb-3 text-lg font-semibold tracking-tight">{ title }</h2>
+		}
 		if props.Empty {
 			@CardRaw("card-border", "", nil) {
 				@Empty(props.EmptyIcon, props.EmptyTitle, props.EmptyDesc)
@@ -54,7 +62,13 @@ templ Section(title string, props SectionProps) {
 			{{ cardClass := "card-border"
 			if props.CardClass != "" { cardClass = props.CardClass } }}
 			@CardRaw(cardClass, props.BodyClass, nil) {
-				{ children... }
+				if props.Rows {
+					<div class="divide-y divide-base-200">
+						{ children... }
+					</div>
+				} else {
+					{ children... }
+				}
 			}
 		}
 	</section>

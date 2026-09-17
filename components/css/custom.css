@@ -28,6 +28,8 @@
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+
+  .toast-bar { animation: none; }
 }
 
 @media (prefers-contrast: more) {
@@ -332,4 +334,22 @@
 .landing-animated-text {
   background-size: 200% 200%;
   animation: gradient-shift-landing 4s ease infinite;
+}
+
+/* ── Toast countdown bar ─────────────────────────────────────── */
+/* width is driven by the inline animation-duration (per-toast duration); the
+   inline animation-play-state pauses it while hovered. */
+@keyframes toast-shrink {
+  from { width: 100%; }
+  to { width: 0; }
+}
+
+.toast-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.5;
+  animation: toast-shrink linear forwards;
 }

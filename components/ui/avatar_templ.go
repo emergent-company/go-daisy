@@ -136,6 +136,9 @@ type AvatarProps struct {
 	// AvatarFallbackIcon (default, icon-first) or AvatarFallbackInitials
 	// (initials-first, falling back to Icon when the name is empty).
 	Fallback AvatarFallback
+	// TextClass is an optional font-size class applied to the initials/fallback
+	// text, e.g. "text-xs" or "text-[10px]". Empty = current behaviour.
+	TextClass string
 	// Attrs is optional; pass nil when not needed.
 	Attrs templ.Attributes
 }
@@ -215,7 +218,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Src)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 151, Col: 24}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 154, Col: 24}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 			if templ_7745c5c3_Err != nil {
@@ -228,7 +231,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 151, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 154, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 			if templ_7745c5c3_Err != nil {
@@ -241,7 +244,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 		} else if props.Fallback == AvatarFallbackInitials {
 			init := avatarInitialsRunes(props.Name)
 			if init != "" {
-				var templ_7745c5c3_Var6 = []any{sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone)}
+				var templ_7745c5c3_Var6 = []any{sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone), props.TextClass}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -266,7 +269,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(init)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 157, Col: 11}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 160, Col: 11}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
@@ -368,7 +371,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			var templ_7745c5c3_Var17 = []any{sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone)}
+			var templ_7745c5c3_Var17 = []any{sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone), props.TextClass}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var17...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -393,7 +396,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 			var templ_7745c5c3_Var19 string
 			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(avatarInitials(props.Name))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 170, Col: 32}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 173, Col: 32}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 			if templ_7745c5c3_Err != nil {

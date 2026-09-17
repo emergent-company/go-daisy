@@ -55,3 +55,74 @@ templ ToastQueue(seed ...alpine.ToastItem) {
 		<div id="toast-queue-dispatch" style="display:none"></div>
 	</div>
 }
+
+// ToastQueueProps configures the optional aspects of ToastQueueWithProps.
+type ToastQueueProps struct {
+	// Position selects the anchor. ToastQueueTopRight (empty) is the default
+	// top-right behaviour; ToastQueueBottomCenter anchors bottom-center on small
+	// screens and bottom-right on sm+.
+	Position string
+	// PauseOnHover pauses a toast's countdown while hovered (requires the
+	// pausable queue init, which also re-arms the timer on resume).
+	PauseOnHover bool
+	// Countdown renders the per-toast shrinking progress bar (components/css/
+	// custom.css .toast-bar). The bar's animation-duration is driven by the
+	// toast's duration; PauseOnHover toggles animation-play-state.
+	Countdown bool
+}
+
+// ToastQueueWithProps renders a toast queue with optional position, hover-pause
+// and per-toast countdown. It is a superset of ToastQueue: the Action link,
+// seed items and the hidden #toast-queue-dispatch OOB target are preserved.
+// With the zero ToastQueueProps it renders the same markup as ToastQueue.
+templ ToastQueueWithProps(p ToastQueueProps, seed ...alpine.ToastItem) {
+	{{ pauseOnHover := p.PauseOnHover
+	   countdown := p.Countdown
+	   slide := toastQueueSlideClass(p.Position)
+	   initExpr := alpine.ToastQueueInit()
+	   if pauseOnHover || countdown {
+		   initExpr = alpine.ToastQueueInitPausable()
+	   } }}
+	<div
+		id="toast-container"
+		class={ toastQueuePositionClass(p.Position) }
+		aria-live="polite"
+		aria-atomic="false"
+		{ alpine.XData(alpine.ToastQueueState(seed...))... }
+		x-init={ initExpr }
+		{ devmode.Attrs(ctx, "ui/ToastQueue")... }
+	>
+		<template x-for="t in toasts" :key="t.id">
+			<div
+				class={ "alert shadow-lg cursor-pointer", templ.KV("relative overflow-hidden", countdown) }
+				:class="'alert-' + t.type"
+				x-show="true"
+				x-transition:enter="transition ease-out duration-300"
+				x-transition:enter-start={ "opacity-0 " + slide }
+				x-transition:enter-end="opacity-100 translate-y-0"
+				x-transition:leave="transition ease-in duration-200"
+				x-transition:leave-start="opacity-100 translate-y-0"
+				x-transition:leave-end={ "opacity-0 " + slide }
+				if pauseOnHover {
+					@mouseenter="pause(t)"
+					@mouseleave="resume(t)"
+				}
+				@click="dismiss(t.id)"
+				role="alert"
+			>
+				<span x-text="t.message"></span>
+				<template x-if="t.action">
+					<a class="btn btn-xs btn-ghost ml-auto" x-text="t.action"
+					   @click.stop></a>
+				</template>
+				if countdown {
+					<div
+						class="toast-bar"
+						:style="'animation-duration:' + t.duration + 'ms; animation-play-state:' + (t.paused ? 'paused' : 'running')"
+					></div>
+				}
+			</div>
+		</template>
+		<div id="toast-queue-dispatch" style="display:none"></div>
+	</div>
+}

@@ -114,6 +114,14 @@ type ToastItem struct {
 	Message  string `json:"message"`
 	Action   string `json:"action,omitempty"`
 	Duration int    `json:"duration"`
+	// Paused flags a hover-paused toast (used by ToastQueueInitPausable). It is
+	// a runtime field managed by the queue's pause()/resume() methods; for seed
+	// items it is always false and omitted from JSON (omitempty) so the marshalled
+	// seed payload is unchanged.
+	Paused bool `json:"paused,omitempty"`
+	// Remaining is the millisecond lifetime left on a paused toast. Runtime-only,
+	// set by pause(); omitted from JSON when zero so seed payloads are unchanged.
+	Remaining int `json:"remaining,omitempty"`
 }
 
 // toastQueueState is the x-data state for a toast notification queue.

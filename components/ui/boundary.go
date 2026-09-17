@@ -1364,3 +1364,72 @@ func IconPickerWithBoundary(props IconPickerProps) templ.Component {
 func ColorPickerWithBoundary(props ColorPickerProps) templ.Component {
 	return devmode.ComponentBoundary("ColorPicker", ColorPicker(props), props)
 }
+
+// ToastQueueWithPropsWithBoundary wraps ToastQueueWithProps with a dev-mode component boundary annotation.
+func ToastQueueWithPropsWithBoundary(props ToastQueueProps, seed ...alpine.ToastItem) templ.Component {
+	return devmode.ComponentBoundary("ToastQueue", ToastQueueWithProps(props, seed...), map[string]any{
+		"position":     props.Position,
+		"pauseOnHover": props.PauseOnHover,
+		"countdown":    props.Countdown,
+	})
+}
+
+// ModalWithBoundary wraps Modal with a dev-mode component boundary annotation.
+// gallery:token id,boxClass
+// gallery:hint id:default(demo-modal)
+func ModalWithBoundary(props ModalProps, content templ.Component) templ.Component {
+	inner := shared.RenderInto(Modal(props), content)
+	return devmode.ComponentBoundary("Modal", inner, map[string]any{
+		"id":       props.ID,
+		"boxClass": props.BoxClass,
+	})
+}
+
+// ConfirmDialogWithBoundary wraps ConfirmDialog with a dev-mode component boundary annotation.
+// gallery:token noun,icon
+// gallery:hint noun:default(agent)
+func ConfirmDialogWithBoundary(props ConfirmDialogProps, description templ.Component, actions ...templ.Component) templ.Component {
+	content := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		for _, a := range actions {
+			if a == nil {
+				continue
+			}
+			if err := a.Render(ctx, w); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return ConfirmDialog(props, description).Render(templ.WithChildren(ctx, content), w)
+	})
+	return devmode.ComponentBoundary("ConfirmDialog", inner, map[string]any{
+		"id":   props.ID,
+		"noun": props.Noun,
+		"icon": props.Icon,
+	})
+}
+
+// DisclosureWithBoundary wraps Disclosure with a dev-mode component boundary annotation.
+// gallery:token open,itemsStart
+// gallery:hint open:default(false)
+func DisclosureWithBoundary(props DisclosureProps, header templ.Component, trailing templ.Component, body templ.Component) templ.Component {
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return Disclosure(props, header, trailing).Render(templ.WithChildren(ctx, body), w)
+	})
+	return devmode.ComponentBoundary("Disclosure", inner, map[string]any{
+		"open":       props.Open,
+		"itemsStart": props.ItemsStart,
+	})
+}
+
+// CommandPaletteButtonWithBoundary wraps CommandPaletteButton with a dev-mode component boundary annotation.
+// gallery:token id,placeholder
+// gallery:hint id:default(spotlight)
+// gallery:hint placeholder:default(Search…)
+func CommandPaletteButtonWithBoundary(id string, placeholder string) templ.Component {
+	return devmode.ComponentBoundary("CommandPaletteButton", CommandPaletteButton(id, placeholder), map[string]any{
+		"id":          id,
+		"placeholder": placeholder,
+	})
+}
