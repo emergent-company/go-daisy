@@ -1,0 +1,60 @@
+package ui
+
+import "github.com/emergent-company/go-daisy/devmode"
+
+// DisclosureProps configures a native <details>/<summary> disclosure.
+type DisclosureProps struct {
+	// Open sets the <details open> attribute.
+	Open bool
+	// Class is appended to the <details> class list.
+	Class string
+	// GroupClass is the Tailwind group name used to rotate the chevron on open.
+	// Defaults to "group"; use "group/cap" for a named group so nested
+	// disclosures don't rotate each other's chevrons.
+	GroupClass string
+	// ItemsStart selects items-start (two-line header) over the default
+	// items-center alignment on the <summary>.
+	ItemsStart bool
+	// SummaryClass is appended to the <summary> class list.
+	SummaryClass string
+	// BodyClass is appended to the body div class list.
+	BodyClass string
+	// Attrs are optional extra attributes on the <details> element.
+	Attrs templ.Attributes
+}
+
+// Disclosure renders a native <details>/<summary> collapsible section: a
+// rounded-box bordered container with a chevron that rotates on open. header is
+// the left-hand summary content; trailing is an optional right-hand badge/count
+// (before the chevron); children are the body.
+//
+// This is distinct from ui.Collapsible (a DaisyUI checkbox-collapse) — it keeps
+// native <details> open/close semantics and the header layout flexibility.
+templ Disclosure(props DisclosureProps, header templ.Component, trailing ...templ.Component) {
+	{{ group := props.GroupClass
+	if group == "" { group = "group" }
+	align := "items-center"
+	if props.ItemsStart { align = "items-start" }
+	chevron := disclosureChevronClass(group) }}
+	<details
+		class={ group, "rounded-box border border-base-content/10 bg-base-200/40", props.Class }
+		if props.Open {
+			open
+		}
+		{ devmode.Attrs(ctx, "ui/Disclosure")... }
+		{ props.Attrs... }
+	>
+		<summary class={ "flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&::-webkit-details-marker]:hidden", align, props.SummaryClass }>
+			@header
+			<div class="flex shrink-0 items-center gap-2">
+				if len(trailing) > 0 && trailing[0] != nil {
+					@trailing[0]
+				}
+				@IconSpan("lucide--chevron-down", "size-4 shrink-0 text-base-content/40 transition-transform "+chevron)
+			</div>
+		</summary>
+		<div class={ "flex flex-col gap-2 border-t border-base-content/10 p-3", props.BodyClass }>
+			{ children... }
+		</div>
+	</details>
+}

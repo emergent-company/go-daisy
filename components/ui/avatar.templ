@@ -128,6 +128,9 @@ type AvatarProps struct {
 	// AvatarFallbackIcon (default, icon-first) or AvatarFallbackInitials
 	// (initials-first, falling back to Icon when the name is empty).
 	Fallback AvatarFallback
+	// TextClass is an optional font-size class applied to the initials/fallback
+	// text, e.g. "text-xs" or "text-[10px]". Empty = current behaviour.
+	TextClass string
 	// Attrs is optional; pass nil when not needed.
 	Attrs templ.Attributes
 }
@@ -153,7 +156,7 @@ templ AvatarFull(props AvatarProps) {
 		} else if props.Fallback == AvatarFallbackInitials {
 			{{ init := avatarInitialsRunes(props.Name) }}
 			if init != "" {
-				<div class={ sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone) }>
+				<div class={ sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone), props.TextClass }>
 					{ init }
 				</div>
 			} else {
@@ -166,7 +169,7 @@ templ AvatarFull(props AvatarProps) {
 				<span class={ "iconify size-[55%] " + props.Icon }></span>
 			</div>
 		} else {
-			<div class={ sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone) }>
+			<div class={ sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone), props.TextClass }>
 				{ avatarInitials(props.Name) }
 			</div>
 		}

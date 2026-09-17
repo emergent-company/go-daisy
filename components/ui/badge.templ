@@ -46,7 +46,17 @@ type BadgeProps struct {
 	Dot      bool             // when true, renders a status dot prefix (uses Variant to colour it)
 	Animate  bool             // when true, adds animate-pulse to the icon/dot span
 	MaxWidth string           // optional Tailwind max-width class (e.g. "max-w-24"); enables truncation with ellipsis
-	Attrs    templ.Attributes // optional extra HTML attributes, e.g. {"data-testid": "status-badge"}
+	// Color is an arbitrary CSS colour applied via inline style (text + a
+	// translucent background/border via color-mix). When set it replaces the
+	// Variant tone class (matching the reference typeNameChip behaviour).
+	Color string
+	// Glyph renders a text/emoji glyph prefix instead of the icon (and dot)
+	// when non-empty.
+	Glyph string
+	// LabelClass is an optional extra class on the label span, e.g.
+	// "text-base-content" to restore contrast when Color is set.
+	LabelClass string
+	Attrs      templ.Attributes // optional extra HTML attributes, e.g. {"data-testid": "status-badge"}
 }
 
 // StatusIntentFor maps a status string to a BadgeIntent.
@@ -71,13 +81,19 @@ func StatusIntentFor(status string) BadgeIntent {
 // Set Icon to show a Lucide icon prefix instead of (or in addition to) a dot.
 // Set MaxWidth to a Tailwind max-width class (e.g. "max-w-24") to enable label truncation.
 templ Badge(props BadgeProps) {
-	<span class={ "badge gap-1", templ.KV(string(props.Variant), props.Variant != ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth } { devmode.Attrs(ctx, "ui/Badge")... } { props.Attrs... }>
+	<span class={ "badge gap-1", templ.KV(string(props.Variant), props.Variant != "" && props.Color == ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth }
+		if props.Color != "" {
+			style={ accentStyle(props.Color) }
+		}
+		{ devmode.Attrs(ctx, "ui/Badge")... } { props.Attrs... }>
 		if props.Dot {
 			<span class={ templ.KV("animate-pulse", props.Animate), dotClass(props.Variant) }></span>
+		} else if props.Glyph != "" {
+			<span class="shrink-0 leading-none text-[13px]" aria-hidden="true">{ props.Glyph }</span>
 		} else if props.Icon != "" {
 			@IconSpan(props.Icon, "size-3 shrink-0")
 		}
-		<span class={ templ.KV("truncate", props.MaxWidth != "") }>{ props.Label }</span>
+		<span class={ templ.KV("truncate", props.MaxWidth != ""), props.LabelClass }>{ props.Label }</span>
 	</span>
 }
 

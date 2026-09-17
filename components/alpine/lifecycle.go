@@ -27,6 +27,20 @@ func ToastQueueInit() string {
 	return `let queue=$data;queue.add=function(t){var item=Object.assign({id:'t'+Date.now(),type:'info',message:'',duration:4000},t);queue.toasts.push(item);if(item.duration>0){setTimeout(function(){queue.dismiss(item.id)},item.duration)}};queue.dismiss=function(id){queue.toasts=queue.toasts.filter(function(t){return t.id!==id})}`
 }
 
+// ToastQueueInitPausable returns the x-init expression for a toast queue with
+// hover-to-pause support. Each added toast tracks its remaining lifetime
+// (remaining/start) and a timer, so pause() clears the timer and resume()
+// re-arms it with the leftover time; the per-toast countdown bar's
+// animation-play-state toggles on t.paused.
+//
+// It is a strict superset of ToastQueueInit: add() defaults are identical
+// (id, type, message, duration 4000) plus a paused:false flag, and dismiss()
+// behaves the same. Like ToastQueueInit it grabs the queue from $data so the
+// methods land on the component's data object.
+func ToastQueueInitPausable() string {
+	return `let queue=$data;if(!queue.toasts)queue.toasts=[];queue.add=function(t){var item=Object.assign({id:'t'+Date.now()+Math.random().toString(36).slice(2),type:'info',message:'',duration:4000,paused:false},t);item.remaining=item.duration;item.start=Date.now();queue.toasts.push(item);item.timer=setTimeout(function(){queue.dismiss(item.id)},item.remaining)};queue.pause=function(t){if(t.paused)return;t.paused=true;clearTimeout(t.timer);t.remaining-=Date.now()-t.start};queue.resume=function(t){if(!t.paused)return;t.paused=false;t.start=Date.now();t.timer=setTimeout(function(){queue.dismiss(t.id)},t.remaining)};queue.dismiss=function(id){queue.toasts=queue.toasts.filter(function(t){return t.id!==id})}`
+}
+
 // ComboboxInit returns the x-init expression for combobox keyboard navigation,
 // item selection, and click-outside dismiss. multi=true for toggle-select mode.
 func ComboboxInit(multi bool) string {

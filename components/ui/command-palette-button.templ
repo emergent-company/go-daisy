@@ -1,0 +1,36 @@
+package ui
+
+// CommandPaletteButtonProps configures a CommandPaletteButton.
+type CommandPaletteButtonProps struct {
+	// Label is the visible button text; defaults to the placeholder string.
+	Label string
+	// Class is appended to the button's class list.
+	Class string
+	// Attrs are optional extra attributes on the button. A supplied "onclick"
+	// overrides the generated toggle/focus wiring.
+	Attrs templ.Attributes
+}
+
+// CommandPaletteButton renders the topbar search button that opens a
+// ui.CommandPalette with the same ID: an outline/ghost search button with a
+// search icon, a visible label (hidden on small screens) and a ⌘K hint. Clicking
+// toggles the palette's ID+"-toggle" checkbox and focuses ID+"-input".
+//
+// Pair with ui.CommandPalette(CommandPaletteProps{ID: id, ...}).
+templ CommandPaletteButton(id string, placeholder string, props ...CommandPaletteButtonProps) {
+	{{ var p CommandPaletteButtonProps
+	if len(props) > 0 { p = props[0] }
+	label := p.Label
+	if label == "" { label = placeholder } }}
+	@Button(ButtonProps{
+		Type:       ButtonTypeButton,
+		Variant:    ButtonOutline,
+		Icon:       "lucide--search",
+		AriaLabel:  "Search",
+		ExtraClass: twmerge("btn-ghost border-base-content/15 text-base-content/60 h-9 w-9 justify-center gap-2 rounded-box px-0 text-sm font-normal hover:bg-base-200 hover:text-base-content md:w-56 md:justify-start md:px-3", p.Class),
+		Attrs:      commandPaletteButtonAttrs(id, p.Attrs),
+	}) {
+		<span class="hidden grow text-left md:inline">{ label }</span>
+		<kbd class="kbd kbd-xs hidden md:inline">⌘K</kbd>
+	}
+}
