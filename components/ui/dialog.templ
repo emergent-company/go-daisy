@@ -2,8 +2,15 @@ package ui
 
 import "github.com/emergent-company/go-daisy/devmode"
 
-// ModalProps configures a native <dialog class="modal"> shell.
-type ModalProps struct {
+// DialogProps configures a native <dialog class="modal"> shell.
+//
+// This is the minimal native-dialog family (components/ui). It differs from
+// components/modal, which is the JS-driver-and-header-oriented family
+// (vanilla/Alpine/Stimulus, FormModal, ConfirmPopup, DeleteButton,
+// OpenModalButton, LoaderModal). ui.Dialog (and ui.ConfirmDialog) render a
+// bare <dialog class="modal"> shell opened with showModal()/close(); callers
+// supply their own attributes and there is no mandatory header.
+type DialogProps struct {
 	// ID is the dialog element id (used by showModal()/close() and any
 	// data-testid targeting).
 	ID string
@@ -17,16 +24,16 @@ type ModalProps struct {
 	Attrs templ.Attributes
 }
 
-// Modal renders a native <dialog class="modal"> shell: a modal-box (with
+// Dialog renders a native <dialog class="modal"> shell: a modal-box (with
 // configurable class/id) and the standard method="dialog" backdrop form.
 // Children are the modal-box content. hx-boost is disabled so HTMX does not
 // intercept the dialog's form submission.
 //
 // Open via document.getElementById(id).showModal() (or an auto-open attribute)
 // — the shell is not pre-opened.
-templ Modal(props ModalProps) {
-	<dialog id={ props.ID } class="modal" hx-boost="false" { devmode.Attrs(ctx, "ui/Modal")... } { props.Attrs... }>
-		<div { modalBoxAttrs(props.BoxID)... } class={ "modal-box", templ.KV(props.BoxClass, props.BoxClass != "") }>
+templ Dialog(props DialogProps) {
+	<dialog id={ props.ID } class="modal" hx-boost="false" { devmode.Attrs(ctx, "ui/Dialog")... } { props.Attrs... }>
+		<div { dialogBoxAttrs(props.BoxID)... } class={ "modal-box", templ.KV(props.BoxClass, props.BoxClass != "") }>
 			{ children... }
 		</div>
 		<form method="dialog" class="modal-backdrop">

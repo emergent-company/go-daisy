@@ -19,8 +19,9 @@ type ConfirmDialogProps struct {
 
 // ConfirmDialog renders a destructive confirm modal: an error icon circle, a
 // "Delete <noun>?" heading, a description slot, and an actions slot (children).
-// Built on ui.Modal. Free of application-specific copy — set Noun and provide
-// your own description/actions.
+// Built on ui.Dialog (the minimal native-dialog family — see Dialog's doc for
+// how it differs from components/modal). Free of application-specific copy —
+// set Noun and provide your own description/actions.
 templ ConfirmDialog(props ConfirmDialogProps, description templ.Component) {
 	{{ boxClass := props.BoxClass
 	if boxClass == "" { boxClass = "max-w-sm" }
@@ -28,7 +29,7 @@ templ ConfirmDialog(props ConfirmDialogProps, description templ.Component) {
 	if icon == "" { icon = "lucide--trash-2" }
 	title := props.Title
 	if title == "" { title = "Delete " + props.Noun + "?" } }}
-	@Modal(ModalProps{ID: props.ID, BoxClass: boxClass, Attrs: props.Attrs}) {
+	@Dialog(DialogProps{ID: props.ID, BoxClass: boxClass, Attrs: props.Attrs}) {
 		<div class="mb-4 flex items-start gap-3">
 			<div class="bg-error/10 text-error grid size-10 shrink-0 place-items-center rounded-full">
 				@IconSpan(icon, "size-5")

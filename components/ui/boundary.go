@@ -1374,12 +1374,12 @@ func ToastQueueWithPropsWithBoundary(props ToastQueueProps, seed ...alpine.Toast
 	})
 }
 
-// ModalWithBoundary wraps Modal with a dev-mode component boundary annotation.
+// DialogWithBoundary wraps Dialog with a dev-mode component boundary annotation.
 // gallery:token id,boxClass
 // gallery:hint id:default(demo-modal)
-func ModalWithBoundary(props ModalProps, content templ.Component) templ.Component {
-	inner := shared.RenderInto(Modal(props), content)
-	return devmode.ComponentBoundary("Modal", inner, map[string]any{
+func DialogWithBoundary(props DialogProps, content templ.Component) templ.Component {
+	inner := shared.RenderInto(Dialog(props), content)
+	return devmode.ComponentBoundary("Dialog", inner, map[string]any{
 		"id":       props.ID,
 		"boxClass": props.BoxClass,
 	})

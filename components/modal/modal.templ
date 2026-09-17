@@ -97,6 +97,12 @@ func modalDialogID(props ModalProps) string {
 
 // Modal renders a DaisyUI dialog modal.
 // Driver field selects the JS framework: "" (vanilla), "alpine", "stimulus".
+//
+// This is the JS-driver-and-header-oriented modal family (components/modal):
+// it pairs ModalHeader with vanilla/Alpine/Stimulus drivers and is the home of
+// FormModal, ConfirmPopup, DeleteButton, OpenModalButton and LoaderModal. For a
+// minimal native <dialog> shell opened with showModal()/close() and no mandatory
+// header, use ui.Dialog / ui.ConfirmDialog instead.
 templ Modal(props ModalProps) {
 	{{ dialogID := modalDialogID(props) }}
 	if props.Driver == ModalDriverAlpine {
@@ -148,7 +154,13 @@ templ Modal(props ModalProps) {
 				@ModalHeader(dialogID, props.Title, templ.JSUnsafeFuncCall("this.closest('dialog').remove()"))
 				{ children... }
 			</div>
-			<form method="dialog" class="modal-backdrop" onclick="document.getElementById('modal').remove()">
+			// Backdrop click removes the dialog node entirely (destructive remove(),
+			// not non-destructive close()). The gallery depends on this pre-opened
+			// modal-open + remove() behaviour, so keep remove() semantics. Targeting
+			// this.closest('dialog') (instead of a hardcoded id) makes the handler
+			// correct for any ModalProps.ID — a non-"modal" id no longer throws or
+			// destroys an unrelated node (LoaderModal/ConfirmPopup hardcode id=modal).
+			<form method="dialog" class="modal-backdrop" onclick="this.closest('dialog').remove()">
 				<button>close</button>
 			</form>
 		</dialog>

@@ -27,8 +27,9 @@ type ConfirmDialogProps struct {
 
 // ConfirmDialog renders a destructive confirm modal: an error icon circle, a
 // "Delete <noun>?" heading, a description slot, and an actions slot (children).
-// Built on ui.Modal. Free of application-specific copy — set Noun and provide
-// your own description/actions.
+// Built on ui.Dialog (the minimal native-dialog family — see Dialog's doc for
+// how it differs from components/modal). Free of application-specific copy —
+// set Noun and provide your own description/actions.
 func ConfirmDialog(props ConfirmDialogProps, description templ.Component) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -89,7 +90,7 @@ func ConfirmDialog(props ConfirmDialogProps, description templ.Component) templ.
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/confirm-dialog.templ`, Line: 37, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/confirm-dialog.templ`, Line: 38, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -115,7 +116,7 @@ func ConfirmDialog(props ConfirmDialogProps, description templ.Component) templ.
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = Modal(ModalProps{ID: props.ID, BoxClass: boxClass, Attrs: props.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Dialog(DialogProps{ID: props.ID, BoxClass: boxClass, Attrs: props.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

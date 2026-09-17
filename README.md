@@ -20,15 +20,20 @@ Components live under `components/` and are organized by package:
 
 | Package | Contents |
 |---|---|
-| `components/ui` | Primitives: Button, Badge, Card, Avatar, Toast, Alert, Pagination, Chart, ProgressBar, Frame, Dashboard, Aura, etc. |
+| `components/ui` | Primitives: Button, Badge, Card, Avatar, Toast, Alert, Pagination, Chart, ProgressBar, Frame, Dashboard, Aura, Dialog, ConfirmDialog, etc. |
 | `components/form` | Form field wrappers, inputs, selects, wizards, OTP, ColorInput, DatalistInput |
 | `components/layout` | Full-page shell, sidebar, navbar, LayoutCustomizer |
 | `components/nav` | PageHeader, TabMenu, TopBar, Megamenu, breadcrumbs, menus |
 | `components/table` | Table, ListArea (infinite-scroll), ScrollRows |
-| `components/modal` | Modal dialogs (CSS, Alpine.js, Stimulus.js variants) |
+| `components/modal` | JS-driver-and-header modal family: vanilla/Alpine/Stimulus drivers, FormModal, ConfirmPopup, DeleteButton, OpenModalButton, LoaderModal |
 | `components/logs` | Log stream display |
 | `components/alpine` | Alpine.js attribute helpers + pre-built data states |
 | `components/stimulus` | Stimulus.js attribute helpers + 6 pre-built controllers |
+
+Two distinct modal families exist — do not confuse them:
+
+- **`components/modal`** is the JS-driver-and-header-oriented family: `Modal`/`FormModal` pair a mandatory `ModalHeader` with vanilla, Alpine.js and Stimulus.js drivers, alongside `ConfirmPopup`, `DeleteButton`, `OpenModalButton` and `LoaderModal`.
+- **`ui.Dialog`** and **`ui.ConfirmDialog`** are the minimal native-dialog family: a bare `<dialog class="modal">` shell opened via `showModal()`/`close()`, with caller-supplied attributes and no mandatory header.
 
 All component functions return `templ.Component`. Props are passed as plain Go structs or positional arguments — no global state.
 
