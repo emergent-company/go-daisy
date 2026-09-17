@@ -197,6 +197,12 @@ func modalDialogID(props ModalProps) string {
 
 // Modal renders a DaisyUI dialog modal.
 // Driver field selects the JS framework: "" (vanilla), "alpine", "stimulus".
+//
+// This is the JS-driver-and-header-oriented modal family (components/modal):
+// it pairs ModalHeader with vanilla/Alpine/Stimulus drivers and is the home of
+// FormModal, ConfirmPopup, DeleteButton, OpenModalButton and LoaderModal. For a
+// minimal native <dialog> shell opened with showModal()/close() and no mandatory
+// header, use ui.Dialog / ui.ConfirmDialog instead.
 func Modal(props ModalProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -345,7 +351,7 @@ func Modal(props ModalProps) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(dialogID)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 138, Col: 16}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 144, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 			if templ_7745c5c3_Err != nil {
@@ -358,7 +364,7 @@ func Modal(props ModalProps) templ.Component {
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue("modal-title-" + dialogID)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 142, Col: 46}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 148, Col: 46}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 			if templ_7745c5c3_Err != nil {
@@ -410,7 +416,7 @@ func Modal(props ModalProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div><form method=\"dialog\" class=\"modal-backdrop\" onclick=\"document.getElementById('modal').remove()\"><button>close</button></form></dialog>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div><form method=\"dialog\" class=\"modal-backdrop\" onclick=\"this.closest('dialog').remove()\"><button>close</button></form></dialog>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -493,7 +499,7 @@ func formModalVanilla(props FormModalProps) templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 174, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 186, Col: 22}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
 		if templ_7745c5c3_Err != nil {
@@ -506,7 +512,7 @@ func formModalVanilla(props FormModalProps) templ.Component {
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue("modal-title-" + props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 174, Col: 114}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 186, Col: 114}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
 		if templ_7745c5c3_Err != nil {
@@ -566,7 +572,7 @@ func formModalVanilla(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var20 string
 			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 179, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 191, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var20)
 			if templ_7745c5c3_Err != nil {
@@ -589,7 +595,7 @@ func formModalVanilla(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var21 string
 			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 181, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 193, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var21)
 			if templ_7745c5c3_Err != nil {
@@ -607,7 +613,7 @@ func formModalVanilla(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var22 string
 			templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 183, Col: 27}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 195, Col: 27}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var22)
 			if templ_7745c5c3_Err != nil {
@@ -626,7 +632,7 @@ func formModalVanilla(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var23 string
 			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Target)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 186, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 198, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var23)
 			if templ_7745c5c3_Err != nil {
@@ -645,7 +651,7 @@ func formModalVanilla(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var24 string
 			templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Swap)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 189, Col: 25}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 201, Col: 25}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var24)
 			if templ_7745c5c3_Err != nil {
@@ -664,7 +670,7 @@ func formModalVanilla(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var25 string
 			templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.ResolveAttributeValue("#" + props.IndicatorID)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 192, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 204, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var25)
 			if templ_7745c5c3_Err != nil {
@@ -710,7 +716,7 @@ func formModalVanilla(props FormModalProps) templ.Component {
 				var templ_7745c5c3_Var28 string
 				templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(cancelText)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 198, Col: 18}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 210, Col: 18}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 				if templ_7745c5c3_Err != nil {
@@ -741,7 +747,7 @@ func formModalVanilla(props FormModalProps) templ.Component {
 				var templ_7745c5c3_Var30 string
 				templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(submitText)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 201, Col: 18}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 213, Col: 18}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 				if templ_7745c5c3_Err != nil {
@@ -843,7 +849,7 @@ func formModalAlpine(props FormModalProps) templ.Component {
 		var templ_7745c5c3_Var34 string
 		templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 224, Col: 18}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 236, Col: 18}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var34)
 		if templ_7745c5c3_Err != nil {
@@ -861,7 +867,7 @@ func formModalAlpine(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var35 string
 			templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 226, Col: 27}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 238, Col: 27}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var35)
 			if templ_7745c5c3_Err != nil {
@@ -884,7 +890,7 @@ func formModalAlpine(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var36 string
 			templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 228, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 240, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var36)
 			if templ_7745c5c3_Err != nil {
@@ -902,7 +908,7 @@ func formModalAlpine(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var37 string
 			templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 230, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 242, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var37)
 			if templ_7745c5c3_Err != nil {
@@ -921,7 +927,7 @@ func formModalAlpine(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var38 string
 			templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Target)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 233, Col: 30}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 245, Col: 30}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var38)
 			if templ_7745c5c3_Err != nil {
@@ -940,7 +946,7 @@ func formModalAlpine(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var39 string
 			templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Swap)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 236, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 248, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var39)
 			if templ_7745c5c3_Err != nil {
@@ -959,7 +965,7 @@ func formModalAlpine(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var40 string
 			templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.ResolveAttributeValue("#" + props.IndicatorID)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 239, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 251, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var40)
 			if templ_7745c5c3_Err != nil {
@@ -1005,7 +1011,7 @@ func formModalAlpine(props FormModalProps) templ.Component {
 				var templ_7745c5c3_Var43 string
 				templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.JoinStringErrs(cancelText)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 246, Col: 19}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 258, Col: 19}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var43))
 				if templ_7745c5c3_Err != nil {
@@ -1036,7 +1042,7 @@ func formModalAlpine(props FormModalProps) templ.Component {
 				var templ_7745c5c3_Var45 string
 				templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.JoinStringErrs(submitText)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 249, Col: 19}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 261, Col: 19}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
 				if templ_7745c5c3_Err != nil {
@@ -1142,7 +1148,7 @@ func formModalStimulus(props FormModalProps) templ.Component {
 		var templ_7745c5c3_Var49 string
 		templ_7745c5c3_Var49, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 274, Col: 18}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 286, Col: 18}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var49)
 		if templ_7745c5c3_Err != nil {
@@ -1160,7 +1166,7 @@ func formModalStimulus(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var50 string
 			templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 276, Col: 27}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 288, Col: 27}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var50)
 			if templ_7745c5c3_Err != nil {
@@ -1183,7 +1189,7 @@ func formModalStimulus(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var51 string
 			templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 278, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 290, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var51)
 			if templ_7745c5c3_Err != nil {
@@ -1201,7 +1207,7 @@ func formModalStimulus(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var52 string
 			templ_7745c5c3_Var52, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 280, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 292, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var52)
 			if templ_7745c5c3_Err != nil {
@@ -1220,7 +1226,7 @@ func formModalStimulus(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var53 string
 			templ_7745c5c3_Var53, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Target)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 283, Col: 30}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 295, Col: 30}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var53)
 			if templ_7745c5c3_Err != nil {
@@ -1239,7 +1245,7 @@ func formModalStimulus(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var54 string
 			templ_7745c5c3_Var54, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Swap)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 286, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 298, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var54)
 			if templ_7745c5c3_Err != nil {
@@ -1258,7 +1264,7 @@ func formModalStimulus(props FormModalProps) templ.Component {
 			var templ_7745c5c3_Var55 string
 			templ_7745c5c3_Var55, templ_7745c5c3_Err = templ.ResolveAttributeValue("#" + props.IndicatorID)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 289, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 301, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var55)
 			if templ_7745c5c3_Err != nil {
@@ -1304,7 +1310,7 @@ func formModalStimulus(props FormModalProps) templ.Component {
 				var templ_7745c5c3_Var58 string
 				templ_7745c5c3_Var58, templ_7745c5c3_Err = templ.JoinStringErrs(cancelText)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 299, Col: 19}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 311, Col: 19}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var58))
 				if templ_7745c5c3_Err != nil {
@@ -1338,7 +1344,7 @@ func formModalStimulus(props FormModalProps) templ.Component {
 				var templ_7745c5c3_Var60 string
 				templ_7745c5c3_Var60, templ_7745c5c3_Err = templ.JoinStringErrs(submitText)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 304, Col: 19}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 316, Col: 19}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var60))
 				if templ_7745c5c3_Err != nil {
@@ -1406,7 +1412,7 @@ func OpenModalButton(modalID string, label string, attrs templ.Attributes, drive
 				var templ_7745c5c3_Var63 string
 				templ_7745c5c3_Var63, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 322, Col: 10}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 334, Col: 10}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var63))
 				if templ_7745c5c3_Err != nil {
@@ -1434,7 +1440,7 @@ func OpenModalButton(modalID string, label string, attrs templ.Attributes, drive
 				var templ_7745c5c3_Var65 string
 				templ_7745c5c3_Var65, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 326, Col: 10}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 338, Col: 10}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var65))
 				if templ_7745c5c3_Err != nil {
@@ -1462,7 +1468,7 @@ func OpenModalButton(modalID string, label string, attrs templ.Attributes, drive
 				var templ_7745c5c3_Var67 string
 				templ_7745c5c3_Var67, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 330, Col: 10}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 342, Col: 10}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var67))
 				if templ_7745c5c3_Err != nil {
@@ -1529,7 +1535,7 @@ func DeleteButton(url string, confirm string, target string, swap string, label 
 			var templ_7745c5c3_Var70 string
 			templ_7745c5c3_Var70, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 349, Col: 9}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 361, Col: 9}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var70))
 			if templ_7745c5c3_Err != nil {
@@ -1667,7 +1673,7 @@ func ConfirmPopup(title string, message string, confirmLabel string, confirmURL 
 		var templ_7745c5c3_Var73 string
 		templ_7745c5c3_Var73, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 402, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 414, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var73))
 		if templ_7745c5c3_Err != nil {
@@ -1730,7 +1736,7 @@ func ConfirmPopup(title string, message string, confirmLabel string, confirmURL 
 				var templ_7745c5c3_Var77 string
 				templ_7745c5c3_Var77, templ_7745c5c3_Err = templ.JoinStringErrs(confirmLabel)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 408, Col: 19}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/modal/modal.templ`, Line: 420, Col: 19}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var77))
 				if templ_7745c5c3_Err != nil {

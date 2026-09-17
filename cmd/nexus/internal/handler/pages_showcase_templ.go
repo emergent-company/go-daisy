@@ -133,7 +133,7 @@ func UIComponentsPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = compCard("Modal", "Dialog modals", "ui.Modal").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = compCard("Dialog", "Native dialog shell", "ui.Dialog").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

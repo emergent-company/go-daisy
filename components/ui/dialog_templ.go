@@ -10,8 +10,15 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/emergent-company/go-daisy/devmode"
 
-// ModalProps configures a native <dialog class="modal"> shell.
-type ModalProps struct {
+// DialogProps configures a native <dialog class="modal"> shell.
+//
+// This is the minimal native-dialog family (components/ui). It differs from
+// components/modal, which is the JS-driver-and-header-oriented family
+// (vanilla/Alpine/Stimulus, FormModal, ConfirmPopup, DeleteButton,
+// OpenModalButton, LoaderModal). ui.Dialog (and ui.ConfirmDialog) render a
+// bare <dialog class="modal"> shell opened with showModal()/close(); callers
+// supply their own attributes and there is no mandatory header.
+type DialogProps struct {
 	// ID is the dialog element id (used by showModal()/close() and any
 	// data-testid targeting).
 	ID string
@@ -25,14 +32,14 @@ type ModalProps struct {
 	Attrs templ.Attributes
 }
 
-// Modal renders a native <dialog class="modal"> shell: a modal-box (with
+// Dialog renders a native <dialog class="modal"> shell: a modal-box (with
 // configurable class/id) and the standard method="dialog" backdrop form.
 // Children are the modal-box content. hx-boost is disabled so HTMX does not
 // intercept the dialog's form submission.
 //
 // Open via document.getElementById(id).showModal() (or an auto-open attribute)
 // — the shell is not pre-opened.
-func Modal(props ModalProps) templ.Component {
+func Dialog(props DialogProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -60,7 +67,7 @@ func Modal(props ModalProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/modal.templ`, Line: 28, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/dialog.templ`, Line: 35, Col: 22}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -70,7 +77,7 @@ func Modal(props ModalProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "ui/Modal"))
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "ui/Dialog"))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -91,7 +98,7 @@ func Modal(props ModalProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, modalBoxAttrs(props.BoxID))
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, dialogBoxAttrs(props.BoxID))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -102,7 +109,7 @@ func Modal(props ModalProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var3).String())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/modal.templ`, Line: 1, Col: 0}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/dialog.templ`, Line: 1, Col: 0}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 		if templ_7745c5c3_Err != nil {
