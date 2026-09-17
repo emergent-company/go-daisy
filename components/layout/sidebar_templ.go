@@ -24,6 +24,7 @@ type SidebarItem struct {
 	Icon   string // Lucide icon suffix, e.g. "lucide--monitor-dot"
 	Active bool
 	Attrs  templ.Attributes // optional extra HTML attributes, e.g. {"data-testid": "sidebar-home"}
+	Warn   templ.Component  // optional warning slot rendered after the label (nil = no warning)
 }
 
 // SidebarGroup represents a labeled group of nav items.
@@ -81,7 +82,7 @@ func Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) tem
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(appName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 37, Col: 58}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 38, Col: 58}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -131,7 +132,7 @@ func Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) tem
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(group.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 52, Col: 110}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 53, Col: 110}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -143,7 +144,7 @@ func Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) tem
 				}
 			}
 			for _, item := range group.Items {
-				templ_7745c5c3_Err = sidebarNavItem(item).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = SidebarNavItem(item).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -179,13 +180,13 @@ func Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) tem
 	})
 }
 
-// sidebarIndicatorID generates a valid HTML id for the nav spinner indicator.
-func sidebarIndicatorID(href string) string {
+// SidebarIndicatorID generates a valid HTML id for the nav spinner indicator.
+func SidebarIndicatorID(href string) string {
 	return "si_" + strings.ReplaceAll(strings.TrimLeft(href, "/"), "/", "_")
 }
 
-// sidebarNavItem renders a single flat nav link.
-func sidebarNavItem(item SidebarItem) templ.Component {
+// SidebarNavItem renders a single flat nav link.
+func SidebarNavItem(item SidebarItem) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -215,7 +216,7 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "layout/sidebarNavItem"))
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "layout/SidebarNavItem"))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -230,7 +231,7 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 		var templ_7745c5c3_Var9 templ.SafeURL
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(item.Href))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 115, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 116, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -243,7 +244,7 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.Href)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 116, Col: 20}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 117, Col: 20}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
@@ -254,9 +255,9 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue("#" + sidebarIndicatorID(item.Href))
+		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue("#" + SidebarIndicatorID(item.Href))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 120, Col: 52}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 121, Col: 52}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 		if templ_7745c5c3_Err != nil {
@@ -310,17 +311,23 @@ func sidebarNavItem(item SidebarItem) templ.Component {
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 126, Col: 33}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 127, Col: 33}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</span> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ui.HTMXIndicator(sidebarIndicatorID(item.Href)).Render(ctx, templ_7745c5c3_Buffer)
+		if item.Warn != nil {
+			templ_7745c5c3_Err = item.Warn.Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = ui.HTMXIndicator(SidebarIndicatorID(item.Href)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

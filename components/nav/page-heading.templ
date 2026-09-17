@@ -1,20 +1,90 @@
 package nav
 
-import "github.com/emergent-company/go-daisy/devmode"
+import (
+	"cmp"
+
+	ui "github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // PageHeadingProps configures a page heading with title and breadcrumbs.
 type PageHeadingProps struct {
 	Title       string
 	Breadcrumbs []BreadcrumbItem
 	Attrs       templ.Attributes
+
+	// Kicker renders an uppercase eyebrow above the title. Empty drops it.
+	Kicker string
+	// Subtitle renders under the title. Empty drops it.
+	Subtitle string
+	// TitleAdornment renders inline with the title (same flex line), e.g. a
+	// version badge. Nil (the default) keeps the title markup unchanged.
+	TitleAdornment templ.Component
+	// Actions renders in the right-hand slot. Nil renders nothing.
+	Actions templ.Component
+	// Margin is the outer wrapper margin class. Default "mb-4".
+	Margin string
+	// Dashboard switches to the dashboard variant: baseline-aligned actions
+	// (items-end), no min-w-0 on the title column, and the larger lg:text-3xl title.
+	Dashboard bool
+	// Bare drops the flex title/actions row entirely — title (+subtitle) only.
+	Bare bool
+	// SubtitleFull renders the subtitle at full width (no max-w-2xl).
+	SubtitleFull bool
 }
 
-// PageHeading renders a page heading with title and DaisyUI breadcrumbs.
+// PageHeading renders a page heading with a breadcrumb trail on top, an h1 with
+// optional kicker eyebrow, subtitle, and inline title adornment, and a
+// right-hand action slot.
 templ PageHeading(props PageHeadingProps) {
-	<div class="flex items-center justify-between" { devmode.Attrs(ctx, "nav/PageHeading")... } { props.Attrs... }>
-		<h3 class="text-lg font-medium">{ props.Title }</h3>
-		<div class="hidden sm:inline">
-			@Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault)
-		</div>
+	{{ margin := cmp.Or(props.Margin, "mb-4") }}
+	<div class={ margin } { devmode.Attrs(ctx, "nav/PageHeading")... } { props.Attrs... }>
+		@Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault)
+		if props.Bare {
+			<div class="mt-2">
+				<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
+				if props.Subtitle != "" {
+					<p class="text-base-content/55 mt-1 text-sm">{ props.Subtitle }</p>
+				}
+			</div>
+		} else {
+			<div class={ "mt-2 flex flex-wrap", templ.KV("items-end", props.Dashboard), templ.KV("items-center", !props.Dashboard), "justify-between gap-4" }>
+				if props.Dashboard {
+					<div>
+						if props.TitleAdornment != nil {
+							<div class="flex flex-wrap items-center gap-2">
+								<h1 class="text-2xl font-bold tracking-tight lg:text-3xl">{ props.Title }</h1>
+								@props.TitleAdornment
+							</div>
+						} else {
+							<h1 class="text-2xl font-bold tracking-tight lg:text-3xl">{ props.Title }</h1>
+						}
+						if props.Subtitle != "" {
+							<p class={ "text-base-content/55 mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm" }>{ props.Subtitle }</p>
+						}
+					</div>
+				} else {
+					<div class="min-w-0">
+						if props.Kicker != "" {
+							@ui.Eyebrow(props.Kicker, ui.EyebrowProps{Size: "text-[11px]", Margin: "mb-1"})
+						}
+						if props.TitleAdornment != nil {
+							<div class="flex flex-wrap items-center gap-2">
+								<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
+								@props.TitleAdornment
+							</div>
+						} else {
+							<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
+						}
+						if props.Subtitle != "" {
+							<p class={ "text-base-content/55 mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm" }>{ props.Subtitle }</p>
+						}
+					</div>
+				}
+				if props.Actions != nil {
+					@props.Actions
+				}
+			</div>
+		}
 	</div>
 }

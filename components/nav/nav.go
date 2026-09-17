@@ -34,3 +34,13 @@ func Crumbs(args ...string) []BreadcrumbItem {
 	}
 	return items
 }
+
+// CrumbsActive marks the trailing breadcrumb as the current page (Active
+// styling). Crumbs builds a trail without setting Active, so detail headers
+// pass their result through this helper before rendering.
+func CrumbsActive(items []BreadcrumbItem) []BreadcrumbItem {
+	if n := len(items); n > 0 {
+		items[n-1].Active = true
+	}
+	return items
+}

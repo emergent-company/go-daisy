@@ -16,6 +16,7 @@ type SidebarItem struct {
 	Icon   string           // Lucide icon suffix, e.g. "lucide--monitor-dot"
 	Active bool
 	Attrs  templ.Attributes // optional extra HTML attributes, e.g. {"data-testid": "sidebar-home"}
+	Warn   templ.Component  // optional warning slot rendered after the label (nil = no warning)
 }
 
 // SidebarGroup represents a labeled group of nav items.
@@ -52,7 +53,7 @@ templ Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) {
 						<p class={ "menu-label px-2.5 pb-1.5", templ.KV("pt-5", i > 0), templ.KV("pt-0", i == 0) }>{ group.Label }</p>
 					}
 					for _, item := range group.Items {
-						@sidebarNavItem(item)
+						@SidebarNavItem(item)
 					}
 				}
 			</div>
@@ -102,29 +103,32 @@ templ Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) {
 	}
 }
 
-// sidebarIndicatorID generates a valid HTML id for the nav spinner indicator.
-func sidebarIndicatorID(href string) string {
+// SidebarIndicatorID generates a valid HTML id for the nav spinner indicator.
+func SidebarIndicatorID(href string) string {
 	return "si_" + strings.ReplaceAll(strings.TrimLeft(href, "/"), "/", "_")
 }
 
-// sidebarNavItem renders a single flat nav link.
-templ sidebarNavItem(item SidebarItem) {
+// SidebarNavItem renders a single flat nav link.
+templ SidebarNavItem(item SidebarItem) {
 	<a
-		{ devmode.Attrs(ctx, "layout/sidebarNavItem")... }
+		{ devmode.Attrs(ctx, "layout/SidebarNavItem")... }
 		{ item.Attrs... }
 		href={ templ.URL(item.Href) }
 		hx-get={ item.Href }
 		hx-target="#main-content"
 		hx-swap="innerHTML"
 		hx-push-url="true"
-		hx-indicator={ "#" + sidebarIndicatorID(item.Href) }
+		hx-indicator={ "#" + SidebarIndicatorID(item.Href) }
 		class={ "menu-item", templ.KV("active", item.Active) }
 	>
 		if item.Icon != "" {
 			<span class={ "iconify size-4 " + item.Icon }></span>
 		}
 		<span class="grow">{ item.Label }</span>
-		@ui.HTMXIndicator(sidebarIndicatorID(item.Href))
+		if item.Warn != nil {
+			@item.Warn
+		}
+		@ui.HTMXIndicator(SidebarIndicatorID(item.Href))
 	</a>
 }
 
