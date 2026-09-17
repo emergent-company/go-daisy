@@ -17,6 +17,10 @@ type PageHeadingProps struct {
 	Kicker string
 	// Subtitle renders under the title. Empty drops it.
 	Subtitle string
+	// Leading renders before the title region — before breadcrumbs and the h1 —
+	// on the outer wrapper, e.g. an icon tile. Nil (the default) keeps the
+	// header markup byte-identical.
+	Leading templ.Component
 	// TitleAdornment renders inline with the title (same flex line), e.g. a
 	// version badge. Nil (the default) keeps the title markup unchanged.
 	TitleAdornment templ.Component
@@ -31,6 +35,10 @@ type PageHeadingProps struct {
 	Bare bool
 	// SubtitleFull renders the subtitle at full width (no max-w-2xl).
 	SubtitleFull bool
+	// HideBreadcrumbs omits the breadcrumbs region entirely. Default false
+	// renders breadcrumbs always (even when Breadcrumbs is empty, matching
+	// today's output). Set true for headers that have no breadcrumbs at all.
+	HideBreadcrumbs bool
 }
 
 // PageHeading renders a page heading with a breadcrumb trail on top, an h1 with
@@ -39,7 +47,12 @@ type PageHeadingProps struct {
 templ PageHeading(props PageHeadingProps) {
 	{{ margin := cmp.Or(props.Margin, "mb-4") }}
 	<div class={ margin } { devmode.Attrs(ctx, "nav/PageHeading")... } { props.Attrs... }>
-		@Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault)
+		if props.Leading != nil {
+			@props.Leading
+		}
+		if !props.HideBreadcrumbs {
+			@Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault)
+		}
 		if props.Bare {
 			<div class="mt-2">
 				<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>

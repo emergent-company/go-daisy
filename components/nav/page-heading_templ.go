@@ -25,6 +25,10 @@ type PageHeadingProps struct {
 	Kicker string
 	// Subtitle renders under the title. Empty drops it.
 	Subtitle string
+	// Leading renders before the title region — before breadcrumbs and the h1 —
+	// on the outer wrapper, e.g. an icon tile. Nil (the default) keeps the
+	// header markup byte-identical.
+	Leading templ.Component
 	// TitleAdornment renders inline with the title (same flex line), e.g. a
 	// version badge. Nil (the default) keeps the title markup unchanged.
 	TitleAdornment templ.Component
@@ -39,6 +43,10 @@ type PageHeadingProps struct {
 	Bare bool
 	// SubtitleFull renders the subtitle at full width (no max-w-2xl).
 	SubtitleFull bool
+	// HideBreadcrumbs omits the breadcrumbs region entirely. Default false
+	// renders breadcrumbs always (even when Breadcrumbs is empty, matching
+	// today's output). Set true for headers that have no breadcrumbs at all.
+	HideBreadcrumbs bool
 }
 
 // PageHeading renders a page heading with a breadcrumb trail on top, an h1 with
@@ -100,9 +108,17 @@ func PageHeading(props PageHeadingProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		if props.Leading != nil {
+			templ_7745c5c3_Err = props.Leading.Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		if !props.HideBreadcrumbs {
+			templ_7745c5c3_Err = Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
 		if props.Bare {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"mt-2\"><h1 class=\"text-2xl font-bold tracking-tight\">")
@@ -112,7 +128,7 @@ func PageHeading(props PageHeadingProps) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 45, Col: 63}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 58, Col: 63}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -130,7 +146,7 @@ func PageHeading(props PageHeadingProps) templ.Component {
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(props.Subtitle)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 47, Col: 66}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 60, Col: 66}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -181,7 +197,7 @@ func PageHeading(props PageHeadingProps) templ.Component {
 					var templ_7745c5c3_Var8 string
 					templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 56, Col: 79}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 69, Col: 79}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 					if templ_7745c5c3_Err != nil {
@@ -207,7 +223,7 @@ func PageHeading(props PageHeadingProps) templ.Component {
 					var templ_7745c5c3_Var9 string
 					templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 60, Col: 78}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 73, Col: 78}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 					if templ_7745c5c3_Err != nil {
@@ -244,7 +260,7 @@ func PageHeading(props PageHeadingProps) templ.Component {
 					var templ_7745c5c3_Var12 string
 					templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(props.Subtitle)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 63, Col: 119}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 76, Col: 119}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 					if templ_7745c5c3_Err != nil {
@@ -278,7 +294,7 @@ func PageHeading(props PageHeadingProps) templ.Component {
 					var templ_7745c5c3_Var13 string
 					templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 73, Col: 67}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 86, Col: 67}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 					if templ_7745c5c3_Err != nil {
@@ -304,7 +320,7 @@ func PageHeading(props PageHeadingProps) templ.Component {
 					var templ_7745c5c3_Var14 string
 					templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 77, Col: 66}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 90, Col: 66}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 					if templ_7745c5c3_Err != nil {
@@ -341,7 +357,7 @@ func PageHeading(props PageHeadingProps) templ.Component {
 					var templ_7745c5c3_Var17 string
 					templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(props.Subtitle)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 80, Col: 119}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 93, Col: 119}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 					if templ_7745c5c3_Err != nil {

@@ -1,23 +1,54 @@
 package ui
 
-import "github.com/emergent-company/go-daisy/devmode"
+import (
+	"cmp"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // DisclosureProps configures a native <details>/<summary> disclosure.
+//
+// Class-vs-Base naming: fields named *Base (DetailsBase, SummaryBase, BodyBase)
+// REPLACE the hardcoded base class list when non-empty, while the existing
+// *Class fields (Class, SummaryClass, BodyClass) are always APPENDED after the
+// base. Appending can never remove a base utility, so a caller that needs a
+// different border/background or padding must set the corresponding *Base field
+// to the full replacement string.
 type DisclosureProps struct {
 	// Open sets the <details open> attribute.
 	Open bool
-	// Class is appended to the <details> class list.
+	// DetailsBase replaces the <details> base classes ("rounded-box border
+	// border-base-content/10 bg-base-200/40") when non-empty. Empty keeps the
+	// default base. GroupClass is always emitted first and Class is always
+	// appended last.
+	DetailsBase string
+	// Class is appended to the <details> class list after the base.
 	Class string
 	// GroupClass is the Tailwind group name used to rotate the chevron on open.
 	// Defaults to "group"; use "group/cap" for a named group so nested
 	// disclosures don't rotate each other's chevrons.
 	GroupClass string
 	// ItemsStart selects items-start (two-line header) over the default
-	// items-center alignment on the <summary>.
+	// items-center alignment on the <summary>. Only applies when SummaryBase is
+	// empty; with a custom SummaryBase the caller supplies items-center or
+	// items-start inside the string.
 	ItemsStart bool
-	// SummaryClass is appended to the <summary> class list.
+	// SummaryBase replaces the <summary> base classes ("flex cursor-pointer
+	// list-none justify-between gap-3 px-3 py-2.5 select-none
+	// [&::-webkit-details-marker]:hidden") when non-empty. When set, the
+	// ItemsStart-derived alignment class is NOT appended — include your own
+	// items-center/items-start in the string.
+	SummaryBase string
+	// SummaryClass is appended to the <summary> class list after the base.
 	SummaryClass string
-	// BodyClass is appended to the body div class list.
+	// SummaryAttrs are optional extra attributes on the <summary> element
+	// (e.g. data-testid hooks). Pass nil when not needed.
+	SummaryAttrs templ.Attributes
+	// BodyBase replaces the body div base classes ("flex flex-col gap-2
+	// border-t border-base-content/10 p-3") when non-empty. Empty keeps the
+	// default base.
+	BodyBase string
+	// BodyClass is appended to the body div class list after the base.
 	BodyClass string
 	// Attrs are optional extra attributes on the <details> element.
 	Attrs templ.Attributes
@@ -35,16 +66,21 @@ templ Disclosure(props DisclosureProps, header templ.Component, trailing ...temp
 	if group == "" { group = "group" }
 	align := "items-center"
 	if props.ItemsStart { align = "items-start" }
-	chevron := disclosureChevronClass(group) }}
+	chevron := disclosureChevronClass(group)
+	detailsBase := cmp.Or(props.DetailsBase, "rounded-box border border-base-content/10 bg-base-200/40")
+	summaryBase := cmp.Or(props.SummaryBase, "flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&::-webkit-details-marker]:hidden")
+	bodyBase := cmp.Or(props.BodyBase, "flex flex-col gap-2 border-t border-base-content/10 p-3") }}
 	<details
-		class={ group, "rounded-box border border-base-content/10 bg-base-200/40", props.Class }
+		class={ group, detailsBase, props.Class }
 		if props.Open {
 			open
 		}
 		{ devmode.Attrs(ctx, "ui/Disclosure")... }
 		{ props.Attrs... }
 	>
-		<summary class={ "flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&::-webkit-details-marker]:hidden", align, props.SummaryClass }>
+		<summary class={ summaryBase, templ.KV(align, props.SummaryBase == ""), props.SummaryClass }
+			{ props.SummaryAttrs... }
+		>
 			@header
 			<div class="flex shrink-0 items-center gap-2">
 				if len(trailing) > 0 && trailing[0] != nil {
@@ -53,7 +89,7 @@ templ Disclosure(props DisclosureProps, header templ.Component, trailing ...temp
 				@IconSpan("lucide--chevron-down", "size-4 shrink-0 text-base-content/40 transition-transform "+chevron)
 			</div>
 		</summary>
-		<div class={ "flex flex-col gap-2 border-t border-base-content/10 p-3", props.BodyClass }>
+		<div class={ bodyBase, props.BodyClass }>
 			{ children... }
 		</div>
 	</details>

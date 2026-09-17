@@ -8,24 +8,55 @@ package ui
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/emergent-company/go-daisy/devmode"
+import (
+	"cmp"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
 
 // DisclosureProps configures a native <details>/<summary> disclosure.
+//
+// Class-vs-Base naming: fields named *Base (DetailsBase, SummaryBase, BodyBase)
+// REPLACE the hardcoded base class list when non-empty, while the existing
+// *Class fields (Class, SummaryClass, BodyClass) are always APPENDED after the
+// base. Appending can never remove a base utility, so a caller that needs a
+// different border/background or padding must set the corresponding *Base field
+// to the full replacement string.
 type DisclosureProps struct {
 	// Open sets the <details open> attribute.
 	Open bool
-	// Class is appended to the <details> class list.
+	// DetailsBase replaces the <details> base classes ("rounded-box border
+	// border-base-content/10 bg-base-200/40") when non-empty. Empty keeps the
+	// default base. GroupClass is always emitted first and Class is always
+	// appended last.
+	DetailsBase string
+	// Class is appended to the <details> class list after the base.
 	Class string
 	// GroupClass is the Tailwind group name used to rotate the chevron on open.
 	// Defaults to "group"; use "group/cap" for a named group so nested
 	// disclosures don't rotate each other's chevrons.
 	GroupClass string
 	// ItemsStart selects items-start (two-line header) over the default
-	// items-center alignment on the <summary>.
+	// items-center alignment on the <summary>. Only applies when SummaryBase is
+	// empty; with a custom SummaryBase the caller supplies items-center or
+	// items-start inside the string.
 	ItemsStart bool
-	// SummaryClass is appended to the <summary> class list.
+	// SummaryBase replaces the <summary> base classes ("flex cursor-pointer
+	// list-none justify-between gap-3 px-3 py-2.5 select-none
+	// [&::-webkit-details-marker]:hidden") when non-empty. When set, the
+	// ItemsStart-derived alignment class is NOT appended — include your own
+	// items-center/items-start in the string.
+	SummaryBase string
+	// SummaryClass is appended to the <summary> class list after the base.
 	SummaryClass string
-	// BodyClass is appended to the body div class list.
+	// SummaryAttrs are optional extra attributes on the <summary> element
+	// (e.g. data-testid hooks). Pass nil when not needed.
+	SummaryAttrs templ.Attributes
+	// BodyBase replaces the body div base classes ("flex flex-col gap-2
+	// border-t border-base-content/10 p-3") when non-empty. Empty keeps the
+	// default base.
+	BodyBase string
+	// BodyClass is appended to the body div class list after the base.
 	BodyClass string
 	// Attrs are optional extra attributes on the <details> element.
 	Attrs templ.Attributes
@@ -68,7 +99,10 @@ func Disclosure(props DisclosureProps, header templ.Component, trailing ...templ
 			align = "items-start"
 		}
 		chevron := disclosureChevronClass(group)
-		var templ_7745c5c3_Var2 = []any{group, "rounded-box border border-base-content/10 bg-base-200/40", props.Class}
+		detailsBase := cmp.Or(props.DetailsBase, "rounded-box border border-base-content/10 bg-base-200/40")
+		summaryBase := cmp.Or(props.SummaryBase, "flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&::-webkit-details-marker]:hidden")
+		bodyBase := cmp.Or(props.BodyBase, "flex flex-col gap-2 border-t border-base-content/10 p-3")
+		var templ_7745c5c3_Var2 = []any{group, detailsBase, props.Class}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -108,7 +142,7 @@ func Disclosure(props DisclosureProps, header templ.Component, trailing ...templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var4 = []any{"flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&::-webkit-details-marker]:hidden", align, props.SummaryClass}
+		var templ_7745c5c3_Var4 = []any{summaryBase, templ.KV(align, props.SummaryBase == ""), props.SummaryClass}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -126,7 +160,15 @@ func Disclosure(props DisclosureProps, header templ.Component, trailing ...templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, props.SummaryAttrs)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -134,7 +176,7 @@ func Disclosure(props DisclosureProps, header templ.Component, trailing ...templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"flex shrink-0 items-center gap-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"flex shrink-0 items-center gap-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -148,16 +190,16 @@ func Disclosure(props DisclosureProps, header templ.Component, trailing ...templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div></summary>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div></summary>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var6 = []any{"flex flex-col gap-2 border-t border-base-content/10 p-3", props.BodyClass}
+		var templ_7745c5c3_Var6 = []any{bodyBase, props.BodyClass}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -170,7 +212,7 @@ func Disclosure(props DisclosureProps, header templ.Component, trailing ...templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -178,7 +220,7 @@ func Disclosure(props DisclosureProps, header templ.Component, trailing ...templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div></details>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div></details>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
