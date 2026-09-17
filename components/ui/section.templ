@@ -32,6 +32,28 @@ type SectionProps struct {
 	// Titleless skips the <h2> heading, rendering only the card body (and any
 	// empty state). Useful for bare list sections with no title.
 	Titleless bool
+	// Wrapperless omits the <section> element (and the <h2> heading) entirely,
+	// rendering the card path directly. Use it when you need a bare card with no
+	// section chrome — e.g. a CardRaw("card-border overflow-hidden", "p-0")
+	// wrapping a divide-y row list — which the titled section layout cannot
+	// express. When Wrapperless is true:
+	//
+	//   - No <section> and no <h2> are emitted (Titleless is implied).
+	//   - The card path renders CardRaw with CardClass and BodyClass, and when
+	//     Rows is true the children are wrapped in
+	//     <div class="divide-y divide-base-200"> exactly as the card path does.
+	//   - Margin is applied to the card element instead of the now-absent section
+	//     wrapper, so outer spacing is preserved.
+	//   - Empty is still honoured: when Empty is true, the default empty-state
+	//     card (card-border, no body padding) renders without a section wrapper.
+	//     As with the non-wrapperless Empty branch, CardClass and BodyClass are
+	//     ignored, but Margin still applies to the card.
+	//   - Raw is ignored: Raw's purpose is to skip the card inside a section, and
+	//     with no section there is nothing for it to skip. The card path always
+	//     renders.
+	//
+	// Default false reproduces today's <section>-wrapped output byte-for-byte.
+	Wrapperless bool
 }
 
 // Section renders a titled card section: an <h2> header followed by a DaisyUI
@@ -48,19 +70,17 @@ type SectionProps struct {
 //
 // When Empty is true the section renders ui.Empty instead of its children.
 templ Section(title string, props SectionProps) {
-	<section class={ templ.KV(props.Margin, props.Margin != "") } { devmode.Attrs(ctx, "ui/Section")... }>
-		if !props.Titleless {
-			<h2 class="mb-3 text-lg font-semibold tracking-tight">{ title }</h2>
-		}
+	if props.Wrapperless {
 		if props.Empty {
-			@CardRaw("card-border", "", nil) {
+			{{ emptyCardClass := "card-border"
+			if props.Margin != "" { emptyCardClass += " " + props.Margin } }}
+			@CardRaw(emptyCardClass, "", nil) {
 				@Empty(props.EmptyIcon, props.EmptyTitle, props.EmptyDesc)
 			}
-		} else if props.Raw {
-			{ children... }
 		} else {
 			{{ cardClass := "card-border"
-			if props.CardClass != "" { cardClass = props.CardClass } }}
+			if props.CardClass != "" { cardClass = props.CardClass }
+			if props.Margin != "" { cardClass += " " + props.Margin } }}
 			@CardRaw(cardClass, props.BodyClass, nil) {
 				if props.Rows {
 					<div class="divide-y divide-base-200">
@@ -71,5 +91,30 @@ templ Section(title string, props SectionProps) {
 				}
 			}
 		}
-	</section>
+	} else {
+		<section class={ templ.KV(props.Margin, props.Margin != "") } { devmode.Attrs(ctx, "ui/Section")... }>
+			if !props.Titleless {
+				<h2 class="mb-3 text-lg font-semibold tracking-tight">{ title }</h2>
+			}
+			if props.Empty {
+				@CardRaw("card-border", "", nil) {
+					@Empty(props.EmptyIcon, props.EmptyTitle, props.EmptyDesc)
+				}
+			} else if props.Raw {
+				{ children... }
+			} else {
+				{{ cardClass := "card-border"
+				if props.CardClass != "" { cardClass = props.CardClass } }}
+				@CardRaw(cardClass, props.BodyClass, nil) {
+					if props.Rows {
+						<div class="divide-y divide-base-200">
+							{ children... }
+						</div>
+					} else {
+						{ children... }
+					}
+				}
+			}
+		</section>
+	}
 }
