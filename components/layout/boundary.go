@@ -18,6 +18,15 @@ func SidebarWithBoundary(appName string, groups []SidebarGroup) templ.Component 
 	})
 }
 
+// SidebarNavItemWithBoundary wraps SidebarNavItem with a dev-mode component boundary annotation.
+func SidebarNavItemWithBoundary(item SidebarItem) templ.Component {
+	return devmode.ComponentBoundary("SidebarNavItem", SidebarNavItem(item), map[string]any{
+		"label":  item.Label,
+		"href":   item.Href,
+		"active": item.Active,
+	})
+}
+
 // NavbarWithBoundary wraps Navbar with a dev-mode component boundary annotation.
 // gallery:token appName
 // gallery:hint appName:default(MyApp)
