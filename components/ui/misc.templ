@@ -7,7 +7,7 @@ templ Tag(label string, removeHref string) {
 	<span class="badge badge-sm gap-1" { devmode.Attrs(ctx, "ui/Tag")... }>
 		{ label }
 		if removeHref != "" {
-			<a href={ templ.URL(removeHref) } class="opacity-60 hover:opacity-100" aria-label={ "Remove " + label }>
+			<a href={ templ.URL(removeHref) } class="inline-flex items-center justify-center leading-none opacity-60 hover:opacity-100" aria-label={ "Remove " + label }>
 				@IconSpan("lucide--x", "size-3")
 			</a>
 		}
