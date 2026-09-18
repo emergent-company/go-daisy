@@ -102,14 +102,8 @@ templ SidebarCollapsibleNexus(icon string, label string, children []templ.Compon
 
 templ SidebarAvatarDropdown(avatarSrc string, avatarAlt string) {
 	<div class="dropdown dropdown-bottom dropdown-end" { devmode.Attrs(ctx, "layout/SidebarAvatarDropdown")... }>
-		<div tabindex="0">
-			<div class="avatar bg-base-200 size-8 cursor-pointer overflow-hidden rounded-full">
-				if avatarSrc != "" {
-					<img alt={ avatarAlt } src={ avatarSrc }/>
-				} else {
-					<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-sm">U</div>
-				}
-			</div>
+		<div tabindex="0" class="cursor-pointer">
+			@ui.AvatarFull(ui.AvatarProps{Name: avatarAlt, Src: avatarSrc, Initials: "U", Size: ui.AvatarSM, TextClass: "text-sm"})
 		</div>
 		<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-4 w-44 shadow">
 			<ul class="menu w-full p-2">
@@ -173,9 +167,7 @@ templ SidebarMeetingBar(participants []string, meetingLabel string) {
 		<div class="flex items-center gap-2">
 			<div class="flex -space-x-2">
 				for _, p := range participants {
-					<div class="avatar bg-base-200 size-7 rounded-full border-2 border-base-100 overflow-hidden">
-						<div class="bg-primary text-primary-content flex size-full items-center justify-center text-[10px] font-semibold">{ initialsFrom(p) }</div>
-					</div>
+					@ui.AvatarFull(ui.AvatarProps{Initials: initialsFrom(p), Size: ui.AvatarSize7, InnerClass: "border-2 border-base-100", TextClass: "text-[10px]"})
 				}
 			</div>
 			<div>

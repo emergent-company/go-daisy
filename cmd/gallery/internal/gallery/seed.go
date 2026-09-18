@@ -2195,33 +2195,32 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				},
 				{
 					Name:        "Examples",
-					Description: "Two person chips side-by-side: Jane Doe (primary, active) and Bob Smith (secondary, on leave).",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							if _, err := io.WriteString(w, `<div class="p-8 space-y-10"><div><p class="text-xs font-semibold uppercase tracking-wider text-base-content/40 mb-4">Inline — initials avatar</p><div class="flex flex-wrap gap-6 items-start">`); err != nil {
-								return err
-							}
-							if err := ui.PersonChip("Jane Doe", "bg-primary", "text-primary-content", "from-primary/20", "to-primary/5", ui.PersonChipContact{
-								Email:       "jane.doe@example.com",
-								Role:        "Senior Attorney",
-								BadgeLabel:  "Active",
-								BadgeClass:  "badge-success badge-soft",
-								ProfileHref: "#",
-							}).Render(ctx, w); err != nil {
-								return err
-							}
-							if err := ui.PersonChip("Bob Smith", "bg-secondary", "text-secondary-content", "from-secondary/20", "to-secondary/5", ui.PersonChipContact{
-								Email:       "bob.smith@example.com",
-								Role:        "Paralegal",
-								BadgeLabel:  "On leave",
-								BadgeClass:  "badge-warning badge-soft",
-								ProfileHref: "#",
-							}).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div></div></div>`)
-							return err
-						})
+					Description: "Each person avatar version as its own example: primary (active) and secondary (on leave).",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Primary — Active",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.PersonChipWithBoundary("Jane Doe", "bg-primary", "text-primary-content", "from-primary/20", "to-primary/5", ui.PersonChipContact{
+									Email:       "jane.doe@example.com",
+									Role:        "Senior Attorney",
+									BadgeLabel:  "Active",
+									BadgeClass:  "badge-success badge-soft",
+									ProfileHref: "#",
+								})
+							},
+						},
+						{
+							Label: "Secondary — On leave",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.PersonChipWithBoundary("Bob Smith", "bg-secondary", "text-secondary-content", "from-secondary/20", "to-secondary/5", ui.PersonChipContact{
+									Email:       "bob.smith@example.com",
+									Role:        "Paralegal",
+									BadgeLabel:  "On leave",
+									BadgeClass:  "badge-warning badge-soft",
+									ProfileHref: "#",
+								})
+							},
+						},
 					},
 					Tokens: []galleryruntime.DesignToken{},
 				},

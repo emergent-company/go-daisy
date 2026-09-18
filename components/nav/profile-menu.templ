@@ -28,10 +28,8 @@ type ProfileMenuItem struct {
 // dedicated sign-out row.
 templ ProfileMenu(name, email, initials string, items []ProfileMenuItem, signOutHref string) {
 	<div class="dropdown dropdown-bottom dropdown-end" { devmode.Attrs(ctx, "nav/ProfileMenu")... }>
-		<div tabindex="0" class="avatar bg-base-200 size-12 cursor-pointer overflow-hidden rounded-full">
-			<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-lg">
-				{ initials }
-			</div>
+		<div tabindex="0" class="cursor-pointer">
+			@ui.AvatarFull(ui.AvatarProps{Initials: initials, Size: ui.AvatarSize12, TextClass: "text-lg"})
 		</div>
 		<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-base-200">
 			<div class="px-4 py-3 border-b border-base-200">
@@ -95,16 +93,14 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 
 	case "switch-account":
 		<div class="dropdown dropdown-bottom dropdown-end" { devmode.Attrs(ctx, "nav/ProfileMenuVariant")... }>
-			<div tabindex="0" class="avatar bg-base-200 size-12 cursor-pointer overflow-hidden rounded-full">
-				<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-lg">{ opts.Initials }</div>
+			<div tabindex="0" class="cursor-pointer">
+				@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarSize12, TextClass: "text-lg"})
 			</div>
 			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-64 shadow-lg border border-base-200">
 				<div class="border-base-200 border-b p-4">
 					<div class="flex items-center justify-between">
 						<div class="flex items-center gap-3">
-							<div class="avatar bg-base-200 size-10 rounded-full overflow-hidden">
-								<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold">{ opts.Initials }</div>
-							</div>
+							@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarMD})
 							<div>
 								<p class="font-semibold text-sm">{ opts.Name }</p>
 								<p class="text-base-content/60 text-xs">{ opts.Email }</p>
@@ -123,9 +119,7 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 					<p class="menu-label text-[11px] px-2 pb-1">Switch Account</p>
 					for _, acct := range opts.Accounts {
 						<div class="hover:bg-base-200 flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 transition-colors">
-							<div class="avatar bg-base-200 size-8 rounded-full overflow-hidden">
-								<div class="bg-base-300 text-base-content/80 flex size-full items-center justify-center font-semibold text-xs">{ firstChars(acct.Name, 2) }</div>
-							</div>
+							@ui.AvatarFull(ui.AvatarProps{Initials: firstChars(acct.Name, 2), Size: ui.AvatarSM, BadgeClass: "bg-base-300 text-base-content/80 font-semibold", TextClass: "text-xs"})
 							<div class="grow">
 								<p class="text-sm font-medium">{ acct.Name }</p>
 								<p class="text-base-content/60 text-xs">{ acct.Email }</p>
@@ -150,9 +144,7 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 	case "overlay":
 		<div class="dropdown dropdown-bottom dropdown-end" { devmode.Attrs(ctx, "nav/ProfileMenuVariant")... }>
 			<div tabindex="0" class="flex cursor-pointer items-center gap-2">
-				<div class="avatar bg-base-200 size-8 rounded-full overflow-hidden">
-					<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-sm">{ opts.Initials }</div>
-				</div>
+				@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarSM, TextClass: "text-sm"})
 				<div class="max-md:hidden">
 					<p class="text-sm font-medium leading-tight">{ opts.Name }</p>
 					<p class="text-base-content/60 text-xs leading-tight">{ opts.Email }</p>
@@ -161,9 +153,7 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 			</div>
 			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-base-200">
 				<div class="p-4 text-center">
-					<div class="avatar bg-base-200 size-16 mx-auto rounded-full overflow-hidden">
-						<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-2xl">{ opts.Initials }</div>
-					</div>
+					@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarSize16, TextClass: "text-2xl"})
 					<div class="mt-2">
 						<div class="inline-flex items-center gap-1 badge badge-soft badge-primary badge-xs">Shield verified</div>
 					</div>
@@ -185,15 +175,13 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 
 	case "referral":
 		<div class="dropdown dropdown-bottom dropdown-end" { devmode.Attrs(ctx, "nav/ProfileMenuVariant")... }>
-			<div tabindex="0" class="avatar bg-base-200 size-12 cursor-pointer overflow-hidden rounded-full">
-				<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-lg">{ opts.Initials }</div>
+			<div tabindex="0" class="cursor-pointer">
+				@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarSize12, TextClass: "text-lg"})
 			</div>
 			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-base-200">
 				<div class="border-base-200 border-b p-4">
 					<div class="flex items-center gap-3">
-						<div class="avatar bg-base-200 size-10 rounded-full overflow-hidden">
-							<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold">{ opts.Initials }</div>
-						</div>
+						@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarMD})
 						<div>
 							<p class="font-semibold text-sm">{ opts.Name }</p>
 							<p class="text-base-content/60 text-xs">{ opts.Email }</p>

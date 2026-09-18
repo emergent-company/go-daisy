@@ -109,13 +109,14 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 				<div class="border-base-300 me-3 h-7 border-e"></div>
 				<div class="dropdown dropdown-bottom dropdown-end">
 					<div tabindex="0" class="cursor-pointer">
-						<div class="avatar bg-base-200 rounded-box size-7 overflow-hidden">
-							if opts.AvatarSrc != "" {
-								<img alt={ opts.AvatarAlt } src={ opts.AvatarSrc } />
-							} else {
-								<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-xs">U</div>
-							}
-						</div>
+					@ui.AvatarFull(ui.AvatarProps{
+						Name:      opts.AvatarAlt,
+						Initials:  "U",
+						Src:       opts.AvatarSrc,
+						Size:      ui.AvatarSize7,
+						Mask:      "rounded-box",
+						TextClass: "text-xs",
+					})
 					</div>
 					<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-44 shadow">
 						<ul class="menu w-full p-2">
@@ -164,13 +165,14 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 			<div class="flex items-center gap-4">
 				<div class="dropdown dropdown-bottom dropdown-end">
 					<div tabindex="0" class="flex cursor-pointer items-center gap-2">
-						<div class="avatar bg-base-200 rounded-box size-7 overflow-hidden">
-							if opts.AvatarSrc != "" {
-								<img alt={ opts.AvatarAlt } src={ opts.AvatarSrc } />
-							} else {
-								<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-xs">U</div>
-							}
-						</div>
+					@ui.AvatarFull(ui.AvatarProps{
+						Name:      opts.AvatarAlt,
+						Initials:  "U",
+						Src:       opts.AvatarSrc,
+						Size:      ui.AvatarSize7,
+						Mask:      "rounded-box",
+						TextClass: "text-xs",
+					})
 						<div>
 							<p class="leading-none font-medium">{ opts.UserName }</p>
 							<p class="text-base-content/60 mt-0 text-xs/none">{ "@" + opts.UserName }</p>
@@ -254,13 +256,14 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 				<div class="border-base-300 ms-1 h-7 border-e"></div>
 				<div class="dropdown dropdown-bottom dropdown-end ms-2">
 					<div tabindex="0" class="cursor-pointer">
-						<div class="avatar bg-base-200 rounded-box size-7 overflow-hidden">
-							if opts.AvatarSrc != "" {
-								<img alt={ opts.AvatarAlt } src={ opts.AvatarSrc } />
-							} else {
-								<div class="bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-xs">U</div>
-							}
-						</div>
+					@ui.AvatarFull(ui.AvatarProps{
+						Name:      opts.AvatarAlt,
+						Initials:  "U",
+						Src:       opts.AvatarSrc,
+						Size:      ui.AvatarSize7,
+						Mask:      "rounded-box",
+						TextClass: "text-xs",
+					})
 					</div>
 					<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-44 shadow">
 						<ul class="menu w-full p-2">
@@ -319,9 +322,26 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 					<span class="text-base-content/40 text-sm max-md:hidden">{ opts.SaveStatus }</span>
 				}
 				<div class="flex -space-x-2">
-					<div class="avatar bg-base-200 size-7 rounded-full border-2 border-base-100 overflow-hidden"><div class="bg-primary text-primary-content flex size-full items-center justify-center text-[10px] font-semibold">U1</div></div>
-					<div class="avatar bg-base-200 size-7 rounded-full border-2 border-base-100 overflow-hidden"><div class="bg-secondary text-secondary-content flex size-full items-center justify-center text-[10px] font-semibold">U2</div></div>
-					<div class="avatar bg-base-200 size-7 rounded-full border-2 border-base-100 overflow-hidden"><div class="bg-accent text-accent-content flex size-full items-center justify-center text-[10px] font-semibold">U3</div></div>
+					@ui.AvatarFull(ui.AvatarProps{
+						Initials:   "U1",
+						Size:       ui.AvatarSize7,
+						TextClass:  "text-[10px]",
+						InnerClass: "border-2 border-base-100",
+					})
+					@ui.AvatarFull(ui.AvatarProps{
+						Initials:   "U2",
+						Size:       ui.AvatarSize7,
+						BadgeClass: "bg-secondary text-secondary-content font-semibold",
+						TextClass:  "text-[10px]",
+						InnerClass: "border-2 border-base-100",
+					})
+					@ui.AvatarFull(ui.AvatarProps{
+						Initials:   "U3",
+						Size:       ui.AvatarSize7,
+						BadgeClass: "bg-accent text-accent-content font-semibold",
+						TextClass:  "text-[10px]",
+						InnerClass: "border-2 border-base-100",
+					})
 				</div>
 				@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Size: ui.ButtonSM, ExtraClass: "max-md:btn-square gap-2"}){
 					@ui.IconSpan("lucide--pencil", "size-4")

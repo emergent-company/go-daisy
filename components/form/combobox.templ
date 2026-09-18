@@ -110,28 +110,27 @@ templ comboboxHiddenInputs(props ComboboxProps) {
 }
 
 templ comboboxPopoverSearch(props ComboboxProps) {
-	if !props.EnableSearch {
-		return
-	}
-	if props.Source.LazyEndpoint != "" {
-		<input
-			type="text"
-			name="q"
-			class="input input-sm input-bordered w-full mb-1"
-			placeholder="Search..."
-			x-model="search"
-			hx-get={ props.Source.LazyEndpoint }
-			hx-target={ "next .combobox-options-inner" }
-			hx-trigger="keyup changed delay:200ms"
-			hx-include="closest .combobox-popover"
-		/>
-	} else {
-		<input
-			type="text"
-			class="input input-sm input-bordered w-full mb-1"
-			placeholder="Search..."
-			x-model="search"
-		/>
+	if props.EnableSearch {
+		if props.Source.LazyEndpoint != "" {
+			<input
+				type="text"
+				name="q"
+				class="input input-sm input-bordered w-full mb-1"
+				placeholder="Search..."
+				x-model="search"
+				hx-get={ props.Source.LazyEndpoint }
+				hx-target={ "next .combobox-options-inner" }
+				hx-trigger="keyup changed delay:200ms"
+				hx-include="closest .combobox-popover"
+			/>
+		} else {
+			<input
+				type="text"
+				class="input input-sm input-bordered w-full mb-1"
+				placeholder="Search..."
+				x-model="search"
+			/>
+		}
 	}
 }
 

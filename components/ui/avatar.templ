@@ -20,7 +20,9 @@ const (
 	// directly to the diameters used by the app's hand-rolled avatars.
 	AvatarSize6  AvatarSize = "size-6"
 	AvatarSize7  AvatarSize = "size-7"
+	AvatarSize12 AvatarSize = "size-12"
 	AvatarSize14 AvatarSize = "size-14"
+	AvatarSize16 AvatarSize = "size-16"
 )
 
 // avatarSizeClass maps an AvatarSize to a Tailwind size-* utility for the inner div.
@@ -33,8 +35,12 @@ func avatarSizeClass(size AvatarSize) string {
 		return "size-7"
 	case AvatarSM:
 		return "size-8"
+	case AvatarSize12:
+		return "size-12"
 	case AvatarLG, AvatarSize14:
 		return "size-14"
+	case AvatarSize16:
+		return "size-16"
 	default: // AvatarMD and zero-value
 		return "size-10"
 	}
@@ -104,26 +110,51 @@ func avatarFallbackIconName(icon string) string {
 	return icon
 }
 
-// avatarToneClasses returns the background/text/flex classes for an initials
-// or fallback-icon badge. The primary variant matches the original Avatar
-// initials classes so the zero-value renders identically.
+// avatarToneClasses returns the background/text classes for an initials
+// badge. The primary variant matches the original Avatar initials classes so
+// the zero-value renders identically. Structural classes (flex centering) are
+// emitted separately by avatarBadgeClasses so a caller-supplied BadgeClass can
+// replace the colors without losing layout.
 func avatarToneClasses(tone AvatarTone) string {
 	if tone == AvatarToneMuted {
-		return "bg-base-300 flex items-center justify-center font-semibold text-base-content/70"
+		return "bg-base-300 font-semibold text-base-content/70"
 	}
-	return "bg-primary flex items-center justify-center font-semibold text-primary-content"
+	return "bg-primary font-semibold text-primary-content"
+}
+
+// avatarBadgeClasses returns the full class string for an initials/fallback
+// badge. When badgeClass is non-empty it replaces the built-in Tone colors,
+// letting callers pass arbitrary DaisyUI tone classes
+// (e.g. "bg-secondary text-secondary-content font-semibold").
+func avatarBadgeClasses(tone AvatarTone, badgeClass string) string {
+	colors := badgeClass
+	if colors == "" {
+		colors = avatarToneClasses(tone)
+	}
+	return "flex items-center justify-center " + colors
 }
 
 // AvatarProps configures an Avatar.
 type AvatarProps struct {
 	Name string
-	Src  string
-	Icon string
-	Size AvatarSize
-	Mask string
+	// Initials, when non-empty, overrides the initials computed from Name.
+	// Use to preserve an existing initials helper's output (e.g. first-two
+	// runes) when migrating hand-rolled avatars.
+	Initials string
+	Src      string
+	Icon     string
+	Size     AvatarSize
+	Mask     string
 	// Tone selects the initials badge color: AvatarTonePrimary (default) or
 	// AvatarToneMuted.
 	Tone AvatarTone
+	// BadgeClass, when non-empty, replaces Tone's background/text classes on
+	// the initials badge. Use for custom tones, e.g.
+	// "bg-secondary text-secondary-content font-semibold".
+	BadgeClass string
+	// InnerClass is appended to the initials/icon badge element for additional
+	// treatment, e.g. "font-bold ring-2 ring-base-100".
+	InnerClass string
 	// Fallback selects the fallback priority when Src is empty:
 	// AvatarFallbackIcon (default, icon-first) or AvatarFallbackInitials
 	// (initials-first, falling back to Icon when the name is empty).
@@ -154,23 +185,24 @@ templ AvatarFull(props AvatarProps) {
 				<img src={ props.Src } alt={ props.Name } class="object-cover w-full h-full"/>
 			</div>
 		} else if props.Fallback == AvatarFallbackInitials {
-			{{ init := avatarInitialsRunes(props.Name) }}
+			{{ init := props.Initials; if init == "" { init = avatarInitialsRunes(props.Name) } }}
 			if init != "" {
-				<div class={ sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone), props.TextClass }>
+				<div class={ sc, "avatar-placeholder", shape, avatarBadgeClasses(props.Tone, props.BadgeClass), props.TextClass, props.InnerClass }>
 					{ init }
 				</div>
 			} else {
-				<div class={ sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone) }>
+				<div class={ sc, "avatar-placeholder", shape, avatarBadgeClasses(props.Tone, props.BadgeClass), props.InnerClass }>
 					<span class={ "iconify size-[55%] " + avatarFallbackIconName(props.Icon) }></span>
 				</div>
 			}
 		} else if props.Icon != "" {
-			<div class={ sc, "avatar-placeholder", shape, "bg-base-300 flex items-center justify-center text-base-content/60" }>
+			<div class={ sc, "avatar-placeholder", shape, "bg-base-300 flex items-center justify-center text-base-content/60", props.InnerClass }>
 				<span class={ "iconify size-[55%] " + props.Icon }></span>
 			</div>
 		} else {
-			<div class={ sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone), props.TextClass }>
-				{ avatarInitials(props.Name) }
+			{{ init := props.Initials; if init == "" { init = avatarInitials(props.Name) } }}
+			<div class={ sc, "avatar-placeholder", shape, avatarBadgeClasses(props.Tone, props.BadgeClass), props.TextClass, props.InnerClass }>
+				{ init }
 			</div>
 		}
 	</div>

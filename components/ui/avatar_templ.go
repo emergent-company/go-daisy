@@ -28,7 +28,9 @@ const (
 	// directly to the diameters used by the app's hand-rolled avatars.
 	AvatarSize6  AvatarSize = "size-6"
 	AvatarSize7  AvatarSize = "size-7"
+	AvatarSize12 AvatarSize = "size-12"
 	AvatarSize14 AvatarSize = "size-14"
+	AvatarSize16 AvatarSize = "size-16"
 )
 
 // avatarSizeClass maps an AvatarSize to a Tailwind size-* utility for the inner div.
@@ -41,8 +43,12 @@ func avatarSizeClass(size AvatarSize) string {
 		return "size-7"
 	case AvatarSM:
 		return "size-8"
+	case AvatarSize12:
+		return "size-12"
 	case AvatarLG, AvatarSize14:
 		return "size-14"
+	case AvatarSize16:
+		return "size-16"
 	default: // AvatarMD and zero-value
 		return "size-10"
 	}
@@ -112,26 +118,51 @@ func avatarFallbackIconName(icon string) string {
 	return icon
 }
 
-// avatarToneClasses returns the background/text/flex classes for an initials
-// or fallback-icon badge. The primary variant matches the original Avatar
-// initials classes so the zero-value renders identically.
+// avatarToneClasses returns the background/text classes for an initials
+// badge. The primary variant matches the original Avatar initials classes so
+// the zero-value renders identically. Structural classes (flex centering) are
+// emitted separately by avatarBadgeClasses so a caller-supplied BadgeClass can
+// replace the colors without losing layout.
 func avatarToneClasses(tone AvatarTone) string {
 	if tone == AvatarToneMuted {
-		return "bg-base-300 flex items-center justify-center font-semibold text-base-content/70"
+		return "bg-base-300 font-semibold text-base-content/70"
 	}
-	return "bg-primary flex items-center justify-center font-semibold text-primary-content"
+	return "bg-primary font-semibold text-primary-content"
+}
+
+// avatarBadgeClasses returns the full class string for an initials/fallback
+// badge. When badgeClass is non-empty it replaces the built-in Tone colors,
+// letting callers pass arbitrary DaisyUI tone classes
+// (e.g. "bg-secondary text-secondary-content font-semibold").
+func avatarBadgeClasses(tone AvatarTone, badgeClass string) string {
+	colors := badgeClass
+	if colors == "" {
+		colors = avatarToneClasses(tone)
+	}
+	return "flex items-center justify-center " + colors
 }
 
 // AvatarProps configures an Avatar.
 type AvatarProps struct {
 	Name string
-	Src  string
-	Icon string
-	Size AvatarSize
-	Mask string
+	// Initials, when non-empty, overrides the initials computed from Name.
+	// Use to preserve an existing initials helper's output (e.g. first-two
+	// runes) when migrating hand-rolled avatars.
+	Initials string
+	Src      string
+	Icon     string
+	Size     AvatarSize
+	Mask     string
 	// Tone selects the initials badge color: AvatarTonePrimary (default) or
 	// AvatarToneMuted.
 	Tone AvatarTone
+	// BadgeClass, when non-empty, replaces Tone's background/text classes on
+	// the initials badge. Use for custom tones, e.g.
+	// "bg-secondary text-secondary-content font-semibold".
+	BadgeClass string
+	// InnerClass is appended to the initials/icon badge element for additional
+	// treatment, e.g. "font-bold ring-2 ring-base-100".
+	InnerClass string
 	// Fallback selects the fallback priority when Src is empty:
 	// AvatarFallbackIcon (default, icon-first) or AvatarFallbackInitials
 	// (initials-first, falling back to Icon when the name is empty).
@@ -218,7 +249,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Src)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 154, Col: 24}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 185, Col: 24}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 			if templ_7745c5c3_Err != nil {
@@ -231,7 +262,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 154, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 185, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 			if templ_7745c5c3_Err != nil {
@@ -242,9 +273,12 @@ func AvatarFull(props AvatarProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else if props.Fallback == AvatarFallbackInitials {
-			init := avatarInitialsRunes(props.Name)
+			init := props.Initials
+			if init == "" {
+				init = avatarInitialsRunes(props.Name)
+			}
 			if init != "" {
-				var templ_7745c5c3_Var6 = []any{sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone), props.TextClass}
+				var templ_7745c5c3_Var6 = []any{sc, "avatar-placeholder", shape, avatarBadgeClasses(props.Tone, props.BadgeClass), props.TextClass, props.InnerClass}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -269,7 +303,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(init)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 160, Col: 11}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 191, Col: 11}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
@@ -280,7 +314,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				var templ_7745c5c3_Var9 = []any{sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone)}
+				var templ_7745c5c3_Var9 = []any{sc, "avatar-placeholder", shape, avatarBadgeClasses(props.Tone, props.BadgeClass), props.InnerClass}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var9...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -326,7 +360,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 				}
 			}
 		} else if props.Icon != "" {
-			var templ_7745c5c3_Var13 = []any{sc, "avatar-placeholder", shape, "bg-base-300 flex items-center justify-center text-base-content/60"}
+			var templ_7745c5c3_Var13 = []any{sc, "avatar-placeholder", shape, "bg-base-300 flex items-center justify-center text-base-content/60", props.InnerClass}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var13...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -371,7 +405,11 @@ func AvatarFull(props AvatarProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			var templ_7745c5c3_Var17 = []any{sc, "avatar-placeholder", shape, avatarToneClasses(props.Tone), props.TextClass}
+			init := props.Initials
+			if init == "" {
+				init = avatarInitials(props.Name)
+			}
+			var templ_7745c5c3_Var17 = []any{sc, "avatar-placeholder", shape, avatarBadgeClasses(props.Tone, props.BadgeClass), props.TextClass, props.InnerClass}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var17...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -394,9 +432,9 @@ func AvatarFull(props AvatarProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var19 string
-			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(avatarInitials(props.Name))
+			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(init)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 173, Col: 32}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 205, Col: 10}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 			if templ_7745c5c3_Err != nil {
