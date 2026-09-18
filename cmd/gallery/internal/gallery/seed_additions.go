@@ -533,5 +533,135 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// ── Forms / Prompt Bar — Agent Picker ──────────────────────────────────
+		{
+			Slug:        "prompt-bar-agent",
+			Name:        "Prompt Bar — Agent Picker",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "Flagship prompt bar composing an agent picker with model, mode and feature pickers via slots. Pickers submit hidden inputs; loading and running states swap the send action.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Agent, model, mode and feature pickers with token counter and toolbar icons.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Ask the agent anything…",
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Description: "Deep research with citations", Icon: "lucide--bot", Group: "Assistants", Meta: "128k", Selected: true},
+								{Value: "coder", Label: "Code Companion", Description: "Writes and reviews code", Icon: "lucide--code-2", Group: "Assistants"},
+								{Value: "analyst", Label: "Data Analyst", Description: "Charts, SQL and summaries", Icon: "lucide--bar-chart-2", Group: "Assistants"},
+								{Value: "writer", Label: "Copywriter", Description: "Product and marketing copy", Icon: "lucide--pen-line", Group: "Specialists"},
+								{Value: "tutor", Label: "Tutor", Description: "Explains concepts step by step", Icon: "lucide--graduation-cap", Group: "Specialists"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Meta: "128k", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu", Meta: "200k"},
+								{Value: "gemini-2-5", Label: "Gemini 2.5 Pro", Icon: "lucide--cpu", Meta: "1M"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "chat", Label: "Chat", Icon: "lucide--message-square", Selected: true},
+								{Value: "plan", Label: "Plan", Icon: "lucide--map"},
+								{Value: "build", Label: "Build", Icon: "lucide--hammer"},
+							},
+							SelectedMode: "Chat",
+							ModeName:     "mode",
+							Features: []form.PromptBarFeatureItem{
+								{Value: "web", Label: "Web search", Description: "Browse the web for fresh sources", Icon: "lucide--globe", On: true},
+								{Value: "thinking", Label: "Deep thinking", Description: "Extended reasoning pass", Icon: "lucide--lightbulb"},
+							},
+							FeatureName:      "feature",
+							ShowTokenCounter: true,
+							TokenCurrent:     42,
+							TokenMax:         128,
+							ShowAttach:       true,
+							ShowImage:        true,
+							ShowVoice:        true,
+						})
+					},
+					FrameHeight: "240px",
+				},
+				{
+					Name:        "Running",
+					Description: "Active run — the send action is replaced by a stop button.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Working…",
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Description: "Deep research with citations", Icon: "lucide--bot", Group: "Assistants", Selected: true},
+								{Value: "coder", Label: "Code Companion", Description: "Writes and reviews code", Icon: "lucide--code-2", Group: "Assistants"},
+								{Value: "analyst", Label: "Data Analyst", Description: "Charts, SQL and summaries", Icon: "lucide--bar-chart-2", Group: "Assistants"},
+								{Value: "writer", Label: "Copywriter", Description: "Product and marketing copy", Icon: "lucide--pen-line", Group: "Specialists"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Meta: "128k", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu", Meta: "200k"},
+								{Value: "gemini-2-5", Label: "Gemini 2.5 Pro", Icon: "lucide--cpu", Meta: "1M"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "chat", Label: "Chat", Icon: "lucide--message-square", Selected: true},
+								{Value: "plan", Label: "Plan", Icon: "lucide--map"},
+								{Value: "build", Label: "Build", Icon: "lucide--hammer"},
+							},
+							SelectedMode: "Chat",
+							ModeName:     "mode",
+							Features: []form.PromptBarFeatureItem{
+								{Value: "web", Label: "Web search", Description: "Browse the web for fresh sources", Icon: "lucide--globe", On: true},
+								{Value: "thinking", Label: "Deep thinking", Description: "Extended reasoning pass", Icon: "lucide--lightbulb"},
+							},
+							FeatureName:      "feature",
+							ShowTokenCounter: true,
+							TokenCurrent:     42,
+							TokenMax:         128,
+							ShowAttach:       true,
+							ShowImage:        true,
+							ShowVoice:        true,
+							Running:          true,
+						})
+					},
+					FrameHeight: "240px",
+				},
+			},
+		},
+
+		// ── Forms / Prompt Bar Picker ──────────────────────────────────────────
+		{
+			Slug:        "prompt-bar-picker",
+			Name:        "Prompt Bar Picker",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "Standalone picker dropdown for the prompt bar toolbar — grouped rows with descriptions and metadata, an optional hidden input, and a disabled row.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Grouped agent picker with one selected and one disabled row.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarPickerWithBoundary(form.PromptBarPickerProps{
+							Label:    "Agent",
+							Icon:     "lucide--bot",
+							Selected: "Research Buddy",
+							Name:     "agent",
+							Items: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Description: "Deep research with citations", Icon: "lucide--bot", Group: "Assistants", Meta: "128k", Selected: true},
+								{Value: "coder", Label: "Code Companion", Description: "Writes and reviews code", Icon: "lucide--code-2", Group: "Assistants"},
+								{Value: "analyst", Label: "Data Analyst", Description: "Charts, SQL and summaries", Icon: "lucide--bar-chart-2", Group: "Assistants"},
+								{Value: "writer", Label: "Copywriter", Description: "Product and marketing copy", Icon: "lucide--pen-line", Group: "Specialists"},
+								{Value: "legacy", Label: "Legacy Agent", Description: "Retired — read only", Icon: "lucide--archive", Group: "Specialists", Disabled: true},
+							},
+						})
+					},
+					FrameHeight: "240px",
+				},
+			},
+		},
 	}
 }

@@ -383,6 +383,18 @@ func FormToggleTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// PromptBarTokens returns the DesignToken slice for PromptBarWithBoundary.
+func PromptBarTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// PromptBarPickerTokens returns the DesignToken slice for PromptBarPickerWithBoundary.
+func PromptBarPickerTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
 // PasswordFieldTokens returns the DesignToken slice for PasswordFieldWithBoundary.
 func PasswordFieldTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{

@@ -219,8 +219,19 @@ func FormToggleWithBoundary(name string, label string, checked bool, errMsg stri
 }
 
 // PromptBarWithBoundary wraps PromptBar with a dev-mode component boundary annotation.
+// gallery:token placeholder,loading
+// gallery:hint placeholder:default(Ask anything…)
 func PromptBarWithBoundary(props PromptBarProps) templ.Component {
 	return devmode.ComponentBoundary("PromptBar", PromptBar(props), props)
+}
+
+// PromptBarPickerWithBoundary wraps PromptBarPicker with a dev-mode component boundary annotation.
+// gallery:token label,icon,selected,disabled
+// gallery:hint label:default(Agent)
+// gallery:hint icon:default(lucide--bot)
+// gallery:hint selected:default(Research Buddy)
+func PromptBarPickerWithBoundary(props PromptBarPickerProps) templ.Component {
+	return devmode.ComponentBoundary("PromptBarPicker", PromptBarPicker(props), props)
 }
 
 // PromptBarActionWithBoundary wraps PromptBarAction with a dev-mode component boundary annotation.
