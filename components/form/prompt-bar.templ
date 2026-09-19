@@ -14,7 +14,10 @@ import (
 // toolbar row used by every PromptBar variant. componentName is forwarded to
 // devmode.Attrs; pass "" to skip the dev-mode annotation (nested variants).
 // rows/name are only emitted when set so existing variants keep their exact markup.
-templ promptBarCard(placeholder string, value string, name string, rows int, loading bool, toolbar templ.Component, attachmentSlot templ.Component, cardClass string, attrs templ.Attributes, componentName string) {
+// rowClass is the class on the toolbar row; legacy variants pass the original
+// "mt-2 flex items-end justify-between" while the wrap-tolerant flagship passes
+// a flex-wrap variant so many controls never overflow the card.
+templ promptBarCard(placeholder string, value string, name string, rows int, loading bool, toolbar templ.Component, attachmentSlot templ.Component, cardClass string, rowClass string, attrs templ.Attributes, componentName string) {
 	<div
 		class={ "card bg-base-100 card-border", templ.KV(cardClass, cardClass != "") }
 		if componentName != "" {
@@ -37,7 +40,7 @@ templ promptBarCard(placeholder string, value string, name string, rows int, loa
 				}
 				disabled?={ loading }
 			>{ value }</textarea>
-			<div class="mt-2 flex items-end justify-between">
+			<div class={ rowClass }>
 				@toolbar
 			</div>
 		</div>
@@ -132,13 +135,13 @@ templ PromptBarPicker(props PromptBarPickerProps) {
 			}
 		}
 	} }}
-	<div class={ "dropdown dropdown-start", templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "form/PromptBarPicker")... } { props.Attrs... }>
-		<div tabindex="0" role="button" class={ "btn btn-sm btn-ghost gap-2", templ.KV("btn-disabled", props.Disabled) } aria-label={ props.Label } aria-haspopup="menu" if props.Disabled { aria-disabled="true" }>
+	<div class={ "dropdown dropdown-start inline-flex min-w-28", templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "form/PromptBarPicker")... } { props.Attrs... }>
+		<div tabindex="0" role="button" class={ "btn btn-sm btn-ghost min-w-0 shrink gap-2", templ.KV("btn-disabled", props.Disabled) } aria-label={ props.Label } aria-haspopup="menu" if props.Disabled { aria-disabled="true" }>
 			if props.Icon != "" {
-				@ui.IconSpan(props.Icon, "size-4 text-base-content/60")
+				@ui.IconSpan(props.Icon, "size-4 shrink-0 text-base-content/60")
 			}
-			<span class="max-w-40 truncate">{ props.Selected }</span>
-			@ui.IconSpan("lucide--chevron-down", "size-3.5 text-base-content/60")
+			<span class="min-w-0 max-w-28 truncate">{ props.Selected }</span>
+			@ui.IconSpan("lucide--chevron-down", "size-3.5 shrink-0 text-base-content/60")
 		</div>
 		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-64 p-2 shadow" role="menu">
 			if len(props.Features) > 0 {
@@ -228,7 +231,8 @@ type PromptBarProps struct {
 	ShowVoice bool
 	// Loading disables the textarea and send button and shows a spinner while the AI responds.
 	Loading bool
-	// Class is appended to the root element's class list.
+	// Class, when set, fully controls the card width: the component emits w-full
+	// plus Class and drops its built-in max-width, so the caller owns the max-width.
 	Class string
 	// Name is the textarea name attribute.
 	Name string
@@ -276,15 +280,27 @@ type PromptBarProps struct {
 // a token counter, and a send button. Pickers render in toolbar order:
 // agents, models, modes, features, then LeftSlot.
 templ PromptBar(props PromptBarProps) {
-	{{ cardClass := "w-full max-w-2xl"
+	{{ flagship := len(props.Agents) > 0 || len(props.Models) > 0 || len(props.Modes) > 0 || len(props.Features) > 0 || props.LeftSlot != nil || props.RightSlot != nil || props.AttachmentSlot != nil || props.Running
+	// When Class is set the caller owns the width: emit w-full plus Class and drop
+	// the built-in max-width so there is no competing max-w-* utility. Otherwise
+	// the legacy minimal default is max-w-2xl and the flagship default is wider.
+	cardClass := "w-full max-w-2xl"
 	if props.Class != "" {
-		cardClass += " " + props.Class
+		cardClass = "w-full " + props.Class
+	} else if flagship {
+		cardClass = "w-full max-w-4xl"
+	}
+	rowClass := "mt-2 flex items-end justify-between"
+	if flagship {
+		rowClass = "mt-2 flex flex-wrap items-end justify-between gap-2 md:flex-nowrap"
 	} }}
-	@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props), props.AttachmentSlot, cardClass, props.Attrs, "form/PromptBar")
+	@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), props.AttachmentSlot, cardClass, rowClass, props.Attrs, "form/PromptBar")
 }
 
 // promptBarDefaultToolbar builds the toolbar for the flagship PromptBar variant.
-templ promptBarDefaultToolbar(props PromptBarProps) {
+// When flagship is true the control groups shrink and truncate inside a single
+// non-wrapping line so the send action stays on the same level as the controls.
+templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
 	{{ featureLabel := "Features"
 	onCount := 0
 	firstLabel := ""
@@ -300,8 +316,20 @@ templ promptBarDefaultToolbar(props PromptBarProps) {
 		featureLabel = firstLabel
 	} else if onCount > 1 {
 		featureLabel = strconv.Itoa(onCount) + " on"
+	}
+	leftClass := "flex items-center gap-0.5"
+	if flagship {
+		leftClass = "flex min-w-0 flex-1 flex-wrap items-center gap-1 md:flex-nowrap"
+	}
+	rightClass := "flex items-center gap-1"
+	if flagship {
+		rightClass = "flex shrink-0 items-center gap-1"
+	}
+	tokenClass := "text-xs"
+	if flagship {
+		tokenClass = "text-xs shrink-0"
 	} }}
-	<div class="flex items-center gap-0.5">
+	<div class={ leftClass }>
 		if props.ShowAttach {
 			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Attach file", "disabled": props.Loading}}) {
 				@ui.IconSpan("lucide--paperclip", "size-4 text-base-content/60")
@@ -329,13 +357,13 @@ templ promptBarDefaultToolbar(props PromptBarProps) {
 		}
 	</div>
 	if props.ShowTokenCounter && props.TokenMax > 0 {
-		<span class="text-xs">
+		<span class={ tokenClass }>
 			<span class="text-base-content/80">Tokens:</span>
 			<span class={ templ.KV("text-error font-medium", props.TokenCurrent >= props.TokenMax*80/100) }>{ strconv.Itoa(props.TokenCurrent) }</span>
 			<span class="text-base-content/60">/{ strconv.Itoa(props.TokenMax) }</span>
 		</span>
 	}
-	<div class="flex items-center gap-1">
+	<div class={ rightClass }>
 		if props.ShowVoice {
 			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Voice input", "disabled": props.Loading}}) {
 				@ui.IconSpan("lucide--mic", "size-4 text-base-content/60")
@@ -368,7 +396,7 @@ type PromptBarActionItem struct {
 
 // PromptBarAction renders an AI prompt input with quick-action labelled buttons.
 templ PromptBarAction(placeholder string, actions []PromptBarActionItem, loading bool, attrs templ.Attributes) {
-	@promptBarCard(placeholder, "", "", 0, loading, promptBarActionToolbar(actions, loading), nil, "w-full max-w-2xl", attrs, "form/PromptBarAction")
+	@promptBarCard(placeholder, "", "", 0, loading, promptBarActionToolbar(actions, loading), nil, "w-full max-w-2xl", "mt-2 flex items-end justify-between", attrs, "form/PromptBarAction")
 }
 
 // promptBarActionToolbar builds the toolbar for the Action variant.
@@ -435,7 +463,7 @@ templ PromptBarModelSelector(props PromptBarModelSelectorProps) {
 		if props.InfoBanner != "" {
 			cardClass = "border-t-0 rounded-t-none"
 		} }}
-		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarModelSelectorToolbar(props), nil, cardClass, nil, "")
+		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarModelSelectorToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "")
 	</div>
 }
 
@@ -522,7 +550,7 @@ templ PromptBarAbility(props PromptBarAbilityProps) {
 		if props.SavedLabel != "" || props.TokensLeft > 0 {
 			cardClass += " rounded-t-none border-t-0"
 		} }}
-		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarAbilityToolbar(props), nil, cardClass, nil, "")
+		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarAbilityToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "")
 	</div>
 }
 
