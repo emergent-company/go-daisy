@@ -828,5 +828,95 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// ── Forms / Prompt Bar — Composer ──────────────────────────────────────
+		{
+			Slug:        "prompt-bar-composer",
+			Name:        "Prompt Bar — Composer",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "A working composer: real form submit with Enter-to-send, Shift+Enter newline, an empty-input guard, and an HTMX-wired stop action while running.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Submit",
+					Description: "GET form submit — Enter sends, Shift+Enter inserts a newline.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Type a message and press Enter…",
+							Action:      "/gallery/render/prompt-bar-composer",
+							Method:      "get",
+							SubmitLabel: "Send",
+							ShowAttach:  true,
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Icon: "lucide--bot", Group: "Assistants", Selected: true},
+								{Value: "coder", Label: "Code Companion", Icon: "lucide--code-2", Group: "Assistants"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "chat", Label: "Chat", Icon: "lucide--message-square", Selected: true},
+								{Value: "plan", Label: "Plan", Icon: "lucide--map"},
+							},
+							SelectedMode: "Chat",
+							ModeName:     "mode",
+							Features: []form.PromptBarFeatureItem{
+								{Value: "web", Label: "Web search", Icon: "lucide--globe", On: true},
+								{Value: "thinking", Label: "Deep thinking", Icon: "lucide--lightbulb"},
+							},
+							FeatureName: "feature",
+							Name:        "message",
+						})
+					},
+					FrameHeight: "240px",
+				},
+				{
+					Name:        "Running",
+					Description: "Active run — the send action is replaced by an HTMX-wired stop button.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Working…",
+							Action:      "/gallery/render/prompt-bar-composer",
+							Method:      "get",
+							SubmitLabel: "Send",
+							ShowAttach:  true,
+							Running:     true,
+							StopAction:  "/gallery/render/prompt-bar-composer",
+							StopMethod:  "get",
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Icon: "lucide--bot", Group: "Assistants", Selected: true},
+								{Value: "coder", Label: "Code Companion", Icon: "lucide--code-2", Group: "Assistants"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "chat", Label: "Chat", Icon: "lucide--message-square", Selected: true},
+								{Value: "plan", Label: "Plan", Icon: "lucide--map"},
+							},
+							SelectedMode: "Chat",
+							ModeName:     "mode",
+							Features: []form.PromptBarFeatureItem{
+								{Value: "web", Label: "Web search", Icon: "lucide--globe", On: true},
+								{Value: "thinking", Label: "Deep thinking", Icon: "lucide--lightbulb"},
+							},
+							FeatureName: "feature",
+							Name:        "message",
+						})
+					},
+					FrameHeight: "240px",
+				},
+			},
+		},
 	}
 }

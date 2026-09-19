@@ -8,6 +8,8 @@ import (
 	ui "github.com/emergent-company/go-daisy/components/ui"
 )
 
+var promptBarScriptOnce = templ.NewOnceHandle()
+
 // ── Shared shell ─────────────────────────────────────────────────────────────
 
 // promptBarCard renders the shared card, optional attachment slot, textarea and
@@ -17,7 +19,7 @@ import (
 // rowClass is the class on the toolbar row; legacy variants pass the original
 // "mt-2 flex items-end justify-between" while the wrap-tolerant flagship passes
 // a flex-wrap variant so many controls never overflow the card.
-templ promptBarCard(placeholder string, value string, name string, rows int, loading bool, toolbar templ.Component, attachmentSlot templ.Component, cardClass string, rowClass string, attrs templ.Attributes, componentName string) {
+templ promptBarCard(placeholder string, value string, name string, rows int, loading bool, toolbar templ.Component, attachmentSlot templ.Component, cardClass string, rowClass string, attrs templ.Attributes, componentName string, composer bool) {
 	<div
 		class={ "card bg-base-100 card-border", templ.KV(cardClass, cardClass != "") }
 		if componentName != "" {
@@ -35,11 +37,14 @@ templ promptBarCard(placeholder string, value string, name string, rows int, loa
 				if name != "" {
 					name={ name }
 				}
-				if rows > 0 {
-					rows={ strconv.Itoa(rows) }
-				}
-				disabled?={ loading }
-			>{ value }</textarea>
+			if rows > 0 {
+				rows={ strconv.Itoa(rows) }
+			}
+			if composer {
+				data-prompt-bar-input
+			}
+			disabled?={ loading }
+		>{ value }</textarea>
 			<div class={ rowClass }>
 				@toolbar
 			</div>
@@ -272,6 +277,25 @@ type PromptBarProps struct {
 	ActiveSlot templ.Component
 	// Running renders ActiveSlot (or a stop button) instead of send.
 	Running bool
+	// Action, when non-empty, wraps the composer in a <form> and wires submit.
+	Action string
+	// Method is the submit method: "post" (default), "get", "put", "patch".
+	Method string
+	// Target, when non-empty, emits hx-<method> targeting this selector.
+	Target string
+	// Swap is the hx-swap value (e.g. "outerHTML", "innerHTML"); only used with Target.
+	Swap string
+	// SubmitLabel adds a text label to the send button; empty = icon-only (current look).
+	SubmitLabel string
+	// SubmitIcon is "arrow" (default, lucide--arrow-up) or "return" (lucide--corner-down-left).
+	SubmitIcon string
+	// AllowEmptySubmit permits submitting with no text (e.g. attachment-only sends).
+	AllowEmptySubmit bool
+	// StopAction, when set, wires the Running stop button with hx-<stopMethod>.
+	StopAction string
+	StopMethod string // "post" (default) | "put" | "patch"
+	StopTarget string
+	StopSwap   string
 	// Attrs are extra HTML attributes spread on the root element.
 	Attrs templ.Attributes
 }
@@ -294,7 +318,146 @@ templ PromptBar(props PromptBarProps) {
 	if flagship {
 		rowClass = "mt-2 flex flex-wrap items-end justify-between gap-2 md:flex-nowrap"
 	} }}
-	@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), props.AttachmentSlot, cardClass, rowClass, props.Attrs, "form/PromptBar")
+	if props.Action != "" {
+		@promptBarComposerForm(props, flagship, cardClass, rowClass)
+	} else if props.AllowEmptySubmit {
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), props.AttachmentSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true)
+		@promptBarKeyboardScript()
+	} else {
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), props.AttachmentSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", false)
+	}
+}
+
+// promptBarComposerForm wraps the card in a <form> when Action is set and wires
+// the submit method, optional HTMX target/swap, and the Enter-to-send script.
+templ promptBarComposerForm(props PromptBarProps, flagship bool, cardClass string, rowClass string) {
+	{{ method := props.Method
+	if method == "" {
+		method = "post"
+	} }}
+	<form
+		action={ props.Action }
+		method={ method }
+		if props.Target != "" {
+			if method == "put" {
+				hx-put={ props.Action }
+			}
+			if method == "patch" {
+				hx-patch={ props.Action }
+			}
+			if method != "put" && method != "patch" {
+				hx-post={ props.Action }
+			}
+			hx-target={ props.Target }
+			if props.Swap != "" {
+				hx-swap={ props.Swap }
+			}
+		}
+		if props.AllowEmptySubmit {
+			data-prompt-bar-allow-empty="true"
+		}
+	>
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), props.AttachmentSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true)
+	</form>
+	@promptBarKeyboardScript()
+}
+
+// promptBarComposerSendButton renders the send action for the composer variant,
+// honouring SubmitLabel/SubmitIcon and becoming type="submit" inside a form.
+templ promptBarComposerSendButton(props PromptBarProps) {
+	{{ sendType := ui.ButtonTypeButton
+	if props.Action != "" {
+		sendType = ui.ButtonTypeSubmit
+	}
+	icon := "lucide--arrow-up"
+	if props.SubmitIcon == "return" {
+		icon = "lucide--corner-down-left"
+	}
+	shape := ui.ButtonShapeSquare
+	extraClass := ""
+	if props.SubmitLabel != "" {
+		shape = ui.ButtonShapeDefault
+		extraClass = "gap-1"
+	}
+	ariaLabel := "Send"
+	if props.SubmitLabel != "" {
+		ariaLabel = props.SubmitLabel
+	} }}
+	@ui.Button(ui.ButtonProps{Type: sendType, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Shape: shape, ExtraClass: extraClass, Attrs: templ.Attributes{"aria-label": ariaLabel, "disabled": props.Loading}}) {
+		if props.Loading {
+			<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
+		} else if props.SubmitLabel == "" {
+			@ui.IconSpan(icon, "size-4")
+		} else {
+			@ui.IconSpan(icon, "size-4")
+			<span>{ props.SubmitLabel }</span>
+		}
+	}
+}
+
+// promptBarStopActionButton renders the stop action while running, wired with
+// an HTMX request when StopAction is set.
+templ promptBarStopActionButton(props PromptBarProps) {
+	{{ stopAttrs := templ.Attributes{"aria-label": "Stop"}
+	stopMethod := props.StopMethod
+	if stopMethod == "" {
+		stopMethod = "post"
+	}
+	if stopMethod == "get" {
+		stopAttrs["hx-get"] = props.StopAction
+	} else if stopMethod == "put" {
+		stopAttrs["hx-put"] = props.StopAction
+	} else if stopMethod == "patch" {
+		stopAttrs["hx-patch"] = props.StopAction
+	} else {
+		stopAttrs["hx-post"] = props.StopAction
+	}
+	if props.StopTarget != "" {
+		stopAttrs["hx-target"] = props.StopTarget
+	}
+	if props.StopSwap != "" {
+		stopAttrs["hx-swap"] = props.StopSwap
+	} }}
+	@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonError, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: stopAttrs}) {
+		@ui.IconSpan("lucide--square", "size-4")
+	}
+}
+
+// promptBarKeyboardScript installs Enter-to-send / Shift+Enter newline and the
+// empty-input guard via document-level event delegation, so any number of
+// composers on one page share a single listener set.
+templ promptBarKeyboardScript() {
+	@promptBarScriptOnce.Once() {
+		<script>
+	if (!window._promptBarInit) {
+		window._promptBarInit = true;
+		document.addEventListener("keydown", function (event) {
+			if (event.isComposing) return;
+			if (event.key !== "Enter") return;
+			if (event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return;
+			var ta = event.target;
+			if (!(ta instanceof HTMLTextAreaElement) || !ta.hasAttribute("data-prompt-bar-input")) return;
+			var form = ta.closest("form");
+			if (!form) return;
+			if (form.getAttribute("data-prompt-bar-allow-empty") !== "true" && !ta.value.trim()) {
+				event.preventDefault();
+				return;
+			}
+			event.preventDefault();
+			form.requestSubmit();
+		});
+		document.addEventListener("submit", function (event) {
+			var form = event.target;
+			if (!(form instanceof HTMLFormElement)) return;
+			if (form.getAttribute("data-prompt-bar-allow-empty") === "true") return;
+			var ta = form.querySelector("textarea[data-prompt-bar-input]");
+			if (ta && !ta.value.trim()) {
+				event.preventDefault();
+			}
+		}, true);
+	}
+		</script>
+	}
 }
 
 // promptBarDefaultToolbar builds the toolbar for the flagship PromptBar variant.
@@ -373,13 +536,15 @@ templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
 			@props.RightSlot
 		}
 		if props.Running {
-			if props.ActiveSlot != nil {
+			if props.StopAction != "" {
+				@promptBarStopActionButton(props)
+			} else if props.ActiveSlot != nil {
 				@props.ActiveSlot
 			} else {
 				@promptBarStopButton()
 			}
 		} else {
-			@promptBarSendButton(props.Loading)
+			@promptBarComposerSendButton(props)
 		}
 	</div>
 }
@@ -396,7 +561,7 @@ type PromptBarActionItem struct {
 
 // PromptBarAction renders an AI prompt input with quick-action labelled buttons.
 templ PromptBarAction(placeholder string, actions []PromptBarActionItem, loading bool, attrs templ.Attributes) {
-	@promptBarCard(placeholder, "", "", 0, loading, promptBarActionToolbar(actions, loading), nil, "w-full max-w-2xl", "mt-2 flex items-end justify-between", attrs, "form/PromptBarAction")
+	@promptBarCard(placeholder, "", "", 0, loading, promptBarActionToolbar(actions, loading), nil, "w-full max-w-2xl", "mt-2 flex items-end justify-between", attrs, "form/PromptBarAction", false)
 }
 
 // promptBarActionToolbar builds the toolbar for the Action variant.
@@ -463,7 +628,7 @@ templ PromptBarModelSelector(props PromptBarModelSelectorProps) {
 		if props.InfoBanner != "" {
 			cardClass = "border-t-0 rounded-t-none"
 		} }}
-		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarModelSelectorToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "")
+		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarModelSelectorToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "", false)
 	</div>
 }
 
@@ -550,7 +715,7 @@ templ PromptBarAbility(props PromptBarAbilityProps) {
 		if props.SavedLabel != "" || props.TokensLeft > 0 {
 			cardClass += " rounded-t-none border-t-0"
 		} }}
-		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarAbilityToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "")
+		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarAbilityToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "", false)
 	</div>
 }
 
