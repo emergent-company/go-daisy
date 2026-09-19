@@ -81,8 +81,17 @@ func LinkWithBoundary(href string, variant LinkVariant, label string) templ.Comp
 // PageHeadingWithBoundary wraps PageHeading with a dev-mode component boundary annotation.
 func PageHeadingWithBoundary(props PageHeadingProps) templ.Component {
 	return devmode.ComponentBoundary("PageHeading", PageHeading(props), map[string]any{
-		"title":         props.Title,
+		"title":           props.Title,
 		"breadcrumbCount": len(props.Breadcrumbs),
+		"kicker":          props.Kicker,
+		"subtitle":        props.Subtitle,
+		"margin":          props.Margin,
+		"dashboard":       props.Dashboard,
+		"bare":            props.Bare,
+		"subtitleFull":    props.SubtitleFull,
+		"hideBreadcrumbs": props.HideBreadcrumbs,
+		"noTopMargin":     props.NoTopMargin,
+		"flat":            props.Flat,
 	})
 }
 
