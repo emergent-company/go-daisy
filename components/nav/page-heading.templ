@@ -14,6 +14,7 @@ type PageHeadingProps struct {
 	Attrs       templ.Attributes
 
 	// Kicker renders an uppercase eyebrow above the title. Empty drops it.
+	// The kicker renders in both the Dashboard and non-Dashboard variants.
 	Kicker string
 	// Subtitle renders under the title. Empty drops it.
 	Subtitle string
@@ -26,7 +27,8 @@ type PageHeadingProps struct {
 	TitleAdornment templ.Component
 	// Actions renders in the right-hand slot. Nil renders nothing.
 	Actions templ.Component
-	// Margin is the outer wrapper margin class. Default "mb-4".
+	// Margin is the outer wrapper margin class. Default "mb-4". When Flat is
+	// true, the margin class lands on the flex row element instead.
 	Margin string
 	// Dashboard switches to the dashboard variant: baseline-aligned actions
 	// (items-end), no min-w-0 on the title column, and the larger lg:text-3xl title.
@@ -39,65 +41,105 @@ type PageHeadingProps struct {
 	// renders breadcrumbs always (even when Breadcrumbs is empty, matching
 	// today's output). Set true for headers that have no breadcrumbs at all.
 	HideBreadcrumbs bool
+	// NoTopMargin omits the mt-2 top-margin class from both the flex
+	// title/actions row and the Bare branch's title div. Default false keeps
+	// today's output byte-identical.
+	NoTopMargin bool
+	// Flat collapses the outer wrapper and the flex title/actions row into a
+	// single element: the flex row becomes the root and carries the Margin
+	// class, with devmode.Attrs and props.Attrs landing on the same element.
+	// Leading and breadcrumbs (when present) still render first inside the flat
+	// element. Intended for headers with no breadcrumbs and no Leading; has no
+	// effect when Bare is true. Default false keeps today's two-div structure
+	// byte-identical.
+	Flat bool
 }
 
 // PageHeading renders a page heading with a breadcrumb trail on top, an h1 with
 // optional kicker eyebrow, subtitle, and inline title adornment, and a
 // right-hand action slot.
 templ PageHeading(props PageHeadingProps) {
-	{{ margin := cmp.Or(props.Margin, "mb-4") }}
-	<div class={ margin } { devmode.Attrs(ctx, "nav/PageHeading")... } { props.Attrs... }>
-		if props.Leading != nil {
-			@props.Leading
-		}
-		if !props.HideBreadcrumbs {
-			@Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault)
-		}
-		if props.Bare {
-			<div class="mt-2">
+	{{ margin := cmp.Or(props.Margin, "mb-4")
+	flex := templ.CSSClasses{
+		"flex flex-wrap",
+		templ.KV("items-end", props.Dashboard),
+		templ.KV("items-center", !props.Dashboard),
+		"justify-between gap-4",
+	} }}
+	if props.Flat {
+		<div class={ margin, templ.KV("mt-2", !props.NoTopMargin), flex } { devmode.Attrs(ctx, "nav/PageHeading")... } { props.Attrs... }>
+			if props.Leading != nil {
+				@props.Leading
+			}
+			if !props.HideBreadcrumbs {
+				@Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault)
+			}
+			@pageHeadingTitleColumn(props)
+			if props.Actions != nil {
+				@props.Actions
+			}
+		</div>
+	} else {
+		<div class={ margin } { devmode.Attrs(ctx, "nav/PageHeading")... } { props.Attrs... }>
+			if props.Leading != nil {
+				@props.Leading
+			}
+			if !props.HideBreadcrumbs {
+				@Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault)
+			}
+			if props.Bare {
+				<div class={ templ.KV("mt-2", !props.NoTopMargin) }>
+					<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
+					if props.Subtitle != "" {
+						<p class="text-base-content/55 mt-1 text-sm">{ props.Subtitle }</p>
+					}
+				</div>
+			} else {
+				<div class={ templ.KV("mt-2", !props.NoTopMargin), flex }>
+					@pageHeadingTitleColumn(props)
+					if props.Actions != nil {
+						@props.Actions
+					}
+				</div>
+			}
+		</div>
+	}
+}
+
+templ pageHeadingTitleColumn(props PageHeadingProps) {
+	if props.Dashboard {
+		<div>
+			if props.Kicker != "" {
+				@ui.Eyebrow(props.Kicker, ui.EyebrowProps{Size: "text-[11px]", Margin: "mb-1"})
+			}
+			if props.TitleAdornment != nil {
+				<div class="flex flex-wrap items-center gap-2">
+					<h1 class="text-2xl font-bold tracking-tight lg:text-3xl">{ props.Title }</h1>
+					@props.TitleAdornment
+				</div>
+			} else {
+				<h1 class="text-2xl font-bold tracking-tight lg:text-3xl">{ props.Title }</h1>
+			}
+			if props.Subtitle != "" {
+				<p class={ "text-base-content/55 mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm" }>{ props.Subtitle }</p>
+			}
+		</div>
+	} else {
+		<div class="min-w-0">
+			if props.Kicker != "" {
+				@ui.Eyebrow(props.Kicker, ui.EyebrowProps{Size: "text-[11px]", Margin: "mb-1"})
+			}
+			if props.TitleAdornment != nil {
+				<div class="flex flex-wrap items-center gap-2">
+					<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
+					@props.TitleAdornment
+				</div>
+			} else {
 				<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
-				if props.Subtitle != "" {
-					<p class="text-base-content/55 mt-1 text-sm">{ props.Subtitle }</p>
-				}
-			</div>
-		} else {
-			<div class={ "mt-2 flex flex-wrap", templ.KV("items-end", props.Dashboard), templ.KV("items-center", !props.Dashboard), "justify-between gap-4" }>
-				if props.Dashboard {
-					<div>
-						if props.TitleAdornment != nil {
-							<div class="flex flex-wrap items-center gap-2">
-								<h1 class="text-2xl font-bold tracking-tight lg:text-3xl">{ props.Title }</h1>
-								@props.TitleAdornment
-							</div>
-						} else {
-							<h1 class="text-2xl font-bold tracking-tight lg:text-3xl">{ props.Title }</h1>
-						}
-						if props.Subtitle != "" {
-							<p class={ "text-base-content/55 mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm" }>{ props.Subtitle }</p>
-						}
-					</div>
-				} else {
-					<div class="min-w-0">
-						if props.Kicker != "" {
-							@ui.Eyebrow(props.Kicker, ui.EyebrowProps{Size: "text-[11px]", Margin: "mb-1"})
-						}
-						if props.TitleAdornment != nil {
-							<div class="flex flex-wrap items-center gap-2">
-								<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
-								@props.TitleAdornment
-							</div>
-						} else {
-							<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
-						}
-						if props.Subtitle != "" {
-							<p class={ "text-base-content/55 mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm" }>{ props.Subtitle }</p>
-						}
-					</div>
-				}
-				if props.Actions != nil {
-					@props.Actions
-				}
-			</div>
-		}
-	</div>
+			}
+			if props.Subtitle != "" {
+				<p class={ "text-base-content/55 mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm" }>{ props.Subtitle }</p>
+			}
+		</div>
+	}
 }

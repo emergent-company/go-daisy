@@ -74,6 +74,11 @@ func TestPageHeadingDefaultOutputLocked(t *testing.T) {
 			want:  `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2 flex flex-wrap items-center justify-between gap-4"><div class="min-w-0"><h1 class="text-2xl font-bold tracking-tight">T</h1><p class="text-base-content/55 mt-1 text-sm">Sub</p></div></div></div>`,
 		},
 		{
+			name:  "explicit_margin",
+			props: PageHeadingProps{Title: "T", Margin: "mb-6"},
+			want:  `<div class="mb-6"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2 flex flex-wrap items-center justify-between gap-4"><div class="min-w-0"><h1 class="text-2xl font-bold tracking-tight">T</h1></div></div></div>`,
+		},
+		{
 			name:    "actions",
 			props:   PageHeadingProps{Title: "T"},
 			actions: "ACT",
@@ -133,5 +138,68 @@ func TestPageHeadingLeadingSlot(t *testing.T) {
 
 	if got != want {
 		t.Errorf("leading slot output:\n got: %q\nwant: %q", got, want)
+	}
+}
+
+// TestPageHeadingFlatTargetMarkup proves that with the new Flat + NoTopMargin +
+// Dashboard + SubtitleFull + HideBreadcrumbs props, PageHeading reproduces the
+// consumer's exact target markup byte-for-byte: a single element carrying the
+// margin and flex classes together, no mt-2, no extra wrapper, the kicker
+// present alongside the dashboard alignment and lg:text-3xl title, and a
+// full-width subtitle.
+func TestPageHeadingFlatTargetMarkup(t *testing.T) {
+	base := PageHeadingProps{
+		Title:           "TITLE",
+		Kicker:          "kicker",
+		Subtitle:        "SUBTITLE",
+		Dashboard:       true,
+		SubtitleFull:    true,
+		HideBreadcrumbs: true,
+		NoTopMargin:     true,
+		Flat:            true,
+		Margin:          "mb-6",
+	}
+
+	got := renderPageHeading(t, base, "ACTIONS")
+	want := `<div class="mb-6 flex flex-wrap items-end justify-between gap-4"><div><p class="text-base-content/45 font-semibold tracking-[0.16em] uppercase text-[11px] mb-1">kicker</p><h1 class="text-2xl font-bold tracking-tight lg:text-3xl">TITLE</h1><p class="text-base-content/55 mt-1 text-sm">SUBTITLE</p></div>ACTIONS</div>`
+	if got != want {
+		t.Errorf("flat target markup:\n got: %q\nwant: %q", got, want)
+	}
+
+	// Subtitle absent: the subtitle <p> is omitted entirely.
+	base.Subtitle = ""
+	got = renderPageHeading(t, base, "ACTIONS")
+	want = `<div class="mb-6 flex flex-wrap items-end justify-between gap-4"><div><p class="text-base-content/45 font-semibold tracking-[0.16em] uppercase text-[11px] mb-1">kicker</p><h1 class="text-2xl font-bold tracking-tight lg:text-3xl">TITLE</h1></div>ACTIONS</div>`
+	if got != want {
+		t.Errorf("flat target markup (no subtitle):\n got: %q\nwant: %q", got, want)
+	}
+}
+
+// TestPageHeadingNoTopMargin covers both the flex row and the Bare branch,
+// proving NoTopMargin omits mt-2 in each.
+func TestPageHeadingNoTopMargin(t *testing.T) {
+	// Flex row: mt-2 omitted.
+	got := renderPageHeading(t, PageHeadingProps{Title: "T", NoTopMargin: true, HideBreadcrumbs: true}, "")
+	want := `<div class="mb-4"><div class="flex flex-wrap items-center justify-between gap-4"><div class="min-w-0"><h1 class="text-2xl font-bold tracking-tight">T</h1></div></div></div>`
+	if got != want {
+		t.Errorf("no-top-margin flex row:\n got: %q\nwant: %q", got, want)
+	}
+
+	// Bare branch: mt-2 omitted (class list becomes empty).
+	got = renderPageHeading(t, PageHeadingProps{Title: "T", Bare: true, NoTopMargin: true, HideBreadcrumbs: true}, "")
+	want = `<div class="mb-4"><div class=""><h1 class="text-2xl font-bold tracking-tight">T</h1></div></div>`
+	if got != want {
+		t.Errorf("no-top-margin bare:\n got: %q\nwant: %q", got, want)
+	}
+}
+
+// TestPageHeadingKickerInDashboard proves the kicker now renders in the
+// Dashboard variant too (previously it only rendered in the non-Dashboard
+// branch), while keeping the items-end alignment and lg:text-3xl title.
+func TestPageHeadingKickerInDashboard(t *testing.T) {
+	got := renderPageHeading(t, PageHeadingProps{Title: "T", Dashboard: true, Kicker: "Eyebrow"}, "")
+	want := `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2 flex flex-wrap items-end justify-between gap-4"><div><p class="text-base-content/45 font-semibold tracking-[0.16em] uppercase text-[11px] mb-1">Eyebrow</p><h1 class="text-2xl font-bold tracking-tight lg:text-3xl">T</h1></div></div></div>`
+	if got != want {
+		t.Errorf("kicker in dashboard:\n got: %q\nwant: %q", got, want)
 	}
 }
