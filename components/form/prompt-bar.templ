@@ -19,7 +19,7 @@ var promptBarScriptOnce = templ.NewOnceHandle()
 // rowClass is the class on the toolbar row; legacy variants pass the original
 // "mt-2 flex items-end justify-between" while the wrap-tolerant flagship passes
 // a flex-wrap variant so many controls never overflow the card.
-templ promptBarCard(placeholder string, value string, name string, rows int, loading bool, toolbar templ.Component, attachmentSlot templ.Component, cardClass string, rowClass string, attrs templ.Attributes, componentName string, composer bool) {
+templ promptBarCard(placeholder string, value string, name string, rows int, loading bool, toolbar templ.Component, attachmentSlot templ.Component, cardClass string, rowClass string, attrs templ.Attributes, componentName string, composer bool, autocomplete *PromptBarAutocompleteProps) {
 	<div
 		class={ "card bg-base-100 card-border", templ.KV(cardClass, cardClass != "") }
 		if componentName != "" {
@@ -31,25 +31,41 @@ templ promptBarCard(placeholder string, value string, name string, rows int, loa
 			if attachmentSlot != nil {
 				@attachmentSlot
 			}
-			<textarea
-				class="textarea w-full h-28 resize-none border-0 p-1 text-base focus:outline-none m-0"
-				placeholder={ placeholder }
-				if name != "" {
-					name={ name }
-				}
-			if rows > 0 {
-				rows={ strconv.Itoa(rows) }
+			if autocomplete != nil {
+				<div class="relative">
+					@promptBarTextarea(placeholder, value, name, rows, loading, composer, autocomplete.ID)
+					@PromptBarAutocomplete(promptBarHiddenAutocomplete(*autocomplete))
+				</div>
+			} else {
+				@promptBarTextarea(placeholder, value, name, rows, loading, composer, "")
 			}
-			if composer {
-				data-prompt-bar-input
-			}
-			disabled?={ loading }
-		>{ value }</textarea>
 			<div class={ rowClass }>
 				@toolbar
 			</div>
 		</div>
 	</div>
+}
+
+// promptBarTextarea renders the composer textarea, optionally linking it to an
+// autocomplete popover via autocompleteID.
+templ promptBarTextarea(placeholder string, value string, name string, rows int, loading bool, composer bool, autocompleteID string) {
+	<textarea
+		class="textarea w-full h-28 resize-none border-0 p-1 text-base focus:outline-none m-0"
+		placeholder={ placeholder }
+		if name != "" {
+			name={ name }
+		}
+		if rows > 0 {
+			rows={ strconv.Itoa(rows) }
+		}
+		if composer {
+			data-prompt-bar-input
+		}
+		if autocompleteID != "" {
+			data-prompt-bar-autocomplete={ autocompleteID }
+		}
+		disabled?={ loading }
+	>{ value }</textarea>
 }
 
 // promptBarSendButton renders the primary send action shared by all variants.
@@ -418,6 +434,157 @@ templ promptBarTrackPill(item PromptBarTrackItem) {
 	</div>
 }
 
+// ── Autocomplete ─────────────────────────────────────────────────────────────
+
+// PromptBarAutocompleteKind selects a row's leading icon.
+type PromptBarAutocompleteKind string
+
+const (
+	PromptBarAutocompleteCommand   PromptBarAutocompleteKind = "command"
+	PromptBarAutocompleteFile      PromptBarAutocompleteKind = "file"
+	PromptBarAutocompleteDirectory PromptBarAutocompleteKind = "directory"
+	PromptBarAutocompleteAgent     PromptBarAutocompleteKind = "agent"
+)
+
+// PromptBarAutocompleteOption is a single selectable row in the popover.
+type PromptBarAutocompleteOption struct {
+	// Value is the inserted text (defaults to Label when empty).
+	Value string
+	// Label is the display name.
+	Label string
+	// Detail is an optional right-aligned hint, e.g. an argument signature.
+	Detail string
+	// Description is an optional second line.
+	Description string
+	// Icon is an optional Iconify override; otherwise derived from Kind.
+	Icon string
+	// Kind selects the derived leading icon.
+	Kind PromptBarAutocompleteKind
+}
+
+// PromptBarAutocompleteProps configures the slash/mention popover.
+type PromptBarAutocompleteProps struct {
+	// ID links the popover to its textarea.
+	ID string
+	// Options is the client-side option list.
+	Options []PromptBarAutocompleteOption
+	// Loading renders a spinner row instead of the option list.
+	Loading bool
+	// EmptyText is shown when filtering yields nothing; default "No results".
+	EmptyText string
+	// HxGet, when set, re-fetches the option list from the server (filtered by the
+	// current query) instead of filtering client-side. HxTarget is the element the
+	// response replaces (defaults to the popover list).
+	HxGet    string
+	HxTarget string
+	// Class is appended to the popover root class list.
+	Class string
+	// Attrs are extra HTML attributes spread on the popover root element.
+	Attrs templ.Attributes
+}
+
+// promptBarAutocompleteKindIcon returns the default icon for a kind.
+func promptBarAutocompleteKindIcon(kind PromptBarAutocompleteKind) string {
+	switch kind {
+	case PromptBarAutocompleteCommand:
+		return "lucide--terminal"
+	case PromptBarAutocompleteFile:
+		return "lucide--file"
+	case PromptBarAutocompleteDirectory:
+		return "lucide--folder"
+	case PromptBarAutocompleteAgent:
+		return "lucide--bot"
+	default:
+		return ""
+	}
+}
+
+// promptBarHiddenAutocomplete clones the props and forces the popover hidden
+// (used by the PromptBar integration; the standalone component stays visible).
+func promptBarHiddenAutocomplete(ac PromptBarAutocompleteProps) PromptBarAutocompleteProps {
+	if ac.Class != "" {
+		ac.Class += " hidden"
+	} else {
+		ac.Class = "hidden"
+	}
+	return ac
+}
+
+// PromptBarAutocomplete renders the slash/mention popover anchored above the textarea.
+templ PromptBarAutocomplete(props PromptBarAutocompleteProps) {
+	{{ emptyText := props.EmptyText
+	if emptyText == "" {
+		emptyText = "No results"
+	} }}
+	<div
+		id={ props.ID }
+		class={ "absolute inset-x-0 bottom-full z-20 mb-2 max-h-56 overflow-auto rounded-box border border-base-300 bg-base-100 p-1 shadow-lg", templ.KV(props.Class, props.Class != "") }
+		data-prompt-bar-autocomplete
+		if props.HxGet != "" {
+			data-prompt-bar-hx-get={ props.HxGet }
+		}
+		if props.HxTarget != "" {
+			data-prompt-bar-hx-target={ props.HxTarget }
+		}
+		{ devmode.Attrs(ctx, "form/PromptBarAutocomplete")... }
+		{ props.Attrs... }
+	>
+		<div data-prompt-bar-detail class="hidden border-b border-base-300 px-3 py-2">
+			<span data-prompt-bar-detail-label class="block text-sm"></span>
+			<span data-prompt-bar-detail-desc class="block text-xs text-base-content/60"></span>
+			<span data-prompt-bar-detail-hint class="block text-xs text-base-content/50"></span>
+		</div>
+		<div data-prompt-bar-options>
+			if props.Loading {
+				<div class="flex items-center gap-2 px-2 py-1.5">
+					<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
+					<span class="text-sm text-base-content/60">Loading…</span>
+				</div>
+			} else {
+				for _, opt := range props.Options {
+					@promptBarAutocompleteRow(opt)
+				}
+				<div data-prompt-bar-empty class={ "px-2 py-1.5 text-sm text-base-content/60", templ.KV("hidden", len(props.Options) > 0) }>{ emptyText }</div>
+			}
+		</div>
+	</div>
+}
+
+// promptBarAutocompleteRow renders a single selectable popover row.
+templ promptBarAutocompleteRow(opt PromptBarAutocompleteOption) {
+	{{ val := opt.Value
+	if val == "" {
+		val = opt.Label
+	}
+	icon := opt.Icon
+	if icon == "" {
+		icon = promptBarAutocompleteKindIcon(opt.Kind)
+	} }}
+	<button
+		type="button"
+		data-prompt-bar-option
+		data-value={ val }
+		data-label={ opt.Label }
+		data-description={ opt.Description }
+		data-detail={ opt.Detail }
+		data-kind={ opt.Kind }
+		class="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left"
+	>
+		if icon != "" {
+			@ui.IconSpan(icon, "size-4 text-base-content/60")
+		}
+		<span class="min-w-0 flex-1">
+			<span class="block text-sm">{ opt.Label }</span>
+			if opt.Description != "" {
+				<span class="block text-xs text-base-content/60">{ opt.Description }</span>
+			}
+		</span>
+		if opt.Detail != "" {
+			<span class="ms-auto shrink-0 text-xs text-base-content/50">{ opt.Detail }</span>
+		}
+	</button>
+}
+
 // ── PromptBar ────────────────────────────────────────────────────────────────
 
 // PromptBarProps configures a PromptBar component.
@@ -479,6 +646,8 @@ type PromptBarProps struct {
 	Attachments []PromptBarAttachmentItem
 	// Tracks renders an ambient status rail above the card.
 	Tracks []PromptBarTrackItem
+	// Autocomplete, when non-nil, renders a slash/mention popover above the textarea.
+	Autocomplete *PromptBarAutocompleteProps
 	// ActiveSlot replaces the send button while Running.
 	ActiveSlot templ.Component
 	// Running renders ActiveSlot (or a stop button) instead of send.
@@ -533,11 +702,11 @@ templ PromptBar(props PromptBarProps) {
 	}
 	if props.Action != "" {
 		@promptBarComposerForm(props, flagship, cardClass, rowClass, topSlot)
-	} else if props.AllowEmptySubmit {
-		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true)
+	} else if props.AllowEmptySubmit || props.Autocomplete != nil {
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true, props.Autocomplete)
 		@promptBarKeyboardScript()
 	} else {
-		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", false)
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", false, nil)
 	}
 }
 
@@ -580,7 +749,7 @@ templ promptBarComposerForm(props PromptBarProps, flagship bool, cardClass strin
 			data-prompt-bar-allow-empty="true"
 		}
 	>
-		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true)
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true, props.Autocomplete)
 	</form>
 	@promptBarKeyboardScript()
 }
@@ -654,11 +823,194 @@ templ promptBarKeyboardScript() {
 		<script>
 	if (!window._promptBarInit) {
 		window._promptBarInit = true;
+
+		// ---- slash/mention autocomplete helpers ----
+		function promptBarPopoverFor(ta) {
+			var id = ta.getAttribute("data-prompt-bar-autocomplete");
+			return id ? document.getElementById(id) : null;
+		}
+		function promptBarOptionRows(pop) {
+			return pop.querySelectorAll("[data-prompt-bar-option]");
+		}
+		function promptBarVisibleRows(pop) {
+			var rows = promptBarOptionRows(pop);
+			var visible = [];
+			for (var i = 0; i < rows.length; i++) {
+				if (!rows[i].classList.contains("hidden")) visible.push(rows[i]);
+			}
+			return visible;
+		}
+		function promptBarClose(pop) {
+			pop.classList.add("hidden");
+			var rows = promptBarOptionRows(pop);
+			for (var i = 0; i < rows.length; i++) rows[i].classList.remove("bg-base-200");
+			pop._pbActive = -1;
+			var detail = pop.querySelector("[data-prompt-bar-detail]");
+			if (detail) detail.classList.add("hidden");
+		}
+		function promptBarUpdateDetail(pop, row) {
+			var detail = pop.querySelector("[data-prompt-bar-detail]");
+			if (!detail) return;
+			if (row && (row.getAttribute("data-description") || row.getAttribute("data-detail"))) {
+				detail.classList.remove("hidden");
+				var l = detail.querySelector("[data-prompt-bar-detail-label]");
+				var d = detail.querySelector("[data-prompt-bar-detail-desc]");
+				var h = detail.querySelector("[data-prompt-bar-detail-hint]");
+				if (l) l.textContent = row.getAttribute("data-label") || "";
+				if (d) d.textContent = row.getAttribute("data-description") || "";
+				if (h) h.textContent = row.getAttribute("data-detail") || "";
+			} else {
+				detail.classList.add("hidden");
+			}
+		}
+		function promptBarSetActive(pop, idx) {
+			var rows = promptBarVisibleRows(pop);
+			if (!rows.length) { pop._pbActive = -1; return; }
+			idx = ((idx % rows.length) + rows.length) % rows.length;
+			pop._pbActive = idx;
+			var all = promptBarOptionRows(pop);
+			for (var i = 0; i < all.length; i++) {
+				all[i].classList.toggle("bg-base-200", all[i] === rows[idx]);
+			}
+			promptBarUpdateDetail(pop, rows[idx]);
+		}
+		function promptBarMatchQuery(text) {
+			for (var i = text.length - 1; i >= 0; i--) {
+				var c = text.charAt(i);
+				if (c === "/" || c === "@") {
+					if (i > 0 && !/\s/.test(text.charAt(i - 1))) continue;
+					var query = text.slice(i + 1);
+					if (/[\s\/@]/.test(query)) continue;
+					return { trigger: c, query: query, start: i };
+				}
+				if (/\s/.test(c)) break;
+			}
+			return null;
+		}
+		function promptBarFilter(pop, query) {
+			var q = query.toLowerCase();
+			var trigger = pop._pbTrigger || "";
+			var rows = promptBarOptionRows(pop);
+			var visible = 0;
+			for (var i = 0; i < rows.length; i++) {
+				var row = rows[i];
+				var kind = row.getAttribute("data-kind") || "";
+				var kindOk = true;
+				if (trigger === "/") {
+					kindOk = kind === "" || kind === "command";
+				} else if (trigger === "@") {
+					kindOk = kind === "" || kind === "file" || kind === "directory" || kind === "agent";
+				}
+				var label = (row.getAttribute("data-label") || "").toLowerCase();
+				var value = (row.getAttribute("data-value") || "").toLowerCase();
+				var ok = kindOk && (label.indexOf(q) !== -1 || value.indexOf(q) !== -1);
+				row.classList.toggle("hidden", !ok);
+				if (ok) visible++;
+			}
+			var empty = pop.querySelector("[data-prompt-bar-empty]");
+			if (empty) empty.classList.toggle("hidden", visible > 0);
+			promptBarSetActive(pop, 0);
+		}
+		function promptBarOpen(pop, m) {
+			pop._pbTrigger = m.trigger;
+			pop.classList.remove("hidden");
+			var hxGet = pop.getAttribute("data-prompt-bar-hx-get") || "";
+			if (hxGet && typeof htmx !== "undefined") {
+				var list = pop.querySelector("[data-prompt-bar-options]");
+				var target = pop.getAttribute("data-prompt-bar-hx-target") || list;
+				htmx.ajax("GET", hxGet, { target: target, values: { q: m.query, trigger: m.trigger } });
+			} else {
+				promptBarFilter(pop, m.query);
+			}
+		}
+		function promptBarAccept(pop, ta, row) {
+			var value = row.getAttribute("data-value") || "";
+			var caret = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;
+			var before = ta.value.slice(0, caret);
+			var m = promptBarMatchQuery(before);
+			if (m) {
+				var end = (ta.selectionEnd != null) ? ta.selectionEnd : caret;
+				ta.value = before.slice(0, m.start) + value + " " + ta.value.slice(end);
+				var newCaret = m.start + value.length + 1;
+				ta.setSelectionRange(newCaret, newCaret);
+			}
+			promptBarClose(pop);
+			ta.focus();
+			ta.dispatchEvent(new Event("input", { bubbles: true }));
+		}
+
+		// ---- input: detect trigger + query ----
+		document.addEventListener("input", function (event) {
+			var ta = event.target;
+			if (!(ta instanceof HTMLTextAreaElement) || !ta.hasAttribute("data-prompt-bar-input")) return;
+			var pop = promptBarPopoverFor(ta);
+			if (!pop) return;
+			var caret = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;
+			var m = promptBarMatchQuery(ta.value.slice(0, caret));
+			if (m) {
+				promptBarOpen(pop, m);
+			} else {
+				promptBarClose(pop);
+			}
+		});
+
+		// ---- click: accept a row, or close when clicking outside ----
+		document.addEventListener("click", function (event) {
+			var target = event.target;
+			var row = (target && target.closest) ? target.closest("[data-prompt-bar-option]") : null;
+			if (row) {
+				var pop = row.closest("[data-prompt-bar-autocomplete]");
+				var ta = pop ? pop.parentElement.querySelector("textarea[data-prompt-bar-input]") : null;
+				if (ta && pop) promptBarAccept(pop, ta, row);
+				return;
+			}
+			var pops = document.querySelectorAll("[data-prompt-bar-autocomplete]");
+			for (var i = 0; i < pops.length; i++) {
+				if (!pops[i].classList.contains("hidden") && !pops[i].contains(target)) {
+					promptBarClose(pops[i]);
+				}
+			}
+		});
+
+		// ---- keydown: autocomplete first, then Enter-to-send ----
 		document.addEventListener("keydown", function (event) {
 			if (event.isComposing) return;
+			var ta = event.target;
+			if (ta instanceof HTMLTextAreaElement && ta.hasAttribute("data-prompt-bar-input")) {
+				var pop = promptBarPopoverFor(ta);
+				if (pop && !pop.classList.contains("hidden")) {
+					var rows = promptBarVisibleRows(pop);
+					if (event.key === "ArrowDown") {
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						var cur = (typeof pop._pbActive === "number" && pop._pbActive >= 0) ? pop._pbActive : -1;
+						promptBarSetActive(pop, cur + 1);
+						return;
+					}
+					if (event.key === "ArrowUp") {
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						var cur = (typeof pop._pbActive === "number" && pop._pbActive >= 0) ? pop._pbActive : 0;
+						promptBarSetActive(pop, cur - 1);
+						return;
+					}
+					if (event.key === "Enter" || event.key === "Tab") {
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						var active = (typeof pop._pbActive === "number" && pop._pbActive >= 0) ? pop._pbActive : 0;
+						if (rows[active]) promptBarAccept(pop, ta, rows[active]);
+						return;
+					}
+					if (event.key === "Escape") {
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						promptBarClose(pop);
+						return;
+					}
+				}
+			}
 			if (event.key !== "Enter") return;
 			if (event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return;
-			var ta = event.target;
 			if (!(ta instanceof HTMLTextAreaElement) || !ta.hasAttribute("data-prompt-bar-input")) return;
 			var form = ta.closest("form");
 			if (!form) return;
@@ -669,6 +1021,7 @@ templ promptBarKeyboardScript() {
 			event.preventDefault();
 			form.requestSubmit();
 		});
+
 		document.addEventListener("submit", function (event) {
 			var form = event.target;
 			if (!(form instanceof HTMLFormElement)) return;
@@ -784,7 +1137,7 @@ type PromptBarActionItem struct {
 
 // PromptBarAction renders an AI prompt input with quick-action labelled buttons.
 templ PromptBarAction(placeholder string, actions []PromptBarActionItem, loading bool, attrs templ.Attributes) {
-	@promptBarCard(placeholder, "", "", 0, loading, promptBarActionToolbar(actions, loading), nil, "w-full max-w-2xl", "mt-2 flex items-end justify-between", attrs, "form/PromptBarAction", false)
+	@promptBarCard(placeholder, "", "", 0, loading, promptBarActionToolbar(actions, loading), nil, "w-full max-w-2xl", "mt-2 flex items-end justify-between", attrs, "form/PromptBarAction", false, nil)
 }
 
 // promptBarActionToolbar builds the toolbar for the Action variant.
@@ -851,7 +1204,7 @@ templ PromptBarModelSelector(props PromptBarModelSelectorProps) {
 		if props.InfoBanner != "" {
 			cardClass = "border-t-0 rounded-t-none"
 		} }}
-		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarModelSelectorToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "", false)
+		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarModelSelectorToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "", false, nil)
 	</div>
 }
 
@@ -938,7 +1291,7 @@ templ PromptBarAbility(props PromptBarAbilityProps) {
 		if props.SavedLabel != "" || props.TokensLeft > 0 {
 			cardClass += " rounded-t-none border-t-0"
 		} }}
-		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarAbilityToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "", false)
+		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarAbilityToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "", false, nil)
 	</div>
 }
 

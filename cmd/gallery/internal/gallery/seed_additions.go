@@ -1086,5 +1086,94 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// ── Forms / Prompt Bar — Autocomplete ─────────────────────────────────
+		{
+			Slug:        "prompt-bar-autocomplete",
+			Name:        "Prompt Bar — Autocomplete",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "Slash-command and @mention autocomplete — a popover above the input, filtered as you type, keyboard-navigable, replacing the trigger query on accept.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Commands",
+					Description: "Slash command options.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return shared.Compose(
+							templ.Raw(`<div class="relative mt-52">`),
+							form.PromptBarAutocomplete(form.PromptBarAutocompleteProps{
+								ID: "autocomplete-commands",
+								Options: []form.PromptBarAutocompleteOption{
+									{Label: "/help", Value: "/help", Description: "Show available commands", Detail: "⌘ /", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/clear", Value: "/clear", Description: "Clear the conversation", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/plan", Value: "/plan", Description: "Switch to planning mode", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/model", Value: "/model", Description: "Change the model", Detail: "gpt-4o", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/review", Value: "/review", Description: "Review the current diff", Kind: form.PromptBarAutocompleteCommand},
+								},
+							}),
+							templ.Raw(`</div>`),
+						)
+					},
+					FrameHeight: "280px",
+				},
+				{
+					Name:        "Mentions",
+					Description: "@ mention options — a directory, files, and an agent.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return shared.Compose(
+							templ.Raw(`<div class="relative mt-40">`),
+							form.PromptBarAutocomplete(form.PromptBarAutocompleteProps{
+								ID: "autocomplete-mentions",
+								Options: []form.PromptBarAutocompleteOption{
+									{Label: "src/components/", Value: "src/components/", Description: "Directory", Kind: form.PromptBarAutocompleteDirectory},
+									{Label: "docs/roadmap.md", Value: "docs/roadmap.md", Description: "File", Detail: "12 KB", Kind: form.PromptBarAutocompleteFile},
+									{Label: "prompt-bar.templ", Value: "prompt-bar.templ", Description: "File", Detail: "21 KB", Kind: form.PromptBarAutocompleteFile},
+									{Label: "Research Buddy", Value: "@research", Description: "Deep research with citations", Kind: form.PromptBarAutocompleteAgent},
+								},
+							}),
+							templ.Raw(`</div>`),
+						)
+					},
+					FrameHeight: "240px",
+				},
+				{
+					Name:        "In composer",
+					Description: "Autocomplete anchored above the PromptBar textarea — type / or @ to open.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Type / for commands or @ to mention…",
+							Action:      "/gallery/render/prompt-bar-autocomplete",
+							Method:      "get",
+							SubmitLabel: "Send",
+							ShowAttach:  true,
+							Autocomplete: &form.PromptBarAutocompleteProps{
+								ID: "autocomplete-composer",
+								Options: []form.PromptBarAutocompleteOption{
+									{Label: "/help", Value: "/help", Description: "Show available commands", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/clear", Value: "/clear", Description: "Clear the conversation", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/plan", Value: "/plan", Description: "Switch to planning mode", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "src/main.go", Value: "src/main.go", Kind: form.PromptBarAutocompleteFile},
+									{Label: "Research Buddy", Value: "@research", Description: "Deep research with citations", Kind: form.PromptBarAutocompleteAgent},
+								},
+							},
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Icon: "lucide--bot", Group: "Assistants", Selected: true},
+								{Value: "coder", Label: "Code Companion", Icon: "lucide--code-2", Group: "Assistants"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Name:          "message",
+						})
+					},
+					FrameHeight: "240px",
+				},
+			},
+		},
 	}
 }

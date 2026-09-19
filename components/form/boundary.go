@@ -244,6 +244,11 @@ func PromptBarTracksWithBoundary(props PromptBarTracksProps) templ.Component {
 	return devmode.ComponentBoundary("PromptBarTracks", PromptBarTracks(props), props)
 }
 
+// PromptBarAutocompleteWithBoundary wraps PromptBarAutocomplete with a dev-mode component boundary annotation.
+func PromptBarAutocompleteWithBoundary(props PromptBarAutocompleteProps) templ.Component {
+	return devmode.ComponentBoundary("PromptBarAutocomplete", PromptBarAutocomplete(props), props)
+}
+
 // PromptBarActionWithBoundary wraps PromptBarAction with a dev-mode component boundary annotation.
 func PromptBarActionWithBoundary(placeholder string, actions []PromptBarActionItem) templ.Component {
 	return devmode.ComponentBoundary("PromptBarAction", PromptBarAction(placeholder, actions, false, nil), map[string]any{
