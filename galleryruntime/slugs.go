@@ -118,6 +118,7 @@ var ComponentSlugs = map[string]string{
 	"Toggle":         "form-checkbox",
 	"PromptBar":      "prompt-bar-minimal",
 	"PromptBarAction": "prompt-bar-action",
+	"PromptBarPicker": "prompt-bar-picker",
 	"InputSpinner":   "input-spinner",
 	"WizardStepper":  "wizard-stepper",
 }

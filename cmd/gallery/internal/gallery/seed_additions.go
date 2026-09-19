@@ -11,6 +11,7 @@ import (
 	"github.com/emergent-company/go-daisy/components/schemaform"
 	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/galleryruntime"
+	"github.com/emergent-company/go-daisy/shared"
 )
 
 func additionalComponents() []galleryruntime.GalleryComponent {
@@ -530,6 +531,647 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 					FrameHeight: "160px",
+				},
+			},
+		},
+
+		// ── Forms / Prompt Bar — Agent Picker ──────────────────────────────────
+		{
+			Slug:        "prompt-bar-agent",
+			Name:        "Prompt Bar — Agent Picker",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "Flagship prompt bar composing an agent picker with model, mode and feature pickers via slots. Pickers submit hidden inputs; loading and running states swap the send action.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Agent, model, mode and feature pickers with token counter and toolbar icons.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Ask the agent anything…",
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Description: "Deep research with citations", Icon: "lucide--bot", Group: "Assistants", Meta: "128k", Selected: true},
+								{Value: "coder", Label: "Code Companion", Description: "Writes and reviews code", Icon: "lucide--code-2", Group: "Assistants"},
+								{Value: "analyst", Label: "Data Analyst", Description: "Charts, SQL and summaries", Icon: "lucide--bar-chart-2", Group: "Assistants"},
+								{Value: "writer", Label: "Copywriter", Description: "Product and marketing copy", Icon: "lucide--pen-line", Group: "Specialists"},
+								{Value: "tutor", Label: "Tutor", Description: "Explains concepts step by step", Icon: "lucide--graduation-cap", Group: "Specialists"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Meta: "128k", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu", Meta: "200k"},
+								{Value: "gemini-2-5", Label: "Gemini 2.5 Pro", Icon: "lucide--cpu", Meta: "1M"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "chat", Label: "Chat", Icon: "lucide--message-square", Selected: true},
+								{Value: "plan", Label: "Plan", Icon: "lucide--map"},
+								{Value: "build", Label: "Build", Icon: "lucide--hammer"},
+							},
+							SelectedMode: "Chat",
+							ModeName:     "mode",
+							Features: []form.PromptBarFeatureItem{
+								{Value: "web", Label: "Web search", Description: "Browse the web for fresh sources", Icon: "lucide--globe", On: true},
+								{Value: "thinking", Label: "Deep thinking", Description: "Extended reasoning pass", Icon: "lucide--lightbulb"},
+							},
+							FeatureName:      "feature",
+							ShowTokenCounter: true,
+							TokenCurrent:     42,
+							TokenMax:         128,
+							ShowAttach:       true,
+							ShowImage:        true,
+							ShowVoice:        true,
+						})
+					},
+					FrameHeight: "240px",
+				},
+				{
+					Name:        "Running",
+					Description: "Active run — the send action is replaced by a stop button.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Working…",
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Description: "Deep research with citations", Icon: "lucide--bot", Group: "Assistants", Selected: true},
+								{Value: "coder", Label: "Code Companion", Description: "Writes and reviews code", Icon: "lucide--code-2", Group: "Assistants"},
+								{Value: "analyst", Label: "Data Analyst", Description: "Charts, SQL and summaries", Icon: "lucide--bar-chart-2", Group: "Assistants"},
+								{Value: "writer", Label: "Copywriter", Description: "Product and marketing copy", Icon: "lucide--pen-line", Group: "Specialists"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Meta: "128k", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu", Meta: "200k"},
+								{Value: "gemini-2-5", Label: "Gemini 2.5 Pro", Icon: "lucide--cpu", Meta: "1M"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "chat", Label: "Chat", Icon: "lucide--message-square", Selected: true},
+								{Value: "plan", Label: "Plan", Icon: "lucide--map"},
+								{Value: "build", Label: "Build", Icon: "lucide--hammer"},
+							},
+							SelectedMode: "Chat",
+							ModeName:     "mode",
+							Features: []form.PromptBarFeatureItem{
+								{Value: "web", Label: "Web search", Description: "Browse the web for fresh sources", Icon: "lucide--globe", On: true},
+								{Value: "thinking", Label: "Deep thinking", Description: "Extended reasoning pass", Icon: "lucide--lightbulb"},
+							},
+							FeatureName:      "feature",
+							ShowTokenCounter: true,
+							TokenCurrent:     42,
+							TokenMax:         128,
+							ShowAttach:       true,
+							ShowImage:        true,
+							ShowVoice:        true,
+							Running:          true,
+						})
+					},
+					FrameHeight: "240px",
+				},
+			},
+		},
+
+		// ── Forms / Prompt Bar Picker ──────────────────────────────────────────
+		{
+			Slug:        "prompt-bar-picker",
+			Name:        "Prompt Bar Picker",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "Standalone picker dropdown for the prompt bar toolbar — grouped rows with descriptions and metadata, an optional hidden input, and a disabled row.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Grouped agent picker with one selected and one disabled row.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarPickerWithBoundary(form.PromptBarPickerProps{
+							Label:    "Agent",
+							Icon:     "lucide--bot",
+							Selected: "Research Buddy",
+							Name:     "agent",
+							Items: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Description: "Deep research with citations", Icon: "lucide--bot", Group: "Assistants", Meta: "128k", Selected: true},
+								{Value: "coder", Label: "Code Companion", Description: "Writes and reviews code", Icon: "lucide--code-2", Group: "Assistants"},
+								{Value: "analyst", Label: "Data Analyst", Description: "Charts, SQL and summaries", Icon: "lucide--bar-chart-2", Group: "Assistants"},
+								{Value: "writer", Label: "Copywriter", Description: "Product and marketing copy", Icon: "lucide--pen-line", Group: "Specialists"},
+								{Value: "legacy", Label: "Legacy Agent", Description: "Retired — read only", Icon: "lucide--archive", Group: "Specialists", Disabled: true},
+							},
+						})
+					},
+					FrameHeight: "240px",
+				},
+			},
+		},
+
+		// ── Forms / Prompt Bar — Paseo Parity ──────────────────────────────────
+		{
+			Slug:        "prompt-bar-paseo",
+			Name:        "Prompt Bar — Paseo Parity",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "Paseo's real composer option set: six built-in providers, provider-qualified models, per-provider permission modes with colour tiers, feature toggles, a thinking picker in LeftSlot, and a voice + context-window meter in RightSlot.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Composer",
+					Description: "Agent, model, mode, feature and thinking controls with token counter and voice/context extras.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Message the agent, tag @files, or use /commands and /skills",
+							Agents: []form.PromptBarPickerItem{
+								{Value: "claude", Label: "Claude", Description: "Anthropic's multi-tool assistant with MCP support, streaming, and deep reasoning", Icon: "lucide--bot", Group: "Built-in", Selected: true},
+								{Value: "codex", Label: "Codex", Description: "OpenAI's Codex workspace agent with sandbox controls and optional network access", Icon: "lucide--terminal", Group: "Built-in"},
+								{Value: "copilot", Label: "Copilot", Description: "GitHub Copilot via Agent Client Protocol with dynamic modes and session support", Icon: "lucide--github", Group: "Built-in"},
+								{Value: "opencode", Label: "OpenCode", Description: "Open-source coding assistant with multi-provider model support", Icon: "lucide--code-2", Group: "Built-in"},
+								{Value: "pi", Label: "Pi", Description: "Minimal terminal-based coding agent with multi-provider LLM support", Icon: "lucide--cpu", Group: "More"},
+								{Value: "omp", Label: "Oh My Pi", Description: "Multi-provider coding agent with native approvals, host tools, and subagents", Icon: "lucide--sparkles", Group: "More"},
+							},
+							SelectedAgent: "Claude",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "claude:haiku", Label: "claude · Haiku", Icon: "lucide--cpu", Meta: "200k", Selected: true},
+								{Value: "codex:gpt-5.4-mini", Label: "codex · GPT-5.4 Mini", Icon: "lucide--cpu", Meta: "400k"},
+								{Value: "codex:gpt-5.4", Label: "codex · GPT-5.4", Icon: "lucide--cpu", Meta: "400k"},
+								{Value: "copilot:gpt-5", Label: "copilot · GPT-5", Icon: "lucide--cpu", Meta: "128k"},
+								{Value: "opencode:claude-sonnet", Label: "opencode · Claude Sonnet", Icon: "lucide--cpu", Meta: "1M"},
+							},
+							SelectedModel: "claude · Haiku",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "claude:plan", Label: "Plan Mode", Description: "Analyze the codebase without executing tools or edits", Icon: "lucide--shield-ellipsis", Group: "Claude", Meta: "planning", Selected: true},
+								{Value: "claude:default", Label: "Always Ask", Description: "Prompts for permission the first time a tool is used", Icon: "lucide--shield", Group: "Claude", Meta: "safe"},
+								{Value: "claude:acceptEdits", Label: "Accept File Edits", Description: "Automatically approves edit-focused tools without prompting", Icon: "lucide--shield-plus", Group: "Claude", Meta: "moderate"},
+								{Value: "claude:auto", Label: "Auto mode", Description: "Uses a model classifier to review permission prompts automatically", Icon: "lucide--shield-check", Group: "Claude", Meta: "moderate"},
+								{Value: "claude:bypass", Label: "Bypass", Description: "Skip all permission prompts (use with caution)", Icon: "lucide--shield-off", Group: "Claude", Meta: "dangerous"},
+								{Value: "codex:default", Label: "Default Permissions", Description: "Edit files and run commands with Codex's default approval flow.", Icon: "lucide--shield", Group: "Codex", Meta: "moderate"},
+								{Value: "codex:auto-review", Label: "Auto-review", Description: "Same workspace-write permissions as Default, but eligible on-request approvals are routed through the auto-reviewer subagent.", Icon: "lucide--shield-check", Group: "Codex", Meta: "moderate"},
+								{Value: "codex:full-access", Label: "Full Access", Description: "Edit files, run commands, and access the network without additional prompts.", Icon: "lucide--shield-off", Group: "Codex", Meta: "dangerous"},
+								{Value: "opencode:build", Label: "Build", Description: "Allows edits and tool execution for implementation work", Icon: "lucide--shield", Group: "OpenCode", Meta: "moderate"},
+								{Value: "opencode:plan", Label: "Plan", Description: "Read-only planning mode that avoids file edits", Icon: "lucide--shield-ellipsis", Group: "OpenCode", Meta: "planning"},
+								{Value: "copilot:agent", Label: "Agent", Description: "Default agent mode for conversational interactions", Icon: "lucide--shield", Group: "Copilot", Meta: "moderate"},
+								{Value: "copilot:plan", Label: "Plan", Description: "Plan mode for creating and executing multi-step plans", Icon: "lucide--shield-ellipsis", Group: "Copilot", Meta: "planning"},
+								{Value: "copilot:allow-all", Label: "Allow All", Description: "Automatically approves all Copilot tool, path, and URL requests.", Icon: "lucide--shield-off", Group: "Copilot", Meta: "dangerous"},
+							},
+							SelectedMode: "Plan Mode",
+							ModeName:     "mode",
+							Features: []form.PromptBarFeatureItem{
+								{Value: "plan_mode", Label: "Plan", Description: "Switch Codex into planning-only collaboration mode", Icon: "lucide--list-todo"},
+								{Value: "fast_mode", Label: "Fast", Description: "Priority inference at increased usage", Icon: "lucide--zap", On: true},
+								{Value: "auto_accept", Label: "Auto Accept", Description: "Automatically approves ACP permission prompts.", Icon: "lucide--shield-check"},
+							},
+							FeatureName: "features",
+							LeftSlot: form.PromptBarPicker(form.PromptBarPickerProps{
+								Label:    "Thinking",
+								Icon:     "lucide--brain",
+								Selected: "Think hard",
+								Name:     "thinking",
+								Items: []form.PromptBarPickerItem{
+									{Value: "default", Label: "Default"},
+									{Value: "think", Label: "Think"},
+									{Value: "think-hard", Label: "Think hard", Selected: true},
+									{Value: "xhigh", Label: "Extra high"},
+								},
+							}),
+							RightSlot: shared.Compose(
+								ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Icon: "lucide--audio-lines", AriaLabel: "Voice mode"}),
+								templ.Raw(`<span class="text-xs text-base-content/60" aria-label="Context window">128k / 200k</span>`),
+							),
+							Class:            "max-w-5xl",
+							Name:             "message",
+							ShowTokenCounter: true,
+							TokenCurrent:     42,
+							TokenMax:         128,
+							ShowAttach:       true,
+							ShowImage:        true,
+							ShowVoice:        true,
+						})
+					},
+					FrameHeight: "240px",
+				},
+				{
+					Name:        "Running",
+					Description: "Active run — the send action is replaced by the stop button.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Message the agent, tag @files, or use /commands and /skills",
+							Agents: []form.PromptBarPickerItem{
+								{Value: "claude", Label: "Claude", Description: "Anthropic's multi-tool assistant with MCP support, streaming, and deep reasoning", Icon: "lucide--bot", Group: "Built-in", Selected: true},
+								{Value: "codex", Label: "Codex", Description: "OpenAI's Codex workspace agent with sandbox controls and optional network access", Icon: "lucide--terminal", Group: "Built-in"},
+								{Value: "copilot", Label: "Copilot", Description: "GitHub Copilot via Agent Client Protocol with dynamic modes and session support", Icon: "lucide--github", Group: "Built-in"},
+								{Value: "opencode", Label: "OpenCode", Description: "Open-source coding assistant with multi-provider model support", Icon: "lucide--code-2", Group: "Built-in"},
+								{Value: "pi", Label: "Pi", Description: "Minimal terminal-based coding agent with multi-provider LLM support", Icon: "lucide--cpu", Group: "More"},
+								{Value: "omp", Label: "Oh My Pi", Description: "Multi-provider coding agent with native approvals, host tools, and subagents", Icon: "lucide--sparkles", Group: "More"},
+							},
+							SelectedAgent: "Claude",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "claude:haiku", Label: "claude · Haiku", Icon: "lucide--cpu", Meta: "200k", Selected: true},
+								{Value: "codex:gpt-5.4-mini", Label: "codex · GPT-5.4 Mini", Icon: "lucide--cpu", Meta: "400k"},
+								{Value: "codex:gpt-5.4", Label: "codex · GPT-5.4", Icon: "lucide--cpu", Meta: "400k"},
+								{Value: "copilot:gpt-5", Label: "copilot · GPT-5", Icon: "lucide--cpu", Meta: "128k"},
+								{Value: "opencode:claude-sonnet", Label: "opencode · Claude Sonnet", Icon: "lucide--cpu", Meta: "1M"},
+							},
+							SelectedModel: "claude · Haiku",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "claude:plan", Label: "Plan Mode", Description: "Analyze the codebase without executing tools or edits", Icon: "lucide--shield-ellipsis", Group: "Claude", Meta: "planning", Selected: true},
+								{Value: "claude:default", Label: "Always Ask", Description: "Prompts for permission the first time a tool is used", Icon: "lucide--shield", Group: "Claude", Meta: "safe"},
+								{Value: "claude:acceptEdits", Label: "Accept File Edits", Description: "Automatically approves edit-focused tools without prompting", Icon: "lucide--shield-plus", Group: "Claude", Meta: "moderate"},
+								{Value: "claude:auto", Label: "Auto mode", Description: "Uses a model classifier to review permission prompts automatically", Icon: "lucide--shield-check", Group: "Claude", Meta: "moderate"},
+								{Value: "claude:bypass", Label: "Bypass", Description: "Skip all permission prompts (use with caution)", Icon: "lucide--shield-off", Group: "Claude", Meta: "dangerous"},
+								{Value: "codex:default", Label: "Default Permissions", Description: "Edit files and run commands with Codex's default approval flow.", Icon: "lucide--shield", Group: "Codex", Meta: "moderate"},
+								{Value: "codex:auto-review", Label: "Auto-review", Description: "Same workspace-write permissions as Default, but eligible on-request approvals are routed through the auto-reviewer subagent.", Icon: "lucide--shield-check", Group: "Codex", Meta: "moderate"},
+								{Value: "codex:full-access", Label: "Full Access", Description: "Edit files, run commands, and access the network without additional prompts.", Icon: "lucide--shield-off", Group: "Codex", Meta: "dangerous"},
+								{Value: "opencode:build", Label: "Build", Description: "Allows edits and tool execution for implementation work", Icon: "lucide--shield", Group: "OpenCode", Meta: "moderate"},
+								{Value: "opencode:plan", Label: "Plan", Description: "Read-only planning mode that avoids file edits", Icon: "lucide--shield-ellipsis", Group: "OpenCode", Meta: "planning"},
+								{Value: "copilot:agent", Label: "Agent", Description: "Default agent mode for conversational interactions", Icon: "lucide--shield", Group: "Copilot", Meta: "moderate"},
+								{Value: "copilot:plan", Label: "Plan", Description: "Plan mode for creating and executing multi-step plans", Icon: "lucide--shield-ellipsis", Group: "Copilot", Meta: "planning"},
+								{Value: "copilot:allow-all", Label: "Allow All", Description: "Automatically approves all Copilot tool, path, and URL requests.", Icon: "lucide--shield-off", Group: "Copilot", Meta: "dangerous"},
+							},
+							SelectedMode: "Plan Mode",
+							ModeName:     "mode",
+							Features: []form.PromptBarFeatureItem{
+								{Value: "plan_mode", Label: "Plan", Description: "Switch Codex into planning-only collaboration mode", Icon: "lucide--list-todo"},
+								{Value: "fast_mode", Label: "Fast", Description: "Priority inference at increased usage", Icon: "lucide--zap", On: true},
+								{Value: "auto_accept", Label: "Auto Accept", Description: "Automatically approves ACP permission prompts.", Icon: "lucide--shield-check"},
+							},
+							FeatureName: "features",
+							LeftSlot: form.PromptBarPicker(form.PromptBarPickerProps{
+								Label:    "Thinking",
+								Icon:     "lucide--brain",
+								Selected: "Think hard",
+								Name:     "thinking",
+								Items: []form.PromptBarPickerItem{
+									{Value: "default", Label: "Default"},
+									{Value: "think", Label: "Think"},
+									{Value: "think-hard", Label: "Think hard", Selected: true},
+									{Value: "xhigh", Label: "Extra high"},
+								},
+							}),
+							RightSlot: shared.Compose(
+								ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Icon: "lucide--audio-lines", AriaLabel: "Voice mode"}),
+								templ.Raw(`<span class="text-xs text-base-content/60" aria-label="Context window">128k / 200k</span>`),
+							),
+							Class:            "max-w-5xl",
+							Name:             "message",
+							ShowTokenCounter: true,
+							TokenCurrent:     42,
+							TokenMax:         128,
+							ShowAttach:       true,
+							ShowImage:        true,
+							ShowVoice:        true,
+							Running:          true,
+						})
+					},
+					FrameHeight: "240px",
+				},
+			},
+		},
+
+		// ── Forms / Prompt Bar — Composer ──────────────────────────────────────
+		{
+			Slug:        "prompt-bar-composer",
+			Name:        "Prompt Bar — Composer",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "A working composer: real form submit with Enter-to-send, Shift+Enter newline, an empty-input guard, and an HTMX-wired stop action while running.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Submit",
+					Description: "GET form submit — Enter sends, Shift+Enter inserts a newline.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Type a message and press Enter…",
+							Action:      "/gallery/render/prompt-bar-composer",
+							Method:      "get",
+							SubmitLabel: "Send",
+							ShowAttach:  true,
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Icon: "lucide--bot", Group: "Assistants", Selected: true},
+								{Value: "coder", Label: "Code Companion", Icon: "lucide--code-2", Group: "Assistants"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "chat", Label: "Chat", Icon: "lucide--message-square", Selected: true},
+								{Value: "plan", Label: "Plan", Icon: "lucide--map"},
+							},
+							SelectedMode: "Chat",
+							ModeName:     "mode",
+							Features: []form.PromptBarFeatureItem{
+								{Value: "web", Label: "Web search", Icon: "lucide--globe", On: true},
+								{Value: "thinking", Label: "Deep thinking", Icon: "lucide--lightbulb"},
+							},
+							FeatureName: "feature",
+							Name:        "message",
+						})
+					},
+					FrameHeight: "240px",
+				},
+				{
+					Name:        "Running",
+					Description: "Active run — the send action is replaced by an HTMX-wired stop button.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Working…",
+							Action:      "/gallery/render/prompt-bar-composer",
+							Method:      "get",
+							SubmitLabel: "Send",
+							ShowAttach:  true,
+							Running:     true,
+							StopAction:  "/gallery/render/prompt-bar-composer",
+							StopMethod:  "get",
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Icon: "lucide--bot", Group: "Assistants", Selected: true},
+								{Value: "coder", Label: "Code Companion", Icon: "lucide--code-2", Group: "Assistants"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "chat", Label: "Chat", Icon: "lucide--message-square", Selected: true},
+								{Value: "plan", Label: "Plan", Icon: "lucide--map"},
+							},
+							SelectedMode: "Chat",
+							ModeName:     "mode",
+							Features: []form.PromptBarFeatureItem{
+								{Value: "web", Label: "Web search", Icon: "lucide--globe", On: true},
+								{Value: "thinking", Label: "Deep thinking", Icon: "lucide--lightbulb"},
+							},
+							FeatureName: "feature",
+							Name:        "message",
+						})
+					},
+					FrameHeight: "240px",
+				},
+				{
+					Name:        "Full",
+					Description: "Attachments, tracks and pickers composed in one dense prompt bar.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Message the agent…",
+							Action:      "/gallery/render/prompt-bar-composer",
+							Method:      "get",
+							SubmitLabel: "Send",
+							ShowAttach:  true,
+							Attachments: []form.PromptBarAttachmentItem{
+								{Label: "design.png", Subtitle: "2.1 MB", Thumbnail: "https://picsum.photos/96/96", Kind: form.PromptBarAttachmentImage},
+								{Label: "notes.md", Subtitle: "12 KB", Icon: "lucide--file-text", Kind: form.PromptBarAttachmentFile},
+								{Label: "Figma board", Subtitle: "figma.com/board/x1", Icon: "lucide--link", Kind: form.PromptBarAttachmentLink, Href: "#"},
+							},
+							Tracks: []form.PromptBarTrackItem{
+								{
+									Label: "3/5 tasks", Icon: "lucide--list-checks", Title: "Tasks",
+									Rows: []form.PromptBarTrackRow{
+										{Label: "Research", Subtitle: "Complete", Icon: "lucide--circle-check", Done: true},
+										{Label: "Write", Subtitle: "In progress", Icon: "lucide--circle-dot"},
+									},
+								},
+								{
+									Label: "Diff", Icon: "lucide--git-branch", Title: "Changes",
+									Segments: []form.PromptBarTrackSegment{
+										{Text: "+128", Bucket: form.PromptBarTrackDone},
+										{Text: "−42", Bucket: form.PromptBarTrackFailed},
+									},
+								},
+							},
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Icon: "lucide--bot", Group: "Assistants", Selected: true},
+								{Value: "coder", Label: "Code Companion", Icon: "lucide--code-2", Group: "Assistants"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "chat", Label: "Chat", Icon: "lucide--message-square", Selected: true},
+								{Value: "plan", Label: "Plan", Icon: "lucide--map"},
+							},
+							SelectedMode: "Chat",
+							ModeName:     "mode",
+							Name:         "message",
+						})
+					},
+					FrameHeight: "380px",
+				},
+			},
+		},
+
+		// ── Forms / Prompt Bar — Attachments ──────────────────────────────────
+		{
+			Slug:        "prompt-bar-attachments",
+			Name:        "Prompt Bar — Attachments",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "Paseo-style attachment chips with thumbnail/file/link leading visuals, an optional subtitle, and a hover-reveal remove action.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Tray",
+					Description: "Standalone attachment tray.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarAttachmentsWithBoundary(form.PromptBarAttachmentsProps{
+							Items: []form.PromptBarAttachmentItem{
+								{Label: "hero-shot.png", Subtitle: "2.1 MB", Thumbnail: "https://picsum.photos/96/96", Kind: form.PromptBarAttachmentImage},
+								{Label: "research-notes.md", Subtitle: "12 KB · Markdown", Icon: "lucide--file-text", Kind: form.PromptBarAttachmentFile},
+								{Label: "Figma board", Subtitle: "figma.com/board/x1", Icon: "lucide--link", Kind: form.PromptBarAttachmentLink, Href: "#"},
+								{Label: "Wireframes", Subtitle: "Final revisions after the design review on Tuesday afternoon", Icon: "lucide--file", Kind: form.PromptBarAttachmentFile},
+							},
+						})
+					},
+					FrameHeight: "160px",
+				},
+				{
+					Name:        "In Composer",
+					Description: "The same chips rendered above the PromptBar textarea via Attachments.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Add context…",
+							Attachments: []form.PromptBarAttachmentItem{
+								{Label: "hero-shot.png", Subtitle: "2.1 MB", Thumbnail: "https://picsum.photos/96/96", Kind: form.PromptBarAttachmentImage},
+								{Label: "research-notes.md", Subtitle: "12 KB · Markdown", Icon: "lucide--file-text", Kind: form.PromptBarAttachmentFile},
+								{Label: "Figma board", Subtitle: "figma.com/board/x1", Icon: "lucide--link", Kind: form.PromptBarAttachmentLink, Href: "#"},
+							},
+							ShowAttach: true,
+							Name:       "message",
+						})
+					},
+					FrameHeight: "280px",
+				},
+			},
+		},
+
+		// ── Forms / Prompt Bar — Tracks ───────────────────────────────────────
+		{
+			Slug:        "prompt-bar-tracks",
+			Name:        "Prompt Bar — Tracks",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "Ambient status pills floated above the composer — task progress, subagent states, and a diff stat with colour-coded segments.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Rail",
+					Description: "Standalone track rail.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarTracksWithBoundary(form.PromptBarTracksProps{
+							Items: []form.PromptBarTrackItem{
+								{
+									Label: "3/5 tasks", Icon: "lucide--list-checks", Title: "Tasks",
+									Rows: []form.PromptBarTrackRow{
+										{Label: "Research the API", Subtitle: "Complete", Icon: "lucide--circle-check", Done: true},
+										{Label: "Draft the proposal", Subtitle: "In progress", Icon: "lucide--circle-dot"},
+										{Label: "Review changes", Subtitle: "Queued", Icon: "lucide--circle"},
+									},
+								},
+								{
+									Label: "2 subagents", Icon: "lucide--bot", Title: "Subagents",
+									Rows: []form.PromptBarTrackRow{
+										{Label: "explorer", Subtitle: "Scanning the repo", Icon: "lucide--search"},
+										{Label: "reviewer", Subtitle: "Checking the diff", Icon: "lucide--shield-check"},
+									},
+								},
+								{
+									Label: "Diff", Icon: "lucide--git-branch", Title: "Changes",
+									Segments: []form.PromptBarTrackSegment{
+										{Text: "+128", Bucket: form.PromptBarTrackDone},
+										{Text: "−42", Bucket: form.PromptBarTrackFailed},
+									},
+								},
+							},
+						})
+					},
+					FrameHeight: "120px",
+				},
+				{
+					Name:        "Above Composer",
+					Description: "The same pills rendered above a PromptBar via Tracks.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Message the agent…",
+							Tracks: []form.PromptBarTrackItem{
+								{
+									Label: "3/5 tasks", Icon: "lucide--list-checks", Title: "Tasks",
+									Rows: []form.PromptBarTrackRow{
+										{Label: "Research", Icon: "lucide--circle-check", Done: true},
+										{Label: "Write", Icon: "lucide--circle-dot"},
+									},
+								},
+								{
+									Label: "Diff", Icon: "lucide--git-branch",
+									Segments: []form.PromptBarTrackSegment{
+										{Text: "+128", Bucket: form.PromptBarTrackDone},
+										{Text: "−42", Bucket: form.PromptBarTrackFailed},
+									},
+								},
+							},
+							Name: "message",
+						})
+					},
+					FrameHeight: "240px",
+				},
+			},
+		},
+
+		// ── Forms / Prompt Bar — Autocomplete ─────────────────────────────────
+		{
+			Slug:        "prompt-bar-autocomplete",
+			Name:        "Prompt Bar — Autocomplete",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "Slash-command and @mention autocomplete — a popover above the input, filtered as you type, keyboard-navigable, replacing the trigger query on accept.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Commands",
+					Description: "Slash command options.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return shared.Compose(
+							templ.Raw(`<div class="relative mt-52">`),
+							form.PromptBarAutocomplete(form.PromptBarAutocompleteProps{
+								ID: "autocomplete-commands",
+								Options: []form.PromptBarAutocompleteOption{
+									{Label: "/help", Value: "/help", Description: "Show available commands", Detail: "⌘ /", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/clear", Value: "/clear", Description: "Clear the conversation", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/plan", Value: "/plan", Description: "Switch to planning mode", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/model", Value: "/model", Description: "Change the model", Detail: "gpt-4o", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/review", Value: "/review", Description: "Review the current diff", Kind: form.PromptBarAutocompleteCommand},
+								},
+							}),
+							templ.Raw(`</div>`),
+						)
+					},
+					FrameHeight: "280px",
+				},
+				{
+					Name:        "Mentions",
+					Description: "@ mention options — a directory, files, and an agent.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return shared.Compose(
+							templ.Raw(`<div class="relative mt-40">`),
+							form.PromptBarAutocomplete(form.PromptBarAutocompleteProps{
+								ID: "autocomplete-mentions",
+								Options: []form.PromptBarAutocompleteOption{
+									{Label: "src/components/", Value: "src/components/", Description: "Directory", Kind: form.PromptBarAutocompleteDirectory},
+									{Label: "docs/roadmap.md", Value: "docs/roadmap.md", Description: "File", Detail: "12 KB", Kind: form.PromptBarAutocompleteFile},
+									{Label: "prompt-bar.templ", Value: "prompt-bar.templ", Description: "File", Detail: "21 KB", Kind: form.PromptBarAutocompleteFile},
+									{Label: "Research Buddy", Value: "@research", Description: "Deep research with citations", Kind: form.PromptBarAutocompleteAgent},
+								},
+							}),
+							templ.Raw(`</div>`),
+						)
+					},
+					FrameHeight: "240px",
+				},
+				{
+					Name:        "In composer",
+					Description: "Autocomplete anchored above the PromptBar textarea — type / or @ to open.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Type / for commands or @ to mention…",
+							Action:      "/gallery/render/prompt-bar-autocomplete",
+							Method:      "get",
+							SubmitLabel: "Send",
+							ShowAttach:  true,
+							Autocomplete: &form.PromptBarAutocompleteProps{
+								ID: "autocomplete-composer",
+								Options: []form.PromptBarAutocompleteOption{
+									{Label: "/help", Value: "/help", Description: "Show available commands", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/clear", Value: "/clear", Description: "Clear the conversation", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "/plan", Value: "/plan", Description: "Switch to planning mode", Kind: form.PromptBarAutocompleteCommand},
+									{Label: "src/main.go", Value: "src/main.go", Kind: form.PromptBarAutocompleteFile},
+									{Label: "Research Buddy", Value: "@research", Description: "Deep research with citations", Kind: form.PromptBarAutocompleteAgent},
+								},
+							},
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Icon: "lucide--bot", Group: "Assistants", Selected: true},
+								{Value: "coder", Label: "Code Companion", Icon: "lucide--code-2", Group: "Assistants"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Name:          "message",
+						})
+					},
+					FrameHeight: "240px",
 				},
 			},
 		},

@@ -8,7 +8,584 @@ import (
 	ui "github.com/emergent-company/go-daisy/components/ui"
 )
 
+var promptBarScriptOnce = templ.NewOnceHandle()
 
+// ── Shared shell ─────────────────────────────────────────────────────────────
+
+// promptBarCard renders the shared card, optional attachment slot, textarea and
+// toolbar row used by every PromptBar variant. componentName is forwarded to
+// devmode.Attrs; pass "" to skip the dev-mode annotation (nested variants).
+// rows/name are only emitted when set so existing variants keep their exact markup.
+// rowClass is the class on the toolbar row; legacy variants pass the original
+// "mt-2 flex items-end justify-between" while the wrap-tolerant flagship passes
+// a flex-wrap variant so many controls never overflow the card.
+templ promptBarCard(placeholder string, value string, name string, rows int, loading bool, toolbar templ.Component, attachmentSlot templ.Component, cardClass string, rowClass string, attrs templ.Attributes, componentName string, composer bool, autocomplete *PromptBarAutocompleteProps) {
+	<div
+		class={ "card bg-base-100 card-border", templ.KV(cardClass, cardClass != "") }
+		if componentName != "" {
+			{ devmode.Attrs(ctx, componentName)... }
+		}
+		{ attrs... }
+	>
+		<div class="card-body p-3">
+			if attachmentSlot != nil {
+				@attachmentSlot
+			}
+			if autocomplete != nil {
+				<div class="relative">
+					@promptBarTextarea(placeholder, value, name, rows, loading, composer, autocomplete.ID)
+					@PromptBarAutocomplete(promptBarHiddenAutocomplete(*autocomplete))
+				</div>
+			} else {
+				@promptBarTextarea(placeholder, value, name, rows, loading, composer, "")
+			}
+			<div class={ rowClass }>
+				@toolbar
+			</div>
+		</div>
+	</div>
+}
+
+// promptBarTextarea renders the composer textarea, optionally linking it to an
+// autocomplete popover via autocompleteID.
+templ promptBarTextarea(placeholder string, value string, name string, rows int, loading bool, composer bool, autocompleteID string) {
+	<textarea
+		class="textarea w-full h-28 resize-none border-0 p-1 text-base focus:outline-none m-0"
+		placeholder={ placeholder }
+		if name != "" {
+			name={ name }
+		}
+		if rows > 0 {
+			rows={ strconv.Itoa(rows) }
+		}
+		if composer {
+			data-prompt-bar-input
+		}
+		if autocompleteID != "" {
+			data-prompt-bar-autocomplete={ autocompleteID }
+		}
+		disabled?={ loading }
+	>{ value }</textarea>
+}
+
+// promptBarSendButton renders the primary send action shared by all variants.
+templ promptBarSendButton(loading bool) {
+	@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Send", "disabled": loading}}) {
+		if loading {
+			<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
+		} else {
+			@ui.IconSpan("lucide--arrow-up", "size-4")
+		}
+	}
+}
+
+// promptBarStopButton renders the stop action shown while a run is active.
+templ promptBarStopButton() {
+	@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonError, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Stop"}}) {
+		@ui.IconSpan("lucide--square", "size-4")
+	}
+}
+
+// ── Pickers ──────────────────────────────────────────────────────────────────
+
+// PromptBarPickerItem is a generic selectable row in a PromptBar picker dropdown.
+type PromptBarPickerItem struct {
+	// Value is the submitted value.
+	Value string
+	// Label is the display name.
+	Label string
+	// Description is an optional second line / role subtitle.
+	Description string
+	// Icon is an optional Iconify icon identifier.
+	Icon string
+	// Group is an optional section header; consecutive items with the same Group share one header.
+	Group string
+	// Meta is optional right-aligned metadata (e.g. "128k").
+	Meta string
+	// Disabled disables selection of the row.
+	Disabled bool
+	// Selected marks the currently selected row.
+	Selected bool
+}
+
+// PromptBarFeatureItem is a toggle-style capability row in the features dropdown.
+type PromptBarFeatureItem struct {
+	// Value is the submitted value.
+	Value string
+	// Label is the display name.
+	Label string
+	// Description is an optional second line.
+	Description string
+	// Icon is an optional Iconify icon identifier.
+	Icon string
+	// On reports whether the capability is enabled.
+	On bool
+}
+
+// PromptBarPickerProps configures the standalone PromptBarPicker dropdown.
+type PromptBarPickerProps struct {
+	// Label is the aria-label + tooltip for the trigger.
+	Label string
+	// Icon is the trigger icon (Iconify).
+	Icon string
+	// Selected is the label shown on the trigger.
+	Selected string
+	// Name, if non-empty, emits a hidden input carrying the selected value.
+	Name string
+	// SelectedValue is the value emitted in the hidden input (falls back to the selected item's Value when empty).
+	SelectedValue string
+	// Items is the list of selectable rows.
+	Items []PromptBarPickerItem
+	// Features, when non-empty, renders toggle rows instead of picker rows.
+	Features []PromptBarFeatureItem
+	// Disabled disables the trigger.
+	Disabled bool
+	// Class is appended to the root element's class list.
+	Class string
+	// Attrs are extra HTML attributes spread on the root element.
+	Attrs templ.Attributes
+}
+
+// PromptBarPicker renders a standalone dropdown picker (or feature toggles) for the prompt bar.
+templ PromptBarPicker(props PromptBarPickerProps) {
+	{{ hiddenValue := props.SelectedValue
+	if hiddenValue == "" {
+		for _, it := range props.Items {
+			if it.Selected {
+				hiddenValue = it.Value
+			}
+		}
+	} }}
+	<div class={ "dropdown dropdown-start inline-flex min-w-28", templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "form/PromptBarPicker")... } { props.Attrs... }>
+		<div tabindex="0" role="button" class={ "btn btn-sm btn-ghost min-w-0 shrink gap-2", templ.KV("btn-disabled", props.Disabled) } aria-label={ props.Label } aria-haspopup="menu" if props.Disabled { aria-disabled="true" }>
+			if props.Icon != "" {
+				@ui.IconSpan(props.Icon, "size-4 shrink-0 text-base-content/60")
+			}
+			<span class="hidden min-w-0 max-w-28 truncate lg:inline">{ props.Selected }</span>
+			@ui.IconSpan("lucide--chevron-down", "size-3.5 shrink-0 text-base-content/60")
+		</div>
+		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-64 p-2 shadow" role="menu">
+			if len(props.Features) > 0 {
+				for _, f := range props.Features {
+					<li>
+						<a>
+							if f.Icon != "" {
+								@ui.IconSpan(f.Icon, "size-4")
+							}
+							<span class="min-w-0 flex-1">
+								<span class="block text-sm">{ f.Label }</span>
+								if f.Description != "" {
+									<span class="block text-xs text-base-content/60">{ f.Description }</span>
+								}
+							</span>
+							if f.On {
+								@ui.IconSpan("lucide--check", "size-4 text-primary")
+							}
+						</a>
+					</li>
+				}
+			} else {
+				for i, it := range props.Items {
+					if it.Group != "" && (i == 0 || props.Items[i-1].Group != it.Group) {
+						<li class="menu-title">{ it.Group }</li>
+					}
+					<li>
+						if it.Disabled {
+							<a class="menu-disabled" aria-disabled="true">@promptBarPickerRow(it)</a>
+						} else {
+							<a>@promptBarPickerRow(it)</a>
+						}
+					</li>
+				}
+			}
+		</ul>
+		if props.Name != "" {
+			if len(props.Features) > 0 {
+				for _, f := range props.Features {
+					if f.On {
+						<input type="hidden" name={ props.Name } value={ f.Value }/>
+					}
+				}
+			} else {
+				<input type="hidden" name={ props.Name } value={ hiddenValue }/>
+			}
+		}
+	</div>
+}
+
+// promptBarPickerRow renders the inner content of a single selectable picker row.
+templ promptBarPickerRow(item PromptBarPickerItem) {
+	if item.Icon != "" {
+		@ui.IconSpan(item.Icon, "size-4")
+	}
+	<span class="min-w-0 flex-1">
+		<span class="block text-sm">{ item.Label }</span>
+		if item.Description != "" {
+			<span class="block text-xs text-base-content/60">{ item.Description }</span>
+		}
+	</span>
+	if item.Meta != "" {
+		<span class="ms-auto text-xs text-base-content/60">{ item.Meta }</span>
+	}
+	if item.Selected {
+		@ui.IconSpan("lucide--check", "size-4 text-primary")
+	}
+}
+
+// ── Attachments ──────────────────────────────────────────────────────────────
+
+// PromptBarAttachmentKind selects the chip leading visual.
+type PromptBarAttachmentKind string
+
+const (
+	PromptBarAttachmentImage PromptBarAttachmentKind = "image"
+	PromptBarAttachmentFile  PromptBarAttachmentKind = "file"
+	PromptBarAttachmentLink  PromptBarAttachmentKind = "link"
+)
+
+// PromptBarAttachmentItem is a single chip in the attachment tray.
+type PromptBarAttachmentItem struct {
+	// ID is an optional stable identifier for the chip.
+	ID string
+	// Label is the attachment name.
+	Label string
+	// Subtitle is an optional second line (e.g. file size or URL).
+	Subtitle string
+	// Icon is the Iconify fallback when no Thumbnail is provided.
+	Icon string
+	// Thumbnail is an image URL for a 48x48 preview.
+	Thumbnail string
+	// Href is an optional link target for the label.
+	Href string
+	// Kind selects the leading visual (image thumbnail vs icon chip).
+	Kind PromptBarAttachmentKind
+	// RemoveAttrs lets the caller wire removal (e.g. hx-post/hx-delete + hx-target).
+	RemoveAttrs templ.Attributes
+}
+
+// PromptBarAttachmentsProps configures the PromptBarAttachments tray.
+type PromptBarAttachmentsProps struct {
+	// Items is the list of attachment chips.
+	Items []PromptBarAttachmentItem
+	// Class is appended to the tray root class list.
+	Class string
+	// Attrs are extra HTML attributes spread on the tray root element.
+	Attrs templ.Attributes
+}
+
+// PromptBarAttachments renders a Paseo-style attachment chip tray above the textarea.
+templ PromptBarAttachments(props PromptBarAttachmentsProps) {
+	<div class={ "flex flex-wrap items-center gap-2", templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "form/PromptBarAttachments")... } { props.Attrs... }>
+		for _, item := range props.Items {
+			@promptBarAttachmentChip(item)
+		}
+	</div>
+}
+
+// promptBarAttachmentChip renders a single attachment chip.
+templ promptBarAttachmentChip(item PromptBarAttachmentItem) {
+	<div class="group flex items-center gap-2 rounded-2xl border border-base-300 bg-base-100 p-1.5 pe-2">
+		if item.Kind == PromptBarAttachmentImage && item.Thumbnail != "" {
+			<img class="size-12 rounded-xl object-cover" src={ templ.URL(item.Thumbnail) } alt=""/>
+		} else {
+			<span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-base-200">
+				@ui.IconSpan(item.Icon, "size-5 text-base-content/60")
+			</span>
+		}
+		<span class="flex min-w-0 flex-col">
+			if item.Href != "" {
+				<a href={ templ.URL(item.Href) } class="text-sm">{ item.Label }</a>
+			} else {
+				<span class="text-sm">{ item.Label }</span>
+			}
+			if item.Subtitle != "" {
+				<span class="block text-xs text-base-content/60">{ item.Subtitle }</span>
+			}
+		</span>
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeCircle, Icon: "lucide--x", AriaLabel: "Remove " + item.Label, ExtraClass: "md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100", Attrs: item.RemoveAttrs})
+	</div>
+}
+
+// ── Tracks ───────────────────────────────────────────────────────────────────
+
+// PromptBarTrackBucket drives the status dot colour.
+type PromptBarTrackBucket string
+
+const (
+	PromptBarTrackNone       PromptBarTrackBucket = ""
+	PromptBarTrackRunning    PromptBarTrackBucket = "running"
+	PromptBarTrackNeedsInput PromptBarTrackBucket = "needs_input"
+	PromptBarTrackFailed     PromptBarTrackBucket = "failed"
+	PromptBarTrackAttention  PromptBarTrackBucket = "attention"
+	PromptBarTrackDone       PromptBarTrackBucket = "done"
+)
+
+// PromptBarTrackSegment is a labelled status piece inside a track pill.
+type PromptBarTrackSegment struct {
+	Text   string
+	Bucket PromptBarTrackBucket
+}
+
+// PromptBarTrackRow is a single row in a track pill's dropdown panel.
+type PromptBarTrackRow struct {
+	Label    string
+	Subtitle string
+	Icon     string
+	Done     bool
+}
+
+// PromptBarTrackItem is a single ambient status pill above the composer.
+type PromptBarTrackItem struct {
+	// Label is the pill label, e.g. "3/5 tasks".
+	Label string
+	// Icon is the pill leading icon.
+	Icon string
+	// Segments are coloured status pieces (each with its own bucket).
+	Segments []PromptBarTrackSegment
+	// Title is the dropdown panel heading.
+	Title string
+	// Rows are the dropdown panel rows.
+	Rows []PromptBarTrackRow
+}
+
+// PromptBarTracksProps configures the PromptBarTracks rail.
+type PromptBarTracksProps struct {
+	// Items is the list of track pills.
+	Items []PromptBarTrackItem
+	// Class is appended to the rail root class list.
+	Class string
+	// Attrs are extra HTML attributes spread on the rail root element.
+	Attrs templ.Attributes
+}
+
+// promptBarTrackBucketClass maps a track bucket to its status dot colour class.
+func promptBarTrackBucketClass(bucket PromptBarTrackBucket) string {
+	switch bucket {
+	case PromptBarTrackRunning:
+		return "bg-info"
+	case PromptBarTrackNeedsInput, PromptBarTrackAttention:
+		return "bg-warning"
+	case PromptBarTrackFailed:
+		return "bg-error"
+	case PromptBarTrackDone:
+		return "bg-success"
+	default:
+		return "bg-base-content/30"
+	}
+}
+
+// promptBarTrackDot renders a status dot (or a spinner for the running bucket).
+templ promptBarTrackDot(bucket PromptBarTrackBucket) {
+	if bucket == PromptBarTrackRunning {
+		<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
+	} else {
+		<span class={ "size-2 shrink-0 rounded-full", promptBarTrackBucketClass(bucket) } aria-hidden="true"></span>
+	}
+}
+
+// PromptBarTracks renders an ambient status rail floated above the composer.
+templ PromptBarTracks(props PromptBarTracksProps) {
+	<div class={ "flex flex-wrap items-center gap-2", templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "form/PromptBarTracks")... } { props.Attrs... }>
+		for _, item := range props.Items {
+			@promptBarTrackPill(item)
+		}
+	</div>
+}
+
+// promptBarTrackPill renders a single DaisyUI dropdown status pill.
+templ promptBarTrackPill(item PromptBarTrackItem) {
+	<div class="dropdown dropdown-start">
+		<div tabindex="0" role="button" class="btn btn-sm btn-ghost h-8 min-h-8 gap-2 rounded-2xl border border-base-300 bg-base-100 px-3 font-normal" aria-haspopup="menu">
+			if item.Icon != "" {
+				@ui.IconSpan(item.Icon, "size-4 text-base-content/60")
+			}
+			if item.Label != "" {
+				<span>{ item.Label }</span>
+			}
+			for i, seg := range item.Segments {
+				if i > 0 || item.Label != "" {
+					<span class="text-base-content/40">·</span>
+				}
+				@promptBarTrackDot(seg.Bucket)
+				<span>{ seg.Text }</span>
+			}
+			@ui.IconSpan("lucide--chevron-up", "size-3.5 text-base-content/60")
+		</div>
+		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-80 p-2 shadow" role="menu">
+			if item.Title != "" {
+				<li class="menu-title">{ item.Title }</li>
+			}
+			for _, row := range item.Rows {
+				<li>
+					<a>
+						if row.Icon != "" {
+							@ui.IconSpan(row.Icon, "size-4")
+						}
+						<span class="min-w-0 flex-1">
+							<span class={ "block text-sm", templ.KV("line-through", row.Done) }>{ row.Label }</span>
+							if row.Subtitle != "" {
+								<span class="block text-xs text-base-content/60">{ row.Subtitle }</span>
+							}
+						</span>
+					</a>
+				</li>
+			}
+		</ul>
+	</div>
+}
+
+// ── Autocomplete ─────────────────────────────────────────────────────────────
+
+// PromptBarAutocompleteKind selects a row's leading icon.
+type PromptBarAutocompleteKind string
+
+const (
+	PromptBarAutocompleteCommand   PromptBarAutocompleteKind = "command"
+	PromptBarAutocompleteFile      PromptBarAutocompleteKind = "file"
+	PromptBarAutocompleteDirectory PromptBarAutocompleteKind = "directory"
+	PromptBarAutocompleteAgent     PromptBarAutocompleteKind = "agent"
+)
+
+// PromptBarAutocompleteOption is a single selectable row in the popover.
+type PromptBarAutocompleteOption struct {
+	// Value is the inserted text (defaults to Label when empty).
+	Value string
+	// Label is the display name.
+	Label string
+	// Detail is an optional right-aligned hint, e.g. an argument signature.
+	Detail string
+	// Description is an optional second line.
+	Description string
+	// Icon is an optional Iconify override; otherwise derived from Kind.
+	Icon string
+	// Kind selects the derived leading icon.
+	Kind PromptBarAutocompleteKind
+}
+
+// PromptBarAutocompleteProps configures the slash/mention popover.
+type PromptBarAutocompleteProps struct {
+	// ID links the popover to its textarea.
+	ID string
+	// Options is the client-side option list.
+	Options []PromptBarAutocompleteOption
+	// Loading renders a spinner row instead of the option list.
+	Loading bool
+	// EmptyText is shown when filtering yields nothing; default "No results".
+	EmptyText string
+	// HxGet, when set, re-fetches the option list from the server (filtered by the
+	// current query) instead of filtering client-side. HxTarget is the element the
+	// response replaces (defaults to the popover list).
+	HxGet    string
+	HxTarget string
+	// Class is appended to the popover root class list.
+	Class string
+	// Attrs are extra HTML attributes spread on the popover root element.
+	Attrs templ.Attributes
+}
+
+// promptBarAutocompleteKindIcon returns the default icon for a kind.
+func promptBarAutocompleteKindIcon(kind PromptBarAutocompleteKind) string {
+	switch kind {
+	case PromptBarAutocompleteCommand:
+		return "lucide--terminal"
+	case PromptBarAutocompleteFile:
+		return "lucide--file"
+	case PromptBarAutocompleteDirectory:
+		return "lucide--folder"
+	case PromptBarAutocompleteAgent:
+		return "lucide--bot"
+	default:
+		return ""
+	}
+}
+
+// promptBarHiddenAutocomplete clones the props and forces the popover hidden
+// (used by the PromptBar integration; the standalone component stays visible).
+func promptBarHiddenAutocomplete(ac PromptBarAutocompleteProps) PromptBarAutocompleteProps {
+	if ac.Class != "" {
+		ac.Class += " hidden"
+	} else {
+		ac.Class = "hidden"
+	}
+	return ac
+}
+
+// PromptBarAutocomplete renders the slash/mention popover anchored above the textarea.
+templ PromptBarAutocomplete(props PromptBarAutocompleteProps) {
+	{{ emptyText := props.EmptyText
+	if emptyText == "" {
+		emptyText = "No results"
+	} }}
+	<div
+		id={ props.ID }
+		class={ "absolute inset-x-0 bottom-full z-20 mb-2 max-h-56 overflow-auto rounded-box border border-base-300 bg-base-100 p-1 shadow-lg", templ.KV(props.Class, props.Class != "") }
+		data-prompt-bar-autocomplete
+		if props.HxGet != "" {
+			data-prompt-bar-hx-get={ props.HxGet }
+		}
+		if props.HxTarget != "" {
+			data-prompt-bar-hx-target={ props.HxTarget }
+		}
+		{ devmode.Attrs(ctx, "form/PromptBarAutocomplete")... }
+		{ props.Attrs... }
+	>
+		<div data-prompt-bar-detail class="hidden border-b border-base-300 px-3 py-2">
+			<span data-prompt-bar-detail-label class="block text-sm"></span>
+			<span data-prompt-bar-detail-desc class="block text-xs text-base-content/60"></span>
+			<span data-prompt-bar-detail-hint class="block text-xs text-base-content/50"></span>
+		</div>
+		<div data-prompt-bar-options>
+			if props.Loading {
+				<div class="flex items-center gap-2 px-2 py-1.5">
+					<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
+					<span class="text-sm text-base-content/60">Loading…</span>
+				</div>
+			} else {
+				for _, opt := range props.Options {
+					@promptBarAutocompleteRow(opt)
+				}
+				<div data-prompt-bar-empty class={ "px-2 py-1.5 text-sm text-base-content/60", templ.KV("hidden", len(props.Options) > 0) }>{ emptyText }</div>
+			}
+		</div>
+	</div>
+}
+
+// promptBarAutocompleteRow renders a single selectable popover row.
+templ promptBarAutocompleteRow(opt PromptBarAutocompleteOption) {
+	{{ val := opt.Value
+	if val == "" {
+		val = opt.Label
+	}
+	icon := opt.Icon
+	if icon == "" {
+		icon = promptBarAutocompleteKindIcon(opt.Kind)
+	} }}
+	<button
+		type="button"
+		data-prompt-bar-option
+		data-value={ val }
+		data-label={ opt.Label }
+		data-description={ opt.Description }
+		data-detail={ opt.Detail }
+		data-kind={ opt.Kind }
+		class="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left"
+	>
+		if icon != "" {
+			@ui.IconSpan(icon, "size-4 text-base-content/60")
+		}
+		<span class="min-w-0 flex-1">
+			<span class="block text-sm">{ opt.Label }</span>
+			if opt.Description != "" {
+				<span class="block text-xs text-base-content/60">{ opt.Description }</span>
+			}
+		</span>
+		if opt.Detail != "" {
+			<span class="ms-auto shrink-0 text-xs text-base-content/50">{ opt.Detail }</span>
+		}
+	</button>
+}
+
+// ── PromptBar ────────────────────────────────────────────────────────────────
 
 // PromptBarProps configures a PromptBar component.
 type PromptBarProps struct {
@@ -28,58 +605,527 @@ type PromptBarProps struct {
 	ShowVoice bool
 	// Loading disables the textarea and send button and shows a spinner while the AI responds.
 	Loading bool
+	// Class, when set, fully controls the card width: the component emits w-full
+	// plus Class and drops its built-in max-width, so the caller owns the max-width.
+	Class string
+	// Name is the textarea name attribute.
+	Name string
+	// Value is the textarea initial content.
+	Value string
+	// Rows is the textarea rows attribute; when zero the h-28 height class is used.
+	Rows int
+	// Agents are selectable agent picker rows.
+	Agents []PromptBarPickerItem
+	// SelectedAgent is the label shown on the agent picker trigger.
+	SelectedAgent string
+	// AgentName is the hidden input name for the agent picker; "" disables the hidden input.
+	AgentName string
+	// Models are selectable model picker rows.
+	Models []PromptBarPickerItem
+	// SelectedModel is the label shown on the model picker trigger.
+	SelectedModel string
+	// ModelName is the hidden input name for the model picker; "" disables the hidden input.
+	ModelName string
+	// Modes are selectable mode picker rows.
+	Modes []PromptBarPickerItem
+	// SelectedMode is the label shown on the mode picker trigger.
+	SelectedMode string
+	// ModeName is the hidden input name for the mode picker; "" disables the hidden input.
+	ModeName string
+	// Features are toggle-style capability rows.
+	Features []PromptBarFeatureItem
+	// FeatureName is the hidden input name for enabled features; "" disables the hidden inputs.
+	FeatureName string
+	// LeftSlot adds extra controls to the left toolbar group, after the pickers.
+	LeftSlot templ.Component
+	// RightSlot adds extra controls to the right toolbar group, before send.
+	RightSlot templ.Component
+	// AttachmentSlot renders above the textarea, inside the card.
+	AttachmentSlot templ.Component
+	// Attachments renders a chip tray above the textarea (before AttachmentSlot).
+	Attachments []PromptBarAttachmentItem
+	// Tracks renders an ambient status rail above the card.
+	Tracks []PromptBarTrackItem
+	// Autocomplete, when non-nil, renders a slash/mention popover above the textarea.
+	Autocomplete *PromptBarAutocompleteProps
+	// ActiveSlot replaces the send button while Running.
+	ActiveSlot templ.Component
+	// Running renders ActiveSlot (or a stop button) instead of send.
+	Running bool
+	// Action, when non-empty, wraps the composer in a <form> and wires submit.
+	Action string
+	// Method is the submit method: "post" (default), "get", "put", "patch".
+	Method string
+	// Target, when non-empty, emits hx-<method> targeting this selector.
+	Target string
+	// Swap is the hx-swap value (e.g. "outerHTML", "innerHTML"); only used with Target.
+	Swap string
+	// SubmitLabel adds a text label to the send button; empty = icon-only (current look).
+	SubmitLabel string
+	// SubmitIcon is "arrow" (default, lucide--arrow-up) or "return" (lucide--corner-down-left).
+	SubmitIcon string
+	// AllowEmptySubmit permits submitting with no text (e.g. attachment-only sends).
+	AllowEmptySubmit bool
+	// StopAction, when set, wires the Running stop button with hx-<stopMethod>.
+	StopAction string
+	StopMethod string // "post" (default) | "put" | "patch"
+	StopTarget string
+	StopSwap   string
 	// Attrs are extra HTML attributes spread on the root element.
 	Attrs templ.Attributes
 }
 
 // PromptBar renders a minimal AI prompt / chat input with optional toolbar icons,
-// a token counter, and a send button.
+// a token counter, and a send button. Pickers render in toolbar order:
+// agents, models, modes, features, then LeftSlot.
 templ PromptBar(props PromptBarProps) {
-	<div class="card bg-base-100 card-border w-full max-w-2xl" { devmode.Attrs(ctx, "form/PromptBar")... } { props.Attrs... }>
-		<div class="card-body p-3">
-			<textarea
-				class="textarea w-full h-28 resize-none border-0 p-1 text-base focus:outline-none m-0"
-				placeholder={ props.Placeholder }
-				disabled?={ props.Loading }
-			></textarea>
-			<div class="mt-2 flex items-end justify-between">
-				<div class="flex items-center gap-0.5">
-					if props.ShowAttach {
-						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Attach file", "disabled": props.Loading}}) {
-							@ui.IconSpan("lucide--paperclip", "size-4 text-base-content/60")
-						}
-					}
-					if props.ShowImage {
-						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Insert image", "disabled": props.Loading}}) {
-							@ui.IconSpan("lucide--image-plus", "size-4 text-base-content/60")
-						}
-					}
-				</div>
-				if props.ShowTokenCounter && props.TokenMax > 0 {
-					<span class="text-xs">
-						<span class="text-base-content/80">Tokens:</span>
-						<span class={ templ.KV("text-error font-medium", props.TokenCurrent >= props.TokenMax*80/100) }>{ strconv.Itoa(props.TokenCurrent) }</span>
-						<span class="text-base-content/60">/{ strconv.Itoa(props.TokenMax) }</span>
-					</span>
+	{{ flagship := len(props.Agents) > 0 || len(props.Models) > 0 || len(props.Modes) > 0 || len(props.Features) > 0 || props.LeftSlot != nil || props.RightSlot != nil || props.AttachmentSlot != nil || props.Running
+	// When Class is set the caller owns the width: emit w-full plus Class and drop
+	// the built-in max-width so there is no competing max-w-* utility. Otherwise
+	// the legacy minimal default is max-w-2xl and the flagship default is wider.
+	cardClass := "w-full max-w-2xl"
+	if props.Class != "" {
+		cardClass = "w-full " + props.Class
+	} else if flagship {
+		cardClass = "w-full max-w-4xl"
+	}
+	rowClass := "mt-2 flex items-end justify-between"
+	if flagship {
+		rowClass = "mt-2 flex flex-wrap items-end justify-between gap-2 md:flex-nowrap"
+	}
+	topSlot := props.AttachmentSlot
+	if len(props.Attachments) > 0 {
+		topSlot = promptBarTopSlot(props.Attachments, props.AttachmentSlot)
+	} }}
+	if len(props.Tracks) > 0 {
+		@PromptBarTracks(PromptBarTracksProps{Items: props.Tracks})
+	}
+	if props.Action != "" {
+		@promptBarComposerForm(props, flagship, cardClass, rowClass, topSlot)
+	} else if props.AllowEmptySubmit || props.Autocomplete != nil {
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true, props.Autocomplete)
+		@promptBarKeyboardScript()
+	} else {
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", false, nil)
+	}
+}
+
+// promptBarTopSlot composes the attachments tray with the caller's AttachmentSlot.
+templ promptBarTopSlot(attachments []PromptBarAttachmentItem, attachmentSlot templ.Component) {
+	if len(attachments) > 0 {
+		@PromptBarAttachments(PromptBarAttachmentsProps{Items: attachments})
+	}
+	if attachmentSlot != nil {
+		@attachmentSlot
+	}
+}
+
+// promptBarComposerForm wraps the card in a <form> when Action is set and wires
+// the submit method, optional HTMX target/swap, and the Enter-to-send script.
+templ promptBarComposerForm(props PromptBarProps, flagship bool, cardClass string, rowClass string, topSlot templ.Component) {
+	{{ method := props.Method
+	if method == "" {
+		method = "post"
+	} }}
+	<form
+		action={ props.Action }
+		method={ method }
+		if props.Target != "" {
+			if method == "put" {
+				hx-put={ props.Action }
+			}
+			if method == "patch" {
+				hx-patch={ props.Action }
+			}
+			if method != "put" && method != "patch" {
+				hx-post={ props.Action }
+			}
+			hx-target={ props.Target }
+			if props.Swap != "" {
+				hx-swap={ props.Swap }
+			}
+		}
+		if props.AllowEmptySubmit {
+			data-prompt-bar-allow-empty="true"
+		}
+	>
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true, props.Autocomplete)
+	</form>
+	@promptBarKeyboardScript()
+}
+
+// promptBarComposerSendButton renders the send action for the composer variant,
+// honouring SubmitLabel/SubmitIcon and becoming type="submit" inside a form.
+templ promptBarComposerSendButton(props PromptBarProps) {
+	{{ sendType := ui.ButtonTypeButton
+	if props.Action != "" {
+		sendType = ui.ButtonTypeSubmit
+	}
+	icon := "lucide--arrow-up"
+	if props.SubmitIcon == "return" {
+		icon = "lucide--corner-down-left"
+	}
+	shape := ui.ButtonShapeSquare
+	extraClass := ""
+	if props.SubmitLabel != "" {
+		shape = ui.ButtonShapeDefault
+		extraClass = "gap-1"
+	}
+	ariaLabel := "Send"
+	if props.SubmitLabel != "" {
+		ariaLabel = props.SubmitLabel
+	} }}
+	@ui.Button(ui.ButtonProps{Type: sendType, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Shape: shape, ExtraClass: extraClass, Attrs: templ.Attributes{"aria-label": ariaLabel, "disabled": props.Loading}}) {
+		if props.Loading {
+			<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
+		} else if props.SubmitLabel == "" {
+			@ui.IconSpan(icon, "size-4")
+		} else {
+			@ui.IconSpan(icon, "size-4")
+			<span>{ props.SubmitLabel }</span>
+		}
+	}
+}
+
+// promptBarStopActionButton renders the stop action while running, wired with
+// an HTMX request when StopAction is set.
+templ promptBarStopActionButton(props PromptBarProps) {
+	{{ stopAttrs := templ.Attributes{"aria-label": "Stop"}
+	stopMethod := props.StopMethod
+	if stopMethod == "" {
+		stopMethod = "post"
+	}
+	if stopMethod == "get" {
+		stopAttrs["hx-get"] = props.StopAction
+	} else if stopMethod == "put" {
+		stopAttrs["hx-put"] = props.StopAction
+	} else if stopMethod == "patch" {
+		stopAttrs["hx-patch"] = props.StopAction
+	} else {
+		stopAttrs["hx-post"] = props.StopAction
+	}
+	if props.StopTarget != "" {
+		stopAttrs["hx-target"] = props.StopTarget
+	}
+	if props.StopSwap != "" {
+		stopAttrs["hx-swap"] = props.StopSwap
+	} }}
+	@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonError, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: stopAttrs}) {
+		@ui.IconSpan("lucide--square", "size-4")
+	}
+}
+
+// promptBarKeyboardScript installs Enter-to-send / Shift+Enter newline and the
+// empty-input guard via document-level event delegation, so any number of
+// composers on one page share a single listener set.
+templ promptBarKeyboardScript() {
+	@promptBarScriptOnce.Once() {
+		<script>
+	if (!window._promptBarInit) {
+		window._promptBarInit = true;
+
+		// ---- slash/mention autocomplete helpers ----
+		function promptBarPopoverFor(ta) {
+			var id = ta.getAttribute("data-prompt-bar-autocomplete");
+			return id ? document.getElementById(id) : null;
+		}
+		function promptBarOptionRows(pop) {
+			return pop.querySelectorAll("[data-prompt-bar-option]");
+		}
+		function promptBarVisibleRows(pop) {
+			var rows = promptBarOptionRows(pop);
+			var visible = [];
+			for (var i = 0; i < rows.length; i++) {
+				if (!rows[i].classList.contains("hidden")) visible.push(rows[i]);
+			}
+			return visible;
+		}
+		function promptBarClose(pop) {
+			pop.classList.add("hidden");
+			var rows = promptBarOptionRows(pop);
+			for (var i = 0; i < rows.length; i++) rows[i].classList.remove("bg-base-200");
+			pop._pbActive = -1;
+			var detail = pop.querySelector("[data-prompt-bar-detail]");
+			if (detail) detail.classList.add("hidden");
+		}
+		function promptBarUpdateDetail(pop, row) {
+			var detail = pop.querySelector("[data-prompt-bar-detail]");
+			if (!detail) return;
+			if (row && (row.getAttribute("data-description") || row.getAttribute("data-detail"))) {
+				detail.classList.remove("hidden");
+				var l = detail.querySelector("[data-prompt-bar-detail-label]");
+				var d = detail.querySelector("[data-prompt-bar-detail-desc]");
+				var h = detail.querySelector("[data-prompt-bar-detail-hint]");
+				if (l) l.textContent = row.getAttribute("data-label") || "";
+				if (d) d.textContent = row.getAttribute("data-description") || "";
+				if (h) h.textContent = row.getAttribute("data-detail") || "";
+			} else {
+				detail.classList.add("hidden");
+			}
+		}
+		function promptBarSetActive(pop, idx) {
+			var rows = promptBarVisibleRows(pop);
+			if (!rows.length) { pop._pbActive = -1; return; }
+			idx = ((idx % rows.length) + rows.length) % rows.length;
+			pop._pbActive = idx;
+			var all = promptBarOptionRows(pop);
+			for (var i = 0; i < all.length; i++) {
+				all[i].classList.toggle("bg-base-200", all[i] === rows[idx]);
+			}
+			promptBarUpdateDetail(pop, rows[idx]);
+		}
+		function promptBarMatchQuery(text) {
+			for (var i = text.length - 1; i >= 0; i--) {
+				var c = text.charAt(i);
+				if (c === "/" || c === "@") {
+					if (i > 0 && !/\s/.test(text.charAt(i - 1))) continue;
+					var query = text.slice(i + 1);
+					if (/[\s\/@]/.test(query)) continue;
+					return { trigger: c, query: query, start: i };
 				}
-				<div class="flex items-center gap-1">
-					if props.ShowVoice {
-						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Voice input", "disabled": props.Loading}}) {
-							@ui.IconSpan("lucide--mic", "size-4 text-base-content/60")
-						}
+				if (/\s/.test(c)) break;
+			}
+			return null;
+		}
+		function promptBarFilter(pop, query) {
+			var q = query.toLowerCase();
+			var trigger = pop._pbTrigger || "";
+			var rows = promptBarOptionRows(pop);
+			var visible = 0;
+			for (var i = 0; i < rows.length; i++) {
+				var row = rows[i];
+				var kind = row.getAttribute("data-kind") || "";
+				var kindOk = true;
+				if (trigger === "/") {
+					kindOk = kind === "" || kind === "command";
+				} else if (trigger === "@") {
+					kindOk = kind === "" || kind === "file" || kind === "directory" || kind === "agent";
+				}
+				var label = (row.getAttribute("data-label") || "").toLowerCase();
+				var value = (row.getAttribute("data-value") || "").toLowerCase();
+				var ok = kindOk && (label.indexOf(q) !== -1 || value.indexOf(q) !== -1);
+				row.classList.toggle("hidden", !ok);
+				if (ok) visible++;
+			}
+			var empty = pop.querySelector("[data-prompt-bar-empty]");
+			if (empty) empty.classList.toggle("hidden", visible > 0);
+			promptBarSetActive(pop, 0);
+		}
+		function promptBarOpen(pop, m) {
+			pop._pbTrigger = m.trigger;
+			pop.classList.remove("hidden");
+			var hxGet = pop.getAttribute("data-prompt-bar-hx-get") || "";
+			if (hxGet && typeof htmx !== "undefined") {
+				var list = pop.querySelector("[data-prompt-bar-options]");
+				var target = pop.getAttribute("data-prompt-bar-hx-target") || list;
+				htmx.ajax("GET", hxGet, { target: target, values: { q: m.query, trigger: m.trigger } });
+			} else {
+				promptBarFilter(pop, m.query);
+			}
+		}
+		function promptBarAccept(pop, ta, row) {
+			var value = row.getAttribute("data-value") || "";
+			var caret = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;
+			var before = ta.value.slice(0, caret);
+			var m = promptBarMatchQuery(before);
+			if (m) {
+				var end = (ta.selectionEnd != null) ? ta.selectionEnd : caret;
+				ta.value = before.slice(0, m.start) + value + " " + ta.value.slice(end);
+				var newCaret = m.start + value.length + 1;
+				ta.setSelectionRange(newCaret, newCaret);
+			}
+			promptBarClose(pop);
+			ta.focus();
+			ta.dispatchEvent(new Event("input", { bubbles: true }));
+		}
+
+		// ---- input: detect trigger + query ----
+		document.addEventListener("input", function (event) {
+			var ta = event.target;
+			if (!(ta instanceof HTMLTextAreaElement) || !ta.hasAttribute("data-prompt-bar-input")) return;
+			var pop = promptBarPopoverFor(ta);
+			if (!pop) return;
+			var caret = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;
+			var m = promptBarMatchQuery(ta.value.slice(0, caret));
+			if (m) {
+				promptBarOpen(pop, m);
+			} else {
+				promptBarClose(pop);
+			}
+		});
+
+		// ---- click: accept a row, or close when clicking outside ----
+		document.addEventListener("click", function (event) {
+			var target = event.target;
+			var row = (target && target.closest) ? target.closest("[data-prompt-bar-option]") : null;
+			if (row) {
+				var pop = row.closest("[data-prompt-bar-autocomplete]");
+				var ta = pop ? pop.parentElement.querySelector("textarea[data-prompt-bar-input]") : null;
+				if (ta && pop) promptBarAccept(pop, ta, row);
+				return;
+			}
+			var pops = document.querySelectorAll("[data-prompt-bar-autocomplete]");
+			for (var i = 0; i < pops.length; i++) {
+				if (!pops[i].classList.contains("hidden") && !pops[i].contains(target)) {
+					promptBarClose(pops[i]);
+				}
+			}
+		});
+
+		// ---- keydown: autocomplete first, then Enter-to-send ----
+		document.addEventListener("keydown", function (event) {
+			if (event.isComposing) return;
+			var ta = event.target;
+			if (ta instanceof HTMLTextAreaElement && ta.hasAttribute("data-prompt-bar-input")) {
+				var pop = promptBarPopoverFor(ta);
+				if (pop && !pop.classList.contains("hidden")) {
+					var rows = promptBarVisibleRows(pop);
+					if (event.key === "ArrowDown") {
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						var cur = (typeof pop._pbActive === "number" && pop._pbActive >= 0) ? pop._pbActive : -1;
+						promptBarSetActive(pop, cur + 1);
+						return;
 					}
-					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Send", "disabled": props.Loading}}) {
-						if props.Loading {
-							<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
-						} else {
-							@ui.IconSpan("lucide--arrow-up", "size-4")
-						}
+					if (event.key === "ArrowUp") {
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						var cur = (typeof pop._pbActive === "number" && pop._pbActive >= 0) ? pop._pbActive : 0;
+						promptBarSetActive(pop, cur - 1);
+						return;
 					}
-				</div>
-			</div>
-		</div>
+					if (event.key === "Enter" || event.key === "Tab") {
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						var active = (typeof pop._pbActive === "number" && pop._pbActive >= 0) ? pop._pbActive : 0;
+						if (rows[active]) promptBarAccept(pop, ta, rows[active]);
+						return;
+					}
+					if (event.key === "Escape") {
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						promptBarClose(pop);
+						return;
+					}
+				}
+			}
+			if (event.key !== "Enter") return;
+			if (event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return;
+			if (!(ta instanceof HTMLTextAreaElement) || !ta.hasAttribute("data-prompt-bar-input")) return;
+			var form = ta.closest("form");
+			if (!form) return;
+			if (form.getAttribute("data-prompt-bar-allow-empty") !== "true" && !ta.value.trim()) {
+				event.preventDefault();
+				return;
+			}
+			event.preventDefault();
+			form.requestSubmit();
+		});
+
+		document.addEventListener("submit", function (event) {
+			var form = event.target;
+			if (!(form instanceof HTMLFormElement)) return;
+			if (form.getAttribute("data-prompt-bar-allow-empty") === "true") return;
+			var ta = form.querySelector("textarea[data-prompt-bar-input]");
+			if (ta && !ta.value.trim()) {
+				event.preventDefault();
+			}
+		}, true);
+	}
+		</script>
+	}
+}
+
+// promptBarDefaultToolbar builds the toolbar for the flagship PromptBar variant.
+// When flagship is true the control groups shrink and truncate inside a single
+// non-wrapping line so the send action stays on the same level as the controls.
+templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
+	{{ featureLabel := "Features"
+	onCount := 0
+	firstLabel := ""
+	for _, f := range props.Features {
+		if f.On {
+			onCount++
+			if firstLabel == "" {
+				firstLabel = f.Label
+			}
+		}
+	}
+	if onCount == 1 {
+		featureLabel = firstLabel
+	} else if onCount > 1 {
+		featureLabel = strconv.Itoa(onCount) + " on"
+	}
+	leftClass := "flex items-center gap-0.5"
+	if flagship {
+		leftClass = "flex min-w-0 flex-1 flex-wrap items-center gap-1 md:flex-nowrap"
+	}
+	rightClass := "flex items-center gap-1"
+	if flagship {
+		rightClass = "flex shrink-0 items-center gap-1"
+	}
+	tokenClass := "text-xs"
+	if flagship {
+		tokenClass = "hidden shrink-0 text-xs sm:inline"
+	} }}
+	<div class={ leftClass }>
+		if props.ShowAttach {
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Attach file", "disabled": props.Loading}}) {
+				@ui.IconSpan("lucide--paperclip", "size-4 text-base-content/60")
+			}
+		}
+		if props.ShowImage {
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Insert image", "disabled": props.Loading}}) {
+				@ui.IconSpan("lucide--image-plus", "size-4 text-base-content/60")
+			}
+		}
+		if len(props.Agents) > 0 {
+			@PromptBarPicker(PromptBarPickerProps{Label: "Agent", Icon: "lucide--bot", Selected: props.SelectedAgent, Name: props.AgentName, Items: props.Agents})
+		}
+		if len(props.Models) > 0 {
+			@PromptBarPicker(PromptBarPickerProps{Label: "Model", Icon: "lucide--cpu", Selected: props.SelectedModel, Name: props.ModelName, Items: props.Models})
+		}
+		if len(props.Modes) > 0 {
+			@PromptBarPicker(PromptBarPickerProps{Label: "Mode", Icon: "lucide--sliders-horizontal", Selected: props.SelectedMode, Name: props.ModeName, Items: props.Modes})
+		}
+		if len(props.Features) > 0 {
+			@PromptBarPicker(PromptBarPickerProps{Label: "Features", Icon: "lucide--sparkles", Selected: featureLabel, Name: props.FeatureName, Features: props.Features})
+		}
+		if props.LeftSlot != nil {
+			@props.LeftSlot
+		}
+	</div>
+	if props.ShowTokenCounter && props.TokenMax > 0 {
+		<span class={ tokenClass }>
+			<span class="text-base-content/80">Tokens:</span>
+			<span class={ templ.KV("text-error font-medium", props.TokenCurrent >= props.TokenMax*80/100) }>{ strconv.Itoa(props.TokenCurrent) }</span>
+			<span class="text-base-content/60">/{ strconv.Itoa(props.TokenMax) }</span>
+		</span>
+	}
+	<div class={ rightClass }>
+		if props.ShowVoice {
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Voice input", "disabled": props.Loading}}) {
+				@ui.IconSpan("lucide--mic", "size-4 text-base-content/60")
+			}
+		}
+		if props.RightSlot != nil {
+			@props.RightSlot
+		}
+		if props.Running {
+			if props.StopAction != "" {
+				@promptBarStopActionButton(props)
+			} else if props.ActiveSlot != nil {
+				@props.ActiveSlot
+			} else {
+				@promptBarStopButton()
+			}
+		} else {
+			@promptBarComposerSendButton(props)
+		}
 	</div>
 }
+
+// ── PromptBarAction ──────────────────────────────────────────────────────────
 
 // PromptBarActionItem is a labelled quick-action button shown above the send button.
 type PromptBarActionItem struct {
@@ -91,33 +1137,23 @@ type PromptBarActionItem struct {
 
 // PromptBarAction renders an AI prompt input with quick-action labelled buttons.
 templ PromptBarAction(placeholder string, actions []PromptBarActionItem, loading bool, attrs templ.Attributes) {
-	<div class="card bg-base-100 card-border w-full max-w-2xl" { devmode.Attrs(ctx, "form/PromptBarAction")... } { attrs... }>
-		<div class="card-body p-3">
-			<textarea
-				class="textarea w-full h-28 resize-none border-0 p-1 text-base focus:outline-none m-0"
-				placeholder={ placeholder }
-				disabled?={ loading }
-			></textarea>
-			<div class="mt-2 flex items-end justify-between">
-				<div class="flex items-center gap-2">
-					for _, action := range actions {
-						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 text-base-content/80 gap-1", Attrs: templ.Attributes{"disabled": loading}}) {
-							<span class={ "iconify size-4", action.Icon } aria-hidden="true"></span>
-							{ action.Label }
-						}
-					}
-				</div>
-				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Send", "disabled": loading}}) {
-					if loading {
-						<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
-					} else {
-						@ui.IconSpan("lucide--arrow-up", "size-4")
-					}
-				}
-			</div>
-		</div>
-	</div>
+	@promptBarCard(placeholder, "", "", 0, loading, promptBarActionToolbar(actions, loading), nil, "w-full max-w-2xl", "mt-2 flex items-end justify-between", attrs, "form/PromptBarAction", false, nil)
 }
+
+// promptBarActionToolbar builds the toolbar for the Action variant.
+templ promptBarActionToolbar(actions []PromptBarActionItem, loading bool) {
+	<div class="flex items-center gap-2">
+		for _, action := range actions {
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 text-base-content/80 gap-1", Attrs: templ.Attributes{"disabled": loading}}) {
+				<span class={ "iconify size-4", action.Icon } aria-hidden="true"></span>
+				{ action.Label }
+			}
+		}
+	</div>
+	@promptBarSendButton(loading)
+}
+
+// ── PromptBarModelSelector ───────────────────────────────────────────────────
 
 // PromptBarModelSelectorItem is a model listed in the model-selector dropdown.
 type PromptBarModelSelectorItem struct {
@@ -164,55 +1200,49 @@ templ PromptBarModelSelector(props PromptBarModelSelectorProps) {
 				</div>
 			</div>
 		}
-		<div class={ "card bg-base-100 card-border", templ.KV("border-t-0 rounded-t-none", props.InfoBanner != "") }>
-			<div class="card-body p-3">
-				<textarea
-					class="textarea w-full h-28 resize-none border-0 p-1 text-base focus:outline-none m-0"
-					placeholder={ props.Placeholder }
-					disabled?={ props.Loading }
-				></textarea>
-				<div class="mt-2 flex items-end justify-between">
-					<div class="flex items-center">
-						if len(props.Models) > 0 {
-							<div class="dropdown dropdown-start">
-								<div tabindex="0" role="button" class="btn btn-sm btn-ghost gap-2" aria-label="Model selector">
-									@ui.IconSpan("lucide--cpu", "size-4 text-base-content/60")
-									<span>{ props.SelectedModel }</span>
-									@ui.IconSpan("lucide--chevron-down", "size-3.5 text-base-content/60")
-								</div>
-								<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow">
-									for _, m := range props.Models {
-										<li>
-											<a>
-												if m.Icon != "" {
-													<span class={ "iconify size-4", m.Icon } aria-hidden="true"></span>
-												}
-												{ m.Label }
-											</a>
-										</li>
-									}
-								</ul>
-							</div>
-						}
-					</div>
-					if props.ShowTokenCounter && props.TokenMax > 0 {
-						<span class="text-xs">
-							<span class={ templ.KV("text-error font-medium", props.TokenCurrent >= props.TokenMax*80/100) }>{ strconv.Itoa(props.TokenCurrent) }</span>
-							<span class="text-base-content/60"> / { strconv.Itoa(props.TokenMax) } tokens</span>
-						</span>
-					}
-					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Send", "disabled": props.Loading}}) {
-						if props.Loading {
-							<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
-						} else {
-							@ui.IconSpan("lucide--arrow-up", "size-4")
-						}
-					}
-				</div>
-			</div>
-		</div>
+		{{ cardClass := ""
+		if props.InfoBanner != "" {
+			cardClass = "border-t-0 rounded-t-none"
+		} }}
+		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarModelSelectorToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "", false, nil)
 	</div>
 }
+
+// promptBarModelSelectorToolbar builds the toolbar for the ModelSelector variant.
+templ promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) {
+	<div class="flex items-center">
+		if len(props.Models) > 0 {
+			<div class="dropdown dropdown-start">
+				<div tabindex="0" role="button" class="btn btn-sm btn-ghost gap-2" aria-label="Model selector">
+					@ui.IconSpan("lucide--cpu", "size-4 text-base-content/60")
+					<span>{ props.SelectedModel }</span>
+					@ui.IconSpan("lucide--chevron-down", "size-3.5 text-base-content/60")
+				</div>
+				<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow">
+					for _, m := range props.Models {
+						<li>
+							<a>
+								if m.Icon != "" {
+									<span class={ "iconify size-4", m.Icon } aria-hidden="true"></span>
+								}
+								{ m.Label }
+							</a>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+	</div>
+	if props.ShowTokenCounter && props.TokenMax > 0 {
+		<span class="text-xs">
+			<span class={ templ.KV("text-error font-medium", props.TokenCurrent >= props.TokenMax*80/100) }>{ strconv.Itoa(props.TokenCurrent) }</span>
+			<span class="text-base-content/60"> / { strconv.Itoa(props.TokenMax) } tokens</span>
+		</span>
+	}
+	@promptBarSendButton(props.Loading)
+}
+
+// ── PromptBarAbility ─────────────────────────────────────────────────────────
 
 // PromptBarAbilityItem is an ability listed in the ability-selector dropdown.
 type PromptBarAbilityItem struct {
@@ -257,46 +1287,38 @@ templ PromptBarAbility(props PromptBarAbilityProps) {
 				}
 			</div>
 		}
-		<div class={ "card bg-base-100 card-border shadow-xs", templ.KV("rounded-t-none border-t-0", props.SavedLabel != "" || props.TokensLeft > 0) }>
-			<div class="card-body p-3">
-				<textarea
-					class="textarea w-full h-28 resize-none border-0 p-1 text-base focus:outline-none m-0"
-					placeholder={ props.Placeholder }
-					disabled?={ props.Loading }
-				></textarea>
-				<div class="mt-2 flex items-end justify-between">
-					<div class="flex items-center gap-0.5">
-						if len(props.Abilities) > 0 {
-							<div class="dropdown dropdown-start">
-								<div tabindex="0" role="button" class="btn btn-sm btn-ghost gap-2" aria-label="Ability selector">
-									@ui.IconSpan("lucide--zap", "size-4 text-base-content/60")
-									<span>{ props.SelectedAbility }</span>
-									@ui.IconSpan("lucide--chevron-down", "size-3.5 text-base-content/60")
-								</div>
-								<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow">
-									for _, a := range props.Abilities {
-										<li>
-											<a>
-												if a.Icon != "" {
-													<span class={ "iconify size-4", a.Icon } aria-hidden="true"></span>
-												}
-												{ a.Label }
-											</a>
-										</li>
-									}
-								</ul>
-							</div>
-						}
-					</div>
-					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Send", "disabled": props.Loading}}) {
-						if props.Loading {
-							<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
-						} else {
-							@ui.IconSpan("lucide--arrow-up", "size-4")
-						}
-					}
-				</div>
-			</div>
-		</div>
+		{{ cardClass := "shadow-xs"
+		if props.SavedLabel != "" || props.TokensLeft > 0 {
+			cardClass += " rounded-t-none border-t-0"
+		} }}
+		@promptBarCard(props.Placeholder, "", "", 0, props.Loading, promptBarAbilityToolbar(props), nil, cardClass, "mt-2 flex items-end justify-between", nil, "", false, nil)
 	</div>
+}
+
+// promptBarAbilityToolbar builds the toolbar for the Ability variant.
+templ promptBarAbilityToolbar(props PromptBarAbilityProps) {
+	<div class="flex items-center gap-0.5">
+		if len(props.Abilities) > 0 {
+			<div class="dropdown dropdown-start">
+				<div tabindex="0" role="button" class="btn btn-sm btn-ghost gap-2" aria-label="Ability selector">
+					@ui.IconSpan("lucide--zap", "size-4 text-base-content/60")
+					<span>{ props.SelectedAbility }</span>
+					@ui.IconSpan("lucide--chevron-down", "size-3.5 text-base-content/60")
+				</div>
+				<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow">
+					for _, a := range props.Abilities {
+						<li>
+							<a>
+								if a.Icon != "" {
+									<span class={ "iconify size-4", a.Icon } aria-hidden="true"></span>
+								}
+								{ a.Label }
+							</a>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+	</div>
+	@promptBarSendButton(props.Loading)
 }
