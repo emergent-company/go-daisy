@@ -234,6 +234,16 @@ func PromptBarPickerWithBoundary(props PromptBarPickerProps) templ.Component {
 	return devmode.ComponentBoundary("PromptBarPicker", PromptBarPicker(props), props)
 }
 
+// PromptBarAttachmentsWithBoundary wraps PromptBarAttachments with a dev-mode component boundary annotation.
+func PromptBarAttachmentsWithBoundary(props PromptBarAttachmentsProps) templ.Component {
+	return devmode.ComponentBoundary("PromptBarAttachments", PromptBarAttachments(props), props)
+}
+
+// PromptBarTracksWithBoundary wraps PromptBarTracks with a dev-mode component boundary annotation.
+func PromptBarTracksWithBoundary(props PromptBarTracksProps) templ.Component {
+	return devmode.ComponentBoundary("PromptBarTracks", PromptBarTracks(props), props)
+}
+
 // PromptBarActionWithBoundary wraps PromptBarAction with a dev-mode component boundary annotation.
 func PromptBarActionWithBoundary(placeholder string, actions []PromptBarActionItem) templ.Component {
 	return devmode.ComponentBoundary("PromptBarAction", PromptBarAction(placeholder, actions, false, nil), map[string]any{

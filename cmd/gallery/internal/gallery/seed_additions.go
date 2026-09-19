@@ -916,6 +916,174 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 					},
 					FrameHeight: "240px",
 				},
+				{
+					Name:        "Full",
+					Description: "Attachments, tracks and pickers composed in one dense prompt bar.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Message the agent…",
+							Action:      "/gallery/render/prompt-bar-composer",
+							Method:      "get",
+							SubmitLabel: "Send",
+							ShowAttach:  true,
+							Attachments: []form.PromptBarAttachmentItem{
+								{Label: "design.png", Subtitle: "2.1 MB", Thumbnail: "https://picsum.photos/96/96", Kind: form.PromptBarAttachmentImage},
+								{Label: "notes.md", Subtitle: "12 KB", Icon: "lucide--file-text", Kind: form.PromptBarAttachmentFile},
+								{Label: "Figma board", Subtitle: "figma.com/board/x1", Icon: "lucide--link", Kind: form.PromptBarAttachmentLink, Href: "#"},
+							},
+							Tracks: []form.PromptBarTrackItem{
+								{
+									Label: "3/5 tasks", Icon: "lucide--list-checks", Title: "Tasks",
+									Rows: []form.PromptBarTrackRow{
+										{Label: "Research", Subtitle: "Complete", Icon: "lucide--circle-check", Done: true},
+										{Label: "Write", Subtitle: "In progress", Icon: "lucide--circle-dot"},
+									},
+								},
+								{
+									Label: "Diff", Icon: "lucide--git-branch", Title: "Changes",
+									Segments: []form.PromptBarTrackSegment{
+										{Text: "+128", Bucket: form.PromptBarTrackDone},
+										{Text: "−42", Bucket: form.PromptBarTrackFailed},
+									},
+								},
+							},
+							Agents: []form.PromptBarPickerItem{
+								{Value: "research", Label: "Research Buddy", Icon: "lucide--bot", Group: "Assistants", Selected: true},
+								{Value: "coder", Label: "Code Companion", Icon: "lucide--code-2", Group: "Assistants"},
+							},
+							SelectedAgent: "Research Buddy",
+							AgentName:     "agent",
+							Models: []form.PromptBarPickerItem{
+								{Value: "gpt-4o", Label: "GPT-4o", Icon: "lucide--cpu", Selected: true},
+								{Value: "claude-3-7", Label: "Claude 3.7 Sonnet", Icon: "lucide--cpu"},
+							},
+							SelectedModel: "GPT-4o",
+							ModelName:     "model",
+							Modes: []form.PromptBarPickerItem{
+								{Value: "chat", Label: "Chat", Icon: "lucide--message-square", Selected: true},
+								{Value: "plan", Label: "Plan", Icon: "lucide--map"},
+							},
+							SelectedMode: "Chat",
+							ModeName:     "mode",
+							Name:         "message",
+						})
+					},
+					FrameHeight: "380px",
+				},
+			},
+		},
+
+		// ── Forms / Prompt Bar — Attachments ──────────────────────────────────
+		{
+			Slug:        "prompt-bar-attachments",
+			Name:        "Prompt Bar — Attachments",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "Paseo-style attachment chips with thumbnail/file/link leading visuals, an optional subtitle, and a hover-reveal remove action.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Tray",
+					Description: "Standalone attachment tray.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarAttachmentsWithBoundary(form.PromptBarAttachmentsProps{
+							Items: []form.PromptBarAttachmentItem{
+								{Label: "hero-shot.png", Subtitle: "2.1 MB", Thumbnail: "https://picsum.photos/96/96", Kind: form.PromptBarAttachmentImage},
+								{Label: "research-notes.md", Subtitle: "12 KB · Markdown", Icon: "lucide--file-text", Kind: form.PromptBarAttachmentFile},
+								{Label: "Figma board", Subtitle: "figma.com/board/x1", Icon: "lucide--link", Kind: form.PromptBarAttachmentLink, Href: "#"},
+								{Label: "Wireframes", Subtitle: "Final revisions after the design review on Tuesday afternoon", Icon: "lucide--file", Kind: form.PromptBarAttachmentFile},
+							},
+						})
+					},
+					FrameHeight: "160px",
+				},
+				{
+					Name:        "In Composer",
+					Description: "The same chips rendered above the PromptBar textarea via Attachments.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Add context…",
+							Attachments: []form.PromptBarAttachmentItem{
+								{Label: "hero-shot.png", Subtitle: "2.1 MB", Thumbnail: "https://picsum.photos/96/96", Kind: form.PromptBarAttachmentImage},
+								{Label: "research-notes.md", Subtitle: "12 KB · Markdown", Icon: "lucide--file-text", Kind: form.PromptBarAttachmentFile},
+								{Label: "Figma board", Subtitle: "figma.com/board/x1", Icon: "lucide--link", Kind: form.PromptBarAttachmentLink, Href: "#"},
+							},
+							ShowAttach: true,
+							Name:       "message",
+						})
+					},
+					FrameHeight: "280px",
+				},
+			},
+		},
+
+		// ── Forms / Prompt Bar — Tracks ───────────────────────────────────────
+		{
+			Slug:        "prompt-bar-tracks",
+			Name:        "Prompt Bar — Tracks",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Prompt Bar",
+			Description: "Ambient status pills floated above the composer — task progress, subagent states, and a diff stat with colour-coded segments.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Rail",
+					Description: "Standalone track rail.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarTracksWithBoundary(form.PromptBarTracksProps{
+							Items: []form.PromptBarTrackItem{
+								{
+									Label: "3/5 tasks", Icon: "lucide--list-checks", Title: "Tasks",
+									Rows: []form.PromptBarTrackRow{
+										{Label: "Research the API", Subtitle: "Complete", Icon: "lucide--circle-check", Done: true},
+										{Label: "Draft the proposal", Subtitle: "In progress", Icon: "lucide--circle-dot"},
+										{Label: "Review changes", Subtitle: "Queued", Icon: "lucide--circle"},
+									},
+								},
+								{
+									Label: "2 subagents", Icon: "lucide--bot", Title: "Subagents",
+									Rows: []form.PromptBarTrackRow{
+										{Label: "explorer", Subtitle: "Scanning the repo", Icon: "lucide--search"},
+										{Label: "reviewer", Subtitle: "Checking the diff", Icon: "lucide--shield-check"},
+									},
+								},
+								{
+									Label: "Diff", Icon: "lucide--git-branch", Title: "Changes",
+									Segments: []form.PromptBarTrackSegment{
+										{Text: "+128", Bucket: form.PromptBarTrackDone},
+										{Text: "−42", Bucket: form.PromptBarTrackFailed},
+									},
+								},
+							},
+						})
+					},
+					FrameHeight: "120px",
+				},
+				{
+					Name:        "Above Composer",
+					Description: "The same pills rendered above a PromptBar via Tracks.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.PromptBarWithBoundary(form.PromptBarProps{
+							Placeholder: "Message the agent…",
+							Tracks: []form.PromptBarTrackItem{
+								{
+									Label: "3/5 tasks", Icon: "lucide--list-checks", Title: "Tasks",
+									Rows: []form.PromptBarTrackRow{
+										{Label: "Research", Icon: "lucide--circle-check", Done: true},
+										{Label: "Write", Icon: "lucide--circle-dot"},
+									},
+								},
+								{
+									Label: "Diff", Icon: "lucide--git-branch",
+									Segments: []form.PromptBarTrackSegment{
+										{Text: "+128", Bucket: form.PromptBarTrackDone},
+										{Text: "−42", Bucket: form.PromptBarTrackFailed},
+									},
+								},
+							},
+							Name: "message",
+						})
+					},
+					FrameHeight: "240px",
+				},
 			},
 		},
 	}

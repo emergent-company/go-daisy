@@ -145,7 +145,7 @@ templ PromptBarPicker(props PromptBarPickerProps) {
 			if props.Icon != "" {
 				@ui.IconSpan(props.Icon, "size-4 shrink-0 text-base-content/60")
 			}
-			<span class="min-w-0 max-w-28 truncate">{ props.Selected }</span>
+			<span class="hidden min-w-0 max-w-28 truncate lg:inline">{ props.Selected }</span>
 			@ui.IconSpan("lucide--chevron-down", "size-3.5 shrink-0 text-base-content/60")
 		</div>
 		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-64 p-2 shadow" role="menu">
@@ -216,6 +216,208 @@ templ promptBarPickerRow(item PromptBarPickerItem) {
 	}
 }
 
+// ── Attachments ──────────────────────────────────────────────────────────────
+
+// PromptBarAttachmentKind selects the chip leading visual.
+type PromptBarAttachmentKind string
+
+const (
+	PromptBarAttachmentImage PromptBarAttachmentKind = "image"
+	PromptBarAttachmentFile  PromptBarAttachmentKind = "file"
+	PromptBarAttachmentLink  PromptBarAttachmentKind = "link"
+)
+
+// PromptBarAttachmentItem is a single chip in the attachment tray.
+type PromptBarAttachmentItem struct {
+	// ID is an optional stable identifier for the chip.
+	ID string
+	// Label is the attachment name.
+	Label string
+	// Subtitle is an optional second line (e.g. file size or URL).
+	Subtitle string
+	// Icon is the Iconify fallback when no Thumbnail is provided.
+	Icon string
+	// Thumbnail is an image URL for a 48x48 preview.
+	Thumbnail string
+	// Href is an optional link target for the label.
+	Href string
+	// Kind selects the leading visual (image thumbnail vs icon chip).
+	Kind PromptBarAttachmentKind
+	// RemoveAttrs lets the caller wire removal (e.g. hx-post/hx-delete + hx-target).
+	RemoveAttrs templ.Attributes
+}
+
+// PromptBarAttachmentsProps configures the PromptBarAttachments tray.
+type PromptBarAttachmentsProps struct {
+	// Items is the list of attachment chips.
+	Items []PromptBarAttachmentItem
+	// Class is appended to the tray root class list.
+	Class string
+	// Attrs are extra HTML attributes spread on the tray root element.
+	Attrs templ.Attributes
+}
+
+// PromptBarAttachments renders a Paseo-style attachment chip tray above the textarea.
+templ PromptBarAttachments(props PromptBarAttachmentsProps) {
+	<div class={ "flex flex-wrap items-center gap-2", templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "form/PromptBarAttachments")... } { props.Attrs... }>
+		for _, item := range props.Items {
+			@promptBarAttachmentChip(item)
+		}
+	</div>
+}
+
+// promptBarAttachmentChip renders a single attachment chip.
+templ promptBarAttachmentChip(item PromptBarAttachmentItem) {
+	<div class="group flex items-center gap-2 rounded-2xl border border-base-300 bg-base-100 p-1.5 pe-2">
+		if item.Kind == PromptBarAttachmentImage && item.Thumbnail != "" {
+			<img class="size-12 rounded-xl object-cover" src={ templ.URL(item.Thumbnail) } alt=""/>
+		} else {
+			<span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-base-200">
+				@ui.IconSpan(item.Icon, "size-5 text-base-content/60")
+			</span>
+		}
+		<span class="flex min-w-0 flex-col">
+			if item.Href != "" {
+				<a href={ templ.URL(item.Href) } class="text-sm">{ item.Label }</a>
+			} else {
+				<span class="text-sm">{ item.Label }</span>
+			}
+			if item.Subtitle != "" {
+				<span class="block text-xs text-base-content/60">{ item.Subtitle }</span>
+			}
+		</span>
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeCircle, Icon: "lucide--x", AriaLabel: "Remove " + item.Label, ExtraClass: "md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100", Attrs: item.RemoveAttrs})
+	</div>
+}
+
+// ── Tracks ───────────────────────────────────────────────────────────────────
+
+// PromptBarTrackBucket drives the status dot colour.
+type PromptBarTrackBucket string
+
+const (
+	PromptBarTrackNone       PromptBarTrackBucket = ""
+	PromptBarTrackRunning    PromptBarTrackBucket = "running"
+	PromptBarTrackNeedsInput PromptBarTrackBucket = "needs_input"
+	PromptBarTrackFailed     PromptBarTrackBucket = "failed"
+	PromptBarTrackAttention  PromptBarTrackBucket = "attention"
+	PromptBarTrackDone       PromptBarTrackBucket = "done"
+)
+
+// PromptBarTrackSegment is a labelled status piece inside a track pill.
+type PromptBarTrackSegment struct {
+	Text   string
+	Bucket PromptBarTrackBucket
+}
+
+// PromptBarTrackRow is a single row in a track pill's dropdown panel.
+type PromptBarTrackRow struct {
+	Label    string
+	Subtitle string
+	Icon     string
+	Done     bool
+}
+
+// PromptBarTrackItem is a single ambient status pill above the composer.
+type PromptBarTrackItem struct {
+	// Label is the pill label, e.g. "3/5 tasks".
+	Label string
+	// Icon is the pill leading icon.
+	Icon string
+	// Segments are coloured status pieces (each with its own bucket).
+	Segments []PromptBarTrackSegment
+	// Title is the dropdown panel heading.
+	Title string
+	// Rows are the dropdown panel rows.
+	Rows []PromptBarTrackRow
+}
+
+// PromptBarTracksProps configures the PromptBarTracks rail.
+type PromptBarTracksProps struct {
+	// Items is the list of track pills.
+	Items []PromptBarTrackItem
+	// Class is appended to the rail root class list.
+	Class string
+	// Attrs are extra HTML attributes spread on the rail root element.
+	Attrs templ.Attributes
+}
+
+// promptBarTrackBucketClass maps a track bucket to its status dot colour class.
+func promptBarTrackBucketClass(bucket PromptBarTrackBucket) string {
+	switch bucket {
+	case PromptBarTrackRunning:
+		return "bg-info"
+	case PromptBarTrackNeedsInput, PromptBarTrackAttention:
+		return "bg-warning"
+	case PromptBarTrackFailed:
+		return "bg-error"
+	case PromptBarTrackDone:
+		return "bg-success"
+	default:
+		return "bg-base-content/30"
+	}
+}
+
+// promptBarTrackDot renders a status dot (or a spinner for the running bucket).
+templ promptBarTrackDot(bucket PromptBarTrackBucket) {
+	if bucket == PromptBarTrackRunning {
+		<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
+	} else {
+		<span class={ "size-2 shrink-0 rounded-full", promptBarTrackBucketClass(bucket) } aria-hidden="true"></span>
+	}
+}
+
+// PromptBarTracks renders an ambient status rail floated above the composer.
+templ PromptBarTracks(props PromptBarTracksProps) {
+	<div class={ "flex flex-wrap items-center gap-2", templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "form/PromptBarTracks")... } { props.Attrs... }>
+		for _, item := range props.Items {
+			@promptBarTrackPill(item)
+		}
+	</div>
+}
+
+// promptBarTrackPill renders a single DaisyUI dropdown status pill.
+templ promptBarTrackPill(item PromptBarTrackItem) {
+	<div class="dropdown dropdown-start">
+		<div tabindex="0" role="button" class="btn btn-sm btn-ghost h-8 min-h-8 gap-2 rounded-2xl border border-base-300 bg-base-100 px-3 font-normal" aria-haspopup="menu">
+			if item.Icon != "" {
+				@ui.IconSpan(item.Icon, "size-4 text-base-content/60")
+			}
+			if item.Label != "" {
+				<span>{ item.Label }</span>
+			}
+			for i, seg := range item.Segments {
+				if i > 0 || item.Label != "" {
+					<span class="text-base-content/40">·</span>
+				}
+				@promptBarTrackDot(seg.Bucket)
+				<span>{ seg.Text }</span>
+			}
+			@ui.IconSpan("lucide--chevron-up", "size-3.5 text-base-content/60")
+		</div>
+		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-80 p-2 shadow" role="menu">
+			if item.Title != "" {
+				<li class="menu-title">{ item.Title }</li>
+			}
+			for _, row := range item.Rows {
+				<li>
+					<a>
+						if row.Icon != "" {
+							@ui.IconSpan(row.Icon, "size-4")
+						}
+						<span class="min-w-0 flex-1">
+							<span class={ "block text-sm", templ.KV("line-through", row.Done) }>{ row.Label }</span>
+							if row.Subtitle != "" {
+								<span class="block text-xs text-base-content/60">{ row.Subtitle }</span>
+							}
+						</span>
+					</a>
+				</li>
+			}
+		</ul>
+	</div>
+}
+
 // ── PromptBar ────────────────────────────────────────────────────────────────
 
 // PromptBarProps configures a PromptBar component.
@@ -273,6 +475,10 @@ type PromptBarProps struct {
 	RightSlot templ.Component
 	// AttachmentSlot renders above the textarea, inside the card.
 	AttachmentSlot templ.Component
+	// Attachments renders a chip tray above the textarea (before AttachmentSlot).
+	Attachments []PromptBarAttachmentItem
+	// Tracks renders an ambient status rail above the card.
+	Tracks []PromptBarTrackItem
 	// ActiveSlot replaces the send button while Running.
 	ActiveSlot templ.Component
 	// Running renders ActiveSlot (or a stop button) instead of send.
@@ -317,20 +523,37 @@ templ PromptBar(props PromptBarProps) {
 	rowClass := "mt-2 flex items-end justify-between"
 	if flagship {
 		rowClass = "mt-2 flex flex-wrap items-end justify-between gap-2 md:flex-nowrap"
+	}
+	topSlot := props.AttachmentSlot
+	if len(props.Attachments) > 0 {
+		topSlot = promptBarTopSlot(props.Attachments, props.AttachmentSlot)
 	} }}
+	if len(props.Tracks) > 0 {
+		@PromptBarTracks(PromptBarTracksProps{Items: props.Tracks})
+	}
 	if props.Action != "" {
-		@promptBarComposerForm(props, flagship, cardClass, rowClass)
+		@promptBarComposerForm(props, flagship, cardClass, rowClass, topSlot)
 	} else if props.AllowEmptySubmit {
-		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), props.AttachmentSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true)
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true)
 		@promptBarKeyboardScript()
 	} else {
-		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), props.AttachmentSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", false)
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", false)
+	}
+}
+
+// promptBarTopSlot composes the attachments tray with the caller's AttachmentSlot.
+templ promptBarTopSlot(attachments []PromptBarAttachmentItem, attachmentSlot templ.Component) {
+	if len(attachments) > 0 {
+		@PromptBarAttachments(PromptBarAttachmentsProps{Items: attachments})
+	}
+	if attachmentSlot != nil {
+		@attachmentSlot
 	}
 }
 
 // promptBarComposerForm wraps the card in a <form> when Action is set and wires
 // the submit method, optional HTMX target/swap, and the Enter-to-send script.
-templ promptBarComposerForm(props PromptBarProps, flagship bool, cardClass string, rowClass string) {
+templ promptBarComposerForm(props PromptBarProps, flagship bool, cardClass string, rowClass string, topSlot templ.Component) {
 	{{ method := props.Method
 	if method == "" {
 		method = "post"
@@ -357,7 +580,7 @@ templ promptBarComposerForm(props PromptBarProps, flagship bool, cardClass strin
 			data-prompt-bar-allow-empty="true"
 		}
 	>
-		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), props.AttachmentSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true)
+		@promptBarCard(props.Placeholder, props.Value, props.Name, props.Rows, props.Loading, promptBarDefaultToolbar(props, flagship), topSlot, cardClass, rowClass, props.Attrs, "form/PromptBar", true)
 	</form>
 	@promptBarKeyboardScript()
 }
@@ -490,7 +713,7 @@ templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
 	}
 	tokenClass := "text-xs"
 	if flagship {
-		tokenClass = "text-xs shrink-0"
+		tokenClass = "hidden shrink-0 text-xs sm:inline"
 	} }}
 	<div class={ leftClass }>
 		if props.ShowAttach {
