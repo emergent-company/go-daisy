@@ -120,6 +120,12 @@ type PromptBarFeatureItem struct {
 	Icon string
 	// On reports whether the capability is enabled.
 	On bool
+	// Toggle, when true, renders the feature as a standalone icon-only toggle
+	// button in the left toolbar group instead of a row in the features dropdown.
+	// The button tints text-success while On and text-base-content/60 otherwise.
+	Toggle bool
+	// AriaLabel overrides the toggle button's aria-label; falls back to Label.
+	AriaLabel string
 }
 
 // PromptBarPickerProps configures the standalone PromptBarPicker dropdown.
@@ -636,7 +642,8 @@ type PromptBarProps struct {
 	Features []PromptBarFeatureItem
 	// FeatureName is the hidden input name for enabled features; "" disables the hidden inputs.
 	FeatureName string
-	// LeftSlot adds extra controls to the left toolbar group, after the pickers.
+	// LeftSlot adds extra controls to the left toolbar group, rendered right after
+	// the model picker and before the mode / feature controls.
 	LeftSlot templ.Component
 	// RightSlot adds extra controls to the right toolbar group, before send.
 	RightSlot templ.Component
@@ -676,8 +683,9 @@ type PromptBarProps struct {
 }
 
 // PromptBar renders a minimal AI prompt / chat input with optional toolbar icons,
-// a token counter, and a send button. Pickers render in toolbar order:
-// agents, models, modes, features, then LeftSlot.
+// a token counter, and a send button. The left toolbar group renders in order:
+// attach/image buttons, agents picker, model picker, LeftSlot, mode picker, then
+// the features dropdown and any Toggle feature buttons.
 templ PromptBar(props PromptBarProps) {
 	{{ flagship := len(props.Agents) > 0 || len(props.Models) > 0 || len(props.Modes) > 0 || len(props.Features) > 0 || props.LeftSlot != nil || props.RightSlot != nil || props.AttachmentSlot != nil || props.Running
 	// When Class is set the caller owns the width: emit w-full plus Class and drop
@@ -756,7 +764,9 @@ templ promptBarComposerForm(props PromptBarProps, flagship bool, cardClass strin
 
 // promptBarComposerSendButton renders the send action for the composer variant,
 // honouring SubmitLabel/SubmitIcon and becoming type="submit" inside a form.
-templ promptBarComposerSendButton(props PromptBarProps) {
+// The flagship (picker) toolbar labels the action "Send message" to match the
+// Paseo composer; legacy variants keep the plain "Send" label.
+templ promptBarComposerSendButton(props PromptBarProps, flagship bool) {
 	{{ sendType := ui.ButtonTypeButton
 	if props.Action != "" {
 		sendType = ui.ButtonTypeSubmit
@@ -772,6 +782,9 @@ templ promptBarComposerSendButton(props PromptBarProps) {
 		extraClass = "gap-1"
 	}
 	ariaLabel := "Send"
+	if flagship {
+		ariaLabel = "Send message"
+	}
 	if props.SubmitLabel != "" {
 		ariaLabel = props.SubmitLabel
 	} }}
@@ -1040,10 +1053,21 @@ templ promptBarKeyboardScript() {
 // When flagship is true the control groups shrink and truncate inside a single
 // non-wrapping line so the send action stays on the same level as the controls.
 templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
-	{{ featureLabel := "Features"
+	{{ // Split features: Toggle features render as standalone icon buttons,
+	// the rest stay in the features dropdown.
+	menuFeatures := []PromptBarFeatureItem{}
+	toggleFeatures := []PromptBarFeatureItem{}
+	for _, f := range props.Features {
+		if f.Toggle {
+			toggleFeatures = append(toggleFeatures, f)
+		} else {
+			menuFeatures = append(menuFeatures, f)
+		}
+	}
+	featureLabel := "Features"
 	onCount := 0
 	firstLabel := ""
-	for _, f := range props.Features {
+	for _, f := range menuFeatures {
 		if f.On {
 			onCount++
 			if firstLabel == "" {
@@ -1055,6 +1079,21 @@ templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
 		featureLabel = firstLabel
 	} else if onCount > 1 {
 		featureLabel = strconv.Itoa(onCount) + " on"
+	}
+	// The combined model selector shows the selected model's provider glyph.
+	modelIcon := "lucide--cpu"
+	for _, m := range props.Models {
+		if m.Selected && m.Icon != "" {
+			modelIcon = m.Icon
+		}
+	}
+	// The flagship attach button uses Paseo's plus glyph and label; legacy keeps
+	// the original paperclip / "Attach file" so its markup stays byte-identical.
+	attachIcon := "lucide--paperclip"
+	attachLabel := "Attach file"
+	if flagship {
+		attachIcon = "lucide--plus"
+		attachLabel = "Add attachment"
 	}
 	leftClass := "flex items-center gap-0.5"
 	if flagship {
@@ -1070,8 +1109,8 @@ templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
 	} }}
 	<div class={ leftClass }>
 		if props.ShowAttach {
-			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Attach file", "disabled": props.Loading}}) {
-				@ui.IconSpan("lucide--paperclip", "size-4 text-base-content/60")
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": attachLabel, "disabled": props.Loading}}) {
+				@ui.IconSpan(attachIcon, "size-4 text-base-content/60")
 			}
 		}
 		if props.ShowImage {
@@ -1083,16 +1122,19 @@ templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
 			@PromptBarPicker(PromptBarPickerProps{Label: "Agent", Icon: "lucide--bot", Selected: props.SelectedAgent, Name: props.AgentName, Items: props.Agents})
 		}
 		if len(props.Models) > 0 {
-			@PromptBarPicker(PromptBarPickerProps{Label: "Model", Icon: "lucide--cpu", Selected: props.SelectedModel, Name: props.ModelName, Items: props.Models})
-		}
-		if len(props.Modes) > 0 {
-			@PromptBarPicker(PromptBarPickerProps{Label: "Mode", Icon: "lucide--sliders-horizontal", Selected: props.SelectedMode, Name: props.ModeName, Items: props.Modes})
-		}
-		if len(props.Features) > 0 {
-			@PromptBarPicker(PromptBarPickerProps{Label: "Features", Icon: "lucide--sparkles", Selected: featureLabel, Name: props.FeatureName, Features: props.Features})
+			@PromptBarPicker(PromptBarPickerProps{Label: "Select model (" + props.SelectedModel + ")", Icon: modelIcon, Selected: props.SelectedModel, Name: props.ModelName, Items: props.Models})
 		}
 		if props.LeftSlot != nil {
 			@props.LeftSlot
+		}
+		if len(props.Modes) > 0 {
+			@PromptBarPicker(PromptBarPickerProps{Label: "Select agent mode (" + props.SelectedMode + ")", Icon: "lucide--bot", Selected: props.SelectedMode, Name: props.ModeName, Items: props.Modes})
+		}
+		if len(menuFeatures) > 0 {
+			@PromptBarPicker(PromptBarPickerProps{Label: "Features", Icon: "lucide--sparkles", Selected: featureLabel, Name: props.FeatureName, Features: menuFeatures})
+		}
+		for _, f := range toggleFeatures {
+			@promptBarFeatureToggle(f)
 		}
 	</div>
 	if props.ShowTokenCounter && props.TokenMax > 0 {
@@ -1120,9 +1162,26 @@ templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
 				@promptBarStopButton()
 			}
 		} else {
-			@promptBarComposerSendButton(props)
+			@promptBarComposerSendButton(props, flagship)
 		}
 	</div>
+}
+
+// promptBarFeatureToggle renders a bare, icon-only feature toggle button for the
+// left toolbar group. Active features tint text-success; inactive use the muted
+// base-content colour. The aria-label falls back to the feature Label.
+templ promptBarFeatureToggle(f PromptBarFeatureItem) {
+	{{ label := f.AriaLabel
+	if label == "" {
+		label = f.Label
+	}
+	color := "text-base-content/60"
+	if f.On {
+		color = "text-success"
+	} }}
+	@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": label}}) {
+		@ui.IconSpan(f.Icon, "size-4", color)
+	}
 }
 
 // ── PromptBarAction ──────────────────────────────────────────────────────────
