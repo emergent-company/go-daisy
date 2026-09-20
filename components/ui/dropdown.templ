@@ -14,8 +14,14 @@ const (
 
 // Dropdown wraps a trigger + dropdown-content menu.
 // attrs is optional; pass nil when not needed.
+//
+// NOTE: no aria-expanded/aria-haspopup here. This is daisyUI's CSS-only
+// (focus/focus-within) dropdown, so the open state has no JS hook to toggle
+// aria-expanded — a static "false" would lie to assistive tech. Callers that
+// need ARIA-complete dropdowns should use AlpineDropdown (which binds
+// aria-expanded to its `open` state on the trigger).
 templ Dropdown(align DropdownAlign, attrs templ.Attributes) {
-	<div class={ "dropdown", templ.KV(string(align), align != "") } aria-expanded="false" aria-haspopup="true" { devmode.Attrs(ctx, "ui/Dropdown")... } { attrs... }>
+	<div class={ "dropdown", templ.KV(string(align), align != "") } { devmode.Attrs(ctx, "ui/Dropdown")... } { attrs... }>
 		{ children... }
 	</div>
 }

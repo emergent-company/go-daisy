@@ -22,6 +22,12 @@ const (
 
 // Dropdown wraps a trigger + dropdown-content menu.
 // attrs is optional; pass nil when not needed.
+//
+// NOTE: no aria-expanded/aria-haspopup here. This is daisyUI's CSS-only
+// (focus/focus-within) dropdown, so the open state has no JS hook to toggle
+// aria-expanded — a static "false" would lie to assistive tech. Callers that
+// need ARIA-complete dropdowns should use AlpineDropdown (which binds
+// aria-expanded to its `open` state on the trigger).
 func Dropdown(align DropdownAlign, attrs templ.Attributes) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -61,7 +67,7 @@ func Dropdown(align DropdownAlign, attrs templ.Attributes) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" aria-expanded=\"false\" aria-haspopup=\"true\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -149,7 +155,7 @@ func DropdownTrigger(label string, variant string, attrs templ.Attributes) templ
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/dropdown.templ`, Line: 27, Col: 9}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/dropdown.templ`, Line: 33, Col: 9}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
