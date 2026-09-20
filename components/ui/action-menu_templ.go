@@ -115,7 +115,7 @@ func ActionMenu(items []ActionMenuItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, " role=\"menu\" class=\"dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-200 z-50 w-44 p-1 mt-1\" style=\"display:none\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, " role=\"menu\" class=\"dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-200 z-50 w-max min-w-44 max-w-[calc(100vw-2rem)] p-1 mt-1\" style=\"display:none\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -125,7 +125,7 @@ func ActionMenu(items []ActionMenuItem) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if item.HXGet != "" {
-				var templ_7745c5c3_Var3 = []any{"flex items-center gap-2 text-sm",
+				var templ_7745c5c3_Var3 = []any{"flex min-w-0 break-words items-center gap-2 text-sm",
 					templ.KV("text-error", item.Danger)}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
 				if templ_7745c5c3_Err != nil {
@@ -249,7 +249,7 @@ func ActionMenu(items []ActionMenuItem) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else if item.HXPost != "" {
-				var templ_7745c5c3_Var11 = []any{"flex items-center gap-2 text-sm",
+				var templ_7745c5c3_Var11 = []any{"flex min-w-0 break-words items-center gap-2 text-sm",
 					templ.KV("text-error", item.Danger)}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var11...)
 				if templ_7745c5c3_Err != nil {
@@ -354,7 +354,7 @@ func ActionMenu(items []ActionMenuItem) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else if item.HXPatch != "" {
-				var templ_7745c5c3_Var18 = []any{"flex items-center gap-2 text-sm",
+				var templ_7745c5c3_Var18 = []any{"flex min-w-0 break-words items-center gap-2 text-sm",
 					templ.KV("text-error", item.Danger)}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var18...)
 				if templ_7745c5c3_Err != nil {
@@ -459,7 +459,7 @@ func ActionMenu(items []ActionMenuItem) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else if item.HXDelete != "" {
-				var templ_7745c5c3_Var25 = []any{"flex items-center gap-2 text-sm",
+				var templ_7745c5c3_Var25 = []any{"flex min-w-0 break-words items-center gap-2 text-sm",
 					templ.KV("text-error", item.Danger)}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var25...)
 				if templ_7745c5c3_Err != nil {
@@ -564,7 +564,7 @@ func ActionMenu(items []ActionMenuItem) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				var templ_7745c5c3_Var32 = []any{"flex items-center gap-2 text-sm",
+				var templ_7745c5c3_Var32 = []any{"flex min-w-0 break-words items-center gap-2 text-sm",
 					templ.KV("text-error", item.Danger)}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var32...)
 				if templ_7745c5c3_Err != nil {

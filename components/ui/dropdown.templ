@@ -32,7 +32,7 @@ templ DropdownTrigger(label string, variant string, attrs templ.Attributes) {
 // DropdownMenu renders the dropdown-content menu list.
 // attrs is optional; pass nil when not needed.
 templ DropdownMenu(attrs templ.Attributes) {
-	<ul tabindex="0" role="menu" class="dropdown-content z-[1] menu menu-sm p-1 bg-base-100 border border-base-200 rounded-box shadow-lg w-40 mt-1" { devmode.Attrs(ctx, "ui/DropdownMenu")... } { attrs... }>
+	<ul tabindex="0" role="menu" class="dropdown-content z-[1] menu menu-sm p-1 bg-base-100 border border-base-200 rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1" { devmode.Attrs(ctx, "ui/DropdownMenu")... } { attrs... }>
 		{ children... }
 	</ul>
 }
@@ -41,7 +41,7 @@ templ DropdownMenu(attrs templ.Attributes) {
 // attrs is optional; pass nil when not needed.
 templ DropdownItem(active bool, danger bool, attrs templ.Attributes) {
 	<li role="none" { devmode.Attrs(ctx, "ui/DropdownItem")... } { attrs... }>
-		<a role="menuitem" class={ templ.KV("active", active), templ.KV("text-error", danger) }>
+		<a role="menuitem" class={ "min-w-0 break-words", templ.KV("active", active), templ.KV("text-error", danger) }>
 			{ children... }
 		</a>
 	</li>
