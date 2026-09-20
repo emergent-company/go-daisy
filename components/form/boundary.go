@@ -218,6 +218,14 @@ func FormToggleWithBoundary(name string, label string, checked bool, errMsg stri
 	})
 }
 
+// ToggleInputWithBoundary wraps ToggleInput with a dev-mode component boundary annotation.
+// gallery:token name,checked,class
+// gallery:hint name:default(toggle)
+// gallery:hint class:default(toggle toggle-sm)
+func ToggleInputWithBoundary(props ToggleInputProps) templ.Component {
+	return devmode.ComponentBoundary("ToggleInput", ToggleInput(props), props)
+}
+
 // PromptBarWithBoundary wraps PromptBar with a dev-mode component boundary annotation.
 // gallery:token placeholder,loading
 // gallery:hint placeholder:default(Ask anything…)

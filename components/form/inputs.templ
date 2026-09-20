@@ -130,6 +130,52 @@ templ Toggle(name string, checked bool, label string) {
 	@checkableInput(name, checked, label, "toggle toggle-primary", false, false, nil, "form/Toggle")
 }
 
+// ToggleInputProps configures a bare toggle input.
+type ToggleInputProps struct {
+	// Name is the form field name emitted as the input's name attribute.
+	Name string
+	// Checked emits the checked attribute when true.
+	Checked bool
+	// Class overrides the default "toggle" class; empty yields "toggle".
+	// Callers pass e.g. "toggle toggle-sm" or "toggle toggle-sm shrink-0".
+	// Unlike the deprecated Toggle, no color class (toggle-primary) is forced.
+	Class string
+	// Value is an optional value attribute, emitted only when non-empty.
+	Value string
+	// Attrs are extra attributes spread onto the input, e.g. aria-label,
+	// data-* hooks, or onchange handlers. The component never forces an id
+	// or a name-derived id; callers opt in via Attrs.
+	Attrs templ.Attributes
+}
+
+// ToggleInput renders a bare DaisyUI toggle <input type="checkbox">: no wrapper
+// <div>, no <label> element, no FieldError. It is the building block for callers
+// that lay out their own row/label around a toggle (the consumer's hand-rolled
+// sites in agent.templ, mcp_servers.templ, objects.templ and schedules.templ).
+//
+// Attribute order is canonical: type, name, value (when non-empty), class,
+// checked (when true), then Attrs in alphabetical key order. A zero-value props
+// struct renders <input type="checkbox" name="" class="toggle"/>.
+//
+// The input is intentionally bare: it does not force toggle-primary (callers
+// pass their own class string), and it does not force an id (several consumer
+// sites have no id at all).
+templ ToggleInput(props ToggleInputProps) {
+	{{ cls := props.Class }}
+	{{ if cls == "" { cls = "toggle" } }}
+	<input
+		type="checkbox"
+		name={ props.Name }
+		if props.Value != "" {
+			value={ props.Value }
+		}
+		class={ cls }
+		checked?={ props.Checked }
+		{ props.Attrs... }
+		{ devmode.Attrs(ctx, "form/ToggleInput")... }
+	/>
+}
+
 // FilterSelect renders a compact, HTMX-aware select for table filter toolbars.
 // Uses a children slot (caller provides <option> elements), no label/error wrapper.
 // Pass class to override width, or empty string for default (w-36).
