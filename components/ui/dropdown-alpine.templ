@@ -41,7 +41,7 @@ templ AlpineDropdownMenu() {
 		{ alpine.Transition()... }
 		{ alpine.On("click.outside", "open = false")... }
 		role="menu"
-		class="dropdown-content z-[1] menu menu-sm p-1 bg-base-100 border border-base-200 rounded-box shadow-lg w-40 mt-1"
+		class="dropdown-content z-[1] menu menu-sm p-1 bg-base-100 border border-base-200 rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1"
 		{ devmode.Attrs(ctx, "ui/AlpineDropdownMenu")... }
 		style="display:none"
 	>
@@ -55,7 +55,7 @@ templ AlpineDropdownItem(active bool, danger bool) {
 		<a
 			role="menuitem"
 			{ alpine.On("click", "open = false")... }
-			class={ templ.KV("active", active), templ.KV("text-error", danger) }
+			class={ "min-w-0 break-words", templ.KV("active", active), templ.KV("text-error", danger) }
 		>
 			{ children... }
 		</a>

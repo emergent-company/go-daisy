@@ -45,7 +45,7 @@ templ ActionMenu(items []ActionMenuItem) {
 			{ alpine.Transition()... }
 			{ alpine.On("click.outside", "open = false")... }
 			role="menu"
-			class="dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-200 z-50 w-44 p-1 mt-1"
+			class="dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-200 z-50 w-max min-w-44 max-w-[calc(100vw-2rem)] p-1 mt-1"
 			style="display:none">
 		for _, item := range items {
 			<li role="presentation">
@@ -61,7 +61,7 @@ templ ActionMenu(items []ActionMenuItem) {
 						href={ templ.URL(item.HXGet) }
 						role="menuitem"
 						{ alpine.On("click", "open = false")... }
-						class={ "flex items-center gap-2 text-sm",
+						class={ "flex min-w-0 break-words items-center gap-2 text-sm",
 							templ.KV("text-error", item.Danger) }
 					>
 						if item.Icon != "" {
@@ -74,7 +74,7 @@ templ ActionMenu(items []ActionMenuItem) {
 						type="button"
 						role="menuitem"
 						{ alpine.On("click", "open = false")... }
-						class={ "flex items-center gap-2 text-sm",
+						class={ "flex min-w-0 break-words items-center gap-2 text-sm",
 							templ.KV("text-error", item.Danger) }
 						hx-post={ item.HXPost }
 						if item.Confirm != "" {
@@ -91,7 +91,7 @@ templ ActionMenu(items []ActionMenuItem) {
 						type="button"
 						role="menuitem"
 						{ alpine.On("click", "open = false")... }
-						class={ "flex items-center gap-2 text-sm",
+						class={ "flex min-w-0 break-words items-center gap-2 text-sm",
 							templ.KV("text-error", item.Danger) }
 						hx-patch={ item.HXPatch }
 						if item.Confirm != "" {
@@ -108,7 +108,7 @@ templ ActionMenu(items []ActionMenuItem) {
 						type="button"
 						role="menuitem"
 						{ alpine.On("click", "open = false")... }
-						class={ "flex items-center gap-2 text-sm",
+						class={ "flex min-w-0 break-words items-center gap-2 text-sm",
 							templ.KV("text-error", item.Danger) }
 						hx-delete={ item.HXDelete }
 						if item.Confirm != "" {
@@ -125,7 +125,7 @@ templ ActionMenu(items []ActionMenuItem) {
 						href={ templ.URL(item.Href) }
 						role="menuitem"
 						{ alpine.On("click", "open = false")... }
-						class={ "flex items-center gap-2 text-sm",
+						class={ "flex min-w-0 break-words items-center gap-2 text-sm",
 							templ.KV("text-error", item.Danger) }
 					>
 						if item.Icon != "" {
