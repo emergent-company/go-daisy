@@ -146,6 +146,9 @@ type PromptBarPickerProps struct {
 	Features []PromptBarFeatureItem
 	// Disabled disables the trigger.
 	Disabled bool
+	// MenuClass lets the caller widen the opened panel (e.g. "w-80"). Empty keeps
+	// today's default of w-64.
+	MenuClass string
 	// Class is appended to the root element's class list.
 	Class string
 	// Attrs are extra HTML attributes spread on the root element.
@@ -170,7 +173,7 @@ templ PromptBarPicker(props PromptBarPickerProps) {
 			<span class="hidden min-w-0 max-w-28 truncate lg:inline">{ props.Selected }</span>
 			@ui.IconSpan("lucide--chevron-down", "size-3.5 shrink-0 text-base-content/60")
 		</div>
-		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-64 p-2 shadow" role="menu">
+		<ul tabindex="0" class={ "dropdown-content menu bg-base-100 rounded-box z-10", templ.KV("w-64", props.MenuClass == ""), templ.KV(props.MenuClass, props.MenuClass != ""), "p-2 shadow" } role="menu">
 			if len(props.Features) > 0 {
 				for _, f := range props.Features {
 					<li>
@@ -1119,7 +1122,7 @@ templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
 			}
 		}
 		if len(props.Agents) > 0 {
-			@PromptBarPicker(PromptBarPickerProps{Label: "Agent", Icon: "lucide--bot", Selected: props.SelectedAgent, Name: props.AgentName, Items: props.Agents})
+			@PromptBarPicker(PromptBarPickerProps{Label: "Agent", Icon: "lucide--bot", Selected: props.SelectedAgent, Name: props.AgentName, Items: props.Agents, MenuClass: "w-80"})
 		}
 		if len(props.Models) > 0 {
 			@PromptBarPicker(PromptBarPickerProps{Label: "Select model (" + props.SelectedModel + ")", Icon: modelIcon, Selected: props.SelectedModel, Name: props.ModelName, Items: props.Models})

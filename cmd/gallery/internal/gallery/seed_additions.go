@@ -647,10 +647,11 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 					Description: "Grouped agent picker with one selected and one disabled row.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return form.PromptBarPickerWithBoundary(form.PromptBarPickerProps{
-							Label:    "Agent",
-							Icon:     "lucide--bot",
-							Selected: "Research Buddy",
-							Name:     "agent",
+							Label:     "Agent",
+							Icon:      "lucide--bot",
+							Selected:  "Research Buddy",
+							Name:      "agent",
+							MenuClass: "w-80",
 							Items: []form.PromptBarPickerItem{
 								{Value: "research", Label: "Research Buddy", Description: "Deep research with citations", Icon: "lucide--bot", Group: "Assistants", Meta: "128k", Selected: true},
 								{Value: "coder", Label: "Code Companion", Description: "Writes and reviews code", Icon: "lucide--code-2", Group: "Assistants"},
@@ -680,12 +681,12 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 						return form.PromptBarWithBoundary(form.PromptBarProps{
 							Placeholder: "Message the agent, tag @files, or use /commands and /skills",
 							Models: []form.PromptBarPickerItem{
-								{Value: "deepseek:v4-flash", Label: "DeepSeek V4 Flash", Icon: "lucide--waves", Group: "DeepSeek", Meta: "1M", Selected: true},
-								{Value: "deepseek:v4", Label: "DeepSeek V4", Icon: "lucide--waves", Group: "DeepSeek", Meta: "1M"},
+								{Value: "deepseek:v4-flash", Label: "DeepSeek V4 Flash", Icon: "lucide--brain-circuit", Group: "DeepSeek", Meta: "1M", Selected: true},
+								{Value: "deepseek:v4", Label: "DeepSeek V4", Icon: "lucide--brain-circuit", Group: "DeepSeek", Meta: "1M"},
 								{Value: "anthropic:claude-sonnet-4.5", Label: "Claude Sonnet 4.5", Icon: "lucide--sparkles", Group: "Anthropic", Meta: "200k"},
 								{Value: "anthropic:claude-haiku", Label: "Claude Haiku", Icon: "lucide--sparkles", Group: "Anthropic", Meta: "200k"},
-								{Value: "openai:gpt-5.4", Label: "GPT-5.4", Icon: "lucide--atom", Group: "OpenAI", Meta: "400k"},
-								{Value: "openai:gpt-5.4-mini", Label: "GPT-5.4 Mini", Icon: "lucide--atom", Group: "OpenAI", Meta: "400k"},
+								{Value: "openai:gpt-5.4", Label: "GPT-5.4", Icon: "lucide--cpu", Group: "OpenAI", Meta: "400k"},
+								{Value: "openai:gpt-5.4-mini", Label: "GPT-5.4 Mini", Icon: "lucide--cpu", Group: "OpenAI", Meta: "400k"},
 							},
 							SelectedModel: "DeepSeek V4 Flash",
 							ModelName:     "model",
@@ -736,12 +737,12 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 						return form.PromptBarWithBoundary(form.PromptBarProps{
 							Placeholder: "Message the agent, tag @files, or use /commands and /skills",
 							Models: []form.PromptBarPickerItem{
-								{Value: "deepseek:v4-flash", Label: "DeepSeek V4 Flash", Icon: "lucide--waves", Group: "DeepSeek", Meta: "1M", Selected: true},
-								{Value: "deepseek:v4", Label: "DeepSeek V4", Icon: "lucide--waves", Group: "DeepSeek", Meta: "1M"},
+								{Value: "deepseek:v4-flash", Label: "DeepSeek V4 Flash", Icon: "lucide--brain-circuit", Group: "DeepSeek", Meta: "1M", Selected: true},
+								{Value: "deepseek:v4", Label: "DeepSeek V4", Icon: "lucide--brain-circuit", Group: "DeepSeek", Meta: "1M"},
 								{Value: "anthropic:claude-sonnet-4.5", Label: "Claude Sonnet 4.5", Icon: "lucide--sparkles", Group: "Anthropic", Meta: "200k"},
 								{Value: "anthropic:claude-haiku", Label: "Claude Haiku", Icon: "lucide--sparkles", Group: "Anthropic", Meta: "200k"},
-								{Value: "openai:gpt-5.4", Label: "GPT-5.4", Icon: "lucide--atom", Group: "OpenAI", Meta: "400k"},
-								{Value: "openai:gpt-5.4-mini", Label: "GPT-5.4 Mini", Icon: "lucide--atom", Group: "OpenAI", Meta: "400k"},
+								{Value: "openai:gpt-5.4", Label: "GPT-5.4", Icon: "lucide--cpu", Group: "OpenAI", Meta: "400k"},
+								{Value: "openai:gpt-5.4-mini", Label: "GPT-5.4 Mini", Icon: "lucide--cpu", Group: "OpenAI", Meta: "400k"},
 							},
 							SelectedModel: "DeepSeek V4 Flash",
 							ModelName:     "model",
