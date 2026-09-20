@@ -30,9 +30,16 @@ templ DropdownTrigger(label string, variant string, attrs templ.Attributes) {
 }
 
 // DropdownMenu renders the dropdown-content menu list.
-// attrs is optional; pass nil when not needed.
+// attrs is optional; pass nil when not needed. A "class" entry in attrs is
+// merged into the default menu classes via twmerge (last-wins conflict
+// resolution), so callers can widen, re-tint, or add scroll constraints.
 templ DropdownMenu(attrs templ.Attributes) {
-	<ul tabindex="0" role="menu" class="dropdown-content z-[1] menu menu-sm p-1 bg-base-100 border border-base-200 rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1" { devmode.Attrs(ctx, "ui/DropdownMenu")... } { attrs... }>
+	{{ extraClass := ""
+	if s, ok := attrs["class"].(string); ok {
+		extraClass = s
+		delete(attrs, "class")
+	} }}
+	<ul tabindex="0" role="menu" class={ twmerge("dropdown-content z-[1] menu menu-sm p-1 bg-base-100 border border-base-200 rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1", extraClass) } { devmode.Attrs(ctx, "ui/DropdownMenu")... } { attrs... }>
 		{ children... }
 	</ul>
 }
