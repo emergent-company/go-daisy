@@ -37,8 +37,13 @@ func ToastQueueInit() string {
 // (id, type, message, duration 4000) plus a paused:false flag, and dismiss()
 // behaves the same. Like ToastQueueInit it grabs the queue from $data so the
 // methods land on the component's data object.
+//
+// A toast with duration <= 0 is persistent: no timer is armed (add()), pause()
+// is a no-op, and resume() does not re-arm — the toast stays until the caller
+// dismisses it (the consumer renders a close button for these). This mirrors
+// ToastQueueInit's `if(item.duration>0)` guard.
 func ToastQueueInitPausable() string {
-	return `let queue=$data;if(!queue.toasts)queue.toasts=[];queue.add=function(t){var item=Object.assign({id:'t'+Date.now()+Math.random().toString(36).slice(2),type:'info',message:'',duration:4000,paused:false},t);item.remaining=item.duration;item.start=Date.now();queue.toasts.push(item);item.timer=setTimeout(function(){queue.dismiss(item.id)},item.remaining)};queue.pause=function(t){if(t.paused)return;t.paused=true;clearTimeout(t.timer);t.remaining-=Date.now()-t.start};queue.resume=function(t){if(!t.paused)return;t.paused=false;t.start=Date.now();t.timer=setTimeout(function(){queue.dismiss(t.id)},t.remaining)};queue.dismiss=function(id){queue.toasts=queue.toasts.filter(function(t){return t.id!==id})}`
+	return `let queue=$data;if(!queue.toasts)queue.toasts=[];queue.add=function(t){var item=Object.assign({id:'t'+Date.now()+Math.random().toString(36).slice(2),type:'info',message:'',duration:4000,paused:false},t);item.remaining=item.duration;item.start=Date.now();queue.toasts.push(item);if(item.remaining>0){item.timer=setTimeout(function(){queue.dismiss(item.id)},item.remaining)}};queue.pause=function(t){if(t.paused||!(t.remaining>0))return;t.paused=true;clearTimeout(t.timer);t.remaining-=Date.now()-t.start};queue.resume=function(t){if(!t.paused)return;t.paused=false;t.start=Date.now();if(t.remaining>0){t.timer=setTimeout(function(){queue.dismiss(t.id)},t.remaining)}};queue.dismiss=function(id){queue.toasts=queue.toasts.filter(function(t){return t.id!==id})}`
 }
 
 // ComboboxInit returns the x-init expression for combobox keyboard navigation,

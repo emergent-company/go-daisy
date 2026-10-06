@@ -61,6 +61,25 @@ func TestToastQueueInitPausableIsValidAlpineExpression(t *testing.T) {
 	}
 }
 
+// TestToastQueueInitPausablePersistentDuration proves duration <= 0 is
+// persistent: add() must not arm a timer, and resume() must not re-arm one.
+// Without the guards a persistent toast (duration 0) would setTimeout(fn, 0)
+// and vanish immediately. Both queues must treat duration <= 0 as persistent.
+func TestToastQueueInitPausablePersistentDuration(t *testing.T) {
+	expr := ToastQueueInitPausable()
+	if !strings.Contains(expr, "if(item.remaining>0)") {
+		t.Errorf("ToastQueueInitPausable add() must guard timer arming with if(item.remaining>0) so duration<=0 is persistent: %s", expr)
+	}
+	if !strings.Contains(expr, "if(t.remaining>0)") {
+		t.Errorf("ToastQueueInitPausable resume() must guard re-arming with if(t.remaining>0): %s", expr)
+	}
+
+	plain := ToastQueueInit()
+	if !strings.Contains(plain, "if(item.duration>0)") {
+		t.Errorf("ToastQueueInit must keep its if(item.duration>0) persistent guard: %s", plain)
+	}
+}
+
 func TestToastItemPausedRemainingOmitWhenZero(t *testing.T) {
 	// New Paused/Remaining fields must not change the marshalled seed payload:
 	// both zero values are omitted, so existing callers' JSON is unchanged.

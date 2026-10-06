@@ -16,6 +16,12 @@ import (
 // ToastQueue renders a fixed-position toast notification area with Alpine.js
 // queue management, auto-dismiss, enter/leave transitions, and click-to-dismiss.
 //
+// A toast with duration <= 0 is persistent: it does not auto-dismiss and renders
+// a close button instead (use it for errors, which the user must acknowledge).
+// Auto-dismissing toasts (duration > 0) keep click-anywhere-to-dismiss and the
+// optional countdown bar; persistent toasts show no bar and are dismissed only
+// via their close button.
+//
 // Push a toast from server via hx-swap-oob:
 //
 //	<div hx-swap-oob="afterbegin" id="toast-queue-dispatch">
@@ -72,8 +78,9 @@ type ToastQueueProps struct {
 	// pausable queue init, which also re-arms the timer on resume).
 	PauseOnHover bool
 	// Countdown renders the per-toast shrinking progress bar (components/css/
-	// custom.css .toast-bar). The bar's animation-duration is driven by the
-	// toast's duration; PauseOnHover toggles animation-play-state.
+	// custom.css .toast-bar) for auto-dismissing toasts. The bar's
+	// animation-duration is driven by the toast's duration; PauseOnHover toggles
+	// animation-play-state. Persistent toasts (duration <= 0) never show a bar.
 	Countdown bool
 }
 
@@ -142,7 +149,7 @@ func ToastQueueWithProps(p ToastQueueProps, seed ...alpine.ToastItem) templ.Comp
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(initExpr)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 65, Col: 19}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 72, Col: 19}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
@@ -160,7 +167,7 @@ func ToastQueueWithProps(p ToastQueueProps, seed ...alpine.ToastItem) templ.Comp
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var6 = []any{"alert shadow-lg cursor-pointer", templ.KV("relative overflow-hidden", countdown)}
+		var templ_7745c5c3_Var6 = []any{"alert shadow-lg", templ.KV("relative overflow-hidden", countdown)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -178,14 +185,14 @@ func ToastQueueWithProps(p ToastQueueProps, seed ...alpine.ToastItem) templ.Comp
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" :class=\"'alert-' + t.type\" x-show=\"true\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" :class=\"'alert-' + t.type + (t.duration > 0 ? ' cursor-pointer' : '')\" x-show=\"true\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue("opacity-0 " + slide)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 74, Col: 51}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 81, Col: 51}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
@@ -198,7 +205,7 @@ func ToastQueueWithProps(p ToastQueueProps, seed ...alpine.ToastItem) templ.Comp
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue("opacity-0 " + slide)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 78, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 85, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 		if templ_7745c5c3_Err != nil {
@@ -214,17 +221,25 @@ func ToastQueueWithProps(p ToastQueueProps, seed ...alpine.ToastItem) templ.Comp
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " @click=\"dismiss(t.id)\" role=\"alert\"><span x-text=\"t.message\"></span><template x-if=\"t.action\"><a class=\"btn btn-xs btn-ghost ml-auto\" x-text=\"t.action\" @click.stop></a></template>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " @click=\"t.duration > 0 && dismiss(t.id)\" role=\"alert\"><span x-text=\"t.message\"></span><template x-if=\"t.action\"><a class=\"btn btn-xs btn-ghost ml-auto\" x-text=\"t.action\" @click.stop></a></template><template x-if=\"t.duration <= 0\"><button type=\"button\" class=\"btn btn-ghost btn-xs btn-circle ml-auto shrink-0\" aria-label=\"Dismiss\" @click.stop=\"dismiss(t.id)\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = IconSpan("lucide--x", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</button></template>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if countdown {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"toast-bar\" :style=\"'animation-duration:' + t.duration + 'ms; animation-play-state:' + (t.paused ? 'paused' : 'running')\"></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<template x-if=\"t.duration > 0\"><div class=\"toast-bar\" :style=\"'animation-duration:' + t.duration + 'ms; animation-play-state:' + (t.paused ? 'paused' : 'running')\"></div></template>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div></template><div id=\"toast-queue-dispatch\" style=\"display:none\"></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div></template><div id=\"toast-queue-dispatch\" style=\"display:none\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
