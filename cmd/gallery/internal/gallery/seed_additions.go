@@ -336,6 +336,21 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 					},
 					FrameHeight: "300px",
 				},
+				{
+					Name:        "Long Message",
+					Description: "Persistent error with a long message and an unbroken token — the message must wrap and the close button must stay visible.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ToastQueueWithPropsWithBoundary(
+							ui.ToastQueueProps{Position: ui.ToastQueueBottomCenter, PauseOnHover: true, Countdown: true},
+							alpine.ToastItem{
+								Type:     "error",
+								Message:  "memory 422 validation_error: no OAuth client configured for provider github (configure an org OAuth client or set SOURCES_OAUTH_GOOGLE_CLIENT_ID/SECRET)",
+								Duration: 0,
+							},
+						)
+					},
+					FrameHeight: "300px",
+				},
 			},
 		},
 

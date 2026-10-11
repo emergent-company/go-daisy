@@ -16,9 +16,9 @@ const (
 // to the default top-right layout (identical to ui.ToastQueue).
 func toastQueuePositionClass(position string) string {
 	if position == ToastQueueBottomCenter {
-		return "fixed bottom-4 left-1/2 z-70 flex w-80 max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-col gap-2 sm:left-auto sm:right-4 sm:translate-x-0"
+		return "fixed bottom-4 left-1/2 z-70 flex w-96 max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-col gap-2 sm:left-auto sm:right-4 sm:translate-x-0"
 	}
-	return "fixed top-4 right-4 z-70 flex flex-col-reverse gap-2 w-80 max-w-[calc(100vw-2rem)]"
+	return "fixed top-4 right-4 z-70 flex flex-col-reverse gap-2 w-96 max-w-[calc(100vw-2rem)]"
 }
 
 // toastQueueSlideClass returns the enter/leave translate class: top-right slides
