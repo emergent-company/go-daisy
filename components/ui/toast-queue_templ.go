@@ -22,6 +22,11 @@ import (
 // optional countdown bar; persistent toasts show no bar and are dismissed only
 // via their close button.
 //
+// Long messages wrap onto multiple lines (including unbroken tokens such as
+// SOURCES_OAUTH_GOOGLE_CLIENT_ID/SECRET) and are vertically capped at the
+// viewport height with scrolling, so the message stays legible and the close
+// button remains visible and clickable.
+//
 // Push a toast from server via hx-swap-oob:
 //
 //	<div hx-swap-oob="afterbegin" id="toast-queue-dispatch">
@@ -149,7 +154,7 @@ func ToastQueueWithProps(p ToastQueueProps, seed ...alpine.ToastItem) templ.Comp
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(initExpr)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 72, Col: 19}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 77, Col: 19}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
@@ -192,7 +197,7 @@ func ToastQueueWithProps(p ToastQueueProps, seed ...alpine.ToastItem) templ.Comp
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue("opacity-0 " + slide)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 81, Col: 51}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 86, Col: 51}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
@@ -205,7 +210,7 @@ func ToastQueueWithProps(p ToastQueueProps, seed ...alpine.ToastItem) templ.Comp
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue("opacity-0 " + slide)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 85, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/toast-queue.templ`, Line: 90, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 		if templ_7745c5c3_Err != nil {
@@ -221,7 +226,7 @@ func ToastQueueWithProps(p ToastQueueProps, seed ...alpine.ToastItem) templ.Comp
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " @click=\"t.duration > 0 && dismiss(t.id)\" role=\"alert\"><span x-text=\"t.message\"></span><template x-if=\"t.action\"><a class=\"btn btn-xs btn-ghost ml-auto\" x-text=\"t.action\" @click.stop></a></template><template x-if=\"t.duration <= 0\"><button type=\"button\" class=\"btn btn-ghost btn-xs btn-circle ml-auto shrink-0\" aria-label=\"Dismiss\" @click.stop=\"dismiss(t.id)\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " @click=\"t.duration > 0 && dismiss(t.id)\" role=\"alert\"><span class=\"min-w-0 wrap-anywhere max-h-[calc(100vh-4rem)] overflow-y-auto\" x-text=\"t.message\"></span><template x-if=\"t.action\"><a class=\"btn btn-xs btn-ghost ml-auto\" x-text=\"t.action\" @click.stop></a></template><template x-if=\"t.duration <= 0\"><button type=\"button\" class=\"btn btn-ghost btn-xs btn-circle ml-auto shrink-0\" aria-label=\"Dismiss\" @click.stop=\"dismiss(t.id)\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

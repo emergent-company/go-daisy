@@ -14,6 +14,11 @@ import (
 // optional countdown bar; persistent toasts show no bar and are dismissed only
 // via their close button.
 //
+// Long messages wrap onto multiple lines (including unbroken tokens such as
+// SOURCES_OAUTH_GOOGLE_CLIENT_ID/SECRET) and are vertically capped at the
+// viewport height with scrolling, so the message stays legible and the close
+// button remains visible and clickable.
+//
 // Push a toast from server via hx-swap-oob:
 //
 //	<div hx-swap-oob="afterbegin" id="toast-queue-dispatch">
@@ -90,7 +95,7 @@ templ ToastQueueWithProps(p ToastQueueProps, seed ...alpine.ToastItem) {
 				@click="t.duration > 0 && dismiss(t.id)"
 				role="alert"
 			>
-				<span x-text="t.message"></span>
+				<span class="min-w-0 wrap-anywhere max-h-[calc(100vh-4rem)] overflow-y-auto" x-text="t.message"></span>
 				<template x-if="t.action">
 					<a class="btn btn-xs btn-ghost ml-auto" x-text="t.action"
 					   @click.stop></a>
