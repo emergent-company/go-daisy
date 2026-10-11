@@ -47,6 +47,11 @@ func Hash() string {
 // the embedded static/ tree in sorted path order.
 //
 // Keep in sync with the //go:generate directive in this file.
+//
+// The two implementations only agree for asset names without whitespace, a
+// backslash, or a leading "-" (xargs would split or sha256sum would escape
+// them). Keep asset names well-behaved; TestStaticFilesHashMatchesCommitted
+// would surface any divergence rather than let it drift silently.
 func computeHash(fsys fs.FS) (string, error) {
 	var paths []string
 	if err := fs.WalkDir(fsys, "static", func(p string, d fs.DirEntry, err error) error {
