@@ -2,17 +2,27 @@
 // the binary without a runtime filesystem dependency.
 //
 // When static files change, run:  go generate ./staticfs/
-// This updates staticfs_hash.go so the Go compiler recompiles the package.
-//go:generate sh -c "find static -type f -exec sha256sum {} + | sha256sum | cut -d' ' -f1 | xargs -I{} printf 'package staticfs\n\nconst staticFilesHash = \"%s\"\n' {} > staticfs_hash.go"
+// This updates staticfs_hash.go so the Go compiler recompiles the package and
+// every cache-busting ?v= changes. The generator is deterministic: it hashes
+// the files in sorted path order, because `find` emits in directory order,
+// which is not stable across checkouts and would otherwise hand the same
+// content two different hashes (or two contents the same hash).
+// TestStaticFilesHashMatchesCommitted pins the committed constant to the FS.
+//
+//go:generate sh -c "find static -type f | LC_ALL=C sort | xargs sha256sum | sha256sum | cut -d' ' -f1 | xargs -I{} printf 'package staticfs\n\nconst staticFilesHash = \"%s\"\n' {} > staticfs_hash.go"
 package staticfs
 
 import (
+	"bytes"
+	"crypto/sha256"
 	"embed"
+	"encoding/hex"
 	"fmt"
 	"html"
 	"io/fs"
 	"net/http"
 	"path"
+	"sort"
 	"strings"
 )
 
@@ -30,6 +40,39 @@ var UseUnminified bool
 // Use for cache-busting query params: /static/js/htmx.js?v=abc123
 func Hash() string {
 	return staticFilesHash[:12]
+}
+
+// computeHash reproduces the go:generate pipeline above, so it can be asserted
+// in a test: sha256 of the concatenated "sha256(file)  path\n" lines, walking
+// the embedded static/ tree in sorted path order.
+//
+// Keep in sync with the //go:generate directive in this file.
+func computeHash(fsys fs.FS) (string, error) {
+	var paths []string
+	if err := fs.WalkDir(fsys, "static", func(p string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !d.IsDir() {
+			paths = append(paths, p)
+		}
+		return nil
+	}); err != nil {
+		return "", err
+	}
+	sort.Strings(paths)
+
+	var buf bytes.Buffer
+	for _, p := range paths {
+		b, err := fs.ReadFile(fsys, p)
+		if err != nil {
+			return "", err
+		}
+		sum := sha256.Sum256(b)
+		fmt.Fprintf(&buf, "%s  %s\n", hex.EncodeToString(sum[:]), p)
+	}
+	total := sha256.Sum256(buf.Bytes())
+	return hex.EncodeToString(total[:]), nil
 }
 
 // Stylesheet returns a <link> tag for a CSS file with cache-busting hash.
