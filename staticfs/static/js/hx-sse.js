@@ -29,6 +29,17 @@
         }
     }
 
+    // cancelReader cancels the current response body without surfacing the
+    // rejection cancel() produces when the stream is already errored. abort()
+    // (see cleanup) errors the body, so a discarded cancel() promise escaped as
+    // "Uncaught (in promise) AbortError: signal is aborted without reason" on
+    // every navigation away from an element holding an hx-sse:connect stream.
+    // An aborted/cancelled stream is a normal end, never an error.
+    // LOCAL PATCH to htmx 4.0.0's hx-sse ext — drop once upstream guards this.
+    function cancelReader(connection) {
+        Promise.resolve(connection?.reader?.cancel?.()).catch(() => {});
+    }
+
     // ========================================
     // SSE PARSER
     // ========================================
@@ -147,7 +158,7 @@
             if (!element.isConnected || reconnectRequested) return;
             reconnectRequested = true;
             if (connection.delayCanceller) connection.delayCanceller();
-            connection.reader?.cancel();
+            cancelReader(connection);
         };
 
         let paused = false;
@@ -157,7 +168,7 @@
             let visibilityHandler = () => {
                 if (document.hidden) {
                     paused = true;
-                    connection.reader?.cancel();
+                    cancelReader(connection);
                 } else if (paused) {
                     paused = false;
                     if (unpauseResolver) unpauseResolver();
@@ -347,7 +358,7 @@
         if (!connection) return;
 
         connection.abortController?.abort();
-        connection.reader?.cancel?.();
+        cancelReader(connection);
         if (connection.delayCanceller) connection.delayCanceller();
         if (connection.visibilityHandler) {
             document.removeEventListener('visibilitychange', connection.visibilityHandler);
