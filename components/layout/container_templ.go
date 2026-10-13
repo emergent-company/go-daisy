@@ -18,6 +18,11 @@ const (
 	ContainerMD ContainerSize = "max-w-4xl"
 	// ContainerLG is a large-width container.
 	ContainerLG ContainerSize = "max-w-6xl"
+	// ContainerFull removes the width cap: the container fills its parent
+	// (minus the responsive padding) instead of centering at a max width. Use
+	// for full-bleed surfaces such as boards that must share all available
+	// horizontal space instead of forcing a horizontal scroll.
+	ContainerFull ContainerSize = "max-w-none"
 )
 
 // Container centers its children in a max-width container with horizontal
