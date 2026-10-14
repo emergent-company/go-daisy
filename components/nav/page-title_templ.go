@@ -38,7 +38,7 @@ func PageTitleMinimal(title string, steps []BreadcrumbItem) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"bg-base-100 rounded-lg border border-base-200 px-4 py-3\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -121,7 +121,7 @@ func PageTitleEditor(steps []BreadcrumbItem, title, subtitle string, actions []P
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"bg-base-100 rounded-lg border border-base-200 px-4 py-3\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -279,7 +279,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		switch style {
 		case "minimal":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -313,7 +313,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "ecommerce":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<div class=\"bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -368,7 +368,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</span></div><hr class=\"border-base-300 h-7 w-px border-e border-dashed max-md:hidden\"><div class=\"flex items-center gap-2 max-md:hidden\"><label class=\"text-sm font-medium\" for=\"status\">Status</label> <select id=\"status\" aria-label=\"Order status\" class=\"select select-sm w-24\"><option>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</span></div><hr class=\"border-line-strong h-7 w-px border-e border-dashed max-md:hidden\"><div class=\"flex items-center gap-2 max-md:hidden\"><label class=\"text-sm font-medium\" for=\"status\">Status</label> <select id=\"status\" aria-label=\"Order status\" class=\"select select-sm w-24\"><option>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -381,7 +381,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</option> <option>Unpaid</option></select></div><hr class=\"border-base-300 h-7 w-px border-e border-dashed\"><div class=\"flex items-center gap-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</option> <option>Unpaid</option></select></div><hr class=\"border-line-strong h-7 w-px border-e border-dashed\"><div class=\"flex items-center gap-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -429,7 +429,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "border-base-300", Attrs: templ.Attributes{"aria-label": "More options"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var15), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "border-line-strong", Attrs: templ.Attributes{"aria-label": "More options"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var15), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -438,7 +438,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "editor":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<div class=\"bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -569,7 +569,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "task":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<div class=\"bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -655,7 +655,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 max-md:btn-square gap-2"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var25), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong max-md:btn-square gap-2"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var25), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -690,7 +690,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "stepper":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -746,7 +746,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 gap-2"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var28), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong gap-2"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var28), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -796,7 +796,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "analytics":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<div class=\"bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -825,7 +825,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</div><div class=\"flex items-center gap-3\"><div class=\"dropdown dropdown-end\"><label tabindex=\"0\" class=\"btn btn-outline btn-sm border-base-300 gap-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</div><div class=\"flex items-center gap-3\"><div class=\"dropdown dropdown-end\"><label tabindex=\"0\" class=\"btn btn-outline btn-sm border-line-strong gap-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -833,7 +833,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<span class=\"max-md:hidden\">Filter</span></label><ul tabindex=\"0\" class=\"dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-40 p-1 border border-base-200 mt-1\"><li><a>This Week</a></li><li><a>This Month</a></li><li><a>This Year</a></li></ul></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<span class=\"max-md:hidden\">Filter</span></label><ul tabindex=\"0\" class=\"dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-40 p-1 border border-line mt-1\"><li><a>This Week</a></li><li><a>This Month</a></li><li><a>This Year</a></li></ul></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -859,7 +859,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 max-md:btn-square gap-2"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var34), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong max-md:btn-square gap-2"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var34), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

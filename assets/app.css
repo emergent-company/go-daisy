@@ -54,6 +54,30 @@
 @source inline("size-{1,2,3,4}");
 @source inline("animate-pulse");
 
+/* Line ladder — consumer-facing utilities. The steps themselves are declared in
+   `components/css/custom.css` (see the note below); these safelist entries exist
+   so a build that serves this compiled bundle, rather than compiling its own,
+   still carries the directional forms and the opacity ramp for consumer markup. */
+@source inline("border-line border-line-strong border-line-translucent");
+@source inline("border-line/{10,20,40,60,80}");
+@source inline("border-t-line border-b-line border-e-line border-s-line");
+@source inline("divide-line divide-line-strong");
+
+/* Line ladder — the named border/rule scale, DECLARED IN
+ * `components/css/custom.css`, NOT HERE.
+ *
+ * `custom.css` is the only go-daisy stylesheet consumers load, and this file
+ * `@import`s it below, so declaring the `@theme` block there makes the ladder
+ * self-installing: any build that imports the component CSS gets the steps
+ * registered and `border-line` utilities that resolve. Declaring it here alone
+ * left consumers holding utilities (and `custom.css` holding `@apply
+ * border-line`) that reference an undefined variable — a hard build error, not a
+ * cosmetic drift. See PR #37.
+ *
+ * Steps, their roles and the measured per-theme presence: §13 of
+ * docs/PATTERNS.md; the full derivation comment sits next to the declaration in
+ * `components/css/custom.css`. */
+
 @theme {
   --font-sans: ui-sans-serif, system-ui, sans-serif;
 

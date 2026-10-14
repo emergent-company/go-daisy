@@ -66,7 +66,7 @@ type DataGridProps struct {
 templ DataGrid(props DataGridProps) {
 	<div
 		id={ "datagrid-" + props.ID }
-		class={ "card bg-base-100 shadow-sm border border-base-200", props.Class }
+		class={ "card bg-base-100 shadow-sm border border-line", props.Class }
 		x-data="dataGridStore()"
 		x-init="init()"
 		hx-on::after:settle="initTree()"
@@ -190,7 +190,7 @@ templ DataGrid(props DataGridProps) {
 
 		<!-- Footer: pagination + count -->
 		if props.TotalPages > 1 {
-			<div class="px-5 pb-5 pt-3 border-t border-base-200">
+			<div class="px-5 pb-5 pt-3 border-t border-line">
 				@ui.PaginationWithProps(ui.PaginationProps{
 					CurrentPage: props.CurrentPage,
 					TotalPages:  props.TotalPages,

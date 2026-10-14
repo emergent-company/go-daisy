@@ -26,7 +26,7 @@ type SectionProps struct {
 	// wrapper — for sections whose branches are not carded (e.g. an error
 	// Alert). Ignored when Empty is true.
 	Raw bool
-	// Rows wraps the children in a divide-y divide-base-200 container inside the
+	// Rows wraps the children in a divide-y divide-line container inside the
 	// card body, for list rows separated by hairlines.
 	Rows bool
 	// Titleless skips the <h2> heading, rendering only the card body (and any
@@ -41,7 +41,7 @@ type SectionProps struct {
 	//   - No <section> and no <h2> are emitted (Titleless is implied).
 	//   - The card path renders CardRaw with CardClass and BodyClass, and when
 	//     Rows is true the children are wrapped in
-	//     <div class="divide-y divide-base-200"> exactly as the card path does.
+	//     <div class="divide-y divide-line"> exactly as the card path does.
 	//   - Margin is applied to the card element instead of the now-absent section
 	//     wrapper, so outer spacing is preserved.
 	//   - Empty is still honoured: when Empty is true, the default empty-state
@@ -83,7 +83,7 @@ templ Section(title string, props SectionProps) {
 			if props.Margin != "" { cardClass += " " + props.Margin } }}
 			@CardRaw(cardClass, props.BodyClass, nil) {
 				if props.Rows {
-					<div class="divide-y divide-base-200">
+					<div class="divide-y divide-line">
 						{ children... }
 					</div>
 				} else {
@@ -107,7 +107,7 @@ templ Section(title string, props SectionProps) {
 				if props.CardClass != "" { cardClass = props.CardClass } }}
 				@CardRaw(cardClass, props.BodyClass, nil) {
 					if props.Rows {
-						<div class="divide-y divide-base-200">
+						<div class="divide-y divide-line">
 							{ children... }
 						</div>
 					} else {

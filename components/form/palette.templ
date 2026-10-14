@@ -71,21 +71,21 @@ templ Palette(props PaletteProps) {
 			<div class="flex gap-1 flex-wrap">
 				<button
 					type="button"
-					class="w-7 h-7 rounded border border-base-300 bg-white"
+					class="w-7 h-7 rounded border border-line-strong bg-white"
 					title="White"
 					@click={ "picked = 'white'; $dispatch('palette-pick', {value: 'white'})" }
 					aria-label="Pick white"
 				></button>
 				<button
 					type="button"
-					class="w-7 h-7 rounded border border-base-300 bg-black"
+					class="w-7 h-7 rounded border border-line-strong bg-black"
 					title="Black"
 					@click={ "picked = 'black'; $dispatch('palette-pick', {value: 'black'})" }
 					aria-label="Pick black"
 				></button>
 				<button
 					type="button"
-					class="w-7 h-7 rounded border border-base-300"
+					class="w-7 h-7 rounded border border-line-strong"
 					style="background: transparent"
 					title="Transparent"
 					@click={ "picked = 'transparent'; $dispatch('palette-pick', {value: 'transparent'})" }
@@ -101,7 +101,7 @@ templ Palette(props PaletteProps) {
 					}
 					<button
 						type="button"
-						class="w-7 h-7 rounded border border-base-300"
+						class="w-7 h-7 rounded border border-line-strong"
 						style={ "background:" + hue }
 						title={ hue }
 						@click={ "picked = '" + hue + "'; $dispatch('palette-pick', {value: '" + hue + "'})" }
@@ -122,7 +122,7 @@ templ Palette(props PaletteProps) {
 		}}
 					<button
 						type="button"
-						class={ "w-7 h-7 rounded border border-base-300 rounded-btn", tailwindColorClass(hue, shade) }
+						class={ "w-7 h-7 rounded border border-line-strong rounded-btn", tailwindColorClass(hue, shade) }
 						title={ title }
 						@click={ "picked = '" + pickVal + "'; $dispatch('palette-pick', {value: '" + pickVal + "'})" }
 						aria-label={ "Pick " + hue + "-" + shade }

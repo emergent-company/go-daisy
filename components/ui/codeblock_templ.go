@@ -61,7 +61,7 @@ func CodeBlock(props CodeBlockProps) templ.Component {
 		if label == "" {
 			label = "Code"
 		}
-		var templ_7745c5c3_Var2 = []any{"code-block-root relative border border-base-200 rounded-box overflow-hidden", templ.KV(props.Class, props.Class != "")}
+		var templ_7745c5c3_Var2 = []any{"code-block-root relative border border-line rounded-box overflow-hidden", templ.KV(props.Class, props.Class != "")}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -91,7 +91,7 @@ func CodeBlock(props CodeBlockProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "><div class=\"flex items-center justify-between px-4 py-2 bg-base-200/50 border-b border-base-200\"><span class=\"text-xs font-mono text-base-content/60 select-none\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "><div class=\"flex items-center justify-between px-4 py-2 bg-base-200/50 border-b border-line\"><span class=\"text-xs font-mono text-base-content/60 select-none\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

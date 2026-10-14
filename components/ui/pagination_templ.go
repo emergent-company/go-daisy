@@ -83,7 +83,7 @@ func PaginationWithProps(props PaginationProps) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		if props.TotalPages > 1 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-base-200 flex flex-wrap items-center justify-between gap-2 border-t border-dashed p-5\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"border-line flex flex-wrap items-center justify-between gap-2 border-t border-dashed p-5\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -263,7 +263,7 @@ func squaredButtons(props PaginationProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var8 = []any{"btn btn-square btn-sm btn-outline border-base-300 join-item",
+		var templ_7745c5c3_Var8 = []any{"btn btn-square btn-sm btn-outline border-line-strong join-item",
 			templ.KV("btn-disabled", props.CurrentPage <= 1)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var8...)
 		if templ_7745c5c3_Err != nil {
@@ -344,7 +344,7 @@ func squaredButtons(props PaginationProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for p := 1; p <= props.TotalPages; p++ {
-			var templ_7745c5c3_Var13 = []any{"btn btn-square btn-sm btn-outline border-base-300 join-item",
+			var templ_7745c5c3_Var13 = []any{"btn btn-square btn-sm btn-outline border-line-strong join-item",
 				templ.KV("btn-active", p == props.CurrentPage)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var13...)
 			if templ_7745c5c3_Err != nil {
@@ -420,7 +420,7 @@ func squaredButtons(props PaginationProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		var templ_7745c5c3_Var19 = []any{"btn btn-square btn-sm btn-outline border-base-300 join-item",
+		var templ_7745c5c3_Var19 = []any{"btn btn-square btn-sm btn-outline border-line-strong join-item",
 			templ.KV("btn-disabled", props.CurrentPage >= props.TotalPages)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var19...)
 		if templ_7745c5c3_Err != nil {

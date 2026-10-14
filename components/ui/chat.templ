@@ -33,7 +33,7 @@ templ ChatBubble(sent bool, author string, timestamp string, avatarSrc string, b
 		<div class={ "chat-bubble relative", bubbleClass }>
 			{ children... }
 			if showActions {
-				<div class="border-base-300 bg-base-100 absolute end-2 -bottom-8 z-10 flex scale-90 items-center gap-1.5 rounded-full border px-3 py-2 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100">
+				<div class="border-line-strong bg-base-100 absolute end-2 -bottom-8 z-10 flex scale-90 items-center gap-1.5 rounded-full border px-3 py-2 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100">
 					@Button(ButtonProps{Type: ButtonTypeButton, Size: ButtonXS}) { Regenerate }
 					@Button(ButtonProps{Type: ButtonTypeButton, Size: ButtonXS}) { Copy }
 					@Button(ButtonProps{Type: ButtonTypeButton, Variant: ButtonError, Size: ButtonXS, Shape: ButtonShapeCircle, ExtraClass: "btn-ghost", Attrs: templ.Attributes{"aria-label": "Dislike"}}) {

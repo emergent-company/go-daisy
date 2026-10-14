@@ -292,7 +292,7 @@ func tabsServer(props TabsProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if item.Content != nil {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div role=\"tabpanel\" class=\"tab-content border-base-300 bg-base-100 p-6\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div role=\"tabpanel\" class=\"tab-content border-line bg-base-100 p-6\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -488,7 +488,7 @@ func tabsClient(props TabsProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "\" role=\"tabpanel\" class=\"tab-content border-base-300 bg-base-100 p-6\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "\" role=\"tabpanel\" class=\"tab-content border-line bg-base-100 p-6\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -700,7 +700,7 @@ func tabsStimulus(props TabsProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "\" role=\"tabpanel\" class=\"tab-content border-base-300 bg-base-100 p-6\" style=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "\" role=\"tabpanel\" class=\"tab-content border-line bg-base-100 p-6\" style=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

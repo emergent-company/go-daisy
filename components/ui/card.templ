@@ -31,7 +31,7 @@ templ CardRaw(cardClass string, bodyClass string, attrs templ.Attributes, as ...
 templ Card(title string, attrs templ.Attributes, compact ...bool) {
 	{{ isCompact := false
 	if len(compact) > 0 { isCompact = compact[0] } }}
-	<div class="card bg-base-100 border border-base-200 shadow-sm" { devmode.Attrs(ctx, "ui/Card")... } { attrs... }>
+	<div class="card bg-base-100 border border-line shadow-sm" { devmode.Attrs(ctx, "ui/Card")... } { attrs... }>
 		<div class={ "card-body", templ.KV("p-4", !isCompact), templ.KV("p-3 gap-2", isCompact) }>
 			if title != "" {
 				<h2 class="card-title text-base font-semibold text-base-content mb-3">{ title }</h2>
@@ -48,7 +48,7 @@ templ CardBodyText(text string) {
 
 // CardPlaceholder renders a small labelled card placeholder for examples and gallery stories.
 templ CardPlaceholder(label string) {
-	<div class="card bg-base-100 border border-base-200 w-32 h-16 flex items-center justify-center text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/CardPlaceholder")... }>{ label }</div>
+	<div class="card bg-base-100 border border-line w-32 h-16 flex items-center justify-center text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/CardPlaceholder")... }>{ label }</div>
 }
 
 // CardCompact renders a compact DaisyUI card with tighter padding.
@@ -118,7 +118,7 @@ type StatCardMinimalItem struct {
 // floating icon badge and a soft trend pill; otherwise as the minimal layout.
 templ StatCardMinimal(item StatCardMinimalItem) {
 	if item.Icon != "" {
-		<div class="card bg-base-100 relative shadow-sm border border-base-200" { devmode.Attrs(ctx, "ui/StatCardMinimal")... } { item.Attrs... }>
+		<div class="card bg-base-100 relative shadow-sm border border-line" { devmode.Attrs(ctx, "ui/StatCardMinimal")... } { item.Attrs... }>
 			<div class="card-body gap-2">
 				<p class="text-2xl/none font-semibold">{ item.Value }</p>
 				<p class="text-base-content/60 mt-1 text-sm font-medium">{ item.Label }</p>

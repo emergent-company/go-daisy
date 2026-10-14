@@ -32,7 +32,7 @@ func GalleryIndex() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col items-center justify-center h-full min-h-[60vh] gap-6 p-8 text-center\"><div class=\"flex flex-col items-center gap-3\"><div class=\"border-base-300 bg-base-100 rounded-2xl flex size-16 items-center justify-center border shadow-sm\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col items-center justify-center h-full min-h-[60vh] gap-6 p-8 text-center\"><div class=\"flex flex-col items-center gap-3\"><div class=\"border-line-strong bg-base-100 rounded-2xl flex size-16 items-center justify-center border shadow-sm\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -34,7 +34,7 @@ type SectionProps struct {
 	// wrapper — for sections whose branches are not carded (e.g. an error
 	// Alert). Ignored when Empty is true.
 	Raw bool
-	// Rows wraps the children in a divide-y divide-base-200 container inside the
+	// Rows wraps the children in a divide-y divide-line container inside the
 	// card body, for list rows separated by hairlines.
 	Rows bool
 	// Titleless skips the <h2> heading, rendering only the card body (and any
@@ -49,7 +49,7 @@ type SectionProps struct {
 	//   - No <section> and no <h2> are emitted (Titleless is implied).
 	//   - The card path renders CardRaw with CardClass and BodyClass, and when
 	//     Rows is true the children are wrapped in
-	//     <div class="divide-y divide-base-200"> exactly as the card path does.
+	//     <div class="divide-y divide-line"> exactly as the card path does.
 	//   - Margin is applied to the card element instead of the now-absent section
 	//     wrapper, so outer spacing is preserved.
 	//   - Empty is still honoured: when Empty is true, the default empty-state
@@ -147,7 +147,7 @@ func Section(title string, props SectionProps) templ.Component {
 					}
 					ctx = templ.InitializeContext(ctx)
 					if props.Rows {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"divide-y divide-base-200\">")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"divide-y divide-line\">")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
@@ -268,7 +268,7 @@ func Section(title string, props SectionProps) templ.Component {
 					}
 					ctx = templ.InitializeContext(ctx)
 					if props.Rows {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"divide-y divide-base-200\">")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"divide-y divide-line\">")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}

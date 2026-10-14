@@ -92,7 +92,7 @@ func DataGrid(props DataGridProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{"card bg-base-100 shadow-sm border border-base-200", props.Class}
+		var templ_7745c5c3_Var2 = []any{"card bg-base-100 shadow-sm border border-line", props.Class}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -569,7 +569,7 @@ func DataGrid(props DataGridProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if props.TotalPages > 1 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"px-5 pb-5 pt-3 border-t border-base-200\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"px-5 pb-5 pt-3 border-t border-line\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

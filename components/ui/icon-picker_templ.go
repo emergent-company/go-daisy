@@ -336,7 +336,7 @@ func IconPicker(props IconPickerProps) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"sticky top-0 z-10 -mx-2 -mt-2 mb-2 border-b border-base-200 bg-base-100 px-2 py-2\"><div class=\"relative\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"sticky top-0 z-10 -mx-2 -mt-2 mb-2 border-b border-line bg-base-100 px-2 py-2\"><div class=\"relative\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -712,7 +712,7 @@ func IconPicker(props IconPickerProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</p><div class=\"mt-2 border-t border-base-200 pt-2\"><button type=\"button\" data-gd-icon-reset class=\"btn btn-ghost btn-xs w-full\" style=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</p><div class=\"mt-2 border-t border-line pt-2\"><button type=\"button\" data-gd-icon-reset class=\"btn btn-ghost btn-xs w-full\" style=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

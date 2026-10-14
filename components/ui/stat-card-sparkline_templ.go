@@ -234,7 +234,7 @@ func StatCardSparkline(props StatCardSparklineProps) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = CardRaw("border border-base-content/10 shadow-sm h-full", "p-4 flex flex-col gap-3 h-full", props.Attrs).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = CardRaw("border border-line shadow-sm h-full", "p-4 flex flex-col gap-3 h-full", props.Attrs).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

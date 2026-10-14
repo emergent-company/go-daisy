@@ -854,7 +854,7 @@ func SidebarAvatarDropdown(avatarSrc string, avatarAlt string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "Help</a></li></ul><hr class=\"border-base-300\"><ul class=\"menu w-full p-2\"><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "Help</a></li></ul><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -899,7 +899,7 @@ func SidebarPromoCard(daysLeft int, message string) templ.Component {
 			templ_7745c5c3_Var43 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "<div class=\"border-base-200 rounded-box relative mx-3 mb-3 mt-auto border p-3\"><p class=\"font-medium\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "<div class=\"border-line rounded-box relative mx-3 mb-3 mt-auto border p-3\"><p class=\"font-medium\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1000,7 +1000,7 @@ func SidebarSearchInput(placeholder string, showKbd bool) templ.Component {
 			templ_7745c5c3_Var48 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "<div class=\"input input-sm w-full border-base-300\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "<div class=\"input input-sm w-full border-line-strong\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1026,14 +1026,14 @@ func SidebarSearchInput(placeholder string, showKbd bool) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if showKbd {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "<div class=\"border-base-300 bg-base-200 rounded-box px-1 text-[10px]\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "<div class=\"border-line-strong bg-base-200 rounded-box px-1 text-[10px]\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var50 string
 			templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.JoinStringErrs("\u2318K")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar-elements.templ`, Line: 151, Col: 84}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar-elements.templ`, Line: 151, Col: 87}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var50))
 			if templ_7745c5c3_Err != nil {
@@ -1073,7 +1073,7 @@ func SidebarProjectSwitcher(items []SidebarProjectItem) templ.Component {
 			templ_7745c5c3_Var51 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "<div class=\"dropdown w-full\"><label tabindex=\"0\" class=\"btn btn-outline border-base-300 btn-sm w-full justify-between gap-2 font-normal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "<div class=\"dropdown w-full\"><label tabindex=\"0\" class=\"btn btn-outline border-line-strong btn-sm w-full justify-between gap-2 font-normal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1102,7 +1102,7 @@ func SidebarProjectSwitcher(items []SidebarProjectItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "</label><ul tabindex=\"0\" class=\"dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-full p-1 border border-base-content/10 mt-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "</label><ul tabindex=\"0\" class=\"dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-full p-1 border border-line mt-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1189,7 +1189,7 @@ func SidebarMeetingBar(participants []string, meetingLabel string) templ.Compone
 			templ_7745c5c3_Var57 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "<div class=\"border-base-200 mx-3 mb-3 mt-auto rounded-box border p-3\"><div class=\"flex items-center gap-2\"><div class=\"flex -space-x-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "<div class=\"border-line mx-3 mb-3 mt-auto rounded-box border p-3\"><div class=\"flex items-center gap-2\"><div class=\"flex -space-x-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1581,7 +1581,7 @@ func SidebarVersionSwitcher(versions []string, current string) templ.Component {
 			templ_7745c5c3_Var79 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, "<div class=\"dropdown w-full\"><label tabindex=\"0\" class=\"btn btn-outline border-base-300 btn-xs w-full justify-between gap-2 font-normal\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, "<div class=\"dropdown w-full\"><label tabindex=\"0\" class=\"btn btn-outline border-line-strong btn-xs w-full justify-between gap-2 font-normal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1610,7 +1610,7 @@ func SidebarVersionSwitcher(versions []string, current string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, "</label><ul tabindex=\"0\" class=\"dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-full p-1 border border-base-content/10 mt-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, "</label><ul tabindex=\"0\" class=\"dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-full p-1 border border-line mt-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1684,7 +1684,7 @@ func SidebarDocCard(icon string, title string, desc string, bgClass string) temp
 			templ_7745c5c3_Var84 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "<div class=\"rounded-box border border-base-200 p-3\"><div class=\"flex items-center gap-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "<div class=\"rounded-box border border-line p-3\"><div class=\"flex items-center gap-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1783,7 +1783,7 @@ func SidebarDivider() templ.Component {
 			templ_7745c5c3_Var91 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 131, "<div class=\"border-base-200 mx-2.5 my-4 border-t\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 131, "<div class=\"border-line mx-2.5 my-4 border-t\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

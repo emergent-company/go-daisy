@@ -264,7 +264,7 @@ func PopoverContent(props ...PopoverContentProps) templ.Component {
 		if p.Offset == 0 {
 			p.Offset = 8
 		}
-		var templ_7745c5c3_Var9 = []any{"z-50 rounded-box bg-base-100 border border-base-200 shadow-lg p-0",
+		var templ_7745c5c3_Var9 = []any{"z-50 rounded-box bg-base-100 border border-line shadow-lg p-0",
 			"m-0 [&:popover-open]:opacity-100 opacity-0 transition-opacity duration-150",
 			p.Class,
 		}
@@ -344,7 +344,7 @@ func PopoverContent(props ...PopoverContentProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if p.ShowArrow {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<div data-gd-popover-arrow class=\"absolute size-2 rotate-45 bg-inherit border-b border-r border-base-200 [&:popover-open]:opacity-100 opacity-0\"></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<div data-gd-popover-arrow class=\"absolute size-2 rotate-45 bg-inherit border-b border-r border-line [&:popover-open]:opacity-100 opacity-0\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

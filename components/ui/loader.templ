@@ -59,30 +59,30 @@ templ SkeletonDashboard(blocks []SkeletonDashboardBlock) {
 			<!-- default layout -->
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
 				for range [4]struct{}{} {
-					<div class="border-base-300/80 bg-base-200/20 rounded-box flex h-28 flex-col items-center justify-center border border-dashed text-center">
+					<div class="border-line-strong/80 bg-base-200/20 rounded-box flex h-28 flex-col items-center justify-center border border-dashed text-center">
 						<p class="text-base-content/80 font-medium text-sm">Stats</p>
 						<p class="text-base-content/50 text-xs">1 / 4</p>
 					</div>
 				}
 			</div>
 			<div class="grid grid-cols-12 gap-4">
-				<div class="border-base-300/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-8">
+				<div class="border-line-strong/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-8">
 					<p class="text-base-content/80 font-medium text-sm">Primary Chart</p>
 					<p class="text-base-content/50 text-xs">8 / 12</p>
 				</div>
-				<div class="border-base-300/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-4">
+				<div class="border-line-strong/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-4">
 					<p class="text-base-content/80 font-medium text-sm">Side Panel</p>
 					<p class="text-base-content/50 text-xs">4 / 12</p>
 				</div>
 			</div>
-			<div class="border-base-300/80 bg-base-200/20 rounded-box flex h-48 flex-col items-center justify-center border border-dashed text-center">
+			<div class="border-line-strong/80 bg-base-200/20 rounded-box flex h-48 flex-col items-center justify-center border border-dashed text-center">
 				<p class="text-base-content/80 font-medium text-sm">Full-Width Table</p>
 				<p class="text-base-content/50 text-xs">12 / 12</p>
 			</div>
 		} else {
 			<div class="grid grid-cols-12 gap-4">
 				for _, b := range blocks {
-					<div class={ "border-base-300/80 bg-base-200/20 rounded-box flex flex-col items-center justify-center border border-dashed text-center", b.ColSpan, b.Height }>
+					<div class={ "border-line-strong/80 bg-base-200/20 rounded-box flex flex-col items-center justify-center border border-dashed text-center", b.ColSpan, b.Height }>
 						<p class="text-base-content/80 font-medium text-sm">{ b.Label }</p>
 					</div>
 				}

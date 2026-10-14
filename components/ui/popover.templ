@@ -108,7 +108,7 @@ templ PopoverContent(props ...PopoverContentProps) {
 		data-gd-popover-placement={ string(p.Placement) }
 		data-gd-popover-offset={ strconv.Itoa(p.Offset) }
 		class={
-			"z-50 rounded-box bg-base-100 border border-base-200 shadow-lg p-0",
+			"z-50 rounded-box bg-base-100 border border-line shadow-lg p-0",
 			"m-0 [&:popover-open]:opacity-100 opacity-0 transition-opacity duration-150",
 			p.Class,
 		}
@@ -125,7 +125,7 @@ templ PopoverContent(props ...PopoverContentProps) {
 		if p.ShowArrow {
 			<div
 				data-gd-popover-arrow
-				class="absolute size-2 rotate-45 bg-inherit border-b border-r border-base-200 [&:popover-open]:opacity-100 opacity-0"
+				class="absolute size-2 rotate-45 bg-inherit border-b border-r border-line [&:popover-open]:opacity-100 opacity-0"
 			></div>
 		}
 	</div>

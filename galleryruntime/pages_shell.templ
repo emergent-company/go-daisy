@@ -135,7 +135,7 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 						</div>
 					}
 					<!-- SDK Documentation link -->
-					<div class="border-base-200 border-t pt-2 mt-2">
+					<div class="border-line border-t pt-2 mt-2">
 						<a
 							href="/gallery/docs"
 							hx-get="/gallery/docs"
@@ -151,7 +151,7 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 					</div>
 				</div>
 				<!-- Footer note -->
-				<div class="border-base-200 px-3 py-3 border-t shrink-0">
+				<div class="border-line px-3 py-3 border-t shrink-0">
 					<p class="text-xs text-base-content/40 text-center">DaisyUI component gallery</p>
 				</div>
 			</div>
@@ -159,13 +159,13 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 			<div class="flex min-w-0 grow flex-col overflow-hidden">
 				@layout.Navbar("Gallery") {
 					<!-- Search trigger (desktop) -->
-					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 text-base-content/60 hidden h-9 w-72 justify-start gap-2 md:flex", Attrs: templ.Attributes{"id": "gallery-search-trigger", "aria-label": "Search components", "onclick": "gallerySearchOpen();"}}) {
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong text-base-content/60 hidden h-9 w-72 justify-start gap-2 md:flex", Attrs: templ.Attributes{"id": "gallery-search-trigger", "aria-label": "Search components", "onclick": "gallerySearchOpen();"}}) {
 						@ui.IconSpan("lucide--search", "size-4")
 						<span class="grow text-left text-sm">Search components…</span>
 						<kbd class="kbd kbd-xs shrink-0">⌘K</kbd>
 					}
 					<!-- Search trigger (mobile icon only) -->
-					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "border-base-300 text-base-content/60 flex size-9 md:hidden", Attrs: templ.Attributes{"aria-label": "Search components", "onclick": "gallerySearchOpen();"}}) {
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "border-line-strong text-base-content/60 flex size-9 md:hidden", Attrs: templ.Attributes{"aria-label": "Search components", "onclick": "gallerySearchOpen();"}}) {
 						@ui.IconSpan("lucide--search", "size-4")
 					}
 					@ui.ThemeSwitcher()
@@ -194,7 +194,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 	<dialog id="gallery-search-modal" class="modal p-0">
 		<div class="modal-box p-0 max-w-xl overflow-hidden" role="dialog" aria-label="Search components">
 			<!-- Search input row -->
-			<div class="border-base-300 flex w-full items-center gap-2 border-b px-4 py-3">
+			<div class="border-line-strong flex w-full items-center gap-2 border-b px-4 py-3">
 				@ui.IconSpan("lucide--search", "size-4.5")
 				<input
 					id="gallery-search-input"
@@ -211,7 +211,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 				</form>
 			</div>
 			<!-- Keyboard hint bar -->
-			<div class="border-base-300 bg-base-200/50 flex items-center gap-4 border-b px-4 py-1.5 text-xs text-base-content/50">
+			<div class="border-line-strong bg-base-200/50 flex items-center gap-4 border-b px-4 py-1.5 text-xs text-base-content/50">
 				<span><kbd class="kbd kbd-xs">↑</kbd><kbd class="kbd kbd-xs ml-0.5">↓</kbd> Navigate</span>
 				<span><kbd class="kbd kbd-xs">↵</kbd> Open</span>
 				<span><kbd class="kbd kbd-xs">Esc</kbd> Close</span>
@@ -223,7 +223,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 				</ul>
 			</div>
 			<!-- Footer -->
-			<div class="border-base-300 flex items-center justify-between border-t px-4 py-2">
+			<div class="border-line-strong flex items-center justify-between border-t px-4 py-2">
 				<span id="gallery-search-count" class="text-xs text-base-content/40"></span>
 				<span class="text-xs text-base-content/30">go-daisy</span>
 			</div>
@@ -318,7 +318,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 						+ ' hx-target="#gallery-content" hx-swap="innerHTML" hx-push-url="true"'
 						+ ' onclick="document.getElementById(\'gallery-search-modal\').close();"'
 						+ '>'
-						+ '<div class="border-base-300 bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border">'
+						+ '<div class="border-line-strong bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border">'
 						+ '<span class="iconify lucide--layers size-4 text-primary"></span>'
 						+ '</div>'
 						+ '<div class="grow min-w-0">'
@@ -340,7 +340,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 						+ ' hx-target="#gallery-content" hx-swap="innerHTML" hx-push-url="true"'
 						+ ' onclick="document.getElementById(\'gallery-search-modal\').close();"'
 						+ '>'
-						+ '<div class="border-base-300 bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border">'
+						+ '<div class="border-line-strong bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border">'
 						+ '<span class="iconify lucide--folder size-4 text-primary"></span>'
 						+ '</div>'
 						+ '<div class="grow min-w-0">'
@@ -364,7 +364,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 						+ ' hx-target="#gallery-content" hx-swap="innerHTML" hx-push-url="true"'
 						+ ' onclick="document.getElementById(\'gallery-search-modal\').close();"'
 						+ '>'
-						+ '<div class="border-base-300 bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border">'
+						+ '<div class="border-line-strong bg-base-100 rounded-box flex size-8 shrink-0 items-center justify-center border">'
 						+ '<span class="iconify lucide--component size-4 text-primary"></span>'
 						+ '</div>'
 						+ '<div class="grow min-w-0">'

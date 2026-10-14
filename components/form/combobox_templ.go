@@ -94,7 +94,7 @@ func comboboxTrigger(props ComboboxProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{"flex items-center justify-between w-full px-3 py-2 border border-base-300 bg-base-100 rounded-btn cursor-pointer",
+		var templ_7745c5c3_Var2 = []any{"flex items-center justify-between w-full px-3 py-2 border border-line-strong bg-base-100 rounded-btn cursor-pointer",
 			templ.KV("opacity-50 pointer-events-none", props.Disabled)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
@@ -792,7 +792,7 @@ func Combobox(props ComboboxProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "<div class=\"combobox-popover absolute z-50 mt-1 w-full bg-base-100 border border-base-300 rounded-box shadow-lg max-h-60 overflow-auto p-1\" x-show=\"open\" x-transition @click.outside=\"open = false\" x-trap.noscroll=\"open\" style=\"display:none\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "<div class=\"combobox-popover absolute z-50 mt-1 w-full bg-base-100 border border-line rounded-box shadow-lg max-h-60 overflow-auto p-1\" x-show=\"open\" x-transition @click.outside=\"open = false\" x-trap.noscroll=\"open\" style=\"display:none\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

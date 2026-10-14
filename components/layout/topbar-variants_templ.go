@@ -92,7 +92,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var3 = []any{"border-base-300/80 bg-base-100 sticky top-0 z-1 flex h-16 items-center justify-between border-b border-dashed px-4 md:px-8 xl:px-12 2xl:px-20", templ.KV(opts.ExtraClass, opts.ExtraClass != "")}
+		var templ_7745c5c3_Var3 = []any{"border-line-strong/80 bg-base-100 sticky top-0 z-1 flex h-16 items-center justify-between border-b border-dashed px-4 md:px-8 xl:px-12 2xl:px-20", templ.KV(opts.ExtraClass, opts.ExtraClass != "")}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -189,7 +189,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if opts.ShowSearch {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"btn btn-outline border-base-300 btn-sm max-sm:btn-square w-56 gap-2 sm:justify-start\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"btn btn-outline border-line-strong btn-sm max-sm:btn-square w-56 gap-2 sm:justify-start\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -273,7 +273,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"border-base-300 me-3 h-7 border-e\"></div><div class=\"dropdown dropdown-bottom dropdown-end\"><div tabindex=\"0\" class=\"cursor-pointer\"><div class=\"avatar bg-base-200 rounded-box size-7 overflow-hidden\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"border-line-strong me-3 h-7 border-e\"></div><div class=\"dropdown dropdown-bottom dropdown-end\"><div tabindex=\"0\" class=\"cursor-pointer\"><div class=\"avatar bg-base-200 rounded-box size-7 overflow-hidden\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -338,7 +338,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "Help</a></li></ul><hr class=\"border-base-300\"><ul class=\"menu w-full p-2\"><li><div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "Help</a></li></ul><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -553,7 +553,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "Help</a></li></ul><hr class=\"border-base-300\"><ul class=\"menu w-full p-2\"><li><div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "Help</a></li></ul><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -774,7 +774,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "<div class=\"border-base-300 ms-1 h-7 border-e\"></div><div class=\"dropdown dropdown-bottom dropdown-end ms-2\"><div tabindex=\"0\" class=\"cursor-pointer\"><div class=\"avatar bg-base-200 rounded-box size-7 overflow-hidden\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "<div class=\"border-line-strong ms-1 h-7 border-e\"></div><div class=\"dropdown dropdown-bottom dropdown-end ms-2\"><div tabindex=\"0\" class=\"cursor-pointer\"><div class=\"avatar bg-base-200 rounded-box size-7 overflow-hidden\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -839,7 +839,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "Help</a></li></ul><hr class=\"border-base-300\"><ul class=\"menu w-full p-2\"><li><a class=\"text-error hover:bg-error/10\" href=\"#\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "Help</a></li></ul><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><a class=\"text-error hover:bg-error/10\" href=\"#\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -937,7 +937,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if opts.ShowSearch {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "<div class=\"btn btn-outline border-base-300 btn-sm max-sm:btn-square w-48 gap-2 sm:justify-start max-md:hidden\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "<div class=\"btn btn-outline border-line-strong btn-sm max-sm:btn-square w-48 gap-2 sm:justify-start max-md:hidden\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

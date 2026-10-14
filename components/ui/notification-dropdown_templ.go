@@ -86,7 +86,7 @@ func NotificationDropdown(props NotificationDropdownProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</label><div class=\"dropdown-content bg-base-100 rounded-box shadow-sm border border-base-200 mt-2 w-80 z-20 p-0\"><div class=\"flex items-center justify-between px-4 py-3 border-b border-base-200\"><h3 class=\"text-sm font-semibold text-base-content\">Notifications</h3><button class=\"btn btn-ghost btn-xs\" onclick=\"markAllRead('{ props.ID }')\" aria-label=\"Mark all as read\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</label><div class=\"dropdown-content bg-base-100 rounded-box shadow-sm border border-line mt-2 w-80 z-20 p-0\"><div class=\"flex items-center justify-between px-4 py-3 border-b border-line\"><h3 class=\"text-sm font-semibold text-base-content\">Notifications</h3><button class=\"btn btn-ghost btn-xs\" onclick=\"markAllRead('{ props.ID }')\" aria-label=\"Mark all as read\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -94,14 +94,14 @@ func NotificationDropdown(props NotificationDropdownProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "Mark all read</button></div><div class=\"max-h-80 overflow-y-auto divide-y divide-base-200\" id=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "Mark all read</button></div><div class=\"max-h-80 overflow-y-auto divide-y divide-line\" id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-list")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/notification-dropdown.templ`, Line: 44, Col: 89}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/notification-dropdown.templ`, Line: 44, Col: 85}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -128,7 +128,7 @@ func NotificationDropdown(props NotificationDropdownProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if props.ViewAllHref != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"border-t border-base-200 p-2\"><a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"border-t border-line p-2\"><a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -76,7 +76,7 @@ func ProfileMenu(name, email, initials string, items []ProfileMenuItem, signOutH
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-base-200\"><div class=\"px-4 py-3 border-b border-base-200\"><p class=\"font-semibold text-sm\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-line\"><div class=\"px-4 py-3 border-b border-line\"><p class=\"font-semibold text-sm\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -198,7 +198,7 @@ func ProfileMenu(name, email, initials string, items []ProfileMenuItem, signOutH
 			return templ_7745c5c3_Err
 		}
 		if signOutHref != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<hr class=\"border-base-200\"><ul class=\"menu w-full p-2\"><li><a class=\"text-error hover:bg-error/10\" href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><a class=\"text-error hover:bg-error/10\" href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -298,7 +298,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-64 shadow-lg border border-base-200\"><div class=\"border-base-200 border-b p-4\"><div class=\"flex items-center justify-between\"><div class=\"flex items-center gap-3\"><div class=\"avatar bg-base-200 size-10 rounded-full overflow-hidden\"><div class=\"bg-primary text-primary-content flex size-full items-center justify-center font-semibold\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-64 shadow-lg border border-line\"><div class=\"border-line border-b p-4\"><div class=\"flex items-center justify-between\"><div class=\"flex items-center gap-3\"><div class=\"avatar bg-base-200 size-10 rounded-full overflow-hidden\"><div class=\"bg-primary text-primary-content flex size-full items-center justify-center font-semibold\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -391,7 +391,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonOutline, Size: ui.ButtonXS, ExtraClass: "border-base-300 grow"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var17), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonOutline, Size: ui.ButtonXS, ExtraClass: "border-line-strong grow"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var17), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -454,7 +454,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</div><hr class=\"border-base-200 mx-2\"><ul class=\"menu w-full p-2\"><li><div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</div><hr class=\"border-line mx-2\"><ul class=\"menu w-full p-2\"><li><div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -480,7 +480,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</div></li></ul><hr class=\"border-base-200 mx-2\"><ul class=\"menu w-full p-2\"><li><div class=\"text-base-content/60 text-xs\">Version 3.0.0</div></li></ul></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</div></li></ul><hr class=\"border-line mx-2\"><ul class=\"menu w-full p-2\"><li><div class=\"text-base-content/60 text-xs\">Version 3.0.0</div></li></ul></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -540,7 +540,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-base-200\"><div class=\"p-4 text-center\"><div class=\"avatar bg-base-200 size-16 mx-auto rounded-full overflow-hidden\"><div class=\"bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-2xl\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-line\"><div class=\"p-4 text-center\"><div class=\"avatar bg-base-200 size-16 mx-auto rounded-full overflow-hidden\"><div class=\"bg-primary text-primary-content flex size-full items-center justify-center font-semibold text-2xl\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -579,7 +579,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "</p></div><hr class=\"border-base-200\"><ul class=\"menu w-full p-2\"><li><a>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "</p></div><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><a>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -657,7 +657,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</a></li></ul><hr class=\"border-base-200\"><ul class=\"menu w-full p-2\"><li><a class=\"text-error hover:bg-error/10\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</a></li></ul><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><a class=\"text-error hover:bg-error/10\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -709,7 +709,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</div></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-base-200\"><div class=\"border-base-200 border-b p-4\"><div class=\"flex items-center gap-3\"><div class=\"avatar bg-base-200 size-10 rounded-full overflow-hidden\"><div class=\"bg-primary text-primary-content flex size-full items-center justify-center font-semibold\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</div></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-line\"><div class=\"border-line border-b p-4\"><div class=\"flex items-center gap-3\"><div class=\"avatar bg-base-200 size-10 rounded-full overflow-hidden\"><div class=\"bg-primary text-primary-content flex size-full items-center justify-center font-semibold\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -830,7 +830,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</a></li></ul><hr class=\"border-base-200\"><div class=\"p-3\"><div class=\"bg-base-200 rounded-box flex items-center gap-3 p-3\"><div class=\"bg-primary/10 rounded-box flex size-10 items-center justify-center\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</a></li></ul><hr class=\"border-line\"><div class=\"p-3\"><div class=\"bg-base-200 rounded-box flex items-center gap-3 p-3\"><div class=\"bg-primary/10 rounded-box flex size-10 items-center justify-center\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

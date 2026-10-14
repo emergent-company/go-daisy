@@ -76,7 +76,7 @@ templ Banner(props BannerProps) {
 	if props.CookieBanner {
 		<div
 			{ alpine.XData(alpine.Toggle(true))... }
-			class={ "card bg-base-100 shadow-lg border border-base-200 max-w-sm p-6 space-y-4", pos, templ.KV(props.Class, props.Class != "") }
+			class={ "card bg-base-100 shadow-lg border border-line max-w-sm p-6 space-y-4", pos, templ.KV(props.Class, props.Class != "") }
 			x-show="show"
 			x-transition
 			{ devmode.Attrs(ctx, "ui/Banner")... }

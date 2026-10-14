@@ -10,7 +10,7 @@ import (
 // PageTitleMinimal renders a compact title bar with an inline breadcrumb trail
 // on the right and a primary title on the left.
 templ PageTitleMinimal(title string, steps []BreadcrumbItem) {
-	<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3" { devmode.Attrs(ctx, "nav/PageTitleMinimal")... }>
+	<div class="bg-base-100 rounded-lg border border-line px-4 py-3" { devmode.Attrs(ctx, "nav/PageTitleMinimal")... }>
 		<div class="flex w-full items-center justify-between gap-3">
 			<p class="font-semibold text-base-content">{ title }</p>
 			@Breadcrumbs(steps, BreadcrumbsDividerSlash)
@@ -44,7 +44,7 @@ func pageTitleActionAttrs(ariaLabel string) templ.Attributes {
 // PageTitleEditor renders a full page title with DaisyUI breadcrumbs,
 // a subtitle meta line, and a row of action buttons.
 templ PageTitleEditor(steps []BreadcrumbItem, title, subtitle string, actions []PageTitleEditorAction) {
-	<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3" { devmode.Attrs(ctx, "nav/PageTitleEditor")... }>
+	<div class="bg-base-100 rounded-lg border border-line px-4 py-3" { devmode.Attrs(ctx, "nav/PageTitleEditor")... }>
 		<div class="mb-1">
 			@Breadcrumbs(steps, BreadcrumbsDividerDefault)
 		</div>
@@ -96,7 +96,7 @@ type PageTitleVariantOpts struct {
 templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 	switch style {
 	case "minimal":
-		<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="flex w-full items-center justify-between gap-3">
 				<p class="font-medium">{ opts.Title }</p>
 				@Breadcrumbs(opts.Steps, BreadcrumbsDividerSlash)
@@ -104,7 +104,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 		</div>
 
 	case "ecommerce":
-		<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="flex w-full items-center justify-between">
 				<div>
 					<p class="font-medium">{ opts.Title }</p>
@@ -117,7 +117,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 						@ui.IconSpan("lucide--calendar-days", "size-4")
 						<span class="text-base-content/80 text-sm max-md:hidden">{ opts.Date }</span>
 					</div>
-					<hr class="border-base-300 h-7 w-px border-e border-dashed max-md:hidden" />
+					<hr class="border-line-strong h-7 w-px border-e border-dashed max-md:hidden" />
 					<div class="flex items-center gap-2 max-md:hidden">
 						<label class="text-sm font-medium" for="status">Status</label>
 						<select id="status" aria-label="Order status" class="select select-sm w-24">
@@ -125,13 +125,13 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 							<option>Unpaid</option>
 						</select>
 					</div>
-					<hr class="border-base-300 h-7 w-px border-e border-dashed" />
+					<hr class="border-line-strong h-7 w-px border-e border-dashed" />
 					<div class="flex items-center gap-2">
 						@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Size: ui.ButtonSM, ExtraClass: "max-md:btn-square gap-2"}){
 							@ui.IconSpan("lucide--download", "size-4")
 							<span class="max-md:hidden">Invoice</span>
 						}
-						@ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "border-base-300", Attrs: templ.Attributes{"aria-label": "More options"}}){
+						@ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "border-line-strong", Attrs: templ.Attributes{"aria-label": "More options"}}){
 							@ui.IconSpan("lucide--more-vertical", "size-4")
 						}
 					</div>
@@ -140,7 +140,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 		</div>
 
 	case "editor":
-		<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="w-full">
 				@Breadcrumbs(opts.Steps, BreadcrumbsDividerDefault)
 				<div class="mt-1 flex items-end justify-between gap-3">
@@ -176,7 +176,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 		</div>
 
 	case "task":
-		<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="flex w-full items-center justify-between gap-3">
 				<div>
 					<p class="text-lg font-medium">{ opts.Title }</p>
@@ -187,7 +187,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 					</p>
 				</div>
 				<div class="flex items-center gap-3">
-					@ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 max-md:btn-square gap-2"}){
+					@ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong max-md:btn-square gap-2"}){
 						@ui.IconSpan("lucide--calendar-clock", "size-4")
 						<span class="max-md:hidden">Sync with Calendar</span>
 					}
@@ -200,10 +200,10 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 		</div>
 
 	case "stepper":
-		<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="flex w-full items-center justify-between gap-3">
 				<p class="font-medium sm:text-lg">{ opts.Title }</p>
-				@ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 gap-2"}){
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong gap-2"}){
 					@ui.IconSpan("lucide--eye", "size-4")
 					{ "Preview" }
 				}
@@ -216,7 +216,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 		</div>
 
 	case "analytics":
-		<div class="bg-base-100 rounded-lg border border-base-200 px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="flex w-full items-center justify-between gap-3">
 				<div>
 					<p class="font-medium sm:text-lg">{ opts.Title }</p>
@@ -224,17 +224,17 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 				</div>
 				<div class="flex items-center gap-3">
 					<div class="dropdown dropdown-end">
-						<label tabindex="0" class="btn btn-outline btn-sm border-base-300 gap-2">
+						<label tabindex="0" class="btn btn-outline btn-sm border-line-strong gap-2">
 							@ui.IconSpan("lucide--filter", "size-4")
 							<span class="max-md:hidden">Filter</span>
 						</label>
-						<ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-40 p-1 border border-base-200 mt-1">
+						<ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-40 p-1 border border-line mt-1">
 							<li><a>This Week</a></li>
 							<li><a>This Month</a></li>
 							<li><a>This Year</a></li>
 						</ul>
 					</div>
-					@ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 max-md:btn-square gap-2"}){
+					@ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong max-md:btn-square gap-2"}){
 						@ui.IconSpan("lucide--download", "size-4")
 						<span class="max-md:hidden">Export</span>
 					}

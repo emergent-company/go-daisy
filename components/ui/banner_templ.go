@@ -100,7 +100,7 @@ func Banner(props BannerProps) templ.Component {
 			pos = string(BannerRelative)
 		}
 		if props.CookieBanner {
-			var templ_7745c5c3_Var2 = []any{"card bg-base-100 shadow-lg border border-base-200 max-w-sm p-6 space-y-4", pos, templ.KV(props.Class, props.Class != "")}
+			var templ_7745c5c3_Var2 = []any{"card bg-base-100 shadow-lg border border-line max-w-sm p-6 space-y-4", pos, templ.KV(props.Class, props.Class != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

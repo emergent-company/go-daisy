@@ -56,7 +56,7 @@ func SettingsPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"card bg-base-100 shadow-sm border border-base-200\"><div class=\"card-body p-6\"><div class=\"tabs tabs-lift\"><input type=\"radio\" name=\"settings-tabs\" class=\"tab\" aria-label=\"Profile\" checked><div class=\"tab-content p-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"card bg-base-100 shadow-sm border border-line\"><div class=\"card-body p-6\"><div class=\"tabs tabs-lift\"><input type=\"radio\" name=\"settings-tabs\" class=\"tab\" aria-label=\"Profile\" checked><div class=\"tab-content p-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

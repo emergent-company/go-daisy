@@ -191,7 +191,7 @@ render.AppendToast(w, r,
 	},
 	{
 		ID: "styling", Title: "Styling & Themes",
-		Description: "go-daisy uses DaisyUI themes. Switch themes via data-theme attribute on <html>.",
+		Description: "go-daisy uses DaisyUI themes. Switch themes via data-theme attribute on <html>, and draw every border from the line ladder.",
 		Lang: "go",
 		Code: `// In your layout shell:
 layout.Page("My App", "nord") {   // "nord" = light theme
@@ -205,7 +205,37 @@ layout.Page("My App", "") { ... }
 ui.ThemeSwitcher()
 
 // Available DaisyUI themes: light, dark, nord, dracula, cupcake, etc.
-// Configure in tailwind.config.js under daisyui.themes.`,
+// Configure in tailwind.config.js under daisyui.themes.
+
+// ── Line ladder — the border/rule scale (components/css/custom.css) ──────
+//    Declared in the component CSS consumers import, not in assets/app.css,
+//    so any build that imports go-daisy's components gets the steps for free.
+//
+//   border-line         DEFAULT   = --color-base-200
+//     A surface that sits on the page (card, panel, list, table wrapper),
+//     a region divider inside a surface, and a floating surface's edge
+//     (popover, menu, modal) where the shadow carries the elevation.
+//
+//   border-line-strong  EMPHASIS  = --color-base-300
+//     Control outlines (input, outline button, chip, swatch, editor),
+//     separator bars and keyboard chips, rules that must assert over
+//     scrolling content (sticky bar), edges on an opaque bg-base-200 fill.
+//
+//   border-line-translucent  TRANSLUCENT  = --color-base-content at 10%
+//     A translucent hairline for a surface the surface ramp cannot serve
+//     (a bg-base-200/40 fill, where --color-base-200 nearly vanishes:
+//     soft box, disclosure). Most present edge of the three in nord and
+//     dracula; marginally below line-strong in flow. Opaque vs translucent
+//     is not a strength ramp, so the step is named for what it is — never
+//     for the muted ladder's -bright slot (where -bright means MOST
+//     emphatic). Positional adjectives stay reserved for steps genuinely
+//     ordered by strength: line < line-strong.
+//
+// Every step derives from the theme's base variables, so nord, dracula and
+// flow each keep their own hue. Quieter than border-line? Use the opacity
+// modifier (border-line/50) — there is no sub-visible step by design.
+// Directional forms: border-t-line, border-b-line, border-e-line,
+// border-s-line, divide-line, divide-line-strong.`,
 	},
 	{
 		ID: "dev-guide", Title: "Development Guide",
@@ -264,7 +294,7 @@ templ DocsPage() {
 			<h1 class="text-2xl font-bold mb-2">SDK Reference</h1>
 			<p class="text-base-content/60 mb-8">Code examples and usage patterns for every go-daisy package. Click ▼ to expand details.</p>
 			for _, s := range docSections {
-				<div id={ sectionID(s.ID) } class="mb-8 pb-6 px-4 border-b border-base-200 scroll-mt-4">
+				<div id={ sectionID(s.ID) } class="mb-8 pb-6 px-4 border-b border-line scroll-mt-4">
 					<div class="mb-3">
 						<h2 class="text-base font-semibold">{ s.Title }</h2>
 						<p class="text-xs text-base-content/50 mt-0.5">{ s.Description }</p>
@@ -274,7 +304,7 @@ templ DocsPage() {
 					</div>
 				</div>
 			}
-			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-base-content/10 scroll-mt-4">
+			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4">
 				<h2 class="text-md font-semibold mb-2">Packages Reference</h2>
 				<p class="text-sm text-base-content/60 mb-4">All go-daisy packages and their import paths.</p>
 				@docsRefTable()
@@ -297,7 +327,7 @@ templ DocsContent() {
 			<h1 class="text-2xl font-bold mb-2">SDK Reference</h1>
 			<p class="text-base-content/60 mb-4">Code examples and usage patterns for every go-daisy package.</p>
 			for _, s := range docSections {
-				<div id={ sectionID(s.ID) } class="mb-8 pb-6 px-4 border-b border-base-200 scroll-mt-4">
+				<div id={ sectionID(s.ID) } class="mb-8 pb-6 px-4 border-b border-line scroll-mt-4">
 					<div class="mb-3">
 						<h2 class="text-base font-semibold">{ s.Title }</h2>
 						<p class="text-xs text-base-content/50 mt-0.5">{ s.Description }</p>
@@ -307,7 +337,7 @@ templ DocsContent() {
 					</div>
 				</div>
 			}
-			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-base-content/10 scroll-mt-4">
+			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4">
 				<h2 class="text-md font-semibold mb-2">Packages Reference</h2>
 				<p class="text-sm text-base-content/60 mb-4">All go-daisy packages and their import paths.</p>
 				@docsRefTable()

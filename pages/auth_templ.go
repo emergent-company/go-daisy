@@ -146,7 +146,7 @@ func AuthPage(props AuthPageProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div></div><div class=\"hidden lg:flex flex-1 bg-base-200 items-center justify-center p-12\"><div class=\"max-w-sm text-center\"><div class=\"text-6xl mb-6\">🚀</div><h2 class=\"text-2xl font-bold text-base-content mb-3\">Build faster with go-daisy</h2><p class=\"text-base-content/60 mb-6\">Type-safe Templ components styled with DaisyUI for HTMX-driven web applications.</p><div class=\"border-t border-base-300 pt-6 mt-6\"><p class=\"text-sm text-base-content/50 italic\">\"The component library that makes Go web development a joy.\"</p><p class=\"text-sm font-semibold text-base-content mt-2\">— Team go-daisy</p></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div></div><div class=\"hidden lg:flex flex-1 bg-base-200 items-center justify-center p-12\"><div class=\"max-w-sm text-center\"><div class=\"text-6xl mb-6\">🚀</div><h2 class=\"text-2xl font-bold text-base-content mb-3\">Build faster with go-daisy</h2><p class=\"text-base-content/60 mb-6\">Type-safe Templ components styled with DaisyUI for HTMX-driven web applications.</p><div class=\"border-t border-line pt-6 mt-6\"><p class=\"text-sm text-base-content/50 italic\">\"The component library that makes Go web development a joy.\"</p><p class=\"text-sm font-semibold text-base-content mt-2\">— Team go-daisy</p></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

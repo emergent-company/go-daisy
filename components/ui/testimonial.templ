@@ -29,9 +29,9 @@ func testimonialMaxRating(max int) int {
 // testimonialCardClass builds the card class string based on bordered flag.
 func testimonialCardClass(bordered bool) string {
 	if bordered {
-		return "card-border shadow-sm border border-base-content/10 h-full flex flex-col p-6"
+		return "card-border shadow-sm border border-line h-full flex flex-col p-6"
 	}
-	return "shadow-sm border border-base-content/10 h-full flex flex-col p-6"
+	return "shadow-sm border border-line h-full flex flex-col p-6"
 }
 
 // TestimonialCard renders a quote card with avatar, name, role, and optional star rating.
@@ -57,7 +57,7 @@ templ TestimonialCard(props TestimonialCardProps) {
 			"{ props.Quote }"
 		</blockquote>
 		// Avatar + name/role
-		<div class="flex items-center gap-3 mt-auto pt-3 border-t border-base-content/10">
+		<div class="flex items-center gap-3 mt-auto pt-3 border-t border-line">
 			@Avatar(props.Name, props.AvatarSrc, props.AvatarIcon, AvatarSM, "", nil)
 			<div>
 				<p class="text-sm font-semibold text-base-content">{ props.Name }</p>

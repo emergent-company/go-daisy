@@ -40,7 +40,7 @@ func TopBar(props TopBarProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{"flex items-center justify-between border-b border-base-200",
+		var templ_7745c5c3_Var2 = []any{"flex items-center justify-between border-b border-line",
 			templ.KV("px-4 py-4 bg-base-100", !props.ScrollAware),
 			templ.KV("px-4 py-3 bg-base-100/80 backdrop-blur-sm sticky top-0 z-10 transition-transform duration-300", props.ScrollAware),
 			props.Class,

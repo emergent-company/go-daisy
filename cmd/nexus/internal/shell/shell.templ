@@ -147,7 +147,7 @@ templ nexusSidebar(activeSlug string) {
 			<div class="pointer-events-none absolute start-0 end-0 bottom-0 h-7 bg-gradient-to-t from-base-100/60 to-transparent"></div>
 		</div>
 		<div class="mb-2">
-			<hr class="border-base-300"/>
+			<hr class="border-line-strong"/>
 			<ul class="menu w-full">
 				<li><a href="/pages/settings" class="flex items-center gap-2"><span class="iconify lucide--settings-2 size-4"></span>Settings<div class="border-primary/20 bg-primary/5 text-primary rounded-box ms-auto border px-1 text-[11px]">New</div></a></li>
 				<li><a href="/pages/get-help" class="flex items-center gap-2"><span class="iconify lucide--circle-help size-4"></span>Get Help<div class="border-primary/20 bg-primary/5 text-primary rounded-box ms-auto border px-1 text-[11px]">New</div></a></li>
@@ -158,7 +158,7 @@ templ nexusSidebar(activeSlug string) {
 					<div class="grow -space-y-0.5"><p class="text-sm font-medium">Denish N</p><p class="text-base-content/60 text-xs">{ "@withden" }</p></div>
 					@ui.IconSpan("lucide--chevrons-up-down", "text-base-content/60 size-4")
 				</div>
-				<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box mb-1 w-48 p-1 shadow-lg border border-base-200 z-50">
+				<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box mb-1 w-48 p-1 shadow-lg border border-line z-50">
 					<li><a href="/pages/settings">@ui.IconSpan("lucide--user", "size-4")  My Profile</a></li>
 					<li><a href="/pages/settings">@ui.IconSpan("lucide--settings", "size-4")  Settings</a></li>
 					<li><a href="/pages/get-help">@ui.IconSpan("lucide--help-circle", "size-4")  Help</a></li>
@@ -176,10 +176,10 @@ templ nexusTopbar() {
 			<label class="btn btn-square btn-ghost btn-sm" aria-label="Leftmenu toggle" for="_layout-sidebar-toggle-trigger">
 				@ui.IconSpan("lucide--menu", "size-5")
 			</label>
-			<button class="btn btn-outline btn-sm btn-ghost border-base-300 text-base-content/70 hidden h-9 w-48 justify-start gap-2 !text-sm md:flex" onclick="document.querySelector('#topbar-search-modal')?.showModal()">
+			<button class="btn btn-outline btn-sm btn-ghost border-line-strong text-base-content/70 hidden h-9 w-48 justify-start gap-2 !text-sm md:flex" onclick="document.querySelector('#topbar-search-modal')?.showModal()">
 				<span class="iconify lucide--search size-4"></span>Search
 			</button>
-			<button class="btn btn-outline btn-sm btn-square btn-ghost border-base-300 text-base-content/70 flex size-9 md:hidden" aria-label="Search" onclick="document.querySelector('#topbar-search-modal')?.showModal()">
+			<button class="btn btn-outline btn-sm btn-square btn-ghost border-line-strong text-base-content/70 flex size-9 md:hidden" aria-label="Search" onclick="document.querySelector('#topbar-search-modal')?.showModal()">
 				@ui.IconSpan("lucide--search", "size-4")
 			</button>
 		</div>
@@ -199,13 +199,13 @@ templ nexusTopbar() {
 						<div class="-space-y-0.5 text-start"><p class="text-sm">Denish</p><p class="text-base-content/60 text-xs">Profile</p></div>
 					</div>
 				</div>
-				<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-4 w-44 shadow-lg border border-base-200 z-50">
+				<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-4 w-44 shadow-lg border border-line z-50">
 					<ul class="menu w-full p-2">
 						<li><a href="/pages/settings">@ui.IconSpan("lucide--user", "size-4")  My Profile</a></li>
 						<li><a href="/pages/settings">@ui.IconSpan("lucide--settings", "size-4")  Settings</a></li>
 						<li><a href="/pages/get-help">@ui.IconSpan("lucide--help-circle", "size-4")  Help</a></li>
 					</ul>
-					<hr class="border-base-300"/>
+					<hr class="border-line-strong"/>
 					<ul class="menu w-full p-2">
 						<li><div>@ui.IconSpan("lucide--arrow-left-right", "size-4")  Switch Account</div></li>
 						<li><a class="text-error hover:bg-error/10" href="/auth/login">@ui.IconSpan("lucide--log-out", "size-4")  Logout</a></li>
@@ -220,7 +220,7 @@ templ nexusTopbar() {
 templ nexusSearchModal() {
 	<dialog id="topbar-search-modal" class="modal p-0">
 		<div class="modal-box p-0">
-			<div class="input border-base-300 w-full rounded-none border-0 border-b focus:!outline-0">
+			<div class="input border-line-strong w-full rounded-none border-0 border-b focus:!outline-0">
 				@ui.IconSpan("lucide--search", "text-base-content/60 size-4.5")
 				<input type="search" class="grow" placeholder="Search" aria-label="Search"/>
 				<form method="dialog"><button class="btn btn-sm btn-circle btn-ghost" aria-label="Close">@ui.IconSpan("lucide--x", "text-base-content/80 size-4")</button></form>
@@ -231,7 +231,7 @@ templ nexusSearchModal() {
 				<li><div>@ui.IconSpan("lucide--file-plus", "size-4.5")<p class="grow text-sm">Upload new document</p></div></li>
 				<li><div>@ui.IconSpan("lucide--user-plus", "size-4.5")<p class="grow text-sm">Invite to project</p></div></li>
 			</ul>
-			<hr class="border-base-300 h-px"/>
+			<hr class="border-line-strong h-px"/>
 			<ul class="menu w-full pt-0">
 				<li class="menu-title">Quick Links</li>
 				<li><div>@ui.IconSpan("lucide--folders", "size-4.5")<p class="grow text-sm">File Manager</p></div></li>
@@ -272,13 +272,13 @@ templ nexusRightbar() {
 					</div>
 					<p class="mt-6 font-medium">Sidebar</p>
 					<div class="mt-3 grid grid-cols-2 gap-3">
-						<div class="border-base-300 hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.getElementById('_layout-sidebar').dataset.theme='light'"><span class="iconify lucide--sun size-4.5"></span>Light</div>
-						<div class="border-base-300 hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.getElementById('_layout-sidebar').dataset.theme='dark'"><span class="iconify lucide--moon size-4.5"></span>Dark</div>
+						<div class="border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.getElementById('_layout-sidebar').dataset.theme='light'"><span class="iconify lucide--sun size-4.5"></span>Light</div>
+						<div class="border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.getElementById('_layout-sidebar').dataset.theme='dark'"><span class="iconify lucide--moon size-4.5"></span>Dark</div>
 					</div>
 					<p class="mt-6 font-medium">Direction</p>
 					<div class="mt-3 grid grid-cols-2 gap-3">
-						<div class="border-base-300 hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.documentElement.dir='ltr'"><span class="iconify lucide--pilcrow-left size-4.5"></span>LTR</div>
-						<div class="border-base-300 hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.documentElement.dir='rtl'"><span class="iconify lucide--pilcrow-right size-4.5"></span>RTL</div>
+						<div class="border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.documentElement.dir='ltr'"><span class="iconify lucide--pilcrow-left size-4.5"></span>LTR</div>
+						<div class="border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2" onclick="document.documentElement.dir='rtl'"><span class="iconify lucide--pilcrow-right size-4.5"></span>RTL</div>
 					</div>
 				</div>
 			</div>

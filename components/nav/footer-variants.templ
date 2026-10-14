@@ -109,7 +109,7 @@ templ FooterVariant(style string, opts FooterVariantOpts) {
 						<span class="text-sm">Language</span>
 						@ui.IconSpan("lucide--chevron-down", "size-3 text-base-content/40")
 					</label>
-					<ul tabindex="0" class="dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-36 p-1 border border-base-200 mt-1">
+					<ul tabindex="0" class="dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-36 p-1 border border-line mt-1">
 						for _, l := range opts.Languages {
 							<li><a href={ templ.SafeURL(l.Href) }>{ l.Label }</a></li>
 						}
@@ -121,7 +121,7 @@ templ FooterVariant(style string, opts FooterVariantOpts) {
 						<span class="text-sm">Currency</span>
 						@ui.IconSpan("lucide--chevron-down", "size-3 text-base-content/40")
 					</label>
-					<ul tabindex="0" class="dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-36 p-1 border border-base-200 mt-1">
+					<ul tabindex="0" class="dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-36 p-1 border border-line mt-1">
 						for _, c := range opts.Currencies {
 							<li><a href={ templ.SafeURL(c.Href) }>{ c.Symbol } { c.Label }</a></li>
 						}

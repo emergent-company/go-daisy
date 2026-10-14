@@ -116,7 +116,7 @@ func StatCard(p StatCardProps) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = CardRaw("border border-base-content/10 shadow-sm h-full", "p-4 flex flex-row items-center gap-3 h-full", p.Attrs).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = CardRaw("border border-line shadow-sm h-full", "p-4 flex flex-row items-center gap-3 h-full", p.Attrs).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -492,7 +492,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = CardRaw("shadow-sm border border-base-content/10 overflow-hidden", "px-4 py-3 flex items-center justify-between gap-3", props.Attrs).Render(templ.WithChildren(ctx, templ_7745c5c3_Var20), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = CardRaw("shadow-sm border border-line overflow-hidden", "px-4 py-3 flex items-center justify-between gap-3", props.Attrs).Render(templ.WithChildren(ctx, templ_7745c5c3_Var20), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -651,7 +651,7 @@ func ProgressCard(props ProgressCardProps) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = CardRaw("shadow-sm border border-base-content/10 overflow-hidden", "p-0 gap-0", props.Attrs).Render(templ.WithChildren(ctx, templ_7745c5c3_Var25), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = CardRaw("shadow-sm border border-line overflow-hidden", "p-0 gap-0", props.Attrs).Render(templ.WithChildren(ctx, templ_7745c5c3_Var25), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

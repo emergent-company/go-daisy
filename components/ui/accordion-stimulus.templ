@@ -13,7 +13,7 @@ templ StimulusAccordionItem(title string, open bool, key string) {
 	<div
 		data-accordion-target="item"
 		data-key={ key }
-		class={ "collapse collapse-arrow border border-base-200 bg-base-100", templ.KV("collapse-open", open) }
+		class={ "collapse collapse-arrow border border-line bg-base-100", templ.KV("collapse-open", open) }
 		{ devmode.Attrs(ctx, "ui/StimulusAccordionItem")... }
 	>
 		<div

@@ -37,9 +37,9 @@ func testimonialMaxRating(max int) int {
 // testimonialCardClass builds the card class string based on bordered flag.
 func testimonialCardClass(bordered bool) string {
 	if bordered {
-		return "card-border shadow-sm border border-base-content/10 h-full flex flex-col p-6"
+		return "card-border shadow-sm border border-line h-full flex flex-col p-6"
 	}
-	return "shadow-sm border border-base-content/10 h-full flex flex-col p-6"
+	return "shadow-sm border border-line h-full flex flex-col p-6"
 }
 
 // TestimonialCard renders a quote card with avatar, name, role, and optional star rating.
@@ -163,7 +163,7 @@ func TestimonialCard(props TestimonialCardProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\"</blockquote> <div class=\"flex items-center gap-3 mt-auto pt-3 border-t border-base-content/10\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\"</blockquote> <div class=\"flex items-center gap-3 mt-auto pt-3 border-t border-line\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

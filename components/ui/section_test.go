@@ -78,7 +78,7 @@ func TestSectionDefaultOutputLocked(t *testing.T) {
 			title: "Object types",
 			props: SectionProps{Rows: true},
 			child: `<div>r0</div><div>r1</div>`,
-			want:  `<section class=""><h2 class="mb-3 text-lg font-semibold tracking-tight">Object types</h2><div class="card bg-base-100 card-border"><div class="card-body "><div class="divide-y divide-base-200"><div>r0</div><div>r1</div></div></div></div></section>`,
+			want:  `<section class=""><h2 class="mb-3 text-lg font-semibold tracking-tight">Object types</h2><div class="card bg-base-100 card-border"><div class="card-body "><div class="divide-y divide-line"><div>r0</div><div>r1</div></div></div></div></section>`,
 		},
 		{
 			name:  "raw",
@@ -125,13 +125,13 @@ func TestSectionWrapperlessMatchesCardRaw(t *testing.T) {
 		Rows:        true,
 	}, child)
 
-	literal := `<div class="card bg-base-100 card-border overflow-hidden"><div class="card-body p-0"><div class="divide-y divide-base-200"><div>r0</div><div>r1</div><div>r2</div></div></div></div>`
+	literal := `<div class="card bg-base-100 card-border overflow-hidden"><div class="card-body p-0"><div class="divide-y divide-line"><div>r0</div><div>r1</div><div>r2</div></div></div></div>`
 
 	if got != literal {
 		t.Errorf("wrapperless output != literal target:\n got: %q\nwant: %q", got, literal)
 	}
 
-	want := renderCardRaw(t, cardClass, bodyClass, `<div class="divide-y divide-base-200">`+child+`</div>`)
+	want := renderCardRaw(t, cardClass, bodyClass, `<div class="divide-y divide-line">`+child+`</div>`)
 	if got != want {
 		t.Errorf("wrapperless output != CardRaw equivalent:\n got: %q\nwant: %q", got, want)
 	}
@@ -208,7 +208,7 @@ func TestSectionWrapperlessMarginOnCard(t *testing.T) {
 		Rows:        true,
 	}, `<div>r0</div>`)
 
-	want := `<div class="card bg-base-100 card-border overflow-hidden mt-6"><div class="card-body p-0"><div class="divide-y divide-base-200"><div>r0</div></div></div></div>`
+	want := `<div class="card bg-base-100 card-border overflow-hidden mt-6"><div class="card-body p-0"><div class="divide-y divide-line"><div>r0</div></div></div></div>`
 
 	if got != want {
 		t.Errorf("wrapperless margin output:\n got: %q\nwant: %q", got, want)

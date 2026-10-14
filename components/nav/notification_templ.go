@@ -186,7 +186,7 @@ func NotificationVariant(style string, opts NotificationVariantOpts) templ.Compo
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<hr class=\"border-base-300 -mx-2 mt-2 border-dashed\"><div class=\"flex items-center justify-between pt-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<hr class=\"border-line -mx-2 mt-2 border-dashed\"><div class=\"flex items-center justify-between pt-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -255,7 +255,7 @@ func NotificationVariant(style string, opts NotificationVariantOpts) templ.Compo
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-1 w-84 shadow\"><div class=\"bg-base-200/30 rounded-t-box border-base-200 border-b ps-4 pe-2 pt-3\"><div class=\"flex items-center justify-between\"><p class=\"font-medium\">Notification</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-1 w-84 shadow\"><div class=\"bg-base-200/30 rounded-t-box border-line border-b ps-4 pe-2 pt-3\"><div class=\"flex items-center justify-between\"><p class=\"font-medium\">Notification</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -481,7 +481,7 @@ func NotificationVariant(style string, opts NotificationVariantOpts) templ.Compo
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</label></div><div class=\"drawer-side\"><label for=\"notification-drawer\" aria-label=\"close sidebar\" class=\"drawer-overlay\"></label><div class=\"bg-base-100 border-base-200 flex min-h-full w-80 flex-col border-s\"><div class=\"border-base-200 flex items-center justify-between border-b px-4 py-3\"><p class=\"font-medium\">Notification</p><label for=\"notification-drawer\" class=\"btn btn-xs btn-circle btn-ghost\" aria-label=\"Close\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</label></div><div class=\"drawer-side\"><label for=\"notification-drawer\" aria-label=\"close sidebar\" class=\"drawer-overlay\"></label><div class=\"bg-base-100 border-line flex min-h-full w-80 flex-col border-s\"><div class=\"border-line flex items-center justify-between border-b px-4 py-3\"><p class=\"font-medium\">Notification</p><label for=\"notification-drawer\" class=\"btn btn-xs btn-circle btn-ghost\" aria-label=\"Close\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -604,7 +604,7 @@ func NotificationVariant(style string, opts NotificationVariantOpts) templ.Compo
 					}
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</div><div class=\"border-base-200 border-t px-4 py-3\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</div><div class=\"border-line border-t px-4 py-3\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -42,7 +42,7 @@ templ CommandPalette(props CommandPaletteProps) {
 	<input type="checkbox" id={ props.ID + "-toggle" } data-command-palette="true" class="modal-toggle" checked?={ props.Open } />
 	<div class="modal" role="dialog" { devmode.Attrs(ctx, "ui/CommandPalette")... } { props.Attrs... }>
 		<div class="modal-box p-0 max-w-lg">
-			<div class="flex items-center gap-3 px-4 py-3 border-b border-base-200">
+			<div class="flex items-center gap-3 px-4 py-3 border-b border-line">
 				@IconSpan("lucide--search", "size-5 text-base-content/40")
 				<input
 					type="text"
