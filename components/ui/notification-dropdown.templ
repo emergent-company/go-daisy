@@ -32,8 +32,8 @@ templ NotificationDropdown(props NotificationDropdownProps) {
 			}
 		</label>
 
-		<div class="dropdown-content bg-base-100 rounded-box shadow-sm border border-base-200 mt-2 w-80 z-20 p-0">
-			<div class="flex items-center justify-between px-4 py-3 border-b border-base-200">
+		<div class="dropdown-content bg-base-100 rounded-box shadow-sm border border-line mt-2 w-80 z-20 p-0">
+			<div class="flex items-center justify-between px-4 py-3 border-b border-line">
 				<h3 class="text-sm font-semibold text-base-content">Notifications</h3>
 				<button class="btn btn-ghost btn-xs" onclick="markAllRead('{ props.ID }')" aria-label="Mark all as read">
 					@IconSpan("lucide--check-check", "size-3.5")
@@ -41,7 +41,7 @@ templ NotificationDropdown(props NotificationDropdownProps) {
 				</button>
 			</div>
 
-			<div class="max-h-80 overflow-y-auto divide-y divide-base-200" id={ props.ID + "-list" }>
+			<div class="max-h-80 overflow-y-auto divide-y divide-line" id={ props.ID + "-list" }>
 				for _, item := range props.Items {
 					@dropdownNotificationRow(props.ID, item)
 				}
@@ -51,7 +51,7 @@ templ NotificationDropdown(props NotificationDropdownProps) {
 			</div>
 
 			if props.ViewAllHref != "" {
-				<div class="border-t border-base-200 p-2">
+				<div class="border-t border-line p-2">
 					<a href={ templ.SafeURL(props.ViewAllHref) } class="btn btn-ghost btn-sm w-full text-sm">View all notifications</a>
 				</div>
 			}

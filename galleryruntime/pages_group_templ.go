@@ -133,7 +133,7 @@ func galleryGroupGrid(components []GalleryComponent) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = ui.CardRaw("card-border border-base-300 bg-base-100 hover:border-primary/40 hover:shadow-md transition-all duration-200 cursor-pointer", "p-5", templ.Attributes{
+			templ_7745c5c3_Err = ui.CardRaw("card-border border-line-strong bg-base-100 hover:border-primary/40 hover:shadow-md transition-all duration-200 cursor-pointer", "p-5", templ.Attributes{
 				"href":        templ.URL("/gallery/" + comp.Slug),
 				"hx-get":      "/gallery/" + comp.Slug,
 				"hx-target":   "#gallery-content",

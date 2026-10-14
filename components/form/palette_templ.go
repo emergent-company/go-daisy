@@ -132,7 +132,7 @@ func Palette(props PaletteProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if !props.HideNeutral {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"flex gap-1 flex-wrap\"><button type=\"button\" class=\"w-7 h-7 rounded border border-base-300 bg-white\" title=\"White\" @click=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"flex gap-1 flex-wrap\"><button type=\"button\" class=\"w-7 h-7 rounded border border-line-strong bg-white\" title=\"White\" @click=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -145,7 +145,7 @@ func Palette(props PaletteProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" aria-label=\"Pick white\"></button> <button type=\"button\" class=\"w-7 h-7 rounded border border-base-300 bg-black\" title=\"Black\" @click=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" aria-label=\"Pick white\"></button> <button type=\"button\" class=\"w-7 h-7 rounded border border-line-strong bg-black\" title=\"Black\" @click=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -158,7 +158,7 @@ func Palette(props PaletteProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" aria-label=\"Pick black\"></button> <button type=\"button\" class=\"w-7 h-7 rounded border border-base-300\" style=\"background: transparent\" title=\"Transparent\" @click=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" aria-label=\"Pick black\"></button> <button type=\"button\" class=\"w-7 h-7 rounded border border-line-strong\" style=\"background: transparent\" title=\"Transparent\" @click=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -201,7 +201,7 @@ func Palette(props PaletteProps) templ.Component {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<button type=\"button\" class=\"w-7 h-7 rounded border border-base-300\" style=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<button type=\"button\" class=\"w-7 h-7 rounded border border-line-strong\" style=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -288,7 +288,7 @@ func Palette(props PaletteProps) templ.Component {
 						title += " " + hex
 					}
 					pickVal := hue + "-" + shade
-					var templ_7745c5c3_Var13 = []any{"w-7 h-7 rounded border border-base-300 rounded-btn", tailwindColorClass(hue, shade)}
+					var templ_7745c5c3_Var13 = []any{"w-7 h-7 rounded border border-line-strong rounded-btn", tailwindColorClass(hue, shade)}
 					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var13...)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err

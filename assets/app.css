@@ -54,6 +54,58 @@
 @source inline("size-{1,2,3,4}");
 @source inline("animate-pulse");
 
+/* Line ladder — consumer-facing utilities. go-daisy's own components use all
+   three steps, so the base utilities compile anyway; the directional forms and
+   the opacity ramp are for consumers that draw their own rules. */
+@source inline("border-line border-line-strong border-line-bright");
+@source inline("border-line/{10,20,40,60,80}");
+@source inline("border-t-line border-b-line border-e-line border-s-line");
+@source inline("divide-line divide-line-strong");
+
+/* Line ladder — the named border/rule scale.
+ *
+ * Border colour was spread across three ad-hoc tokens for the same visual role
+ * (`border-base-200`, `border-base-300`, `border-base-content/10`), with no
+ * ladder to match a component against: `ui.Card` and `ui.StatCard` are both
+ * cards yet disagreed on their own outline, and dropdown surfaces used two
+ * different tokens. This is the single named scale.
+ *
+ * It mirrors the foreground ladder the consumer (emergent.memory web-ui) already
+ * uses (`--color-muted-subtle | -faint | muted | -strong | -bright`): the same
+ * positional suffixes around the plain default slot, the same `@theme` block so
+ * the steps are real CSS variables too, and the same derivation rule — every
+ * step comes from an existing theme variable, so each theme keeps its own hue
+ * and no colour is hard-coded.
+ *
+ * Steps, ordered by how much presence the line carries:
+ *
+ *   line-bright  the theme's content ink at 10% — a translucent hairline for a
+ *                surface the surface ramp cannot serve: a `bg-base-200/40` fill,
+ *                where `--color-base-200` itself nearly vanishes (soft box,
+ *                disclosure). The most present edge in all three bundled themes.
+ *   line-strong  = --color-base-300. The emphasised step: control outlines
+ *                (input, outline button, chip, swatch, editor), separator bars
+ *                and keyboard chips, rules that must assert over scrolling
+ *                content (sticky bar), and edges drawn on an opaque
+ *                `bg-base-200` fill.
+ *   line         = --color-base-200. THE DEFAULT: the outline of a surface that
+ *                sits on the page (card, panel, list, table wrapper), a region
+ *                divider inside a surface, and a floating surface's edge
+ *                (popover, menu, modal) where the shadow carries the elevation.
+ *
+ * `line` is the default because `border-base-200` is what the majority of
+ * in-tree sites already used (89 lines in `components/`, 102 with `pages/`), so
+ * most components render byte-identically. Nothing quieter than `line` is
+ * defined on purpose: a rule that needs to be quieter is `border-line/50`
+ * (Tailwind's opacity modifier), not another token — a sub-visible step would be
+ * a phantom. The scale needs only `--color-base-100/200/300` and
+ * `--color-base-content` from a theme, so any daisyUI theme resolves it. */
+@theme {
+  --color-line: var(--color-base-200);
+  --color-line-strong: var(--color-base-300);
+  --color-line-bright: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+}
+
 @theme {
   --font-sans: ui-sans-serif, system-ui, sans-serif;
 

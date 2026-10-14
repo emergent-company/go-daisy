@@ -45,7 +45,7 @@ templ ActionMenu(items []ActionMenuItem) {
 			{ alpine.Transition()... }
 			{ alpine.On("click.outside", "open = false")... }
 			role="menu"
-			class="dropdown-content menu bg-base-100 rounded-box shadow-lg border border-base-200 z-50 w-max min-w-44 max-w-[calc(100vw-2rem)] p-1 mt-1"
+			class="dropdown-content menu bg-base-100 rounded-box shadow-lg border border-line z-50 w-max min-w-44 max-w-[calc(100vw-2rem)] p-1 mt-1"
 			style="display:none">
 		for _, item := range items {
 			<li role="presentation">

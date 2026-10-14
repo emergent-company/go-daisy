@@ -157,11 +157,11 @@
 
 /* Border on sidebar and topbar */
 #_layout-sidebar {
-  @apply border-base-200 border-e;
+  @apply border-line border-e;
 }
 
 #_layout-topbar {
-  @apply border-base-200 border-b;
+  @apply border-line border-b;
 }
 
 /* Topbar hamburger icon swap based on sidebar state */

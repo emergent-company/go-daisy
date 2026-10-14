@@ -172,7 +172,7 @@ func SortableItem(extraClass string, attrs templ.Attributes) templ.Component {
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var9 = []any{"rounded-box border border-base-content/10 bg-base-100 px-4 py-3 flex items-center gap-3 cursor-grab active:cursor-grabbing",
+		var templ_7745c5c3_Var9 = []any{"rounded-box border border-line-strong bg-base-100 px-4 py-3 flex items-center gap-3 cursor-grab active:cursor-grabbing",
 			extraClass}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var9...)
 		if templ_7745c5c3_Err != nil {

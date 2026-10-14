@@ -2880,8 +2880,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						}
 						actions := []nav.PageTitleEditorAction{
 							{Label: "Save Changes", Class: "btn-primary btn-sm"},
-							{Label: "Preview", Class: "btn-outline btn-sm border-base-300"},
-							{Icon: "lucide--ellipsis-vertical", Class: "btn-outline btn-sm border-base-300 btn-square", AriaLabel: "More options"},
+							{Label: "Preview", Class: "btn-outline btn-sm border-line-strong"},
+							{Icon: "lucide--ellipsis-vertical", Class: "btn-outline btn-sm border-line-strong btn-square", AriaLabel: "More options"},
 						}
 						return nav.PageTitleVariantWithBoundary("editor", nav.PageTitleVariantOpts{Title: "Johnson v. Smith", Subtitle: "Type: Civil Litigation", Steps: steps, Actions: actions})
 					},
@@ -3521,10 +3521,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
   <div class="card card-border">
     <div class="bg-base-200/30 rounded-t-box px-5 py-3 font-medium">Inset Shadow</div>
     <div class="grid grid-cols-2 gap-6 p-6 lg:grid-cols-4">
-      <div class="bg-base-100 border-base-200 rounded-box text-base-content/60 flex h-24 items-center justify-center border text-xs inset-shadow-none">inset-none</div>
-      <div class="bg-base-100 border-base-200 rounded-box text-base-content/60 flex h-24 items-center justify-center border text-xs inset-shadow-xs">inset-xs</div>
-      <div class="bg-base-100 border-base-200 rounded-box text-base-content/60 flex h-24 items-center justify-center border text-xs inset-shadow-sm">inset-sm</div>
-      <div class="bg-base-100 border-base-200 rounded-box text-base-content/60 inset-shadow-primary/15 flex h-24 items-center justify-center border text-xs inset-shadow-sm">inset-primary</div>
+      <div class="bg-base-100 border-line rounded-box text-base-content/60 flex h-24 items-center justify-center border text-xs inset-shadow-none">inset-none</div>
+      <div class="bg-base-100 border-line rounded-box text-base-content/60 flex h-24 items-center justify-center border text-xs inset-shadow-xs">inset-xs</div>
+      <div class="bg-base-100 border-line rounded-box text-base-content/60 flex h-24 items-center justify-center border text-xs inset-shadow-sm">inset-sm</div>
+      <div class="bg-base-100 border-line rounded-box text-base-content/60 inset-shadow-primary/15 flex h-24 items-center justify-center border text-xs inset-shadow-sm">inset-primary</div>
     </div>
   </div>
   <div class="card card-border">
@@ -7244,7 +7244,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						},
 						Actions: []nav.PageTitleEditorAction{
 							{Label: "Save Changes", Class: "btn-primary btn-sm"},
-							{Label: "Preview Tool", Class: "btn-outline btn-sm border-base-300"},
+							{Label: "Preview Tool", Class: "btn-outline btn-sm border-line-strong"},
 						},
 					}),
 				},

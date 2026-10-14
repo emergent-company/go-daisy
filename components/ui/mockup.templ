@@ -23,7 +23,7 @@ templ MockupCodeLine(prefix string, colorClass string) {
 
 // MockupBrowser renders a browser window mockup.
 templ MockupBrowser(url string) {
-	<div class="mockup-browser border border-base-300" { devmode.Attrs(ctx, "ui/MockupBrowser")... }>
+	<div class="mockup-browser border border-line-strong" { devmode.Attrs(ctx, "ui/MockupBrowser")... }>
 		<div class="mockup-browser-toolbar">
 			<div class="input">{ url }</div>
 		</div>
@@ -33,7 +33,7 @@ templ MockupBrowser(url string) {
 
 // MockupBrowserPlaceholder renders placeholder content for the MockupBrowser gallery example.
 templ MockupBrowserPlaceholder() {
-	<div class="flex justify-center px-4 py-8 border-t border-base-300 bg-base-200 text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/MockupBrowserPlaceholder")... }>Page content here</div>
+	<div class="flex justify-center px-4 py-8 border-t border-line-strong bg-base-200 text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/MockupBrowserPlaceholder")... }>Page content here</div>
 }
 
 // MockupPhone renders a phone frame mockup.
@@ -53,12 +53,12 @@ templ MockupPhonePlaceholder() {
 
 // MockupWindow renders a desktop window frame mockup.
 templ MockupWindow() {
-	<div class="mockup-window border border-base-300" { devmode.Attrs(ctx, "ui/MockupWindow")... }>
+	<div class="mockup-window border border-line-strong" { devmode.Attrs(ctx, "ui/MockupWindow")... }>
 		{ children... }
 	</div>
 }
 
 // MockupWindowPlaceholder renders placeholder content for the MockupWindow gallery example.
 templ MockupWindowPlaceholder() {
-	<div class="flex justify-center px-4 py-8 border-t border-base-300 bg-base-200 text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/MockupWindowPlaceholder")... }>Window content here</div>
+	<div class="flex justify-center px-4 py-8 border-t border-line-strong bg-base-200 text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/MockupWindowPlaceholder")... }>Window content here</div>
 }

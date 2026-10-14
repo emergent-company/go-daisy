@@ -29,7 +29,7 @@ templ TabMenu(tabs []Tab, attrs templ.Attributes, target string) {
 		htmx := swapTarget != "-"
 	}}
 	if htmx {
-		<div class="border-b border-base-200 bg-base-100" { devmode.Attrs(ctx, "nav/TabMenu")... } { attrs... }>
+		<div class="border-b border-line bg-base-100" { devmode.Attrs(ctx, "nav/TabMenu")... } { attrs... }>
 			<nav class="flex px-6 -mb-px" aria-label="Tabs">
 				for _, tab := range tabs {
 					<a
@@ -39,7 +39,7 @@ templ TabMenu(tabs []Tab, attrs templ.Attributes, target string) {
 						hx-push-url="true"
 						class={ "inline-flex items-center px-4 py-3 text-sm font-medium border-b-2 transition-colors",
 							templ.KV("border-primary text-primary", tab.Active),
-							templ.KV("border-transparent text-base-content/50 hover:text-base-content hover:border-base-300", !tab.Active) }
+							templ.KV("border-transparent text-base-content/50 hover:text-base-content hover:border-line-strong", !tab.Active) }
 						aria-current={ func() string {
 							if tab.Active {
 								return "page"

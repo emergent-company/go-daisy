@@ -102,7 +102,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "><div class=\"modal-box p-0 max-w-lg\"><div class=\"flex items-center gap-3 px-4 py-3 border-b border-base-200\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "><div class=\"modal-box p-0 max-w-lg\"><div class=\"flex items-center gap-3 px-4 py-3 border-b border-line\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

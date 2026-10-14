@@ -78,7 +78,7 @@ func DiffContainer() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"diff aspect-[16/6] w-full max-w-lg rounded-box overflow-hidden border border-base-200\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"diff aspect-[16/6] w-full max-w-lg rounded-box overflow-hidden border border-line\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

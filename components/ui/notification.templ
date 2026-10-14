@@ -51,7 +51,7 @@ templ NotificationRow(item NotificationItem) {
 // a []NotificationItem slice and composes NotificationRow children automatically.
 // For a dropdown-style variant, see NotificationDropdown.
 templ NotificationPanel(unreadCount int, viewAllHref string) {
-	<div class="bg-base-100 border border-base-200 rounded-box shadow-lg w-80" { devmode.Attrs(ctx, "ui/NotificationPanel")... }>
+	<div class="bg-base-100 border border-line rounded-box shadow-lg w-80" { devmode.Attrs(ctx, "ui/NotificationPanel")... }>
 		<div class="flex items-center justify-between px-4 pt-4 pb-2">
 			<p class="font-semibold text-sm">Notifications</p>
 			@Button(ButtonProps{Variant: ButtonGhost, Size: ButtonXS, ExtraClass: "text-primary"}) { Mark all read }
@@ -65,10 +65,10 @@ templ NotificationPanel(unreadCount int, viewAllHref string) {
 				}
 			</a>
 		</div>
-		<ul class="divide-y divide-base-200">
+		<ul class="divide-y divide-line">
 			{ children... }
 		</ul>
-		<div class="px-4 py-3 border-t border-base-200">
+		<div class="px-4 py-3 border-t border-line">
 			<a href={ templ.URL(viewAllHref) } class="text-xs text-primary hover:underline">View all notifications</a>
 		</div>
 	</div>

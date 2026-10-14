@@ -213,7 +213,7 @@ func AlpineDropdownMenu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, " role=\"menu\" class=\"dropdown-content z-[1] menu menu-sm p-1 bg-base-100 border border-base-200 rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, " role=\"menu\" class=\"dropdown-content z-[1] menu menu-sm p-1 bg-base-100 border border-line rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

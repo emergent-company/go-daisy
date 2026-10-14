@@ -26,7 +26,7 @@ templ SearchDropdown(placeholder string, sections []SearchDropdownSection) {
 			@IconSpanColored("lucide--search", "size-4", "text-base-content/50")
 			<input placeholder={ placeholder } class="grow bg-transparent text-sm focus:outline-none" type="text"/>
 		</label>
-		<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-1 w-full shadow-lg border border-base-200 z-50">
+		<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-1 w-full shadow-lg border border-line z-50">
 			<ul class="menu menu-sm w-full p-1">
 				for _, section := range sections {
 					<li><p class="menu-title text-xs text-base-content/50 px-3 py-1">{ section.Title }</p></li>

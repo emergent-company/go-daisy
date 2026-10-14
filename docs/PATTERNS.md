@@ -56,6 +56,10 @@ class={ templ.KV(custom, custom != ""), templ.KV("default-class", custom == "") 
 // Right:  class={ "btn", props.ExtraClass }    // additive
 ```
 
+**Borders always come from the line ladder** (`border-line`, `border-line-strong`,
+`border-line-bright`) — never `border-base-200` / `border-base-300` /
+`border-base-content/N`. See §13.
+
 ---
 
 ## 3. Icons
@@ -242,3 +246,51 @@ Use `checked?={ boolVal }` or `disabled?={ boolVal }` — never raw `if` blocks 
 if props.Checked { checked }
 <input type="checkbox" checked?={ props.Value == "true" }/>
 ```
+
+---
+
+## 13. Borders — the line ladder
+
+Every border, divider and rule comes from the **line ladder** in
+`assets/app.css`. Three named steps replace the three ad-hoc tokens
+(`border-base-200`, `border-base-300`, `border-base-content/10`) that used to
+compete for the same visual role.
+
+| Token | Value | Use it for |
+|---|---|---|
+| `border-line` | `--color-base-200` | **Default.** The outline of a surface that sits on the page (card, panel, list, table wrapper), a region divider *inside* a surface, and a floating surface's edge (popover, menu, modal) — there the shadow carries the elevation. |
+| `border-line-strong` | `--color-base-300` | The emphasised step. Control outlines (input, outline button, chip, swatch, editor wrapper), separator bars and keyboard chips, rules that must assert over scrolling content (sticky bar), and edges drawn on an opaque `bg-base-200` fill. |
+| `border-line-bright` | `--color-base-content` at 10% | A translucent hairline for a surface the surface ramp cannot serve — a `bg-base-200/40` fill, where `--color-base-200` itself nearly vanishes (soft box, disclosure, repo-doc callouts). |
+
+```templ
+// Right — card outline, divider, popover edge
+class="card bg-base-100 border border-line shadow-sm"
+class="px-4 py-3 border-b border-line"
+class="dropdown-content bg-base-100 border border-line rounded-box shadow-lg"
+
+// Right — control outline, separator bar, hairline on a tinted fill
+class="input input-sm w-full border-line-strong"
+class="border-line-strong h-7 w-px border-e"
+class="rounded-box border border-line-bright bg-base-200/40"
+
+// Wrong — raw base tokens; no ladder to match against
+class="card bg-base-100 border border-base-200"
+class="rounded-box border border-base-content/10"
+```
+
+Rules that follow:
+
+- **Nothing quieter than `border-line` is a token.** Use Tailwind's opacity
+  modifier (`border-line/50`) instead — a sub-visible step would be a phantom.
+- **Directional forms exist**: `border-t-line`, `border-b-line`, `border-e-line`,
+  `border-s-line`, and `divide-line` / `divide-line-strong` for row separators.
+- **Let the theme own the hue.** The steps derive from `--color-base-200`,
+  `--color-base-300` and `--color-base-content`, so every theme (nord, dracula,
+  flow) keeps its own colour — never hard-code an `oklch()` border.
+- **`border-line-bright` is the most present step in all three bundled themes**,
+  even though it is translucent: on light themes it is the darkest rule, on dark
+  themes the lightest, so it reads as the defined edge either way. Reach for it
+  only when the surface ramp can't do the job — otherwise stay on `border-line`.
+- The ladder mirrors the consumer's foreground ladder
+  (`--color-muted-subtle | -faint | muted | -strong | -bright`) so the two repos
+  name their scales the same way.

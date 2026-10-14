@@ -1043,7 +1043,7 @@ func promptBarAttachmentChip(item PromptBarAttachmentItem) templ.Component {
 			templ_7745c5c3_Var39 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<div class=\"group flex items-center gap-2 rounded-2xl border border-base-300 bg-base-100 p-1.5 pe-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<div class=\"group flex items-center gap-2 rounded-2xl border border-line-strong bg-base-100 p-1.5 pe-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1383,7 +1383,7 @@ func promptBarTrackPill(item PromptBarTrackItem) templ.Component {
 			templ_7745c5c3_Var51 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "<div class=\"dropdown dropdown-start\"><div tabindex=\"0\" role=\"button\" class=\"btn btn-sm btn-ghost h-8 min-h-8 gap-2 rounded-2xl border border-base-300 bg-base-100 px-3 font-normal\" aria-haspopup=\"menu\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "<div class=\"dropdown dropdown-start\"><div tabindex=\"0\" role=\"button\" class=\"btn btn-sm btn-ghost h-8 min-h-8 gap-2 rounded-2xl border border-line-strong bg-base-100 px-3 font-normal\" aria-haspopup=\"menu\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1656,7 +1656,7 @@ func PromptBarAutocomplete(props PromptBarAutocompleteProps) templ.Component {
 		if emptyText == "" {
 			emptyText = "No results"
 		}
-		var templ_7745c5c3_Var60 = []any{"absolute inset-x-0 bottom-full z-20 mb-2 max-h-56 overflow-auto rounded-box border border-base-300 bg-base-100 p-1 shadow-lg", templ.KV(props.Class, props.Class != "")}
+		var templ_7745c5c3_Var60 = []any{"absolute inset-x-0 bottom-full z-20 mb-2 max-h-56 overflow-auto rounded-box border border-line bg-base-100 p-1 shadow-lg", templ.KV(props.Class, props.Class != "")}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var60...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -1737,7 +1737,7 @@ func PromptBarAutocomplete(props PromptBarAutocompleteProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "><div data-prompt-bar-detail class=\"hidden border-b border-base-300 px-3 py-2\"><span data-prompt-bar-detail-label class=\"block text-sm\"></span> <span data-prompt-bar-detail-desc class=\"block text-xs text-base-content/60\"></span> <span data-prompt-bar-detail-hint class=\"block text-xs text-base-content/50\"></span></div><div data-prompt-bar-options>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "><div data-prompt-bar-detail class=\"hidden border-b border-line px-3 py-2\"><span data-prompt-bar-detail-label class=\"block text-sm\"></span> <span data-prompt-bar-detail-desc class=\"block text-xs text-base-content/60\"></span> <span data-prompt-bar-detail-hint class=\"block text-xs text-base-content/50\"></span></div><div data-prompt-bar-options>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -3090,7 +3090,7 @@ func promptBarActionToolbar(actions []PromptBarActionItem, loading bool) templ.C
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 text-base-content/80 gap-1", Attrs: templ.Attributes{"disabled": loading}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var112), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong text-base-content/80 gap-1", Attrs: templ.Attributes{"disabled": loading}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var112), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

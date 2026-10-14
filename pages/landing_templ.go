@@ -59,7 +59,7 @@ func LandingPage(props LandingPageProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "><nav class=\"border-b border-base-200 bg-base-100/80 backdrop-blur-sm sticky top-0 z-10\"><div class=\"max-w-6xl mx-auto flex items-center justify-between px-6 h-16\"><a href=\"#\" class=\"text-xl font-bold text-base-content\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "><nav class=\"border-b border-line bg-base-100/80 backdrop-blur-sm sticky top-0 z-10\"><div class=\"max-w-6xl mx-auto flex items-center justify-between px-6 h-16\"><a href=\"#\" class=\"text-xl font-bold text-base-content\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -240,7 +240,7 @@ func LandingPage(props LandingPageProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div></section><footer class=\"border-t border-base-200 py-8\"><div class=\"max-w-6xl mx-auto px-6 text-center text-sm text-base-content/50\"><p>&copy; 2026 ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div></section><footer class=\"border-t border-line py-8\"><div class=\"max-w-6xl mx-auto px-6 text-center text-sm text-base-content/50\"><p>&copy; 2026 ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -282,7 +282,7 @@ func featureCard(icon, title, description string) templ.Component {
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"card bg-base-100 border border-base-200 shadow-sm\"><div class=\"card-body p-6\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"card bg-base-100 border border-line shadow-sm\"><div class=\"card-body p-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -347,7 +347,7 @@ func pricingCard(name, price, period string, features []string, highlighted bool
 		ctx = templ.ClearChildren(ctx)
 		var templ_7745c5c3_Var12 = []any{"card border shadow-sm",
 			templ.KV("bg-primary text-primary-content", highlighted),
-			templ.KV("bg-base-100 border-base-200", !highlighted)}
+			templ.KV("bg-base-100 border-line", !highlighted)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var12...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

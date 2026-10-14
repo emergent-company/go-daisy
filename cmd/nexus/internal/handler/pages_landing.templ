@@ -30,7 +30,7 @@ templ LandingPage() {
 
 templ landingTopbar() {
 	<div id="landing-topbar" class="group fixed inset-x-0 z-[60] flex justify-center transition-all duration-500 data-[scrolled]:top-0 data-[scrolled]:max-w-screen data-[scrolled]:rounded-none data-[scrolled]:translate-y-0 top-4">
-		<div class="border-base-content/15 bg-base-100/80 backdrop-blur-sm flex w-full max-w-[800px] items-center justify-between rounded-box border px-4 h-16 transition-all duration-500 group-data-[scrolled]:max-w-full group-data-[scrolled]:rounded-none data-[scrolled]:border-0 group-data-[scrolled]:border-b data-[scrolled]:border-base-200">
+		<div class="border-base-content/15 bg-base-100/80 backdrop-blur-sm flex w-full max-w-[800px] items-center justify-between rounded-box border px-4 h-16 transition-all duration-500 group-data-[scrolled]:max-w-full group-data-[scrolled]:rounded-none data-[scrolled]:border-0 group-data-[scrolled]:border-b data-[scrolled]:border-line">
 			<div class="flex items-center gap-4">
 				<div class="drawer lg:hidden">
 					<input id="landing-mobile-drawer" type="checkbox" class="drawer-toggle"/>
@@ -77,8 +77,8 @@ templ landingHero() {
 			</div>
 			<div class="mt-12 flex justify-center">
 				<div class="relative">
-					<img id="hero-dark" src="/images/landing/hero-dashboard-dark.jpg" class="rounded-box border border-base-200 shadow-lg max-w-full" alt="Dashboard" style="display:none"/>
-					<img id="hero-light" src="/images/landing/hero-dashboard-light.jpg" class="rounded-box border border-base-200 shadow-lg max-w-full" alt="Dashboard"/>
+					<img id="hero-dark" src="/images/landing/hero-dashboard-dark.jpg" class="rounded-box border border-line shadow-lg max-w-full" alt="Dashboard" style="display:none"/>
+					<img id="hero-light" src="/images/landing/hero-dashboard-light.jpg" class="rounded-box border border-line shadow-lg max-w-full" alt="Dashboard"/>
 				</div>
 			</div>
 			<div class="mt-8 flex items-center justify-center gap-6 text-sm text-base-content/50">
@@ -115,7 +115,7 @@ templ landingFeatures() {
 }
 
 templ landingFeatureCard(icon, title, desc, color string) {
-	<div class="card bg-base-100 shadow-sm border border-base-200 hover:border-base-300 transition-all">
+	<div class="card bg-base-100 shadow-sm border border-line hover:border-line-strong transition-all">
 		<div class="card-body">
 			<div class={ "rounded-box p-2 w-fit " + color + "/10 " + color }>
 				<span class={ "iconify size-5 " + icon }></span>
@@ -265,27 +265,27 @@ templ landingFAQ() {
 			<p class="text-base-content/60 mt-3">Got questions? We have answers.</p>
 		</div>
 		<div class="space-y-2">
-			<div class="collapse collapse-plus border border-base-200 bg-base-100 rounded-box">
+			<div class="collapse collapse-plus border border-line bg-base-100 rounded-box">
 				<input type="radio" name="landing-faq"/>
 				<div class="collapse-title font-medium">How can I give feedback?</div>
 				<div class="collapse-content"><p class="text-sm text-base-content/60">You can submit feedback through our contact form or email us at support@nexus.com. We value your input!</p></div>
 			</div>
-			<div class="collapse collapse-plus border border-base-200 bg-base-100 rounded-box">
+			<div class="collapse collapse-plus border border-line bg-base-100 rounded-box">
 				<input type="radio" name="landing-faq"/>
 				<div class="collapse-title font-medium">Can I get the full source code?</div>
 				<div class="collapse-content"><p class="text-sm text-base-content/60">Yes! The full source code is included with your purchase. You can customize it as needed.</p></div>
 			</div>
-			<div class="collapse collapse-plus border border-base-200 bg-base-100 rounded-box">
+			<div class="collapse collapse-plus border border-line bg-base-100 rounded-box">
 				<input type="radio" name="landing-faq"/>
 				<div class="collapse-title font-medium">Will there be future payments?</div>
 				<div class="collapse-content"><p class="text-sm text-base-content/60">No. All purchases are one-time payments with lifetime access to updates.</p></div>
 			</div>
-			<div class="collapse collapse-plus border border-base-200 bg-base-100 rounded-box">
+			<div class="collapse collapse-plus border border-line bg-base-100 rounded-box">
 				<input type="radio" name="landing-faq"/>
 				<div class="collapse-title font-medium">Are there plans for future updates?</div>
 				<div class="collapse-content"><p class="text-sm text-base-content/60">Yes! We regularly update Nexus with new features, components, and improvements.</p></div>
 			</div>
-			<div class="collapse collapse-plus border border-base-200 bg-base-100 rounded-box">
+			<div class="collapse collapse-plus border border-line bg-base-100 rounded-box">
 				<input type="radio" name="landing-faq"/>
 				<div class="collapse-title font-medium">Do I need a backend?</div>
 				<div class="collapse-content"><p class="text-sm text-base-content/60">Nexus is a frontend template. You can connect it to any backend of your choice.</p></div>
@@ -295,7 +295,7 @@ templ landingFAQ() {
 }
 
 templ landingFooter() {
-	<footer class="bg-base-200 border-t border-base-300">
+	<footer class="bg-base-200 border-t border-line-strong">
 		<div class="container mx-auto px-4 py-12">
 			<div class="bg-primary/10 rounded-box p-8 mb-8">
 				<div class="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -341,7 +341,7 @@ templ landingFooter() {
 					</ul>
 				</div>
 			</div>
-			<div class="text-center text-sm text-base-content/40 mt-8 pt-8 border-t border-base-300">
+			<div class="text-center text-sm text-base-content/40 mt-8 pt-8 border-t border-line-strong">
 				<p>Developed with <span class="iconify lucide--heart text-error size-3.5 inline"></span> using daisyUI. v2.1.0</p>
 			</div>
 		</div>

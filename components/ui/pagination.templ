@@ -55,7 +55,7 @@ func pageURL(base string, page int) string {
 // Style controls the button variant: "square" (join-based outline) or "circle" (ghost/primary).
 templ PaginationWithProps(props PaginationProps) {
 	if props.TotalPages > 1 {
-		<div class="border-base-200 flex flex-wrap items-center justify-between gap-2 border-t border-dashed p-5" { devmode.Attrs(ctx, "ui/PaginationWithProps")... } { props.Attrs... }>
+		<div class="border-line flex flex-wrap items-center justify-between gap-2 border-t border-dashed p-5" { devmode.Attrs(ctx, "ui/PaginationWithProps")... } { props.Attrs... }>
 			if props.TotalItems > 0 {
 				<p class="text-base-content/70 text-sm">
 					Showing
@@ -100,7 +100,7 @@ templ PaginationCircle(currentPage int, totalPages int, baseURL string, targetID
 templ squaredButtons(props PaginationProps) {
 	<div class="join">
 		<a
-			class={ "btn btn-square btn-sm btn-outline border-base-300 join-item",
+			class={ "btn btn-square btn-sm btn-outline border-line-strong join-item",
 				templ.KV("btn-disabled", props.CurrentPage <= 1) }
 			if props.CurrentPage > 1 {
 				href={ templ.URL(pageURL(props.BaseURL, props.CurrentPage-1)) }
@@ -115,7 +115,7 @@ templ squaredButtons(props PaginationProps) {
 		</a>
 		for p := 1; p <= props.TotalPages; p++ {
 			<a
-				class={ "btn btn-square btn-sm btn-outline border-base-300 join-item",
+				class={ "btn btn-square btn-sm btn-outline border-line-strong join-item",
 					templ.KV("btn-active", p == props.CurrentPage) }
 				href={ templ.URL(pageURL(props.BaseURL, p)) }
 				hx-get={ pageURL(props.BaseURL, p) }
@@ -127,7 +127,7 @@ templ squaredButtons(props PaginationProps) {
 			</a>
 		}
 		<a
-			class={ "btn btn-square btn-sm btn-outline border-base-300 join-item",
+			class={ "btn btn-square btn-sm btn-outline border-line-strong join-item",
 				templ.KV("btn-disabled", props.CurrentPage >= props.TotalPages) }
 			if props.CurrentPage < props.TotalPages {
 				href={ templ.URL(pageURL(props.BaseURL, props.CurrentPage+1)) }

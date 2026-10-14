@@ -69,7 +69,7 @@ func LayoutCustomizer() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</label> <label for=\"layout-customizer-toggle\" id=\"layout-customizer-backdrop\" class=\"fixed inset-0 bg-black/30 z-80 hidden\"></label><div id=\"layout-customizer-drawer\" class=\"fixed top-0 right-0 h-full w-72 bg-base-100 border-l border-base-200 z-90 p-5 overflow-y-auto transform translate-x-full transition-transform duration-200\"><div class=\"flex items-center justify-between mb-4\"><h3 class=\"font-semibold text-base-content\">Layout Settings</h3><label for=\"layout-customizer-toggle\" class=\"btn btn-sm btn-circle btn-ghost\" aria-label=\"Close settings\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</label> <label for=\"layout-customizer-toggle\" id=\"layout-customizer-backdrop\" class=\"fixed inset-0 bg-black/30 z-80 hidden\"></label><div id=\"layout-customizer-drawer\" class=\"fixed top-0 right-0 h-full w-72 bg-base-100 border-l border-line z-90 p-5 overflow-y-auto transform translate-x-full transition-transform duration-200\"><div class=\"flex items-center justify-between mb-4\"><h3 class=\"font-semibold text-base-content\">Layout Settings</h3><label for=\"layout-customizer-toggle\" class=\"btn btn-sm btn-circle btn-ghost\" aria-label=\"Close settings\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

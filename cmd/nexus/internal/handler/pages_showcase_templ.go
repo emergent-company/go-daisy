@@ -274,7 +274,7 @@ func compCard(title, desc, importPath string) templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"card bg-base-100 shadow-sm hover:shadow-md transition-shadow border border-base-200\"><div class=\"card-body p-4\"><h4 class=\"font-semibold text-sm\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"card bg-base-100 shadow-sm hover:shadow-md transition-shadow border border-line\"><div class=\"card-body p-4\"><h4 class=\"font-semibold text-sm\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -829,7 +829,7 @@ func renderComponentDemo(name string) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		switch name {
 		case "accordion":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"w-full\"><div class=\"collapse collapse-arrow border border-base-300 bg-base-100 rounded-box\"><input type=\"checkbox\"><div class=\"collapse-title font-medium\">Click to expand</div><div class=\"collapse-content\"><p>TABINDEX / ESC to close</p></div></div><div class=\"collapse collapse-plus border border-base-300 bg-base-100 rounded-box mt-1\"><input type=\"checkbox\"><div class=\"collapse-title font-medium\">Plus icon</div><div class=\"collapse-content\"><p>Uses collapse-plus class</p></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"w-full\"><div class=\"collapse collapse-arrow border border-line-strong bg-base-100 rounded-box\"><input type=\"checkbox\"><div class=\"collapse-title font-medium\">Click to expand</div><div class=\"collapse-content\"><p>TABINDEX / ESC to close</p></div></div><div class=\"collapse collapse-plus border border-line-strong bg-base-100 rounded-box mt-1\"><input type=\"checkbox\"><div class=\"collapse-title font-medium\">Plus icon</div><div class=\"collapse-content\"><p>Uses collapse-plus class</p></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -1075,7 +1075,7 @@ func renderFormDemo(name string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "fieldset":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "<fieldset class=\"fieldset bg-base-200 border border-base-300 p-4 rounded-box w-full max-w-md\"><legend class=\"fieldset-legend\">Settings</legend><label class=\"fieldset-label\">Name</label><input type=\"text\" class=\"input w-full\" placeholder=\"Name\"></fieldset>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "<fieldset class=\"fieldset bg-base-200 border border-line-strong p-4 rounded-box w-full max-w-md\"><legend class=\"fieldset-legend\">Settings</legend><label class=\"fieldset-label\">Name</label><input type=\"text\" class=\"input w-full\" placeholder=\"Name\"></fieldset>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

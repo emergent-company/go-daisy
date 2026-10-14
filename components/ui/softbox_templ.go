@@ -52,7 +52,7 @@ func SoftBox(props ...SoftBoxProps) templ.Component {
 		if pad == "" {
 			pad = "p-3"
 		}
-		var templ_7745c5c3_Var2 = []any{"rounded-box border border-base-content/10 bg-base-200/40", pad, p.Class}
+		var templ_7745c5c3_Var2 = []any{"rounded-box border border-line-bright bg-base-200/40", pad, p.Class}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

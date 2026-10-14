@@ -163,19 +163,19 @@ templ SidebarProject(opts SidebarVariantOpts) {
 				}
 				<p class="menu-label px-2.5 pb-1.5">Favorites</p>
 				@SidebarMenuItemWithExtra("Button System", "#", "lucide--star", false) {
-					<div class="border-base-300 bg-base-200 rounded-box px-1 text-[10px]">{ "\u2318B" }</div>
+					<div class="border-line-strong bg-base-200 rounded-box px-1 text-[10px]">{ "\u2318B" }</div>
 				}
 				@SidebarMenuItemWithExtra("Color Palette", "#", "lucide--star", false) {
-					<div class="border-base-300 bg-base-200 rounded-box px-1 text-[10px]">{ "\u2318P" }</div>
+					<div class="border-line-strong bg-base-200 rounded-box px-1 text-[10px]">{ "\u2318P" }</div>
 				}
 				@SidebarMenuItemWithExtra("Typography", "#", "lucide--star", false) {
-					<div class="border-base-300 bg-base-200 rounded-box px-1 text-[10px]">{ "\u2318T" }</div>
+					<div class="border-line-strong bg-base-200 rounded-box px-1 text-[10px]">{ "\u2318T" }</div>
 				}
 				<p class="menu-label px-2.5 pb-1.5">Channels</p>
 				@SidebarMenuItemWithExtra("general", "#", "lucide--hashtag", false) {
 					<div class="dropdown dropdown-bottom dropdown-end" onclick="event.stopPropagation()">
 						<div tabindex="0" class="btn btn-xs btn-circle btn-ghost">@ui.IconSpan("lucide--ellipsis", "size-3")</div>
-						<div tabindex="0" class="dropdown-content bg-base-100 rounded-box w-32 shadow p-1 border border-base-200">
+						<div tabindex="0" class="dropdown-content bg-base-100 rounded-box w-32 shadow p-1 border border-line">
 							<ul class="menu menu-xs p-0"><li><a>Mute</a></li><li><a>Mark Read</a></li></ul>
 						</div>
 					</div>
@@ -216,7 +216,7 @@ templ SidebarChat(opts SidebarVariantOpts) {
 				}
 			</div>
 		</div>
-		<div class="border-base-200 border-t px-3 py-3">
+		<div class="border-line border-t px-3 py-3">
 			@SidebarTokenMeter(opts.TokenUsed, opts.TokenMax)
 			@SidebarBottomNav([]SidebarBottomNavItem{
 				{Label: "Home", Icon: "lucide--home", Href: "#", Active: true},
@@ -238,31 +238,31 @@ templ SidebarDocs(opts SidebarVariantOpts) {
 		</div>
 		<div class="sidebar-menu custom-scrollbar grow overflow-auto px-2.5">
 			<div class="space-y-3">
-				<div class="rounded-box border border-base-200 p-3">
+				<div class="rounded-box border border-line p-3">
 					<div class="flex items-center gap-3">
 						@SidebarIconBox("bg-primary/10", "text-primary", "lucide--rocket")
 						@SidebarIconText("Getting Started", "Learn the basics")
 					</div>
 				</div>
-				<div class="rounded-box border border-base-200 p-3">
+				<div class="rounded-box border border-line p-3">
 					<div class="flex items-center gap-3">
 						@SidebarIconBox("bg-secondary/10", "text-secondary", "lucide--book-open")
 						@SidebarIconText("Guide", "Step-by-step tutorials")
 					</div>
 				</div>
-				<div class="rounded-box border border-base-200 p-3">
+				<div class="rounded-box border border-line p-3">
 					<div class="flex items-center gap-3">
 						@SidebarIconBox("bg-accent/10", "text-accent", "lucide--code")
 						@SidebarIconText("API", "Reference & endpoints")
 					</div>
 				</div>
-				<div class="rounded-box border border-base-200 p-3">
+				<div class="rounded-box border border-line p-3">
 					<div class="flex items-center gap-3">
 						@SidebarIconBox("bg-neutral/10", "text-neutral", "lucide--users")
 						@SidebarIconText("Community", "Discussions & support")
 					</div>
 				</div>
-				<div class="border-base-200 mt-4 border-t pt-3">
+				<div class="border-line mt-4 border-t pt-3">
 					<p class="menu-label px-2.5 pb-1.5">Sections</p>
 					@SidebarCollapsible("lucide--book-marked", "Getting Started", []templ.Component{
 						SidebarMenuItem("Installation", "#", "", true),
@@ -282,7 +282,7 @@ templ SidebarDocs(opts SidebarVariantOpts) {
 				</div>
 			</div>
 		</div>
-		<div class="border-base-200 border-t px-3 py-3">
+		<div class="border-line border-t px-3 py-3">
 			@SidebarVersionSwitcher(opts.Versions, opts.Version)
 		</div>
 	</div>

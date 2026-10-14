@@ -293,7 +293,7 @@ templ PromptBarAttachments(props PromptBarAttachmentsProps) {
 
 // promptBarAttachmentChip renders a single attachment chip.
 templ promptBarAttachmentChip(item PromptBarAttachmentItem) {
-	<div class="group flex items-center gap-2 rounded-2xl border border-base-300 bg-base-100 p-1.5 pe-2">
+	<div class="group flex items-center gap-2 rounded-2xl border border-line-strong bg-base-100 p-1.5 pe-2">
 		if item.Kind == PromptBarAttachmentImage && item.Thumbnail != "" {
 			<img class="size-12 rounded-xl object-cover" src={ templ.URL(item.Thumbnail) } alt=""/>
 		} else {
@@ -404,7 +404,7 @@ templ PromptBarTracks(props PromptBarTracksProps) {
 // promptBarTrackPill renders a single DaisyUI dropdown status pill.
 templ promptBarTrackPill(item PromptBarTrackItem) {
 	<div class="dropdown dropdown-start">
-		<div tabindex="0" role="button" class="btn btn-sm btn-ghost h-8 min-h-8 gap-2 rounded-2xl border border-base-300 bg-base-100 px-3 font-normal" aria-haspopup="menu">
+		<div tabindex="0" role="button" class="btn btn-sm btn-ghost h-8 min-h-8 gap-2 rounded-2xl border border-line-strong bg-base-100 px-3 font-normal" aria-haspopup="menu">
 			if item.Icon != "" {
 				@ui.IconSpan(item.Icon, "size-4 text-base-content/60")
 			}
@@ -527,7 +527,7 @@ templ PromptBarAutocomplete(props PromptBarAutocompleteProps) {
 	} }}
 	<div
 		id={ props.ID }
-		class={ "absolute inset-x-0 bottom-full z-20 mb-2 max-h-56 overflow-auto rounded-box border border-base-300 bg-base-100 p-1 shadow-lg", templ.KV(props.Class, props.Class != "") }
+		class={ "absolute inset-x-0 bottom-full z-20 mb-2 max-h-56 overflow-auto rounded-box border border-line bg-base-100 p-1 shadow-lg", templ.KV(props.Class, props.Class != "") }
 		data-prompt-bar-autocomplete
 		if props.HxGet != "" {
 			data-prompt-bar-hx-get={ props.HxGet }
@@ -538,7 +538,7 @@ templ PromptBarAutocomplete(props PromptBarAutocompleteProps) {
 		{ devmode.Attrs(ctx, "form/PromptBarAutocomplete")... }
 		{ props.Attrs... }
 	>
-		<div data-prompt-bar-detail class="hidden border-b border-base-300 px-3 py-2">
+		<div data-prompt-bar-detail class="hidden border-b border-line px-3 py-2">
 			<span data-prompt-bar-detail-label class="block text-sm"></span>
 			<span data-prompt-bar-detail-desc class="block text-xs text-base-content/60"></span>
 			<span data-prompt-bar-detail-hint class="block text-xs text-base-content/50"></span>
@@ -1206,7 +1206,7 @@ templ PromptBarAction(placeholder string, actions []PromptBarActionItem, loading
 templ promptBarActionToolbar(actions []PromptBarActionItem, loading bool) {
 	<div class="flex items-center gap-2">
 		for _, action := range actions {
-			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-base-300 text-base-content/80 gap-1", Attrs: templ.Attributes{"disabled": loading}}) {
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong text-base-content/80 gap-1", Attrs: templ.Attributes{"disabled": loading}}) {
 				<span class={ "iconify size-4", action.Icon } aria-hidden="true"></span>
 				{ action.Label }
 			}

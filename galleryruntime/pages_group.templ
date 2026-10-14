@@ -40,7 +40,7 @@ func subcategoryTotal(subcategories []SubcategoryGroup) int {
 templ galleryGroupGrid(components []GalleryComponent) {
 	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 		for _, comp := range components {
-			@ui.CardRaw("card-border border-base-300 bg-base-100 hover:border-primary/40 hover:shadow-md transition-all duration-200 cursor-pointer", "p-5", templ.Attributes{
+			@ui.CardRaw("card-border border-line-strong bg-base-100 hover:border-primary/40 hover:shadow-md transition-all duration-200 cursor-pointer", "p-5", templ.Attributes{
 				"href": templ.URL("/gallery/" + comp.Slug),
 				"hx-get": "/gallery/" + comp.Slug,
 				"hx-target": "#gallery-content",

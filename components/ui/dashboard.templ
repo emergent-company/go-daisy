@@ -31,7 +31,7 @@ templ DashboardGrid(cols int) {
 // Children are placed in the card body after the optional title/subtitle header.
 templ DashboardCard(title string, subtitle string) {
 	<div
-		class="card bg-base-100 border border-base-200 shadow-sm"
+		class="card bg-base-100 border border-line shadow-sm"
 		{ devmode.Attrs(ctx, "ui/DashboardCard")... }
 	>
 		<div class="card-body p-5">

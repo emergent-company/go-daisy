@@ -330,12 +330,12 @@ func SkeletonDashboard(blocks []SkeletonDashboardBlock) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			for range [4]struct{}{} {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"border-base-300/80 bg-base-200/20 rounded-box flex h-28 flex-col items-center justify-center border border-dashed text-center\"><p class=\"text-base-content/80 font-medium text-sm\">Stats</p><p class=\"text-base-content/50 text-xs\">1 / 4</p></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"border-line-strong/80 bg-base-200/20 rounded-box flex h-28 flex-col items-center justify-center border border-dashed text-center\"><p class=\"text-base-content/80 font-medium text-sm\">Stats</p><p class=\"text-base-content/50 text-xs\">1 / 4</p></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div><div class=\"grid grid-cols-12 gap-4\"><div class=\"border-base-300/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-8\"><p class=\"text-base-content/80 font-medium text-sm\">Primary Chart</p><p class=\"text-base-content/50 text-xs\">8 / 12</p></div><div class=\"border-base-300/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-4\"><p class=\"text-base-content/80 font-medium text-sm\">Side Panel</p><p class=\"text-base-content/50 text-xs\">4 / 12</p></div></div><div class=\"border-base-300/80 bg-base-200/20 rounded-box flex h-48 flex-col items-center justify-center border border-dashed text-center\"><p class=\"text-base-content/80 font-medium text-sm\">Full-Width Table</p><p class=\"text-base-content/50 text-xs\">12 / 12</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div><div class=\"grid grid-cols-12 gap-4\"><div class=\"border-line-strong/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-8\"><p class=\"text-base-content/80 font-medium text-sm\">Primary Chart</p><p class=\"text-base-content/50 text-xs\">8 / 12</p></div><div class=\"border-line-strong/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-4\"><p class=\"text-base-content/80 font-medium text-sm\">Side Panel</p><p class=\"text-base-content/50 text-xs\">4 / 12</p></div></div><div class=\"border-line-strong/80 bg-base-200/20 rounded-box flex h-48 flex-col items-center justify-center border border-dashed text-center\"><p class=\"text-base-content/80 font-medium text-sm\">Full-Width Table</p><p class=\"text-base-content/50 text-xs\">12 / 12</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -345,7 +345,7 @@ func SkeletonDashboard(blocks []SkeletonDashboardBlock) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			for _, b := range blocks {
-				var templ_7745c5c3_Var11 = []any{"border-base-300/80 bg-base-200/20 rounded-box flex flex-col items-center justify-center border border-dashed text-center", b.ColSpan, b.Height}
+				var templ_7745c5c3_Var11 = []any{"border-line-strong/80 bg-base-200/20 rounded-box flex flex-col items-center justify-center border border-dashed text-center", b.ColSpan, b.Height}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var11...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err

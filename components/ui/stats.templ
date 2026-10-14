@@ -12,7 +12,7 @@ type StatsGroupItem struct {
 
 // StatsGroup renders a DaisyUI stats bar with multiple stat cells side by side.
 templ StatsGroup(items []StatsGroupItem) {
-	<div class="stats shadow border border-base-200">
+	<div class="stats shadow border border-line">
 		for _, item := range items {
 			<div class="stat place-items-center">
 				<div class="stat-title">{ item.Title }</div>

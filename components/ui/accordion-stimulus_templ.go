@@ -40,7 +40,7 @@ func StimulusAccordionItem(title string, open bool, key string) templ.Component 
 		if key == "" {
 			key = strconv.FormatBool(open)
 		}
-		var templ_7745c5c3_Var2 = []any{"collapse collapse-arrow border border-base-200 bg-base-100", templ.KV("collapse-open", open)}
+		var templ_7745c5c3_Var2 = []any{"collapse collapse-arrow border border-line bg-base-100", templ.KV("collapse-open", open)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

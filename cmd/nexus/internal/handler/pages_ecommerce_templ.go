@@ -51,7 +51,7 @@ func ProductsList() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<span class=\"hidden sm:inline\">New Product</span></a><div class=\"dropdown dropdown-bottom dropdown-end\"><div tabindex=\"0\" role=\"button\" class=\"btn btn-ghost border-base-300 btn-sm btn-square\" aria-label=\"More option\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<span class=\"hidden sm:inline\">New Product</span></a><div class=\"dropdown dropdown-bottom dropdown-end\"><div tabindex=\"0\" role=\"button\" class=\"btn btn-ghost border-line-strong btn-sm btn-square\" aria-label=\"More option\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -67,7 +67,7 @@ func ProductsList() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Bulk Actions</div></li></ul><hr class=\"border-base-300\"><ul class=\"menu w-full p-2\"><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Bulk Actions</div></li></ul><hr class=\"border-line-strong\"><ul class=\"menu w-full p-2\"><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

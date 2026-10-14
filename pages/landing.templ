@@ -24,7 +24,7 @@ func landingTagline(s string) string {
 // LandingPage renders a full landing page with hero, features, and pricing.
 templ LandingPage(props LandingPageProps) {
 	<div class="min-h-screen" { devmode.Attrs(ctx, "pages/LandingPage")... }>
-		<nav class="border-b border-base-200 bg-base-100/80 backdrop-blur-sm sticky top-0 z-10">
+		<nav class="border-b border-line bg-base-100/80 backdrop-blur-sm sticky top-0 z-10">
 			<div class="max-w-6xl mx-auto flex items-center justify-between px-6 h-16">
 				<a href="#" class="text-xl font-bold text-base-content">{ landingBrand(props.BrandName) }</a>
 				<div class="flex items-center gap-6 text-sm">
@@ -97,7 +97,7 @@ templ LandingPage(props LandingPageProps) {
 			</div>
 		</section>
 
-		<footer class="border-t border-base-200 py-8">
+		<footer class="border-t border-line py-8">
 			<div class="max-w-6xl mx-auto px-6 text-center text-sm text-base-content/50">
 				<p>&copy; 2026 { landingBrand(props.BrandName) }. Built with DaisyUI and Go.</p>
 			</div>
@@ -106,7 +106,7 @@ templ LandingPage(props LandingPageProps) {
 }
 
 templ featureCard(icon, title, description string) {
-	<div class="card bg-base-100 border border-base-200 shadow-sm">
+	<div class="card bg-base-100 border border-line shadow-sm">
 		<div class="card-body p-6">
 			@ui.IconSpan(icon, "size-8 text-primary mb-2")
 			<h3 class="text-lg font-semibold text-base-content">{ title }</h3>
@@ -118,7 +118,7 @@ templ featureCard(icon, title, description string) {
 templ pricingCard(name, price, period string, features []string, highlighted bool) {
 	<div class={ "card border shadow-sm",
 		templ.KV("bg-primary text-primary-content", highlighted),
-		templ.KV("bg-base-100 border-base-200", !highlighted) }>
+		templ.KV("bg-base-100 border-line", !highlighted) }>
 		<div class="card-body p-6 text-center">
 			<h3 class="text-lg font-semibold">{ name }</h3>
 			<p class={ "text-4xl font-black mt-2", templ.KV("text-base-content", !highlighted) }>{ price }</p>

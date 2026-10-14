@@ -30,11 +30,11 @@ templ CodeBlock(props CodeBlockProps) {
 		if label == "" { label = props.Language }
 		if label == "" { label = "Code" } }}
 	<div
-		class={ "code-block-root relative border border-base-200 rounded-box overflow-hidden", templ.KV(props.Class, props.Class != "") }
+		class={ "code-block-root relative border border-line rounded-box overflow-hidden", templ.KV(props.Class, props.Class != "") }
 		{ devmode.Attrs(ctx, "ui/CodeBlock")... }
 		{ props.Attrs... }
 	>
-		<div class="flex items-center justify-between px-4 py-2 bg-base-200/50 border-b border-base-200">
+		<div class="flex items-center justify-between px-4 py-2 bg-base-200/50 border-b border-line">
 			<span class="text-xs font-mono text-base-content/60 select-none">{ label }</span>
 			<button
 				type="button"

@@ -499,7 +499,7 @@ func FooterVariant(style string, opts FooterVariantOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</label><ul tabindex=\"0\" class=\"dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-36 p-1 border border-base-200 mt-1\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</label><ul tabindex=\"0\" class=\"dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-36 p-1 border border-line mt-1\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -551,7 +551,7 @@ func FooterVariant(style string, opts FooterVariantOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</label><ul tabindex=\"0\" class=\"dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-36 p-1 border border-base-200 mt-1\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</label><ul tabindex=\"0\" class=\"dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-36 p-1 border border-line mt-1\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

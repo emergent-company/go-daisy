@@ -38,7 +38,7 @@ templ SortableList(id string, opts SortableOptions) {
 // SortableItem renders a draggable list item inside a SortableList.
 templ SortableItem(extraClass string, attrs templ.Attributes) {
 	<div
-		class={ "rounded-box border border-base-content/10 bg-base-100 px-4 py-3 flex items-center gap-3 cursor-grab active:cursor-grabbing",
+		class={ "rounded-box border border-line-strong bg-base-100 px-4 py-3 flex items-center gap-3 cursor-grab active:cursor-grabbing",
 			extraClass }
 		{ devmode.Attrs(ctx, "ui/SortableItem")... }
 		{ attrs... }
