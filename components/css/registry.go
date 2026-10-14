@@ -15,9 +15,11 @@ import (
 )
 
 // CustomCSS is the co-located custom component CSS that go-daisy ships for
-// consumers (sidebar/layout/topbar/alpine/view-transition/icon rules). It is
-// imported by go-daisy's own assets/app.css and can be @imported by a
-// consumer's Tailwind build from the vendored module:
+// consumers (sidebar/layout/topbar/alpine/view-transition/icon rules). It
+// also declares the line-ladder theme steps (`--color-line*`), so importing it
+// is what makes `border-line` resolve in a consumer build. It is imported by
+// go-daisy's own assets/app.css and can be @imported by a consumer's Tailwind
+// build from the vendored module:
 //
 //	@import "../components/css/custom.css";
 const CustomCSS = "css/custom.css"

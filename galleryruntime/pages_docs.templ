@@ -207,7 +207,9 @@ ui.ThemeSwitcher()
 // Available DaisyUI themes: light, dark, nord, dracula, cupcake, etc.
 // Configure in tailwind.config.js under daisyui.themes.
 
-// ── Line ladder — the border/rule scale (assets/app.css) ─────────────────
+// ── Line ladder — the border/rule scale (components/css/custom.css) ──────
+//    Declared in the component CSS consumers import, not in assets/app.css,
+//    so any build that imports go-daisy's components gets the steps for free.
 //
 //   border-line         DEFAULT   = --color-base-200
 //     A surface that sits on the page (card, panel, list, table wrapper),

@@ -252,7 +252,9 @@ if props.Checked { checked }
 ## 13. Borders — the line ladder
 
 Every border, divider and rule comes from the **line ladder** in
-`assets/app.css`. Three named steps replace the three ad-hoc tokens
+`components/css/custom.css` (the only go-daisy stylesheet consumers load, which is
+why it is declared there — `assets/app.css` imports that file, so the library
+registers it too). Three named steps replace the three ad-hoc tokens
 (`border-base-200`, `border-base-300`, `border-base-content/10`) that used to
 compete for the same visual role.
 
