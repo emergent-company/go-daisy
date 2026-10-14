@@ -98,3 +98,39 @@ func TestSoftBoxSurfaceVariants(t *testing.T) {
 		})
 	}
 }
+
+// TestSoftBoxAttrsEmptyIsByteIdentical proves the Attrs escape hatch is an
+// addition, not a rewrite: an empty Attrs map (and a nil one) spread onto the
+// root element emits nothing, so the markup stays byte-identical to the
+// pre-Attrs output down to the trailing space in the class list. Existing
+// callers that never set Attrs do not move.
+func TestSoftBoxAttrsEmptyIsByteIdentical(t *testing.T) {
+	const locked = `<div class="rounded-box border border-line-translucent bg-base-200/40 p-3 ">Content</div>`
+
+	for _, attrs := range []templ.Attributes{nil, {}} {
+		got := renderSoftBox(t, "Content", SoftBoxProps{Attrs: attrs})
+		if got != locked {
+			t.Errorf("empty Attrs %#v changed the markup:\n got: %q\nwant: %q", attrs, got, locked)
+		}
+	}
+}
+
+// TestSoftBoxAttrsRenders pins the new behaviour: Attrs values are spread onto
+// the root element, including a data-* key carrying a dynamic Go value — the
+// shape the gateway needs for data-testid, data-registry-name and
+// data-mcp-configure-help selection.
+func TestSoftBoxAttrsRenders(t *testing.T) {
+	registryName := "mcp-entry"
+	got := renderSoftBox(t, "Content", SoftBoxProps{
+		Surface: SoftBoxMuted,
+		Attrs: templ.Attributes{
+			"data-testid":        "mcp-registry-entry",
+			"data-registry-name": registryName,
+		},
+	})
+	// templ.RenderAttributes emits attributes in sorted key order.
+	want := `<div class="rounded-box border border-line-translucent bg-base-200/30 p-3 " data-registry-name="mcp-entry" data-testid="mcp-registry-entry">Content</div>`
+	if got != want {
+		t.Errorf("Attrs did not render on the root element:\n got: %q\nwant: %q", got, want)
+	}
+}
