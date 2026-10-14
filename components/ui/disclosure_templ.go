@@ -26,7 +26,7 @@ type DisclosureProps struct {
 	// Open sets the <details open> attribute.
 	Open bool
 	// DetailsBase replaces the <details> base classes ("rounded-box border
-	// border-line-bright bg-base-200/40") when non-empty. Empty keeps the
+	// border-line-translucent bg-base-200/40") when non-empty. Empty keeps the
 	// default base. GroupClass is always emitted first and Class is always
 	// appended last.
 	DetailsBase string
@@ -53,7 +53,7 @@ type DisclosureProps struct {
 	// (e.g. data-testid hooks). Pass nil when not needed.
 	SummaryAttrs templ.Attributes
 	// BodyBase replaces the body div base classes ("flex flex-col gap-2
-	// border-t border-line-bright p-3") when non-empty. Empty keeps the
+	// border-t border-line-translucent p-3") when non-empty. Empty keeps the
 	// default base.
 	BodyBase string
 	// BodyClass is appended to the body div class list after the base.
@@ -99,9 +99,9 @@ func Disclosure(props DisclosureProps, header templ.Component, trailing ...templ
 			align = "items-start"
 		}
 		chevron := disclosureChevronClass(group)
-		detailsBase := cmp.Or(props.DetailsBase, "rounded-box border border-line-bright bg-base-200/40")
+		detailsBase := cmp.Or(props.DetailsBase, "rounded-box border border-line-translucent bg-base-200/40")
 		summaryBase := cmp.Or(props.SummaryBase, "flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&::-webkit-details-marker]:hidden")
-		bodyBase := cmp.Or(props.BodyBase, "flex flex-col gap-2 border-t border-line-bright p-3")
+		bodyBase := cmp.Or(props.BodyBase, "flex flex-col gap-2 border-t border-line-translucent p-3")
 		var templ_7745c5c3_Var2 = []any{group, detailsBase, props.Class}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {

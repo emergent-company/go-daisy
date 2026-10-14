@@ -57,7 +57,7 @@ class={ templ.KV(custom, custom != ""), templ.KV("default-class", custom == "") 
 ```
 
 **Borders always come from the line ladder** (`border-line`, `border-line-strong`,
-`border-line-bright`) — never `border-base-200` / `border-base-300` /
+`border-line-translucent`) — never `border-base-200` / `border-base-300` /
 `border-base-content/N`. See §13.
 
 ---
@@ -260,7 +260,7 @@ compete for the same visual role.
 |---|---|---|
 | `border-line` | `--color-base-200` | **Default.** The outline of a surface that sits on the page (card, panel, list, table wrapper), a region divider *inside* a surface, and a floating surface's edge (popover, menu, modal) — there the shadow carries the elevation. |
 | `border-line-strong` | `--color-base-300` | The emphasised step. Control outlines (input, outline button, chip, swatch, editor wrapper), separator bars and keyboard chips, rules that must assert over scrolling content (sticky bar), and edges drawn on an opaque `bg-base-200` fill. |
-| `border-line-bright` | `--color-base-content` at 10% | A translucent hairline for a surface the surface ramp cannot serve — a `bg-base-200/40` fill, where `--color-base-200` itself nearly vanishes (soft box, disclosure, repo-doc callouts). |
+| `border-line-translucent` | `--color-base-content` at 10% | A translucent hairline for a surface the surface ramp cannot serve — a `bg-base-200/40` fill, where `--color-base-200` itself nearly vanishes (soft box, disclosure, repo-doc callouts). |
 
 ```templ
 // Right — card outline, divider, popover edge
@@ -271,7 +271,7 @@ class="dropdown-content bg-base-100 border border-line rounded-box shadow-lg"
 // Right — control outline, separator bar, hairline on a tinted fill
 class="input input-sm w-full border-line-strong"
 class="border-line-strong h-7 w-px border-e"
-class="rounded-box border border-line-bright bg-base-200/40"
+class="rounded-box border border-line-translucent bg-base-200/40"
 
 // Wrong — raw base tokens; no ladder to match against
 class="card bg-base-100 border border-base-200"
@@ -287,10 +287,22 @@ Rules that follow:
 - **Let the theme own the hue.** The steps derive from `--color-base-200`,
   `--color-base-300` and `--color-base-content`, so every theme (nord, dracula,
   flow) keeps its own colour — never hard-code an `oklch()` border.
-- **`border-line-bright` is the most present step in all three bundled themes**,
-  even though it is translucent: on light themes it is the darkest rule, on dark
-  themes the lightest, so it reads as the defined edge either way. Reach for it
-  only when the surface ramp can't do the job — otherwise stay on `border-line`.
-- The ladder mirrors the consumer's foreground ladder
-  (`--color-muted-subtle | -faint | muted | -strong | -bright`) so the two repos
-  name their scales the same way.
+- **`border-line-translucent` is not a positional slot.** In the consumer's
+  `--color-muted-*` ladder `-bright` is the *most emphatic* step (content at 80%);
+  here the third step is a translucent hairline that reads *weakest* and exists
+  only for fills the opaque ramp cannot serve, so it is named for what it is. It
+  is the most present edge of the three in `nord` (sRGB Δ32 vs Δ28 for
+  `line-strong`) and `dracula` (Δ35 vs Δ18), but marginally *below* `line-strong`
+  in `flow` (Δ39 vs Δ46). It is translucent, so it composites over whatever sits
+  behind it: its contrast depends on the fill and it flips direction per theme
+  (darkest rule on a light theme, lightest on a dark one). Reach for it only when
+  the surface ramp can't do the job — otherwise stay on `border-line`.
+- **Positional adjectives only where the ordering is real.** `line` <
+  `line-strong` is a genuine strength ramp; `line-translucent` sits outside it
+  (opaque vs translucent, not weaker vs stronger), which is why it carries a
+  mechanism name instead of a third adjective.
+- The ladder shares the consumer's foreground ladder
+  (`--color-muted-subtle | -faint | muted | -strong | -bright`) *shape*: one
+  `--color-*` scale in a plain `@theme` block, steps derived from the theme's own
+  variables. It does **not** borrow the `-bright` slot adjective, precisely so the
+  two scales can't be misread against each other.

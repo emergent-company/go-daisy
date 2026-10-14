@@ -219,10 +219,15 @@ ui.ThemeSwitcher()
 //     separator bars and keyboard chips, rules that must assert over
 //     scrolling content (sticky bar), edges on an opaque bg-base-200 fill.
 //
-//   border-line-bright  HAIRLINE  = --color-base-content at 10%
+//   border-line-translucent  TRANSLUCENT  = --color-base-content at 10%
 //     A translucent hairline for a surface the surface ramp cannot serve
 //     (a bg-base-200/40 fill, where --color-base-200 nearly vanishes:
-//     soft box, disclosure). Most present step in all three themes.
+//     soft box, disclosure). Most present edge of the three in nord and
+//     dracula; marginally below line-strong in flow. Opaque vs translucent
+//     is not a strength ramp, so the step is named for what it is — never
+//     for the muted ladder's -bright slot (where -bright means MOST
+//     emphatic). Positional adjectives stay reserved for steps genuinely
+//     ordered by strength: line < line-strong.
 //
 // Every step derives from the theme's base variables, so nord, dracula and
 // flow each keep their own hue. Quieter than border-line? Use the opacity
@@ -297,7 +302,7 @@ templ DocsPage() {
 					</div>
 				</div>
 			}
-			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-line-bright scroll-mt-4">
+			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4">
 				<h2 class="text-md font-semibold mb-2">Packages Reference</h2>
 				<p class="text-sm text-base-content/60 mb-4">All go-daisy packages and their import paths.</p>
 				@docsRefTable()
@@ -330,7 +335,7 @@ templ DocsContent() {
 					</div>
 				</div>
 			}
-			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-line-bright scroll-mt-4">
+			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4">
 				<h2 class="text-md font-semibold mb-2">Packages Reference</h2>
 				<p class="text-sm text-base-content/60 mb-4">All go-daisy packages and their import paths.</p>
 				@docsRefTable()

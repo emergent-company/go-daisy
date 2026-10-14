@@ -227,10 +227,15 @@ ui.ThemeSwitcher()
 //     separator bars and keyboard chips, rules that must assert over
 //     scrolling content (sticky bar), edges on an opaque bg-base-200 fill.
 //
-//   border-line-bright  HAIRLINE  = --color-base-content at 10%
+//   border-line-translucent  TRANSLUCENT  = --color-base-content at 10%
 //     A translucent hairline for a surface the surface ramp cannot serve
 //     (a bg-base-200/40 fill, where --color-base-200 nearly vanishes:
-//     soft box, disclosure). Most present step in all three themes.
+//     soft box, disclosure). Most present edge of the three in nord and
+//     dracula; marginally below line-strong in flow. Opaque vs translucent
+//     is not a strength ramp, so the step is named for what it is — never
+//     for the muted ladder's -bright slot (where -bright means MOST
+//     emphatic). Positional adjectives stay reserved for steps genuinely
+//     ordered by strength: line < line-strong.
 //
 // Every step derives from the theme's base variables, so nord, dracula and
 // flow each keep their own hue. Quieter than border-line? Use the opacity
@@ -330,7 +335,7 @@ func DocsPage() templ.Component {
 				var templ_7745c5c3_Var3 templ.SafeURL
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs("#" + sectionID(s.ID))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 281, Col: 53}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 286, Col: 53}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -343,7 +348,7 @@ func DocsPage() templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(s.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 281, Col: 93}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 286, Col: 93}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -384,7 +389,7 @@ func DocsPage() templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(sectionID(s.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 290, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 295, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 			if templ_7745c5c3_Err != nil {
@@ -397,7 +402,7 @@ func DocsPage() templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(s.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 292, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 297, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -410,7 +415,7 @@ func DocsPage() templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(s.Description)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 293, Col: 68}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 298, Col: 68}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -429,7 +434,7 @@ func DocsPage() templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div id=\"docs-packages\" class=\"mt-8 p-4 bg-base-200 rounded-box border border-line-bright scroll-mt-4\"><h2 class=\"text-md font-semibold mb-2\">Packages Reference</h2><p class=\"text-sm text-base-content/60 mb-4\">All go-daisy packages and their import paths.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div id=\"docs-packages\" class=\"mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4\"><h2 class=\"text-md font-semibold mb-2\">Packages Reference</h2><p class=\"text-sm text-base-content/60 mb-4\">All go-daisy packages and their import paths.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -494,7 +499,7 @@ func DocsContent() templ.Component {
 				var templ_7745c5c3_Var10 templ.SafeURL
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs("#" + sectionID(s.ID))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 314, Col: 53}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 319, Col: 53}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -507,7 +512,7 @@ func DocsContent() templ.Component {
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(s.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 314, Col: 93}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 319, Col: 93}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
@@ -548,7 +553,7 @@ func DocsContent() templ.Component {
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(sectionID(s.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 323, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 328, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
 			if templ_7745c5c3_Err != nil {
@@ -561,7 +566,7 @@ func DocsContent() templ.Component {
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(s.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 325, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 330, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -574,7 +579,7 @@ func DocsContent() templ.Component {
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(s.Description)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 326, Col: 68}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 331, Col: 68}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -593,7 +598,7 @@ func DocsContent() templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<div id=\"docs-packages\" class=\"mt-8 p-4 bg-base-200 rounded-box border border-line-bright scroll-mt-4\"><h2 class=\"text-md font-semibold mb-2\">Packages Reference</h2><p class=\"text-sm text-base-content/60 mb-4\">All go-daisy packages and their import paths.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<div id=\"docs-packages\" class=\"mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4\"><h2 class=\"text-md font-semibold mb-2\">Packages Reference</h2><p class=\"text-sm text-base-content/60 mb-4\">All go-daisy packages and their import paths.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -730,7 +735,7 @@ func docsRefTable() templ.Component {
 					var templ_7745c5c3_Var20 string
 					templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(r.Topic)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 355, Col: 58}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 360, Col: 58}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 					if templ_7745c5c3_Err != nil {
@@ -743,7 +748,7 @@ func docsRefTable() templ.Component {
 					var templ_7745c5c3_Var21 string
 					templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(r.Desc)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 356, Col: 33}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 361, Col: 33}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 					if templ_7745c5c3_Err != nil {
@@ -756,7 +761,7 @@ func docsRefTable() templ.Component {
 					var templ_7745c5c3_Var22 string
 					templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(r.Usage)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 357, Col: 65}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 362, Col: 65}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 					if templ_7745c5c3_Err != nil {
@@ -769,7 +774,7 @@ func docsRefTable() templ.Component {
 					var templ_7745c5c3_Var23 string
 					templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(r.Category)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 358, Col: 62}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 363, Col: 62}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 					if templ_7745c5c3_Err != nil {
