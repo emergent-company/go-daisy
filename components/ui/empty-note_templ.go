@@ -24,6 +24,20 @@ const (
 	EmptyNoteSize2XS EmptyNoteSize = "2xs"
 )
 
+// EmptyNoteTone selects the note's foreground step.
+type EmptyNoteTone string
+
+const (
+	// EmptyNoteToneDefault is the zero-value default: text-base-content/50.
+	EmptyNoteToneDefault EmptyNoteTone = ""
+	// EmptyNoteToneQuiet is the de-emphasised step: text-base-content/40. It
+	// reproduces the pre-Tone default byte-for-byte, so consumers that need the
+	// old shade can pin it explicitly rather than fight Class ordering.
+	EmptyNoteToneQuiet EmptyNoteTone = "quiet"
+	// EmptyNoteToneStrong is the emphasised step: text-base-content/65.
+	EmptyNoteToneStrong EmptyNoteTone = "strong"
+)
+
 // EmptyNoteProps configures an EmptyNote.
 type EmptyNoteProps struct {
 	// ID sets the paragraph's id attribute. Empty omits it.
@@ -33,6 +47,12 @@ type EmptyNoteProps struct {
 	Hidden bool
 	// Size selects the type scale: text-sm (default) or text-xs ("xs").
 	Size EmptyNoteSize
+	// Tone selects the foreground step: Default (text-base-content/50, the
+	// zero value), Quiet (text-base-content/40) or Strong (text-base-content/65).
+	// The step is rendered by the component, not via Class, because
+	// text-base-content/40 and a consumer's own text-muted are equal-specificity
+	// utilities whose winner is decided by compiled stylesheet order.
+	Tone EmptyNoteTone
 	// Icon, when non-empty, renders a leading lucide icon and switches the note
 	// to a flex row with a 1.5 gap between the icon and the copy.
 	Icon string
@@ -58,11 +78,21 @@ type EmptyNoteProps struct {
 // Size picks the tier: SM (text-sm, the default), XS (text-xs) or 2XS
 // (text-[11px], the micro tier for dense metadata — timestamps, keyboard hints).
 //
-// The zero value emits <p class="text-base-content/40 text-sm">…</p>. The muted
-// foreground is the de-emphasised text step; it is expressed with the
-// text-base-content/40 opacity utility rather than a named muted token, because
-// go-daisy ships no foreground ladder (consumers that define one can append
-// their own step through Class).
+// Tone picks the foreground step. The zero value emits
+// <p class="text-base-content/50 text-sm">…</p> — the majority muted-prose
+// level in the wild, and the same step ui.EmptyState's compact description and
+// ui.Empty's description use, so a note is never fainter than the empty-state
+// copy sitting directly above it. Quiet ("quiet") emits text-base-content/40 —
+// the pre-Tone default, byte-for-byte — and Strong ("strong") emits
+// text-base-content/65.
+//
+// The steps are fixed opacities derived from base-content rather than a named
+// muted token, because go-daisy ships no foreground ladder (a generic primitive
+// cannot reference a consumer's --color-muted-*). Consumers that define their
+// own ladder can still append a step through Class, but they should prefer Tone:
+// text-base-content/40 and a consumer's text-muted are equal-specificity
+// utilities, so the winner would be decided by compiled stylesheet order, not
+// class-attribute order.
 func EmptyNote(props ...EmptyNoteProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -95,7 +125,13 @@ func EmptyNote(props ...EmptyNoteProps) templ.Component {
 		case EmptyNoteSize2XS:
 			size = "text-[11px]"
 		}
-		cls := "text-base-content/40"
+		cls := "text-base-content/50"
+		switch p.Tone {
+		case EmptyNoteToneQuiet:
+			cls = "text-base-content/40"
+		case EmptyNoteToneStrong:
+			cls = "text-base-content/65"
+		}
 		if p.Hidden {
 			cls += " hidden"
 		}
@@ -127,7 +163,7 @@ func EmptyNote(props ...EmptyNoteProps) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.ID)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/empty-note.templ`, Line: 89, Col: 12}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/empty-note.templ`, Line: 125, Col: 12}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 			if templ_7745c5c3_Err != nil {
