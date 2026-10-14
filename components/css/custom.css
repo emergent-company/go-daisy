@@ -1,3 +1,76 @@
+/* ── Line ladder ───────────────────────────────────────────────────────────
+ *
+ * The named border/rule scale: `--color-line`, `--color-line-strong`,
+ * `--color-line-translucent`.
+ *
+ * DECLARED HERE — not in `assets/app.css` — on purpose. This is the only
+ * go-daisy stylesheet consumers load (it is co-located for them, and the memory
+ * gateway imports exactly this file), whereas `assets/app.css` is the library's
+ * own entry point that consumers never load. Registering the steps in the file
+ * consumers already import makes the ladder self-installing: any build that
+ * imports this CSS gets `border-line` utilities that resolve and `@apply
+ * border-line` that compiles, with no companion `@theme` block in the consumer's
+ * own theme. `assets/app.css` imports this file too (near the bottom), so the
+ * library's own build registers the very same three steps, exactly once — the
+ * values are untouched. A consumer that wants different line colours declares
+ * its own `--color-line*` in a later `@theme` block; the later declaration wins,
+ * as with any theme variable.
+ *
+ * Border colour was spread across three ad-hoc tokens for the same visual role
+ * (`border-base-200`, `border-base-300`, `border-base-content/10`), with no
+ * ladder to match a component against: `ui.Card` and `ui.StatCard` are both
+ * cards yet disagreed on their own outline, and dropdown surfaces used two
+ * different tokens. This is the single named scale.
+ *
+ * It takes the shape of the foreground ladder the consumer (emergent.memory
+ * web-ui) already uses (`--color-muted-subtle | -faint | muted | -strong |
+ * -bright`): one `--color-*` scale declared in a plain `@theme` block, so the
+ * steps are real CSS variables too, derived from existing theme variables so
+ * each theme keeps its own hue and no colour is hard-coded.
+ *
+ * It deliberately does NOT reuse that scale's positional adjectives for the
+ * third step. In `--color-muted-*`, `-bright` is the MOST emphatic step (content
+ * at 80%); this ladder's third step is a translucent hairline that reads
+ * weakest and only exists for fills the opaque ramp cannot serve. Borrowing the
+ * slot adjective would make two sibling scales mean opposite things, so the step
+ * is named for what it is — `line-translucent`. Positional adjectives stay
+ * reserved for steps genuinely ordered by strength (`line` < `line-strong`).
+ *
+ * Steps, ordered by how much presence the line carries:
+ *
+ *   line-translucent  the theme's content ink at 10% — a translucent hairline
+ *                for a surface the surface ramp cannot serve: a `bg-base-200/40`
+ *                fill, where `--color-base-200` itself nearly vanishes (soft
+ *                box, disclosure). The most present edge of the three in `nord`
+ *                (sRGB Δ32 vs Δ28 for `line-strong`) and in `dracula` (Δ35 vs
+ *                Δ18); marginally below `line-strong` in `flow` (Δ39 vs Δ46),
+ *                which is exactly why it is not a positional slot. Translucent
+ *                rather than opaque: it composites over whatever sits behind it,
+ *                so its contrast depends on the fill and it flips direction per
+ *                theme (darkest rule on a light theme, lightest on a dark one).
+ *   line-strong  = --color-base-300. The emphasised step: control outlines
+ *                (input, outline button, chip, swatch, editor), separator bars
+ *                and keyboard chips, rules that must assert over scrolling
+ *                content (sticky bar), and edges drawn on an opaque
+ *                `bg-base-200` fill.
+ *   line         = --color-base-200. THE DEFAULT: the outline of a surface that
+ *                sits on the page (card, panel, list, table wrapper), a region
+ *                divider inside a surface, and a floating surface's edge
+ *                (popover, menu, modal) where the shadow carries the elevation.
+ *
+ * `line` is the default because `border-base-200` is what the majority of
+ * in-tree sites already used (89 lines in `components/`, 102 with `pages/`), so
+ * most components render byte-identically. Nothing quieter than `line` is
+ * defined on purpose: a rule that needs to be quieter is `border-line/50`
+ * (Tailwind's opacity modifier), not another token — a sub-visible step would be
+ * a phantom. The scale needs only `--color-base-100/200/300` and
+ * `--color-base-content` from a theme, so any daisyUI theme resolves it. */
+@theme {
+  --color-line: var(--color-base-200);
+  --color-line-strong: var(--color-base-300);
+  --color-line-translucent: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+}
+
 /* ── Layout: Sidebar ─────────────────────────────────────────── */
 
 :root {
