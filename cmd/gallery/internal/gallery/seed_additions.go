@@ -1151,5 +1151,192 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// ── Foundation / Typography — Dialog Title ───────────────────────────
+		{
+			Slug:        "dialog-title",
+			Name:        "Dialog Title",
+			Category:    galleryruntime.CategoryFoundation,
+			Subcategory: "Typography",
+			Description: "Dialog, panel and card heading — the one \"text-lg|text-base font-semibold [tracking-tight]\" title shape, with the heading level as the only structural choice.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Type scale and tracking. The heading level stays an <h3> here; the Examples story shows each level.",
+					RenderFunc: func(params url.Values) templ.Component {
+						title := params.Get("title")
+						if title == "" {
+							title = "Dialog title"
+						}
+						return ui.DialogTitleWithBoundary(title, ui.DialogTitleLevelH3, ui.DialogTitleSize(params.Get("size")), params.Get("tracking") == "true")
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Title", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "Dialog title", QueryParam: "title"},
+						{Label: "Size", Group: "Typography", Type: galleryruntime.TokenTypeSelect, Default: "", QueryParam: "size", Options: []galleryruntime.TokenOption{
+							{Value: "", Label: "Large (default)"},
+							{Value: "md", Label: "Medium"},
+						}},
+						{Label: "Tracking", Group: "Typography", Type: galleryruntime.TokenTypeSelect, Default: "false", QueryParam: "tracking", Options: []galleryruntime.TokenOption{
+							{Value: "false", Label: "Normal"},
+							{Value: "true", Label: "Tight"},
+						}},
+					},
+					FrameHeight: "160px",
+				},
+				{
+					Name:        "Examples",
+					Description: "The three shapes already in the tree: the h3 dialog title, the h2 page-section header with tight tracking, and the compact text-base heading.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "h3 · text-lg (default)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.DialogTitleWithBoundary("New agent", ui.DialogTitleLevelH3, ui.DialogTitleSizeLG, false)
+							},
+						},
+						{
+							Label: "h2 · tracking-tight",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.DialogTitleWithBoundary("Members", ui.DialogTitleLevelH2, ui.DialogTitleSizeLG, true)
+							},
+						},
+						{
+							Label: "h3 · text-base (compact)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.DialogTitleWithBoundary("Migration details", ui.DialogTitleLevelH3, ui.DialogTitleSizeMD, false)
+							},
+						},
+					},
+				},
+			},
+		},
+
+		// ── Feedback / States — Empty Note ───────────────────────────────────
+		{
+			Slug:        "empty-note",
+			Name:        "Empty Note",
+			Category:    galleryruntime.CategoryFeedback,
+			Subcategory: "States",
+			Description: "One muted line of empty-state or hint copy — left-aligned prose, optionally led by an icon. The line-shaped sibling of EmptyState.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Type scale, an optional leading icon, and the pre-rendered note a modal reveals later.",
+					RenderFunc: func(params url.Values) templ.Component {
+						text := params.Get("text")
+						if text == "" {
+							text = "No other agents to delegate to."
+						}
+						return ui.EmptyNoteWithBoundary(text, ui.EmptyNoteSize(params.Get("size")), params.Get("icon"), params.Get("hidden") == "true")
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Text", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "No other agents to delegate to.", QueryParam: "text"},
+						{Label: "Size", Group: "Typography", Type: galleryruntime.TokenTypeSelect, Default: "", QueryParam: "size", Options: []galleryruntime.TokenOption{
+							{Value: "", Label: "Small (default, text-sm)"},
+							{Value: "xs", Label: "Extra small (text-xs)"},
+						}},
+						{Label: "Icon", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "", QueryParam: "icon"},
+						{Label: "Hidden", Group: "State", Type: galleryruntime.TokenTypeSelect, Default: "false", QueryParam: "hidden", Options: []galleryruntime.TokenOption{
+							{Value: "false", Label: "Visible"},
+							{Value: "true", Label: "Hidden until revealed"},
+						}},
+					},
+					FrameHeight: "140px",
+				},
+				{
+					Name:        "Examples",
+					Description: "The note shapes already in the tree: a plain line, the compact line, an icon-led hint, and the hidden note a secret picker un-hides.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Default (text-sm)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.EmptyNoteWithBoundary("No pending invitations.", ui.EmptyNoteSizeSM, "", false)
+							},
+						},
+						{
+							Label: "Compact (text-xs)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.EmptyNoteWithBoundary("No projects in this organization yet.", ui.EmptyNoteSizeXS, "", false)
+							},
+						},
+						{
+							Label: "Icon-led hint",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.EmptyNoteWithBoundary("Runs on the memory host.", ui.EmptyNoteSizeXS, "lucide--info", false)
+							},
+						},
+						{
+							Label: "Hidden note",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return shared.Compose(
+									rawHTML(`<p class="text-xs opacity-50">Shown in place of the note below — reveal it to see the note appear.</p>`),
+									ui.EmptyNoteWithBoundary("Nothing matches.", ui.EmptyNoteSizeXS, "", true),
+								)
+							},
+						},
+					},
+				},
+			},
+		},
+
+		// ── Components / Display — Soft Box ──────────────────────────────────
+		{
+			Slug:        "soft-box",
+			Name:        "Soft Box",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Display",
+			Description: "A muted rounded panel — the bordered, softly-filled box that groups related content, at the default, lighter or unfilled surface.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Padding and fill surface. Border and radius are the same for every surface.",
+					RenderFunc: func(params url.Values) templ.Component {
+						return ui.SoftBoxWithBoundary(
+							ui.SoftBoxProps{
+								Padding: params.Get("padding"),
+								Surface: ui.SoftBoxSurface(params.Get("surface")),
+							},
+							rawHTML(`<p class="text-sm">A muted panel wrapping related content — metadata, a hint, a preview.</p>`),
+						)
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Padding", Group: "Spacing", Type: galleryruntime.TokenTypeSelect, Default: "p-3", QueryParam: "padding", Options: []galleryruntime.TokenOption{
+							{Value: "p-3", Label: "p-3 (default)"},
+							{Value: "p-4", Label: "p-4"},
+							{Value: "p-5", Label: "p-5"},
+						}},
+						{Label: "Surface", Group: "Surface", Type: galleryruntime.TokenTypeSelect, Default: "", QueryParam: "surface", Options: []galleryruntime.TokenOption{
+							{Value: "", Label: "Soft (default)"},
+							{Value: "muted", Label: "Muted"},
+							{Value: "plain", Label: "Plain (no fill)"},
+						}},
+					},
+					FrameHeight: "160px",
+				},
+				{
+					Name:        "Examples",
+					Description: "The three surfaces, all at the default p-3 padding.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Soft (default)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.SoftBoxWithBoundary(ui.SoftBoxProps{}, rawHTML(`<p class="text-sm">The default soft fill — bg-base-200/40.</p>`))
+							},
+						},
+						{
+							Label: "Muted",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.SoftBoxWithBoundary(ui.SoftBoxProps{Surface: ui.SoftBoxMuted}, rawHTML(`<p class="text-sm">The lighter fill — bg-base-200/30.</p>`))
+							},
+						},
+						{
+							Label: "Plain (no fill)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.SoftBoxWithBoundary(ui.SoftBoxProps{Surface: ui.SoftBoxPlain}, rawHTML(`<p class="text-sm">Border and radius only — no background.</p>`))
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 }

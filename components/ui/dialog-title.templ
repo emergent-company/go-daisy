@@ -1,0 +1,74 @@
+package ui
+
+import "github.com/emergent-company/go-daisy/devmode"
+
+// DialogTitleLevel is the semantic heading element DialogTitle renders.
+type DialogTitleLevel string
+
+const (
+	// DialogTitleLevelH3 is the zero-value default: an <h3>.
+	DialogTitleLevelH3 DialogTitleLevel = ""
+	// DialogTitleLevelH2 renders an <h2> instead.
+	DialogTitleLevelH2 DialogTitleLevel = "h2"
+)
+
+// DialogTitleSize selects the title's type scale.
+type DialogTitleSize string
+
+const (
+	// DialogTitleSizeLG is the zero-value default: text-lg.
+	DialogTitleSizeLG DialogTitleSize = ""
+	// DialogTitleSizeMD is the compact scale: text-base.
+	DialogTitleSizeMD DialogTitleSize = "md"
+)
+
+// DialogTitleProps configures a DialogTitle.
+type DialogTitleProps struct {
+	// ID sets the heading's id attribute — the target a dialog's aria-labelledby
+	// points at. Empty omits it.
+	ID string
+	// Level selects the heading element: h3 (default) or h2 ("h2").
+	Level DialogTitleLevel
+	// Size selects the type scale: text-lg (default) or text-base ("md").
+	Size DialogTitleSize
+	// Tracking adds tracking-tight to the title.
+	Tracking bool
+	// Class is extra CSS classes appended to the title's class list.
+	Class string
+	// Attrs are extra attributes spread onto the heading element.
+	Attrs templ.Attributes
+}
+
+// DialogTitle renders a dialog, panel or card heading: the single
+// "text-lg|text-base font-semibold [tracking-tight]" title shape. Level (h2/h3),
+// scale and tracking are the only degrees of freedom, so the same title never
+// has to be re-typed with a slightly different class list.
+//
+//	@ui.DialogTitle(ui.DialogTitleProps{ID: "agent-form-title"}) { New agent }
+//
+// The zero value emits <h3 class="text-lg font-semibold">…</h3> — the dominant
+// in-tree shape. The heading text is passed as children so callers can include
+// inline markup (a highlighted project name, for instance).
+templ DialogTitle(props ...DialogTitleProps) {
+	{{ var p DialogTitleProps
+	if len(props) > 0 { p = props[0] }
+	cls := "text-lg font-semibold"
+	if p.Size == DialogTitleSizeMD { cls = "text-base font-semibold" }
+	if p.Tracking { cls += " tracking-tight" }
+	if p.Class != "" { cls += " " + p.Class } }}
+	if p.Level == DialogTitleLevelH2 {
+		<h2
+			if p.ID != "" { id={ p.ID } }
+			class={ cls }
+			{ devmode.Attrs(ctx, "ui/DialogTitle")... }
+			{ p.Attrs... }
+		>{ children... }</h2>
+	} else {
+		<h3
+			if p.ID != "" { id={ p.ID } }
+			class={ cls }
+			{ devmode.Attrs(ctx, "ui/DialogTitle")... }
+			{ p.Attrs... }
+		>{ children... }</h3>
+	}
+}

@@ -1433,3 +1433,51 @@ func CommandPaletteButtonWithBoundary(id string, placeholder string) templ.Compo
 		"placeholder": placeholder,
 	})
 }
+
+// DialogTitleWithBoundary wraps DialogTitle with a dev-mode component boundary annotation.
+//
+// The heading level is document structure rather than a design token, so it is
+// not exposed as a gallery control (the Examples story shows each level).
+//
+// No gallery:token annotation: the token panel is written by hand in the gallery
+// seed, because `boundarytoken` would default the size control to MD (its
+// generated default prefers a const named "…MD"), while the component's zero
+// value is the large scale.
+func DialogTitleWithBoundary(title string, level DialogTitleLevel, size DialogTitleSize, tracking bool) templ.Component {
+	inner := shared.RenderInto(DialogTitle(DialogTitleProps{Level: level, Size: size, Tracking: tracking}), shared.StrComp(title))
+	return devmode.ComponentBoundary("DialogTitle", inner, map[string]any{
+		"title":    title,
+		"level":    string(level),
+		"size":     string(size),
+		"tracking": tracking,
+	})
+}
+
+// EmptyNoteWithBoundary wraps EmptyNote with a dev-mode component boundary annotation.
+//
+// No gallery:token annotation: the panel is written by hand in the gallery seed
+// so its controls (and the hidden-note toggle) sit next to the other two
+// composition primitives' panels.
+func EmptyNoteWithBoundary(text string, size EmptyNoteSize, icon string, hidden bool) templ.Component {
+	inner := shared.RenderInto(EmptyNote(EmptyNoteProps{Size: size, Icon: icon, Hidden: hidden}), shared.StrComp(text))
+	return devmode.ComponentBoundary("EmptyNote", inner, map[string]any{
+		"text":   text,
+		"size":   string(size),
+		"icon":   icon,
+		"hidden": hidden,
+	})
+}
+
+// SoftBoxWithBoundary wraps SoftBox with a dev-mode component boundary annotation.
+//
+// No gallery:token annotation: `boundarytoken` maps per parameter and this
+// boundary takes a struct, so an annotation here yields no tokens at all — the
+// padding and surface controls are written by hand in the gallery seed.
+func SoftBoxWithBoundary(props SoftBoxProps, children templ.Component) templ.Component {
+	inner := shared.RenderInto(SoftBox(props), children)
+	return devmode.ComponentBoundary("SoftBox", inner, map[string]any{
+		"padding": props.Padding,
+		"surface": string(props.Surface),
+		"class":   props.Class,
+	})
+}

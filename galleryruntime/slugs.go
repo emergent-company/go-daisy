@@ -27,10 +27,14 @@ var ComponentSlugs = map[string]string{
 	"Alert":           "alert",
 	"Empty":           "empty-state-real",
 	"EmptyState":      "empty-state-real",
+	"EmptyNote":       "empty-note",
 	"Loader":          "loader",
 	"NoPermissions":   "no-permissions",
 	"SectionHeader":   "section-header",
 	"Skeleton":        "skeleton",
+	// Title / surface
+	"DialogTitle": "dialog-title",
+	"SoftBox":     "soft-box",
 	// Data display
 	"StatCard":               "stat-card-real",
 	"StatCardMinimal":        "stat-card-minimal",
