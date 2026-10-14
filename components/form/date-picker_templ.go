@@ -108,7 +108,7 @@ func DatePicker(props DatePickerProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		var templ_7745c5c3_Var4 = []any{"input input-bordered w-full",
+		var templ_7745c5c3_Var4 = []any{"input w-full",
 			templ.KV("input-error", props.Error != ""),
 			templ.KV(props.Class, props.Class != "")}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)

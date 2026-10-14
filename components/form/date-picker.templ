@@ -49,7 +49,7 @@ templ DatePicker(props DatePickerProps) {
 			value={ props.Value }
 			placeholder={ props.Placeholder }
 			required?={ props.Required }
-			class={ "input input-bordered w-full",
+			class={ "input w-full",
 				templ.KV("input-error", props.Error != ""),
 				templ.KV(props.Class, props.Class != "") }
 			data-flatpickr

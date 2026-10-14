@@ -64,7 +64,7 @@ templ structuredInputColumn(col StructuredColumn, rowIdx int, props StructuredIn
 		}
 		if col.Type == StructuredColumnSelect {
 			<select
-				class={ "select select-sm select-bordered flex-1", templ.KV("opacity-50", props.Disabled) }
+				class={ "select select-sm flex-1", templ.KV("opacity-50", props.Disabled) }
 				x-model={ "rows[" + strconv.Itoa(rowIdx) + "]['" + col.Key + "']" }
 				if props.Disabled {
 					disabled
@@ -78,7 +78,7 @@ templ structuredInputColumn(col StructuredColumn, rowIdx int, props StructuredIn
 		} else {
 			<input
 				type="text"
-				class={ "input input-sm input-bordered flex-1", templ.KV("opacity-50", props.Disabled) }
+				class={ "input input-sm flex-1", templ.KV("opacity-50", props.Disabled) }
 				placeholder={ col.Placeholder }
 				x-model={ "rows[" + strconv.Itoa(rowIdx) + "]['" + col.Key + "']" }
 				if props.Disabled {

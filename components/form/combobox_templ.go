@@ -342,7 +342,7 @@ func comboboxPopoverSearch(props ComboboxProps) templ.Component {
 			}
 		}
 		if props.Source.LazyEndpoint != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<input type=\"text\" name=\"q\" class=\"input input-sm input-bordered w-full mb-1\" placeholder=\"Search...\" x-model=\"search\" hx-get=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<input type=\"text\" name=\"q\" class=\"input input-sm w-full mb-1\" placeholder=\"Search...\" x-model=\"search\" hx-get=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -373,7 +373,7 @@ func comboboxPopoverSearch(props ComboboxProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<input type=\"text\" class=\"input input-sm input-bordered w-full mb-1\" placeholder=\"Search...\" x-model=\"search\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<input type=\"text\" class=\"input input-sm w-full mb-1\" placeholder=\"Search...\" x-model=\"search\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

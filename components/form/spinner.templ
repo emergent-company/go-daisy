@@ -26,7 +26,7 @@ templ InputSpinner(id string, value int, min int, max int, hasMinMax bool, btnCl
 				min={ strconv.Itoa(min) }
 				max={ strconv.Itoa(max) }
 			}
-			class={ "input input-bordered text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none", inputClass }
+			class={ "input text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none", inputClass }
 		/>
 		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeSquare, ExtraClass: btnClass, OnClick: templ.JSFuncCall("spinnerIncrement", id), Attrs: templ.Attributes{"aria-label": "Increment"}}) {
 			@ui.IconSpan("lucide--plus", "size-4")

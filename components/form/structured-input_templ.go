@@ -110,7 +110,7 @@ func structuredInputColumn(col StructuredColumn, rowIdx int, props StructuredInp
 			}
 		}
 		if col.Type == StructuredColumnSelect {
-			var templ_7745c5c3_Var3 = []any{"select select-sm select-bordered flex-1", templ.KV("opacity-50", props.Disabled)}
+			var templ_7745c5c3_Var3 = []any{"select select-sm flex-1", templ.KV("opacity-50", props.Disabled)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -205,7 +205,7 @@ func structuredInputColumn(col StructuredColumn, rowIdx int, props StructuredInp
 				return templ_7745c5c3_Err
 			}
 		} else {
-			var templ_7745c5c3_Var9 = []any{"input input-sm input-bordered flex-1", templ.KV("opacity-50", props.Disabled)}
+			var templ_7745c5c3_Var9 = []any{"input input-sm flex-1", templ.KV("opacity-50", props.Disabled)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var9...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

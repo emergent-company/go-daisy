@@ -75,7 +75,7 @@ templ FormField(props FormFieldProps) {
 				rows={ strconv.Itoa(rows) }
 				required?={ props.Required }
 				disabled?={ props.Disabled }
-				class={ "textarea textarea-bordered w-full",
+				class={ "textarea w-full",
 					templ.KV("textarea-error", props.Error != ""),
 					templ.KV(props.Class, props.Class != "") }
 				{ props.Attrs... }
@@ -88,7 +88,7 @@ templ FormField(props FormFieldProps) {
 				name={ props.Name }
 				required?={ props.Required }
 				disabled?={ props.Disabled }
-				class={ "select select-bordered w-full",
+				class={ "select w-full",
 					templ.KV("select-error", props.Error != ""),
 					templ.KV(props.Class, props.Class != "") }
 				{ props.Attrs... }
@@ -110,7 +110,7 @@ templ FormField(props FormFieldProps) {
 				placeholder={ props.Placeholder }
 				required?={ props.Required }
 				disabled?={ props.Disabled }
-				class={ "input input-bordered w-full",
+				class={ "input w-full",
 					templ.KV("input-error", props.Error != ""),
 					templ.KV(props.Class, props.Class != "") }
 				{ props.Attrs... }
@@ -127,7 +127,7 @@ templ Input(name string, value string, placeholder string, hasError bool) {
 		type="text"
 		value={ value }
 		placeholder={ placeholder }
-		class={ "input input-bordered w-full",
+		class={ "input w-full",
 			templ.KV("input-error", hasError) }
 		{ devmode.Attrs(ctx, "form/Input")... }
 	/>
@@ -140,7 +140,7 @@ templ PasswordInput(name string, placeholder string, hasError bool) {
 		name={ name }
 		type="password"
 		placeholder={ placeholder }
-		class={ "input input-bordered w-full",
+		class={ "input w-full",
 			templ.KV("input-error", hasError) }
 		{ devmode.Attrs(ctx, "form/PasswordInput")... }
 	/>
@@ -153,7 +153,7 @@ templ Textarea(name string, value string, placeholder string, rows int, hasError
 		name={ name }
 		placeholder={ placeholder }
 		rows={ strconv.Itoa(rows) }
-		class={ "textarea textarea-bordered w-full",
+		class={ "textarea w-full",
 			templ.KV("textarea-error", hasError) }
 		{ devmode.Attrs(ctx, "form/Textarea")... }
 	>{ value }</textarea>
@@ -164,7 +164,7 @@ templ Select(name string, hasError bool) {
 	<select
 		id={ name }
 		name={ name }
-		class={ "select select-bordered w-full",
+		class={ "select w-full",
 			templ.KV("select-error", hasError) }
 		{ devmode.Attrs(ctx, "form/Select")... }
 	>

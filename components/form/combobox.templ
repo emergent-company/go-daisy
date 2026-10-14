@@ -117,7 +117,7 @@ templ comboboxPopoverSearch(props ComboboxProps) {
 		<input
 			type="text"
 			name="q"
-			class="input input-sm input-bordered w-full mb-1"
+			class="input input-sm w-full mb-1"
 			placeholder="Search..."
 			x-model="search"
 			hx-get={ props.Source.LazyEndpoint }
@@ -128,7 +128,7 @@ templ comboboxPopoverSearch(props ComboboxProps) {
 	} else {
 		<input
 			type="text"
-			class="input input-sm input-bordered w-full mb-1"
+			class="input input-sm w-full mb-1"
 			placeholder="Search..."
 			x-model="search"
 		/>

@@ -151,7 +151,7 @@ func ColorPicker(props ColorPickerProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" class=\"input input-bordered join-item h-10 w-14 cursor-pointer p-1\" aria-label=\"Pick a color\" tabindex=\"-1\"> <input type=\"text\" id=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" class=\"input join-item h-10 w-14 cursor-pointer p-1\" aria-label=\"Pick a color\" tabindex=\"-1\"> <input type=\"text\" id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -190,7 +190,7 @@ func ColorPicker(props ColorPickerProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" class=\"input input-bordered join-item min-w-0 flex-1 font-mono\" autocomplete=\"off\" spellcheck=\"false\" aria-label=\"Color value\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" class=\"input join-item min-w-0 flex-1 font-mono\" autocomplete=\"off\" spellcheck=\"false\" aria-label=\"Color value\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -51,7 +51,7 @@ func TextInput(name string, label string, value string, errMsg string, required 
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			var templ_7745c5c3_Var3 = []any{"input input-bordered w-full", templ.KV("input-error", errMsg != "")}
+			var templ_7745c5c3_Var3 = []any{"input w-full", templ.KV("input-error", errMsg != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -167,7 +167,7 @@ func TextareaInput(name string, label string, value string, errMsg string, rows 
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			var templ_7745c5c3_Var10 = []any{"textarea textarea-bordered w-full", templ.KV("textarea-error", errMsg != "")}
+			var templ_7745c5c3_Var10 = []any{"textarea w-full", templ.KV("textarea-error", errMsg != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var10...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -739,7 +739,7 @@ func DateInput(name string, value string, hasError bool) templ.Component {
 			templ_7745c5c3_Var35 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var36 = []any{"input input-bordered w-full",
+		var templ_7745c5c3_Var36 = []any{"input w-full",
 			templ.KV("input-error", hasError)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var36...)
 		if templ_7745c5c3_Err != nil {

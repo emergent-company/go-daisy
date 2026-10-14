@@ -10,7 +10,7 @@ templ FileInput(name string, label string, accept string, errMsg string) {
 			if accept != "" {
 				accept={ accept }
 			}
-			class={ "file-input file-input-bordered w-full", templ.KV("file-input-error", errMsg != "") }
+			class={ "file-input w-full", templ.KV("file-input-error", errMsg != "") }
 		/>
 	}
 }

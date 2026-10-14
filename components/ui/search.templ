@@ -22,7 +22,7 @@ type SearchDropdownSection struct {
 // No JS is required — the dropdown opens via DaisyUI focus.
 templ SearchDropdown(placeholder string, sections []SearchDropdownSection) {
 	<div class="dropdown dropdown-bottom w-full max-w-sm" { devmode.Attrs(ctx, "ui/SearchDropdown")... }>
-		<label tabindex="0" class="input input-sm input-bordered flex items-center gap-2 px-2 w-full">
+		<label tabindex="0" class="input input-sm flex items-center gap-2 px-2 w-full">
 			@IconSpanColored("lucide--search", "size-4", "text-base-content/50")
 			<input placeholder={ placeholder } class="grow bg-transparent text-sm focus:outline-none" type="text"/>
 		</label>

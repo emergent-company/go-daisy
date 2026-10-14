@@ -524,14 +524,14 @@ templ ComponentDetail(c GalleryComponent) {
 							html += '<input type="color" class="w-full h-8 rounded cursor-pointer border border-base-200"'
 								+ ' value="' + escT(def) + '" oninput="handleParamChange(this)"/>';
 						} else if (tok.Type === 'select') {
-							html += '<select class="select select-xs select-bordered w-full" onchange="handleParamChange(this)">';
+							html += '<select class="select select-xs w-full" onchange="handleParamChange(this)">';
 							(tok.Options || []).forEach(function(opt) {
 								var sel = opt.Value === def ? ' selected' : '';
 								html += '<option value="' + escT(opt.Value) + '"' + sel + '>' + escT(opt.Label) + '</option>';
 							});
 							html += '</select>';
 						} else if (tok.Type === 'text') {
-							html += '<input type="text" class="input input-xs input-bordered w-full" value="' + escT(def) + '" oninput="handleParamChange(this)"/>';
+							html += '<input type="text" class="input input-xs w-full" value="' + escT(def) + '" oninput="handleParamChange(this)"/>';
 						} else if (tok.Type === 'bool') {
 							var chk = def === 'true' ? ' checked' : '';
 							html += '<input type="checkbox" class="toggle toggle-xs toggle-primary"' + chk + ' onchange="handleParamChange(this)"/>';
@@ -849,10 +849,10 @@ templ ComponentDetail(c GalleryComponent) {
 				var chk = v ? ' checked' : '';
 				ctrl = '<input type="checkbox" class="toggle toggle-xs toggle-primary" data-default="' + escHtml(defVal) + '"' + chk + ' onchange="handlePropChange(this)" style="vertical-align:middle"/>';
 			} else if (typeof v === 'number') {
-				ctrl = '<input type="number" class="input input-xs input-bordered w-20 font-mono text-right" data-default="' + escHtml(defVal) + '" value="' + escHtml(defVal) + '" oninput="handlePropChange(this)"/>';
+				ctrl = '<input type="number" class="input input-xs w-20 font-mono text-right" data-default="' + escHtml(defVal) + '" value="' + escHtml(defVal) + '" oninput="handlePropChange(this)"/>';
 			} else {
 				var str = (v === null || v === undefined || v === '') ? '' : String(v);
-				ctrl = '<input type="text" class="input input-xs input-bordered w-full font-mono" data-default="' + escHtml(str) + '" value="' + escHtml(str) + '" oninput="handlePropChange(this)"/>';
+				ctrl = '<input type="text" class="input input-xs w-full font-mono" data-default="' + escHtml(str) + '" value="' + escHtml(str) + '" oninput="handlePropChange(this)"/>';
 			}
 			rows += '<tr>'
 				+ '<td style="padding:3px 8px 3px 0;white-space:nowrap;color:#94a3b8;font-size:0.68rem;vertical-align:middle" class="font-mono">' + escHtml(k) + '</td>'

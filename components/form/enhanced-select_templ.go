@@ -102,7 +102,7 @@ func EnhancedSelect(props EnhancedSelectProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		var templ_7745c5c3_Var4 = []any{"select select-bordered w-full",
+		var templ_7745c5c3_Var4 = []any{"select w-full",
 			templ.KV("select-error", props.Error != ""),
 			templ.KV(props.Class, props.Class != "")}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)
