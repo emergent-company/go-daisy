@@ -16,8 +16,12 @@ type EmptyNoteSize string
 const (
 	// EmptyNoteSizeSM is the zero-value default: text-sm.
 	EmptyNoteSizeSM EmptyNoteSize = ""
-	// EmptyNoteSizeXS is the compact scale: text-xs.
+	// EmptyNoteSizeXS is the compact scale: text-xs (12px).
 	EmptyNoteSizeXS EmptyNoteSize = "xs"
+	// EmptyNoteSize2XS is the micro scale one step below XS: text-[11px]. For
+	// the dense metadata tier — timestamps, keyboard hints, identifiers — where
+	// the note is deliberately quieter than the type scale's smallest step.
+	EmptyNoteSize2XS EmptyNoteSize = "2xs"
 )
 
 // EmptyNoteProps configures an EmptyNote.
@@ -51,6 +55,9 @@ type EmptyNoteProps struct {
 //
 // Note copy — including links and inline markup — is passed as children.
 //
+// Size picks the tier: SM (text-sm, the default), XS (text-xs) or 2XS
+// (text-[11px], the micro tier for dense metadata — timestamps, keyboard hints).
+//
 // The zero value emits <p class="text-base-content/40 text-sm">…</p>. The muted
 // foreground is the de-emphasised text step; it is expressed with the
 // text-base-content/40 opacity utility rather than a named muted token, because
@@ -82,8 +89,11 @@ func EmptyNote(props ...EmptyNoteProps) templ.Component {
 			p = props[0]
 		}
 		size := "text-sm"
-		if p.Size == EmptyNoteSizeXS {
+		switch p.Size {
+		case EmptyNoteSizeXS:
 			size = "text-xs"
+		case EmptyNoteSize2XS:
+			size = "text-[11px]"
 		}
 		cls := "text-base-content/40"
 		if p.Hidden {
@@ -117,7 +127,7 @@ func EmptyNote(props ...EmptyNoteProps) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.ID)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/empty-note.templ`, Line: 64, Col: 27}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/empty-note.templ`, Line: 89, Col: 12}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 			if templ_7745c5c3_Err != nil {

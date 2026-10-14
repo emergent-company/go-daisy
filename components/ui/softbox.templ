@@ -37,11 +37,12 @@ type SoftBoxProps struct {
 // no fill at all (Plain) instead of hand-rolling the class list.
 //
 // The fill is expressed as three mutually-exclusive templ.KV entries rather than
-// one, because templ's class renderer keys classes by name and skips disabled
-// entries: a KV whose key is the empty string (a filled surface for Plain) would
-// collide with the empty Class element and re-enable an empty name, emitting a
-// doubled separator. Non-empty keys have no such collision, so the default class
-// list stays byte-identical.
+// one, because templ adds a KV whose key is the empty string as a class named
+// "" — whatever the boolean holds — and that empty name keeps its slot in the
+// join, landing as a doubled separator between its neighbours (measured:
+// "rounded-box border border-line-translucent  p-3"). Non-empty keys cannot
+// collapse to an empty name, so the default class list stays byte-identical
+// down to its trailing space.
 templ SoftBox(props ...SoftBoxProps) {
 	{{ var p SoftBoxProps
 	if len(props) > 0 { p = props[0] }

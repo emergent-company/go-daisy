@@ -8,8 +8,12 @@ type EmptyNoteSize string
 const (
 	// EmptyNoteSizeSM is the zero-value default: text-sm.
 	EmptyNoteSizeSM EmptyNoteSize = ""
-	// EmptyNoteSizeXS is the compact scale: text-xs.
+	// EmptyNoteSizeXS is the compact scale: text-xs (12px).
 	EmptyNoteSizeXS EmptyNoteSize = "xs"
+	// EmptyNoteSize2XS is the micro scale one step below XS: text-[11px]. For
+	// the dense metadata tier — timestamps, keyboard hints, identifiers — where
+	// the note is deliberately quieter than the type scale's smallest step.
+	EmptyNoteSize2XS EmptyNoteSize = "2xs"
 )
 
 // EmptyNoteProps configures an EmptyNote.
@@ -43,25 +47,47 @@ type EmptyNoteProps struct {
 //
 // Note copy — including links and inline markup — is passed as children.
 //
+// Size picks the tier: SM (text-sm, the default), XS (text-xs) or 2XS
+// (text-[11px], the micro tier for dense metadata — timestamps, keyboard hints).
+//
 // The zero value emits <p class="text-base-content/40 text-sm">…</p>. The muted
 // foreground is the de-emphasised text step; it is expressed with the
 // text-base-content/40 opacity utility rather than a named muted token, because
 // go-daisy ships no foreground ladder (consumers that define one can append
 // their own step through Class).
 templ EmptyNote(props ...EmptyNoteProps) {
-	{{ var p EmptyNoteProps
-	if len(props) > 0 { p = props[0] }
-	size := "text-sm"
-	if p.Size == EmptyNoteSizeXS { size = "text-xs" }
-	cls := "text-base-content/40"
-	if p.Hidden { cls += " hidden" }
-	if p.Icon != "" { cls += " flex items-center gap-1.5" }
-	cls += " " + size
-	if p.Class != "" { cls += " " + p.Class }
-	iconClass := p.IconClass
-	if iconClass == "" { iconClass = "size-3.5 shrink-0" } }}
+	{{
+		var p EmptyNoteProps
+		if len(props) > 0 {
+			p = props[0]
+		}
+		size := "text-sm"
+		switch p.Size {
+		case EmptyNoteSizeXS:
+			size = "text-xs"
+		case EmptyNoteSize2XS:
+			size = "text-[11px]"
+		}
+		cls := "text-base-content/40"
+		if p.Hidden {
+			cls += " hidden"
+		}
+		if p.Icon != "" {
+			cls += " flex items-center gap-1.5"
+		}
+		cls += " " + size
+		if p.Class != "" {
+			cls += " " + p.Class
+		}
+		iconClass := p.IconClass
+		if iconClass == "" {
+			iconClass = "size-3.5 shrink-0"
+		}
+	}}
 	<p
-		if p.ID != "" { id={ p.ID } }
+		if p.ID != "" {
+			id={ p.ID }
+		}
 		class={ cls }
 		{ devmode.Attrs(ctx, "ui/EmptyNote")... }
 		{ p.Attrs... }

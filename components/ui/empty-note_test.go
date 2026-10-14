@@ -3,6 +3,7 @@ package ui
 import (
 	"bytes"
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/a-h/templ"
@@ -46,6 +47,12 @@ func TestEmptyNoteOutputLocked(t *testing.T) {
 			want:  `<p class="text-base-content/40 text-xs">No projects in this organization yet.</p>`,
 		},
 		{
+			name:  "2xs_micro",
+			body:  "Enter to send · Shift+Enter for a new line",
+			props: EmptyNoteProps{Size: EmptyNoteSize2XS},
+			want:  `<p class="text-base-content/40 text-[11px]">Enter to send · Shift+Enter for a new line</p>`,
+		},
+		{
 			name:  "hidden_id",
 			body:  "Nothing matches.",
 			props: EmptyNoteProps{ID: "picker-empty", Hidden: true, Size: EmptyNoteSizeXS},
@@ -82,6 +89,35 @@ func TestEmptyNoteOutputLocked(t *testing.T) {
 			got := renderEmptyNote(t, tc.body, tc.props)
 			if got != tc.want {
 				t.Errorf("output changed:\n got: %q\nwant: %q", got, tc.want)
+			}
+		})
+	}
+}
+
+// TestEmptyNoteSizeStepsAreExclusive guards the reason 2XS exists at all: each
+// size step must emit exactly one font-size utility. A "text-[11px]" passed
+// through Class instead would emit two competing font-size utilities, whose
+// winner is decided by CSS cascade order rather than class order.
+func TestEmptyNoteSizeStepsAreExclusive(t *testing.T) {
+	steps := []struct {
+		name string
+		size EmptyNoteSize
+		want string
+	}{
+		{"sm", EmptyNoteSizeSM, "text-sm"},
+		{"xs", EmptyNoteSizeXS, "text-xs"},
+		{"2xs", EmptyNoteSize2XS, "text-[11px]"},
+	}
+	for _, tc := range steps {
+		t.Run(tc.name, func(t *testing.T) {
+			got := renderEmptyNote(t, "note", EmptyNoteProps{Size: tc.size})
+			if !strings.Contains(got, tc.want) {
+				t.Fatalf("size %q did not emit %q: %q", tc.name, tc.want, got)
+			}
+			for _, other := range steps {
+				if other.want != tc.want && strings.Contains(got, other.want) {
+					t.Errorf("size %q also emitted %q — two competing font-size utilities: %q", tc.name, other.want, got)
+				}
 			}
 		})
 	}

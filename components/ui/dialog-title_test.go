@@ -3,6 +3,7 @@ package ui
 import (
 	"bytes"
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/a-h/templ"
@@ -97,12 +98,41 @@ func TestDialogTitleOutputLocked(t *testing.T) {
 
 // TestDialogTitleConfirmDialogParity proves a dogfooded caller renders exactly
 // the same heading as the hand-written markup it replaced. ConfirmDialog's
-// heading is the canonical "Delete <noun>?" title text-lg font-semibold, so the
-// two must agree byte-for-byte.
+// heading is the canonical "Delete <noun>?" title, so the two must agree
+// byte-for-byte.
+//
+// It renders the real ConfirmDialog rather than DialogTitle in isolation: the
+// adoption is @DialogTitle() { { title } }, and a children block holding a bare
+// identifier renders that identifier as literal text, so an isolated render
+// would stay green through exactly the regression this test exists to catch.
 func TestDialogTitleConfirmDialogParity(t *testing.T) {
-	got := renderDialogTitle(t, "Delete agent?", DialogTitleProps{})
+	var buf bytes.Buffer
+	if err := ConfirmDialog(ConfirmDialogProps{Noun: "agent"}, nil).Render(context.Background(), &buf); err != nil {
+		t.Fatalf("render: %v", err)
+	}
+	got := buf.String()
+
 	const want = `<h3 class="text-lg font-semibold">Delete agent?</h3>`
-	if got != want {
-		t.Errorf("ConfirmDialog heading drifted:\n got: %q\nwant: %q", got, want)
+	if !strings.Contains(got, want) {
+		t.Errorf("ConfirmDialog heading drifted — want to contain:\n  %s\ngot:\n  %s", want, got)
+	}
+	// The literal identifier must not leak into the heading as text.
+	if strings.Contains(got, ">title<") || strings.Contains(got, ">title ") {
+		t.Errorf("title rendered as the literal word \"title\":\n  %s", got)
+	}
+	if !strings.Contains(got, "Delete agent?") {
+		t.Errorf("ConfirmDialog did not render its title text:\n  %s", got)
+	}
+}
+
+// TestDialogTitleConfirmDialogOverrideParity pins the Title override path — the
+// other branch that reaches the same heading through DialogTitle's children.
+func TestDialogTitleConfirmDialogOverrideParity(t *testing.T) {
+	var buf bytes.Buffer
+	if err := ConfirmDialog(ConfirmDialogProps{Title: "Remove integration?"}, nil).Render(context.Background(), &buf); err != nil {
+		t.Fatalf("render: %v", err)
+	}
+	if got := buf.String(); !strings.Contains(got, `<h3 class="text-lg font-semibold">Remove integration?</h3>`) {
+		t.Errorf("Title override did not reach the heading:\n  %s", got)
 	}
 }

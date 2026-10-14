@@ -1233,6 +1233,7 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 						{Label: "Size", Group: "Typography", Type: galleryruntime.TokenTypeSelect, Default: "", QueryParam: "size", Options: []galleryruntime.TokenOption{
 							{Value: "", Label: "Small (default, text-sm)"},
 							{Value: "xs", Label: "Extra small (text-xs)"},
+							{Value: "2xs", Label: "Micro (text-[11px])"},
 						}},
 						{Label: "Icon", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "", QueryParam: "icon"},
 						{Label: "Hidden", Group: "State", Type: galleryruntime.TokenTypeSelect, Default: "false", QueryParam: "hidden", Options: []galleryruntime.TokenOption{
@@ -1244,7 +1245,7 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 				{
 					Name:        "Examples",
-					Description: "The note shapes already in the tree: a plain line, the compact line, an icon-led hint, and the hidden note a secret picker un-hides.",
+					Description: "The note shapes already in the tree: a plain line, the compact line, the micro line, an icon-led hint, and the hidden note a secret picker un-hides.",
 					SubExamples: []galleryruntime.GallerySubExample{
 						{
 							Label: "Default (text-sm)",
@@ -1256,6 +1257,12 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 							Label: "Compact (text-xs)",
 							RenderFunc: func(_ url.Values) templ.Component {
 								return ui.EmptyNoteWithBoundary("No projects in this organization yet.", ui.EmptyNoteSizeXS, "", false)
+							},
+						},
+						{
+							Label: "Micro (text-[11px])",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.EmptyNoteWithBoundary("Enter to send · Shift+Enter for a new line", ui.EmptyNoteSize2XS, "", false)
 							},
 						},
 						{
