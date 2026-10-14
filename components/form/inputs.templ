@@ -18,7 +18,7 @@ templ TextInput(name string, label string, value string, errMsg string, required
 			type="text"
 			value={ value }
 			required?={ required }
-			class={ "input input-bordered w-full", templ.KV("input-error", errMsg != "") }
+			class={ "input w-full", templ.KV("input-error", errMsg != "") }
 		/>
 	}
 }
@@ -32,7 +32,7 @@ templ TextareaInput(name string, label string, value string, errMsg string, rows
 			name={ name }
 			rows={ strconv.Itoa(rows) }
 			required?={ required }
-			class={ "textarea textarea-bordered w-full", templ.KV("textarea-error", errMsg != "") }
+			class={ "textarea w-full", templ.KV("textarea-error", errMsg != "") }
 		>{ value }</textarea>
 	}
 }
@@ -112,7 +112,7 @@ templ DateInput(name string, value string, hasError bool) {
 		name={ name }
 		type="date"
 		value={ value }
-		class={ "input input-bordered w-full",
+		class={ "input w-full",
 			templ.KV("input-error", hasError) }
 		{ devmode.Attrs(ctx, "form/DateInput")... }
 	/>

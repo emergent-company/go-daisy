@@ -9,7 +9,7 @@ templ ColorInput(id string, value string) {
 		type="color"
 		id={ id }
 		value={ value }
-		class="input input-bordered w-16 h-10 cursor-pointer p-1"
+		class="input w-16 h-10 cursor-pointer p-1"
 		{ devmode.Attrs(ctx, "form/ColorInput")... }
 	/>
 }

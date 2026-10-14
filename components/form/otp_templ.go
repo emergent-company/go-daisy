@@ -56,7 +56,7 @@ func OTPInput(id string, digits int) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for i := 0; i < digits; i++ {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<input type=\"text\" class=\"input input-bordered w-12 h-14 text-center text-lg font-semibold\" maxlength=\"1\" pattern=\"[0-9]\" inputmode=\"numeric\" autocomplete=\"one-time-code\" id=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<input type=\"text\" class=\"input w-12 h-14 text-center text-lg font-semibold\" maxlength=\"1\" pattern=\"[0-9]\" inputmode=\"numeric\" autocomplete=\"one-time-code\" id=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

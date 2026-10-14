@@ -202,7 +202,7 @@ func DataTable(props DataTableProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if props.Searchable {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"join flex-1 max-w-sm\"><input type=\"search\" class=\"input input-bordered input-sm join-item w-full\" placeholder=\"Search...\" x-model=\"search\" @input.debounce=\"filterRows()\"></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"join flex-1 max-w-sm\"><input type=\"search\" class=\"input input-sm join-item w-full\" placeholder=\"Search...\" x-model=\"search\" @input.debounce=\"filterRows()\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

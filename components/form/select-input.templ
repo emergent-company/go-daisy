@@ -9,7 +9,7 @@ templ SelectInput(name string, label string, selected string, options [][2]strin
 			id={ name }
 			name={ name }
 			required?={ required }
-			class={ "select select-bordered w-full", templ.KV("select-error", errMsg != "") }
+			class={ "select w-full", templ.KV("select-error", errMsg != "") }
 		>
 			for _, opt := range options {
 				<option

@@ -126,7 +126,7 @@ func SelectShell(props SelectShellProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		var templ_7745c5c3_Var6 = []any{"flex items-center justify-between gap-2 w-full select select-bordered text-left",
+		var templ_7745c5c3_Var6 = []any{"flex items-center justify-between gap-2 w-full select text-left",
 			templ.KV("select-disabled", props.Disabled)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 		if templ_7745c5c3_Err != nil {

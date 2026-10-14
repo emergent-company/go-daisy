@@ -1080,12 +1080,12 @@ func renderFormDemo(name string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "file-input":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<div class=\"space-y-2\"><input type=\"file\" class=\"file-input file-input-bordered w-full max-w-xs\"><input type=\"file\" class=\"file-input file-input-primary w-full max-w-xs\"></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<div class=\"space-y-2\"><input type=\"file\" class=\"file-input w-full max-w-xs\"><input type=\"file\" class=\"file-input file-input-primary w-full max-w-xs\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "label":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<label class=\"form-control w-full max-w-xs\"><div class=\"label\"><span class=\"label-text\">Name</span><span class=\"label-text-alt\">Required</span></div><input type=\"text\" class=\"input input-bordered w-full\"></label>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<label class=\"form-control w-full max-w-xs\"><div class=\"label\"><span class=\"label-text\">Name</span><span class=\"label-text-alt\">Required</span></div><input type=\"text\" class=\"input w-full\"></label>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -1105,7 +1105,7 @@ func renderFormDemo(name string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "textarea":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "<textarea class=\"textarea textarea-bordered w-full max-w-md\" rows=\"4\" placeholder=\"Write here...\"></textarea>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "<textarea class=\"textarea w-full max-w-md\" rows=\"4\" placeholder=\"Write here...\"></textarea>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -239,7 +239,7 @@ func FormField(props FormFieldProps) templ.Component {
 				if rows <= 0 {
 					rows = 3
 				}
-				var templ_7745c5c3_Var8 = []any{"textarea textarea-bordered w-full",
+				var templ_7745c5c3_Var8 = []any{"textarea w-full",
 					templ.KV("textarea-error", props.Error != ""),
 					templ.KV(props.Class, props.Class != "")}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var8...)
@@ -371,7 +371,7 @@ func FormField(props FormFieldProps) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				var templ_7745c5c3_Var16 = []any{"select select-bordered w-full",
+				var templ_7745c5c3_Var16 = []any{"select w-full",
 					templ.KV("select-error", props.Error != ""),
 					templ.KV(props.Class, props.Class != "")}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var16...)
@@ -514,7 +514,7 @@ func FormField(props FormFieldProps) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				var templ_7745c5c3_Var23 = []any{"input input-bordered w-full",
+				var templ_7745c5c3_Var23 = []any{"input w-full",
 					templ.KV("input-error", props.Error != ""),
 					templ.KV(props.Class, props.Class != "")}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var23...)
@@ -660,7 +660,7 @@ func Input(name string, value string, placeholder string, hasError bool) templ.C
 			templ_7745c5c3_Var30 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var31 = []any{"input input-bordered w-full",
+		var templ_7745c5c3_Var31 = []any{"input w-full",
 			templ.KV("input-error", hasError)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var31...)
 		if templ_7745c5c3_Err != nil {
@@ -769,7 +769,7 @@ func PasswordInput(name string, placeholder string, hasError bool) templ.Compone
 			templ_7745c5c3_Var37 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var38 = []any{"input input-bordered w-full",
+		var templ_7745c5c3_Var38 = []any{"input w-full",
 			templ.KV("input-error", hasError)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var38...)
 		if templ_7745c5c3_Err != nil {
@@ -865,7 +865,7 @@ func Textarea(name string, value string, placeholder string, rows int, hasError 
 			templ_7745c5c3_Var43 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var44 = []any{"textarea textarea-bordered w-full",
+		var templ_7745c5c3_Var44 = []any{"textarea w-full",
 			templ.KV("textarea-error", hasError)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var44...)
 		if templ_7745c5c3_Err != nil {
@@ -987,7 +987,7 @@ func Select(name string, hasError bool) templ.Component {
 			templ_7745c5c3_Var51 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var52 = []any{"select select-bordered w-full",
+		var templ_7745c5c3_Var52 = []any{"select w-full",
 			templ.KV("select-error", hasError)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var52...)
 		if templ_7745c5c3_Err != nil {

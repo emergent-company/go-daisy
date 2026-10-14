@@ -35,7 +35,7 @@ templ SelectShell(props SelectShellProps) {
 		<button
 			type="button"
 			id={ props.ID + "-trigger" }
-			class={ "flex items-center justify-between gap-2 w-full select select-bordered text-left",
+			class={ "flex items-center justify-between gap-2 w-full select text-left",
 				templ.KV("select-disabled", props.Disabled) }
 			disabled?={ props.Disabled }
 			@click="open = !open"

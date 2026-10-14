@@ -25,5 +25,5 @@ func joinButtonExtraClass(active bool) string {
 
 // JoinInputPlaceholder renders a text input with the join-item class.
 templ JoinInputPlaceholder(placeholder string) {
-	<input class="join-item input input-bordered input-sm" placeholder={ placeholder } { devmode.Attrs(ctx, "ui/JoinInputPlaceholder")... }/>
+	<input class="join-item input input-sm" placeholder={ placeholder } { devmode.Attrs(ctx, "ui/JoinInputPlaceholder")... }/>
 }

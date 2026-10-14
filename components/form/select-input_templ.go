@@ -44,7 +44,7 @@ func SelectInput(name string, label string, selected string, options [][2]string
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			var templ_7745c5c3_Var3 = []any{"select select-bordered w-full", templ.KV("select-error", errMsg != "")}
+			var templ_7745c5c3_Var3 = []any{"select w-full", templ.KV("select-error", errMsg != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

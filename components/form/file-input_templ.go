@@ -42,7 +42,7 @@ func FileInput(name string, label string, accept string, errMsg string) templ.Co
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			var templ_7745c5c3_Var3 = []any{"file-input file-input-bordered w-full", templ.KV("file-input-error", errMsg != "")}
+			var templ_7745c5c3_Var3 = []any{"file-input w-full", templ.KV("file-input-error", errMsg != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

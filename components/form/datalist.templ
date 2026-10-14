@@ -20,7 +20,7 @@ templ DatalistInput(id string, placeholder string, options []DatalistOption) {
 		id={ id }
 		list={ listID }
 		placeholder={ placeholder }
-		class="input input-bordered w-full"
+		class="input w-full"
 		{ devmode.Attrs(ctx, "form/DatalistInput")... }
 	/>
 	<datalist id={ listID }>

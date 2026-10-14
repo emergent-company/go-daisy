@@ -39,7 +39,7 @@ templ EnhancedSelect(props EnhancedSelectProps) {
 		<select
 			id={ props.Name }
 			name={ props.Name }
-			class={ "select select-bordered w-full",
+			class={ "select w-full",
 				templ.KV("select-error", props.Error != ""),
 				templ.KV(props.Class, props.Class != "") }
 			required?={ props.Required }

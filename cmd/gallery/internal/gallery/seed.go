@@ -6692,7 +6692,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								<span class="label-text">Email address</span>
 								<span class="label-text-alt">Required</span>
 							</div>
-							<input type="email" class="input input-bordered w-full" placeholder="you@example.com"/>
+							<input type="email" class="input w-full" placeholder="you@example.com"/>
 							<div class="label">
 								<span class="label-text-alt">We'll never share your email.</span>
 							</div>
@@ -6701,7 +6701,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							<div class="label">
 								<span class="label-text">Username</span>
 							</div>
-							<input type="text" class="input input-bordered w-full" placeholder="johndoe"/>
+							<input type="text" class="input w-full" placeholder="johndoe"/>
 						</div>
 					</div>`),
 				},
@@ -6724,14 +6724,14 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						<div class="form-control">
 							<div class="label"><span class="label-text">Email (required)</span></div>
 							<div class="validator">
-								<input type="email" required class="input input-bordered w-full" placeholder="you@example.com"/>
+								<input type="email" required class="input w-full" placeholder="you@example.com"/>
 							</div>
 							<p class="validator-hint">Please enter a valid email address.</p>
 						</div>
 						<div class="form-control">
 							<div class="label"><span class="label-text">Password (min 8 chars)</span></div>
 							<div class="validator">
-								<input type="password" minlength="8" required class="input input-bordered w-full" placeholder="••••••••"/>
+								<input type="password" minlength="8" required class="input w-full" placeholder="••••••••"/>
 							</div>
 							<p class="validator-hint">Password must be at least 8 characters.</p>
 						</div>
