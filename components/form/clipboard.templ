@@ -21,11 +21,16 @@ type ClipboardCopyItem struct {
 	// ButtonClass is extra DaisyUI classes for the button (e.g. "btn-primary").
 	ButtonClass string
 	// Mono renders the value in a monospace <code> badge instead of an <input>.
+	// Because Mono inlines the value into the button's onclick attribute, it is
+	// unsuitable for secrets revealed on demand — anything that must not appear
+	// in the initial HTML belongs in the input variant (or a bespoke flow).
 	Mono bool
 }
 
 // ClipboardCopy renders one or more click-to-copy fields with visual feedback.
-// Uses vanilla JS navigator.clipboard — no library needed.
+// Uses navigator.clipboard with an execCommand('copy') textarea fallback for
+// non-secure contexts — no library needed. A successful copy shows a transient
+// check; a rejected write shows a distinct failure state.
 templ ClipboardCopy(items []ClipboardCopyItem) {
 	<div class="space-y-4" { devmode.Attrs(ctx, "form/ClipboardCopy")... }>
 		for _, item := range items {
@@ -45,7 +50,7 @@ templ ClipboardCopy(items []ClipboardCopyItem) {
 							class="input input-sm flex-1 font-mono text-sm"
 						/>
 					}
-					@ui.Button(ui.ButtonProps{Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: item.ButtonClass, OnClick: clipboardOnClick(item.ID, item.Value, item.Mono)}) {
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: item.ButtonClass, OnClick: clipboardOnClick(item.ID, item.Value, item.Mono)}) {
 						@ui.IconSpan("lucide--copy", "size-4")
 						if item.ButtonLabel != "" {
 							{ item.ButtonLabel }
@@ -60,11 +65,14 @@ templ ClipboardCopy(items []ClipboardCopyItem) {
 	@clipboardScript()
 }
 
+// clipboardOnClick returns the button's onclick script. The button element is
+// passed explicitly as `this` so the handler never relies on the implicit
+// global `event` (a non-standard property absent in some contexts).
 func clipboardOnClick(id string, value string, mono bool) templ.ComponentScript {
 	if mono {
-		return templ.JSFuncCall("clipboardCopyText", value)
+		return templ.JSFuncCall("clipboardCopyText", value, templ.JSExpression("this"))
 	}
-	return templ.JSFuncCall("clipboardCopyInput", id)
+	return templ.JSFuncCall("clipboardCopyInput", id, templ.JSExpression("this"))
 }
 
 templ clipboardScript() {
@@ -72,24 +80,57 @@ templ clipboardScript() {
 		<script>
 	if (!window._clipboardInit) {
 	  window._clipboardInit = true;
-	  window.clipboardCopyInput = function(inputId) {
+	  function clipboardFlash(btn, html) {
+	    var orig = btn.innerHTML;
+	    btn.innerHTML = html;
+	    btn.disabled = true;
+	    setTimeout(function() { btn.innerHTML = orig; btn.disabled = false; }, 2000);
+	  }
+	  function clipboardFail(btn) {
+	    var orig = btn.innerHTML;
+	    btn.innerHTML = '✗ Copy failed';
+	    btn.classList.add('btn-error');
+	    btn.disabled = true;
+	    setTimeout(function() {
+	      btn.innerHTML = orig;
+	      btn.disabled = false;
+	      btn.classList.remove('btn-error');
+	    }, 2000);
+	  }
+	  function clipboardFallback(text) {
+	    var ta = document.createElement('textarea');
+	    ta.value = text;
+	    ta.setAttribute('readonly', '');
+	    ta.style.position = 'fixed';
+	    ta.style.left = '-9999px';
+	    document.body.appendChild(ta);
+	    ta.select();
+	    var ok = false;
+	    try { ok = document.execCommand('copy'); } catch (e) {}
+	    document.body.removeChild(ta);
+	    return ok;
+	  }
+	  function clipboardWrite(text, btn, successHtml) {
+	    if (navigator.clipboard && navigator.clipboard.writeText) {
+	      navigator.clipboard.writeText(text).then(function() {
+	        clipboardFlash(btn, successHtml);
+	      }).catch(function() {
+	        clipboardFail(btn);
+	      });
+	    } else if (clipboardFallback(text)) {
+	      clipboardFlash(btn, successHtml);
+	    } else {
+	      clipboardFail(btn);
+	    }
+	  }
+	  window.clipboardCopyInput = function(inputId, btn) {
 	    var el = document.getElementById(inputId);
-	    if (!el) return;
-	    var btn = event.currentTarget;
-	    navigator.clipboard.writeText(el.value).then(function() {
-	      var orig = btn.innerHTML;
-	      btn.innerHTML = '✓ Copied!';
-	      btn.disabled = true;
-	      setTimeout(function() { btn.innerHTML = orig; btn.disabled = false; }, 2000);
-	    });
+	    if (!el || !btn) return;
+	    clipboardWrite(el.value, btn, '✓ Copied!');
 	  };
-	  window.clipboardCopyText = function(text) {
-	    var btn = event.currentTarget;
-	    navigator.clipboard.writeText(text).then(function() {
-	      var orig = btn.innerHTML;
-	      btn.innerHTML = '✓';
-	      setTimeout(function() { btn.innerHTML = orig; }, 2000);
-	    });
+	  window.clipboardCopyText = function(text, btn) {
+	    if (!btn) return;
+	    clipboardWrite(text, btn, '✓');
 	  };
 	}
 	</script>
