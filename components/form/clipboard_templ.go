@@ -188,7 +188,7 @@ func ClipboardCopy(items []ClipboardCopyItem) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: item.ButtonClass, OnClick: clipboardOnClick(item.ID, item.Value, item.Mono)}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var6), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: item.ButtonClass, OnClick: clipboardOnClick(item.ID, item.Value, item.Mono)}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var6), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

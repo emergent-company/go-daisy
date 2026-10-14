@@ -37,9 +37,11 @@ func TestClipboardCopyRendersMarkup(t *testing.T) {
 				`<p class="text-xs text-base-content/60 mb-2 font-semibold uppercase">Case ID</p>`,
 				`id="copy-input-1" type="text" value="CASE-2026-00142" readonly class="input input-sm flex-1 font-mono text-sm"`,
 				`onclick="clipboardCopyInput(&#34;copy-input-1&#34;,this)"`,
+				// The copy button must be a plain button, not an implicit submit.
+				`<button type="button" class="btn btn-sm btn-outline"`,
 				`Copy</button>`,
 			},
-			notContain: []string{`<code class="bg-base-200`},
+			notContain: []string{`<code class="bg-base-200`, `type=""`},
 		},
 		{
 			name: "mono_variant",
@@ -49,10 +51,12 @@ func TestClipboardCopyRendersMarkup(t *testing.T) {
 			contains: []string{
 				`<code class="bg-base-200 text-base-content px-3 py-1.5 rounded text-sm font-mono flex-1">CASE-2026-00142</code>`,
 				`onclick="clipboardCopyText(&#34;CASE-2026-00142&#34;,this)"`,
+				// The copy button must be a plain button, not an implicit submit.
+				`<button type="button" class="btn btn-sm btn-outline"`,
 				// Mono omits the button label, falling back to the default "Copy".
 				`Copy</button>`,
 			},
-			notContain: []string{`type="text"`},
+			notContain: []string{`type="text"`, `type=""`},
 		},
 	}
 
@@ -70,6 +74,23 @@ func TestClipboardCopyRendersMarkup(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+// TestClipboardCopyButtonExplicitType pins the copy button to a non-submit
+// type. The Button component renders type="" by default when Type is unset,
+// and an empty type attribute defaults to submit — so inside a <form> a copy
+// click would submit the form. This fails if the explicit type regresses.
+func TestClipboardCopyButtonExplicitType(t *testing.T) {
+	got := renderClipboard(t, []ClipboardCopyItem{{ID: "copy-input-1", Value: "CASE-2026-00142"}})
+
+	if !strings.Contains(got, `type="button"`) {
+		t.Errorf("copy button must carry an explicit type=\"button\":\n%s", got)
+	}
+	for _, unwanted := range []string{`type=""`, `type="submit"`} {
+		if strings.Contains(got, unwanted) {
+			t.Errorf("copy button renders %s — it would submit an enclosing form:\n%s", unwanted, got)
+		}
 	}
 }
 
@@ -141,5 +162,26 @@ func TestClipboardCopyOnclickPassesThis(t *testing.T) {
 	got := renderClipboard(t, []ClipboardCopyItem{{ID: "copy-input-1", Value: "CASE-2026-00142"}})
 	if !strings.Contains(got, `clipboardCopyInput(&#34;copy-input-1&#34;,this)`) {
 		t.Errorf("onclick does not pass `this` explicitly:\n%s", got)
+	}
+}
+
+// TestClipboardCopyScriptGuardsMissingButton pins the `!btn` guards in the
+// emitted script. `this` is passed explicitly, so a stray call with no button
+// (or a missing input element in the input variant) would otherwise dereference
+// a nil/undefined button inside clipboardWrite. Reverting the guard must fail
+// this test; a render test cannot exercise the JS, so presence is the contract.
+func TestClipboardCopyScriptGuardsMissingButton(t *testing.T) {
+	got := renderClipboard(t, []ClipboardCopyItem{
+		{ID: "copy-input-1", Value: "CASE-2026-00142"},
+		{ID: "copy-input-3", Value: "CASE-2026-00142", Mono: true},
+	})
+
+	// Input variant: bail out if the element or the button is missing.
+	if !strings.Contains(got, `if (!el || !btn) return;`) {
+		t.Errorf("input handler is missing the `!el || !btn` guard:\n%s", got)
+	}
+	// Mono variant: bail out if the button is missing.
+	if !strings.Contains(got, `if (!btn) return;`) {
+		t.Errorf("text handler is missing the `!btn` guard:\n%s", got)
 	}
 }
