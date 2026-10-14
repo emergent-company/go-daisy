@@ -24,10 +24,12 @@ type SoftBoxProps struct {
 	// (bg-base-200/30) or Plain (no background). The border and radius are the
 	// same for every surface.
 	Surface SoftBoxSurface
-	// Attrs are extra attributes spread onto the root element — e.g.
-	// data-testid="soft-box-preview" for e2e selection, or data-* keys a
-	// consumer needs to wire to client code. Spread last, so a caller can
-	// override the devmode data-component annotation when dev mode is on.
+	// Attrs are extra attributes spread onto the root element, after the
+	// devmode data-component annotation. Spread last, so a key duplicating one
+	// the component already set emits a duplicate attribute, not an override.
+	// Values must be string, *string, bool or numeric: templ.RenderAttributes
+	// silently drops anything else (a named string type, a struct), so convert
+	// typed IDs first — string(id). Classes belong in Class, not Attrs.
 	Attrs templ.Attributes
 }
 
