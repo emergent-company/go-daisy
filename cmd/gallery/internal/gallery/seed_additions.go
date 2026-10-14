@@ -1220,13 +1220,13 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
-					Description: "Type scale, an optional leading icon, and the pre-rendered note a modal reveals later.",
+					Description: "Type scale, the foreground tone, an optional leading icon, and the pre-rendered note a modal reveals later.",
 					RenderFunc: func(params url.Values) templ.Component {
 						text := params.Get("text")
 						if text == "" {
 							text = "No other agents to delegate to."
 						}
-						return ui.EmptyNoteWithBoundary(text, ui.EmptyNoteSize(params.Get("size")), params.Get("icon"), params.Get("hidden") == "true")
+						return ui.EmptyNoteWithBoundary(text, ui.EmptyNoteSize(params.Get("size")), ui.EmptyNoteTone(params.Get("tone")), params.Get("icon"), params.Get("hidden") == "true")
 					},
 					Tokens: []galleryruntime.DesignToken{
 						{Label: "Text", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "No other agents to delegate to.", QueryParam: "text"},
@@ -1234,6 +1234,11 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 							{Value: "", Label: "Small (default, text-sm)"},
 							{Value: "xs", Label: "Extra small (text-xs)"},
 							{Value: "2xs", Label: "Micro (text-[11px])"},
+						}},
+						{Label: "Tone", Group: "Typography", Type: galleryruntime.TokenTypeSelect, Default: "", QueryParam: "tone", Options: []galleryruntime.TokenOption{
+							{Value: "", Label: "Default (text-base-content/50)"},
+							{Value: "quiet", Label: "Quiet (text-base-content/40)"},
+							{Value: "strong", Label: "Strong (text-base-content/65)"},
 						}},
 						{Label: "Icon", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "", QueryParam: "icon"},
 						{Label: "Hidden", Group: "State", Type: galleryruntime.TokenTypeSelect, Default: "false", QueryParam: "hidden", Options: []galleryruntime.TokenOption{
@@ -1245,30 +1250,30 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 				{
 					Name:        "Examples",
-					Description: "The note shapes already in the tree: a plain line, the compact line, the micro line, an icon-led hint, and the hidden note a secret picker un-hides.",
+					Description: "The note shapes already in the tree: a plain line, the compact line, the micro line, an icon-led hint, the hidden note a secret picker un-hides, and the three foreground tones.",
 					SubExamples: []galleryruntime.GallerySubExample{
 						{
 							Label: "Default (text-sm)",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.EmptyNoteWithBoundary("No pending invitations.", ui.EmptyNoteSizeSM, "", false)
+								return ui.EmptyNoteWithBoundary("No pending invitations.", ui.EmptyNoteSizeSM, ui.EmptyNoteToneDefault, "", false)
 							},
 						},
 						{
 							Label: "Compact (text-xs)",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.EmptyNoteWithBoundary("No projects in this organization yet.", ui.EmptyNoteSizeXS, "", false)
+								return ui.EmptyNoteWithBoundary("No projects in this organization yet.", ui.EmptyNoteSizeXS, ui.EmptyNoteToneDefault, "", false)
 							},
 						},
 						{
 							Label: "Micro (text-[11px])",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.EmptyNoteWithBoundary("Enter to send · Shift+Enter for a new line", ui.EmptyNoteSize2XS, "", false)
+								return ui.EmptyNoteWithBoundary("Enter to send · Shift+Enter for a new line", ui.EmptyNoteSize2XS, ui.EmptyNoteToneDefault, "", false)
 							},
 						},
 						{
 							Label: "Icon-led hint",
 							RenderFunc: func(_ url.Values) templ.Component {
-								return ui.EmptyNoteWithBoundary("Runs on the memory host.", ui.EmptyNoteSizeXS, "lucide--info", false)
+								return ui.EmptyNoteWithBoundary("Runs on the memory host.", ui.EmptyNoteSizeXS, ui.EmptyNoteToneDefault, "lucide--info", false)
 							},
 						},
 						{
@@ -1276,8 +1281,26 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 							RenderFunc: func(_ url.Values) templ.Component {
 								return shared.Compose(
 									rawHTML(`<p class="text-xs opacity-50">Shown in place of the note below — reveal it to see the note appear.</p>`),
-									ui.EmptyNoteWithBoundary("Nothing matches.", ui.EmptyNoteSizeXS, "", true),
+									ui.EmptyNoteWithBoundary("Nothing matches.", ui.EmptyNoteSizeXS, ui.EmptyNoteToneDefault, "", true),
 								)
+							},
+						},
+						{
+							Label: "Default tone (text-base-content/50)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.EmptyNoteWithBoundary("A note at the default foreground step.", ui.EmptyNoteSizeSM, ui.EmptyNoteToneDefault, "", false)
+							},
+						},
+						{
+							Label: "Quiet tone (text-base-content/40)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.EmptyNoteWithBoundary("A note at the quieter foreground step.", ui.EmptyNoteSizeSM, ui.EmptyNoteToneQuiet, "", false)
+							},
+						},
+						{
+							Label: "Strong tone (text-base-content/65)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.EmptyNoteWithBoundary("A note at the stronger foreground step.", ui.EmptyNoteSizeSM, ui.EmptyNoteToneStrong, "", false)
 							},
 						},
 					},
