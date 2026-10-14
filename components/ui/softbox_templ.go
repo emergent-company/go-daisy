@@ -32,6 +32,11 @@ type SoftBoxProps struct {
 	// (bg-base-200/30) or Plain (no background). The border and radius are the
 	// same for every surface.
 	Surface SoftBoxSurface
+	// Attrs are extra attributes spread onto the root element — e.g.
+	// data-testid="soft-box-preview" for e2e selection, or data-* keys a
+	// consumer needs to wire to client code. Spread last, so a caller can
+	// override the devmode data-component annotation when dev mode is on.
+	Attrs templ.Attributes
 }
 
 // SoftBox renders a muted rounded panel wrapping its children.
@@ -103,6 +108,10 @@ func SoftBox(props ...SoftBoxProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "ui/SoftBox"))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, p.Attrs)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
