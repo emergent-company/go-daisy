@@ -29,11 +29,16 @@ type ClipboardCopyItem struct {
 	// ButtonClass is extra DaisyUI classes for the button (e.g. "btn-primary").
 	ButtonClass string
 	// Mono renders the value in a monospace <code> badge instead of an <input>.
+	// Because Mono inlines the value into the button's onclick attribute, it is
+	// unsuitable for secrets revealed on demand — anything that must not appear
+	// in the initial HTML belongs in the input variant (or a bespoke flow).
 	Mono bool
 }
 
 // ClipboardCopy renders one or more click-to-copy fields with visual feedback.
-// Uses vanilla JS navigator.clipboard — no library needed.
+// Uses navigator.clipboard with an execCommand('copy') textarea fallback for
+// non-secure contexts — no library needed. A successful copy shows a transient
+// check; a rejected write shows a distinct failure state.
 func ClipboardCopy(items []ClipboardCopyItem) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -80,7 +85,7 @@ func ClipboardCopy(items []ClipboardCopyItem) templ.Component {
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 34, Col: 86}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 39, Col: 86}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
@@ -103,7 +108,7 @@ func ClipboardCopy(items []ClipboardCopyItem) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(item.Value)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 38, Col: 107}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 43, Col: 107}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -121,7 +126,7 @@ func ClipboardCopy(items []ClipboardCopyItem) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.ID)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 41, Col: 19}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 46, Col: 19}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 				if templ_7745c5c3_Err != nil {
@@ -134,7 +139,7 @@ func ClipboardCopy(items []ClipboardCopyItem) templ.Component {
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.Value)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 43, Col: 25}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 48, Col: 25}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 				if templ_7745c5c3_Err != nil {
@@ -169,7 +174,7 @@ func ClipboardCopy(items []ClipboardCopyItem) templ.Component {
 					var templ_7745c5c3_Var7 string
 					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(item.ButtonLabel)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 51, Col: 25}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 56, Col: 25}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 					if templ_7745c5c3_Err != nil {
@@ -204,11 +209,14 @@ func ClipboardCopy(items []ClipboardCopyItem) templ.Component {
 	})
 }
 
+// clipboardOnClick returns the button's onclick script. The button element is
+// passed explicitly as `this` so the handler never relies on the implicit
+// global `event` (a non-standard property absent in some contexts).
 func clipboardOnClick(id string, value string, mono bool) templ.ComponentScript {
 	if mono {
-		return templ.JSFuncCall("clipboardCopyText", value)
+		return templ.JSFuncCall("clipboardCopyText", value, templ.JSExpression("this"))
 	}
-	return templ.JSFuncCall("clipboardCopyInput", id)
+	return templ.JSFuncCall("clipboardCopyInput", id, templ.JSExpression("this"))
 }
 
 func clipboardScript() templ.Component {
@@ -244,7 +252,7 @@ func clipboardScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<script>\n\tif (!window._clipboardInit) {\n\t  window._clipboardInit = true;\n\t  window.clipboardCopyInput = function(inputId) {\n\t    var el = document.getElementById(inputId);\n\t    if (!el) return;\n\t    var btn = event.currentTarget;\n\t    navigator.clipboard.writeText(el.value).then(function() {\n\t      var orig = btn.innerHTML;\n\t      btn.innerHTML = '✓ Copied!';\n\t      btn.disabled = true;\n\t      setTimeout(function() { btn.innerHTML = orig; btn.disabled = false; }, 2000);\n\t    });\n\t  };\n\t  window.clipboardCopyText = function(text) {\n\t    var btn = event.currentTarget;\n\t    navigator.clipboard.writeText(text).then(function() {\n\t      var orig = btn.innerHTML;\n\t      btn.innerHTML = '✓';\n\t      setTimeout(function() { btn.innerHTML = orig; }, 2000);\n\t    });\n\t  };\n\t}\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<script>\n\tif (!window._clipboardInit) {\n\t  window._clipboardInit = true;\n\t  function clipboardFlash(btn, html) {\n\t    var orig = btn.innerHTML;\n\t    btn.innerHTML = html;\n\t    btn.disabled = true;\n\t    setTimeout(function() { btn.innerHTML = orig; btn.disabled = false; }, 2000);\n\t  }\n\t  function clipboardFail(btn) {\n\t    var orig = btn.innerHTML;\n\t    btn.innerHTML = '✗ Copy failed';\n\t    btn.classList.add('btn-error');\n\t    btn.disabled = true;\n\t    setTimeout(function() {\n\t      btn.innerHTML = orig;\n\t      btn.disabled = false;\n\t      btn.classList.remove('btn-error');\n\t    }, 2000);\n\t  }\n\t  function clipboardFallback(text) {\n\t    var ta = document.createElement('textarea');\n\t    ta.value = text;\n\t    ta.setAttribute('readonly', '');\n\t    ta.style.position = 'fixed';\n\t    ta.style.left = '-9999px';\n\t    document.body.appendChild(ta);\n\t    ta.select();\n\t    var ok = false;\n\t    try { ok = document.execCommand('copy'); } catch (e) {}\n\t    document.body.removeChild(ta);\n\t    return ok;\n\t  }\n\t  function clipboardWrite(text, btn, successHtml) {\n\t    if (navigator.clipboard && navigator.clipboard.writeText) {\n\t      navigator.clipboard.writeText(text).then(function() {\n\t        clipboardFlash(btn, successHtml);\n\t      }).catch(function() {\n\t        clipboardFail(btn);\n\t      });\n\t    } else if (clipboardFallback(text)) {\n\t      clipboardFlash(btn, successHtml);\n\t    } else {\n\t      clipboardFail(btn);\n\t    }\n\t  }\n\t  window.clipboardCopyInput = function(inputId, btn) {\n\t    var el = document.getElementById(inputId);\n\t    if (!el || !btn) return;\n\t    clipboardWrite(el.value, btn, '✓ Copied!');\n\t  };\n\t  window.clipboardCopyText = function(text, btn) {\n\t    if (!btn) return;\n\t    clipboardWrite(text, btn, '✓');\n\t  };\n\t}\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
