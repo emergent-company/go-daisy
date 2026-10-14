@@ -1458,11 +1458,12 @@ func DialogTitleWithBoundary(title string, level DialogTitleLevel, size DialogTi
 // No gallery:token annotation: the panel is written by hand in the gallery seed
 // so its controls (and the hidden-note toggle) sit next to the other two
 // composition primitives' panels.
-func EmptyNoteWithBoundary(text string, size EmptyNoteSize, icon string, hidden bool) templ.Component {
-	inner := shared.RenderInto(EmptyNote(EmptyNoteProps{Size: size, Icon: icon, Hidden: hidden}), shared.StrComp(text))
+func EmptyNoteWithBoundary(text string, size EmptyNoteSize, tone EmptyNoteTone, icon string, hidden bool) templ.Component {
+	inner := shared.RenderInto(EmptyNote(EmptyNoteProps{Size: size, Tone: tone, Icon: icon, Hidden: hidden}), shared.StrComp(text))
 	return devmode.ComponentBoundary("EmptyNote", inner, map[string]any{
 		"text":   text,
 		"size":   string(size),
+		"tone":   string(tone),
 		"icon":   icon,
 		"hidden": hidden,
 	})
