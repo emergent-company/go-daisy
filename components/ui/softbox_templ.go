@@ -10,12 +10,28 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/emergent-company/go-daisy/devmode"
 
+// SoftBoxSurface selects the box's fill.
+type SoftBoxSurface string
+
+const (
+	// SoftBoxDefault is the zero-value default: the soft bg-base-200/40 fill.
+	SoftBoxDefault SoftBoxSurface = ""
+	// SoftBoxMuted is the lighter bg-base-200/30 fill.
+	SoftBoxMuted SoftBoxSurface = "muted"
+	// SoftBoxPlain is an unfilled box — the border and radius only.
+	SoftBoxPlain SoftBoxSurface = "plain"
+)
+
 // SoftBoxProps configures a SoftBox.
 type SoftBoxProps struct {
 	// Class is extra CSS classes appended to the panel's class list.
 	Class string
 	// Padding is the padding class. Default "p-3".
 	Padding string
+	// Surface selects the fill: the default soft fill (bg-base-200/40), Muted
+	// (bg-base-200/30) or Plain (no background). The border and radius are the
+	// same for every surface.
+	Surface SoftBoxSurface
 }
 
 // SoftBox renders a muted rounded panel wrapping its children.
@@ -23,6 +39,18 @@ type SoftBoxProps struct {
 //	@ui.SoftBox(ui.SoftBoxProps{Padding: "p-5"}) {
 //		<p>Content</p>
 //	}
+//
+// The zero value renders the soft fill byte-for-byte as before the Surface axis
+// was added. Use Surface to pick the same box at a lighter fill (Muted) or with
+// no fill at all (Plain) instead of hand-rolling the class list.
+//
+// The fill is expressed as three mutually-exclusive templ.KV entries rather than
+// one, because templ adds a KV whose key is the empty string as a class named
+// "" — whatever the boolean holds — and that empty name keeps its slot in the
+// join, landing as a doubled separator between its neighbours (measured:
+// "rounded-box border border-line-translucent  p-3"). Non-empty keys cannot
+// collapse to an empty name, so the default class list stays byte-identical
+// down to its trailing space.
 func SoftBox(props ...SoftBoxProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -52,7 +80,7 @@ func SoftBox(props ...SoftBoxProps) templ.Component {
 		if pad == "" {
 			pad = "p-3"
 		}
-		var templ_7745c5c3_Var2 = []any{"rounded-box border border-line-translucent bg-base-200/40", pad, p.Class}
+		var templ_7745c5c3_Var2 = []any{"rounded-box border border-line-translucent", templ.KV("bg-base-200/40", p.Surface != SoftBoxMuted && p.Surface != SoftBoxPlain), templ.KV("bg-base-200/30", p.Surface == SoftBoxMuted), pad, p.Class}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
