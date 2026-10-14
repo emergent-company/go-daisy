@@ -92,6 +92,8 @@
 
     &.active {
       @apply bg-base-200 font-medium text-base-content;
+    }
+  }
 }
 
 /* ── Accessibility ───────────────────────────────────────────── */
@@ -117,11 +119,10 @@
   }
   .btn-primary, .badge-primary {
     forced-color-adjust: none;
-    }
   }
 }
 
- matches nexus.daisyui.com visual parity */
+/* #sidebar-menu — matches nexus.daisyui.com visual parity */
 #sidebar-menu {
   .sidebar-menu-title {
     color: oklch(var(--bc) / 0.7);
@@ -181,7 +182,6 @@
       margin-left: 0;
     }
   }
-}
 }
 
 #_layout-sidebar {
@@ -330,7 +330,7 @@
   }
 }
 
-/* Nexus-style sidebar refinements —
+/* Nexus-style sidebar refinements — */
 
 /* Nexus sidebar overrides — must be at root level, not nested */
 #_layout-sidebar #sidebar-menu .sidebar-menu-title {

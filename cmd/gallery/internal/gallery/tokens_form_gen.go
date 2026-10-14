@@ -383,6 +383,12 @@ func FormToggleTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// ToggleInputTokens returns the DesignToken slice for ToggleInputWithBoundary.
+func ToggleInputTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
 // PromptBarTokens returns the DesignToken slice for PromptBarWithBoundary.
 func PromptBarTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{

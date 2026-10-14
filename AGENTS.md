@@ -210,9 +210,12 @@ task dev:ui
 1. Create `components/<package>/<name>.templ` with your Templ component(s).
 2. Add `*WithBoundary` wrapper in `components/<package>/boundary.go` — this is mandatory for every exported component.
 3. Run `task build:ui` — this generates `<name>_templ.go` and recompiles CSS.
-4. Add a gallery page under `cmd/gallery/internal/handler/` to showcase the component.
-5. Register route in `cmd/gallery/internal/handler/handler.go`.
-6. Register in `cmd/gallery/internal/gallery/seed.go` via `GalleryComponent{...}` struct with `Preview` and `Source` fields. Slug must match handler route.
+4. Register the component with the gallery: add a `galleryruntime.GalleryComponent` to the `components`
+   slice in `cmd/gallery/internal/gallery/seed.go`, or to `additionalComponents()` in
+   `cmd/gallery/internal/gallery/seed_additions.go` for a new component. There is no `Preview`/`Source`
+   pair and no route to register — see "Gallery registration pattern" below.
+5. Map the component's `data-component` name to its gallery `Slug` in `galleryruntime.ComponentSlugs`
+   (`galleryruntime/slugs.go`) so the dev overlay and component tree can resolve it.
 
 ### Standard Props struct template
 
@@ -719,13 +722,83 @@ Do NOT skip this — gallery dev tools depend on it for hover overlays and compo
 
 ### Gallery registration pattern
 
-Components are registered in `cmd/gallery/internal/gallery/seed.go` via `GalleryComponent` structs:
+There is no `Preview`/`Source` pair — a component is registered as a
+`galleryruntime.GalleryComponent` (`galleryruntime/types.go`):
 
 ```go
-{Name: "Button", Slug: "button", Package: "ui", Category: "Primitives",
-    Preview: ui.ButtonWithBoundary("#", ui.ButtonPrimary, ...),
-    Source:  ui.ButtonWithBoundary as templ.Component,
+type GalleryComponent struct {
+	Slug        string
+	Name        string
+	Category    Category
+	Subcategory string // optional grouping within a category (e.g. "Buttons", "Modal")
+	Description string
+
+	// Root-level preview fields (backward-compatible; used when Variants is empty).
+	HTML        string          // raw HTML snippet — rendered via srcdoc iframe
+	Templ       templ.Component // full-page templ component — rendered via /gallery/render/{slug}
+	FrameHeight string          // optional iframe height (e.g. "100vh"); defaults to "400px"
+
+	// Tokens are optional design token controls shown in the token panel.
+	Tokens []DesignToken
+
+	// Variants lists named stories for this component. When non-empty, the
+	// detail page shows a tab strip to switch between them. The root HTML/Templ
+	// fields serve as a fallback "Default" story when Variants is nil.
+	Variants []GalleryStory
 }
 ```
 
-Each component gets a `Preview` (shown in gallery list/cards) and a `Source` (full render in detail view). The `Slug` must match the route registered in `cmd/gallery/internal/handler/handler.go`.
+Existing components live in the `components` slice inside `AllComponents()`, at the top of
+`cmd/gallery/internal/gallery/seed.go`. **New** components go in `additionalComponents()` in
+`cmd/gallery/internal/gallery/seed_additions.go`, which `seed.go` appends:
+
+```go
+return append(components, additionalComponents()...)
+```
+
+```go
+func additionalComponents() []galleryruntime.GalleryComponent {
+	return []galleryruntime.GalleryComponent{
+		{
+			Slug:        "aura",
+			Name:        "Aura",
+			Category:    galleryruntime.CategoryFoundation,
+			Subcategory: "Effects",
+			Description: "DaisyUI 5 aura effect — animated border glow that responds to cursor position. Wraps any child element.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Aura wrapping a card.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.AuraWithBoundary(ui.DashboardCardWithBoundary("Aura Effect", "Hover over this card to see the glow"))
+					},
+					FrameHeight: "180px",
+				},
+			},
+		},
+	}
+}
+```
+
+The previews hang off the stories: each `GalleryStory` renders via `RenderFunc` (called with the
+per-variant query params) or its own `HTML`/`Templ`. There is **no** per-component route to register —
+`galleryruntime/handler.go` serves every component through generic routes: `/gallery/:slug` (detail),
+`/gallery/render/:slug` (preview) and `/gallery/render/:slug/:variant` (a named story).
+
+Last, map the component's `data-component` name to its `Slug` in `galleryruntime.ComponentSlugs`
+(`galleryruntime/slugs.go`):
+
+```go
+var ComponentSlugs = map[string]string{
+	"Button": "button",
+	"Aura":   "aura",
+	// ...
+}
+```
+
+The key is the component name **without** its package prefix — the dev overlay strips the prefix from
+`data-component` before looking it up (`"ui/Progress"` → `"Progress"`, see `buildTree` in
+`galleryruntime/devoverlay.go`); the value is the component's `Slug`. `ComponentSlugs` is the single
+source of truth, embedded as the `COMPONENT_SLUGS` JS global by `ComponentSlugsScript()` for both the
+hover overlay (`devoverlay.go`) and the detail-page component tree (`pages_detail.templ`). A component
+missing from the map still renders, but has no click-through link in those two dev tools.

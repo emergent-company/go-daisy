@@ -1771,3 +1771,41 @@ func ColorPickerTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
 	}
 }
+
+// DialogTokens returns the DesignToken slice for DialogWithBoundary.
+func DialogTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// ConfirmDialogTokens returns the DesignToken slice for ConfirmDialogWithBoundary.
+func ConfirmDialogTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// DisclosureTokens returns the DesignToken slice for DisclosureWithBoundary.
+func DisclosureTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+	}
+}
+
+// CommandPaletteButtonTokens returns the DesignToken slice for CommandPaletteButtonWithBoundary.
+func CommandPaletteButtonTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Id",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "spotlight",
+			QueryParam: "id",
+		},
+		{
+			Label:      "Placeholder",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Search…",
+			QueryParam: "placeholder",
+		},
+	}
+}
