@@ -430,18 +430,17 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 			Name:        "Head Dependencies",
 			Category:    galleryruntime.CategoryFoundation,
 			Subcategory: "Setup",
-			Description: "Unified <head> asset tag emitter — CSS, HTMX, Alpine, Morph, Stimulus, SSE, WS with cache-busting.",
+			Description: "Unified <head> asset tag emitter — CSS, HTMX, Alpine, Morph, SSE, WS with cache-busting.",
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Full",
 					Description: "All dependencies enabled.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return head.DependenciesWithBoundary(head.DepsProps{
-							Alpine:   true,
-							Morph:    true,
-							Stimulus: true,
-							SSE:      true,
-							WS:       true,
+							Alpine: true,
+							Morph:  true,
+							SSE:    true,
+							WS:     true,
 						})
 					},
 					FrameHeight: "100px",

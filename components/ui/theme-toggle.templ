@@ -2,12 +2,11 @@ package ui
 
 import (
 	"github.com/emergent-company/go-daisy/components/alpine"
-	"github.com/emergent-company/go-daisy/components/stimulus"
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
 type ThemeToggleProps struct {
-	Driver string // "" = vanilla, "alpine" = AlpineJS, "stimulus" = StimulusJS
+	Driver string // "" = vanilla, "alpine" = AlpineJS
 }
 
 // themeToggleVisual renders the shared visual: two Iconify icons (sun/moon)
@@ -18,12 +17,10 @@ templ themeToggleVisual() {
 }
 
 // ThemeToggle renders an animated sun/moon theme toggle.
-// Use Driver to select implementation: "" (vanilla inline JS), "alpine" (AlpineJS), "stimulus" (StimulusJS).
+// Use Driver to select implementation: "" (vanilla inline JS), "alpine" (AlpineJS).
 templ ThemeToggle(props ThemeToggleProps) {
 	if props.Driver == "alpine" {
 		@alpineThemeToggle()
-	} else if props.Driver == "stimulus" {
-		@stimulusThemeToggle()
 	} else {
 		@vanillaThemeToggle()
 	}
@@ -34,13 +31,6 @@ templ ThemeToggle(props ThemeToggleProps) {
 // Deprecated: use ThemeToggle(ThemeToggleProps{Driver: "alpine"}) instead.
 templ AlpineThemeToggle() {
 	@alpineThemeToggle()
-}
-
-// StimulusThemeToggle renders a sun/moon theme toggle using Stimulus controller.
-//
-// Deprecated: use ThemeToggle(ThemeToggleProps{Driver: "stimulus"}) instead.
-templ StimulusThemeToggle() {
-	@stimulusThemeToggle()
 }
 
 // vanillaThemeToggle renders the vanilla inline-JS theme toggle.
@@ -69,23 +59,6 @@ templ alpineThemeToggle() {
 	>
 		<label class="swap swap-rotate cursor-pointer">
 			<input type="checkbox" class="hidden" { alpine.BooleanBinding("checked", "dark")... } { alpine.On("change", "dark = $el.checked")... }/>
-			@themeToggleVisual()
-		</label>
-	</div>
-}
-
-// stimulusThemeToggle renders the Stimulus.js theme toggle.
-templ stimulusThemeToggle() {
-	<div
-		{ stimulus.Controller("theme")... }
-		{ devmode.Attrs(ctx, "ui/ThemeToggle")... }
-	>
-		<label
-			class="swap swap-rotate cursor-pointer"
-			aria-label="Toggle theme"
-			{ stimulus.Action("click", "theme", "toggle")... }
-		>
-			<input type="checkbox" class="hidden" data-theme-target="checkbox"/>
 			@themeToggleVisual()
 		</label>
 	</div>

@@ -25,14 +25,13 @@ Components live under `components/` and are organized by package:
 | `components/layout` | Full-page shell, sidebar, navbar, LayoutCustomizer |
 | `components/nav` | PageHeader, TabMenu, TopBar, Megamenu, breadcrumbs, menus |
 | `components/table` | Table, ListArea (infinite-scroll), ScrollRows |
-| `components/modal` | JS-driver-and-header modal family: vanilla/Alpine/Stimulus drivers, FormModal, ConfirmPopup, DeleteButton, OpenModalButton, LoaderModal |
+| `components/modal` | JS-driver-and-header modal family: vanilla/Alpine drivers, FormModal, ConfirmPopup, DeleteButton, OpenModalButton, LoaderModal |
 | `components/logs` | Log stream display |
 | `components/alpine` | Alpine.js attribute helpers + pre-built data states |
-| `components/stimulus` | Stimulus.js attribute helpers + 6 pre-built controllers |
 
 Two distinct modal families exist — do not confuse them:
 
-- **`components/modal`** is the JS-driver-and-header-oriented family: `Modal`/`FormModal` pair a mandatory `ModalHeader` with vanilla, Alpine.js and Stimulus.js drivers, alongside `ConfirmPopup`, `DeleteButton`, `OpenModalButton` and `LoaderModal`.
+- **`components/modal`** is the JS-driver-and-header-oriented family: `Modal`/`FormModal` pair a mandatory `ModalHeader` with vanilla and Alpine.js drivers, alongside `ConfirmPopup`, `DeleteButton`, `OpenModalButton` and `LoaderModal`.
 - **`ui.Dialog`** and **`ui.ConfirmDialog`** are the minimal native-dialog family: a bare `<dialog class="modal">` shell opened via `showModal()`/`close()`, with caller-supplied attributes and no mandatory header.
 
 All component functions return `templ.Component`. Props are passed as plain Go structs or positional arguments — no global state.
@@ -61,9 +60,9 @@ Use helpers from the `render` package in every HTTP handler instead of calling `
 
 ---
 
-## Micro-Interactions (Alpine.js / Stimulus.js)
+## Micro-Interactions (Alpine.js / vanilla JS)
 
-Every interactive component has three render modes: CSS-only (default), Alpine.js, and Stimulus.js. Pick one per page.
+Every interactive component has three render modes: CSS-only (default), Alpine.js, and the vanilla inline-JS driver.
 
 ### Alpine.js (recommended)
 
@@ -89,18 +88,6 @@ Or use the ready-made Alpine variants:
 @ui.AlpineAccordionItem("Section", false) { ... }
 @ui.AlpineThemeToggle()
 ```
-
-### Stimulus.js (explicit controller pattern)
-
-```go
-import "github.com/emergent-company/go-daisy/components/stimulus"
-
-<div { stimulus.Controller("modal")... }>
-    <button { stimulus.Action("click", "modal", "open")... }>Open</button>
-</div>
-```
-
-Pre-built controllers: `ModalController`, `DropdownController`, `TabsController`, `AccordionController`, `ThemeController`, `ClipboardController`.
 
 ### Real-Time Updates
 
@@ -310,7 +297,7 @@ task dev:ui
 | Templating | Templ |
 | CSS | DaisyUI 5 + Tailwind CSS 4 |
 | Interactivity | HTMX v4 |
-| Micro-interactions | Alpine.js 3 or Stimulus 3 (optional, pick one) |
+| Micro-interactions | Alpine.js 3 (optional) + vanilla inline-JS driver |
 | DOM morphing | htmx 4 core morphing (`innerMorph`) |
 | Real-time | HTMX hx-sse / hx-ws extensions (optional) |
 | Charts | ApexCharts 4 (lazy-loaded CDN) |

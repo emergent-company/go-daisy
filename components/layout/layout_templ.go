@@ -75,7 +75,7 @@ func Page(title string, themeAttr string) templ.Component {
 }
 
 // PageFull renders the full HTML shell with optional Alpine.js, morphing,
-// prefetch, and Stimulus support.
+// and prefetch support.
 func PageFull(props PageProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -243,78 +243,46 @@ func PageFull(props PageProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		if props.Stimulus {
+		if props.SSE {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<script src=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var11 string
-			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/js/stimulus.js?v=" + staticfs.Hash())
+			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/js/hx-sse.js?v=" + staticfs.Hash())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 73, Col: 62}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 73, Col: 60}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\"></script> <script src=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var12 string
-			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/js/stimulus-controllers.js?v=" + staticfs.Hash())
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 74, Col: 74}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\"></script>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		if props.SSE {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<script src=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var13 string
-			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/js/hx-sse.js?v=" + staticfs.Hash())
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 77, Col: 60}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\"></script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\"></script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
 		if props.WS {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<script src=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<script src=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var14 string
-			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/js/hx-ws.js?v=" + staticfs.Hash())
+			var templ_7745c5c3_Var12 string
+			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue("/static/js/hx-ws.js?v=" + staticfs.Hash())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 80, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout.templ`, Line: 76, Col: 59}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\"></script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "\"></script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
 		if props.Prefetch {
-			templ_7745c5c3_Var15 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_Var13 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 				if !templ_7745c5c3_IsBuffer {
@@ -326,19 +294,19 @@ func PageFull(props PageProps) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<script>\n\t\t\t\t(function() {\n\t\t\t\tvar timer;\n\t\t\t\tdocument.addEventListener('mouseover', function(e) {\n\t\t\t\t\tvar link = e.target.closest('a[href]');\n\t\t\t\t\tif (!link || link.dataset.prefetch === 'false') return;\n\t\t\t\t\tvar url = link.getAttribute('href');\n\t\t\t\t\tif (!url || url.startsWith('#') || url.startsWith('http')) return;\n\t\t\t\t\tclearTimeout(timer);\n\t\t\t\t\ttimer = setTimeout(function() {\n\t\t\t\t\t\tvar pre = document.createElement('link');\n\t\t\t\t\t\tpre.rel = 'prefetch';\n\t\t\t\t\t\tpre.href = url;\n\t\t\t\t\t\tpre.as = 'document';\n\t\t\t\t\t\tdocument.head.appendChild(pre);\n\t\t\t\t\t}, 100);\n\t\t\t\t}, {passive: true});\n\t\t\t})();\n\t\t\t\t</script>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<script>\n\t\t\t\t(function() {\n\t\t\t\tvar timer;\n\t\t\t\tdocument.addEventListener('mouseover', function(e) {\n\t\t\t\t\tvar link = e.target.closest('a[href]');\n\t\t\t\t\tif (!link || link.dataset.prefetch === 'false') return;\n\t\t\t\t\tvar url = link.getAttribute('href');\n\t\t\t\t\tif (!url || url.startsWith('#') || url.startsWith('http')) return;\n\t\t\t\t\tclearTimeout(timer);\n\t\t\t\t\ttimer = setTimeout(function() {\n\t\t\t\t\t\tvar pre = document.createElement('link');\n\t\t\t\t\t\tpre.rel = 'prefetch';\n\t\t\t\t\t\tpre.href = url;\n\t\t\t\t\t\tpre.as = 'document';\n\t\t\t\t\t\tdocument.head.appendChild(pre);\n\t\t\t\t\t}, 100);\n\t\t\t\t}, {passive: true});\n\t\t\t})();\n\t\t\t\t</script>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = layoutPrefetchOnce.Once().Render(templ.WithChildren(ctx, templ_7745c5c3_Var15), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = layoutPrefetchOnce.Once().Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
 		if props.ViewTransitions {
-			templ_7745c5c3_Var16 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_Var14 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 				if !templ_7745c5c3_IsBuffer {
@@ -350,18 +318,18 @@ func PageFull(props PageProps) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<script>\n\t\t\t\t(function() {\n\t\t\t\tdocument.addEventListener('htmx:before:history:update', function() {\n\t\t\t\t\tdocument.documentElement.setAttribute('data-navigation-direction', 'forward');\n\t\t\t\t});\n\t\t\t\twindow.addEventListener('popstate', function() {\n\t\t\t\t\tdocument.documentElement.setAttribute('data-navigation-direction', 'back');\n\t\t\t\t});\n\t\t\t\tdocument.addEventListener('htmx:after:settle', function() {\n\t\t\t\t\tsetTimeout(function() {\n\t\t\t\t\t\tdocument.documentElement.removeAttribute('data-navigation-direction');\n\t\t\t\t\t}, 300);\n\t\t\t\t});\n\t\t\t})();\n\t\t\t\t</script>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<script>\n\t\t\t\t(function() {\n\t\t\t\tdocument.addEventListener('htmx:before:history:update', function() {\n\t\t\t\t\tdocument.documentElement.setAttribute('data-navigation-direction', 'forward');\n\t\t\t\t});\n\t\t\t\twindow.addEventListener('popstate', function() {\n\t\t\t\t\tdocument.documentElement.setAttribute('data-navigation-direction', 'back');\n\t\t\t\t});\n\t\t\t\tdocument.addEventListener('htmx:after:settle', function() {\n\t\t\t\t\tsetTimeout(function() {\n\t\t\t\t\t\tdocument.documentElement.removeAttribute('data-navigation-direction');\n\t\t\t\t\t}, 300);\n\t\t\t\t});\n\t\t\t})();\n\t\t\t\t</script>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = layoutViewTransitionsOnce.Once().Render(templ.WithChildren(ctx, templ_7745c5c3_Var16), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = layoutViewTransitionsOnce.Once().Render(templ.WithChildren(ctx, templ_7745c5c3_Var14), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -386,12 +354,12 @@ func AppShell(appName string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var17 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var17 == nil {
-			templ_7745c5c3_Var17 = templ.NopComponent
+		templ_7745c5c3_Var15 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var15 == nil {
+			templ_7745c5c3_Var15 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<div id=\"_app-shell\" class=\"flex h-screen overflow-hidden\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div id=\"_app-shell\" class=\"flex h-screen overflow-hidden\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -399,15 +367,15 @@ func AppShell(appName string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "><input type=\"checkbox\" id=\"_layout-sidebar-toggle-trigger\" class=\"hidden\" aria-label=\"Toggle layout sidebar\"> <label for=\"_layout-sidebar-toggle-trigger\" id=\"_layout-sidebar-backdrop\"></label>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "><input type=\"checkbox\" id=\"_layout-sidebar-toggle-trigger\" class=\"hidden\" aria-label=\"Toggle layout sidebar\"> <label for=\"_layout-sidebar-toggle-trigger\" id=\"_layout-sidebar-backdrop\"></label>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ_7745c5c3_Var17.Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templ_7745c5c3_Var15.Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -432,12 +400,12 @@ func AppShellContent() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var18 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var18 == nil {
-			templ_7745c5c3_Var18 = templ.NopComponent
+		templ_7745c5c3_Var16 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var16 == nil {
+			templ_7745c5c3_Var16 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"flex min-w-0 grow flex-col overflow-hidden\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<div class=\"flex min-w-0 grow flex-col overflow-hidden\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -445,15 +413,15 @@ func AppShellContent() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ_7745c5c3_Var18.Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templ_7745c5c3_Var16.Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<main id=\"main-content\" class=\"grow overflow-auto\"></main></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<main id=\"main-content\" class=\"grow overflow-auto\"></main></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -478,12 +446,12 @@ func AppShellWithNav(appName string, groups []SidebarGroup) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var19 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var19 == nil {
-			templ_7745c5c3_Var19 = templ.NopComponent
+		templ_7745c5c3_Var17 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var17 == nil {
+			templ_7745c5c3_Var17 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<div id=\"_app-shell\" class=\"flex h-screen overflow-hidden\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div id=\"_app-shell\" class=\"flex h-screen overflow-hidden\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -491,7 +459,7 @@ func AppShellWithNav(appName string, groups []SidebarGroup) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "><input type=\"checkbox\" id=\"_layout-sidebar-toggle-trigger\" class=\"hidden\" aria-label=\"Toggle layout sidebar\"> <label for=\"_layout-sidebar-toggle-trigger\" id=\"_layout-sidebar-backdrop\"></label>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "><input type=\"checkbox\" id=\"_layout-sidebar-toggle-trigger\" class=\"hidden\" aria-label=\"Toggle layout sidebar\"> <label for=\"_layout-sidebar-toggle-trigger\" id=\"_layout-sidebar-backdrop\"></label>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -499,11 +467,11 @@ func AppShellWithNav(appName string, groups []SidebarGroup) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"flex min-w-0 grow flex-col overflow-hidden\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div class=\"flex min-w-0 grow flex-col overflow-hidden\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var20 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Var18 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 			if !templ_7745c5c3_IsBuffer {
@@ -515,17 +483,17 @@ func AppShellWithNav(appName string, groups []SidebarGroup) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templ_7745c5c3_Var19.Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = templ_7745c5c3_Var17.Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = Navbar(appName).Render(templ.WithChildren(ctx, templ_7745c5c3_Var20), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Navbar(appName).Render(templ.WithChildren(ctx, templ_7745c5c3_Var18), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<main id=\"main-content\" class=\"grow overflow-auto bg-base-200\"></main></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<main id=\"main-content\" class=\"grow overflow-auto bg-base-200\"></main></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

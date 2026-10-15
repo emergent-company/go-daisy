@@ -7,7 +7,6 @@ type PageProps struct {
 	ThemeAttr       string
 	Alpine          bool // include Alpine.js <script> tag
 	Morph           bool // include idiomorph global (HTMX morphing is core in v4, no extension needed)
-	Stimulus        bool // include Stimulus.js + controllers
 	Prefetch        bool // include link prefetch on hover
 	ViewTransitions bool // enable View Transitions API (browser-native crossfade)
 	ProgressBar     bool // include auto-show progress bar during slow HTMX requests

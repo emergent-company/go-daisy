@@ -235,7 +235,7 @@
  * border-line`) that reference an undefined variable — a hard build error, not a
  * cosmetic drift. See PR #37.
  *
- * Steps, their roles and the measured per-theme presence: §13 of
+ * Steps, their roles and the measured per-theme presence: §12 of
  * docs/PATTERNS.md; the full derivation comment sits next to the declaration in
  * `components/css/custom.css`. */
 

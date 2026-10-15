@@ -1319,26 +1319,11 @@ func SheetWithBoundary(side string, open bool) templ.Component {
 	return devmode.ComponentBoundary("Sheet", inner, map[string]any{"side": side, "open": open})
 }
 
-// StimulusTabsWithBoundary wraps Tabs with Stimulus driver.
-//
-// Deprecated: use TabsWithBoundary(TabsProps{Driver: "stimulus", ...}) instead.
-func StimulusTabsWithBoundary(props TabsProps) templ.Component {
-	props.Driver = "stimulus"
-	return TabsWithBoundary(props)
-}
-
 // AlpineThemeToggleWithBoundary wraps ThemeToggle with Alpine driver.
 //
 // Deprecated: use ThemeToggleWithBoundary("alpine") instead.
 func AlpineThemeToggleWithBoundary() templ.Component {
 	return ThemeToggleWithBoundary("alpine")
-}
-
-// StimulusThemeToggleWithBoundary wraps ThemeToggle with Stimulus driver.
-//
-// Deprecated: use ThemeToggleWithBoundary("stimulus") instead.
-func StimulusThemeToggleWithBoundary() templ.Component {
-	return ThemeToggleWithBoundary("stimulus")
 }
 
 // AlpineToastWithBoundary wraps Toast with Alpine driver.

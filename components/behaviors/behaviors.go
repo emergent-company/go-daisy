@@ -27,7 +27,7 @@ func Tag() templ.Component {
 
 // TagDefer returns the init runtime script tag. The runtime must be present
 // before component scripts run (it is loaded synchronously), so this is
-// identical to Tag() and is provided for API parity with alpine/stimulus.
+// identical to Tag() and is provided for API parity with alpine.
 func TagDefer() templ.Component {
 	return Tag()
 }
