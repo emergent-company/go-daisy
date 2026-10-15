@@ -48,9 +48,7 @@ templ CodePreview(tabs []CodeTab) {
 	</div>
 	@codePreviewCopyOnce.Once() {
 		<script>
-		(function() {
-			if (window._cpCopyLoaded) return;
-			window._cpCopyLoaded = true;
+		gdOnce('cpCopyLoaded', function () {
 			function cpShowCopied(btn) {
 				btn._origTip = btn._origTip || btn.getAttribute('data-tip');
 				btn.setAttribute('data-tip', 'Copied!');
@@ -80,7 +78,7 @@ templ CodePreview(tabs []CodeTab) {
 					document.body.removeChild(ta);
 				}
 			};
-		})();
+		});
 		</script>
 	}
 }

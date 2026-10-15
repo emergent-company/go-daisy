@@ -39,8 +39,7 @@ templ InputSpinner(id string, value int, min int, max int, hasMinMax bool, btnCl
 templ spinnerScript() {
 	@spinnerScriptOnce.Once() {
 		<script>
-	if (!window._spinnerInit) {
-	  window._spinnerInit = true;
+	gdOnce('spinnerInit', function () {
 	  window.spinnerGet = function(id) { return document.getElementById(id); };
 	  window.spinnerIncrement = function(id, step) {
 	    var el = spinnerGet(id); if (!el) return;
@@ -54,7 +53,7 @@ templ spinnerScript() {
 	    var min = el.min !== '' ? parseFloat(el.min) : -Infinity;
 	    el.value = Math.max(v - s, min);
 	  };
-	}
+	});
 	</script>
 	}
 }

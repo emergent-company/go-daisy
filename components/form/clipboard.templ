@@ -78,8 +78,7 @@ func clipboardOnClick(id string, value string, mono bool) templ.ComponentScript 
 templ clipboardScript() {
 	@clipboardScriptOnce.Once() {
 		<script>
-	if (!window._clipboardInit) {
-	  window._clipboardInit = true;
+	gdOnce('clipboardInit', function () {
 	  function clipboardFlash(btn, html) {
 	    var orig = btn.innerHTML;
 	    btn.innerHTML = html;
@@ -132,7 +131,7 @@ templ clipboardScript() {
 	    if (!btn) return;
 	    clipboardWrite(text, btn, '✓');
 	  };
-	}
+	});
 	</script>
 	}
 }

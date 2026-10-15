@@ -292,11 +292,19 @@ templ ComponentDetail(c GalleryComponent) {
 	</div>
 
 	<!-- Theme toggle + copy + fullscreen script -->
+	@templ.Raw("<script>" + ui.ThemeRuntimeJS() + "</script>")
 	<script>
 		(function() {
 			var STORAGE_KEY = 'gallery-preview-theme';
-		var THEMES = { light: 'nord', dark: 'dracula' };
-		function toDaisyTheme(m) { return THEMES[m] || 'nord'; }
+		// Palette registry + resolver: single source of truth (ui.ThemeRuntimeJS).
+		var THEMES = window.__goDaisyTheme.palettes;
+		function readPalette() {
+			try {
+				var p = localStorage.getItem('gallery-ui-palette');
+				return THEMES[p] ? p : window.__goDaisyTheme.defaultPalette;
+			} catch(e) { return window.__goDaisyTheme.defaultPalette; }
+		}
+		function toDaisyTheme(m) { return window.__goDaisyTheme.resolve(m, readPalette()); }
 
 			function getSavedTheme() {
 				try { return localStorage.getItem(STORAGE_KEY) || 'light'; } catch(e) { return 'light'; }
@@ -1067,6 +1075,7 @@ templ ComponentExamples(c GalleryComponent) {
 		}
 	</div>
 	<!-- Examples tab JS: theme per-frame, fullscreen, auto-resize -->
+	@templ.Raw("<script>" + ui.ThemeRuntimeJS() + "</script>")
 	<script>
 	(function() {
 		// Per-frame theme state: inherits from global gallery theme on init
@@ -1075,8 +1084,15 @@ templ ComponentExamples(c GalleryComponent) {
 		function getSavedTheme() {
 			try { return localStorage.getItem('gallery-preview-theme') || 'light'; } catch(e) { return 'light'; }
 		}
-		var THEMES = { light: 'nord', dark: 'dracula' };
-		function toDaisyTheme(m) { return THEMES[m] || 'nord'; }
+		// Palette registry + resolver: single source of truth (ui.ThemeRuntimeJS).
+		var THEMES = window.__goDaisyTheme.palettes;
+		function readPalette() {
+			try {
+				var p = localStorage.getItem('gallery-ui-palette');
+				return THEMES[p] ? p : window.__goDaisyTheme.defaultPalette;
+			} catch(e) { return window.__goDaisyTheme.defaultPalette; }
+		}
+		function toDaisyTheme(m) { return window.__goDaisyTheme.resolve(m, readPalette()); }
 
 		function applyThemeToFrame(frame, theme) {
 			try {

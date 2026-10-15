@@ -10,6 +10,7 @@ import (
 	"github.com/a-h/templ"
 	"github.com/labstack/echo/v4"
 
+	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 	"github.com/emergent-company/go-daisy/render"
 	"github.com/emergent-company/go-daisy/staticfs"
@@ -39,6 +40,8 @@ func newGalleryHandler(title string, logo templ.Component, components []GalleryC
 func (h *galleryHandler) register(e *echo.Echo) {
 	e.GET("/gallery", h.handleIndex)
 	e.GET("/gallery/docs", h.handleDocs)
+	e.GET("/gallery/docs/:slug.md", h.handleComponentMarkdown)
+	e.GET("/llms.txt", h.handleLLMs)
 	e.GET("/gallery/render/:slug", h.handleRender)
 	e.GET("/gallery/render/:slug/examples", h.handleRenderSubExample)
 	e.GET("/gallery/render/:slug/:variant", h.handleRenderVariant)
@@ -336,28 +339,42 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
 	}
 	fmt.Fprintf(&jsDeps, `<script defer src="%salpine.js?v=%s"></script>`, jsBase, hash)
 
+	// The behaviour-init runtime must be defined BEFORE any component inline
+	// script runs, because the migrated scripts call gdOnce/gdBehaviour at parse
+	// time. Those scripts are emitted as part of the body snippet below, so the
+	// runtime is loaded synchronously from the <head> — putting it in jsDeps
+	// would land it after the snippet, i.e. too late.
+	initRuntime := fmt.Sprintf("<script src=\"%sgo-daisy-init.js?v=%s\"></script>\n", jsBase, hash)
+
 	devScript := ""
 	if devMode {
 		devScript = strings.Replace(devOverlayScript, "__COMPONENT_SLUGS_JSON__", ComponentSlugsJSON(), 1)
 	}
 
 	return fmt.Sprintf(`<!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-%s  <script>
-    try {
-      var t = localStorage.getItem('gallery-preview-theme');
-      if (t) {
-        var themes = { light: 'nord', dark: 'dracula' };
-        var theme = themes[t];
-        if (!theme) theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dracula' : 'nord';
-        document.documentElement.setAttribute('data-theme', theme);
-      }
-    } catch(e) {}
+  <script>
+%s
+  try {
+    var rt = window.__goDaisyTheme;
+    var saved = null;
+    var palette = null;
+    try { saved = localStorage.getItem('gallery-preview-theme'); } catch (e) {}
+    try { palette = localStorage.getItem('gallery-ui-palette'); } catch (e) {}
+    if (!rt.palettes[palette]) palette = rt.defaultPalette;
+    var mode;
+    if (saved === 'light' || saved === 'dark') {
+      mode = saved;
+    } else {
+      mode = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', rt.resolve(mode, palette));
+  } catch(e) {}
   </script>
-  <style>
+%s%s  <style>
     html { margin: 0; padding: 0; background: transparent; }
     body { margin: 0; padding: 16px; background: transparent; }
   </style>
@@ -365,5 +382,5 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
 <body>
 %s%s%s
 </body>
-</html>`, headExtras.String(), snippet, jsDeps.String(), devScript)
+</html>`, ui.ThemeRuntimeJS(), headExtras.String(), initRuntime, snippet, jsDeps.String(), devScript)
 }

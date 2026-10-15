@@ -68,9 +68,7 @@ templ SidebarDense(props SidebarDenseProps) {
 templ sidebarDenseScript() {
 	@sidebarDenseOnce.Once() {
 		<script>
-	(function() {
-	  if (window._sidebarDenseInit) return;
-	  window._sidebarDenseInit = true;
+	gdOnce('sidebarDenseInit', function () {
 
 	  // Inject CSS
 	  var css = document.createElement('style');
@@ -107,7 +105,7 @@ templ sidebarDenseScript() {
 	      if (cfg.denseExpanded) el.classList.add('expanded');
 	    } catch(e) {}
 	  })();
-	})();
+	});
 	</script>
 	}
 }

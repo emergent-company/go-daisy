@@ -96,8 +96,7 @@ var themeToggleScriptOnce = templ.NewOnceHandle()
 templ themeToggleScript() {
 	@themeToggleScriptOnce.Once() {
 			<script>
-		if (!window._themeToggleInit) {
-		  window._themeToggleInit = true;
+		gdOnce('themeToggleInit', function () {
 
 		  window.themeToggleAnimated = function(cb) {
 		    var current = document.documentElement.getAttribute('data-theme') || 'nord';
@@ -118,7 +117,7 @@ templ themeToggleScript() {
 		      el.checked = isDark;
 		    });
 		  })();
-		}
+		});
 		</script>
 	}
 }

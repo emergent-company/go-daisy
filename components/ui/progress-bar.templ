@@ -22,10 +22,8 @@ templ ProgressBar() {
 	></div>
 	@progressBarScriptOnce.Once() {
 		<script>
-	if (!window._goDaisyProgressInit) {
-		window._goDaisyProgressInit = true;
-		(function() {
-			var bar = document.getElementById('progress-bar');
+	gdOnce('goDaisyProgressInit', function () {
+		var bar = document.getElementById('progress-bar');
 			if (!bar) return;
 			var timer, animFrame;
 
@@ -70,8 +68,7 @@ templ ProgressBar() {
 					bar.classList.remove('htmx-request');
 				}
 			});
-		})();
-	}
+	});
 		</script>
 	}
 }

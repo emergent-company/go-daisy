@@ -1,0 +1,99 @@
+package ui
+
+import (
+	"fmt"
+	"strings"
+)
+
+// themePalettePairs is the SINGLE SOURCE OF TRUTH for the palette registry:
+// each palette id maps to its light and dark daisyUI theme names. These names
+// must match the `@plugin "daisyui/theme"` blocks in assets/app.css.
+//
+// Everything that needs palette x mode -> theme resolution consumes this via
+// ThemeRuntimeJS(): the head ThemeScript, ThemeSwitcher, the gallery
+// preview-iframe bootstrap (galleryruntime/handler.go) and the gallery
+// detail-page scripts (galleryruntime/pages_detail.templ). Change it here only.
+var themePalettePairs = []struct {
+	ID    string
+	Light string
+	Dark  string
+}{
+	{ID: "default", Light: "nord", Dark: "dracula"},
+	{ID: "flow", Light: "flow", Dark: "flow-dark"},
+	{ID: "ember", Light: "ember", Dark: "ember-dark"},
+	{ID: "slate", Light: "slate", Dark: "slate-dark"},
+}
+
+// ThemeRuntimeJS returns a self-contained <script> body that publishes
+// window.__goDaisyTheme = { palettes, defaultPalette, effectiveMode, resolve }.
+//
+// Every consumer injects this exact string, so the mapping cannot drift between
+// the Go-rendered iframe harness and the templ-rendered switcher. It is
+// idempotent (a page that injects it more than once keeps the first definition)
+// and dependency-free. It is safe to run in <head> before the stylesheet.
+func ThemeRuntimeJS() string {
+	var b strings.Builder
+	b.WriteString(`if(!window.__goDaisyTheme){window.__goDaisyTheme=(function(){var palettes={`)
+	for i, p := range themePalettePairs {
+		if i > 0 {
+			b.WriteString(",")
+		}
+		fmt.Fprintf(&b, `"%s":{"light":"%s","dark":"%s"}`, p.ID, p.Light, p.Dark)
+	}
+	b.WriteString(`};function effectiveMode(mode){if(mode==="system"){return (window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";}return mode==="dark"?"dark":"light";}function resolveTheme(mode,palette){var set=palettes[palette]||palettes["default"];return effectiveMode(mode)==="dark"?set.dark:set.light;}return {palettes:palettes,defaultPalette:"default",effectiveMode:effectiveMode,resolve:resolveTheme};})();}`)
+	return b.String()
+}
+
+// ThemeScript emits a tiny, synchronous inline script meant to sit in <head>
+// BEFORE the stylesheet link, so the persisted (palette, mode) selection is
+// resolved and written to <html data-theme> before first paint. This removes
+// the "paint default theme, then snap" flash on a full page load.
+//
+// Behaviour:
+//   - Reads the persisted mode ('gallery-ui-theme') and palette
+//     ('gallery-ui-palette'); falls back to OS preference / default palette
+//     when unset, so the app follows the OS until the user explicitly chooses.
+//   - Resolves palette x mode -> daisyUI theme name (via window.__goDaisyTheme)
+//     and sets data-theme.
+//   - Seeds the iframe preview key ('gallery-preview-theme') so embedded
+//     previews paint in the matching effective mode.
+//   - Never throws: all storage access is wrapped (private mode / disabled
+//     storage). Only touches document.documentElement (no DOM queries, no
+//     layout/paint cost).
+//   - Exposes window.__goDaisyThemeState so the switcher script can reuse the
+//     resolution instead of repeating it.
+//
+// No dev-mode boundary wrapper: this is a <head> snippet, not a renderable
+// component, and devmode.ComponentBoundary would inject a <div>, which is
+// invalid inside <head>.
+templ ThemeScript() {
+	@templ.Raw("<script>" + ThemeRuntimeJS() + "</script>")
+	<script>
+	(function() {
+		try {
+			var rt = window.__goDaisyTheme;
+			var MODE_KEY = 'gallery-ui-theme';
+			var PALETTE_KEY = 'gallery-ui-palette';
+			var PREVIEW_KEY = 'gallery-preview-theme';
+
+			var mode = null;
+			var palette = null;
+			try { mode = localStorage.getItem(MODE_KEY); } catch (e) {}
+			try { palette = localStorage.getItem(PALETTE_KEY); } catch (e) {}
+			if (mode !== 'light' && mode !== 'dark' && mode !== 'system') { mode = 'system'; }
+			if (!rt.palettes[palette]) { palette = rt.defaultPalette; }
+
+			var effective = rt.effectiveMode(mode);
+			var theme = rt.resolve(mode, palette);
+
+			document.documentElement.setAttribute('data-theme', theme);
+
+			// Seed the preview key for embedded iframes; tolerate storage errors.
+			try { localStorage.setItem(PREVIEW_KEY, effective); } catch (e) {}
+
+			// Share the resolution with the switcher so it does not repeat the work.
+			window.__goDaisyThemeState = { mode: mode, palette: palette, theme: theme, effective: effective };
+		} catch (e) {}
+	})();
+	</script>
+}

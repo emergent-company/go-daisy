@@ -64,8 +64,7 @@ templ CodeBlock(props CodeBlockProps) {
 	</div>
 	@codeBlockScriptOnce.Once() {
 		<script>
-	if (!window._copyBlockCode) {
-	  window._copyBlockCode = true;
+	gdOnce('copyBlockCode', function () {
 	  window.copyBlockCode = function(el) {
 	    var pre = el.closest('.code-block-root');
 	    var code = pre ? pre.querySelector('pre') || pre.querySelector('code') : null;
@@ -77,7 +76,7 @@ templ CodeBlock(props CodeBlockProps) {
 	      }).catch(function() {});
 	    }
 	  };
-	}
+	});
 		</script>
 	}
 }

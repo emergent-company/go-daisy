@@ -55,9 +55,7 @@ templ SortableHandle() {
 templ sortableScript() {
 	@sortableScriptOnce.Once() {
 		<script>
-	if (!window._sortableInit) {
-	  window._sortableInit = true;
-
+	(function () {
 	  window.initSortable = function(el) {
 	    if (typeof Sortable === 'undefined') {
 	      var s = document.createElement('script');
@@ -80,16 +78,17 @@ templ sortableScript() {
 	    } catch(e) { console.warn('Sortable init failed:', e); }
 	  }
 
-	  document.addEventListener('DOMContentLoaded', function() {
-	    document.querySelectorAll('[data-sortable]').forEach(initSortableElement);
-	  });
-	  document.addEventListener('htmx:after:settle', function() {
+	  gdBehaviour('sortableInit', function () {
+	    document.addEventListener('DOMContentLoaded', function() {
+	      document.querySelectorAll('[data-sortable]').forEach(initSortableElement);
+	    });
+	  }, function () {
 	    document.querySelectorAll('[data-sortable]:not(._sortable-initialized)').forEach(function(el) {
 	      el.classList.add('_sortable-initialized');
 	      initSortableElement(el);
 	    });
 	  });
-	}
+	})();
 	</script>
 	}
 }

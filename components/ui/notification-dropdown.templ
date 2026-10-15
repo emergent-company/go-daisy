@@ -86,8 +86,7 @@ templ dropdownNotificationRow(dropdownID string, item NotificationItem) {
 templ notificationDropdownScript(id string) {
 	@notificationDropdownScriptOnce.Once() {
 		<script>
-	if (!window._notifDropdownInit) {
-	  window._notifDropdownInit = true;
+	gdOnce('notifDropdownInit', function () {
 
 	  window.markNotifRead = function(btn, dropdownId) {
 	    var row = btn.closest('[data-notification-id]');
@@ -133,7 +132,7 @@ templ notificationDropdownScript(id string) {
 	      }
 	    }
 	  }
-	}
+	});
 	</script>
 	}
 }

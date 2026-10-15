@@ -61,9 +61,7 @@ templ Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) {
 	</div>
 	@sidebarScriptOnce.Once() {
 		<script>
-		(function() {
-			if (window._sidebarInit) return;
-			window._sidebarInit = true;
+		gdOnce('sidebarInit', function () {
 			var sidebar = document.getElementById('_layout-sidebar');
 			if (!sidebar) return;
 
@@ -98,7 +96,7 @@ templ Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) {
 			document.addEventListener('htmx:after:history:replace', function(e) {
 				updateActiveSidebarItem(e.detail && e.detail.path);
 			});
-		})();
+		});
 	</script>
 	}
 }
