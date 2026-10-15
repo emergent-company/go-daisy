@@ -10,7 +10,6 @@ func DependenciesWithBoundary(props DepsProps) templ.Component {
 	return devmode.ComponentBoundary("Dependencies", Dependencies(props), map[string]any{
 		"alpine":   props.Alpine,
 		"morph":    props.Morph,
-		"stimulus": props.Stimulus,
 		"sse":      props.SSE,
 		"ws":       props.WS,
 	})

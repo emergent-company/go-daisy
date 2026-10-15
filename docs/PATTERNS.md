@@ -58,7 +58,7 @@ class={ templ.KV(custom, custom != ""), templ.KV("default-class", custom == "") 
 
 **Borders always come from the line ladder** (`border-line`, `border-line-strong`,
 `border-line-translucent`) — never `border-base-200` / `border-base-300` /
-`border-base-content/N`. See §13.
+`border-base-content/N`. See §12.
 
 ---
 
@@ -192,33 +192,7 @@ templ AlpineFoo(props FooProps) {
 
 ---
 
-## 10. Stimulus.js Variants
-
-Identical HTML structure to Alpine variants. Only data attributes differ:
-
-```templ
-templ StimulusFoo(props FooProps) {
-    <div { stimulus.Controller("foo")... }
-         { stimulus.Action("keydown.escape", "foo", "close")... }
-         { devmode.Attrs(ctx, "package/StimulusFoo")... }>
-        <button { stimulus.Action("click", "foo", "toggle")... }
-                data-foo-target="trigger">Trigger</button>
-        <div data-foo-target="menu" style="display:none">
-            { children... }
-        </div>
-    </div>
-}
-```
-
-- Controller on outer wrapper.
-- Actions on interactive elements.
-- Targets for element references.
-- Keyboard events: always add `keydown.escape`, `keydown.arrow-down`, `keydown.arrow-up`, `keydown.enter`.
-- `aria-expanded="false"` hardcoded initially — controller manages the toggle.
-
----
-
-## 11. HTMX Method Dispatch
+## 10. HTMX Method Dispatch
 
 When a component supports multiple HTTP methods, use this pattern:
 
@@ -234,7 +208,7 @@ if props.Method == "put" {
 
 ---
 
-## 12. Boolean Attributes
+## 11. Boolean Attributes
 
 Use `checked?={ boolVal }` or `disabled?={ boolVal }` — never raw `if` blocks or string comparisons:
 
@@ -249,7 +223,7 @@ if props.Checked { checked }
 
 ---
 
-## 13. Borders — the line ladder
+## 12. Borders — the line ladder
 
 Every border, divider and rule comes from the **line ladder** in
 `components/css/custom.css` (the only go-daisy stylesheet consumers load, which is

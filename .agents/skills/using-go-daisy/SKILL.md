@@ -17,7 +17,7 @@ go-daisy ships pre-generated `*_templ.go` files. Consumer agents do **not** run 
 
 ## 2. Serve Bundled Assets
 
-go-daisy bundles CSS + JS (HTMX, Alpine.js, morph, Stimulus, calendar, gantt). Mount them once:
+go-daisy bundles CSS + JS (HTMX, Alpine.js, morph, calendar, gantt). Mount them once:
 
 ```go
 import "github.com/emergent-company/go-daisy/staticfs"
@@ -199,30 +199,7 @@ Pre-built Alpine data components exist for: `Toggle`, `TabState`, `DropdownState
 
 ---
 
-## 8. Stimulus.js Components
-
-For teams that prefer explicit controller-based JS, use Stimulus variants:
-
-```go
-import "github.com/emergent-company/go-daisy/components/stimulus"
-```
-
-```templ
-<div { stimulus.Controller("dropdown") }
-     { stimulus.Action("keydown.escape", "dropdown", "close") }>
-    <button { stimulus.Action("click", "dropdown", "toggle") }
-            data-dropdown-target="trigger">Menu</button>
-    <div data-dropdown-target="menu" style="display:none">
-        Items...
-    </div>
-</div>
-```
-
-Pre-built controllers: `ModalController`, `DropdownController`, `TabsController`, `AccordionController`, `ThemeController`, `ClipboardController`.
-
----
-
-## 9. Real-Time (SSE / WebSocket)
+## 8. Real-Time (SSE / WebSocket)
 
 Use `streamhub` for pub/sub and `stream` for HTML fragment broadcasting:
 
@@ -243,7 +220,7 @@ e.GET("/events", func(c echo.Context) error {
 
 ---
 
-## 10. Web Components
+## 9. Web Components
 
 For JS-heavy widgets, use Custom Elements:
 
@@ -256,7 +233,7 @@ Include their JS: `staticfs.Script("/js/go-daisy-calendar.js")`.
 
 ---
 
-## 11. Common Integration Mistakes
+## 10. Common Integration Mistakes
 
 | Mistake | Fix |
 |---|---|
@@ -274,7 +251,7 @@ Include their JS: `staticfs.Script("/js/go-daisy-calendar.js")`.
 
 ---
 
-## 12. Page Templates
+## 11. Page Templates
 
 go-daisy ships pre-built page templates:
 

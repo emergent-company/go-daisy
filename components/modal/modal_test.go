@@ -55,22 +55,6 @@ func TestModalAlpineBranchUnaffected(t *testing.T) {
 	}
 }
 
-// TestModalStimulusBranchUnaffected locks the Stimulus driver output: it keeps
-// the data-controller wiring and a plain method=dialog backdrop form.
-func TestModalStimulusBranchUnaffected(t *testing.T) {
-	html := renderModal(t, Modal(ModalProps{Title: "T", Driver: ModalDriverStimulus}))
-
-	if !strings.Contains(html, `data-controller="modal"`) {
-		t.Errorf("stimulus branch missing controller:\n%s", html)
-	}
-	if !strings.Contains(html, `data-modal-target="dialog"`) {
-		t.Errorf("stimulus branch missing dialog target:\n%s", html)
-	}
-	if strings.Contains(html, `this.closest('dialog').remove()`) {
-		t.Errorf("stimulus branch must not emit destructive remove():\n%s", html)
-	}
-}
-
 // TestModalDefaultOutput locks the vanilla default rendering (empty ID → id="modal")
 // so the backdrop-handler fix cannot silently change the default markup.
 func TestModalDefaultOutput(t *testing.T) {

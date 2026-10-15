@@ -35,7 +35,6 @@ func ModalTokens() []galleryruntime.DesignToken {
 			QueryParam: "driver",
 			Options: []galleryruntime.TokenOption{
 				{Value: "alpine", Label: "Alpine"},
-				{Value: "stimulus", Label: "Stimulus"},
 				{Value: "", Label: "Vanilla"},
 			},
 		},
@@ -53,7 +52,6 @@ func FormModalTokens() []galleryruntime.DesignToken {
 			QueryParam: "driver",
 			Options: []galleryruntime.TokenOption{
 				{Value: "alpine", Label: "Alpine"},
-				{Value: "stimulus", Label: "Stimulus"},
 				{Value: "", Label: "Vanilla"},
 			},
 		},
@@ -105,7 +103,6 @@ func OpenModalButtonTokens() []galleryruntime.DesignToken {
 			QueryParam: "driver",
 			Options: []galleryruntime.TokenOption{
 				{Value: "alpine", Label: "Alpine"},
-				{Value: "stimulus", Label: "Stimulus"},
 				{Value: "", Label: "Vanilla"},
 			},
 		},

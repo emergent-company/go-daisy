@@ -5,7 +5,6 @@ import (
 
 	"github.com/emergent-company/go-daisy/components/alpine"
 	"github.com/emergent-company/go-daisy/components/form"
-	"github.com/emergent-company/go-daisy/components/stimulus"
 	ui "github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
@@ -23,9 +22,8 @@ const (
 type ModalDriver string
 
 const (
-	ModalDriverVanilla  ModalDriver = ""
-	ModalDriverAlpine   ModalDriver = "alpine"
-	ModalDriverStimulus ModalDriver = "stimulus"
+	ModalDriverVanilla ModalDriver = ""
+	ModalDriverAlpine  ModalDriver = "alpine"
 )
 
 // ModalProps configures a Modal component.
@@ -59,7 +57,7 @@ type FormModalProps struct {
 	IndicatorID string
 	Variant     string           // "error" for destructive modals
 	Attrs       templ.Attributes // optional extra HTML attributes on the <dialog>, e.g. {"data-testid": "form-modal"}
-	Driver      ModalDriver      // JS framework driver: "" (vanilla), "alpine", "stimulus"
+	Driver      ModalDriver      // JS framework driver: "" (vanilla), "alpine"
 }
 
 // formModalSubmitVariant picks the error-colored variant for destructive modals.
@@ -89,17 +87,14 @@ func modalDialogID(props ModalProps) string {
 	if props.Driver == ModalDriverAlpine {
 		return "alpine-modal"
 	}
-	if props.Driver == ModalDriverStimulus {
-		return "stimulus-modal"
-	}
 	return "modal"
 }
 
 // Modal renders a DaisyUI dialog modal.
-// Driver field selects the JS framework: "" (vanilla), "alpine", "stimulus".
+// Driver field selects the JS framework: "" (vanilla), "alpine".
 //
 // This is the JS-driver-and-header-oriented modal family (components/modal):
-// it pairs ModalHeader with vanilla/Alpine/Stimulus drivers and is the home of
+// it pairs ModalHeader with vanilla/Alpine drivers and is the home of
 // FormModal, ConfirmPopup, DeleteButton, OpenModalButton and LoaderModal. For a
 // minimal native <dialog> shell opened with showModal()/close() and no mandatory
 // header, use ui.Dialog / ui.ConfirmDialog instead.
@@ -118,26 +113,6 @@ templ Modal(props ModalProps) {
 				</div>
 				<div class="modal-backdrop" @click="open = false"></div>
 			</div>
-		</div>
-	} else if props.Driver == ModalDriverStimulus {
-		<div
-			{ stimulus.Controller("modal")... }
-			{ devmode.Attrs(ctx, "modal/StimulusModal")... }
-		>
-			<dialog
-				data-modal-target="dialog"
-				class={ "modal", templ.KV(string(props.Size), props.Size != "") }
-				{ stimulus.Action("click", "modal", "backdropClose")... }
-				{ stimulus.Action("keydown.escape", "modal", "escapeClose")... }
-			>
-				<div class="modal-box">
-					@ModalHeader(dialogID, props.Title, templ.JSUnsafeFuncCall("this.closest('[data-controller=modal]').__stimulusController.close()"))
-					{ children... }
-				</div>
-				<form method="dialog" class="modal-backdrop">
-					<button>close</button>
-				</form>
-			</dialog>
 		</div>
 	} else {
 		<dialog
@@ -168,12 +143,10 @@ templ Modal(props ModalProps) {
 }
 
 // FormModal renders a modal containing a form that submits via HTMX.
-// Driver field selects the JS framework: "" (vanilla), "alpine", "stimulus".
+// Driver field selects the JS framework: "" (vanilla), "alpine".
 templ FormModal(props FormModalProps) {
 	if props.Driver == ModalDriverAlpine {
 		@formModalAlpine(props)
-	} else if props.Driver == ModalDriverStimulus {
-		@formModalStimulus(props)
 	} else {
 		@formModalVanilla(props)
 	}
@@ -268,73 +241,12 @@ templ formModalAlpine(props FormModalProps) {
 	</div>
 }
 
-// formModalStimulus renders the Stimulus.js FormModal markup.
-templ formModalStimulus(props FormModalProps) {
-	{{ submitText, cancelText, size := modalDefaults(props) }}
-	<div
-		{ stimulus.Controller("modal")... }
-		{ devmode.Attrs(ctx, "modal/StimulusFormModal")... }
-	>
-		<dialog
-			data-modal-target="dialog"
-			class="modal"
-			{ stimulus.Action("click", "modal", "backdropClose")... }
-		>
-			<div class={ "modal-box", templ.KV(string(size), size != "") }>
-				@ModalHeader(props.ID, props.Title, templ.JSUnsafeFuncCall("this.closest('[data-controller=modal]').__stimulusController.close()"))
-				<form
-					id={ props.ID }
-					if props.Method == "put" {
-						hx-put={ props.Action }
-					} else if props.Method == "patch" {
-						hx-patch={ props.Action }
-					} else {
-						hx-post={ props.Action }
-					}
-					if props.Target != "" {
-						hx-target={ props.Target }
-					}
-					if props.Swap != "" {
-						hx-swap={ props.Swap }
-					}
-					if props.IndicatorID != "" {
-						hx-indicator={ "#" + props.IndicatorID }
-					}
-					hx-on::after:request="this.closest('[data-controller=modal]').__stimulusController.close()"
-				>
-					{ children... }
-					@form.FormActions("", "") {
-						@ui.Button(ui.ButtonProps{
-							Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM,
-							Attrs: stimulus.Action("click", "modal", "close"),
-						}) {
-							{ cancelText }
-						}
-						@ui.Button(ui.ButtonProps{
-							Type: ui.ButtonTypeSubmit, Variant: formModalSubmitVariant(props.Variant), Size: ui.ButtonSM,
-						}) {
-							{ submitText }
-						}
-					}
-				</form>
-			</div>
-			<form method="dialog" class="modal-backdrop">
-				<button>close</button>
-			</form>
-		</dialog>
-	</div>
-}
-
 // OpenModalButton renders a button that opens a modal.
-// Driver selects the JS mechanism: "" (vanilla, by dialog id), "alpine" (x-on:click),
-// "stimulus" (data-action). attrs is optional; pass nil when not needed.
+// Driver selects the JS mechanism: "" (vanilla, by dialog id), "alpine" (x-on:click).
+// attrs is optional; pass nil when not needed.
 templ OpenModalButton(modalID string, label string, attrs templ.Attributes, driver ModalDriver) {
 	if driver == ModalDriverAlpine {
 		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Attrs: mergeAttrs(alpine.On("click", "open = true"), attrs)}) {
-			{ label }
-		}
-	} else if driver == ModalDriverStimulus {
-		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Attrs: mergeAttrs(stimulus.Action("click", "modal", "show"), attrs)}) {
 			{ label }
 		}
 	} else {

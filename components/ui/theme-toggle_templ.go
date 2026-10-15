@@ -10,12 +10,11 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"github.com/emergent-company/go-daisy/components/alpine"
-	"github.com/emergent-company/go-daisy/components/stimulus"
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
 type ThemeToggleProps struct {
-	Driver string // "" = vanilla, "alpine" = AlpineJS, "stimulus" = StimulusJS
+	Driver string // "" = vanilla, "alpine" = AlpineJS
 }
 
 // themeToggleVisual renders the shared visual: two Iconify icons (sun/moon)
@@ -54,7 +53,7 @@ func themeToggleVisual() templ.Component {
 }
 
 // ThemeToggle renders an animated sun/moon theme toggle.
-// Use Driver to select implementation: "" (vanilla inline JS), "alpine" (AlpineJS), "stimulus" (StimulusJS).
+// Use Driver to select implementation: "" (vanilla inline JS), "alpine" (AlpineJS).
 func ThemeToggle(props ThemeToggleProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -78,11 +77,6 @@ func ThemeToggle(props ThemeToggleProps) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		if props.Driver == "alpine" {
 			templ_7745c5c3_Err = alpineThemeToggle().Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else if props.Driver == "stimulus" {
-			templ_7745c5c3_Err = stimulusThemeToggle().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -128,10 +122,8 @@ func AlpineThemeToggle() templ.Component {
 	})
 }
 
-// StimulusThemeToggle renders a sun/moon theme toggle using Stimulus controller.
-//
-// Deprecated: use ThemeToggle(ThemeToggleProps{Driver: "stimulus"}) instead.
-func StimulusThemeToggle() templ.Component {
+// vanillaThemeToggle renders the vanilla inline-JS theme toggle.
+func vanillaThemeToggle() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -150,36 +142,6 @@ func StimulusThemeToggle() templ.Component {
 		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
 		if templ_7745c5c3_Var4 == nil {
 			templ_7745c5c3_Var4 = templ.NopComponent
-		}
-		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = stimulusThemeToggle().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		return nil
-	})
-}
-
-// vanillaThemeToggle renders the vanilla inline-JS theme toggle.
-func vanillaThemeToggle() templ.Component {
-	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
-			return templ_7745c5c3_CtxErr
-		}
-		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-		if !templ_7745c5c3_IsBuffer {
-			defer func() {
-				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err == nil {
-					templ_7745c5c3_Err = templ_7745c5c3_BufErr
-				}
-			}()
-		}
-		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var5 == nil {
-			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<label class=\"swap swap-rotate cursor-pointer\"")
@@ -227,9 +189,9 @@ func alpineThemeToggle() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var6 == nil {
-			templ_7745c5c3_Var6 = templ.NopComponent
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div")
@@ -276,64 +238,6 @@ func alpineThemeToggle() templ.Component {
 	})
 }
 
-// stimulusThemeToggle renders the Stimulus.js theme toggle.
-func stimulusThemeToggle() templ.Component {
-	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
-			return templ_7745c5c3_CtxErr
-		}
-		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-		if !templ_7745c5c3_IsBuffer {
-			defer func() {
-				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err == nil {
-					templ_7745c5c3_Err = templ_7745c5c3_BufErr
-				}
-			}()
-		}
-		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var7 == nil {
-			templ_7745c5c3_Var7 = templ.NopComponent
-		}
-		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, stimulus.Controller("theme"))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "ui/ThemeToggle"))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "><label class=\"swap swap-rotate cursor-pointer\" aria-label=\"Toggle theme\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, stimulus.Action("click", "theme", "toggle"))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "><input type=\"checkbox\" class=\"hidden\" data-theme-target=\"checkbox\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = themeToggleVisual().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</label></div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		return nil
-	})
-}
-
 var themeToggleScriptOnce = templ.NewOnceHandle()
 
 func themeToggleScript() templ.Component {
@@ -352,12 +256,12 @@ func themeToggleScript() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var8 == nil {
-			templ_7745c5c3_Var8 = templ.NopComponent
+		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var6 == nil {
+			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Var9 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Var7 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 			if !templ_7745c5c3_IsBuffer {
@@ -369,13 +273,13 @@ func themeToggleScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<script>\n\t\tgdOnce('themeToggleInit', function () {\n\n\t\t  window.themeToggleAnimated = function(cb) {\n\t\t    var current = document.documentElement.getAttribute('data-theme') || 'nord';\n\t\t    var next = current === 'nord' || current === 'flow' ? 'dracula' : 'nord';\n\t\t    document.documentElement.setAttribute('data-theme', next);\n\t\t    try {\n\t\t      var cfg = JSON.parse(localStorage.getItem('__NEXUS_CONFIG_v3.0__') || '{}');\n\t\t      cfg.theme = next;\n\t\t      localStorage.setItem('__NEXUS_CONFIG_v3.0__', JSON.stringify(cfg));\n\t\t    } catch(e) {}\n\t\t  };\n\n\t\t  // Sync checkbox state on load\n\t\t  (function() {\n\t\t    var current = document.documentElement.getAttribute('data-theme') || 'nord';\n\t\t    var isDark = current === 'dracula' || current === 'dim' || current === 'sunset';\n\t\t    document.querySelectorAll('.theme-controller').forEach(function(el) {\n\t\t      el.checked = isDark;\n\t\t    });\n\t\t  })();\n\t\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<script>\n\t\tgdOnce('themeToggleInit', function () {\n\n\t\t  window.themeToggleAnimated = function(cb) {\n\t\t    var current = document.documentElement.getAttribute('data-theme') || 'nord';\n\t\t    var next = current === 'nord' || current === 'flow' ? 'dracula' : 'nord';\n\t\t    document.documentElement.setAttribute('data-theme', next);\n\t\t    try {\n\t\t      var cfg = JSON.parse(localStorage.getItem('__NEXUS_CONFIG_v3.0__') || '{}');\n\t\t      cfg.theme = next;\n\t\t      localStorage.setItem('__NEXUS_CONFIG_v3.0__', JSON.stringify(cfg));\n\t\t    } catch(e) {}\n\t\t  };\n\n\t\t  // Sync checkbox state on load\n\t\t  (function() {\n\t\t    var current = document.documentElement.getAttribute('data-theme') || 'nord';\n\t\t    var isDark = current === 'dracula' || current === 'dim' || current === 'sunset';\n\t\t    document.querySelectorAll('.theme-controller').forEach(function(el) {\n\t\t      el.checked = isDark;\n\t\t    });\n\t\t  })();\n\t\t});\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = themeToggleScriptOnce.Once().Render(templ.WithChildren(ctx, templ_7745c5c3_Var9), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = themeToggleScriptOnce.Once().Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -44,5 +44,5 @@ type TabsProps struct {
 	Name       string
 	ExtraClass string
 	Mode       TabMode
-	Driver     string // "" = vanilla (HTMX/Alpine via Mode), "stimulus" = StimulusJS
+	Driver     string // "" = vanilla (HTMX/Alpine via Mode)
 }

@@ -26,7 +26,7 @@ templ Page(title string, themeAttr string) {
 }
 
 // PageFull renders the full HTML shell with optional Alpine.js, morphing,
-// prefetch, and Stimulus support.
+// and prefetch support.
 templ PageFull(props PageProps) {
 	<!DOCTYPE html>
 	<html lang="en" data-theme={ props.ThemeAttr } class="group/html" data-asset-track="reload">
@@ -68,10 +68,6 @@ templ PageFull(props PageProps) {
 		}
 		if props.Alpine {
 			<script defer src={ "/static/js/alpine.js?v=" + staticfs.Hash() }></script>
-		}
-		if props.Stimulus {
-			<script src={ "/static/js/stimulus.js?v=" + staticfs.Hash() }></script>
-			<script src={ "/static/js/stimulus-controllers.js?v=" + staticfs.Hash() }></script>
 		}
 		if props.SSE {
 			<script src={ "/static/js/hx-sse.js?v=" + staticfs.Hash() }></script>

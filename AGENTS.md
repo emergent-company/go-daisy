@@ -19,14 +19,18 @@ go-daisy/
 │   ├── boundarytoken/    # Codegen: parses gallery:token annotations → tokens_*_gen.go
 │   ├── nexus/            # Reference dogfood app using go-daisy components
 │   └── nexus-compare/    # Playwright-based visual comparison vs nexus-html
-├── components/           # The component library (10 packages)
+├── components/           # The component library (13 packages)
 │   ├── alpine/           # Alpine.js attribute generators (no .templ files)
-│   ├── stimulus/         # Stimulus.js attribute generators (no .templ files)
+│   ├── behaviors/        # Behaviour-init runtime helper (gdOnce/gdBehaviour/gdRescan)
+│   ├── css/              # Per-package CSS dependency registry (prune daisyUI, compile your own)
 │   ├── form/             # Form inputs, field wrappers, validators, editors (~26 components)
+│   ├── head/             # <head> asset tag emitters (CSS, HTMX, Alpine, Morph, SSE, WS)
 │   ├── layout/           # Page shell, sidebar variants, navbar, topbar (~10 components)
 │   ├── logs/             # Log stream display (~1 component)
-│   ├── modal/            # Modal dialogs (vanilla, Alpine, Stimulus) (~3 components)
+│   ├── modal/            # Modal dialogs (vanilla, Alpine) (~3 components)
 │   ├── nav/              # Page headers, tab menus, breadcrumbs, footer (~16 components)
+│   ├── schemaform/       # JSON-Schema-driven form field generation
+│   ├── search/           # Server-side search/filter helpers (no .templ files)
 │   ├── table/            # Data tables, list areas, scroll rows (~6 components)
 │   └── ui/               # Primitives: button, badge, card, avatar, toast, alert, chart, etc. (~73 components)
 ├── pages/                # Pre-built page templates (auth, chat, dashboard, landing, settings)
@@ -101,7 +105,7 @@ Embedded static assets with cache-busting content hashes.
 | `Hash()` | 12-char content hash for cache busting |
 | `FS()` | Embedded `fs.FS` rooted at `static/` |
 
-**Bundled JS (14 files):** `htmx.js`, `morph.js`, `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `stimulus.js`, `stimulus-controllers.js`, `go-daisy-init.js` (behaviour-init runtime — see `components/behaviors`), `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`.
+**Bundled JS (12 files):** `htmx.js`, `morph.js`, `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js` (behaviour-init runtime — see `components/behaviors`), `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`.
 
 **Bundled CSS:** `app.css` (compiled Tailwind + DaisyUI), `frappe-gantt.css`.
 
@@ -115,15 +119,6 @@ Utility package — no `.templ` files. Exports Go functions returning `templ.Att
 **Lifecycle helpers (lifecycle.go):** `ModalInit()`, `DropdownKeyboardInit()`, `TabsHistoryInit()` — returns init expression strings.
 
 **Component tags:** `Tag()`, `TagDefer()` (Alpine.js script), `MorphTag()` (idiomorph script).
-
-### `components/stimulus`
-Utility package — no `.templ` files. Exports Go functions returning `templ.Attributes` for Stimulus.js controllers.
-
-**Attribute generators:** `Controller(name)`, `Action(event, controller, method)`, `Actions(actions...)`, `Target(controller, name)`, `Targets(controller, name)`, `Param(controller, name, value)`, `Value(controller, name, value)`, `Outlet(controller, name, selector)`.
-
-**Pre-built JS controllers** in `controllers/go-daisy-controllers.js`: `ModalController`, `DropdownController`, `TabsController`, `AccordionController`, `ThemeController`, `ClipboardController`.
-
-**Component tag:** `Tag()` (Stimulus.js script).
 
 ### `stream`
 Turbo-Stream-style HTML fragment broadcasting. Generates `<turbo-stream>` elements with actions: `Append`, `Prepend`, `Replace`, `Update`, `Remove`, `Before`, `After`, `Refresh`, `Morph`. Single file: `stream/stream.go`.
@@ -144,7 +139,7 @@ Primitive DaisyUI components (~73). All are `templ.Component` values returned by
 - `Toast`, `Alert`, `Loader`, `EmptyState`
 - `Pagination`, `Filter`, `ActionMenu`, `StatCard`
 - `Chart` (ApexCharts), `Carousel` (SwiperJS), `Diff`, `Timeline`
-- `Accordion` (vanilla/Alpine/Stimulus), `Tabs` (vanilla/Alpine/Stimulus)
+- `Accordion` (vanilla/Alpine), `Tabs` (vanilla/Alpine)
 - `Dropdown`, `Drawer`, `Hero`, `CommandPalette`
 - `ThemeToggle`, `ThemeSwitcher`, `ThemeController`
 - `Frame`, `CodePreview`, `Hover3D`, `Swap`
@@ -163,7 +158,7 @@ Form inputs, field wrappers, validators, editors (~26 components). `FormField`, 
 `Table`, `DataTable`, `TableCard`, `ListArea` (infinite-scroll container), `ScrollRows` (6 components).
 
 ### `components/modal`
-Modal dialogs (3 components): `Modal`, `FormModal`, `AlpineFormModal`, `StimulusFormModal`, `ConfirmPopup`, `LoaderModal`, `OpenModalButton`.
+Modal dialogs (3 components): `Modal`, `FormModal`, `AlpineFormModal`, `ConfirmPopup`, `LoaderModal`, `OpenModalButton`.
 
 ### `components/logs`
 Log stream display (1 component).
@@ -177,7 +172,7 @@ Log stream display (1 component).
 | HTTP framework | Echo v4 (`github.com/labstack/echo/v4`) |
 | Templating | Templ (`github.com/a-h/templ v0.3.1020`) |
 | CSS | DaisyUI + Tailwind CSS (via Node CLI) |
-| Interactivity | HTMX, Alpine.js, Stimulus.js |
+| Interactivity | HTMX, Alpine.js, vanilla inline JS |
 | Client-side JS | htmx 4 (morphing in core), idiomorph global, htmx extensions (hx-sse, hx-ws, hx-head) |
 | Real-time | `stream/` (Turbo-Stream-style), `streamhub/` (SSE/WS pub/sub) |
 | Static assets | Go `embed` package (`staticfs/`) |
@@ -268,7 +263,7 @@ if props.Method == "put" {
 }
 ```
 
-Used in `FormModal`, `AlpineFormModal`, `StimulusFormModal`, `ActionMenu`.
+Used in `FormModal`, `AlpineFormModal`, `ActionMenu`.
 
 ### Demo vs real component pattern
 
@@ -294,7 +289,7 @@ Both need `*WithBoundary` wrappers. The demo variant is only for gallery registr
 
 CSS is compiled from `assets/app.css` → `staticfs/static/css/app.css` and served at `/static/css/app.css`. The `staticfs` package embeds this file into the binary. Do not edit the output file directly; edit `assets/app.css` and re-run `task build:ui`.
 
-**Bundled JavaScript** lives in `staticfs/static/js/` — 14 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `stimulus.js`, `stimulus-controllers.js`, `go-daisy-init.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
+**Bundled JavaScript** lives in `staticfs/static/js/` — 12 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
 
 **Cache busting**: `staticfs.Hash()` returns a 12-char content hash updated via `go generate`. `Stylesheet()` and `Script()` helpers append `?v={hash}` query params automatically. Use `data-asset-track="reload"` on tags to trigger full reload on version mismatch.
 
@@ -355,15 +350,15 @@ Templ auto-injects `import "github.com/a-h/templ"` in the generated `*_templ.go`
 
 ### Props struct placement
 
-Define Props structs in the `.templ` file with the component (before the `templ` declaration). This is the dominant pattern — ~85% of components follow it. Only place Props structs in a package `.go` file when shared across multiple `.templ` files within the same package (e.g., `tabs.go` defines `TabsProps` used by vanilla/Alpine/Stimulus variants).
+Define Props structs in the `.templ` file with the component (before the `templ` declaration). This is the dominant pattern — ~85% of components follow it. Only place Props structs in a package `.go` file when shared across multiple `.templ` files within the same package (e.g., `tabs.go` defines `TabsProps` used by vanilla/Alpine variants).
 
-### Alpine / Stimulus utility packages
+### Alpine utility package
 
-`components/alpine/` and `components/stimulus/` are utility packages that export Go functions returning `templ.Attributes`. They have no `.templ` files and no `boundary.go`. Components use them by spreading the returned attributes:
+`components/alpine/` is a utility package that exports Go functions returning `templ.Attributes` for Alpine.js directives. It has no `.templ` files and no `boundary.go`. Components use it by spreading the returned attributes:
 ```templ
 <button { alpine.On("click", "open = !open")... }>Toggle</button>
 ```
-These packages provide attribute generators for common JS framework patterns — never raw template rendering.
+It provides attribute generators for Alpine.js patterns — never raw template rendering.
 
 ### `pages/` package follows component patterns
 
@@ -414,7 +409,7 @@ Hints support `default()`, `range(min,max,step)`, and `slice(n)` types. Tokens b
 
 Inline component scripts no longer use the legacy `window._x` boolean guard. Instead they call the go-daisy behaviour-init runtime (`staticfs/static/js/go-daisy-init.js`), which exposes `window.gdOnce(key, fn)`, `window.gdBehaviour(key, init, rescan)`, and `window.gdRescan()`. Load it once in the page `<head>` via `@behaviors.Tag()` (from `components/behaviors`) before any component script runs — `layout.PageFull` and `head.Dependencies` already do this.
 
-`gdOnce(key, fn)` runs `fn` exactly once per document lifetime and is for global setup (document-level delegation, global helpers, one-shot listeners) that survives HTMX swaps. `gdBehaviour(key, init, rescan)` runs `init` once, registers a rescan callback, and re-runs `rescan` after every `htmx:after:settle` (the htmx 4 name; the htmx 3 `afterSettle` spelling is also listened for, and a host fires only one of the two) — use it when bindings target specific elements (charts, carousels, sortable lists, form validation) that must be rebound after a swap. It deliberately does **not** hook `after:swap`: htmx fires swap and settle on every swap, and the first rescan wins for elements that mark themselves handled before binding, so binding on settle keeps the original timing and lets dimension-sensitive widgets measure a settled DOM. `rescan` must be idempotent (track handled elements via a data attribute or WeakSet, never double-bind, never throw on removed nodes). Every key must be unique and stable across renders — use a per-component literal (e.g. `sidebarInit`, `apexChartInit`), never a derived or random value.
+`gdOnce(key, fn)` runs `fn` exactly once per document lifetime and is for global setup (document-level delegation, global helpers, one-shot listeners) that survives HTMX swaps. `gdBehaviour(key, init, rescan)` runs `init` once, registers a rescan callback, and re-runs `rescan` after every `htmx:after:settle` (the htmx 4 name; the htmx 3 `afterSettle` spelling is also listened for, and a host fires only one of the two) — use it when bindings target specific elements (charts, carousels, sortable lists, form validation) that must be rebound after a swap. It deliberately does **not** hook the swap-phase htmx event (`htmx:after:swap`): htmx fires swap and settle on every swap, and the first rescan wins for elements that mark themselves handled before binding, so binding on settle keeps the original timing and lets dimension-sensitive widgets measure a settled DOM. `rescan` must be idempotent (track handled elements via a data attribute or WeakSet, never double-bind, never throw on removed nodes). Every key must be unique and stable across renders — use a per-component literal (e.g. `sidebarInit`, `apexChartInit`), never a derived or random value.
 
 The runtime is loaded from the page `<head>` by `layout.PageFull` and `head.Dependencies` — and, critically, also by the gallery's standalone preview document (`renderSnippetPage` in `galleryruntime/handler.go`), which has no page shell. It must precede any component inline script, because migrated scripts call `gdOnce`/`gdBehaviour` at parse time; a shell that renders those components without loading the runtime first gets `ReferenceError: gdOnce is not defined`.
 
