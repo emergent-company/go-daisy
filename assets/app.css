@@ -1,4 +1,34 @@
 @import "tailwindcss";
+
+/*
+ * Reproducibility guard for the CSS build.
+ *
+ * Tailwind's automatic source detection is rooted at the working directory
+ * and governed by an extension *denylist* — files with no extension are
+ * scanned in full with no size limit.  Three accidentally-committed, compiled
+ * Go binaries are git-tracked at the repo root and get mined as candidate
+ * class sources: `gallery`, `boundarytoken`, and `install`.  None is produced
+ * by any Taskfile target (`task gallery` uses `go run ./cmd/gallery`; `task
+ * build` is `go build ./...`, which writes no binary), and nothing references
+ * them.  Without these exclusions the built stylesheet changes depending on
+ * whether the binaries happen to be present on disk, so the directives keep
+ * the CSS build reproducible.
+ */
+@source not "../gallery";       /* accidentally-committed root Go binary, scanned in full */
+@source not "../boundarytoken"; /* accidentally-committed root Go binary, scanned in full */
+@source not "../install";       /* accidentally-committed root Go binary, scanned in full */
+
+/*
+ * Safelist for the dynamically-built palette swatches.
+ *
+ * components/form/palette.templ constructs swatch classes at runtime via
+ * tailwindColorClass(hue, shade) == "bg-" + hue + "-" + shade.  Tailwind's
+ * static scanner structurally cannot see runtime-constructed class names, so
+ * form.Palette has never actually been styled.  Safelist the full 22 × 11 =
+ * 242 utility cartesian product so every swatch is coloured.
+ */
+@source inline("bg-{slate,gray,zinc,neutral,stone,red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose}-{50,100,200,300,400,500,600,700,800,900,950}");
+
 @plugin "daisyui" {
   themes: nord --default, dracula, flow, flow-dark, ember, ember-dark, slate, slate-dark;
 }

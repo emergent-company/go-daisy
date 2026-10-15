@@ -2,3 +2,13 @@ node_modules/
 gallery_bin
 tmp/
 
+# Accidentally-committed root build artifacts (compiled Go binaries). The
+# leading slash anchors the pattern to the repo root so it does not also
+# ignore cmd/gallery/, cmd/boundarytoken/, or cmd/install/.
+/gallery
+/boundarytoken
+/install
+
+# Playwright test output — regenerated on every run, must never be tracked.
+test-results/
+
