@@ -1,6 +1,8 @@
 package layout
 
 import (
+	"github.com/emergent-company/go-daisy/components/behaviors"
+	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 	"github.com/emergent-company/go-daisy/staticfs"
 )
@@ -11,6 +13,10 @@ var layoutViewTransitionsOnce = templ.NewOnceHandle()
 
 // Page renders the full HTML shell. themeAttr is the DaisyUI data-theme value
 // (e.g. "nord", "flow", "dark"). Pass "" to use the browser/OS default.
+//
+// Note: PageFull emits ui.ThemeScript() in <head>, so the persisted
+// palette/mode selection overrides themeAttr before first paint. themeAttr is
+// the no-JS fallback.
 //
 // Deprecated: use PageFull(PageProps{...}) instead.
 templ Page(title string, themeAttr string) {
@@ -27,6 +33,8 @@ templ PageFull(props PageProps) {
 	<head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		@ui.ThemeScript()
+		@behaviors.Tag()
 		<meta name="htmx-config" content='{"implicitInheritance":true,"noSwap":[204,304]}'/>
 		<title>{ props.Title }</title>
 		<link rel="stylesheet" href={ "/static/css/app.css?v=" + staticfs.Hash() } data-asset-track="reload"/>

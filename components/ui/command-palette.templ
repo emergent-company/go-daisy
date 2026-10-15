@@ -128,8 +128,7 @@ templ paletteGroup(paletteID, group string, items []CommandPaletteItem) {
 templ commandPaletteTrigger() {
 	@commandPaletteTriggerOnce.Once() {
 		<script>
-	if (!window._paletteTriggerInit) {
-	  window._paletteTriggerInit = true;
+	gdOnce('paletteTriggerInit', function () {
 
 	  // Templ does not interpolate Go expressions inside <script>, so palette
 	  // ids cannot be baked into this handler. Palette toggles are instead
@@ -155,7 +154,7 @@ templ commandPaletteTrigger() {
 	      }
 	    }
 	  });
-	}
+	});
 		</script>
 	}
 }
@@ -163,8 +162,7 @@ templ commandPaletteTrigger() {
 templ commandPaletteScript() {
 	@commandPaletteScriptOnce.Once() {
 		<script>
-	if (!window._paletteFilterInit) {
-	  window._paletteFilterInit = true;
+	gdOnce('paletteFilterInit', function () {
 
 	  window.filterPaletteItems = function(input) {
 	    var q = input.value.toLowerCase().trim();
@@ -249,7 +247,7 @@ templ commandPaletteScript() {
 	      if (header) header.style.display = hasVisible ? '' : 'none';
 	    });
 	  }
-	}
+	});
 	</script>
 	}
 }

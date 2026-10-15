@@ -66,19 +66,7 @@ func validationRulesJSON(rules []ValidationRule) string {
 templ formValidationScript() {
 	@formValidationOnce.Once() {
 		<script>
-	if (!window._formValidationInit) {
-	  window._formValidationInit = true;
-
-	  document.addEventListener('DOMContentLoaded', function() {
-	    document.querySelectorAll('[data-form-validation]').forEach(attachValidation);
-	  });
-	  document.addEventListener('htmx:after:settle', function() {
-	    document.querySelectorAll('[data-form-validation]:not(._fv-initialized)').forEach(function(el) {
-	      el.classList.add('_fv-initialized');
-	      attachValidation(el);
-	    });
-	  });
-
+	(function () {
 	  function attachValidation(form) {
 	    var rules = [];
 	    try { rules = JSON.parse(form.dataset.rules || '[]'); } catch(e) { rules = []; }
@@ -164,7 +152,18 @@ templ formValidationScript() {
 	    err.style.display = 'flex';
 	    setTimeout(function() { err.style.display = 'none'; }, 5000);
 	  }
-	}
+
+	  gdBehaviour('formValidationInit', function () {
+	    document.addEventListener('DOMContentLoaded', function() {
+	      document.querySelectorAll('[data-form-validation]').forEach(attachValidation);
+	    });
+	  }, function () {
+	    document.querySelectorAll('[data-form-validation]:not(._fv-initialized)').forEach(function(el) {
+	      el.classList.add('_fv-initialized');
+	      attachValidation(el);
+	    });
+	  });
+	})();
 	</script>
 	}
 }

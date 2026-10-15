@@ -19,7 +19,7 @@ go-daisy/
 │   ├── boundarytoken/    # Codegen: parses gallery:token annotations → tokens_*_gen.go
 │   ├── nexus/            # Reference dogfood app using go-daisy components
 │   └── nexus-compare/    # Playwright-based visual comparison vs nexus-html
-├── components/           # The component library (9 packages)
+├── components/           # The component library (10 packages)
 │   ├── alpine/           # Alpine.js attribute generators (no .templ files)
 │   ├── stimulus/         # Stimulus.js attribute generators (no .templ files)
 │   ├── form/             # Form inputs, field wrappers, validators, editors (~26 components)
@@ -101,7 +101,7 @@ Embedded static assets with cache-busting content hashes.
 | `Hash()` | 12-char content hash for cache busting |
 | `FS()` | Embedded `fs.FS` rooted at `static/` |
 
-**Bundled JS (11 files):** `htmx.js`, `morph.js`, `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `stimulus.js`, `stimulus-controllers.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`.
+**Bundled JS (14 files):** `htmx.js`, `morph.js`, `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `stimulus.js`, `stimulus-controllers.js`, `go-daisy-init.js` (behaviour-init runtime — see `components/behaviors`), `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`.
 
 **Bundled CSS:** `app.css` (compiled Tailwind + DaisyUI), `frappe-gantt.css`.
 
@@ -294,7 +294,7 @@ Both need `*WithBoundary` wrappers. The demo variant is only for gallery registr
 
 CSS is compiled from `assets/app.css` → `staticfs/static/css/app.css` and served at `/static/css/app.css`. The `staticfs` package embeds this file into the binary. Do not edit the output file directly; edit `assets/app.css` and re-run `task build:ui`.
 
-**Bundled JavaScript** lives in `staticfs/static/js/` — 11 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `stimulus.js`, `stimulus-controllers.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
+**Bundled JavaScript** lives in `staticfs/static/js/` — 14 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `stimulus.js`, `stimulus-controllers.js`, `go-daisy-init.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
 
 **Cache busting**: `staticfs.Hash()` returns a 12-char content hash updated via `go generate`. `Stylesheet()` and `Script()` helpers append `?v={hash}` query params automatically. Use `data-asset-track="reload"` on tags to trigger full reload on version mismatch.
 
@@ -412,20 +412,30 @@ Hints support `default()`, `range(min,max,step)`, and `slice(n)` types. Tokens b
 
 ### Inline JS singleton pattern
 
-Scripts embedded in components use a singleton guard to prevent re-init on HTMX swaps:
+Inline component scripts no longer use the legacy `window._x` boolean guard. Instead they call the go-daisy behaviour-init runtime (`staticfs/static/js/go-daisy-init.js`), which exposes `window.gdOnce(key, fn)`, `window.gdBehaviour(key, init, rescan)`, and `window.gdRescan()`. Load it once in the page `<head>` via `@behaviors.Tag()` (from `components/behaviors`) before any component script runs — `layout.PageFull` and `head.Dependencies` already do this.
 
-```templ
-templ myScript() {
-    <script>
-    if (!window._myInit) {
-        window._myInit = true;
-        // init code here
-    }
-    </script>
-}
-```
+`gdOnce(key, fn)` runs `fn` exactly once per document lifetime and is for global setup (document-level delegation, global helpers, one-shot listeners) that survives HTMX swaps. `gdBehaviour(key, init, rescan)` runs `init` once, registers a rescan callback, and re-runs `rescan` after every `htmx:after:settle`/`htmx:after:swap` (the htmx 4 names; the htmx 3 `afterSettle`/`afterSwap` spellings are also listened for) — use it when bindings target specific elements (charts, carousels, sortable lists, form validation) that must be rebound after a swap; `rescan` must be idempotent (track handled elements via a data attribute or WeakSet, never double-bind, never throw on removed nodes). Every key must be unique and stable across renders — use a per-component literal (e.g. `sidebarInit`, `apexChartInit`), never a derived or random value.
 
-Call via `@myScript()` inside the component. This avoids duplicate event listeners and leaked state on partial page swaps.
+### Theming — palette × mode, no-flash
+
+`ThemeScript()` (from `components/ui`) is emitted in the page `<head>` before the stylesheet by `layout.PageFull` and `head.Dependencies`. It is a synchronous inline script that resolves the persisted selection and writes `<html data-theme>` **before first paint**, so a full page load never paints the default theme and then snaps. The `data-theme` attribute passed to `PageFull`/`Page` is the no-JS fallback only.
+
+The palette registry is a single source of truth in `components/ui/theme-script.templ` (`themePalettePairs`) — palette id → light/dark daisyUI theme names — and every consumer injects it via `ThemeRuntimeJS()`, which publishes `window.__goDaisyTheme = { palettes, defaultPalette, effectiveMode, resolve }`. Consumers: `ThemeScript`, `ThemeSwitcher`, the gallery preview-iframe bootstrap (`galleryruntime/handler.go`) and the gallery detail/examples scripts (`galleryruntime/pages_detail.templ`). **Change it in one place only**, and keep the theme names in sync with the `@plugin "daisyui/theme"` blocks in `assets/app.css`.
+
+Two independent axes, two storage keys: `gallery-ui-theme` (`light|dark|system`) and `gallery-ui-palette` (`default|flow|ember|slate`). `gallery-preview-theme` is the derived effective mode (`light|dark`) that the gallery's preview iframes read. `system` follows the OS until the user picks a mode. `ThemeScript()` and `ThemeRuntimeJS()` are both idempotent and never throw, so a page may inject them more than once safely.
+
+The runtime is exposed as a plain templ function, **not** a `*WithBoundary` component: `devmode.ComponentBoundary` wraps its output in a `<div>`, which is invalid inside `<head>`.
+
+### Agent-readable surface (llms.txt / per-component Markdown)
+
+The gallery server publishes a machine-readable surface generated entirely from the component registry — no hand-maintained content:
+
+| Route | Content-Type | What |
+|---|---|---|
+| `/llms.txt` | `text/plain` | Markdown-formatted index: H1 title, description, one `## <Category>` section per category, `- [Name](/gallery/docs/<slug>.md): Description` per component, plus a `## Links` section |
+| `/gallery/docs/<slug>.md` | `text/markdown` | Per-component reference: name, category/subcategory, description, variants, design-token table, rendered example, gallery link. 404 for unknown slugs |
+
+Both are implemented in `galleryruntime/markdown.go` and must stay **deterministic** for a fixed registry (stable category and component ordering) so agents can diff them. Note the Echo route quirk: `/gallery/docs/:slug.md` names its param literally `slug.md`, so the handler reads `c.Param("slug.md")` and trims the extension. Design tokens render as a `Parameter` column showing `CSSVar` or `?QueryParam` (registry tokens are usually query-param-driven, not CSS-variable-driven).
 
 ### Variant dispatch pattern
 

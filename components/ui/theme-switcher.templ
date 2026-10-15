@@ -2,9 +2,21 @@ package ui
 
 var themeSwitcherScriptOnce = templ.NewOnceHandle()
 
-// ThemeSwitcher renders a 3-way theme dropdown (Light/Dark/System) with
-// localStorage persistence, OS preference detection, iframe sync via
-// contentDocument, and parent-frame postMessage.
+// ThemeSwitcher renders a dropdown with two independent axes:
+//
+//   - Mode: Light / Dark / System (localStorage key "gallery-ui-theme").
+//   - Palette: a compact swatch row (localStorage key "gallery-ui-palette").
+//
+// The active daisyUI theme is resolved as palette x mode. The persisted
+// selection is applied before first paint by ThemeScript() (see
+// theme-script.templ), which is wired into head.Dependencies; this component
+// only owns the control, persistence, OS-preference following, and iframe
+// preview sync (via contentDocument).
+//
+// Storage keys:
+//   - gallery-ui-theme     : 'light' | 'dark' | 'system'
+//   - gallery-ui-palette   : 'default' | 'flow' | 'ember' | 'slate'
+//   - gallery-preview-theme: effective 'light' | 'dark' (kept for iframe harness)
 templ ThemeSwitcher() {
 	<div class="dropdown dropdown-end">
 		<label tabindex="0" class="btn btn-sm btn-circle btn-ghost" data-testid="theme-toggle" aria-label="Theme switcher">
@@ -12,37 +24,56 @@ templ ThemeSwitcher() {
 			<span id="theme-icon-dark" class="iconify lucide--moon size-4.5" style="display:none" aria-hidden="true"></span>
 			<span id="theme-icon-system" class="iconify lucide--monitor-dot size-4.5" style="display:none" aria-hidden="true"></span>
 		</label>
-		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-50 w-36 p-2 shadow-sm" data-testid="theme-dropdown">
+		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-50 w-48 p-2 shadow-sm" data-testid="theme-dropdown">
 			<li><button data-theme-option="light" class="flex items-center gap-2 w-full text-left"><span class="iconify lucide--sun size-4"></span>Light<span id="check-light" class="iconify lucide--check size-4 ms-auto" style="display:none"></span></button></li>
 			<li><button data-theme-option="dark" class="flex items-center gap-2 w-full text-left"><span class="iconify lucide--moon size-4"></span>Dark<span id="check-dark" class="iconify lucide--check size-4 ms-auto" style="display:none"></span></button></li>
 			<li><button data-theme-option="system" class="flex items-center gap-2 w-full text-left"><span class="iconify lucide--monitor-dot size-4"></span>System<span id="check-system" class="iconify lucide--check size-4 ms-auto" style="display:none"></span></button></li>
+			<li class="menu-title mt-1"><span class="opacity-60">Palette</span></li>
+			<li>
+				<div class="flex flex-wrap items-center gap-1.5 p-1">
+					@paletteSwatch("default", "Default", "#5e81ac", "#bd93f9", true)
+					@paletteSwatch("flow", "Teal", "#0d9488", "#22c55e", false)
+					@paletteSwatch("ember", "Ember", "#c2410c", "#f59e0b", false)
+					@paletteSwatch("slate", "Slate", "#4338ca", "#0f172a", false)
+				</div>
+			</li>
 		</ul>
 	</div>
 	@themeSwitcherScriptOnce.Once() {
+		@templ.Raw("<script>" + ThemeRuntimeJS() + "</script>")
 		<script>
 		(function() {
-			var THEMES = { light: 'nord', dark: 'dracula' };
+			// Palette registry + resolver come from the single source of truth
+			// (ThemeRuntimeJS, injected just above); never re-declare them here.
+			var rt = window.__goDaisyTheme;
+			var PALETTES = rt.palettes;
+			var DEFAULT_PALETTE = rt.defaultPalette;
+			var MODES = ['light', 'dark', 'system'];
 			var STORAGE_KEY = 'gallery-ui-theme';
+			var PALETTE_KEY = 'gallery-ui-palette';
 			var PREVIEW_KEY = 'gallery-preview-theme';
 
-			function resolveTheme(mode) {
-				if (mode === 'system') {
-					return window.matchMedia('(prefers-color-scheme: dark)').matches ? THEMES.dark : THEMES.light;
-				}
-				return THEMES[mode] || THEMES.light;
+			function isMode(m) { return m === 'light' || m === 'dark' || m === 'system'; }
+			function isPalette(p) { return !!PALETTES[p]; }
+
+			function readMode() {
+				try { var m = localStorage.getItem(STORAGE_KEY); return isMode(m) ? m : null; } catch(e) { return null; }
+			}
+			function readPalette() {
+				try { var p = localStorage.getItem(PALETTE_KEY); return isPalette(p) ? p : null; } catch(e) { return null; }
 			}
 
-			function resolvePreviewMode(mode) {
-				if (mode === 'system') {
-					return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-				}
-				return mode;
-			}
+			function effectiveMode(mode) { return rt.effectiveMode(mode); }
 
-			function syncPreviewIframes(mode) {
-				var previewMode = resolvePreviewMode(mode);
-				try { localStorage.setItem(PREVIEW_KEY, previewMode); } catch(e) {}
-				var daisyTheme = THEMES[previewMode] || THEMES.light;
+			function resolveTheme(mode, palette) { return rt.resolve(mode, palette); }
+
+			// Keep the preview key in sync (effective mode) and push the
+			// resolved daisyUI theme into any live preview iframes. With the
+			// default palette this resolves to the historical nord/dracula
+			// mapping, so existing preview behaviour is unchanged.
+			function syncPreviewIframes(mode, palette) {
+				try { localStorage.setItem(PREVIEW_KEY, effectiveMode(mode)); } catch(e) {}
+				var daisyTheme = resolveTheme(mode, palette);
 				document.querySelectorAll('[id$="preview-frame"], [id*="examples-frame"]').forEach(function(f) {
 					try {
 						var d = f.contentDocument || f.contentWindow.document;
@@ -53,48 +84,101 @@ templ ThemeSwitcher() {
 				});
 			}
 
+			var current = { mode: 'system', palette: DEFAULT_PALETTE };
 			var _applying = false;
-			function applyTheme(mode) {
+			function applyTheme(mode, palette) {
 				if (_applying) return;
 				_applying = true;
 				try {
-					var themeAttr = resolveTheme(mode);
+					if (!isMode(mode)) { mode = 'system'; }
+					if (!isPalette(palette)) { palette = DEFAULT_PALETTE; }
+
+					var themeAttr = resolveTheme(mode, palette);
 					var html = document.documentElement;
-					html.setAttribute('data-theme', themeAttr);
-					['light','dark','system'].forEach(function(m) {
+					if (html.getAttribute('data-theme') !== themeAttr) {
+						html.setAttribute('data-theme', themeAttr);
+					}
+
+					MODES.forEach(function(m) {
 						var el = document.getElementById('theme-icon-' + m);
 						if (el) el.style.display = m === mode ? '' : 'none';
 						var ck = document.getElementById('check-' + m);
 						if (ck) ck.style.display = m === mode ? '' : 'none';
 					});
+
+					Object.keys(PALETTES).forEach(function(p) {
+						var selected = p === palette;
+						var pk = document.getElementById('palette-check-' + p);
+						if (pk) pk.style.display = selected ? '' : 'none';
+						var btn = document.querySelector('[data-palette-option="' + p + '"]');
+						if (btn) btn.setAttribute('aria-pressed', selected ? 'true' : 'false');
+					});
+
+					current.mode = mode;
+					current.palette = palette;
+
 					try { localStorage.setItem(STORAGE_KEY, mode); } catch(e) {}
-					syncPreviewIframes(mode);
+					try { localStorage.setItem(PALETTE_KEY, palette); } catch(e) {}
+					syncPreviewIframes(mode, palette);
 				} finally { _applying = false; }
 			}
 
-			var saved = null;
-			try { saved = localStorage.getItem(STORAGE_KEY); } catch(e) {}
-			if (!saved) { saved = 'system'; }
-			applyTheme(saved);
+			// Reuse the pre-paint resolution from ThemeScript() when present so
+			// we do not repeat the work (and do not rewrite data-theme).
+			var head = window.__goDaisyThemeState;
+			var initMode = (head && isMode(head.mode)) ? head.mode : (readMode() || 'system');
+			var initPalette = (head && isPalette(head.palette)) ? head.palette : (readPalette() || DEFAULT_PALETTE);
+			applyTheme(initMode, initPalette);
 
 			var mq = window.matchMedia('(prefers-color-scheme: dark)');
 			mq.addEventListener('change', function() {
-				var cur = null;
-				try { cur = localStorage.getItem(STORAGE_KEY); } catch(e) {}
-				if (cur === 'system') applyTheme('system');
+				if (current.mode === 'system') { applyTheme('system', current.palette); }
 			});
 
 			document.addEventListener('htmx:after:settle', function() {
-				var cur = null;
-				try { cur = localStorage.getItem(STORAGE_KEY); } catch(e) {}
-				if (cur) syncPreviewIframes(cur);
+				syncPreviewIframes(current.mode, current.palette);
 			});
 
 			document.addEventListener('click', function(e) {
-				var option = e.target.closest('[data-theme-option]');
-				if (option) { applyTheme(option.getAttribute('data-theme-option')); }
+				var target = e.target;
+				if (!target || !target.closest) return;
+				var modeOption = target.closest('[data-theme-option]');
+				if (modeOption) {
+					applyTheme(modeOption.getAttribute('data-theme-option'), current.palette);
+					return;
+				}
+				var paletteOption = target.closest('[data-palette-option]');
+				if (paletteOption) {
+					applyTheme(current.mode, paletteOption.getAttribute('data-palette-option'));
+				}
 			});
 		})();
 		</script>
 	}
+}
+
+// paletteSwatch renders a compact, keyboard-focusable palette control: two
+// brand dots that preview the palette identity plus a selected check.
+// Selected state is drawn from aria-pressed (see assets/app.css) so it does
+// not depend on Tailwind class generation.
+templ paletteSwatch(id string, label string, primary string, accent string, selected bool) {
+	<button
+		type="button"
+		data-palette-option={ id }
+		class="flex items-center gap-1 rounded-full border border-base-300 bg-base-200 px-1.5 py-1 transition hover:bg-base-300"
+		aria-label={ label + " palette" }
+		aria-pressed={ ternary(selected, "true", "false") }
+		title={ label }
+	>
+		<span class="block size-3 rounded-full" style={ "background:" + primary }></span>
+		<span class="block size-3 rounded-full" style={ "background:" + accent }></span>
+		<span id={ "palette-check-" + id } class="iconify lucide--check size-3" style={ checkDisplay(selected) } aria-hidden="true"></span>
+	</button>
+}
+
+func checkDisplay(selected bool) string {
+	if selected {
+		return ""
+	}
+	return "display:none"
 }

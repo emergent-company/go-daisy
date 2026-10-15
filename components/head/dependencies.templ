@@ -1,8 +1,14 @@
 package head
 
-import "github.com/emergent-company/go-daisy/staticfs"
+import (
+	"github.com/emergent-company/go-daisy/components/behaviors"
+	"github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/staticfs"
+)
 
 templ Dependencies(props DepsProps) {
+	@ui.ThemeScript()
+	@behaviors.Tag()
 	@templ.Raw(staticfs.Stylesheet("/css/app.css"))
 	@templ.Raw(staticfs.Script("/js/htmx.js"))
 	if props.Alpine {

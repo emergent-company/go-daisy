@@ -477,9 +477,7 @@ func mergeMaps(base, overlay map[string]any) map[string]any {
 templ apexChartScript() {
 	@chartScriptOnce.Once() {
 		<script>
-	if (!window._apexChartInit) {
-	  window._apexChartInit = true;
-
+	(function () {
 	  window.initApexChart = function(el) {
 	    if (typeof ApexCharts === 'undefined') {
 	      var s = document.createElement('script');
@@ -503,20 +501,21 @@ templ apexChartScript() {
 	    } catch(e) { console.warn('ApexChart init failed:', e); }
 	  }
 
-	  document.addEventListener('DOMContentLoaded', function() {
-	    document.querySelectorAll('[data-chart]').forEach(initApexChart);
-	  });
-	  // Also scan immediately in case page is already loaded
-	  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-	    document.querySelectorAll('[data-chart]').forEach(initApexChart);
-	  }
-	  document.addEventListener('htmx:after:settle', function() {
+	  gdBehaviour('apexChartInit', function () {
+	    document.addEventListener('DOMContentLoaded', function() {
+	      document.querySelectorAll('[data-chart]').forEach(initApexChart);
+	    });
+	    // Also scan immediately in case page is already loaded
+	    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+	      document.querySelectorAll('[data-chart]').forEach(initApexChart);
+	    }
+	  }, function () {
 	    document.querySelectorAll('[data-chart]:not(._ac-initialized)').forEach(function(el) {
 	      el.classList.add('_ac-initialized');
 	      initApexChart(el);
 	    });
 	  });
-	}
+	})();
 	</script>
 	}
 }

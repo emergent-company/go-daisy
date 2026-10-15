@@ -83,9 +83,7 @@ templ SwiperCarousel(props SwiperCarouselProps) {
 templ swiperScript() {
 	@swiperScriptOnce.Once() {
 		<script>
-	if (!window._swiperInit) {
-	  window._swiperInit = true;
-
+	(function () {
 	  window.initSwiper = function(el) {
 	    if (typeof Swiper === 'undefined') {
 	      var s = document.createElement('script');
@@ -116,16 +114,17 @@ templ swiperScript() {
 	    } catch(e) { console.warn('Swiper init failed:', e); }
 	  }
 
-	  document.addEventListener('DOMContentLoaded', function() {
-	    document.querySelectorAll('[data-swiper]').forEach(initSwiperElement);
-	  });
-	  document.addEventListener('htmx:after:settle', function() {
+	  gdBehaviour('swiperInit', function () {
+	    document.addEventListener('DOMContentLoaded', function() {
+	      document.querySelectorAll('[data-swiper]').forEach(initSwiperElement);
+	    });
+	  }, function () {
 	    document.querySelectorAll('[data-swiper]:not(._swiper-initialized)').forEach(function(el) {
 	      el.classList.add('_swiper-initialized');
 	      initSwiperElement(el);
 	    });
 	  });
-	}
+	})();
 	</script>
 	}
 }

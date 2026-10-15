@@ -170,8 +170,7 @@ func pageSizeOptionsJSON(opts []int) string {
 templ dataTableAlpineScript(id string) {
 	@dataTableScriptOnce.Once() {
 		<script>
-	if (!window._dataTableInit) {
-	  window._dataTableInit = true;
+	gdOnce('dataTableInit', function () {
 
 	  window.dataTable = function() {
 	    return {
@@ -255,7 +254,7 @@ templ dataTableAlpineScript(id string) {
 	    s.defer = true;
 	    document.head.appendChild(s);
 	  }
-	}
+	});
 	</script>
 	}
 }

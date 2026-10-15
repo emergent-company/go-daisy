@@ -39,8 +39,7 @@ templ TopBar(props TopBarProps) {
 templ topbarScrollScript() {
 	@topbarScrollOnce.Once() {
 		<script>
-	if (!window._topbarScrollInit) {
-	  window._topbarScrollInit = true;
+	gdOnce('topbarScrollInit', function () {
 
 	  var topbar = document.getElementById('_scroll-topbar');
 	  if (!topbar || !topbar.dataset.scrollTopbar) return;
@@ -67,7 +66,7 @@ templ topbarScrollScript() {
 	      ticking = true;
 	    }
 	  });
-	}
+	});
 	</script>
 	}
 }

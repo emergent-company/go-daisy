@@ -47,7 +47,7 @@ func passwordToggleScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script>\n\tif (!window._passToggleInit) {\n\t\twindow._passToggleInit = true;\n\t\twindow.togglePasswordVisibility = function(btn) {\n\t\t\tvar input = btn.parentElement.querySelector('input');\n\t\t\tif (!input) return;\n\t\t\tif (input.type === 'password') {\n\t\t\t\tinput.type = 'text';\n\t\t\t\tbtn.querySelector('.iconify').classList.remove('lucide--eye');\n\t\t\t\tbtn.querySelector('.iconify').classList.add('lucide--eye-off');\n\t\t\t} else {\n\t\t\t\tinput.type = 'password';\n\t\t\t\tbtn.querySelector('.iconify').classList.remove('lucide--eye-off');\n\t\t\t\tbtn.querySelector('.iconify').classList.add('lucide--eye');\n\t\t\t}\n\t\t};\n\t}\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script>\n\tgdOnce('passToggleInit', function () {\n\t\twindow.togglePasswordVisibility = function(btn) {\n\t\t\tvar input = btn.parentElement.querySelector('input');\n\t\t\tif (!input) return;\n\t\t\tif (input.type === 'password') {\n\t\t\t\tinput.type = 'text';\n\t\t\t\tbtn.querySelector('.iconify').classList.remove('lucide--eye');\n\t\t\t\tbtn.querySelector('.iconify').classList.add('lucide--eye-off');\n\t\t\t} else {\n\t\t\t\tinput.type = 'password';\n\t\t\t\tbtn.querySelector('.iconify').classList.remove('lucide--eye-off');\n\t\t\t\tbtn.querySelector('.iconify').classList.add('lucide--eye');\n\t\t\t}\n\t\t};\n\t});\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

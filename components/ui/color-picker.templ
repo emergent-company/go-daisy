@@ -150,10 +150,8 @@ var colorPickerScriptOnce = templ.NewOnceHandle()
 templ ColorPickerScript() {
 	@colorPickerScriptOnce.Once() {
 		<script>
-			if (!window._gdColorPickerInit) {
-				window._gdColorPickerInit = true;
-				(function () {
-					function rootOf(node) {
+			gdOnce('gdColorPickerInit', function () {
+				function rootOf(node) {
 						return node && node.closest ? node.closest("[data-gd-color-picker]") : null;
 					}
 					function toHex(value) {
@@ -220,8 +218,7 @@ templ ColorPickerScript() {
 							markPresets(r, "");
 						}
 					});
-				})();
-			}
+			});
 		</script>
 	}
 }
