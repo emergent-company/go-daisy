@@ -339,6 +339,13 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
 	}
 	fmt.Fprintf(&jsDeps, `<script defer src="%salpine.js?v=%s"></script>`, jsBase, hash)
 
+	// The behaviour-init runtime must be defined BEFORE any component inline
+	// script runs, because the migrated scripts call gdOnce/gdBehaviour at parse
+	// time. Those scripts are emitted as part of the body snippet below, so the
+	// runtime is loaded synchronously from the <head> — putting it in jsDeps
+	// would land it after the snippet, i.e. too late.
+	initRuntime := fmt.Sprintf("<script src=\"%sgo-daisy-init.js?v=%s\"></script>\n", jsBase, hash)
+
 	devScript := ""
 	if devMode {
 		devScript = strings.Replace(devOverlayScript, "__COMPONENT_SLUGS_JSON__", ComponentSlugsJSON(), 1)
@@ -367,7 +374,7 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
     document.documentElement.setAttribute('data-theme', rt.resolve(mode, palette));
   } catch(e) {}
   </script>
-%s  <style>
+%s%s  <style>
     html { margin: 0; padding: 0; background: transparent; }
     body { margin: 0; padding: 16px; background: transparent; }
   </style>
@@ -375,5 +382,5 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
 <body>
 %s%s%s
 </body>
-</html>`, ui.ThemeRuntimeJS(), headExtras.String(), snippet, jsDeps.String(), devScript)
+</html>`, ui.ThemeRuntimeJS(), headExtras.String(), initRuntime, snippet, jsDeps.String(), devScript)
 }

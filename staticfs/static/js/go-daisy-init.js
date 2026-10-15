@@ -36,11 +36,15 @@
   };
 
   // htmx 4 names its events with colon segments (htmx:after:settle); htmx 3 used
-  // camelCase (htmx:afterSettle). Listen for both so this runtime works against
-  // either, whichever the host page bundles. Rescans are idempotent by contract,
-  // so a host that fires both names cannot cause double-binding.
+  // camelCase (htmx:afterSettle). Listen for both spellings so this runtime works
+  // against either, whichever the host page bundles. A host fires only one of the
+  // two spellings, so this cannot double-fire.
+  //
+  // Deliberately NOT listening for after:swap/afterSwap: htmx fires swap *and*
+  // settle on every swap, and the first rescan wins for elements that mark
+  // themselves as handled before binding. Binding on settle is the original
+  // behaviour and the later of the two, so dimension-sensitive widgets (charts,
+  // carousels) measure a fully settled DOM.
   document.addEventListener('htmx:after:settle', window.gdRescan);
-  document.addEventListener('htmx:after:swap', window.gdRescan);
   document.addEventListener('htmx:afterSettle', window.gdRescan);
-  document.addEventListener('htmx:afterSwap', window.gdRescan);
 })();
