@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/emergent-company/go-daisy/cmd/nexus/compare"
@@ -31,11 +32,18 @@ func main() {
 	total := ok + diff + errCount
 	fmt.Printf("\n  %d tested: %d OK  %d DIFF  %d ERROR\n\n", total, ok, diff, errCount)
 
-	jsonData, _ := json.MarshalIndent(results, "", "  ")
-	os.WriteFile("/tmp/nexus-compare.json", jsonData, 0644)
+	jsonData, err := json.MarshalIndent(results, "", "  ")
+	if err != nil {
+		log.Fatalf("marshal results: %v", err)
+	}
+	if err := os.WriteFile("/tmp/nexus-compare.json", jsonData, 0644); err != nil {
+		log.Fatalf("write /tmp/nexus-compare.json: %v", err)
+	}
 	fmt.Println("JSON: /tmp/nexus-compare.json")
 
 	html := compare.GenerateHTMLReport(results)
-	os.WriteFile("/tmp/nexus-compare.html", []byte(html), 0644)
+	if err := os.WriteFile("/tmp/nexus-compare.html", []byte(html), 0644); err != nil {
+		log.Fatalf("write /tmp/nexus-compare.html: %v", err)
+	}
 	fmt.Println("HTML: /tmp/nexus-compare.html")
 }

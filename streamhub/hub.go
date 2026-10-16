@@ -82,8 +82,9 @@ func (h *Hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.mu.Unlock()
 	}()
 
-	// Send initial connection event.
-	fmt.Fprintf(w, "data: {\"type\":\"connected\",\"id\":\"%s\"}\n\n", id)
+	// Send initial connection event. A write failure means the client is
+	// already gone; the deferred cleanup below removes the connection.
+	_, _ = fmt.Fprintf(w, "data: {\"type\":\"connected\",\"id\":\"%s\"}\n\n", id)
 	flusher.Flush()
 
 	// Heartbeat.

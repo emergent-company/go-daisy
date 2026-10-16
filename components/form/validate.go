@@ -26,7 +26,7 @@ func (e Errors) HasErrors() bool {
 //	}
 func DecodeAndValidate(r *http.Request) (Values, Errors) {
 	if r.Form == nil {
-		r.ParseForm()
+		_ = r.ParseForm() // best-effort: on failure r.Form stays nil and callers see empty values (surfacing as validation errors)
 	}
 	values := make(Values)
 	errs := make(Errors)
@@ -81,7 +81,7 @@ func RequireEmail(v Values, errs Errors, key string) {
 // GetStrings extracts multiple values for a field name (e.g. "tags[0]", "tags[1]").
 func GetStrings(r *http.Request, base string) []string {
 	if r.Form == nil {
-		r.ParseForm()
+		_ = r.ParseForm() // best-effort: on failure r.Form stays nil and callers see empty values (surfacing as validation errors)
 	}
 	var result []string
 	prefix := base + "["
@@ -101,7 +101,7 @@ func GetStrings(r *http.Request, base string) []string {
 // Returns a slice of maps keyed by the inner key.
 func GetNestedStrings(r *http.Request, base string) []map[string]string {
 	if r.Form == nil {
-		r.ParseForm()
+		_ = r.ParseForm() // best-effort: on failure r.Form stays nil and callers see empty values (surfacing as validation errors)
 	}
 	rows := make(map[string]map[string]string)
 	prefix := base + "["

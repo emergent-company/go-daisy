@@ -36,7 +36,7 @@ type ToggleRequest struct {
 
 // ParseToggleRequest extracts the value being toggled and dependencies.
 func ParseToggleRequest(r *http.Request, dependsOn ...string) ToggleRequest {
-	r.ParseForm()
+	_ = r.ParseForm() // best-effort: FormValue re-parses on demand when form parsing fails
 	req := ToggleRequest{
 		Value: r.FormValue("value"),
 		Deps:  make(map[string]string),

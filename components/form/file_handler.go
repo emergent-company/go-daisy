@@ -31,7 +31,7 @@ func ParseUploadedFile(r *http.Request, key string, maxSizeMB int) (*UploadedFil
 	if maxSizeMB > 0 {
 		maxBytes := int64(maxSizeMB) << 20
 		if header.Size > maxBytes {
-			file.Close()
+			_ = file.Close() // close before returning the size error; a close error adds nothing here
 			return nil, fmt.Errorf("file exceeds maximum size of %d MB", maxSizeMB)
 		}
 	}
@@ -46,7 +46,7 @@ func ParseUploadedFile(r *http.Request, key string, maxSizeMB int) (*UploadedFil
 
 // ReadAll reads the uploaded file into memory. Closes the file after reading.
 func (u *UploadedFile) ReadAll() ([]byte, error) {
-	defer u.File.Close()
+	defer func() { _ = u.File.Close() }() // read complete; a close error on an uploaded temp file is not actionable
 	return io.ReadAll(u.File)
 }
 

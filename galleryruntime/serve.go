@@ -91,7 +91,9 @@ func Serve(opts Options) error {
 		log.Println("shutting down...")
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
-		e.Shutdown(ctx)
+		if err := e.Shutdown(ctx); err != nil {
+			log.Printf("shutdown error: %v", err)
+		}
 	}()
 
 	log.Printf("gallery listening on %s", addr)

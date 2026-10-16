@@ -7403,7 +7403,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							<span class="iconify lucide--search size-5"></span>
 						</button>` + func() string {
 						var buf strings.Builder
-						nav.SearchModal("minimal", nav.SearchModalOpts{
+						if err := nav.SearchModal("minimal", nav.SearchModalOpts{
 							Actions: []nav.SearchAction{
 								{Label: "Create a new folder", Icon: "lucide--folder-plus"},
 								{Label: "Upload new document", Icon: "lucide--file-plus"},
@@ -7416,7 +7416,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{Label: "Support", Icon: "lucide--help-circle"},
 								{Label: "Keyboard Shortcuts", Icon: "lucide--keyboard"},
 							},
-						}).Render(context.Background(), &buf)
+						}); err != nil {
+							panic(err) // static seed registration: rendering to a Builder cannot fail
+						}
 						return buf.String()
 					}() + `</div>`),
 				},
@@ -7428,7 +7430,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							<span class="iconify lucide--search size-5"></span>
 						</button>` + func() string {
 						var buf strings.Builder
-						nav.SearchModal("split", nav.SearchModalOpts{
+						if err := nav.SearchModal("split", nav.SearchModalOpts{
 							FilterChips: []nav.SearchFilterChip{
 								{Label: "Writer", Active: true},
 								{Label: "Editor"},
@@ -7439,7 +7441,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{Name: "Task Planner", Description: "Organize your workflow", Icon: "lucide--list-checks"},
 								{Name: "Spark Ideas", Description: "Brainstorming assistant", Icon: "lucide--lightbulb"},
 							},
-						}).Render(context.Background(), &buf)
+						}); err != nil {
+							panic(err) // static seed registration: rendering to a Builder cannot fail
+						}
 						return buf.String()
 					}() + `</div>`),
 				},

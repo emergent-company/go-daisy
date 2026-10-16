@@ -236,7 +236,8 @@ func AppendToast(w http.ResponseWriter, toastType, message string) {
 		alertClass = "alert-warning"
 	}
 	id := fmt.Sprintf("toast-%s", toastType)
-	fmt.Fprintf(w, `<div id="%s" hx-swap-oob="beforeend:#toast-container">`+
+	// A write failure means the client is gone; the toast is best-effort.
+	_, _ = fmt.Fprintf(w, `<div id="%s" hx-swap-oob="beforeend:#toast-container">`+
 		`<div class="alert %s shadow-lg w-80">`+
 		`<span>%s</span>`+
 		`<script>setTimeout(()=>{const e=document.getElementById('%s');if(e)e.remove()},4000)</script>`+
