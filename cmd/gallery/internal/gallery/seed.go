@@ -1258,7 +1258,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						),
 						ui.IndicatorWithBoundary("badge badge-primary badge-xs",
 							templ.NopComponent,
-							ui.Avatar("AJ", "", "", ui.AvatarMD, "", nil),
+							ui.AvatarFull(ui.AvatarProps{Name: "AJ", Size: ui.AvatarMD}),
 							),
 							ui.IndicatorWithBoundary("badge badge-success badge-sm",
 								templ.Raw("New"),
@@ -1685,9 +1685,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							align = ui.DropdownBottom
 						}
 						label := "Open ▼"
-						if align == ui.DropdownTop {
+						switch align {
+						case ui.DropdownTop:
 							label = "Open ▲"
-						} else if align == ui.DropdownEnd {
+						case ui.DropdownEnd:
 							label = "Options ⋮"
 						}
 						return ui.DropdownWithBoundary(align, ui.DropdownTrigger(label, "btn-primary", nil), []ui.DropdownItemProps{
@@ -2139,7 +2140,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								if _, err := io.WriteString(w, `<div class="flex flex-col items-center gap-2">`); err != nil {
 									return err
 								}
-								if err := ui.Avatar("", "", "lucide--building-2", s.size, "", nil).Render(ctx, w); err != nil {
+								if err := ui.AvatarFull(ui.AvatarProps{Icon: "lucide--building-2", Size: s.size}).Render(ctx, w); err != nil {
 									return err
 								}
 								if _, err := io.WriteString(w, `<span class="text-xs text-base-content/60">`+s.label+`</span></div>`); err != nil {
@@ -2150,7 +2151,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							if _, err := io.WriteString(w, `<div class="flex flex-col items-center gap-2"><div class="flex items-center gap-2">`); err != nil {
 								return err
 							}
-							if err := ui.Avatar("", "", "lucide--building-2", ui.AvatarXS, "", nil).Render(ctx, w); err != nil {
+							if err := ui.AvatarFull(ui.AvatarProps{Icon: "lucide--building-2", Size: ui.AvatarXS}).Render(ctx, w); err != nil {
 								return err
 							}
 							if _, err := io.WriteString(w, `<span class="text-sm font-medium">Acme Corp</span></div><span class="text-xs text-base-content/60">with name</span></div>`); err != nil {
@@ -7403,7 +7404,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							<span class="iconify lucide--search size-5"></span>
 						</button>` + func() string {
 						var buf strings.Builder
-						nav.SearchModal("minimal", nav.SearchModalOpts{
+						if err := nav.SearchModal("minimal", nav.SearchModalOpts{
 							Actions: []nav.SearchAction{
 								{Label: "Create a new folder", Icon: "lucide--folder-plus"},
 								{Label: "Upload new document", Icon: "lucide--file-plus"},
@@ -7416,7 +7417,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{Label: "Support", Icon: "lucide--help-circle"},
 								{Label: "Keyboard Shortcuts", Icon: "lucide--keyboard"},
 							},
-						}).Render(context.Background(), &buf)
+						}); err != nil {
+							panic(err) // static seed registration: rendering to a Builder cannot fail
+						}
 						return buf.String()
 					}() + `</div>`),
 				},
@@ -7428,7 +7431,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							<span class="iconify lucide--search size-5"></span>
 						</button>` + func() string {
 						var buf strings.Builder
-						nav.SearchModal("split", nav.SearchModalOpts{
+						if err := nav.SearchModal("split", nav.SearchModalOpts{
 							FilterChips: []nav.SearchFilterChip{
 								{Label: "Writer", Active: true},
 								{Label: "Editor"},
@@ -7439,7 +7442,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{Name: "Task Planner", Description: "Organize your workflow", Icon: "lucide--list-checks"},
 								{Name: "Spark Ideas", Description: "Brainstorming assistant", Icon: "lucide--lightbulb"},
 							},
-						}).Render(context.Background(), &buf)
+						}); err != nil {
+							panic(err) // static seed registration: rendering to a Builder cannot fail
+						}
 						return buf.String()
 					}() + `</div>`),
 				},

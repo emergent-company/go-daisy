@@ -61,42 +61,43 @@ h1 { margin-bottom: 10px; }
 			errCount++
 		}
 	}
-	b.WriteString( fmt.Sprintf(`<div class="summary">
+	fmt.Fprintf(&b, `<div class="summary">
 <div class="stat stat-ok">%d OK</div>
 <div class="stat stat-diff">%d DIFF</div>
 <div class="stat stat-error">%d ERROR</div>
-</div>`, ok, diff, errCount))
+</div>`, ok, diff, errCount)
 
 	// By category
 	cats := CategoryGroups(results)
 	for _, cat := range cats {
 		pages := FilterByCategory(results, cat)
-		b.WriteString( fmt.Sprintf(`<div class="category"><h2>%s</h2>`, cat))
+		fmt.Fprintf(&b, `<div class="category"><h2>%s</h2>`, cat)
 		for _, r := range pages {
 			badgeClass := "badge-ok"
-			if r.Status == "diff" {
+			switch r.Status {
+			case "diff":
 				badgeClass = "badge-diff"
-			} else if r.Status == "error" {
+			case "error":
 				badgeClass = "badge-error"
 			}
-			b.WriteString( fmt.Sprintf(`<div class="page">
+			fmt.Fprintf(&b, `<div class="page">
 <div class="page-header collapsible" onclick="this.nextElementSibling.classList.toggle('no-diffs')">
 <span class="page-name">%s</span>
 <span class="status-badge %s">%s</span>
 <span style="color:#6b7280;font-size:12px">(%d diffs)</span>
 <span style="color:#9ca3af;font-size:11px">nexus=%d chars / godaisy=%d chars</span>
 </div>
-<div class="diff-list">`, r.Page.Name, badgeClass, r.Status, len(r.Diffs), r.NexusChars, r.GoDaisyChars))
+<div class="diff-list">`, r.Page.Name, badgeClass, r.Status, len(r.Diffs), r.NexusChars, r.GoDaisyChars)
 			if len(r.Diffs) == 0 {
 				b.WriteString( `<div class="no-diffs">No structural differences</div>`)
 			}
 			for _, d := range r.Diffs {
-				b.WriteString( fmt.Sprintf(`<div class="diff-item diff-%s">
+				fmt.Fprintf(&b, `<div class="diff-item diff-%s">
 <span class="diff-type">%s</span>
 <span class="diff-path">%s</span>
 <div>nexus: %s</div>
 <div>godaisy: %s</div>
-</div>`, d.Type, d.Type, d.Path, d.NexusVal, d.GoDaisy))
+</div>`, d.Type, d.Type, d.Path, d.NexusVal, d.GoDaisy)
 			}
 			b.WriteString( `</div></div>`)
 		}

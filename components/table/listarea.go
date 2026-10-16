@@ -31,18 +31,3 @@ type ScrollRowsProps struct {
 	ColSpan  int
 	Rows     templ.Component
 }
-
-func listAreaStart(page, pageSize int, total int64) int64 {
-	if total == 0 {
-		return 0
-	}
-	return int64((page-1)*pageSize + 1)
-}
-
-func listAreaEnd(page, pageSize int, total int64) int64 {
-	end := int64(page * pageSize)
-	if end > total {
-		return total
-	}
-	return end
-}

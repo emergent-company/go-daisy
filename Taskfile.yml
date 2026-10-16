@@ -28,11 +28,44 @@ tasks:
       - go build ./...
 
   lint:
-    desc: Run golangci-lint and guard against daisyUI-4 CSS variables
+    desc: Run golangci-lint, the daisyUI-4 CSS guard, and the deprecation guard
     cmds:
-      - golangci-lint run ./...
-      - task: "lint:css"
-      - task: "lint:deprecated"
+      - |
+        bash -s <<'EOF'
+        set -uo pipefail
+
+        rc=0
+
+        echo "==> gate 1/3: golangci-lint run ./..."
+        if golangci-lint run ./...; then
+          echo "==> gate 1/3 ok"
+        else
+          echo "==> gate 1/3 FAILED" >&2
+          rc=1
+        fi
+
+        echo "==> gate 2/3: lint:css"
+        if task "lint:css"; then
+          echo "==> gate 2/3 ok"
+        else
+          echo "==> gate 2/3 FAILED" >&2
+          rc=1
+        fi
+
+        echo "==> gate 3/3: lint:deprecated"
+        if task "lint:deprecated"; then
+          echo "==> gate 3/3 ok"
+        else
+          echo "==> gate 3/3 FAILED" >&2
+          rc=1
+        fi
+
+        if [ "$rc" -ne 0 ]; then
+          echo "lint: one or more gates failed" >&2
+          exit "$rc"
+        fi
+        echo "lint: all gates passed"
+        EOF
 
   "lint:deprecated":
     desc: "Guard Deprecated: markers against docs/DEPRECATED.md inventory"

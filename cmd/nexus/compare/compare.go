@@ -71,7 +71,7 @@ func comparePage(m PageMapping) PageResult {
 		r.Error = fmt.Sprintf("fetch go-daisy: %v", err)
 		return r
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }() // body fully read next; a close error here is not actionable
 	goDaisyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		r.Status = "error"

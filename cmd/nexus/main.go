@@ -13,7 +13,7 @@ import (
 func main() {
 	e := echo.New()
 	e.HideBanner = true
-	e.Use(middleware.Logger())
+	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Recover())
 
 	e.GET("/static/*", echo.WrapHandler(staticfs.Handler("/static/")))

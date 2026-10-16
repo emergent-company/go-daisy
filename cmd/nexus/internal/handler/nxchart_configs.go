@@ -40,24 +40,6 @@ const nxCRMSaleMetricsConfig = `{
   "responsive":[{"breakpoint":450,"options":{"plotOptions":{"bar":{"borderRadius":2}}}}]
 }`
 
-const nxCRMGoalStatusConfig = `{
-  "series":[76],
-  "chart":{"height":258,"type":"radialBar","offsetY":-20,"background":"transparent","sparkline":{"enabled":true}},
-  "stroke":{"lineCap":"round"},
-  "colors":["#167bff"],
-  "plotOptions":{"radialBar":{"startAngle":-90,"endAngle":90,"track":{"background":"var(--color-base-200)","strokeWidth":"75%","margin":8,"dropShadow":{"enabled":false}}}}
-}`
-
-const nxCRMSocialConfig = `{
-  "chart":{"height":300,"type":"bar","background":"transparent","toolbar":{"show":false}},
-  "plotOptions":{"bar":{"horizontal":true,"distributed":true,"borderRadius":2,"borderRadiusApplication":"end"}},
-  "stroke":{"colors":["var(--color-base-100)"]},
-  "colors":["#5860ff"],
-  "series":[{"data":[48,35,10,7]}],
-  "xaxis":{"categories":["Facebook","Whatsapp","Instagram","Youtube"],"type":"category"},
-  "grid":{"show":false}
-}`
-
 const nxGlobalSalesConfig = `{
   "chart":{"height":344,"type":"bar","parentHeightOffset":0,"background":"transparent","toolbar":{"show":false}},
   "plotOptions":{"bar":{"horizontal":true,"borderRadius":4,"distributed":true,"borderRadiusApplication":"end"}},

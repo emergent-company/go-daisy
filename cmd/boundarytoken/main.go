@@ -63,10 +63,25 @@ func main() {
 	}
 
 	// Also parse the whole package dir to collect const declarations for named types.
+	// Parse files individually rather than via the deprecated parser.ParseDir
+	// (which groups files into the also-deprecated ast.Package type); the tool
+	// only needs the flat set of files and does no cross-file resolution.
 	pkgDir := filepath.Dir(inFile)
-	pkgFiles, err := parser.ParseDir(fset, pkgDir, nil, 0)
+	dirEntries, err := os.ReadDir(pkgDir)
 	if err != nil {
-		log.Fatalf("parse package dir %s: %v", pkgDir, err)
+		log.Fatalf("read package dir %s: %v", pkgDir, err)
+	}
+	var pkgFiles []*ast.File
+	for _, entry := range dirEntries {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".go") {
+			continue
+		}
+		path := filepath.Join(pkgDir, entry.Name())
+		pf, err := parser.ParseFile(fset, path, nil, 0)
+		if err != nil {
+			log.Fatalf("parse %s: %v", path, err)
+		}
+		pkgFiles = append(pkgFiles, pf)
 	}
 	// Collect all const values grouped by type name: map[typeName][]constEntry
 	typeConsts := collectTypeConsts(pkgFiles)
@@ -234,38 +249,36 @@ type constEntry struct {
 	value string // string value, e.g. "btn-primary"
 }
 
-func collectTypeConsts(pkgFiles map[string]*ast.Package) map[string][]constEntry {
+func collectTypeConsts(pkgFiles []*ast.File) map[string][]constEntry {
 	result := map[string][]constEntry{}
-	for _, pkg := range pkgFiles {
-		for _, file := range pkg.Files {
-			for _, decl := range file.Decls {
-				gd, ok := decl.(*ast.GenDecl)
-				if !ok || gd.Tok != token.CONST {
+	for _, file := range pkgFiles {
+		for _, decl := range file.Decls {
+			gd, ok := decl.(*ast.GenDecl)
+			if !ok || gd.Tok != token.CONST {
+				continue
+			}
+			for _, spec := range gd.Specs {
+				vs, ok := spec.(*ast.ValueSpec)
+				if !ok {
 					continue
 				}
-				for _, spec := range gd.Specs {
-					vs, ok := spec.(*ast.ValueSpec)
-					if !ok {
+				typeName := ""
+				if vs.Type != nil {
+					typeName = exprString(vs.Type)
+				}
+				if typeName == "" {
+					continue
+				}
+				for i, name := range vs.Names {
+					if i >= len(vs.Values) {
 						continue
 					}
-					typeName := ""
-					if vs.Type != nil {
-						typeName = exprString(vs.Type)
-					}
-					if typeName == "" {
+					lit, ok := vs.Values[i].(*ast.BasicLit)
+					if !ok || lit.Kind != token.STRING {
 						continue
 					}
-					for i, name := range vs.Names {
-						if i >= len(vs.Values) {
-							continue
-						}
-						lit, ok := vs.Values[i].(*ast.BasicLit)
-						if !ok || lit.Kind != token.STRING {
-							continue
-						}
-						val, _ := strconv.Unquote(lit.Value)
-						result[typeName] = append(result[typeName], constEntry{name: name.Name, value: val})
-					}
+					val, _ := strconv.Unquote(lit.Value)
+					result[typeName] = append(result[typeName], constEntry{name: name.Name, value: val})
 				}
 			}
 		}

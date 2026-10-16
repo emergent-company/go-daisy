@@ -54,7 +54,7 @@ func Serve(opts Options) error {
 
 	e := echo.New()
 	e.HideBanner = true
-	e.Use(middleware.Logger())
+	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Recover())
 
 	// Static assets (CSS, JS) embedded in go-daisy's staticfs.
@@ -91,7 +91,9 @@ func Serve(opts Options) error {
 		log.Println("shutting down...")
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
-		e.Shutdown(ctx)
+		if err := e.Shutdown(ctx); err != nil {
+			log.Printf("shutdown error: %v", err)
+		}
 	}()
 
 	log.Printf("gallery listening on %s", addr)
