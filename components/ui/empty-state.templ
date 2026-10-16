@@ -42,7 +42,7 @@ type EmptyStateProps struct {
 	// Heading is the semantic title level. Empty defaults to h3 on the compact
 	// scale and h2 on the hero scale; pick another level to fit the page outline.
 	Heading EmptyStateHeading
-	// Bordered renders the empty state inside a card-border card shell.
+	// Bordered renders the empty state inside a bordered card shell.
 	Bordered bool
 	// ActionHref + ActionLabel render a convenience primary action button
 	// (e.g. "Add your first provider"). Children passed to EmptyState render
@@ -72,7 +72,7 @@ type EmptyStateProps struct {
 templ EmptyState(props EmptyStateProps) {
 	{{ pad := emptyStatePadding(props) }}
 	if props.Bordered {
-		@CardRaw("card-border", "px-0 py-0", props.Attrs) {
+		@CardRaw(CardRawProps{BodyClass: "px-0 py-0", Attrs: props.Attrs}) {
 			@emptyStateBody(props, pad, nil) {
 				{ children... }
 			}

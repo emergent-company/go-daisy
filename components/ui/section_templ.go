@@ -15,13 +15,14 @@ type SectionProps struct {
 	// Margin is the section wrapper's margin class, e.g. "mt-6" (detail pages)
 	// or "mb-8" (list pages). Default "" (no margin).
 	Margin string
-	// CardClass is the card wrapper's class. Default "card-border".
+	// CardClass is the card wrapper's class. Default "" (CardRaw provides its
+	// own border, so callers no longer need to add a card-border class).
 	CardClass string
 	// BodyClass is the card body's padding class, e.g. "p-0" (lists) or "p-5"
 	// (forms). Default "".
 	BodyClass string
 	// Empty switches the section to the empty-state branch: when true, the
-	// ui.Empty card (default "card-border", no padding) is rendered instead of
+	// ui.Empty card (default bordered card, no padding) is rendered instead of
 	// the children. Gate it on the caller's own condition, e.g.
 	// Empty: len(items) == 0. When false, the children render in the card.
 	Empty bool
@@ -42,7 +43,7 @@ type SectionProps struct {
 	Titleless bool
 	// Wrapperless omits the <section> element (and the <h2> heading) entirely,
 	// rendering the card path directly. Use it when you need a bare card with no
-	// section chrome — e.g. a CardRaw("card-border overflow-hidden", "p-0")
+	// section chrome — e.g. a CardRaw(CardRawProps{Class: "overflow-hidden", BodyClass: "p-0"})
 	// wrapping a divide-y row list — which the titled section layout cannot
 	// express. When Wrapperless is true:
 	//
@@ -53,7 +54,7 @@ type SectionProps struct {
 	//   - Margin is applied to the card element instead of the now-absent section
 	//     wrapper, so outer spacing is preserved.
 	//   - Empty is still honoured: when Empty is true, the default empty-state
-	//     card (card-border, no body padding) renders without a section wrapper.
+	//     card (bordered, no body padding) renders without a section wrapper.
 	//     As with the non-wrapperless Empty branch, CardClass and BodyClass are
 	//     ignored, but Margin still applies to the card.
 	//   - Raw is ignored: Raw's purpose is to skip the card inside a section, and
@@ -70,7 +71,7 @@ type SectionProps struct {
 //
 //	@ui.Section("Object types", ui.SectionProps{
 //		Margin:    "mt-6",
-//		CardClass: "card-border overflow-hidden",
+//		CardClass: "overflow-hidden",
 //		BodyClass: "p-0",
 //		Empty:     len(types) == 0,
 //		EmptyIcon: "lucide--box", EmptyTitle: "No object types", EmptyDesc: "None compiled yet.",
@@ -100,10 +101,6 @@ func Section(title string, props SectionProps) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		if props.Wrapperless {
 			if props.Empty {
-				emptyCardClass := "card-border"
-				if props.Margin != "" {
-					emptyCardClass += " " + props.Margin
-				}
 				templ_7745c5c3_Var2 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -122,18 +119,16 @@ func Section(title string, props SectionProps) templ.Component {
 					}
 					return nil
 				})
-				templ_7745c5c3_Err = CardRaw(emptyCardClass, "", nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = CardRaw(CardRawProps{Class: props.Margin}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				cardClass := "card-border"
-				if props.CardClass != "" {
-					cardClass = props.CardClass
+				cardClass := props.CardClass
+				if props.CardClass != "" && props.Margin != "" {
+					cardClass += " "
 				}
-				if props.Margin != "" {
-					cardClass += " " + props.Margin
-				}
+				cardClass += props.Margin
 				templ_7745c5c3_Var3 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -167,7 +162,7 @@ func Section(title string, props SectionProps) templ.Component {
 					}
 					return nil
 				})
-				templ_7745c5c3_Err = CardRaw(cardClass, props.BodyClass, nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = CardRaw(CardRawProps{Class: cardClass, BodyClass: props.BodyClass}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -211,7 +206,7 @@ func Section(title string, props SectionProps) templ.Component {
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/section.templ`, Line: 97, Col: 65}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/section.templ`, Line: 96, Col: 65}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -241,7 +236,7 @@ func Section(title string, props SectionProps) templ.Component {
 					}
 					return nil
 				})
-				templ_7745c5c3_Err = CardRaw("card-border", "", nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = CardRaw(CardRawProps{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -251,10 +246,6 @@ func Section(title string, props SectionProps) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				cardClass := "card-border"
-				if props.CardClass != "" {
-					cardClass = props.CardClass
-				}
 				templ_7745c5c3_Var8 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -288,7 +279,7 @@ func Section(title string, props SectionProps) templ.Component {
 					}
 					return nil
 				})
-				templ_7745c5c3_Err = CardRaw(cardClass, props.BodyClass, nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = CardRaw(CardRawProps{Class: props.CardClass, BodyClass: props.BodyClass}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

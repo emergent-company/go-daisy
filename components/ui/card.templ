@@ -2,24 +2,107 @@ package ui
 
 import "github.com/emergent-company/go-daisy/devmode"
 
+// CardSurface selects the card's background surface. The zero value renders the
+// default "bg-base-100"; a non-zero value REPLACES that default class rather
+// than stacking a second bg-* class on top of it.
+//
+// Surface is deliberately an OPEN class passthrough: unlike CardElement and
+// CardBorder (which are structural, closed enums), a caller may legitimately
+// want an arbitrary background utility (bg-red-500, a gradient, a custom tone),
+// so the value is emitted verbatim with no validation. The named constants are
+// convenience defaults, not an exhaustive set.
+type CardSurface string
+
+const (
+	// CardSurfaceBase100 is the zero-value default surface.
+	CardSurfaceBase100 CardSurface = ""
+	// CardSurfaceBase200 is one step up the base ladder.
+	CardSurfaceBase200 CardSurface = "bg-base-200"
+	// CardSurfaceBase300 is two steps up the base ladder.
+	CardSurfaceBase300 CardSurface = "bg-base-300"
+	// CardSurfaceNeutral uses the neutral surface tone.
+	CardSurfaceNeutral CardSurface = "bg-neutral"
+	// CardSurfaceGhost renders a transparent surface.
+	CardSurfaceGhost CardSurface = "bg-transparent"
+)
+
+// CardElement selects the HTML element CardRaw renders. The zero value renders a
+// <div>. It is a CLOSED enum (unlike CardSurface): unknown values panic in
+// devmode and fall back to <div> outside devmode.
+type CardElement string
+
+const (
+	// CardElementDiv is the zero-value default element.
+	CardElementDiv CardElement = ""
+	// CardElementA renders an <a> (link card).
+	CardElementA CardElement = "a"
+	// CardElementButton renders a <button> (interactive card).
+	CardElementButton CardElement = "button"
+	// CardElementSection renders a <section>.
+	CardElementSection CardElement = "section"
+	// CardElementArticle renders an <article>.
+	CardElementArticle CardElement = "article"
+	// CardElementLi renders an <li> (list-item card).
+	CardElementLi CardElement = "li"
+)
+
+// CardBorder selects the card outline. The zero value renders the default
+// "border border-line"; CardBorderStrong uses the emphasised line-strong step
+// and CardBorderNone removes the outline. It is a CLOSED enum (unlike
+// CardSurface): unknown values panic in devmode and fall back to the default
+// outline outside devmode.
+type CardBorder string
+
+const (
+	// CardBorderLine is the zero-value default outline (border border-line).
+	CardBorderLine CardBorder = ""
+	// CardBorderStrong uses the emphasised line-strong step.
+	CardBorderStrong CardBorder = "strong"
+	// CardBorderNone removes the outline entirely.
+	CardBorderNone CardBorder = "none"
+)
+
+// CardRawProps configures CardRaw.
+type CardRawProps struct {
+	Class      string           // additional CSS classes on the card root (appended)
+	BodyClass  string           // additional CSS classes on the card body
+	Surface    CardSurface      // zero = bg-base-100; a non-zero surface replaces it (open passthrough)
+	As         CardElement      // zero = <div>; unknown values panic in devmode, else fall back to <div>
+	Border     CardBorder       // zero = border border-line; CardBorderNone removes it; unknown panics in devmode
+	Attrs      templ.Attributes // spread last on the card root
+}
+
 // CardRaw renders a bare DaisyUI card shell with configurable card and body CSS classes.
 // Use this when Card or CardCompact don't fit the layout (e.g. custom padding, flex body).
-// as controls the HTML element: "" (default) for <div>, "a" for <a>.
-// attrs is optional; pass nil when not needed.
-templ CardRaw(cardClass string, bodyClass string, attrs templ.Attributes, as ...string) {
-	{{ renderAs := ""
-		if len(as) > 0 { renderAs = as[0] } }}
-	if renderAs == "a" {
-		<a class={ "card bg-base-100", cardClass } { devmode.Attrs(ctx, "ui/CardRaw")... } { attrs... }>
-			<div class={ "card-body", bodyClass }>
-				{ children... }
-			</div>
+// Surface selects the background (zero = bg-base-100), As selects the element
+// (zero = <div>), and Border selects the outline (zero = border border-line).
+templ CardRaw(props CardRawProps) {
+	{{ as := cardElement(props.As, ctx)
+	surface := cardSurfaceClass(props.Surface)
+	border := cardBorderClass(props.Border, ctx) }}
+	if as == CardElementA {
+		<a class={ "card", surface, border, templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "ui/CardRaw")... } { props.Attrs... }>
+			<div class={ "card-body", templ.KV(props.BodyClass, props.BodyClass != "") }>{ children... }</div>
 		</a>
+	} else if as == CardElementButton {
+		<button type="button" class={ "card", surface, border, templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "ui/CardRaw")... } { props.Attrs... }>
+			<div class={ "card-body", templ.KV(props.BodyClass, props.BodyClass != "") }>{ children... }</div>
+		</button>
+	} else if as == CardElementSection {
+		<section class={ "card", surface, border, templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "ui/CardRaw")... } { props.Attrs... }>
+			<div class={ "card-body", templ.KV(props.BodyClass, props.BodyClass != "") }>{ children... }</div>
+		</section>
+	} else if as == CardElementArticle {
+		<article class={ "card", surface, border, templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "ui/CardRaw")... } { props.Attrs... }>
+			<div class={ "card-body", templ.KV(props.BodyClass, props.BodyClass != "") }>{ children... }</div>
+		</article>
+	} else if as == CardElementLi {
+		<li class={ "card", surface, border, templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "ui/CardRaw")... } { props.Attrs... }>
+			<div class={ "card-body", templ.KV(props.BodyClass, props.BodyClass != "") }>{ children... }</div>
+		</li>
 	} else {
-		<div class={ "card bg-base-100", cardClass } { devmode.Attrs(ctx, "ui/CardRaw")... } { attrs... }>
-			<div class={ "card-body", bodyClass }>
-				{ children... }
-			</div>
+		<div class={ "card", surface, border, templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "ui/CardRaw")... } { props.Attrs... }>
+			<div class={ "card-body", templ.KV(props.BodyClass, props.BodyClass != "") }>{ children... }</div>
 		</div>
 	}
 }
@@ -140,7 +223,7 @@ templ StatCardMinimal(item StatCardMinimalItem) {
 		</div>
 		</div>
 	} else {
-		@CardRaw("card-border", "", item.Attrs) {
+		@CardRaw(CardRawProps{Attrs: item.Attrs}) {
 			<p class="text-base-content/60 text-xs font-medium tracking-wide uppercase">{ item.Label }</p>
 			<div class="mt-4 flex items-end justify-between gap-2 text-sm">
 				<p class="text-2xl/none font-semibold">{ item.Value }</p>
