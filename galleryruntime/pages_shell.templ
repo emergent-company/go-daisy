@@ -205,7 +205,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 					autocomplete="off"
 				/>
 				<form method="dialog">
-					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Shape: ui.ButtonShapeCircle, Variant: ui.ButtonGhost, Attrs: templ.Attributes{"aria-label": "Close"}}) {
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Size: ui.ButtonXS, Shape: ui.ButtonShapeCircle, Variant: ui.ButtonGhost, Attrs: templ.Attributes{"aria-label": "Close"}}) {
 						@ui.IconSpan("lucide--x", "size-4")
 					}
 				</form>
