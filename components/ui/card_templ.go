@@ -13,6 +13,12 @@ import "github.com/emergent-company/go-daisy/devmode"
 // CardSurface selects the card's background surface. The zero value renders the
 // default "bg-base-100"; a non-zero value REPLACES that default class rather
 // than stacking a second bg-* class on top of it.
+//
+// Surface is deliberately an OPEN class passthrough: unlike CardElement and
+// CardBorder (which are structural, closed enums), a caller may legitimately
+// want an arbitrary background utility (bg-red-500, a gradient, a custom tone),
+// so the value is emitted verbatim with no validation. The named constants are
+// convenience defaults, not an exhaustive set.
 type CardSurface string
 
 const (
@@ -29,7 +35,8 @@ const (
 )
 
 // CardElement selects the HTML element CardRaw renders. The zero value renders a
-// <div>. Unknown values panic — CardRaw never silently degrades to a <div>.
+// <div>. It is a CLOSED enum (unlike CardSurface): unknown values panic in
+// devmode and fall back to <div> outside devmode.
 type CardElement string
 
 const (
@@ -49,7 +56,9 @@ const (
 
 // CardBorder selects the card outline. The zero value renders the default
 // "border border-line"; CardBorderStrong uses the emphasised line-strong step
-// and CardBorderNone removes the outline.
+// and CardBorderNone removes the outline. It is a CLOSED enum (unlike
+// CardSurface): unknown values panic in devmode and fall back to the default
+// outline outside devmode.
 type CardBorder string
 
 const (
@@ -65,9 +74,9 @@ const (
 type CardRawProps struct {
 	Class     string           // additional CSS classes on the card root (appended)
 	BodyClass string           // additional CSS classes on the card body
-	Surface   CardSurface      // zero = bg-base-100; a non-zero surface replaces it
-	As        CardElement      // zero = <div>; unknown values panic
-	Border    CardBorder       // zero = border border-line; CardBorderNone removes it
+	Surface   CardSurface      // zero = bg-base-100; a non-zero surface replaces it (open passthrough)
+	As        CardElement      // zero = <div>; unknown values panic in devmode, else fall back to <div>
+	Border    CardBorder       // zero = border border-line; CardBorderNone removes it; unknown panics in devmode
 	Attrs     templ.Attributes // spread last on the card root
 }
 
@@ -96,10 +105,10 @@ func CardRaw(props CardRawProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		validateCardElement(props.As)
+		as := cardElement(props.As, ctx)
 		surface := cardSurfaceClass(props.Surface)
-		border := cardBorderClass(props.Border)
-		if props.As == CardElementA {
+		border := cardBorderClass(props.Border, ctx)
+		if as == CardElementA {
 			var templ_7745c5c3_Var2 = []any{"card", surface, border, templ.KV(props.Class, props.Class != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 			if templ_7745c5c3_Err != nil {
@@ -164,7 +173,7 @@ func CardRaw(props CardRawProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if props.As == CardElementButton {
+		} else if as == CardElementButton {
 			var templ_7745c5c3_Var6 = []any{"card", surface, border, templ.KV(props.Class, props.Class != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 			if templ_7745c5c3_Err != nil {
@@ -229,7 +238,7 @@ func CardRaw(props CardRawProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if props.As == CardElementSection {
+		} else if as == CardElementSection {
 			var templ_7745c5c3_Var10 = []any{"card", surface, border, templ.KV(props.Class, props.Class != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var10...)
 			if templ_7745c5c3_Err != nil {
@@ -294,7 +303,7 @@ func CardRaw(props CardRawProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if props.As == CardElementArticle {
+		} else if as == CardElementArticle {
 			var templ_7745c5c3_Var14 = []any{"card", surface, border, templ.KV(props.Class, props.Class != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var14...)
 			if templ_7745c5c3_Err != nil {
@@ -359,7 +368,7 @@ func CardRaw(props CardRawProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if props.As == CardElementLi {
+		} else if as == CardElementLi {
 			var templ_7745c5c3_Var18 = []any{"card", surface, border, templ.KV(props.Class, props.Class != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var18...)
 			if templ_7745c5c3_Err != nil {
@@ -569,7 +578,7 @@ func Card(title string, attrs templ.Attributes, compact ...bool) templ.Component
 			var templ_7745c5c3_Var29 string
 			templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 111, Col: 81}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 120, Col: 81}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 			if templ_7745c5c3_Err != nil {
@@ -629,7 +638,7 @@ func CardBodyText(text string) templ.Component {
 		var templ_7745c5c3_Var31 string
 		templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 120, Col: 92}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 129, Col: 92}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 		if templ_7745c5c3_Err != nil {
@@ -680,7 +689,7 @@ func CardPlaceholder(label string) templ.Component {
 		var templ_7745c5c3_Var33 string
 		templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 125, Col: 177}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 134, Col: 177}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
 		if templ_7745c5c3_Err != nil {
@@ -841,7 +850,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 			var templ_7745c5c3_Var37 string
 			templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(item.Value)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 197, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 206, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
 			if templ_7745c5c3_Err != nil {
@@ -854,7 +863,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 			var templ_7745c5c3_Var38 string
 			templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 198, Col: 73}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 207, Col: 73}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
 			if templ_7745c5c3_Err != nil {
@@ -881,7 +890,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 					var templ_7745c5c3_Var39 string
 					templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(item.ComparisonLabel)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 203, Col: 68}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 212, Col: 68}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
 					if templ_7745c5c3_Err != nil {
@@ -934,7 +943,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 				var templ_7745c5c3_Var41 string
 				templ_7745c5c3_Var41, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 218, Col: 91}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 227, Col: 91}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var41))
 				if templ_7745c5c3_Err != nil {
@@ -947,7 +956,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 				var templ_7745c5c3_Var42 string
 				templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(item.Value)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 220, Col: 55}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 229, Col: 55}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
 				if templ_7745c5c3_Err != nil {

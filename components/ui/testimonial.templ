@@ -14,10 +14,6 @@ type TestimonialCardProps struct {
 	Rating       int    // 1-5 star rating, 0 = no stars shown
 	RatingColor  string // e.g. "bg-orange-400", "rating-warning"
 	MaxRating    int    // defaults to 5
-	// CardBordered is deprecated and retained for source compatibility. It was
-	// historically a no-op (both branches rendered border border-line); the card
-	// border is now always provided by CardRaw's default.
-	CardBordered bool
 	Attrs        templ.Attributes
 }
 

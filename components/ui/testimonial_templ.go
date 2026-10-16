@@ -22,11 +22,7 @@ type TestimonialCardProps struct {
 	Rating      int    // 1-5 star rating, 0 = no stars shown
 	RatingColor string // e.g. "bg-orange-400", "rating-warning"
 	MaxRating   int    // defaults to 5
-	// CardBordered is deprecated and retained for source compatibility. It was
-	// historically a no-op (both branches rendered border border-line); the card
-	// border is now always provided by CardRaw's default.
-	CardBordered bool
-	Attrs        templ.Attributes
+	Attrs       templ.Attributes
 }
 
 // testimonialMaxRating returns max rating with default 5.
@@ -93,7 +89,7 @@ func TestimonialCard(props TestimonialCardProps) templ.Component {
 					var templ_7745c5c3_Var4 string
 					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue("testimonial-rating-" + props.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/testimonial.templ`, Line: 41, Col: 47}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/testimonial.templ`, Line: 37, Col: 47}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 					if templ_7745c5c3_Err != nil {
@@ -129,7 +125,7 @@ func TestimonialCard(props TestimonialCardProps) templ.Component {
 					var templ_7745c5c3_Var6 string
 					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(strconv.Itoa(i) + " star")
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/testimonial.templ`, Line: 44, Col: 44}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/testimonial.templ`, Line: 40, Col: 44}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 					if templ_7745c5c3_Err != nil {
@@ -152,7 +148,7 @@ func TestimonialCard(props TestimonialCardProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(props.Quote)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/testimonial.templ`, Line: 52, Col: 17}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/testimonial.templ`, Line: 48, Col: 17}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -173,7 +169,7 @@ func TestimonialCard(props TestimonialCardProps) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(props.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/testimonial.templ`, Line: 58, Col: 67}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/testimonial.templ`, Line: 54, Col: 67}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -191,7 +187,7 @@ func TestimonialCard(props TestimonialCardProps) templ.Component {
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(props.Role)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/testimonial.templ`, Line: 60, Col: 57}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/testimonial.templ`, Line: 56, Col: 57}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {

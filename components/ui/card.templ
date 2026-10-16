@@ -5,6 +5,12 @@ import "github.com/emergent-company/go-daisy/devmode"
 // CardSurface selects the card's background surface. The zero value renders the
 // default "bg-base-100"; a non-zero value REPLACES that default class rather
 // than stacking a second bg-* class on top of it.
+//
+// Surface is deliberately an OPEN class passthrough: unlike CardElement and
+// CardBorder (which are structural, closed enums), a caller may legitimately
+// want an arbitrary background utility (bg-red-500, a gradient, a custom tone),
+// so the value is emitted verbatim with no validation. The named constants are
+// convenience defaults, not an exhaustive set.
 type CardSurface string
 
 const (
@@ -21,7 +27,8 @@ const (
 )
 
 // CardElement selects the HTML element CardRaw renders. The zero value renders a
-// <div>. Unknown values panic — CardRaw never silently degrades to a <div>.
+// <div>. It is a CLOSED enum (unlike CardSurface): unknown values panic in
+// devmode and fall back to <div> outside devmode.
 type CardElement string
 
 const (
@@ -41,7 +48,9 @@ const (
 
 // CardBorder selects the card outline. The zero value renders the default
 // "border border-line"; CardBorderStrong uses the emphasised line-strong step
-// and CardBorderNone removes the outline.
+// and CardBorderNone removes the outline. It is a CLOSED enum (unlike
+// CardSurface): unknown values panic in devmode and fall back to the default
+// outline outside devmode.
 type CardBorder string
 
 const (
@@ -57,9 +66,9 @@ const (
 type CardRawProps struct {
 	Class      string           // additional CSS classes on the card root (appended)
 	BodyClass  string           // additional CSS classes on the card body
-	Surface    CardSurface      // zero = bg-base-100; a non-zero surface replaces it
-	As         CardElement      // zero = <div>; unknown values panic
-	Border     CardBorder       // zero = border border-line; CardBorderNone removes it
+	Surface    CardSurface      // zero = bg-base-100; a non-zero surface replaces it (open passthrough)
+	As         CardElement      // zero = <div>; unknown values panic in devmode, else fall back to <div>
+	Border     CardBorder       // zero = border border-line; CardBorderNone removes it; unknown panics in devmode
 	Attrs      templ.Attributes // spread last on the card root
 }
 
@@ -68,26 +77,26 @@ type CardRawProps struct {
 // Surface selects the background (zero = bg-base-100), As selects the element
 // (zero = <div>), and Border selects the outline (zero = border border-line).
 templ CardRaw(props CardRawProps) {
-	{{ validateCardElement(props.As)
+	{{ as := cardElement(props.As, ctx)
 	surface := cardSurfaceClass(props.Surface)
-	border := cardBorderClass(props.Border) }}
-	if props.As == CardElementA {
+	border := cardBorderClass(props.Border, ctx) }}
+	if as == CardElementA {
 		<a class={ "card", surface, border, templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "ui/CardRaw")... } { props.Attrs... }>
 			<div class={ "card-body", templ.KV(props.BodyClass, props.BodyClass != "") }>{ children... }</div>
 		</a>
-	} else if props.As == CardElementButton {
+	} else if as == CardElementButton {
 		<button type="button" class={ "card", surface, border, templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "ui/CardRaw")... } { props.Attrs... }>
 			<div class={ "card-body", templ.KV(props.BodyClass, props.BodyClass != "") }>{ children... }</div>
 		</button>
-	} else if props.As == CardElementSection {
+	} else if as == CardElementSection {
 		<section class={ "card", surface, border, templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "ui/CardRaw")... } { props.Attrs... }>
 			<div class={ "card-body", templ.KV(props.BodyClass, props.BodyClass != "") }>{ children... }</div>
 		</section>
-	} else if props.As == CardElementArticle {
+	} else if as == CardElementArticle {
 		<article class={ "card", surface, border, templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "ui/CardRaw")... } { props.Attrs... }>
 			<div class={ "card-body", templ.KV(props.BodyClass, props.BodyClass != "") }>{ children... }</div>
 		</article>
-	} else if props.As == CardElementLi {
+	} else if as == CardElementLi {
 		<li class={ "card", surface, border, templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "ui/CardRaw")... } { props.Attrs... }>
 			<div class={ "card-body", templ.KV(props.BodyClass, props.BodyClass != "") }>{ children... }</div>
 		</li>
