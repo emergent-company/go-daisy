@@ -102,8 +102,11 @@ const (
 )
 
 // AvatarPresence selects a DaisyUI presence dot — the small colored corner
-// marker (avatar-online / avatar-offline / avatar-away) rendered on the outer
-// .avatar element.
+// marker (avatar-online / avatar-offline) rendered on the outer .avatar
+// element.
+//
+// DaisyUI 5 defines only online and offline; there is no "away" modifier. Add
+// a custom rule before introducing any other state.
 //
 // This is distinct from a text status badge (e.g. BadgeLabel on
 // PersonChipContact, or a Badge like "Active"): the presence dot is a compact
@@ -120,8 +123,6 @@ const (
 	AvatarPresenceOnline AvatarPresence = "avatar-online"
 	// AvatarPresenceOffline renders DaisyUI's grey offline corner dot.
 	AvatarPresenceOffline AvatarPresence = "avatar-offline"
-	// AvatarPresenceAway renders DaisyUI's yellow away corner dot.
-	AvatarPresenceAway AvatarPresence = "avatar-away"
 )
 
 // avatarFallbackIconName returns the icon shown when initials are unavailable,

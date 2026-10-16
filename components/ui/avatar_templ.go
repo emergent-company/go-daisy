@@ -110,8 +110,11 @@ const (
 )
 
 // AvatarPresence selects a DaisyUI presence dot — the small colored corner
-// marker (avatar-online / avatar-offline / avatar-away) rendered on the outer
-// .avatar element.
+// marker (avatar-online / avatar-offline) rendered on the outer .avatar
+// element.
+//
+// DaisyUI 5 defines only online and offline; there is no "away" modifier. Add
+// a custom rule before introducing any other state.
 //
 // This is distinct from a text status badge (e.g. BadgeLabel on
 // PersonChipContact, or a Badge like "Active"): the presence dot is a compact
@@ -128,8 +131,6 @@ const (
 	AvatarPresenceOnline AvatarPresence = "avatar-online"
 	// AvatarPresenceOffline renders DaisyUI's grey offline corner dot.
 	AvatarPresenceOffline AvatarPresence = "avatar-offline"
-	// AvatarPresenceAway renders DaisyUI's yellow away corner dot.
-	AvatarPresenceAway AvatarPresence = "avatar-away"
 )
 
 // avatarFallbackIconName returns the icon shown when initials are unavailable,
@@ -300,7 +301,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Src)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 218, Col: 24}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 219, Col: 24}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 			if templ_7745c5c3_Err != nil {
@@ -313,7 +314,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 218, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 219, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
@@ -354,7 +355,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(init)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 224, Col: 11}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 225, Col: 11}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -485,7 +486,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 			var templ_7745c5c3_Var21 string
 			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(init)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 238, Col: 10}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/avatar.templ`, Line: 239, Col: 10}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 			if templ_7745c5c3_Err != nil {

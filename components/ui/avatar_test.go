@@ -95,7 +95,6 @@ func TestAvatarPresenceModifier(t *testing.T) {
 	}{
 		{AvatarPresenceOnline, "avatar avatar-online"},
 		{AvatarPresenceOffline, "avatar avatar-offline"},
-		{AvatarPresenceAway, "avatar avatar-away"},
 	} {
 		got := renderAvatarFull(t, AvatarProps{Name: "Ada", Presence: tc.presence})
 		if !strings.Contains(got, tc.want) {
@@ -109,7 +108,7 @@ func TestAvatarPresenceModifier(t *testing.T) {
 // .avatar.
 func TestAvatarPresenceAbsentWhenUnset(t *testing.T) {
 	got := renderAvatarFull(t, AvatarProps{Name: "Ada"})
-	for _, mod := range []string{"avatar-online", "avatar-offline", "avatar-away"} {
+	for _, mod := range []string{"avatar-online", "avatar-offline"} {
 		if strings.Contains(got, mod) {
 			t.Errorf("zero-value Presence must not render %q:\n%s", mod, got)
 		}
