@@ -191,7 +191,7 @@ func PersonCellCompact(p PersonCellProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = AvatarFull(AvatarProps{Name: p.Name, Size: AvatarSize6, BadgeClass: avatarColor + " " + textColor, InnerClass: "font-semibold", TextClass: "text-[10px]"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = AvatarFull(AvatarProps{Name: p.Name, Size: AvatarSize6, BadgeClass: avatarColor + " " + textColor, InnerClass: "font-semibold shrink-0", TextClass: "text-[10px]"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -234,7 +234,7 @@ func PersonCellCompact(p PersonCellProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = AvatarFull(AvatarProps{Name: p.Name, Size: AvatarMD, BadgeClass: avatarColor + " " + textColor, InnerClass: "font-bold ring-2 ring-base-100", TextClass: "text-sm"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = AvatarFull(AvatarProps{Name: p.Name, Size: AvatarMD, BadgeClass: avatarColor + " " + textColor, InnerClass: "font-bold ring-2 ring-base-100 shrink-0", TextClass: "text-sm"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

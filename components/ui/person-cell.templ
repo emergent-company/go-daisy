@@ -88,12 +88,12 @@ templ PersonCellCompact(p PersonCellProps) {
 		}
 	</style>
 	<div class="relative person-chip inline-flex items-center gap-1.5 rounded-full px-2 py-1 cursor-default select-none hover:bg-base-200 transition-colors" { devmode.Attrs(ctx, "ui/PersonCell")... }>
-		@AvatarFull(AvatarProps{Name: p.Name, Size: AvatarSize6, BadgeClass: avatarColor + " " + textColor, InnerClass: "font-semibold", TextClass: "text-[10px]"})
+		@AvatarFull(AvatarProps{Name: p.Name, Size: AvatarSize6, BadgeClass: avatarColor + " " + textColor, InnerClass: "font-semibold shrink-0", TextClass: "text-[10px]"})
 		<span class="text-sm font-medium text-base-content leading-none">{ p.Name }</span>
 		<div class="person-card absolute left-[-8px] top-full z-50 w-64 rounded-2xl border border-line bg-base-100 shadow-xl overflow-hidden">
 			<div class={ "h-10 bg-gradient-to-r", gradientFrom, gradientTo }></div>
 			<div class="px-4 pb-3 -mt-5 flex items-end gap-3">
-				@AvatarFull(AvatarProps{Name: p.Name, Size: AvatarMD, BadgeClass: avatarColor + " " + textColor, InnerClass: "font-bold ring-2 ring-base-100", TextClass: "text-sm"})
+				@AvatarFull(AvatarProps{Name: p.Name, Size: AvatarMD, BadgeClass: avatarColor + " " + textColor, InnerClass: "font-bold ring-2 ring-base-100 shrink-0", TextClass: "text-sm"})
 				<div class="pb-0.5 min-w-0">
 					<p class="text-sm font-semibold text-base-content leading-tight truncate">{ p.Name }</p>
 					if p.Subtitle != "" {

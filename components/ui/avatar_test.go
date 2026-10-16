@@ -109,6 +109,21 @@ func TestPersonCellCompactUsesAvatarFull(t *testing.T) {
 	if !strings.Contains(got, ">JD</div>") {
 		t.Errorf("compact avatar initials missing:\n%s", got)
 	}
+	// Regression guards for the bare-`return` footgun: on master, PersonCell's
+	// compact branch was `if p.Compact { @PersonCellCompact(p); return }`. Templ
+	// compiled that `return` as a literal " return" write and fell through to
+	// render the non-compact markup too. The if/else form fixes both symptoms.
+	if strings.Contains(got, "return") {
+		t.Errorf("compact PersonCell must not leak a bare-return literal:\n%s", got)
+	}
+	if strings.Contains(got, `class="flex items-center gap-3"`) {
+		t.Errorf("compact PersonCell must not fall through to non-compact markup:\n%s", got)
+	}
+	// The hand-rolled avatars carried shrink-0 (they are flex items in an
+	// inline-flex chip and a flex card); the AvatarFull migration must keep it.
+	if !strings.Contains(got, "shrink-0") {
+		t.Errorf("compact PersonCell avatars must keep shrink-0:\n%s", got)
+	}
 }
 
 // TestPersonCellCompactCustomColors pins that the compact avatar still honors
@@ -134,5 +149,10 @@ func TestPersonCellNonCompact(t *testing.T) {
 	}
 	if !strings.Contains(got, "alice@example.com") {
 		t.Errorf("non-compact PersonCell must render Subtitle:\n%s", got)
+	}
+	// Defense-in-depth: the non-compact branch must also stay free of a
+	// bare-return literal (the same templ footgun that bit the compact branch).
+	if strings.Contains(got, "return") {
+		t.Errorf("non-compact PersonCell must not contain a bare-return literal:\n%s", got)
 	}
 }
