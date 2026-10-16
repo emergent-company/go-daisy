@@ -394,7 +394,7 @@
 
 /* ── Landing Page ───────────────────────────────────────────────── */
 .landing-gradient-underline {
-  background: linear-gradient(90deg, oklch(var(--p)), oklch(var(--s)));
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
   height: 4px;
   border-radius: 2px;
   bottom: -4px;
