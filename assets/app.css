@@ -19,6 +19,18 @@
 @source not "../install";       /* accidentally-committed root Go binary, scanned in full */
 
 /*
+ * The generated stylesheet is NOT a content source.
+ *
+ * The compiled stylesheet (`staticfs/static/css/app.css`) is excluded from the
+ * Tailwind source scan.  In practice the Tailwind CLI already ignores its own
+ * `-o` output, so this directive is currently defensive (a build with and
+ * without it is byte-identical); it is kept so a future CLI/config change that
+ * *does* scan the generated bundle cannot re-introduce the self-perpetuating-
+ * utility trap the issue describes.
+ */
+@source not "../staticfs/static/css/app.css";       /* generated stylesheet — emitted utilities are not sources (defensive: CLI already ignores its own output) */
+
+/*
  * Safelist for the dynamically-built palette swatches.
  *
  * components/form/palette.templ constructs swatch classes at runtime via
