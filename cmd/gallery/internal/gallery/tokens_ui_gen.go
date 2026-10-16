@@ -207,6 +207,132 @@ func StatusBadgeTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// BadgeLinkTokens returns the DesignToken slice for BadgeLinkWithBoundary.
+func BadgeLinkTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Variant",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "badge-primary",
+			QueryParam: "variant",
+			Options: []galleryruntime.TokenOption{
+				{Value: "badge-accent", Label: "Accent"},
+				{Value: "badge-error", Label: "Error"},
+				{Value: "badge-ghost", Label: "Ghost"},
+				{Value: "badge-info", Label: "Info"},
+				{Value: "badge-neutral", Label: "Neutral"},
+				{Value: "badge-primary", Label: "Primary"},
+				{Value: "badge-secondary", Label: "Secondary"},
+				{Value: "badge-success", Label: "Success"},
+				{Value: "badge-warning", Label: "Warning"},
+			},
+		},
+		{
+			Label:      "Style",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "",
+			QueryParam: "style",
+			Options: []galleryruntime.TokenOption{
+				{Value: "badge-dash", Label: "Dash"},
+				{Value: "", Label: "Default"},
+				{Value: "badge-outline", Label: "Outline"},
+				{Value: "badge-soft", Label: "Soft"},
+			},
+		},
+		{
+			Label:      "Size",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "badge-md",
+			QueryParam: "size",
+			Options: []galleryruntime.TokenOption{
+				{Value: "badge-md", Label: "MD"},
+				{Value: "badge-sm", Label: "SM"},
+				{Value: "badge-xs", Label: "XS"},
+			},
+		},
+		{
+			Label:      "Icon",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "icon",
+		},
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Docs",
+			QueryParam: "label",
+		},
+	}
+}
+
+// BadgeIndicatorTokens returns the DesignToken slice for BadgeIndicatorWithBoundary.
+func BadgeIndicatorTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Variant",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "badge-primary",
+			QueryParam: "variant",
+			Options: []galleryruntime.TokenOption{
+				{Value: "badge-accent", Label: "Accent"},
+				{Value: "badge-error", Label: "Error"},
+				{Value: "badge-ghost", Label: "Ghost"},
+				{Value: "badge-info", Label: "Info"},
+				{Value: "badge-neutral", Label: "Neutral"},
+				{Value: "badge-primary", Label: "Primary"},
+				{Value: "badge-secondary", Label: "Secondary"},
+				{Value: "badge-success", Label: "Success"},
+				{Value: "badge-warning", Label: "Warning"},
+			},
+		},
+		{
+			Label:      "Style",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "",
+			QueryParam: "style",
+			Options: []galleryruntime.TokenOption{
+				{Value: "badge-dash", Label: "Dash"},
+				{Value: "", Label: "Default"},
+				{Value: "badge-outline", Label: "Outline"},
+				{Value: "badge-soft", Label: "Soft"},
+			},
+		},
+		{
+			Label:      "Size",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "badge-md",
+			QueryParam: "size",
+			Options: []galleryruntime.TokenOption{
+				{Value: "badge-md", Label: "MD"},
+				{Value: "badge-sm", Label: "SM"},
+				{Value: "badge-xs", Label: "XS"},
+			},
+		},
+		{
+			Label:      "Position",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "indicator-item indicator-top indicator-end",
+			QueryParam: "position",
+		},
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "5",
+			QueryParam: "label",
+		},
+	}
+}
+
 // AvatarTokens returns the DesignToken slice for AvatarWithBoundary.
 func AvatarTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
@@ -285,6 +411,32 @@ func AlertTokens() []galleryruntime.DesignToken {
 			Type:       galleryruntime.TokenTypeText,
 			Default:    "Operation completed successfully.",
 			QueryParam: "message",
+		},
+	}
+}
+
+// AlertBodyTokens returns the DesignToken slice for AlertBodyWithBoundary.
+func AlertBodyTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Type",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "alert-info",
+			QueryParam: "typ",
+			Options: []galleryruntime.TokenOption{
+				{Value: "alert-error", Label: "Error"},
+				{Value: "alert-info", Label: "Info"},
+				{Value: "alert-success", Label: "Success"},
+				{Value: "alert-warning", Label: "Warning"},
+			},
+		},
+		{
+			Label:      "Icon",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "lucide--circle-check",
+			QueryParam: "icon",
 		},
 	}
 }
