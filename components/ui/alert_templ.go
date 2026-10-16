@@ -16,13 +16,18 @@ type AlertProps struct {
 	Style   AlertStyle
 	Icon    string
 	Message string
-	Attrs   templ.Attributes
+	// Body is an optional children/body slot. When non-nil it renders in place
+	// of the plain Message <span>, enabling composed bodies such as a flex row
+	// with text plus an action button. Leave nil to keep the Message-only path.
+	Body  templ.Component
+	Attrs templ.Attributes
 }
 
 // Alert renders a DaisyUI alert banner.
 // Set Icon to a Lucide icon suffix (e.g. "lucide--circle-check") to show an icon.
 // Leave Icon empty for a text-only alert.
 // Set Style to control the visual variant (solid/soft/outline/dash).
+// Set Body to a templ.Component to render a composed body instead of Message.
 // Attrs is optional; pass nil when not needed.
 func Alert(props AlertProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -85,20 +90,31 @@ func Alert(props AlertProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<span>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		if props.Body != nil {
+			templ_7745c5c3_Err = props.Body.Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.Message)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/alert.templ`, Line: 32, Col: 24}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
-		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.Message)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/alert.templ`, Line: 24, Col: 23}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -14,10 +14,17 @@ tasks:
       - ~/go/bin/templ generate ./...
       - "{{.TAILWIND}} -i {{.CSS_IN}} -o {{.CSS_OUT}} --minify"
 
+  generate:
+    desc: Regenerate boundarytoken and staticfs codegen (committed alongside sources)
+    cmds:
+      - go generate ./cmd/gallery/...
+      - go generate ./staticfs/...
+
   build:
-    desc: Build UI then go build
+    desc: Build UI, regenerate codegen, then go build
     cmds:
       - task: build:ui
+      - task: generate
       - go build ./...
 
   lint:

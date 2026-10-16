@@ -310,7 +310,7 @@ func DataGrid(props DataGridProps) templ.Component {
 					var templ_7745c5c3_Var14 string
 					templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(action.Label)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 126, Col: 23}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 127, Col: 23}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 					if templ_7745c5c3_Err != nil {
@@ -319,6 +319,7 @@ func DataGrid(props DataGridProps) templ.Component {
 					return nil
 				})
 				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
+					Type:    ui.ButtonTypeSubmit,
 					Icon:    action.Icon,
 					Size:    ui.ButtonSM,
 					Variant: ternaryVariant(action.Danger),
@@ -343,7 +344,7 @@ func DataGrid(props DataGridProps) templ.Component {
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue("datagrid-" + props.ID + "-body")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 136, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 137, Col: 71}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
 		if templ_7745c5c3_Err != nil {
@@ -421,7 +422,7 @@ func DataGrid(props DataGridProps) templ.Component {
 						var templ_7745c5c3_Var21 string
 						templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(col.Label)
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 157, Col: 20}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 158, Col: 20}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 						if templ_7745c5c3_Err != nil {
@@ -499,7 +500,7 @@ func DataGrid(props DataGridProps) templ.Component {
 									var templ_7745c5c3_Var25 string
 									templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.ResolveAttributeValue(row.ID)
 									if templ_7745c5c3_Err != nil {
-										return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 173, Col: 26}
+										return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 174, Col: 26}
 									}
 									_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var25)
 									if templ_7745c5c3_Err != nil {

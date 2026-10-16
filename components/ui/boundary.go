@@ -44,6 +44,25 @@ func StatusBadgeWithBoundary(status string) templ.Component {
 	return devmode.ComponentBoundary("StatusBadge", StatusBadge(status), map[string]any{"status": status})
 }
 
+// BadgeLinkWithBoundary wraps Badge as a link-styled badge (<a href> instead of <span>).
+// gallery:token variant,style,size,icon,label
+// gallery:hint href:default(#)
+// gallery:hint label:default(Docs)
+func BadgeLinkWithBoundary(href string, variant BadgeIntent, style BadgeStyle, size BadgeSize, icon string, label string) templ.Component {
+	props := BadgeProps{Label: label, Href: href, Variant: variant, Style: style, Size: size, Icon: icon}
+	return devmode.ComponentBoundary("Badge", Badge(props), props)
+}
+
+// BadgeIndicatorWithBoundary wraps Badge positioned for DaisyUI indicator
+// composition, with its label as the element's direct text content.
+// gallery:token variant,style,size,position,label
+// gallery:hint position:default(indicator-item indicator-top indicator-end)
+// gallery:hint label:default(5)
+func BadgeIndicatorWithBoundary(position string, variant BadgeIntent, style BadgeStyle, size BadgeSize, label string) templ.Component {
+	props := BadgeProps{Label: label, Variant: variant, Style: style, Size: size, Position: position, DirectLabel: true}
+	return devmode.ComponentBoundary("Badge", Badge(props), props)
+}
+
 // AvatarWithBoundary wraps Avatar with a dev-mode component boundary annotation.
 // gallery:token name,icon,size
 // gallery:hint name:default(Jane Smith)
@@ -92,6 +111,17 @@ func AlertWithBoundary(typ AlertType, icon string, message string) templ.Compone
 // Deprecated: use AlertWithBoundary directly.
 func AlertWithIconBoundary(typ AlertType, icon string, message string) templ.Component {
 	return AlertWithBoundary(typ, icon, message)
+}
+
+// AlertBodyWithBoundary wraps Alert with a dev-mode component boundary annotation
+// and an explicit body/children slot (renders in place of the Message span).
+// gallery:token typ,icon
+// gallery:hint icon:default(lucide--circle-check)
+func AlertBodyWithBoundary(typ AlertType, icon string, body templ.Component) templ.Component {
+	return devmode.ComponentBoundary("Alert", Alert(AlertProps{Type: typ, Icon: icon, Body: body}), map[string]any{
+		"type": string(typ),
+		"icon": icon,
+	})
 }
 
 // AlertStyledWithBoundary wraps AlertStyled with a dev-mode component boundary annotation.

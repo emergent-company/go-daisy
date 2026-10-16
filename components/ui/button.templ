@@ -176,7 +176,7 @@ templ Button(props ButtonProps) {
 		</label>
 	} else {
 		<button
-			type={ string(props.Type) }
+			type={ ternary(props.Type == "", string(ButtonTypeButton), string(props.Type)) }
 			class={ "btn",
 				templ.KV(string(props.Variant), props.Variant != ""),
 				templ.KV(string(props.Size), props.Size != ""),

@@ -8,20 +8,29 @@ type AlertProps struct {
 	Style   AlertStyle
 	Icon    string
 	Message string
-	Attrs   templ.Attributes
+	// Body is an optional children/body slot. When non-nil it renders in place
+	// of the plain Message <span>, enabling composed bodies such as a flex row
+	// with text plus an action button. Leave nil to keep the Message-only path.
+	Body  templ.Component
+	Attrs templ.Attributes
 }
 
 // Alert renders a DaisyUI alert banner.
 // Set Icon to a Lucide icon suffix (e.g. "lucide--circle-check") to show an icon.
 // Leave Icon empty for a text-only alert.
 // Set Style to control the visual variant (solid/soft/outline/dash).
+// Set Body to a templ.Component to render a composed body instead of Message.
 // Attrs is optional; pass nil when not needed.
 templ Alert(props AlertProps) {
 	<div role="alert" class={ "alert", templ.KV(string(props.Type), props.Type != ""), templ.KV(string(props.Style), props.Style != "") } { devmode.Attrs(ctx, "ui/Alert")... } { props.Attrs... }>
 		if props.Icon != "" {
 			@IconSpan(props.Icon, "size-5")
 		}
-		<span>{ props.Message }</span>
+		if props.Body != nil {
+			@props.Body
+		} else {
+			<span>{ props.Message }</span>
+		}
 	</div>
 }
 

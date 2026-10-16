@@ -424,6 +424,22 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								return ui.AlertWithBoundary(ui.AlertInfo, "lucide--info", "A new software update is available.")
 							},
 						},
+						{
+							Label: "With action",
+							RenderFunc: func(_ url.Values) templ.Component {
+								body := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									if _, err := io.WriteString(w, `<div class="flex w-full items-center justify-between gap-3"><span class="text-sm">A new version is available.</span>`); err != nil {
+										return err
+									}
+									if err := withText("Update", ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM})).Render(ctx, w); err != nil {
+										return err
+									}
+									_, err := io.WriteString(w, `</div>`)
+									return err
+								})
+								return ui.AlertBodyWithBoundary(ui.AlertInfo, "lucide--info", body)
+							},
+						},
 					},
 				},
 			},
@@ -4151,6 +4167,23 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							Label: "With icon",
 							RenderFunc: func(_ url.Values) templ.Component {
 								return ui.BadgeWithBoundary(ui.BadgeError, ui.BadgeStyleDefault, ui.BadgeSizeMD, false, "lucide--circle-x", "Error")
+							},
+						},
+						{
+							Label: "Link",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return ui.BadgeLinkWithBoundary("#", ui.BadgePrimary, ui.BadgeStyleDefault, ui.BadgeSizeMD, "lucide--book-open", "Docs")
+							},
+						},
+						{
+							Label: "Indicator count",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return seq(
+									rawHTML(`<div class="indicator">`),
+									ui.BadgeIndicatorWithBoundary("indicator-item indicator-top indicator-end", ui.BadgeError, ui.BadgeStyleDefault, ui.BadgeSizeSM, "3"),
+									withText("Inbox", ui.CardWithBoundary("Inbox")),
+									rawHTML(`</div>`),
+								)
 							},
 						},
 					},
