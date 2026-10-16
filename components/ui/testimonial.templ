@@ -14,6 +14,9 @@ type TestimonialCardProps struct {
 	Rating       int    // 1-5 star rating, 0 = no stars shown
 	RatingColor  string // e.g. "bg-orange-400", "rating-warning"
 	MaxRating    int    // defaults to 5
+	// CardBordered is deprecated and retained for source compatibility. It was
+	// historically a no-op (both branches rendered border border-line); the card
+	// border is now always provided by CardRaw's default.
 	CardBordered bool
 	Attrs        templ.Attributes
 }
@@ -26,17 +29,9 @@ func testimonialMaxRating(max int) int {
 	return max
 }
 
-// testimonialCardClass builds the card class string based on bordered flag.
-func testimonialCardClass(bordered bool) string {
-	if bordered {
-		return "card-border shadow-sm border border-line h-full flex flex-col p-6"
-	}
-	return "shadow-sm border border-line h-full flex flex-col p-6"
-}
-
 // TestimonialCard renders a quote card with avatar, name, role, and optional star rating.
 templ TestimonialCard(props TestimonialCardProps) {
-	@CardRaw(testimonialCardClass(props.CardBordered), "", props.Attrs) {
+	@CardRaw(CardRawProps{Class: "shadow-sm h-full flex flex-col p-6", Attrs: props.Attrs}) {
 		// Star rating
 		if props.Rating > 0 {
 			<div class="rating mb-3">

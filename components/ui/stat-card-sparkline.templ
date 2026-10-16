@@ -46,7 +46,7 @@ func sparklineFillColor(s string) string {
 
 // StatCardSparkline renders a KPI stat card with an inline SVG sparkline chart.
 templ StatCardSparkline(props StatCardSparklineProps) {
-	@CardRaw("border border-line shadow-sm h-full", "p-4 flex flex-col gap-3 h-full", props.Attrs) {
+	@CardRaw(CardRawProps{Class: "shadow-sm h-full", BodyClass: "p-4 flex flex-col gap-3 h-full", Attrs: props.Attrs}) {
 		// Icon + value + trend row
 		<div class="flex items-start justify-between gap-2">
 			<div class="min-w-0">

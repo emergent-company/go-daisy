@@ -7,13 +7,14 @@ type SectionProps struct {
 	// Margin is the section wrapper's margin class, e.g. "mt-6" (detail pages)
 	// or "mb-8" (list pages). Default "" (no margin).
 	Margin string
-	// CardClass is the card wrapper's class. Default "card-border".
+	// CardClass is the card wrapper's class. Default "" (CardRaw provides its
+	// own border, so callers no longer need to add a card-border class).
 	CardClass string
 	// BodyClass is the card body's padding class, e.g. "p-0" (lists) or "p-5"
 	// (forms). Default "".
 	BodyClass string
 	// Empty switches the section to the empty-state branch: when true, the
-	// ui.Empty card (default "card-border", no padding) is rendered instead of
+	// ui.Empty card (default bordered card, no padding) is rendered instead of
 	// the children. Gate it on the caller's own condition, e.g.
 	// Empty: len(items) == 0. When false, the children render in the card.
 	Empty bool
@@ -34,7 +35,7 @@ type SectionProps struct {
 	Titleless bool
 	// Wrapperless omits the <section> element (and the <h2> heading) entirely,
 	// rendering the card path directly. Use it when you need a bare card with no
-	// section chrome — e.g. a CardRaw("card-border overflow-hidden", "p-0")
+	// section chrome — e.g. a CardRaw(CardRawProps{Class: "overflow-hidden", BodyClass: "p-0"})
 	// wrapping a divide-y row list — which the titled section layout cannot
 	// express. When Wrapperless is true:
 	//
@@ -45,7 +46,7 @@ type SectionProps struct {
 	//   - Margin is applied to the card element instead of the now-absent section
 	//     wrapper, so outer spacing is preserved.
 	//   - Empty is still honoured: when Empty is true, the default empty-state
-	//     card (card-border, no body padding) renders without a section wrapper.
+	//     card (bordered, no body padding) renders without a section wrapper.
 	//     As with the non-wrapperless Empty branch, CardClass and BodyClass are
 	//     ignored, but Margin still applies to the card.
 	//   - Raw is ignored: Raw's purpose is to skip the card inside a section, and
@@ -62,7 +63,7 @@ type SectionProps struct {
 //
 //	@ui.Section("Object types", ui.SectionProps{
 //		Margin:    "mt-6",
-//		CardClass: "card-border overflow-hidden",
+//		CardClass: "overflow-hidden",
 //		BodyClass: "p-0",
 //		Empty:     len(types) == 0,
 //		EmptyIcon: "lucide--box", EmptyTitle: "No object types", EmptyDesc: "None compiled yet.",
@@ -72,16 +73,14 @@ type SectionProps struct {
 templ Section(title string, props SectionProps) {
 	if props.Wrapperless {
 		if props.Empty {
-			{{ emptyCardClass := "card-border"
-			if props.Margin != "" { emptyCardClass += " " + props.Margin } }}
-			@CardRaw(emptyCardClass, "", nil) {
+			@CardRaw(CardRawProps{Class: props.Margin}) {
 				@Empty(props.EmptyIcon, props.EmptyTitle, props.EmptyDesc)
 			}
 		} else {
-			{{ cardClass := "card-border"
-			if props.CardClass != "" { cardClass = props.CardClass }
-			if props.Margin != "" { cardClass += " " + props.Margin } }}
-			@CardRaw(cardClass, props.BodyClass, nil) {
+			{{ cardClass := props.CardClass
+			if props.CardClass != "" && props.Margin != "" { cardClass += " " }
+			cardClass += props.Margin }}
+			@CardRaw(CardRawProps{Class: cardClass, BodyClass: props.BodyClass}) {
 				if props.Rows {
 					<div class="divide-y divide-line">
 						{ children... }
@@ -97,15 +96,13 @@ templ Section(title string, props SectionProps) {
 				<h2 class="mb-3 text-lg font-semibold tracking-tight">{ title }</h2>
 			}
 			if props.Empty {
-				@CardRaw("card-border", "", nil) {
+				@CardRaw(CardRawProps{}) {
 					@Empty(props.EmptyIcon, props.EmptyTitle, props.EmptyDesc)
 				}
 			} else if props.Raw {
 				{ children... }
 			} else {
-				{{ cardClass := "card-border"
-				if props.CardClass != "" { cardClass = props.CardClass } }}
-				@CardRaw(cardClass, props.BodyClass, nil) {
+				@CardRaw(CardRawProps{Class: props.CardClass, BodyClass: props.BodyClass}) {
 					if props.Rows {
 						<div class="divide-y divide-line">
 							{ children... }

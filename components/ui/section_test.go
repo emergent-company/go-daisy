@@ -41,7 +41,7 @@ func renderCardRaw(t *testing.T, cardClass, bodyClass, child string) string {
 	if child != "" {
 		ctx = templ.WithChildren(ctx, strComponent(child))
 	}
-	if err := CardRaw(cardClass, bodyClass, nil).Render(ctx, &buf); err != nil {
+	if err := CardRaw(CardRawProps{Class: cardClass, BodyClass: bodyClass}).Render(ctx, &buf); err != nil {
 		t.Fatalf("render: %v", err)
 	}
 	return buf.String()
@@ -64,21 +64,21 @@ func TestSectionDefaultOutputLocked(t *testing.T) {
 			title: "Object types",
 			props: SectionProps{},
 			child: `<div>r0</div>`,
-			want:  `<section class=""><h2 class="mb-3 text-lg font-semibold tracking-tight">Object types</h2><div class="card bg-base-100 card-border"><div class="card-body "><div>r0</div></div></div></section>`,
+			want:  `<section class=""><h2 class="mb-3 text-lg font-semibold tracking-tight">Object types</h2><div class="card bg-base-100 border border-line"><div class="card-body"><div>r0</div></div></div></section>`,
 		},
 		{
 			name:  "titleless",
 			title: "Object types",
 			props: SectionProps{Titleless: true},
 			child: `<div>r0</div>`,
-			want:  `<section class=""><div class="card bg-base-100 card-border"><div class="card-body "><div>r0</div></div></div></section>`,
+			want:  `<section class=""><div class="card bg-base-100 border border-line"><div class="card-body"><div>r0</div></div></div></section>`,
 		},
 		{
 			name:  "rows",
 			title: "Object types",
 			props: SectionProps{Rows: true},
 			child: `<div>r0</div><div>r1</div>`,
-			want:  `<section class=""><h2 class="mb-3 text-lg font-semibold tracking-tight">Object types</h2><div class="card bg-base-100 card-border"><div class="card-body "><div class="divide-y divide-line"><div>r0</div><div>r1</div></div></div></div></section>`,
+			want:  `<section class=""><h2 class="mb-3 text-lg font-semibold tracking-tight">Object types</h2><div class="card bg-base-100 border border-line"><div class="card-body"><div class="divide-y divide-line"><div>r0</div><div>r1</div></div></div></div></section>`,
 		},
 		{
 			name:  "raw",
@@ -92,7 +92,7 @@ func TestSectionDefaultOutputLocked(t *testing.T) {
 			title: "Object types",
 			props: SectionProps{Empty: true, EmptyIcon: "lucide--box", EmptyTitle: "No types", EmptyDesc: "None yet"},
 			child: `<div>r0</div>`,
-			want:  `<section class=""><h2 class="mb-3 text-lg font-semibold tracking-tight">Object types</h2><div class="card bg-base-100 card-border"><div class="card-body "><div class="flex flex-col items-center justify-center py-16 text-center px-4"><span class="iconify size-12 text-base-content/20 mb-4 lucide--box"></span><h3 class="text-base font-semibold text-base-content mb-1">No types</h3><p class="text-sm text-base-content/50 mb-4">None yet</p></div></div></div></section>`,
+			want:  `<section class=""><h2 class="mb-3 text-lg font-semibold tracking-tight">Object types</h2><div class="card bg-base-100 border border-line"><div class="card-body"><div class="flex flex-col items-center justify-center py-16 text-center px-4"><span class="iconify size-12 text-base-content/20 mb-4 lucide--box"></span><h3 class="text-base font-semibold text-base-content mb-1">No types</h3><p class="text-sm text-base-content/50 mb-4">None yet</p></div></div></div></section>`,
 		},
 	}
 
@@ -113,7 +113,7 @@ func TestSectionDefaultOutputLocked(t *testing.T) {
 // asserted so class names and nesting cannot silently drift.
 func TestSectionWrapperlessMatchesCardRaw(t *testing.T) {
 	const (
-		cardClass = "card-border overflow-hidden"
+		cardClass = "overflow-hidden"
 		bodyClass = "p-0"
 	)
 	const child = `<div>r0</div><div>r1</div><div>r2</div>`
@@ -125,7 +125,7 @@ func TestSectionWrapperlessMatchesCardRaw(t *testing.T) {
 		Rows:        true,
 	}, child)
 
-	literal := `<div class="card bg-base-100 card-border overflow-hidden"><div class="card-body p-0"><div class="divide-y divide-line"><div>r0</div><div>r1</div><div>r2</div></div></div></div>`
+	literal := `<div class="card bg-base-100 border border-line overflow-hidden"><div class="card-body p-0"><div class="divide-y divide-line"><div>r0</div><div>r1</div><div>r2</div></div></div></div>`
 
 	if got != literal {
 		t.Errorf("wrapperless output != literal target:\n got: %q\nwant: %q", got, literal)
@@ -142,7 +142,7 @@ func TestSectionWrapperlessMatchesCardRaw(t *testing.T) {
 func TestSectionWrapperlessOmitsSectionAndHeading(t *testing.T) {
 	got := renderSection(t, "A heading that must not appear", SectionProps{
 		Wrapperless: true,
-		CardClass:   "card-border overflow-hidden",
+		CardClass:   "overflow-hidden",
 		BodyClass:   "p-0",
 		Rows:        true,
 	}, `<div>r0</div>`)
@@ -169,11 +169,11 @@ func TestSectionWrapperlessEmptySupported(t *testing.T) {
 		EmptyDesc:   "None yet",
 		// CardClass/BodyClass must be ignored, matching the non-wrapperless
 		// Empty branch.
-		CardClass: "card-border overflow-hidden",
+		CardClass: "overflow-hidden",
 		BodyClass: "p-0",
 	}, `<div>r0</div>`)
 
-	want := `<div class="card bg-base-100 card-border"><div class="card-body "><div class="flex flex-col items-center justify-center py-16 text-center px-4"><span class="iconify size-12 text-base-content/20 mb-4 lucide--box"></span><h3 class="text-base font-semibold text-base-content mb-1">No types</h3><p class="text-sm text-base-content/50 mb-4">None yet</p></div></div></div>`
+	want := `<div class="card bg-base-100 border border-line"><div class="card-body"><div class="flex flex-col items-center justify-center py-16 text-center px-4"><span class="iconify size-12 text-base-content/20 mb-4 lucide--box"></span><h3 class="text-base font-semibold text-base-content mb-1">No types</h3><p class="text-sm text-base-content/50 mb-4">None yet</p></div></div></div>`
 
 	if got != want {
 		t.Errorf("wrapperless empty output:\n got: %q\nwant: %q", got, want)
@@ -186,11 +186,11 @@ func TestSectionWrapperlessRawIgnored(t *testing.T) {
 	got := renderSection(t, "ignored", SectionProps{
 		Wrapperless: true,
 		Raw:         true,
-		CardClass:   "card-border overflow-hidden",
+		CardClass:   "overflow-hidden",
 		BodyClass:   "p-0",
 	}, `<div>r0</div>`)
 
-	want := `<div class="card bg-base-100 card-border overflow-hidden"><div class="card-body p-0"><div>r0</div></div></div>`
+	want := `<div class="card bg-base-100 border border-line overflow-hidden"><div class="card-body p-0"><div>r0</div></div></div>`
 
 	if got != want {
 		t.Errorf("wrapperless raw output:\n got: %q\nwant: %q", got, want)
@@ -203,27 +203,28 @@ func TestSectionWrapperlessMarginOnCard(t *testing.T) {
 	got := renderSection(t, "ignored", SectionProps{
 		Wrapperless: true,
 		Margin:      "mt-6",
-		CardClass:   "card-border overflow-hidden",
+		CardClass:   "overflow-hidden",
 		BodyClass:   "p-0",
 		Rows:        true,
 	}, `<div>r0</div>`)
 
-	want := `<div class="card bg-base-100 card-border overflow-hidden mt-6"><div class="card-body p-0"><div class="divide-y divide-line"><div>r0</div></div></div></div>`
+	want := `<div class="card bg-base-100 border border-line overflow-hidden mt-6"><div class="card-body p-0"><div class="divide-y divide-line"><div>r0</div></div></div></div>`
 
 	if got != want {
 		t.Errorf("wrapperless margin output:\n got: %q\nwant: %q", got, want)
 	}
 }
 
-// TestSectionWrapperlessDefaultCardClass proves an empty CardClass falls back
-// to "card-border", matching the non-wrapperless card path default.
+// TestSectionWrapperlessDefaultCardClass proves an empty CardClass produces the
+// default bordered card (the border is provided by CardRaw itself, so no
+// card-border fallback class is needed).
 func TestSectionWrapperlessDefaultCardClass(t *testing.T) {
 	got := renderSection(t, "ignored", SectionProps{
 		Wrapperless: true,
 		BodyClass:   "p-0",
 	}, `<div>r0</div>`)
 
-	want := `<div class="card bg-base-100 card-border"><div class="card-body p-0"><div>r0</div></div></div>`
+	want := `<div class="card bg-base-100 border border-line"><div class="card-body p-0"><div>r0</div></div></div>`
 
 	if got != want {
 		t.Errorf("wrapperless default cardClass output:\n got: %q\nwant: %q", got, want)

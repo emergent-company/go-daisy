@@ -18,7 +18,7 @@ type StatCardProps struct {
 
 // StatCard renders a compact summary widget: icon + big number + label.
 templ StatCard(p StatCardProps) {
-	@CardRaw("border border-line shadow-sm h-full", "p-4 flex flex-row items-center gap-3 h-full", p.Attrs) {
+	@CardRaw(CardRawProps{Class: "shadow-sm h-full", BodyClass: "p-4 flex flex-row items-center gap-3 h-full", Attrs: p.Attrs}) {
 		<div class={ "rounded-xl p-2.5 shrink-0 flex items-center justify-center", p.IconColor }>
 			@IconSpan(p.Icon, "size-5")
 		</div>
@@ -113,7 +113,7 @@ type ProgressCardProps struct {
 // Set Horizontal=true for a compact inline layout.
 templ ProgressCard(props ProgressCardProps) {
 	if props.Horizontal {
-		@CardRaw("shadow-sm border border-line overflow-hidden", "px-4 py-3 flex items-center justify-between gap-3", props.Attrs) {
+		@CardRaw(CardRawProps{Class: "shadow-sm overflow-hidden", BodyClass: "px-4 py-3 flex items-center justify-between gap-3", Attrs: props.Attrs}) {
 			<div>
 				<p class="text-sm font-semibold text-base-content">{ props.Title }</p>
 				if props.Subtitle != "" {
@@ -126,7 +126,7 @@ templ ProgressCard(props ProgressCardProps) {
 			</div>
 		}
 	} else {
-		@CardRaw("shadow-sm border border-line overflow-hidden", "p-0 gap-0", props.Attrs) {
+		@CardRaw(CardRawProps{Class: "shadow-sm overflow-hidden", BodyClass: "p-0 gap-0", Attrs: props.Attrs}) {
 			<div class={ "p-4", props.GradientClass }>
 				<h3 class="text-base font-semibold text-base-content">{ props.Title }</h3>
 				if props.Subtitle != "" {
