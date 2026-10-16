@@ -3,7 +3,10 @@
 This document is the single source of truth for the deprecation lifecycle of
 public symbols in go-daisy. Every symbol marked `Deprecated:` in source must be
 listed in the inventory below, and every inventory entry must correspond to a
-live `Deprecated:` marker. `task lint` enforces this via `scripts/lint-deprecated.sh`.
+live `Deprecated:` marker. `task lint` enforces this via
+`scripts/lint-deprecated.sh`, which also fails when a `.templ` source *calls* a
+deprecated symbol (golangci-lint never reads `.templ`, so those callers are
+otherwise invisible — see #67).
 
 ## Policy
 
@@ -109,3 +112,14 @@ cannot run, and self-checks that coverage has not collapsed.
   to the next top-level declaration, or skipped entirely.
 - **Marker/declaration gap over 30 lines** warns and continues, so the symbol is
   missed rather than failing the build.
+
+The `.templ` caller scan (step 4) is a line-based mini-lexer over `.templ`
+sources, not a type-checker. It detects `alias.Symbol(` (render or expression
+calls, alias resolved against the file's imports) and `@Symbol(` (render calls
+within the symbol's own package). It masks `"…"` and `` `…` `` string literals
+and `//` / `/* */` comments first, so a deprecated name appearing only in prose,
+a doc example, or a URL is not flagged. Known gaps: single-quoted rune literals
+are not tracked, and a deprecated call written inside a string literal is
+invisible by design. Coverage collapse (an empty symbol set or `.templ` file
+set, or a missing known-good sentinel) fails the guard with a distinct status,
+so a broken scan never reports clean.
