@@ -756,7 +756,7 @@ func PersonCellWithBoundary(p PersonCellProps) templ.Component {
 	})
 }
 
-// PersonChipWithBoundary wraps PersonChip with a dev-mode component boundary annotation.
+// PersonChipWithBoundary wraps PersonCell (compact) with a dev-mode component boundary annotation.
 // Deprecated: use PersonCellWithBoundary with PersonCellProps{Compact: true} instead.
 // gallery:token name,avatarColor,textColor
 // gallery:hint name:default(Jane Smith)

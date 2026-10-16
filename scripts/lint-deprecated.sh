@@ -10,6 +10,12 @@
 #
 # The inventory is the single source of truth; keep the two in sync in the
 # same change. See docs/DEPRECATED.md for the full policy.
+#
+# Known limitations (robustness gaps, not current bugs — see docs/DEPRECATED.md
+# "Guard limitations"): the marker→declaration heuristic is line-based and
+# fails open on environmental error. None of these shapes exist in the tree
+# today (all live markers are `// Deprecated:` on their own line, directly above
+# a top-level `templ`/`func`/`type`/`const` declaration).
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

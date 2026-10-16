@@ -40,7 +40,7 @@ type FormFieldProps struct {
 // Field wraps a label + input + error message into a form group.
 //
 // Field is the internal building block shared by FormField, TextInput, and the
-// other labelled form inputs. It is not a public API surface and has no
+// other labelled form inputs. It is an internal building block not intended for direct use; it has no
 // boundary wrapper or gallery entry; callers should use FormField, FormControl,
 // or a specific input component instead of Field directly.
 templ Field(label string, name string, errMsg string) {
