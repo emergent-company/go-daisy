@@ -21,9 +21,19 @@ tasks:
       - go build ./...
 
   lint:
-    desc: Run golangci-lint
+    desc: Run golangci-lint and guard against daisyUI-4 CSS variables
     cmds:
       - golangci-lint run ./...
+      - task: "lint:css"
+
+  "lint:css":
+    desc: Guard source CSS against daisyUI-4 color variables
+    cmds:
+      - >-
+        if grep -nE 'var\(--(bc|b1|b2|b3)\)' components/css/custom.css; then
+        echo 'error: components/css/custom.css references daisyUI-4 color variables (--bc/--b1/--b2/--b3); replace with --color-base-* (see #40)' >&2;
+        exit 1;
+        fi
 
   gallery:
     desc: Build UI then run gallery interactively (logs to stdout)
