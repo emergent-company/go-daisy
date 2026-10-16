@@ -34,12 +34,28 @@ tasks:
       - task: "lint:css"
 
   "lint:css":
-    desc: Guard source CSS against daisyUI-4 color variables
+    desc: Guard source CSS and inline styles against daisyUI-4 color variables
+    # Limitation: the regex matches only the bare `--X` token inside a var()
+    # call with no comma fallback and no surrounding whitespace. It does not
+    # catch a `--X,` fallback, a `--X ` trailing space, or a bare `--X:`
+    # definition. No such usage exists today; tightening the pattern risks
+    # false positives, so the gap is documented rather than closed (see #40).
+    # Source scan prunes the generated staticfs/static bundle (and node_modules
+    # / .git) by full path, so an unrelated source directory named `static` is
+    # still scanned (unlike --exclude-dir, which only matches base names).
     cmds:
-      - >-
-        if grep -nE 'var\(--(p|pf|pc|s|sf|sc|a|af|ac|n|nf|nc|b1|b2|b3|bc|in|inc|su|suc|wa|wac|er|erc)\)' components/css/custom.css; then
-        echo 'error: components/css/custom.css references daisyUI-4 color variables (--p/--s/--a/--n/--pc/--sc/--ac/--nc/--b1/--b2/--b3/--bc/--in/--su/--wa/--er and their focus/content variants); replace with --color-* (see #40)' >&2;
-        exit 1;
+      - |
+        matches=$(find . \
+          -path ./staticfs/static -prune -o \
+          -path ./node_modules -prune -o \
+          -path ./.git -prune -o \
+          -type f \( -name '*.templ' -o -name '*.go' -o -name '*.css' \) \
+          ! -name '*_templ.go' \
+          -print0 | xargs -0 -r grep -nHE 'var\(--(p|pf|pc|s|sf|sc|a|af|ac|n|nf|nc|b1|b2|b3|bc|in|inc|su|suc|wa|wac|er|erc)\)' || true)
+        if [ -n "$matches" ]; then
+          printf '%s\n' "$matches"
+          echo 'error: daisyUI-4 color variables (--p/--s/--a/--n/--pc/--sc/--ac/--nc/--b1/--b2/--b3/--bc/--in/--su/--wa/--er and their focus/content variants) found in source CSS or inline styles (custom.css, .templ, .go); replace with --color-* (see #40)' >&2
+          exit 1
         fi
 
   gallery:
