@@ -99,12 +99,10 @@ type-checker. The following are known robustness gaps, not current bugs — none
 of these shapes exist in the tree today (all 23 live markers are
 `// Deprecated:` on their own line, directly above a top-level
 `templ`/`func`/`type`/`const` declaration). They are documented rather than
-fixed here; the fail-open class is tracked separately (see #60).
+fixed here. The separate *fail-open* class — an environmental failure silently
+passing the guard — was closed in #60: the guard now fails closed when the scan
+cannot run, and self-checks that coverage has not collapsed.
 
-- **Fails open on environmental error.** The `find | xargs | awk` pipeline runs
-  inside a process substitution consumed by `mapfile`, so its exit status is
-  discarded and `set -euo pipefail` does not protect it. A broken `find`/`awk`
-  produces an empty set and the guard reports "in sync".
 - **Trailing marker on a declaration line** (`func Foo() {} // Deprecated: ...`)
   is silently missed — the marker must be on its own line.
 - **Marker on a struct field or inside a `const (...)` block** is mis-attributed

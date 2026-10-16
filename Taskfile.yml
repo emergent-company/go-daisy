@@ -49,20 +49,67 @@ tasks:
     # Source scan prunes the generated staticfs/static bundle (and node_modules
     # / .git) by full path, so an unrelated source directory named `static` is
     # still scanned (unlike --exclude-dir, which only matches base names).
+    #
+    # Fail-closed design (see #60): the file list is built first and asserted
+    # non-empty, and a known-good file (components/css/custom.css) must remain
+    # in it, so a broken or over-pruned `find` fails instead of reporting a
+    # clean tree having scanned nothing. The match grep runs as a single
+    # invocation over the list (no `xargs`), so grep's own exit code is
+    # preserved: 1 = no match (clean) vs >=2 = I/O error (fail). A naive
+    # `pipefail` on the original `find | xargs grep` would false-fail every
+    # clean run, because `xargs` maps any child exit in 1-125 to 123.
     cmds:
       - |
-        matches=$(find . \
-          -path ./staticfs/static -prune -o \
-          -path ./node_modules -prune -o \
-          -path ./.git -prune -o \
-          -type f \( -name '*.templ' -o -name '*.go' -o -name '*.css' \) \
-          ! -name '*_templ.go' \
-          -print0 | xargs -0 -r grep -nHE 'var\(--(p|pf|pc|s|sf|sc|a|af|ac|n|nf|nc|b1|b2|b3|bc|in|inc|su|suc|wa|wac|er|erc)\)' || true)
+        bash -s <<'EOF'
+        set -euo pipefail
+
+        pattern='var\(--(p|pf|pc|s|sf|sc|a|af|ac|n|nf|nc|b1|b2|b3|bc|in|inc|su|suc|wa|wac|er|erc)\)'
+        sentinel='./components/css/custom.css'
+
+        # Build the null-delimited scan list to a temp file so find's exit
+        # status is observable (command substitution would strip NUL bytes).
+        list_file="$(mktemp)"
+        trap 'rm -f "$list_file"' EXIT
+
+        if ! find . \
+              -path ./staticfs/static -prune -o \
+              -path ./node_modules -prune -o \
+              -path ./.git -prune -o \
+              -type f \( -name '*.templ' -o -name '*.go' -o -name '*.css' \) \
+              ! -name '*_templ.go' \
+              -print0 > "$list_file"; then
+          echo 'error: lint:css scan failed: find could not enumerate source files' >&2
+          exit 2
+        fi
+
+        mapfile -d '' files < "$list_file"
+        if [ "${#files[@]}" -eq 0 ]; then
+          echo 'error: lint:css scanned 0 files; refusing to report a clean tree' >&2
+          exit 2
+        fi
+
+        found=0
+        for f in "${files[@]}"; do
+          [ "$f" = "$sentinel" ] && { found=1; break; }
+        done
+        if [ "$found" -ne 1 ]; then
+          echo "error: lint:css self-check failed: known-good file '$sentinel' not in scan set" >&2
+          exit 2
+        fi
+
+        rc=0
+        matches="$(grep -nHE "$pattern" -- "${files[@]}")" || rc=$?
+        if [ "$rc" -gt 1 ]; then
+          echo "error: lint:css scan failed: grep exited $rc" >&2
+          exit 2
+        fi
+
         if [ -n "$matches" ]; then
           printf '%s\n' "$matches"
           echo 'error: daisyUI-4 color variables (--p/--s/--a/--n/--pc/--sc/--ac/--nc/--b1/--b2/--b3/--bc/--in/--su/--wa/--er and their focus/content variants) found in source CSS or inline styles (custom.css, .templ, .go); replace with --color-* (see #40)' >&2
           exit 1
         fi
+        EOF
 
   gallery:
     desc: Build UI then run gallery interactively (logs to stdout)
