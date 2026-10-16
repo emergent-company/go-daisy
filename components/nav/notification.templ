@@ -100,9 +100,14 @@ templ NotificationVariant(style string, opts NotificationVariantOpts) {
 				if len(opts.Items) > 0 {
 					for _, item := range opts.Items {
 						<div class="hover:bg-base-200/20 relative flex items-start gap-3 p-4 transition-all">
-							<div class="avatar avatar-online size-12">
-								<img class="from-primary/80 to-primary/60 mask mask-squircle bg-linear-to-b px-1 pt-1" alt={ item.AvatarAlt } src={ item.AvatarSrc } />
-							</div>
+							@ui.AvatarFull(ui.AvatarProps{
+								Name:       item.AvatarAlt,
+								Src:        item.AvatarSrc,
+								Size:       ui.AvatarSize12,
+								Mask:       "mask mask-squircle",
+								Presence:   ui.AvatarPresenceOnline,
+								FrameClass: "from-primary/80 to-primary/60 bg-linear-to-b px-1 pt-1",
+							})
 							<div class="grow">
 								<p class="text-sm leading-tight">{ item.Message }</p>
 								<p class="text-base-content/60 text-xs">{ item.TimeAgo }</p>
@@ -151,9 +156,12 @@ templ NotificationVariant(style string, opts NotificationVariantOpts) {
 						if len(opts.Items) > 0 {
 							for _, item := range opts.Items {
 								<div class="hover:bg-base-200/20 flex items-start gap-3 p-4 transition-all">
-									<div class="avatar avatar-online size-10">
-										<img class="mask mask-squircle" alt={ item.AvatarAlt } src={ item.AvatarSrc } />
-									</div>
+									@ui.AvatarFull(ui.AvatarProps{
+										Name:     item.AvatarAlt,
+										Src:      item.AvatarSrc,
+										Mask:     "mask mask-squircle",
+										Presence: ui.AvatarPresenceOnline,
+									})
 									<div class="grow">
 										<p class="text-sm leading-tight">{ item.Message }</p>
 										<p class="text-base-content/60 text-xs">{ item.TimeAgo }</p>

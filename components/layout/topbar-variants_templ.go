@@ -284,6 +284,11 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 				Size:      ui.AvatarSize7,
 				Mask:      "rounded-box",
 				TextClass: "text-xs",
+				// #61: FrameClass restores the bg-base-200 backdrop the
+				// hand-rolled avatar carried behind a transparent or
+				// failed-to-load image (dropped when this site migrated
+				// to AvatarFull in #57, whose image branch had no hook).
+				FrameClass: "bg-base-200",
 			}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -404,7 +409,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(opts.Greeting)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 161, Col: 67}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 166, Col: 67}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
@@ -417,7 +422,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(", " + opts.UserName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 161, Col: 119}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 166, Col: 119}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -430,7 +435,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(opts.Subtitle)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 162, Col: 84}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 167, Col: 84}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -447,6 +452,11 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 				Size:      ui.AvatarSize7,
 				Mask:      "rounded-box",
 				TextClass: "text-xs",
+				// #61: FrameClass restores the bg-base-200 backdrop the
+				// hand-rolled avatar carried behind a transparent or
+				// failed-to-load image (dropped when this site migrated
+				// to AvatarFull in #57, whose image branch had no hook).
+				FrameClass: "bg-base-200",
 			}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -458,7 +468,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(opts.UserName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 177, Col: 58}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 187, Col: 58}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
@@ -471,7 +481,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs("@" + opts.UserName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 178, Col: 78}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 188, Col: 78}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
@@ -603,7 +613,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 				var templ_7745c5c3_Var20 templ.SafeURL
 				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(link.Href))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 222, Col: 40}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 232, Col: 40}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 				if templ_7745c5c3_Err != nil {
@@ -629,7 +639,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 				var templ_7745c5c3_Var22 string
 				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(link.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 222, Col: 258}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 232, Col: 258}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 				if templ_7745c5c3_Err != nil {
@@ -733,6 +743,11 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 				Size:      ui.AvatarSize7,
 				Mask:      "rounded-box",
 				TextClass: "text-xs",
+				// #61: FrameClass restores the bg-base-200 backdrop the
+				// hand-rolled avatar carried behind a transparent or
+				// failed-to-load image (dropped when this site migrated
+				// to AvatarFull in #57, whose image branch had no hook).
+				FrameClass: "bg-base-200",
 			}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -874,7 +889,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 				var templ_7745c5c3_Var28 string
 				templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(opts.SearchPlaceholder)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 316, Col: 82}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 331, Col: 82}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 				if templ_7745c5c3_Err != nil {
@@ -897,7 +912,7 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 				var templ_7745c5c3_Var29 string
 				templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(opts.SaveStatus)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 322, Col: 79}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 337, Col: 79}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 				if templ_7745c5c3_Err != nil {

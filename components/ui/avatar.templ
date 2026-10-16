@@ -101,6 +101,30 @@ const (
 	AvatarFallbackInitials AvatarFallback = "initials"
 )
 
+// AvatarPresence selects a DaisyUI presence dot — the small colored corner
+// marker (avatar-online / avatar-offline) rendered on the outer .avatar
+// element.
+//
+// DaisyUI 5 defines only online and offline; there is no "away" modifier. Add
+// a custom rule before introducing any other state.
+//
+// This is distinct from a text status badge (e.g. BadgeLabel on
+// PersonChipContact, or a Badge like "Active"): the presence dot is a compact
+// corner indicator, whereas the badge is a labelled chip. Use Presence for
+// "is this person online right now" and the badge for a human-readable status
+// word. The two are not interchangeable — do not use Presence to carry a text
+// label, and do not use the badge to carry a corner dot.
+type AvatarPresence string
+
+const (
+	// AvatarPresenceNone is the zero-value: no presence dot is rendered.
+	AvatarPresenceNone AvatarPresence = ""
+	// AvatarPresenceOnline renders DaisyUI's green online corner dot.
+	AvatarPresenceOnline AvatarPresence = "avatar-online"
+	// AvatarPresenceOffline renders DaisyUI's grey offline corner dot.
+	AvatarPresenceOffline AvatarPresence = "avatar-offline"
+)
+
 // avatarFallbackIconName returns the icon shown when initials are unavailable,
 // defaulting to the Lucide user glyph.
 func avatarFallbackIconName(icon string) string {
@@ -145,6 +169,9 @@ type AvatarProps struct {
 	Icon     string
 	Size     AvatarSize
 	Mask     string
+	// Presence renders a DaisyUI presence dot on the outer avatar element.
+	// Empty (AvatarPresenceNone, the default) renders no dot.
+	Presence AvatarPresence
 	// Tone selects the initials badge color: AvatarTonePrimary (default) or
 	// AvatarToneMuted.
 	Tone AvatarTone
@@ -155,6 +182,12 @@ type AvatarProps struct {
 	// InnerClass is appended to the initials/icon badge element for additional
 	// treatment, e.g. "font-bold ring-2 ring-base-100".
 	InnerClass string
+	// FrameClass is appended to the image branch's frame element (the div that
+	// carries size/shape/overflow and sits behind the <img>) for background or
+	// padding treatment, e.g. "bg-base-200" behind a transparent or
+	// failed-to-load image. It is ignored when Src is empty. FrameClass never
+	// reaches the <img> tag itself — see TextClass for initials text sizing.
+	FrameClass string
 	// Fallback selects the fallback priority when Src is empty:
 	// AvatarFallbackIcon (default, icon-first) or AvatarFallbackInitials
 	// (initials-first, falling back to Icon when the name is empty).
@@ -172,16 +205,17 @@ type AvatarProps struct {
 // (initials > icon). When initials are unavailable the icon defaults to the
 // Lucide user glyph unless Icon is set.
 // Set Mask to a DaisyUI mask class (e.g. "mask mask-squircle") to override the
-// default rounded shape.
+// default rounded shape. Set Presence to render a DaisyUI corner presence dot
+// (online/offline/away) on the outer element.
 templ AvatarFull(props AvatarProps) {
 	{{ sc := avatarSizeClass(props.Size)
 		shape := "rounded-full" }}
 	if props.Mask != "" {
 		{{ shape = props.Mask }}
 	}
-	<div class="avatar" { devmode.Attrs(ctx, "ui/Avatar")... } { props.Attrs... }>
+	<div class={ "avatar", templ.KV(string(props.Presence), props.Presence != "") } { devmode.Attrs(ctx, "ui/Avatar")... } { props.Attrs... }>
 		if props.Src != "" {
-			<div class={ sc, shape, "overflow-hidden" }>
+			<div class={ sc, shape, "overflow-hidden", templ.KV(props.FrameClass, props.FrameClass != "") }>
 				<img src={ props.Src } alt={ props.Name } class="object-cover w-full h-full"/>
 			</div>
 		} else if props.Fallback == AvatarFallbackInitials {

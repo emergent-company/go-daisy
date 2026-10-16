@@ -103,7 +103,18 @@ templ SidebarCollapsibleNexus(icon string, label string, children []templ.Compon
 templ SidebarAvatarDropdown(avatarSrc string, avatarAlt string) {
 	<div class="dropdown dropdown-bottom dropdown-end" { devmode.Attrs(ctx, "layout/SidebarAvatarDropdown")... }>
 		<div tabindex="0" class="cursor-pointer">
-			@ui.AvatarFull(ui.AvatarProps{Name: avatarAlt, Src: avatarSrc, Initials: "U", Size: ui.AvatarSM, TextClass: "text-sm"})
+			@ui.AvatarFull(ui.AvatarProps{
+				Name:       avatarAlt,
+				Src:        avatarSrc,
+				Initials:   "U",
+				Size:       ui.AvatarSM,
+				TextClass:  "text-sm",
+				// #61: FrameClass restores the bg-base-200 backdrop the
+				// hand-rolled avatar carried behind a transparent or
+				// failed-to-load image (dropped when this site migrated to
+				// AvatarFull in #57, whose image branch had no hook).
+				FrameClass: "bg-base-200",
+			})
 		</div>
 		<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-4 w-44 shadow">
 			<ul class="menu w-full p-2">
