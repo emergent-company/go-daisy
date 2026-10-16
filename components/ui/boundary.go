@@ -220,6 +220,12 @@ func PaginationWithBoundary(currentPage int, totalPages int, baseURL string, tar
 	return devmode.ComponentBoundary("Pagination", PaginationWithProps(props), props)
 }
 
+// PaginationCircleWithBoundary is a deprecated alias for PaginationWithBoundary with circle style.
+// Deprecated: use PaginationWithBoundary(..., PaginationStyleCircle) instead.
+func PaginationCircleWithBoundary(currentPage int, totalPages int, baseURL string, targetID string) templ.Component {
+	return PaginationWithBoundary(currentPage, totalPages, baseURL, targetID, PaginationStyleCircle)
+}
+
 // StatCardWithBoundary wraps StatCard with a dev-mode component boundary annotation.
 func StatCardWithBoundary(p StatCardProps) templ.Component {
 	return devmode.ComponentBoundary("StatCard", StatCard(p), p)

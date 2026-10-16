@@ -51,5 +51,6 @@ live `Deprecated:` marker. `task lint` enforces this via `scripts/lint-deprecate
 - `ui.IconSpanColored`
 - `ui.IconSpanColoredWithBoundary`
 - `ui.PaginationCircle`
+- `ui.PaginationCircleWithBoundary`
 - `ui.PersonChipWithBoundary`
 <!-- DEPRECATED-INVENTORY-END -->
