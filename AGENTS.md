@@ -560,14 +560,6 @@ import "github.com/emergent-company/go-daisy/shared"
 combined := shared.Compose(header, body, footer)
 ```
 
-The `layout` package provides a local wrapper for convenience:
-```go
-// components/layout/sidebar-elements.go
-func children(components ...templ.Component) templ.Component {
-    return shared.Compose(components...)
-}
-```
-
 Do NOT re-implement this loop pattern inline — use `shared.Compose`.
 
 ### Boundary wrapper for components with children

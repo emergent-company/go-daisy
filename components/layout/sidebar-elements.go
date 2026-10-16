@@ -1,9 +1,6 @@
 package layout
 
 import (
-	"context"
-	"io"
-
 	"github.com/a-h/templ"
 )
 
@@ -25,21 +22,6 @@ func firstItem(items []SidebarProjectItem) SidebarProjectItem {
 		return items[0]
 	}
 	return SidebarProjectItem{Name: "Select project"}
-}
-
-// children combines multiple templ.Component into one that renders them sequentially.
-func children(components ...templ.Component) templ.Component {
-	if len(components) == 1 {
-		return components[0]
-	}
-	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		for _, c := range components {
-			if err := c.Render(ctx, w); err != nil {
-				return err
-			}
-		}
-		return nil
-	})
 }
 
 func checkedAttr(open bool) templ.SafeCSS {
