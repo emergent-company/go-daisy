@@ -107,12 +107,6 @@ func AlertWithBoundary(typ AlertType, icon string, message string) templ.Compone
 	})
 }
 
-// AlertWithIconBoundary is a backwards-compatible alias for AlertWithBoundary.
-// Deprecated: use AlertWithBoundary directly.
-func AlertWithIconBoundary(typ AlertType, icon string, message string) templ.Component {
-	return AlertWithBoundary(typ, icon, message)
-}
-
 // AlertBodyWithBoundary wraps Alert with a dev-mode component boundary annotation
 // and an explicit body/children slot (renders in place of the Message span).
 // gallery:token typ,icon
@@ -121,19 +115,6 @@ func AlertBodyWithBoundary(typ AlertType, icon string, body templ.Component) tem
 	return devmode.ComponentBoundary("Alert", Alert(AlertProps{Type: typ, Icon: icon, Body: body}), map[string]any{
 		"type": string(typ),
 		"icon": icon,
-	})
-}
-
-// AlertStyledWithBoundary wraps AlertStyled with a dev-mode component boundary annotation.
-// gallery:token typ,style,icon,message
-// gallery:hint message:default(New software update available.)
-// gallery:hint icon:default(lucide--info)
-func AlertStyledWithBoundary(typ AlertType, style AlertStyle, icon string, message string) templ.Component {
-	return devmode.ComponentBoundary("AlertStyled", AlertStyled(typ, style, icon, message, nil), map[string]any{
-		"type":    string(typ),
-		"style":   string(style),
-		"icon":    icon,
-		"message": message,
 	})
 }
 
@@ -237,12 +218,6 @@ func PaginationWithBoundary(currentPage int, totalPages int, baseURL string, tar
 		Style:       style,
 	}
 	return devmode.ComponentBoundary("Pagination", PaginationWithProps(props), props)
-}
-
-// PaginationCircleWithBoundary is a deprecated alias for PaginationWithBoundary with circle style.
-// Deprecated: use PaginationWithBoundary(..., PaginationStyleCircle) instead.
-func PaginationCircleWithBoundary(currentPage int, totalPages int, baseURL string, targetID string) templ.Component {
-	return PaginationWithBoundary(currentPage, totalPages, baseURL, targetID, PaginationStyleCircle)
 }
 
 // StatCardWithBoundary wraps StatCard with a dev-mode component boundary annotation.
@@ -761,22 +736,6 @@ func StatCardMinimalWithBoundary(item StatCardMinimalItem) templ.Component {
 	})
 }
 
-// StatCardIconCornerWithBoundary wraps StatCardMinimal (icon-corner style) with a dev-mode component boundary annotation.
-// Deprecated: use StatCardMinimalWithBoundary with Icon/IconColor set instead.
-// gallery:token label,value,icon,iconColor,trend,trendLabel
-// gallery:hint label:default(Revenue)
-// gallery:hint value:default($48,290)
-func StatCardIconCornerWithBoundary(item StatCardIconCornerItem) templ.Component {
-	return devmode.ComponentBoundary("StatCardMinimal", StatCardMinimal(item), map[string]any{
-		"label":      item.Label,
-		"value":      item.Value,
-		"icon":       item.Icon,
-		"iconColor":  item.IconColor,
-		"trend":      string(item.Trend),
-		"trendLabel": item.TrendLabel,
-	})
-}
-
 // PersonCellWithBoundary wraps PersonCell with a dev-mode component boundary annotation.
 // gallery:token name,subtitle,size
 // gallery:hint name:default(Alice Johnson)
@@ -845,39 +804,6 @@ func FABWithBoundary(icon string, actions []FABAction) templ.Component {
 		"icon":        icon,
 		"actionCount": len(actions),
 	})
-}
-
-// ButtonGlowWithBoundary wraps ButtonGlow with a dev-mode component boundary annotation.
-// gallery:token variant,size,style,typ,shape,icon,loading,block
-// gallery:hint href:default(#)
-// ButtonGlowWithBoundary is a deprecated alias for ButtonWithBoundary with glow enabled.
-// Deprecated: use ButtonWithBoundary(..., glow: true) directly.
-func ButtonGlowWithBoundary(href string, variant ButtonVariant, size ButtonSize, style ButtonStyle, typ ButtonType, shape ButtonShape, icon string, loading bool, block bool) templ.Component {
-	props := ButtonProps{
-		Href:    href,
-		Variant: variant,
-		Size:    size,
-		Style:   style,
-		Type:    typ,
-		Shape:   shape,
-		Icon:    icon,
-		Loading: loading,
-		Block:   block,
-		Glow:    true,
-	}
-	return devmode.ComponentBoundary("ButtonGlow", Button(props), props)
-}
-
-// AnimatedGradientTextWithBoundary wraps AnimatedGradientText with a dev-mode component boundary annotation.
-// gallery:token text,fromColor,toColor,size,weight
-// gallery:hint text:default(go-daisy)
-// gallery:hint fromColor:default(from-primary)
-// gallery:hint toColor:default(to-secondary)
-// AnimatedGradientTextWithBoundary is a deprecated alias for GradientTextWithBoundary with animation enabled.
-// Deprecated: use GradientTextWithBoundary and pass an animated GradientTextProps.
-func AnimatedGradientTextWithBoundary(text string, fromColor string, toColor string, size string, weight string) templ.Component {
-	props := GradientTextProps{Text: text, FromColor: fromColor, ToColor: toColor, Size: size, Weight: weight, Animate: true}
-	return devmode.ComponentBoundary("AnimatedGradientText", GradientText(props), props)
 }
 
 // GradientTextWithBoundary wraps GradientText with a dev-mode component boundary annotation.
@@ -972,17 +898,6 @@ func DrawerToggleWithBoundary(drawerID string, label string, variant string) tem
 func ThemeControllerWithBoundary(theme string, inputType ThemeInputType, label string, checked bool) templ.Component {
 	props := ThemeControllerProps{Theme: theme, InputType: inputType, Label: label, Checked: checked}
 	return devmode.ComponentBoundary("ThemeController", ThemeController(props), props)
-}
-
-// ThemeControllerBtnWithBoundary wraps ThemeControllerBtn with a dev-mode component boundary annotation.
-// ThemeControllerBtnWithBoundary is a deprecated alias for ThemeController button variant.
-// Deprecated: use ThemeController(ThemeControllerProps{Theme: theme, Checked: checked}) directly.
-func ThemeControllerBtnWithBoundary(theme string, checked bool) templ.Component {
-	props := ThemeControllerProps{Theme: theme, Checked: checked}
-	return devmode.ComponentBoundary("ThemeControllerBtn", ThemeController(props), map[string]any{
-		"theme":   theme,
-		"checked": checked,
-	})
 }
 
 // ThemeSwitcherWithBoundary wraps ThemeSwitcher with a dev-mode boundary annotation.
@@ -1184,16 +1099,6 @@ func ProgressBarWithBoundary() templ.Component {
 	return devmode.ComponentBoundary("ProgressBar", ProgressBar(), nil)
 }
 
-// Hover3DCardLayeredWithBoundary wraps Hover3DCardLayered with a dev-mode component boundary annotation.
-// gallery:token extraClass
-// gallery:hint extraClass:default(rounded-2xl w-64 h-40 bg-primary)
-func Hover3DCardLayeredWithBoundary(extraClass string, layers []templ.Component) templ.Component {
-	return devmode.ComponentBoundary("Hover3DCardLayered", Hover3DCardLayered(extraClass, layers), map[string]any{
-		"extraClass": extraClass,
-		"layerCount": len(layers),
-	})
-}
-
 // HTMXIndicatorWithBoundary wraps HTMXIndicator with a dev-mode component boundary annotation.
 // gallery:token id
 // gallery:hint id:default(spinner)
@@ -1205,18 +1110,6 @@ func HTMXIndicatorWithBoundary(id string) templ.Component {
 // gallery:token variant,size
 func SimpleButtonWithBoundary(label string, variant ButtonVariant, size ButtonSize) templ.Component {
 	return devmode.ComponentBoundary("SimpleButton", SimpleButton(label, variant, size, false, nil), map[string]any{
-		"label":   label,
-		"variant": string(variant),
-		"size":    string(size),
-	})
-}
-
-// SimpleButtonGlowWithBoundary wraps SimpleButtonGlow with a dev-mode component boundary annotation.
-// gallery:token variant,size
-// SimpleButtonGlowWithBoundary is a deprecated alias for SimpleButtonWithBoundary with glow enabled.
-// Deprecated: use SimpleButtonWithBoundary with a glow-enabled call directly.
-func SimpleButtonGlowWithBoundary(label string, variant ButtonVariant, size ButtonSize) templ.Component {
-	return devmode.ComponentBoundary("SimpleButtonGlow", SimpleButton(label, variant, size, true, nil), map[string]any{
 		"label":   label,
 		"variant": string(variant),
 		"size":    string(size),
@@ -1347,20 +1240,6 @@ func SheetWithBoundary(side string, open bool) templ.Component {
 	)
 	inner := shared.RenderInto(Sheet(SheetProps{ID: "demo-sheet", Side: SheetSide(side), Open: open}), panelContent)
 	return devmode.ComponentBoundary("Sheet", inner, map[string]any{"side": side, "open": open})
-}
-
-// AlpineThemeToggleWithBoundary wraps ThemeToggle with Alpine driver.
-//
-// Deprecated: use ThemeToggleWithBoundary("alpine") instead.
-func AlpineThemeToggleWithBoundary() templ.Component {
-	return ThemeToggleWithBoundary("alpine")
-}
-
-// AlpineToastWithBoundary wraps Toast with Alpine driver.
-//
-// Deprecated: use ToastWithBoundary(typ, message, "alpine") instead.
-func AlpineToastWithBoundary(typ ToastType, message string) templ.Component {
-	return ToastWithBoundary(typ, message, "alpine")
 }
 
 // IconPickerWithBoundary wraps IconPicker with a dev-mode component boundary annotation.

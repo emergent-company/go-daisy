@@ -95,24 +95,6 @@ func PageHeadingWithBoundary(props PageHeadingProps) templ.Component {
 	})
 }
 
-// Deprecated: use PageTitleVariantWithBoundary("minimal", opts) instead.
-func PageTitleMinimalWithBoundary(title string, steps []BreadcrumbItem) templ.Component {
-	return PageTitleVariantWithBoundary("minimal", PageTitleVariantOpts{
-		Title: title,
-		Steps: steps,
-	})
-}
-
-// Deprecated: use PageTitleVariantWithBoundary("editor", opts) instead.
-func PageTitleEditorWithBoundary(steps []BreadcrumbItem, title, subtitle string, actions []PageTitleEditorAction) templ.Component {
-	return PageTitleVariantWithBoundary("editor", PageTitleVariantOpts{
-		Title:    title,
-		Subtitle: subtitle,
-		Steps:    steps,
-		Actions:  actions,
-	})
-}
-
 // FooterMinimalWithBoundary wraps FooterMinimal with a dev-mode component boundary annotation.
 func FooterMinimalWithBoundary(copyright string, links []FooterLink) templ.Component {
 	return devmode.ComponentBoundary("FooterMinimal", FooterMinimal(copyright, links), map[string]any{

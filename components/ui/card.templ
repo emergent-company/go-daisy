@@ -187,7 +187,7 @@ type StatCardMinimalItem struct {
 	// When empty, defaults to "vs last month".
 	ComparisonLabel string
 	// Icon is a Lucide icon suffix, e.g. "lucide--briefcase".
-	// When set, StatCardMinimal renders as StatCardIconCorner style with a
+	// When set, StatCardMinimal renders as the icon-corner style with a
 	// floating icon badge and a soft trend pill; otherwise as the minimal layout.
 	Icon string
 	// IconColor is a Tailwind text-* class for the icon colour.
@@ -197,7 +197,7 @@ type StatCardMinimalItem struct {
 }
 
 // StatCardMinimal renders a KPI stat card with a trend indicator (↑↓).
-// When item.Icon is set, it renders as StatCardIconCorner style with a
+// When item.Icon is set, it renders as the icon-corner style with a
 // floating icon badge and a soft trend pill; otherwise as the minimal layout.
 templ StatCardMinimal(item StatCardMinimalItem) {
 	if item.Icon != "" {
@@ -233,14 +233,4 @@ templ StatCardMinimal(item StatCardMinimalItem) {
 			</div>
 		}
 	}
-}
-
-// StatCardIconCornerItem holds data for a single StatCardIconCorner cell.
-// Deprecated: use StatCardMinimalItem with Icon/IconColor set instead.
-type StatCardIconCornerItem = StatCardMinimalItem
-
-// StatCardIconCorner renders a stat card with a floating icon in the top corner and a soft trend badge.
-// Deprecated: use StatCardMinimal with Icon/IconColor set instead.
-templ StatCardIconCorner(item StatCardMinimalItem) {
-	@StatCardMinimal(item)
 }

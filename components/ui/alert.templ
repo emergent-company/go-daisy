@@ -33,21 +33,3 @@ templ Alert(props AlertProps) {
 		}
 	</div>
 }
-
-// AlertStyled renders a DaisyUI alert with both type and style.
-// Deprecated: use Alert(AlertProps{Type: typ, Style: style, ...}) directly.
-templ AlertStyled(typ AlertType, style AlertStyle, icon string, message string, attrs templ.Attributes) {
-	@Alert(AlertProps{Type: typ, Style: style, Icon: icon, Message: message, Attrs: attrs})
-}
-
-// InlineAlert is a backwards-compatible alias for Alert without an icon.
-// Deprecated: use Alert(AlertProps{Type: typ, Message: message}) directly.
-templ InlineAlert(typ AlertType, message string) {
-	@Alert(AlertProps{Type: typ, Message: message})
-}
-
-// InlineAlertWithIcon is a backwards-compatible alias for Alert with an icon.
-// Deprecated: use Alert(AlertProps{Type: typ, Icon: icon, Message: message}) directly.
-templ InlineAlertWithIcon(typ AlertType, icon string, message string) {
-	@Alert(AlertProps{Type: typ, Icon: icon, Message: message})
-}

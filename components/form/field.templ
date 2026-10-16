@@ -39,8 +39,10 @@ type FormFieldProps struct {
 
 // Field wraps a label + input + error message into a form group.
 //
-// Deprecated: use FormControl instead. FormControl supports label positioning,
-// hints, and is the canonical form wrapper for all input types.
+// Field is the internal building block shared by FormField, TextInput, and the
+// other labelled form inputs. It is not a public API surface and has no
+// boundary wrapper or gallery entry; callers should use FormField, FormControl,
+// or a specific input component instead of Field directly.
 templ Field(label string, name string, errMsg string) {
 	<div class="form-control mb-3" { devmode.Attrs(ctx, "form/Field")... }>
 		if label != "" {
