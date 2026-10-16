@@ -19,6 +19,25 @@
 @source not "../install";       /* accidentally-committed root Go binary, scanned in full */
 
 /*
+ * Generated stylesheet and vendored Nexus fixtures are NOT content sources.
+ *
+ * The vendored Nexus HTML fixtures under `cmd/nexus/internal/handler/nxhtml/`
+ * (69 files) name legacy daisyUI-4 tokens (`border-base-200` / `border-base-300`
+ * and the `lucide--*` icon set) that no in-tree component uses anymore.  They
+ * are the single remaining "source" that keeps those utilities in the bundle:
+ * excluding them drops ~44 KB of dead rules (500 158 → 456 012 bytes).
+ *
+ * The compiled stylesheet (`staticfs/static/css/app.css`) is also excluded.
+ * In practice the Tailwind CLI already ignores its own `-o` output, so this
+ * directive is currently defensive (a build with and without it is byte-
+ * identical); it is kept so a future CLI/config change that *does* scan the
+ * generated bundle cannot re-introduce the self-perpetuating-utility trap the
+ * issue describes.
+ */
+@source not "../staticfs/static/css/app.css";       /* generated stylesheet — emitted utilities are not sources (defensive: CLI already ignores its own output) */
+@source not "../cmd/nexus/internal/handler/nxhtml"; /* vendored Nexus fixtures naming legacy daisyUI-4 tokens (drops ~44 KB) */
+
+/*
  * Safelist for the dynamically-built palette swatches.
  *
  * components/form/palette.templ constructs swatch classes at runtime via
