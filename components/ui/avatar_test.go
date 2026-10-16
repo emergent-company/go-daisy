@@ -85,6 +85,76 @@ func TestAvatarNumericSizes(t *testing.T) {
 	}
 }
 
+// TestAvatarPresenceModifier pins Presence: each value must render its DaisyUI
+// modifier on the outer .avatar element (the dot is positioned against the
+// whole avatar, not the inner badge).
+func TestAvatarPresenceModifier(t *testing.T) {
+	for _, tc := range []struct {
+		presence AvatarPresence
+		want     string
+	}{
+		{AvatarPresenceOnline, "avatar avatar-online"},
+		{AvatarPresenceOffline, "avatar avatar-offline"},
+		{AvatarPresenceAway, "avatar avatar-away"},
+	} {
+		got := renderAvatarFull(t, AvatarProps{Name: "Ada", Presence: tc.presence})
+		if !strings.Contains(got, tc.want) {
+			t.Errorf("Presence %q must render %q on the outer .avatar element:\n%s", tc.presence, tc.want, got)
+		}
+	}
+}
+
+// TestAvatarPresenceAbsentWhenUnset pins the zero-value convention: an unset
+// Presence must emit no presence modifier and leave the outer element a bare
+// .avatar.
+func TestAvatarPresenceAbsentWhenUnset(t *testing.T) {
+	got := renderAvatarFull(t, AvatarProps{Name: "Ada"})
+	for _, mod := range []string{"avatar-online", "avatar-offline", "avatar-away"} {
+		if strings.Contains(got, mod) {
+			t.Errorf("zero-value Presence must not render %q:\n%s", mod, got)
+		}
+	}
+	if !strings.Contains(got, `class="avatar"`) {
+		t.Errorf("zero-value Presence must leave the outer element as bare .avatar:\n%s", got)
+	}
+}
+
+// TestAvatarFrameClassAppliesToImageFrame pins FrameClass: it is appended to
+// the image branch's frame div (the element carrying size/shape/overflow), not
+// the <img> tag.
+func TestAvatarFrameClassAppliesToImageFrame(t *testing.T) {
+	got := renderAvatarFull(t, AvatarProps{Name: "Ada", Src: "https://example.com/a.png", FrameClass: "bg-base-200"})
+
+	if !strings.Contains(got, "overflow-hidden bg-base-200") {
+		t.Errorf("FrameClass must be appended to the image frame div:\n%s", got)
+	}
+	imgStart := strings.Index(got, "<img")
+	if imgStart == -1 {
+		t.Fatalf("expected <img> in the image branch:\n%s", got)
+	}
+	if strings.Contains(got[imgStart:], "bg-base-200") {
+		t.Errorf("FrameClass must not reach the <img> tag:\n%s", got[imgStart:])
+	}
+}
+
+// TestAvatarFrameClassAbsentWhenUnset pins the zero-value convention for the
+// image branch: an unset FrameClass emits no extra class.
+func TestAvatarFrameClassAbsentWhenUnset(t *testing.T) {
+	got := renderAvatarFull(t, AvatarProps{Name: "Ada", Src: "https://example.com/a.png"})
+	if strings.Contains(got, "bg-base-200") {
+		t.Errorf("unset FrameClass must emit no extra class:\n%s", got)
+	}
+}
+
+// TestAvatarFrameClassIgnoredWithoutSrc pins that FrameClass is an image-branch
+// hook only: with no Src the frame div does not exist, so the class is dropped.
+func TestAvatarFrameClassIgnoredWithoutSrc(t *testing.T) {
+	got := renderAvatarFull(t, AvatarProps{Name: "Ada", FrameClass: "bg-base-200"})
+	if strings.Contains(got, "bg-base-200") {
+		t.Errorf("FrameClass must be ignored when Src is empty:\n%s", got)
+	}
+}
+
 // renderPersonCell renders PersonCell to its HTML string.
 func renderPersonCell(t *testing.T, p PersonCellProps) string {
 	t.Helper()

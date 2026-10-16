@@ -85,6 +85,7 @@ func AvatarFullWithBoundary(props AvatarProps) templ.Component {
 		"size":     string(props.Size),
 		"tone":     string(props.Tone),
 		"fallback": string(props.Fallback),
+		"presence": string(props.Presence),
 	})
 }
 

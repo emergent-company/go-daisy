@@ -116,6 +116,11 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 						Size:      ui.AvatarSize7,
 						Mask:      "rounded-box",
 						TextClass: "text-xs",
+						// #61: FrameClass restores the bg-base-200 backdrop the
+						// hand-rolled avatar carried behind a transparent or
+						// failed-to-load image (dropped when this site migrated
+						// to AvatarFull in #57, whose image branch had no hook).
+						FrameClass: "bg-base-200",
 					})
 					</div>
 					<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-44 shadow">
@@ -172,6 +177,11 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 						Size:      ui.AvatarSize7,
 						Mask:      "rounded-box",
 						TextClass: "text-xs",
+						// #61: FrameClass restores the bg-base-200 backdrop the
+						// hand-rolled avatar carried behind a transparent or
+						// failed-to-load image (dropped when this site migrated
+						// to AvatarFull in #57, whose image branch had no hook).
+						FrameClass: "bg-base-200",
 					})
 						<div>
 							<p class="leading-none font-medium">{ opts.UserName }</p>
@@ -263,6 +273,11 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 						Size:      ui.AvatarSize7,
 						Mask:      "rounded-box",
 						TextClass: "text-xs",
+						// #61: FrameClass restores the bg-base-200 backdrop the
+						// hand-rolled avatar carried behind a transparent or
+						// failed-to-load image (dropped when this site migrated
+						// to AvatarFull in #57, whose image branch had no hook).
+						FrameClass: "bg-base-200",
 					})
 					</div>
 					<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-44 shadow">
