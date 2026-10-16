@@ -119,8 +119,9 @@ templ DataGrid(props DataGridProps) {
 									x-bind:value="selected.join(',')"
 								/>
 								@ui.Button(ui.ButtonProps{
-									Icon: action.Icon,
-									Size: ui.ButtonSM,
+									Type:   ui.ButtonTypeSubmit,
+									Icon:   action.Icon,
+									Size:   ui.ButtonSM,
 									Variant: ternaryVariant(action.Danger),
 								}) {
 									{ action.Label }

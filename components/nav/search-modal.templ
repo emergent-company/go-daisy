@@ -44,7 +44,7 @@ templ SearchModal(style string, opts SearchModalOpts) {
 					@ui.IconSpan("lucide--search", "text-base-content/60 size-4.5")
 					<input class="grow" placeholder="Search" aria-label="Search" type="search" />
 					<form method="dialog">
-						@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeCircle, Attrs: templ.Attributes{"aria-label": "Close"}}){
+						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeCircle, Attrs: templ.Attributes{"aria-label": "Close"}}){
 							@ui.IconSpan("lucide--x", "text-base-content/80 size-4")
 						}
 					</form>
@@ -76,7 +76,7 @@ templ SearchModal(style string, opts SearchModalOpts) {
 @ui.IconSpan("lucide--search", "text-base-content/60 size-4.5")
 						<input class="grow" placeholder="Search" aria-label="Search" type="search" />
 						<form method="dialog">
-							@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeCircle, Attrs: templ.Attributes{"aria-label": "Close"}}){
+							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeSubmit, Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeCircle, Attrs: templ.Attributes{"aria-label": "Close"}}){
 							@ui.IconSpan("lucide--x", "text-base-content/80 size-4")
 							}
 						</form>

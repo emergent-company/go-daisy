@@ -508,9 +508,9 @@ func Button(props ButtonProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var19 string
-			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.ResolveAttributeValue(string(props.Type))
+			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.ResolveAttributeValue(ternary(props.Type == "", string(ButtonTypeButton), string(props.Type)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/button.templ`, Line: 179, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/button.templ`, Line: 179, Col: 81}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var19)
 			if templ_7745c5c3_Err != nil {
