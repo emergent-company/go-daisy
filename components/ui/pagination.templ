@@ -73,17 +73,6 @@ templ PaginationWithProps(props PaginationProps) {
 	}
 }
 
-// Pagination renders a join-based square pagination strip.
-// Deprecated: use PaginationWithProps with Style=PaginationStyleSquare instead.
-templ Pagination(currentPage int, totalPages int, baseURL string, targetID string) {
-	@PaginationWithProps(PaginationProps{
-		CurrentPage: currentPage,
-		TotalPages:  totalPages,
-		BaseURL:     baseURL,
-		TargetID:    targetID,
-	})
-}
-
 // PaginationCircle renders a circle-style pagination button strip.
 // Deprecated: use PaginationWithProps with Style=PaginationStyleCircle instead.
 templ PaginationCircle(currentPage int, totalPages int, baseURL string, targetID string) {
@@ -96,7 +85,7 @@ templ PaginationCircle(currentPage int, totalPages int, baseURL string, targetID
 	})
 }
 
-// squaredButtons renders the Pagination default (square) button strip inside a join div.
+// squaredButtons renders the square button strip inside a join div.
 templ squaredButtons(props PaginationProps) {
 	<div class="join">
 		<a

@@ -489,38 +489,8 @@ func Avatar(name string, src string, icon string, size AvatarSize, mask string, 
 	})
 }
 
-// PlaceholderAvatar is a backwards-compatible alias for Avatar with an icon.
-// Deprecated: use AvatarFull(AvatarProps{Icon: icon, Size: size}) directly.
-func PlaceholderAvatar(icon string, size AvatarSize) templ.Component {
-	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
-			return templ_7745c5c3_CtxErr
-		}
-		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-		if !templ_7745c5c3_IsBuffer {
-			defer func() {
-				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err == nil {
-					templ_7745c5c3_Err = templ_7745c5c3_BufErr
-				}
-			}()
-		}
-		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var21 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var21 == nil {
-			templ_7745c5c3_Var21 = templ.NopComponent
-		}
-		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = AvatarFull(AvatarProps{Icon: icon, Size: size}).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		return nil
-	})
-}
-
-// PersonChipContact holds optional contact details shown in the PersonChip hover card.
+// PersonChipContact holds optional contact details shown in the PersonCell
+// compact hover card (exposed via PersonChipWithBoundary).
 type PersonChipContact struct {
 	Email string
 	Role  string
@@ -530,52 +500,6 @@ type PersonChipContact struct {
 	BadgeClass string
 	// ProfileHref is the optional "View profile" link URL.
 	ProfileHref string
-}
-
-// Deprecated: use PersonCell with Compact=true instead.
-// PersonChip renders an inline avatar+name chip with a CSS-only hover card revealing contact details.
-// avatarColor: a Tailwind bg-* class for the initials avatar (e.g. "bg-primary").
-// textColor: a Tailwind text-* class for the initials contrast (e.g. "text-primary-content").
-// gradientFrom/To: Tailwind from-*/to-* classes for the card header gradient (e.g. "from-primary/20 to-primary/5").
-func PersonChip(name string, avatarColor string, textColor string, gradientFrom string, gradientTo string, contact PersonChipContact) templ.Component {
-	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
-			return templ_7745c5c3_CtxErr
-		}
-		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-		if !templ_7745c5c3_IsBuffer {
-			defer func() {
-				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err == nil {
-					templ_7745c5c3_Err = templ_7745c5c3_BufErr
-				}
-			}()
-		}
-		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var22 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var22 == nil {
-			templ_7745c5c3_Var22 = templ.NopComponent
-		}
-		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = PersonCell(PersonCellProps{
-			Name:         name,
-			Subtitle:     contact.Role,
-			Compact:      true,
-			AvatarColor:  avatarColor,
-			TextColor:    textColor,
-			GradientFrom: gradientFrom,
-			GradientTo:   gradientTo,
-			Email:        contact.Email,
-			BadgeLabel:   contact.BadgeLabel,
-			BadgeClass:   contact.BadgeClass,
-			ProfileHref:  contact.ProfileHref,
-		}).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		return nil
-	})
 }
 
 var _ = templruntime.GeneratedTemplate

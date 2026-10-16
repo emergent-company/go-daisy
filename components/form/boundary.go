@@ -297,16 +297,6 @@ func WizardStepperWithBoundary(id string, steps []WizardStep, panels []WizardSte
 	})
 }
 
-// LabelWithBoundary wraps Label with a dev-mode component boundary annotation.
-func LabelWithBoundary(props LabelProps, children templ.Component) templ.Component {
-	inner := shared.RenderInto(Label(props), children)
-	return devmode.ComponentBoundary("Label", inner, map[string]any{
-		"text":    props.Text,
-		"altText": props.AltText,
-		"for":     props.For,
-	})
-}
-
 // ValidatorInputWithBoundary wraps ValidatorInput with a dev-mode component boundary annotation.
 func ValidatorInputWithBoundary(children templ.Component) templ.Component {
 	inner := shared.RenderInto(ValidatorInput(), children)

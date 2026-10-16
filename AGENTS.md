@@ -137,7 +137,7 @@ Primitive DaisyUI components (~73). All are `templ.Component` values returned by
 
 - `Button`, `Badge`, `Card`, `Avatar`
 - `Toast`, `Alert`, `Loader`, `EmptyState`
-- `Pagination`, `Filter`, `ActionMenu`, `StatCard`
+- `PaginationWithProps`, `Filter`, `ActionMenu`, `StatCard`
 - `Chart` (ApexCharts), `Carousel` (SwiperJS), `Diff`, `Timeline`
 - `Accordion` (vanilla/Alpine), `Tabs` (vanilla/Alpine)
 - `Dropdown`, `Drawer`, `Hero`, `CommandPalette`
@@ -524,7 +524,7 @@ Prefer Props structs over flat positional parameters for all new components. Pro
 | Component | Current | Preferred |
 |---|---|---|
 | Alert | positional: `typ, icon, message, attrs` | `AlertProps{...}` |
-| Pagination | positional: `currentPage, totalPages, baseURL, targetID` | `PaginationProps{...}` |
+| PaginationWithProps | `PaginationProps{...}` (positional square variant removed; `PaginationCircle` remains deprecated) | `PaginationProps{...}` |
 | Toast | positional: `typ, message` | `ToastProps{...}` |
 | Avatar | positional: `name, src, icon, size, attrs` | `AvatarProps{...}` |
 

@@ -219,13 +219,8 @@ templ Avatar(name string, src string, icon string, size AvatarSize, mask string,
 	@AvatarFull(AvatarProps{Name: name, Src: src, Icon: icon, Size: size, Mask: mask, Attrs: attrs})
 }
 
-// PlaceholderAvatar is a backwards-compatible alias for Avatar with an icon.
-// Deprecated: use AvatarFull(AvatarProps{Icon: icon, Size: size}) directly.
-templ PlaceholderAvatar(icon string, size AvatarSize) {
-	@AvatarFull(AvatarProps{Icon: icon, Size: size})
-}
-
-// PersonChipContact holds optional contact details shown in the PersonChip hover card.
+// PersonChipContact holds optional contact details shown in the PersonCell
+// compact hover card (exposed via PersonChipWithBoundary).
 type PersonChipContact struct {
 	Email string
 	Role  string
@@ -235,25 +230,4 @@ type PersonChipContact struct {
 	BadgeClass string
 	// ProfileHref is the optional "View profile" link URL.
 	ProfileHref string
-}
-
-// Deprecated: use PersonCell with Compact=true instead.
-// PersonChip renders an inline avatar+name chip with a CSS-only hover card revealing contact details.
-// avatarColor: a Tailwind bg-* class for the initials avatar (e.g. "bg-primary").
-// textColor: a Tailwind text-* class for the initials contrast (e.g. "text-primary-content").
-// gradientFrom/To: Tailwind from-*/to-* classes for the card header gradient (e.g. "from-primary/20 to-primary/5").
-templ PersonChip(name string, avatarColor string, textColor string, gradientFrom string, gradientTo string, contact PersonChipContact) {
-	@PersonCell(PersonCellProps{
-		Name:         name,
-		Subtitle:     contact.Role,
-		Compact:      true,
-		AvatarColor:  avatarColor,
-		TextColor:    textColor,
-		GradientFrom: gradientFrom,
-		GradientTo:   gradientTo,
-		Email:        contact.Email,
-		BadgeLabel:   contact.BadgeLabel,
-		BadgeClass:   contact.BadgeClass,
-		ProfileHref:  contact.ProfileHref,
-	})
 }

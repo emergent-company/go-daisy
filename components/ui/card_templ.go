@@ -797,7 +797,7 @@ type StatCardMinimalItem struct {
 	// When empty, defaults to "vs last month".
 	ComparisonLabel string
 	// Icon is a Lucide icon suffix, e.g. "lucide--briefcase".
-	// When set, StatCardMinimal renders as StatCardIconCorner style with a
+	// When set, StatCardMinimal renders as the icon-corner style with a
 	// floating icon badge and a soft trend pill; otherwise as the minimal layout.
 	Icon string
 	// IconColor is a Tailwind text-* class for the icon colour.
@@ -807,7 +807,7 @@ type StatCardMinimalItem struct {
 }
 
 // StatCardMinimal renders a KPI stat card with a trend indicator (↑↓).
-// When item.Icon is set, it renders as StatCardIconCorner style with a
+// When item.Icon is set, it renders as the icon-corner style with a
 // floating icon badge and a soft trend pill; otherwise as the minimal layout.
 func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -982,41 +982,6 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		}
-		return nil
-	})
-}
-
-// StatCardIconCornerItem holds data for a single StatCardIconCorner cell.
-// Deprecated: use StatCardMinimalItem with Icon/IconColor set instead.
-type StatCardIconCornerItem = StatCardMinimalItem
-
-// StatCardIconCorner renders a stat card with a floating icon in the top corner and a soft trend badge.
-// Deprecated: use StatCardMinimal with Icon/IconColor set instead.
-func StatCardIconCorner(item StatCardMinimalItem) templ.Component {
-	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
-			return templ_7745c5c3_CtxErr
-		}
-		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-		if !templ_7745c5c3_IsBuffer {
-			defer func() {
-				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err == nil {
-					templ_7745c5c3_Err = templ_7745c5c3_BufErr
-				}
-			}()
-		}
-		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var43 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var43 == nil {
-			templ_7745c5c3_Var43 = templ.NopComponent
-		}
-		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = StatCardMinimal(item).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
 		}
 		return nil
 	})

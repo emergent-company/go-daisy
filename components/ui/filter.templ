@@ -2,13 +2,13 @@ package ui
 
 import "github.com/emergent-company/go-daisy/devmode"
 
-// FilterCardProps configures a FilterCard or CompactFilterBar form wrapper.
+// FilterCardProps configures a FilterCard form wrapper.
 type FilterCardProps struct {
 	Action string
 	Method string // defaults to "get"
 	Target string // hx-target selector
 	Swap   string // hx-swap strategy
-	// Inline renders the bar without a card wrapper (equivalent to CompactFilterBar).
+	// Inline renders the bar without a card wrapper.
 	Inline bool
 }
 
@@ -67,19 +67,5 @@ templ FilterCard(props FilterCardProps) {
 				</form>
 			</div>
 		</div>
-	}
-}
-
-// CompactFilterBar is an alias for FilterCard with Inline=true.
-// Deprecated: set FilterCardProps.Inline = true instead.
-templ CompactFilterBar(props FilterCardProps) {
-	@FilterCard(FilterCardProps{
-		Action: props.Action,
-		Method: props.Method,
-		Target: props.Target,
-		Swap:   props.Swap,
-		Inline: true,
-	}) {
-		{ children... }
 	}
 }

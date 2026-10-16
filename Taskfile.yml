@@ -32,6 +32,12 @@ tasks:
     cmds:
       - golangci-lint run ./...
       - task: "lint:css"
+      - task: "lint:deprecated"
+
+  "lint:deprecated":
+    desc: "Guard Deprecated: markers against docs/DEPRECATED.md inventory"
+    cmds:
+      - bash scripts/lint-deprecated.sh
 
   "lint:css":
     desc: Guard source CSS and inline styles against daisyUI-4 color variables

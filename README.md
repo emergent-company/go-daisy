@@ -20,7 +20,7 @@ Components live under `components/` and are organized by package:
 
 | Package | Contents |
 |---|---|
-| `components/ui` | Primitives: Button, Badge, Card, Avatar, Toast, Alert, Pagination, Chart, ProgressBar, Frame, Dashboard, Aura, Dialog, ConfirmDialog, etc. |
+| `components/ui` | Primitives: Button, Badge, Card, Avatar, Toast, Alert, PaginationWithProps, Chart, ProgressBar, Frame, Dashboard, Aura, Dialog, ConfirmDialog, etc. |
 | `components/form` | Form field wrappers, inputs, selects, wizards, OTP, ColorInput, DatalistInput |
 | `components/layout` | Full-page shell, sidebar, navbar, LayoutCustomizer |
 | `components/nav` | PageHeader, TabMenu, TopBar, Megamenu, breadcrumbs, menus |
@@ -86,7 +86,7 @@ Or use the ready-made Alpine variants:
 @ui.AlpineTabs(ui.TabsProps{...})
 @ui.AlpineDropdown(ui.DropdownBottom) { ... }
 @ui.AlpineAccordionItem("Section", false) { ... }
-@ui.AlpineThemeToggle()
+@ui.ThemeToggle(ui.ThemeToggleProps{Driver: "alpine"})
 ```
 
 ### Real-Time Updates

@@ -26,13 +26,6 @@ templ ThemeToggle(props ThemeToggleProps) {
 	}
 }
 
-// AlpineThemeToggle renders a sun/moon theme toggle using Alpine.js.
-//
-// Deprecated: use ThemeToggle(ThemeToggleProps{Driver: "alpine"}) instead.
-templ AlpineThemeToggle() {
-	@alpineThemeToggle()
-}
-
 // vanillaThemeToggle renders the vanilla inline-JS theme toggle.
 templ vanillaThemeToggle() {
 	<label class="swap swap-rotate cursor-pointer" { devmode.Attrs(ctx, "ui/ThemeToggle")... }>

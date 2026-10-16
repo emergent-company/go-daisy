@@ -47,18 +47,3 @@ templ Hover3DCard(props Hover3DCardProps) {
 		</div>
 	}
 }
-
-// Hover3DCardLayered renders a DaisyUI hover-3d card with multiple named layers.
-// Deprecated: use Hover3DCard(Hover3DCardProps{Layers: ...}) directly.
-templ Hover3DCardLayered(extraClass string, layers []templ.Component) {
-	<div
-		class={ "hover-3d", templ.KV(extraClass, extraClass != "") }
-		{ devmode.Attrs(ctx, "ui/Hover3DCardLayered")... }
-	>
-		for i, layer := range layers {
-			<div class={ "hover-3d-layer-" + strconv.Itoa(i+1) }>
-				@layer
-			</div>
-		}
-	</div>
-}
