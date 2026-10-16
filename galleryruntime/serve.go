@@ -54,7 +54,7 @@ func Serve(opts Options) error {
 
 	e := echo.New()
 	e.HideBanner = true
-	e.Use(middleware.Logger())
+	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Recover())
 
 	// Static assets (CSS, JS) embedded in go-daisy's staticfs.

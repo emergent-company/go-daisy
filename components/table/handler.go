@@ -22,9 +22,10 @@ func ParseSort(q url.Values, defaultBy string, defaultDir SortDir) SortParams {
 	}
 	dir := SortAsc
 	rawDir := strings.ToLower(strings.TrimSpace(q.Get("sort_dir")))
-	if rawDir == "" {
+	switch rawDir {
+	case "":
 		dir = defaultDir
-	} else if rawDir == "desc" {
+	case "desc":
 		dir = SortDesc
 	}
 	return SortParams{By: by, Dir: dir}
