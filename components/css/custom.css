@@ -17,7 +17,7 @@
  * as with any theme variable.
  *
  * Border colour was spread across three ad-hoc tokens for the same visual role
- * (`border-base-200`, `border-base-300`, `border-base-content/10`), with no
+ * (`--color-base-200`, `--color-base-300`, `--color-base-content` at 10%), with no
  * ladder to match a component against: `ui.Card` and `ui.StatCard` are both
  * cards yet disagreed on their own outline, and dropdown surfaces used two
  * different tokens. This is the single named scale.
@@ -58,7 +58,7 @@
  *                divider inside a surface, and a floating surface's edge
  *                (popover, menu, modal) where the shadow carries the elevation.
  *
- * `line` is the default because `border-base-200` is what the majority of
+ * `line` is the default because `--color-base-200` is what the majority of
  * in-tree sites already used (89 lines in `components/`, 102 with `pages/`), so
  * most components render byte-identically. Nothing quieter than `line` is
  * defined on purpose: a rule that needs to be quieter is `border-line/50`

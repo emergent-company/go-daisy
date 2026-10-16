@@ -57,7 +57,7 @@ class={ templ.KV(custom, custom != ""), templ.KV("default-class", custom == "") 
 ```
 
 **Borders always come from the line ladder** (`border-line`, `border-line-strong`,
-`border-line-translucent`) — never `border-base-200` / `border-base-300` /
+`border-line-translucent`) — never `border-base-300` /
 `border-base-content/N`. See §12.
 
 ---
@@ -229,8 +229,8 @@ Every border, divider and rule comes from the **line ladder** in
 `components/css/custom.css` (the only go-daisy stylesheet consumers load, which is
 why it is declared there — `assets/app.css` imports that file, so the library
 registers it too). Three named steps replace the three ad-hoc tokens
-(`border-base-200`, `border-base-300`, `border-base-content/10`) that used to
-compete for the same visual role.
+(`--color-base-200`, `--color-base-300`, `--color-base-content` at 10%) that
+used to compete for the same visual role.
 
 | Token | Value | Use it for |
 |---|---|---|
@@ -250,7 +250,7 @@ class="border-line-strong h-7 w-px border-e"
 class="rounded-box border border-line-translucent bg-base-200/40"
 
 // Wrong — raw base tokens; no ladder to match against
-class="card bg-base-100 border border-base-200"
+class="card bg-base-100 border border-base-300"
 class="rounded-box border border-base-content/10"
 ```
 
