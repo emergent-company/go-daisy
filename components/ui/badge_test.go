@@ -56,9 +56,24 @@ func TestBadgeDirectLabel(t *testing.T) {
 	}
 
 	// Non-direct keeps the nested label span for backward compatibility.
+	// Assert via span-closer count (2 = outer badge + inner label) rather than
+	// pinning the fragile empty-class default (`<span class="">`).
 	nested := renderBadge(t, BadgeProps{Label: "5"})
-	if !strings.Contains(nested, `<span class="">5</span>`) {
-		t.Errorf("Default badge must keep the nested label <span>:\n%s", nested)
+	if got := strings.Count(nested, "</span>"); got != 2 {
+		t.Errorf("Default badge must wrap the label in a nested <span> (2 span closers), got %d:\n%s", got, nested)
+	}
+}
+
+// TestBadgeMaxWidthNoPositionPinsExactClass pins the exact outer class attribute
+// for the zero-Position + MaxWidth case against the pre-Position (master) output.
+// A raw empty Position expression would inject an empty class token (extra
+// whitespace) into the class list, which the substring-based assertions above
+// cannot detect. This exact prefix pin catches that class of divergence.
+func TestBadgeMaxWidthNoPositionPinsExactClass(t *testing.T) {
+	got := renderBadge(t, BadgeProps{Label: "x", MaxWidth: "max-w-24"})
+	const wantPrefix = `<span class="badge gap-1 overflow-hidden max-w-24">`
+	if !strings.HasPrefix(got, wantPrefix) {
+		t.Errorf("Badge with MaxWidth and zero Position must render the exact master class attribute:\n got: %q\nwant prefix: %q", got, wantPrefix)
 	}
 }
 

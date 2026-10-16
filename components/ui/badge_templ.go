@@ -122,7 +122,7 @@ func Badge(props BadgeProps) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		if props.Href != "" {
-			var templ_7745c5c3_Var2 = []any{"badge gap-1", templ.KV(string(props.Variant), props.Variant != "" && props.Color == ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth, props.Position}
+			var templ_7745c5c3_Var2 = []any{"badge gap-1", templ.KV(string(props.Variant), props.Variant != "" && props.Color == ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth, templ.KV(props.Position, props.Position != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -197,7 +197,7 @@ func Badge(props BadgeProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			var templ_7745c5c3_Var6 = []any{"badge gap-1", templ.KV(string(props.Variant), props.Variant != "" && props.Color == ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth, props.Position}
+			var templ_7745c5c3_Var6 = []any{"badge gap-1", templ.KV(string(props.Variant), props.Variant != "" && props.Color == ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth, templ.KV(props.Position, props.Position != "")}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var6...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

@@ -94,7 +94,7 @@ func StatusIntentFor(status string) BadgeIntent {
 // Set DirectLabel to render Label as the element's direct text content.
 templ Badge(props BadgeProps) {
 	if props.Href != "" {
-		<a href={ templ.URL(props.Href) } class={ "badge gap-1", templ.KV(string(props.Variant), props.Variant != "" && props.Color == ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth, props.Position }
+		<a href={ templ.URL(props.Href) } class={ "badge gap-1", templ.KV(string(props.Variant), props.Variant != "" && props.Color == ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth, templ.KV(props.Position, props.Position != "") }
 			if props.Color != "" {
 				style={ accentStyle(props.Color) }
 			}
@@ -102,7 +102,7 @@ templ Badge(props BadgeProps) {
 			@badgeContent(props)
 		</a>
 	} else {
-		<span class={ "badge gap-1", templ.KV(string(props.Variant), props.Variant != "" && props.Color == ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth, props.Position }
+		<span class={ "badge gap-1", templ.KV(string(props.Variant), props.Variant != "" && props.Color == ""), templ.KV(string(props.Style), props.Style != ""), templ.KV(string(props.Size), props.Size != ""), templ.KV("overflow-hidden", props.MaxWidth != ""), props.MaxWidth, templ.KV(props.Position, props.Position != "") }
 			if props.Color != "" {
 				style={ accentStyle(props.Color) }
 			}
