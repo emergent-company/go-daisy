@@ -29,19 +29,19 @@ const (
 // DiffEntry describes a single structural difference.
 type DiffEntry struct {
 	Type     DiffType `json:"type"`
-	Path     string   `json:"path"`     // CSS selector path to element
+	Path     string   `json:"path"`      // CSS selector path to element
 	NexusVal string   `json:"nexus_val"` // value from nexus-html reference
 	GoDaisy  string   `json:"godaisy"`   // value from go-daisy output
 }
 
 // PageResult holds the comparison result for one page.
 type PageResult struct {
-	Page        PageMapping `json:"page"`
-	Status      string      `json:"status"` // "ok", "error", "diff"
-	Error       string      `json:"error,omitempty"`
-	NexusChars  int         `json:"nexus_chars"`
-	GoDaisyChars int        `json:"godaisy_chars"`
-	Diffs       []DiffEntry `json:"diffs"`
+	Page         PageMapping `json:"page"`
+	Status       string      `json:"status"` // "ok", "error", "diff"
+	Error        string      `json:"error,omitempty"`
+	NexusChars   int         `json:"nexus_chars"`
+	GoDaisyChars int         `json:"godaisy_chars"`
+	Diffs        []DiffEntry `json:"diffs"`
 }
 
 // CompareAll fetches all pages and compares them.

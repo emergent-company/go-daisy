@@ -5,14 +5,20 @@ import (
 )
 
 func initials(name string) string {
-	if len(name) == 0 { return "?" }
+	if len(name) == 0 {
+		return "?"
+	}
 	r := []rune(name)
-	if len(r) >= 2 { return string(r[:2]) }
+	if len(r) >= 2 {
+		return string(r[:2])
+	}
 	return string(r[0])
 }
 
 func capFirst(s string) string {
-	if len(s) == 0 { return s }
+	if len(s) == 0 {
+		return s
+	}
 	return strings.ToUpper(s[:1]) + s[1:]
 }
 

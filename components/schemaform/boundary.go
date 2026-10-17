@@ -10,7 +10,7 @@ import (
 // gallery:hint namePrefix:default(values)
 func FieldsWithBoundary(props FieldsProps) templ.Component {
 	return devmode.ComponentBoundary("SchemaFields", Fields(props), map[string]any{
-		"namePrefix":  props.NamePrefix,
-		"fieldCount":  len(props.Fields),
+		"namePrefix": props.NamePrefix,
+		"fieldCount": len(props.Fields),
 	})
 }

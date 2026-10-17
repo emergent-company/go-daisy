@@ -210,7 +210,7 @@ func buildGridProps(c echo.Context) table.DataGridProps {
 	roleFilter := roleFilterComponent(baseURL)
 
 	return table.DataGridProps{
-		ID:               "users",
+		ID: "users",
 		Columns: []table.DataGridColumn{
 			{Key: "name", Label: "Name", Sortable: false},
 			{Key: "email", Label: "Email", Sortable: false},
