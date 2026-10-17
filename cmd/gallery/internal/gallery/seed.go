@@ -7417,7 +7417,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{Label: "Support", Icon: "lucide--help-circle"},
 								{Label: "Keyboard Shortcuts", Icon: "lucide--keyboard"},
 							},
-						}); err != nil {
+						}).Render(context.Background(), &buf); err != nil {
 							panic(err) // static seed registration: rendering to a Builder cannot fail
 						}
 						return buf.String()
@@ -7442,7 +7442,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{Name: "Task Planner", Description: "Organize your workflow", Icon: "lucide--list-checks"},
 								{Name: "Spark Ideas", Description: "Brainstorming assistant", Icon: "lucide--lightbulb"},
 							},
-						}); err != nil {
+						}).Render(context.Background(), &buf); err != nil {
 							panic(err) // static seed registration: rendering to a Builder cannot fail
 						}
 						return buf.String()
