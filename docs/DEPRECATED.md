@@ -48,16 +48,16 @@ successors (`form.FormToggle`, `form.FormCheckbox`) are not interchangeable:
 | | shorthand (`form.Toggle`) | `Form*` (`form.FormToggle`) | building block (`form.ToggleInput`) |
 |---|---|---|---|
 | colour | forces `toggle-primary` | neutral `toggle` | caller's `Class`, none forced |
-| DOM | `<label class="label">` + input | `<div class="form-control">` + `<label>` + input | bare `<input>` |
+| DOM | `<label class="label">` + input | `<div class="flex flex-col items-start">` + `<label>` + input | bare `<input>` |
 | label text | rendered by the component | rendered by the component | rendered by the caller |
 | error slot | no | yes (`FieldError`) | no |
 
 The emphasis drop from `toggle-primary` to neutral is a deliberate part of the
 `Form*` design (neutral fields, emphasis added by the page), so it is **not** a
 faithful migration for a site whose switch is visibly primary today — and the
-`form-control` wrapper (a class with no rules in the shipped DaisyUI 5
-stylesheet) is noise inside a `flex items-center justify-between` row whose
-title and description the caller already renders.
+`Form*` wrapper is an extra vertical stack that a caller-owned
+`flex items-center justify-between` row does not need, since the row already
+renders its own title and description.
 
 When migrating a deprecated shorthand, choose by layout:
 

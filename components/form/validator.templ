@@ -18,11 +18,11 @@ templ ValidatorHint(text string) {
 }
 
 // ValidatedField is a convenience wrapper that combines a label, a ValidatorInput slot,
-// and a ValidatorHint into a single form-control block.
+// and a ValidatorHint into a single field block.
 // inputName wires the label's for= attribute to the input for accessibility.
 // Children should be the raw <input> element.
 templ ValidatedField(labelText string, hintText string, inputName string) {
-	<div class="form-control mb-3" { devmode.Attrs(ctx, "form/ValidatedField")... }>
+	<div class="mb-3" { devmode.Attrs(ctx, "form/ValidatedField")... }>
 		if labelText != "" {
 			<label
 				class="label pb-1"

@@ -31,7 +31,7 @@ type FileUploadProps struct {
 
 // FileUpload renders a FilePond file upload area.
 templ FileUpload(props FileUploadProps) {
-	<div class="form-control w-full" { devmode.Attrs(ctx, "form/FileUpload")... }>
+	<div class="w-full" { devmode.Attrs(ctx, "form/FileUpload")... }>
 		if props.Label != "" {
 			<label class="label" for={ props.Name }>
 				<span class="label-text">{ props.Label }</span>

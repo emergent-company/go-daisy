@@ -408,7 +408,7 @@ func CheckboxInput(name string, label string, checked bool, errMsg string) templ
 			templ_7745c5c3_Var21 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"form-control mb-3\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"mb-3\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -850,8 +850,8 @@ func Checkbox(name string, checked bool, label string) templ.Component {
 // checked, "", nil) for a stacked form field whose label belongs to the field,
 // or ToggleInput(ToggleInputProps{Name: name, Checked: checked, Class:
 // "toggle toggle-primary"}) for a caller-owned row (title and description
-// rendered next to the control). FormToggle renders a neutral switch and adds
-// a form-control wrapper; ToggleInput renders the bare switch, so the caller
+// rendered next to the control). FormToggle renders a neutral switch inside a
+// stacked field wrapper; ToggleInput renders the bare switch, so the caller
 // keeps its own row layout and colour.
 func Toggle(name string, checked bool, label string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {

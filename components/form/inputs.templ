@@ -52,7 +52,7 @@ templ checkableInput(name string, checked bool, label string, inputClass string,
 // CheckboxInput renders a labeled checkbox with error display.
 // Deprecated: use FormCheckbox(name, label, checked, errMsg, nil) instead.
 templ CheckboxInput(name string, label string, checked bool, errMsg string) {
-	<div class="form-control mb-3" { devmode.Attrs(ctx, "form/CheckboxInput")... }>
+	<div class="mb-3" { devmode.Attrs(ctx, "form/CheckboxInput")... }>
 		@checkableInput(name, checked, label, "checkbox checkbox-sm", false, false, templ.Attributes{"id": name}, "")
 		@FieldError(errMsg)
 	</div>
@@ -130,8 +130,8 @@ templ Checkbox(name string, checked bool, label string) {
 // checked, "", nil) for a stacked form field whose label belongs to the field,
 // or ToggleInput(ToggleInputProps{Name: name, Checked: checked, Class:
 // "toggle toggle-primary"}) for a caller-owned row (title and description
-// rendered next to the control). FormToggle renders a neutral switch and adds
-// a form-control wrapper; ToggleInput renders the bare switch, so the caller
+// rendered next to the control). FormToggle renders a neutral switch inside a
+// stacked field wrapper; ToggleInput renders the bare switch, so the caller
 // keeps its own row layout and colour.
 templ Toggle(name string, checked bool, label string) {
 	@checkableInput(name, checked, label, "toggle toggle-primary", false, false, nil, "form/Toggle")

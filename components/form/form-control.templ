@@ -78,16 +78,20 @@ templ FormSelect(name string, label string, selected string, options [][2]string
 }
 
 // FormCheckbox renders a labeled DaisyUI checkbox with optional HTMX attrs.
+// The root is a vertical stack so the error slot sits below the control; the
+// label keeps its content width, matching the bare checkable input.
 templ FormCheckbox(name string, label string, checked bool, errMsg string, attrs templ.Attributes) {
-	<div class="form-control" { devmode.Attrs(ctx, "form/FormCheckbox")... }>
+	<div class="flex flex-col items-start" { devmode.Attrs(ctx, "form/FormCheckbox")... }>
 		@checkableInput(name, checked, label, "checkbox", false, false, attrs, "form/FormCheckbox")
 		@FieldError(errMsg)
 	</div>
 }
 
 // FormToggle renders a labeled DaisyUI toggle switch with optional HTMX attrs.
+// The root is a vertical stack so the error slot sits below the control; the
+// label keeps its content width, matching the bare checkable input.
 templ FormToggle(name string, label string, checked bool, errMsg string, attrs templ.Attributes) {
-	<div class="form-control" { devmode.Attrs(ctx, "form/FormToggle")... }>
+	<div class="flex flex-col items-start" { devmode.Attrs(ctx, "form/FormToggle")... }>
 		@checkableInput(name, checked, label, "toggle", false, false, attrs, "form/FormToggle")
 		@FieldError(errMsg)
 	</div>

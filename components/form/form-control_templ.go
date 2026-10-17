@@ -478,6 +478,8 @@ func FormSelect(name string, label string, selected string, options [][2]string,
 }
 
 // FormCheckbox renders a labeled DaisyUI checkbox with optional HTMX attrs.
+// The root is a vertical stack so the error slot sits below the control; the
+// label keeps its content width, matching the bare checkable input.
 func FormCheckbox(name string, label string, checked bool, errMsg string, attrs templ.Attributes) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -499,7 +501,7 @@ func FormCheckbox(name string, label string, checked bool, errMsg string, attrs 
 			templ_7745c5c3_Var24 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<div class=\"form-control\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<div class=\"flex flex-col items-start\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -528,6 +530,8 @@ func FormCheckbox(name string, label string, checked bool, errMsg string, attrs 
 }
 
 // FormToggle renders a labeled DaisyUI toggle switch with optional HTMX attrs.
+// The root is a vertical stack so the error slot sits below the control; the
+// label keeps its content width, matching the bare checkable input.
 func FormToggle(name string, label string, checked bool, errMsg string, attrs templ.Attributes) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -549,7 +553,7 @@ func FormToggle(name string, label string, checked bool, errMsg string, attrs te
 			templ_7745c5c3_Var25 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<div class=\"form-control\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<div class=\"flex flex-col items-start\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

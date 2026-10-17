@@ -44,7 +44,7 @@ type FormFieldProps struct {
 // boundary wrapper or gallery entry; callers should use FormField, FormControl,
 // or a specific input component instead of Field directly.
 templ Field(label string, name string, errMsg string) {
-	<div class="form-control mb-3" { devmode.Attrs(ctx, "form/Field")... }>
+	<div class="mb-3" { devmode.Attrs(ctx, "form/Field")... }>
 		if label != "" {
 			<label class="label pb-1" for={ name }>
 				<span class="label-text font-medium text-sm text-base-content/70">{ label }</span>
@@ -62,7 +62,7 @@ templ FormField(props FormFieldProps) {
 	if props.Type == FieldHidden {
 		<input type="hidden" name={ props.Name } value={ props.Value } { devmode.Attrs(ctx, "form/FormField")... } { props.Attrs... }/>
 	} else if props.Type == FieldCheckbox {
-		<div class="form-control mb-3" { devmode.Attrs(ctx, "form/FormField")... }>
+		<div class="mb-3" { devmode.Attrs(ctx, "form/FormField")... }>
 			@checkableInput(props.Name, props.Checked || props.Value == "true" || props.Value == "1" || props.Value == "on", props.Label, "checkbox checkbox-sm " + props.Class, props.Required, props.Disabled, props.Attrs, "")
 			@FieldError(props.Error)
 		</div>

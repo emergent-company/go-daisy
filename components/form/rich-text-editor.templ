@@ -26,7 +26,7 @@ type RichTextEditorProps struct {
 
 // RichTextEditor renders a Quill rich text editor.
 templ RichTextEditor(props RichTextEditorProps) {
-	<div class="form-control w-full" { devmode.Attrs(ctx, "form/RichTextEditor")... }>
+	<div class="w-full" { devmode.Attrs(ctx, "form/RichTextEditor")... }>
 		if props.Label != "" {
 			<label class="label" for={ props.ID }>
 				<span class="label-text">{ props.Label }</span>
