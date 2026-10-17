@@ -168,8 +168,8 @@ func TestFieldGroupRootsDoNotEmitFormControl(t *testing.T) {
 
 // TestFieldGroupRootsKeepDevModeAnnotation guards the gallery contract: the
 // hover overlay and component tree resolve data-component on the component's
-// root element. Every root here must still be annotated — including the two
-// components whose wrapper div was removed.
+// root element. Every root here must still be annotated — including the one
+// component whose wrapper div was removed (ThemeController's label variant).
 func TestFieldGroupRootsKeepDevModeAnnotation(t *testing.T) {
 	for _, tc := range fieldGroupComponents(t) {
 		t.Run(tc.name, func(t *testing.T) {
