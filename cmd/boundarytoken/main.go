@@ -30,6 +30,7 @@ import (
 	"flag"
 	"fmt"
 	"go/ast"
+	"go/format"
 	"go/parser"
 	"go/token"
 	"log"
@@ -131,7 +132,16 @@ func main() {
 	if err != nil {
 		log.Fatalf("render: %v", err)
 	}
-	if err := os.WriteFile(*outFile, out, 0644); err != nil {
+	// Format the generated source before writing so the output is always
+	// gofmt-clean. The template can emit shapes gofmt would rewrite (e.g. an
+	// empty composite literal spanning two lines), and a formatting gate (#68)
+	// fails closed on unformatted committed output, so the fix must live in the
+	// generator rather than a post-hoc gofmt -w of the generated file.
+	formatted, err := format.Source(out)
+	if err != nil {
+		log.Fatalf("format generated source: %v", err)
+	}
+	if err := os.WriteFile(*outFile, formatted, 0644); err != nil {
 		log.Fatalf("write %s: %v", *outFile, err)
 	}
 	fmt.Printf("boundarytoken: wrote %s (%d functions)\n", *outFile, len(entries))

@@ -472,8 +472,7 @@ func ToastTokens() []galleryruntime.DesignToken {
 
 // BannerTokens returns the DesignToken slice for BannerWithBoundary.
 func BannerTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // SkeletonAvatarTokens returns the DesignToken slice for SkeletonAvatarWithBoundary.
@@ -491,8 +490,7 @@ func SkeletonAvatarTokens() []galleryruntime.DesignToken {
 
 // CodeBlockTokens returns the DesignToken slice for CodeBlockWithBoundary.
 func CodeBlockTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // PaginationTokens returns the DesignToken slice for PaginationWithBoundary.
@@ -554,8 +552,7 @@ func EmptyTokens() []galleryruntime.DesignToken {
 
 // EmptyStateTokens returns the DesignToken slice for EmptyStateWithBoundary.
 func EmptyStateTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // LoaderTokens returns the DesignToken slice for LoaderWithBoundary.
@@ -1082,8 +1079,7 @@ func CarouselTokens() []galleryruntime.DesignToken {
 
 // ListTokens returns the DesignToken slice for ListWithBoundary.
 func ListTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // FilterTabsTokens returns the DesignToken slice for FilterTabsWithBoundary.
@@ -1114,14 +1110,12 @@ func FieldsetTokens() []galleryruntime.DesignToken {
 
 // StatCardMinimalTokens returns the DesignToken slice for StatCardMinimalWithBoundary.
 func StatCardMinimalTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // PersonCellTokens returns the DesignToken slice for PersonCellWithBoundary.
 func PersonCellTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // PersonChipTokens returns the DesignToken slice for PersonChipWithBoundary.
@@ -1194,14 +1188,12 @@ func GradientTextTokens() []galleryruntime.DesignToken {
 
 // TestimonialCardTokens returns the DesignToken slice for TestimonialCardWithBoundary.
 func TestimonialCardTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // StatCardSparklineTokens returns the DesignToken slice for StatCardSparklineWithBoundary.
 func StatCardSparklineTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // ThemeToggleTokens returns the DesignToken slice for ThemeToggleWithBoundary.
@@ -1219,38 +1211,32 @@ func ThemeToggleTokens() []galleryruntime.DesignToken {
 
 // SortableListTokens returns the DesignToken slice for SortableListWithBoundary.
 func SortableListTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // SwiperCarouselTokens returns the DesignToken slice for SwiperCarouselWithBoundary.
 func SwiperCarouselTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // ChartTokens returns the DesignToken slice for ChartWithBoundary.
 func ChartTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // CommandPaletteTokens returns the DesignToken slice for CommandPaletteWithBoundary.
 func CommandPaletteTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // NotificationDropdownTokens returns the DesignToken slice for NotificationDropdownWithBoundary.
 func NotificationDropdownTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // TabsTokens returns the DesignToken slice for TabsWithBoundary.
 func TabsTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // CodePreviewTokens returns the DesignToken slice for CodePreviewWithBoundary.
@@ -1670,32 +1656,27 @@ func SheetTokens() []galleryruntime.DesignToken {
 
 // IconPickerTokens returns the DesignToken slice for IconPickerWithBoundary.
 func IconPickerTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // ColorPickerTokens returns the DesignToken slice for ColorPickerWithBoundary.
 func ColorPickerTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // DialogTokens returns the DesignToken slice for DialogWithBoundary.
 func DialogTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // ConfirmDialogTokens returns the DesignToken slice for ConfirmDialogWithBoundary.
 func ConfirmDialogTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // DisclosureTokens returns the DesignToken slice for DisclosureWithBoundary.
 func DisclosureTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // CommandPaletteButtonTokens returns the DesignToken slice for CommandPaletteButtonWithBoundary.
