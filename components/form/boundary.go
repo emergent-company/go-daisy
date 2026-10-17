@@ -450,8 +450,8 @@ func PaletteWithBoundary(props PaletteProps) templ.Component {
 // DatalistInputWithBoundary wraps DatalistInput with a dev-mode component boundary annotation.
 func DatalistInputWithBoundary(id string, placeholder string, options []DatalistOption) templ.Component {
 	return devmode.ComponentBoundary("DatalistInput", DatalistInput(id, placeholder, options), map[string]any{
-		"id":           id,
-		"optionCount":  len(options),
+		"id":          id,
+		"optionCount": len(options),
 	})
 }
 

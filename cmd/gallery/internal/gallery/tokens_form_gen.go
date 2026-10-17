@@ -385,80 +385,67 @@ func FormToggleTokens() []galleryruntime.DesignToken {
 
 // ToggleInputTokens returns the DesignToken slice for ToggleInputWithBoundary.
 func ToggleInputTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // PromptBarTokens returns the DesignToken slice for PromptBarWithBoundary.
 func PromptBarTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // PromptBarPickerTokens returns the DesignToken slice for PromptBarPickerWithBoundary.
 func PromptBarPickerTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // PasswordFieldTokens returns the DesignToken slice for PasswordFieldWithBoundary.
 func PasswordFieldTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // PasswordMeterTokens returns the DesignToken slice for PasswordMeterWithBoundary.
 func PasswordMeterTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // EnhancedSelectTokens returns the DesignToken slice for EnhancedSelectWithBoundary.
 func EnhancedSelectTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // DatePickerTokens returns the DesignToken slice for DatePickerWithBoundary.
 func DatePickerTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // RichTextEditorTokens returns the DesignToken slice for RichTextEditorWithBoundary.
 func RichTextEditorTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // FileUploadTokens returns the DesignToken slice for FileUploadWithBoundary.
 func FileUploadTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // FormValidationTokens returns the DesignToken slice for FormValidationWithBoundary.
 func FormValidationTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // PaletteTokens returns the DesignToken slice for PaletteWithBoundary.
 func PaletteTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // FormFieldsetTokens returns the DesignToken slice for FormFieldsetWithBoundary.
 func FormFieldsetTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // SelectShellTokens returns the DesignToken slice for SelectShellWithBoundary.
 func SelectShellTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // FormActionsWithLoadingTokens returns the DesignToken slice for FormActionsWithLoadingWithBoundary.
@@ -496,18 +483,15 @@ func DateInputTokens() []galleryruntime.DesignToken {
 
 // ComboboxTokens returns the DesignToken slice for ComboboxWithBoundary.
 func ComboboxTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // StructuredInputTokens returns the DesignToken slice for StructuredInputWithBoundary.
 func StructuredInputTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }
 
 // TagListTokens returns the DesignToken slice for TagListWithBoundary.
 func TagListTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{
-	}
+	return []galleryruntime.DesignToken{}
 }

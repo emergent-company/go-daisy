@@ -8,9 +8,9 @@ import (
 // DependenciesWithBoundary returns the Dependencies component wrapped for gallery dev tooling.
 func DependenciesWithBoundary(props DepsProps) templ.Component {
 	return devmode.ComponentBoundary("Dependencies", Dependencies(props), map[string]any{
-		"alpine":   props.Alpine,
-		"morph":    props.Morph,
-		"sse":      props.SSE,
-		"ws":       props.WS,
+		"alpine": props.Alpine,
+		"morph":  props.Morph,
+		"sse":    props.SSE,
+		"ws":     props.WS,
 	})
 }

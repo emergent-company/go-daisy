@@ -1,14 +1,12 @@
 package handler
 
 import (
-
 	"github.com/a-h/templ"
 	"github.com/emergent-company/go-daisy/cmd/nexus/internal/shell"
 	"github.com/emergent-company/go-daisy/components/nav"
 	"github.com/emergent-company/go-daisy/render"
 	"github.com/labstack/echo/v4"
 )
-
 
 type Handler struct{}
 

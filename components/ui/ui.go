@@ -27,7 +27,7 @@ const (
 type AlertStyle string
 
 const (
-	AlertStyleDefault AlertStyle = ""             // solid
+	AlertStyleDefault AlertStyle = "" // solid
 	AlertStyleSoft    AlertStyle = "alert-soft"
 	AlertStyleOutline AlertStyle = "alert-outline"
 	AlertStyleDash    AlertStyle = "alert-dash"
@@ -53,5 +53,5 @@ const (
 	LoaderOverlay  LoaderVariant = "overlay"
 )
 
-func ternary(cond bool, a, b string) string     { return shared.Ternary(cond, a, b) }
-func twmerge(classes ...string) string       { return shared.TwMerge(classes...) }
+func ternary(cond bool, a, b string) string { return shared.Ternary(cond, a, b) }
+func twmerge(classes ...string) string      { return shared.TwMerge(classes...) }
