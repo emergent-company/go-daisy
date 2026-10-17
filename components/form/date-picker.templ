@@ -36,7 +36,7 @@ type DatePickerProps struct {
 
 // DatePicker renders a Flatpickr date/time picker input.
 templ DatePicker(props DatePickerProps) {
-	<div class="form-control w-full" { devmode.Attrs(ctx, "form/DatePicker")... }>
+	<div class="w-full" { devmode.Attrs(ctx, "form/DatePicker")... }>
 		if props.Label != "" {
 			<label class="label" for={ props.Name }>
 				<span class="label-text">{ props.Label }</span>

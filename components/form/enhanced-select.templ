@@ -30,7 +30,7 @@ type EnhancedSelectProps struct {
 
 // EnhancedSelect renders a Choices.js-powered select with search, groups, tags.
 templ EnhancedSelect(props EnhancedSelectProps) {
-	<div class="form-control w-full" { devmode.Attrs(ctx, "form/EnhancedSelect")... }>
+	<div class="w-full" { devmode.Attrs(ctx, "form/EnhancedSelect")... }>
 		if props.Label != "" {
 			<label class="label" for={ props.Name }>
 				<span class="label-text">{ props.Label }</span>

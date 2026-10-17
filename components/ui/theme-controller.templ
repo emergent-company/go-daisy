@@ -40,17 +40,15 @@ templ ThemeController(props ThemeControllerProps) {
 		</div>
 	} else {
 		// Full controller with label
-		<div class="form-control" { devmode.Attrs(ctx, "ui/ThemeController")... }>
-			<label class="label cursor-pointer gap-3">
-				<span class="label-text">{ props.Label }</span>
-				<input
-					type={ string(props.InputType) }
-					name="theme-controller"
-					class="theme-controller"
-					value={ props.Theme }
-					checked?={ props.Checked }
-				/>
-			</label>
-		</div>
+		<label class="label cursor-pointer gap-3" { devmode.Attrs(ctx, "ui/ThemeController")... }>
+			<span class="label-text">{ props.Label }</span>
+			<input
+				type={ string(props.InputType) }
+				name="theme-controller"
+				class="theme-controller"
+				value={ props.Theme }
+				checked?={ props.Checked }
+			/>
+		</label>
 	}
 }

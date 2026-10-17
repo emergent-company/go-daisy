@@ -54,7 +54,7 @@ func RichTextEditor(props RichTextEditorProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"form-control w-full\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"w-full\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

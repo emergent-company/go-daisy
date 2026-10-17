@@ -257,22 +257,22 @@ func TestToggleCheckboxFormOutputLocked(t *testing.T) {
 		{
 			name: "form_toggle_checked_err",
 			c:    FormToggle("n", "Label", true, "err", nil),
-			want: `<div class="form-control"><label class="cursor-pointer label justify-start gap-3"><input type="checkbox" name="n" class="toggle" checked> <span class="label-text">Label</span></label><div class="label pt-1"><span class="label-text-alt text-error">err</span></div></div>`,
+			want: `<div class="flex flex-col items-start"><label class="cursor-pointer label justify-start gap-3"><input type="checkbox" name="n" class="toggle" checked> <span class="label-text">Label</span></label><div class="label pt-1"><span class="label-text-alt text-error">err</span></div></div>`,
 		},
 		{
 			name: "form_toggle_unchecked_noerr",
 			c:    FormToggle("n", "Label", false, "", nil),
-			want: `<div class="form-control"><label class="cursor-pointer label justify-start gap-3"><input type="checkbox" name="n" class="toggle"> <span class="label-text">Label</span></label></div>`,
+			want: `<div class="flex flex-col items-start"><label class="cursor-pointer label justify-start gap-3"><input type="checkbox" name="n" class="toggle"> <span class="label-text">Label</span></label></div>`,
 		},
 		{
 			name: "form_checkbox_checked_err",
 			c:    FormCheckbox("n", "Label", true, "err", nil),
-			want: `<div class="form-control"><label class="cursor-pointer label justify-start gap-3"><input type="checkbox" name="n" class="checkbox" checked> <span class="label-text">Label</span></label><div class="label pt-1"><span class="label-text-alt text-error">err</span></div></div>`,
+			want: `<div class="flex flex-col items-start"><label class="cursor-pointer label justify-start gap-3"><input type="checkbox" name="n" class="checkbox" checked> <span class="label-text">Label</span></label><div class="label pt-1"><span class="label-text-alt text-error">err</span></div></div>`,
 		},
 		{
 			name: "form_checkbox_unchecked_noerr",
 			c:    FormCheckbox("n", "Label", false, "", nil),
-			want: `<div class="form-control"><label class="cursor-pointer label justify-start gap-3"><input type="checkbox" name="n" class="checkbox"> <span class="label-text">Label</span></label></div>`,
+			want: `<div class="flex flex-col items-start"><label class="cursor-pointer label justify-start gap-3"><input type="checkbox" name="n" class="checkbox"> <span class="label-text">Label</span></label></div>`,
 		},
 	}
 

@@ -693,7 +693,7 @@ func Combobox(props ComboboxProps) templ.Component {
 			templ_7745c5c3_Var37 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var38 = []any{"form-control w-full", templ.KV(props.Class, props.Class != "")}
+		var templ_7745c5c3_Var38 = []any{"w-full", templ.KV(props.Class, props.Class != "")}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var38...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

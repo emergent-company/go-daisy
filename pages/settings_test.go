@@ -21,7 +21,7 @@ func renderPages(t *testing.T, c templ.Component) string {
 
 // TestNotificationToggleOutputLocked locks the settings row toggle markup.
 // The row owns its title and description, so the control must stay a bare
-// ToggleInput carrying the primary colour: no form-control wrapper, no
+// ToggleInput carrying the primary colour: no wrapper, no
 // component-rendered label, and the accessible name comes from the row title.
 func TestNotificationToggleOutputLocked(t *testing.T) {
 	got := renderPages(t, notificationToggle("mentions", "Mentions", "Get notified when someone mentions you", true))
@@ -34,8 +34,8 @@ func TestNotificationToggleOutputLocked(t *testing.T) {
 // TestSettingsTogglesKeepPrimaryEmphasis asserts every toggle on the settings
 // page keeps primary emphasis and stays a bare input with no wrapper layer. The
 // two appearance rows plus the six notification rows render eight switches, and
-// each one must be an immediate sibling of its description block (no
-// form-control wrapper, no component-owned label between them).
+// each one must be an immediate sibling of its description block — no wrapper
+// and no component-owned label between them.
 func TestSettingsTogglesKeepPrimaryEmphasis(t *testing.T) {
 	out := renderPages(t, SettingsPage())
 
