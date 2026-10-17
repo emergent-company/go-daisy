@@ -43,7 +43,7 @@ templ TableCardFooter(props TableCardFooterProps) {
 			<span class="text-base-content font-medium">{ strconv.FormatInt(props.TotalItems, 10) }</span>
 			items
 		</span>
-		@ui.PaginationCircle(props.CurrentPage, props.TotalPages, props.BaseURL, props.TargetID)
+		@ui.PaginationWithProps(ui.PaginationProps{CurrentPage: props.CurrentPage, TotalPages: props.TotalPages, BaseURL: props.BaseURL, TargetID: props.TargetID, Style: ui.PaginationStyleCircle})
 	</div>
 }
 
