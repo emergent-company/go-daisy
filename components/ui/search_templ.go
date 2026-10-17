@@ -61,7 +61,7 @@ func SearchDropdown(placeholder string, sections []SearchDropdownSection) templ.
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconSpanColored("lucide--search", "size-4", "text-base-content/50").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconSpan("lucide--search", "size-4", "text-base-content/50").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

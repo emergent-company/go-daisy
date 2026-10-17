@@ -158,7 +158,7 @@ func TestimonialCard(props TestimonialCardProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = Avatar(props.Name, props.AvatarSrc, props.AvatarIcon, AvatarSM, "", nil).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = AvatarFull(AvatarProps{Name: props.Name, Src: props.AvatarSrc, Icon: props.AvatarIcon, Size: AvatarSM}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

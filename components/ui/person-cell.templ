@@ -48,7 +48,7 @@ templ PersonCell(p PersonCellProps) {
 	} else {
 		{{ size := p.Size; if size == "" { size = AvatarSM } }}
 		<div class="flex items-center gap-3" { devmode.Attrs(ctx, "ui/PersonCell")... }>
-			@Avatar(p.Name, p.Src, p.Icon, size, "", nil)
+			@AvatarFull(AvatarProps{Name: p.Name, Src: p.Src, Icon: p.Icon, Size: size})
 			<div class="min-w-0">
 				<div class="font-medium text-sm leading-tight truncate">{ p.Name }</div>
 				if p.Subtitle != "" {
