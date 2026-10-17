@@ -184,15 +184,20 @@ tasks:
       # later `gallery:start` serves stale code from another checkout.
       - >-
         sh -c '
+        port_pids() { if command -v lsof >/dev/null 2>&1; then lsof -ti:11000 2>/dev/null || true; else ss -ltnpH "sport = :11000" 2>/dev/null | grep -oE "pid=[0-9]+" | cut -d= -f2 | sort -u; fi; };
+        if ! command -v lsof >/dev/null 2>&1 && ! command -v ss >/dev/null 2>&1; then
+          echo "gallery: cannot inspect port 11000 (neither lsof nor ss found); refusing to report a clean stop" >&2;
+          exit 1;
+        fi;
         if [ -f {{.GALLERY_PID}} ]; then
           kill "$(cat {{.GALLERY_PID}})" 2>/dev/null || true;
           rm -f {{.GALLERY_PID}};
         fi;
-        pids=$(lsof -ti:11000 2>/dev/null || true);
+        pids=$(port_pids);
         if [ -n "$pids" ]; then
           kill $pids 2>/dev/null || true;
           sleep 1;
-          pids=$(lsof -ti:11000 2>/dev/null || true);
+          pids=$(port_pids);
           if [ -n "$pids" ]; then kill -9 $pids 2>/dev/null || true; fi;
           echo "gallery stopped (port 11000 cleared)";
         else
