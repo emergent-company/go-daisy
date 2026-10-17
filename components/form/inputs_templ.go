@@ -387,6 +387,8 @@ func checkableInput(name string, checked bool, label string, inputClass string, 
 
 // CheckboxInput renders a labeled checkbox with error display.
 // Deprecated: use FormCheckbox(name, label, checked, errMsg, nil) instead.
+// It renders the same stacked wrapper as FormCheckbox (label and error on
+// separate lines, `mb-3` field spacing), so migrating keeps the layout.
 func CheckboxInput(name string, label string, checked bool, errMsg string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -408,7 +410,7 @@ func CheckboxInput(name string, label string, checked bool, errMsg string) templ
 			templ_7745c5c3_Var21 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"mb-3\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"flex flex-col items-start mb-3\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -493,7 +495,7 @@ func FormActions(submitText string, indicatorID string) templ.Component {
 					var templ_7745c5c3_Var24 string
 					templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.ResolveAttributeValue(indicatorID)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 69, Col: 27}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 71, Col: 27}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var24)
 					if templ_7745c5c3_Err != nil {
@@ -511,7 +513,7 @@ func FormActions(submitText string, indicatorID string) templ.Component {
 				var templ_7745c5c3_Var25 string
 				templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(submitText)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 71, Col: 16}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 73, Col: 16}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 				if templ_7745c5c3_Err != nil {
@@ -633,7 +635,7 @@ func SearchInput(name string, value string, placeholder string, hxTarget string,
 		var templ_7745c5c3_Var30 string
 		templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.ResolveAttributeValue(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 93, Col: 14}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 95, Col: 14}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var30)
 		if templ_7745c5c3_Err != nil {
@@ -646,7 +648,7 @@ func SearchInput(name string, value string, placeholder string, hxTarget string,
 		var templ_7745c5c3_Var31 string
 		templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.ResolveAttributeValue(value)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 94, Col: 16}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 96, Col: 16}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var31)
 		if templ_7745c5c3_Err != nil {
@@ -659,7 +661,7 @@ func SearchInput(name string, value string, placeholder string, hxTarget string,
 		var templ_7745c5c3_Var32 string
 		templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.ResolveAttributeValue(placeholder)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 95, Col: 28}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 97, Col: 28}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var32)
 		if templ_7745c5c3_Err != nil {
@@ -677,7 +679,7 @@ func SearchInput(name string, value string, placeholder string, hxTarget string,
 			var templ_7745c5c3_Var33 string
 			templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.ResolveAttributeValue(hxGet)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 98, Col: 18}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 100, Col: 18}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var33)
 			if templ_7745c5c3_Err != nil {
@@ -690,7 +692,7 @@ func SearchInput(name string, value string, placeholder string, hxTarget string,
 			var templ_7745c5c3_Var34 string
 			templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.ResolveAttributeValue("#" + hxTarget)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 99, Col: 30}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 101, Col: 30}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var34)
 			if templ_7745c5c3_Err != nil {
@@ -752,7 +754,7 @@ func DateInput(name string, value string, hasError bool) templ.Component {
 		var templ_7745c5c3_Var37 string
 		templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.ResolveAttributeValue(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 111, Col: 11}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 113, Col: 11}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var37)
 		if templ_7745c5c3_Err != nil {
@@ -765,7 +767,7 @@ func DateInput(name string, value string, hasError bool) templ.Component {
 		var templ_7745c5c3_Var38 string
 		templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.ResolveAttributeValue(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 112, Col: 13}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 114, Col: 13}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var38)
 		if templ_7745c5c3_Err != nil {
@@ -778,7 +780,7 @@ func DateInput(name string, value string, hasError bool) templ.Component {
 		var templ_7745c5c3_Var39 string
 		templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.ResolveAttributeValue(value)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 114, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 116, Col: 15}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var39)
 		if templ_7745c5c3_Err != nil {
@@ -949,7 +951,7 @@ func ToggleInput(props ToggleInputProps) templ.Component {
 		var templ_7745c5c3_Var45 string
 		templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 175, Col: 19}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 177, Col: 19}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var45)
 		if templ_7745c5c3_Err != nil {
@@ -967,7 +969,7 @@ func ToggleInput(props ToggleInputProps) templ.Component {
 			var templ_7745c5c3_Var46 string
 			templ_7745c5c3_Var46, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Value)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 177, Col: 22}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 179, Col: 22}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var46)
 			if templ_7745c5c3_Err != nil {
@@ -1066,7 +1068,7 @@ func FilterSelect(name string, hxTarget string, hxGet string, class string) temp
 		var templ_7745c5c3_Var51 string
 		templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.ResolveAttributeValue(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 192, Col: 19}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 194, Col: 19}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var51)
 		if templ_7745c5c3_Err != nil {
@@ -1079,7 +1081,7 @@ func FilterSelect(name string, hxTarget string, hxGet string, class string) temp
 		var templ_7745c5c3_Var52 string
 		templ_7745c5c3_Var52, templ_7745c5c3_Err = templ.ResolveAttributeValue(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 193, Col: 13}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 195, Col: 13}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var52)
 		if templ_7745c5c3_Err != nil {
@@ -1097,7 +1099,7 @@ func FilterSelect(name string, hxTarget string, hxGet string, class string) temp
 			var templ_7745c5c3_Var53 string
 			templ_7745c5c3_Var53, templ_7745c5c3_Err = templ.ResolveAttributeValue(hxGet)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 195, Col: 17}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 197, Col: 17}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var53)
 			if templ_7745c5c3_Err != nil {
@@ -1110,7 +1112,7 @@ func FilterSelect(name string, hxTarget string, hxGet string, class string) temp
 			var templ_7745c5c3_Var54 string
 			templ_7745c5c3_Var54, templ_7745c5c3_Err = templ.ResolveAttributeValue("#" + hxTarget)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 196, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 198, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var54)
 			if templ_7745c5c3_Err != nil {
@@ -1175,7 +1177,7 @@ func FieldError(errMsg string) templ.Component {
 			var templ_7745c5c3_Var56 string
 			templ_7745c5c3_Var56, templ_7745c5c3_Err = templ.JoinStringErrs(errMsg)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 209, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/inputs.templ`, Line: 211, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var56))
 			if templ_7745c5c3_Err != nil {

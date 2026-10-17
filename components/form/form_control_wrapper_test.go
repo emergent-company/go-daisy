@@ -69,7 +69,7 @@ func fieldGroupComponents(t *testing.T) []struct {
 		{
 			name:      "CheckboxInput",
 			component: CheckboxInput("agree", "Agree", false, ""),
-			wantRoot:  `<div class="mb-3"`,
+			wantRoot:  `<div class="flex flex-col items-start mb-3"`,
 			devName:   "form/CheckboxInput",
 		},
 		{
@@ -86,8 +86,8 @@ func fieldGroupComponents(t *testing.T) []struct {
 		},
 		{
 			name:      "FormFieldCheckbox",
-			component: FormField(FormFieldProps{Type: FieldCheckbox, Name: "agree", Label: "Agree"}),
-			wantRoot:  `<div class="mb-3"`,
+			component: FormField(FormFieldProps{Type: FieldCheckbox, Name: "agree", Label: "Agree", Error: "Required"}),
+			wantRoot:  `<div class="flex flex-col items-start mb-3"`,
 			devName:   "form/FormField",
 		},
 		{
@@ -204,6 +204,80 @@ func TestFieldGroupRootsKeepRealSpacingUtilities(t *testing.T) {
 				if !strings.Contains(out, want) {
 					t.Errorf("missing %s in rendered output", want)
 				}
+			}
+		})
+	}
+}
+
+// attrValue returns the value of name="..." inside an opening tag, or "".
+func attrValue(tag, name string) string {
+	key := name + `="`
+	i := strings.Index(tag, key)
+	if i < 0 {
+		return ""
+	}
+	rest := tag[i+len(key):]
+	j := strings.Index(rest, `"`)
+	if j < 0 {
+		return ""
+	}
+	return rest[:j]
+}
+
+// TestCheckableFieldRootsShareOneShape pins the invariant the per-component
+// assertions above cannot: every root that renders checkableInput + FieldError
+// is the same widget (a checkable input with an error slot), so it must be the
+// same vertical stack — label first, error on its own line after it, never
+// inline beside the control, and never a bare block wrapper with an
+// inline-flex label (which reintroduces the line-box strut measured in #71).
+//
+// The follow-up bug this catches: FormCheckbox stacked its error while
+// FormField's checkbox branch kept a plain `mb-3` block, giving callers two
+// different error layouts and row heights for one widget.
+func TestCheckableFieldRootsShareOneShape(t *testing.T) {
+	cases := []struct {
+		name string
+		c    templ.Component
+	}{
+		{"FormToggle", FormToggle("n", "Label", true, "Required", nil)},
+		{"FormCheckbox", FormCheckbox("n", "Label", true, "Required", nil)},
+		{"FormFieldCheckbox", FormField(FormFieldProps{Type: FieldCheckbox, Name: "n", Label: "Label", Checked: true, Error: "Required"})},
+		{"CheckboxInput", CheckboxInput("n", "Label", true, "Required")},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			out := strings.TrimLeft(renderDev(t, tc.c), " \n\t")
+			tag := firstTag(out)
+			class := attrValue(tag, "class")
+
+			// `mb-3` is field rhythm, not widget shape, so it may accompany the
+			// stack but nothing else may.
+			var shape []string
+			for _, tok := range strings.Fields(class) {
+				if tok == "mb-3" {
+					continue
+				}
+				shape = append(shape, tok)
+			}
+			if got, want := strings.Join(shape, " "), "flex flex-col items-start"; got != want {
+				t.Fatalf("checkable field root shape = %q, want %q (class=%q)", got, want, class)
+			}
+
+			labelEnd := strings.Index(out, "</label>")
+			errStart := strings.Index(out, `class="label pt-1"`)
+			if labelEnd < 0 || errStart < 0 {
+				t.Fatalf("expected a <label> and an error slot, got: %s", out)
+			}
+			if errStart < labelEnd {
+				t.Fatalf("error slot is not after the label (it would share the control's line):\n%s", out)
+			}
+			if n := strings.Count(out, `class="label pt-1"`); n != 1 {
+				t.Fatalf("error slot count = %d, want 1:\n%s", n, out)
+			}
+
+			tagEnd := strings.Index(out, ">")
+			if body := out[tagEnd+1:]; !strings.HasPrefix(body, `<label `) {
+				t.Fatalf("label is not the first child of the group root: %s", body)
 			}
 		})
 	}

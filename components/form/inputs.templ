@@ -51,8 +51,10 @@ templ checkableInput(name string, checked bool, label string, inputClass string,
 
 // CheckboxInput renders a labeled checkbox with error display.
 // Deprecated: use FormCheckbox(name, label, checked, errMsg, nil) instead.
+// It renders the same stacked wrapper as FormCheckbox (label and error on
+// separate lines, `mb-3` field spacing), so migrating keeps the layout.
 templ CheckboxInput(name string, label string, checked bool, errMsg string) {
-	<div class="mb-3" { devmode.Attrs(ctx, "form/CheckboxInput")... }>
+	<div class="flex flex-col items-start mb-3" { devmode.Attrs(ctx, "form/CheckboxInput")... }>
 		@checkableInput(name, checked, label, "checkbox checkbox-sm", false, false, templ.Attributes{"id": name}, "")
 		@FieldError(errMsg)
 	</div>

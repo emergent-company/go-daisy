@@ -62,7 +62,10 @@ templ FormField(props FormFieldProps) {
 	if props.Type == FieldHidden {
 		<input type="hidden" name={ props.Name } value={ props.Value } { devmode.Attrs(ctx, "form/FormField")... } { props.Attrs... }/>
 	} else if props.Type == FieldCheckbox {
-		<div class="mb-3" { devmode.Attrs(ctx, "form/FormField")... }>
+		// Same widget, same shape as FormCheckbox: a vertical stack whose label
+		// is a flex item, so the error sits below the control instead of sharing
+		// its line. `mb-3` stays because FormField is a stacked block field.
+		<div class="flex flex-col items-start mb-3" { devmode.Attrs(ctx, "form/FormField")... }>
 			@checkableInput(props.Name, props.Checked || props.Value == "true" || props.Value == "1" || props.Value == "on", props.Label, "checkbox checkbox-sm " + props.Class, props.Required, props.Disabled, props.Attrs, "")
 			@FieldError(props.Error)
 		</div>

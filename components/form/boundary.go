@@ -33,7 +33,8 @@ func TextareaInputWithBoundary(name string, label string, value string, errMsg s
 }
 
 // CheckboxInputWithBoundary wraps CheckboxInput with a dev-mode component boundary annotation.
-// Deprecated: use FormCheckboxWithBoundary(name, label, checked, "", nil) instead.
+// Deprecated: use FormCheckboxWithBoundary(name, label, checked, "", nil) instead; both
+// render the same stacked wrapper, so the layout does not change.
 // gallery:token label,checked
 // gallery:hint label:default(Accept terms and conditions)
 func CheckboxInputWithBoundary(name string, label string, checked bool, errMsg string) templ.Component {
