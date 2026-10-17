@@ -216,13 +216,14 @@ printf '%s\n' "${src_symbols[@]}" | sort -u > "$caller_list_file"
 
 caller_rc=0
 awk -f scripts/lint-deprecated-callers.awk "$caller_list_file" "${templ_files[@]}" || caller_rc=$?
-if [ "$caller_rc" -eq 2 ]; then
-  echo "error: deprecated-caller scan failed (awk exited 2)" >&2
-  exit 2
-fi
 if [ "$caller_rc" -eq 1 ]; then
   echo "error: .templ source calls a deprecated symbol (see above); migrate to the replacement named in its Deprecated: marker" >&2
   status=1
+elif [ "$caller_rc" -ne 0 ]; then
+  # Any other non-zero status is a scan failure (awk unreachable, unreadable
+  # input, ...) and must fail closed rather than read as "no callers".
+  echo "error: deprecated-caller scan failed (awk exited $caller_rc)" >&2
+  exit 2
 fi
 
 if [ "$status" -ne 0 ]; then

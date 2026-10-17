@@ -153,14 +153,27 @@ The `.templ` caller scan (step 4) is a line-based mini-lexer over `.templ`
 sources, not a type-checker. It detects `alias.Symbol(` (render or expression
 calls, alias resolved against the file's imports) and `@Symbol(` (render calls
 within the symbol's own package). It masks `"…"` and `` `…` `` string literals
-and `//` / `/* */` comments first, so a deprecated name appearing only in prose,
-a doc example, or a URL is not flagged. Known gaps: single-quoted rune literals
-are not tracked; a deprecated call written inside a string literal is invisible
-by design; and an unqualified call written as a Go expression inside the
-symbol's own package — `{{ x := Avatar(...) }}` in `package ui` — is **not**
-matched, because unqualified detection only covers `@Symbol(` render calls.
-No such call exists in the tree today, but the shape is a blind spot: if you are
-migrating a symbol within its own package, use the qualified form
-(`ui.Avatar(...)`) or the scan will not see it. Coverage collapse (an empty
-symbol set or `.templ` file set, or a missing known-good sentinel) fails the
-guard with a distinct status, so a broken scan never reports clean.
+and `//` / `/* */` comments, so a deprecated name inside a comment, a quoted
+string, or a URL is not flagged.
+
+Known gaps:
+
+- **Raw markup text is scanned.** Masking covers strings and comments, not
+  element text content: writing a deprecated call as visible text — e.g.
+  `<pre>ui.Avatar(...)</pre>` or `<code>CardCompact(nil)</code>` — **is**
+  flagged. Keep visible examples in comments or quoted strings, or omit the
+  trailing `(` (`ui.Avatar`, not `ui.Avatar(`). (Fail-safe direction: it fails
+  loudly rather than missing a caller.)
+- **Unqualified Go expressions in the symbol's own package are missed.**
+  `{{ x := Avatar(...) }}` in `package ui` is not matched, because unqualified
+  detection only covers `@Symbol(` render calls. Use the qualified form
+  (`ui.Avatar(...)`) when migrating a symbol within its own package.
+- **Dot-imports are missed.** With `. "…/components/ui"` in a foreign package,
+  an unqualified `@Avatar(` is not attributed to `ui` and is not flagged. Do not
+  dot-import component packages.
+- **Single-quoted rune literals are not tracked**, so a rune containing `"` or
+  `` ` `` could mis-mask a following call.
+
+Coverage collapse (an empty symbol set or `.templ` file set, or a missing
+known-good sentinel) fails the guard with a distinct status, so a broken scan
+never reports clean.
