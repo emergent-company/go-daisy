@@ -108,15 +108,15 @@ templ appearanceTab() {
 					<p class="text-sm font-medium text-base-content">Compact view</p>
 					<p class="text-xs text-base-content/50">Use tighter spacing throughout the UI</p>
 				</div>
-			@form.Toggle("compact", true, "")
-		</div>
-		<div class="flex items-center justify-between">
-			<div>
-				<p class="text-sm font-medium text-base-content">Reduced motion</p>
-				<p class="text-xs text-base-content/50">Minimize animations and transitions</p>
+				@form.ToggleInput(form.ToggleInputProps{Name: "compact", Checked: true, Class: "toggle toggle-primary", Attrs: templ.Attributes{"aria-label": "Compact view"}})
 			</div>
-			@form.Toggle("reduced-motion", false, "")
-		</div>
+			<div class="flex items-center justify-between">
+				<div>
+					<p class="text-sm font-medium text-base-content">Reduced motion</p>
+					<p class="text-xs text-base-content/50">Minimize animations and transitions</p>
+				</div>
+				@form.ToggleInput(form.ToggleInputProps{Name: "reduced-motion", Checked: false, Class: "toggle toggle-primary", Attrs: templ.Attributes{"aria-label": "Reduced motion"}})
+			</div>
 		</div>
 
 		@ui.SectionHeader("Font Size")
@@ -154,6 +154,6 @@ templ notificationToggle(name, label, description string, checked bool) {
 			<p class="text-sm font-medium text-base-content">{ label }</p>
 			<p class="text-xs text-base-content/50">{ description }</p>
 		</div>
-		@form.Toggle(name, checked, "")
+		@form.ToggleInput(form.ToggleInputProps{Name: name, Checked: checked, Class: "toggle toggle-primary", Attrs: templ.Attributes{"aria-label": label}})
 	</div>
 }
