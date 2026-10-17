@@ -155,7 +155,12 @@ calls, alias resolved against the file's imports) and `@Symbol(` (render calls
 within the symbol's own package). It masks `"…"` and `` `…` `` string literals
 and `//` / `/* */` comments first, so a deprecated name appearing only in prose,
 a doc example, or a URL is not flagged. Known gaps: single-quoted rune literals
-are not tracked, and a deprecated call written inside a string literal is
-invisible by design. Coverage collapse (an empty symbol set or `.templ` file
-set, or a missing known-good sentinel) fails the guard with a distinct status,
-so a broken scan never reports clean.
+are not tracked; a deprecated call written inside a string literal is invisible
+by design; and an unqualified call written as a Go expression inside the
+symbol's own package — `{{ x := Avatar(...) }}` in `package ui` — is **not**
+matched, because unqualified detection only covers `@Symbol(` render calls.
+No such call exists in the tree today, but the shape is a blind spot: if you are
+migrating a symbol within its own package, use the qualified form
+(`ui.Avatar(...)`) or the scan will not see it. Coverage collapse (an empty
+symbol set or `.templ` file set, or a missing known-good sentinel) fails the
+guard with a distinct status, so a broken scan never reports clean.
