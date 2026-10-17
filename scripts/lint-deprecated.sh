@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 # Guard: every `Deprecated:` marker in source must be registered in
-# docs/DEPRECATED.md, and every inventory entry must have a live marker.
+# docs/DEPRECATED.md, and every inventory entry must have a live marker. It
+# also fails when a `.templ` source *calls* a deprecated symbol — golangci-lint
+# never reads .templ and the generated *_templ.go is excluded from analysis,
+# so those callers are otherwise invisible (see #67).
 #
 # Fails when:
 #   - a `Deprecated:` marker exists in source but is missing from the inventory
 #     (a symbol was deprecated without being registered), or
 #   - an inventory entry has no matching marker (a stale entry left after the
-#     symbol was deleted).
+#     symbol was deleted), or
+#   - a `.templ` file calls a deprecated symbol (migrate the call to the
+#     replacement named in the marker).
 #
 # The inventory is the single source of truth; keep the two in sync in the
 # same change. See docs/DEPRECATED.md for the full policy.
@@ -42,7 +47,8 @@ fi
 # known-good file. awk runs as a single invocation over the list (no `xargs`),
 # so its own exit status is captured directly.
 src_list_file="$(mktemp)"
-trap 'rm -f "$src_list_file"' EXIT
+caller_list_file="$(mktemp)"
+trap 'rm -f "$src_list_file" "$caller_list_file"' EXIT
 
 if ! find . \
       -path ./node_modules -prune -o \
@@ -159,6 +165,65 @@ if [ -n "$only_inv" ]; then
   printf '  - `%s`\n' $only_inv >&2
   echo "Remove the entry or restore the Deprecated: marker." >&2
   status=1
+fi
+
+if [ "$status" -ne 0 ]; then
+  exit "$status"
+fi
+
+# --- 4. Flag .templ callers of deprecated symbols ---
+# golangci-lint never reads .templ sources, and the generated *_templ.go files
+# are excluded from analysis, so a deprecated symbol can keep live callers in
+# the render surface indefinitely (see #67). Derive the .templ file list from
+# the already-validated source scan, assert it non-empty with a known-good
+# sentinel, then scan for callers. Fail-closed: an empty file list, a missing
+# sentinel, a collapsed symbol set, or an awk error (exit 2) all fail; a found
+# caller (exit 1) is a violation, distinct from a clean run (exit 0).
+
+templ_files=()
+for f in "${src_files[@]}"; do
+  case "$f" in *.templ) templ_files+=("$f");; esac
+done
+if [ "${#templ_files[@]}" -eq 0 ]; then
+  echo "error: deprecated-caller scan produced 0 .templ files; refusing to report clean" >&2
+  exit 2
+fi
+templ_sentinel='./components/form/inputs.templ'
+templ_found=0
+for f in "${templ_files[@]}"; do
+  [ "$f" = "$templ_sentinel" ] && { templ_found=1; break; }
+done
+if [ "$templ_found" -ne 1 ]; then
+  echo "error: self-check failed: known-good .templ file '$templ_sentinel' not in scan set" >&2
+  exit 2
+fi
+
+if [ "${#src_symbols[@]}" -eq 0 ]; then
+  echo "error: deprecated-caller scan derived 0 symbols; refusing to report clean" >&2
+  exit 2
+fi
+symbol_sentinel='ui.Avatar'
+sym_found=0
+for s in "${src_symbols[@]}"; do
+  [ "$s" = "$symbol_sentinel" ] && { sym_found=1; break; }
+done
+if [ "$sym_found" -ne 1 ]; then
+  echo "error: self-check failed: known-good deprecated symbol '$symbol_sentinel' not in derived set" >&2
+  exit 2
+fi
+
+printf '%s\n' "${src_symbols[@]}" | sort -u > "$caller_list_file"
+
+caller_rc=0
+awk -f scripts/lint-deprecated-callers.awk "$caller_list_file" "${templ_files[@]}" || caller_rc=$?
+if [ "$caller_rc" -eq 1 ]; then
+  echo "error: .templ source calls a deprecated symbol (see above); migrate to the replacement named in its Deprecated: marker" >&2
+  status=1
+elif [ "$caller_rc" -ne 0 ]; then
+  # Any other non-zero status is a scan failure (awk unreachable, unreadable
+  # input, ...) and must fail closed rather than read as "no callers".
+  echo "error: deprecated-caller scan failed (awk exited $caller_rc)" >&2
+  exit 2
 fi
 
 if [ "$status" -ne 0 ]; then

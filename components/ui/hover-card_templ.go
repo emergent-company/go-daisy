@@ -59,7 +59,7 @@ func HoverCard(props ...HoverCardProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = CardCompact(nil).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Card("", nil, true).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

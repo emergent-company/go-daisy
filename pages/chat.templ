@@ -23,7 +23,7 @@ templ ChatLayout(props ChatLayoutProps) {
 
 		<div class="flex-1 flex flex-col border border-line rounded-box bg-base-100">
 			<div class="flex items-center gap-3 p-4 border-b border-line">
-				@ui.Avatar("Alice Johnson", "", "", ui.AvatarSM, "", nil)
+				@ui.AvatarFull(ui.AvatarProps{Name: "Alice Johnson", Size: ui.AvatarSM})
 				<div>
 					<p class="text-sm font-semibold text-base-content">Alice Johnson</p>
 					<p class="text-xs text-base-content/50">Online</p>
@@ -54,7 +54,7 @@ templ conversationItem(name, lastMessage, time string, active, unread bool) {
 	<div class={ "flex items-center gap-3 px-3 py-3 cursor-pointer",
 		templ.KV("bg-base-200", active),
 		templ.KV("hover:bg-base-200", !active) }>
-		@ui.Avatar(name, "", "", ui.AvatarSM, "", nil)
+		@ui.AvatarFull(ui.AvatarProps{Name: name, Size: ui.AvatarSM})
 		<div class="flex-1 min-w-0">
 			<div class="flex items-center justify-between">
 				<p class={ "text-sm truncate", templ.KV("font-semibold", unread) }>{ name }</p>

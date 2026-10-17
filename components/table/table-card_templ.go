@@ -251,7 +251,7 @@ func TableCardFooter(props TableCardFooterProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ui.PaginationCircle(props.CurrentPage, props.TotalPages, props.BaseURL, props.TargetID).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ui.PaginationWithProps(ui.PaginationProps{CurrentPage: props.CurrentPage, TotalPages: props.TotalPages, BaseURL: props.BaseURL, TargetID: props.TargetID, Style: ui.PaginationStyleCircle}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

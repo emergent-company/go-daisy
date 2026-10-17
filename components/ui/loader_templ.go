@@ -214,7 +214,7 @@ func NoPermissions() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconSpanColored("lucide--lock", "size-10", "text-base-content/20 mb-3").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconSpan("lucide--lock", "size-10", "text-base-content/20 mb-3").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

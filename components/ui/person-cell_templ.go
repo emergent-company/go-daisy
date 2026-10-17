@@ -93,7 +93,7 @@ func PersonCell(p PersonCellProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = Avatar(p.Name, p.Src, p.Icon, size, "", nil).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = AvatarFull(AvatarProps{Name: p.Name, Src: p.Src, Icon: p.Icon, Size: size}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

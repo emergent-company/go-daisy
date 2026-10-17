@@ -357,7 +357,7 @@ func appearanceTab() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = form.Toggle("compact", true, "").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = form.ToggleInput(form.ToggleInputProps{Name: "compact", Checked: true, Class: "toggle toggle-primary", Attrs: templ.Attributes{"aria-label": "Compact view"}}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -365,7 +365,7 @@ func appearanceTab() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = form.Toggle("reduced-motion", false, "").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = form.ToggleInput(form.ToggleInputProps{Name: "reduced-motion", Checked: false, Class: "toggle toggle-primary", Attrs: templ.Attributes{"aria-label": "Reduced motion"}}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -543,7 +543,7 @@ func notificationToggle(name, label, description string, checked bool) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = form.Toggle(name, checked, "").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = form.ToggleInput(form.ToggleInputProps{Name: name, Checked: checked, Class: "toggle toggle-primary", Attrs: templ.Attributes{"aria-label": label}}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

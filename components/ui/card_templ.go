@@ -915,7 +915,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = IconSpanColoredWithBoundary(item.Icon, "size-5", item.IconColor).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = IconSpan(item.Icon, "size-5", item.IconColor).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -124,8 +124,15 @@ templ Checkbox(name string, checked bool, label string) {
 	@checkableInput(name, checked, label, "checkbox checkbox-primary", false, false, nil, "form/Checkbox")
 }
 
-// Toggle renders a DaisyUI toggle switch.
-// Deprecated: use FormToggle(name, label, checked, "", nil) instead.
+// Toggle renders a DaisyUI toggle switch with an inline label and a forced
+// primary colour.
+// Deprecated: pick the replacement by layout — FormToggle(name, label,
+// checked, "", nil) for a stacked form field whose label belongs to the field,
+// or ToggleInput(ToggleInputProps{Name: name, Checked: checked, Class:
+// "toggle toggle-primary"}) for a caller-owned row (title and description
+// rendered next to the control). FormToggle renders a neutral switch and adds
+// a form-control wrapper; ToggleInput renders the bare switch, so the caller
+// keeps its own row layout and colour.
 templ Toggle(name string, checked bool, label string) {
 	@checkableInput(name, checked, label, "toggle toggle-primary", false, false, nil, "form/Toggle")
 }

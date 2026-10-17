@@ -15,5 +15,5 @@ templ HoverCard(props ...HoverCardProps) {
 		@PopoverTrigger(PopoverTriggerProps{TriggerType: PopoverTriggerHover, Class: p.Class})
 			{ children... }
 		@PopoverContent(PopoverContentProps{Placement: PopoverPlacement(p.Side), ShowArrow: false, Class: "p-4 w-72"})
-			@CardCompact(nil)
+			@Card("", nil, true)
 }

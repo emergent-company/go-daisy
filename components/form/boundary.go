@@ -147,7 +147,9 @@ func CheckboxWithBoundary(name string, checked bool, label string) templ.Compone
 }
 
 // ToggleWithBoundary wraps Toggle with a dev-mode component boundary annotation.
-// Deprecated: use FormToggleWithBoundary(name, label, checked, "", nil) instead.
+// Deprecated: use FormToggleWithBoundary(name, label, checked, "", nil) for a stacked
+// form field, or ToggleInputWithBoundary(ToggleInputProps{Name: name, Checked: checked,
+// Class: "toggle toggle-primary"}) for a caller-owned row layout.
 // gallery:token label,checked
 // gallery:hint label:default(Enable notifications)
 func ToggleWithBoundary(name string, checked bool, label string) templ.Component {

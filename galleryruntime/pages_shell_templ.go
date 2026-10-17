@@ -546,7 +546,7 @@ func GalleryPage(title string, activeSlug string, categories []CategoryGroup, lo
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layout.Page(title+" · Gallery", "").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layout.PageFull(layout.PageProps{Title: title + " · Gallery", ThemeAttr: ""}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

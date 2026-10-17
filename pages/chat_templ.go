@@ -76,7 +76,7 @@ func ChatLayout(props ChatLayoutProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ui.Avatar("Alice Johnson", "", "", ui.AvatarSM, "", nil).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{Name: "Alice Johnson", Size: ui.AvatarSM}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -215,7 +215,7 @@ func conversationItem(name, lastMessage, time string, active, unread bool) templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ui.Avatar(name, "", "", ui.AvatarSM, "", nil).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{Name: name, Size: ui.AvatarSM}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
