@@ -89,7 +89,7 @@ h1 { margin-bottom: 10px; }
 </div>
 <div class="diff-list">`, r.Page.Name, badgeClass, r.Status, len(r.Diffs), r.NexusChars, r.GoDaisyChars)
 			if len(r.Diffs) == 0 {
-				b.WriteString( `<div class="no-diffs">No structural differences</div>`)
+				b.WriteString(`<div class="no-diffs">No structural differences</div>`)
 			}
 			for _, d := range r.Diffs {
 				fmt.Fprintf(&b, `<div class="diff-item diff-%s">
@@ -99,10 +99,10 @@ h1 { margin-bottom: 10px; }
 <div>godaisy: %s</div>
 </div>`, d.Type, d.Type, d.Path, d.NexusVal, d.GoDaisy)
 			}
-			b.WriteString( `</div></div>`)
+			b.WriteString(`</div></div>`)
 		}
-		b.WriteString( `</div>`)
+		b.WriteString(`</div>`)
 	}
-	b.WriteString( `</body></html>`)
+	b.WriteString(`</body></html>`)
 	return b.String()
 }

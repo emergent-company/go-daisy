@@ -4,9 +4,9 @@ import "fmt"
 
 // PageMapping links a go-daisy route to its nexus-html reference file.
 type PageMapping struct {
-	Route      string
-	Name       string
-	HTMLFile   string // relative path from nexus-html root
+	Route    string
+	Name     string
+	HTMLFile string // relative path from nexus-html root
 }
 
 // Pages returns the full list of pages to compare.

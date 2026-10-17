@@ -136,9 +136,9 @@ func TestDisclosureTargetVariants(t *testing.T) {
 // no custom SummaryBase is given.
 func TestDisclosureSummaryAttrsAndNamedGroup(t *testing.T) {
 	got := renderDisclosure(t, DisclosureProps{
-		GroupClass:  "group/cap",
-		DetailsBase: "rounded-box border border-line-translucent bg-base-200/40",
-		SummaryBase: "flex cursor-pointer list-none items-start justify-between gap-3 px-3 py-2.5 select-none [&::-webkit-details-marker]:hidden",
+		GroupClass:   "group/cap",
+		DetailsBase:  "rounded-box border border-line-translucent bg-base-200/40",
+		SummaryBase:  "flex cursor-pointer list-none items-start justify-between gap-3 px-3 py-2.5 select-none [&::-webkit-details-marker]:hidden",
 		SummaryAttrs: templ.Attributes{"data-testid": "tool-group-header-grp1"},
 		Attrs:        templ.Attributes{"data-testid": "tool-group", "data-tool-group": "grp1"},
 	}, "HDR", "TRAIL", "BODY")

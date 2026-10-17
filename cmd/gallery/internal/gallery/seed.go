@@ -19,13 +19,13 @@ import (
 	"github.com/emergent-company/go-daisy/components/form"
 	"github.com/emergent-company/go-daisy/components/layout"
 	"github.com/emergent-company/go-daisy/components/logs"
-	"github.com/emergent-company/go-daisy/pages"
 	"github.com/emergent-company/go-daisy/components/modal"
 	"github.com/emergent-company/go-daisy/components/nav"
 	"github.com/emergent-company/go-daisy/components/table"
 	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 	"github.com/emergent-company/go-daisy/galleryruntime"
+	"github.com/emergent-company/go-daisy/pages"
 	"github.com/emergent-company/go-daisy/shared"
 )
 
@@ -158,9 +158,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Chat ───────────────────────────────────────────────────
 		{
-		Slug:        "chat-bubble",
-		Name:        "Chat Bubble",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "chat-bubble",
+			Name:        "Chat Bubble",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Chat conversation bubbles (sent and received) with avatar, bot-icon, and hover action toolbar.",
 			Variants: []galleryruntime.GalleryStory{
@@ -273,9 +273,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-		Slug:        "chat-input",
-		Name:        "Chat Input",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "chat-input",
+			Name:        "Chat Input",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Compact single-line chat input bar with optional attach button and send button.",
 			Variants: []galleryruntime.GalleryStory{
@@ -321,9 +321,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Mockups ────────────────────────────────────────────────
 		{
-		Slug:        "mockup-code",
-		Name:        "Mockup Code",
-		Category:    galleryruntime.CategoryLayout,
+			Slug:        "mockup-code",
+			Name:        "Mockup Code",
+			Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Mockups",
 			Description: "Code block mockup with terminal-style prefix lines.",
 			Variants: []galleryruntime.GalleryStory{
@@ -354,9 +354,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-		Slug:        "mockup-browser",
-		Name:        "Mockup Browser",
-		Category:    galleryruntime.CategoryLayout,
+			Slug:        "mockup-browser",
+			Name:        "Mockup Browser",
+			Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Mockups",
 			Description: "Browser window mockup for UI showcasing.",
 			Variants: []galleryruntime.GalleryStory{
@@ -880,9 +880,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-		Slug:        "collapse",
-		Name:        "Collapse / Accordion",
-		Category:    galleryruntime.CategoryDataDisplay,
+			Slug:        "collapse",
+			Name:        "Collapse / Accordion",
+			Category:    galleryruntime.CategoryDataDisplay,
 			Subcategory: "Display",
 			Description: "Collapsible sections using DaisyUI collapse.",
 			Variants: []galleryruntime.GalleryStory{
@@ -911,9 +911,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-		Slug:        "dropdown",
-		Name:        "Dropdown",
-		Category:    galleryruntime.CategoryOverlays,
+			Slug:        "dropdown",
+			Name:        "Dropdown",
+			Category:    galleryruntime.CategoryOverlays,
 			Subcategory: "Display",
 			Description: "Dropdown menu triggered by a button.",
 			Variants: []galleryruntime.GalleryStory{
@@ -959,9 +959,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-		Slug:        "swap",
-		Name:        "Swap",
-		Category:    galleryruntime.CategoryOverlays,
+			Slug:        "swap",
+			Name:        "Swap",
+			Category:    galleryruntime.CategoryOverlays,
 			Subcategory: "Display",
 			Description: "Toggle between two visual states on click.",
 			Variants: []galleryruntime.GalleryStory{
@@ -991,19 +991,19 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								ui.IconSpan("lucide--sun", "size-8"),
 								ui.IconSpan("lucide--moon", "size-8"),
 							),
-						ui.SwapWithBoundary(false,
-						ui.SimpleButton("ON", "btn-success", ui.ButtonSM, false, nil),
-						ui.SimpleButton("OFF", ui.ButtonGhost, ui.ButtonSM, false, nil),
-						),
+							ui.SwapWithBoundary(false,
+								ui.SimpleButton("ON", "btn-success", ui.ButtonSM, false, nil),
+								ui.SimpleButton("OFF", ui.ButtonGhost, ui.ButtonSM, false, nil),
+							),
 						)
 					},
 				},
 			},
 		},
 		{
-		Slug:        "hero",
-		Name:        "Hero",
-		Category:    galleryruntime.CategoryLayout,
+			Slug:        "hero",
+			Name:        "Hero",
+			Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Layout",
 			Description: "Full-width hero section with headline and CTA button.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1116,8 +1116,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Examples",
 					Description: "All three list layout patterns: default, col-wrap description, and multiple trailing actions.",
 					RenderFunc: func(_ url.Values) templ.Component {
-					editBtn := ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault, Icon: "lucide--pencil"})
-					deleteBtn := ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault, Icon: "lucide--trash-2"})
+						editBtn := ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault, Icon: "lucide--pencil"})
+						deleteBtn := ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault, Icon: "lucide--trash-2"})
 						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 							if _, err := io.WriteString(w, `<div class="p-6 space-y-8">`); err != nil {
 								return err
@@ -1254,11 +1254,11 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return row(
 							ui.IndicatorWithBoundary("badge badge-error badge-sm",
 								templ.Raw("3"),
-						ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeSquare, Icon: "lucide--bell"}),
-						),
-						ui.IndicatorWithBoundary("badge badge-primary badge-xs",
-							templ.NopComponent,
-							ui.AvatarFull(ui.AvatarProps{Name: "AJ", Size: ui.AvatarMD}),
+								ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeSquare, Icon: "lucide--bell"}),
+							),
+							ui.IndicatorWithBoundary("badge badge-primary badge-xs",
+								templ.NopComponent,
+								ui.AvatarFull(ui.AvatarProps{Name: "AJ", Size: ui.AvatarMD}),
 							),
 							ui.IndicatorWithBoundary("badge badge-success badge-sm",
 								templ.Raw("New"),
@@ -1273,9 +1273,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Stack ──────────────────────────────────────────────────
 		{
-		Slug:        "stack",
-		Name:        "Stack",
-		Category:    galleryruntime.CategoryLayout,
+			Slug:        "stack",
+			Name:        "Stack",
+			Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Display",
 			Description: "Overlapping stacked card effect.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1363,9 +1363,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Mask ───────────────────────────────────────────────────
 		{
-		Slug:        "mask",
-		Name:        "Mask",
-		Category:    galleryruntime.CategoryLayout,
+			Slug:        "mask",
+			Name:        "Mask",
+			Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Display",
 			Description: "CSS mask shapes applied to images and elements.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1560,9 +1560,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Mockup Phone & Window ──────────────────────────────────
 		{
-		Slug:        "mockup-phone",
-		Name:        "Mockup Phone",
-		Category:    galleryruntime.CategoryLayout,
+			Slug:        "mockup-phone",
+			Name:        "Mockup Phone",
+			Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Mockups",
 			Description: "Phone frame mockup for mobile UI display.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1584,9 +1584,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-		Slug:        "mockup-window",
-		Name:        "Mockup Window",
-		Category:    galleryruntime.CategoryLayout,
+			Slug:        "mockup-window",
+			Name:        "Mockup Window",
+			Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Mockups",
 			Description: "Desktop window frame mockup.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1716,10 +1716,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: "Item 2"},
 							{Label: "Item 3"},
 						}
-					return row(
-						ui.DropdownWithBoundary("", ui.DropdownTrigger("Bottom ▼", "btn-outline", nil), items),
-						ui.DropdownWithBoundary(ui.DropdownTop, ui.DropdownTrigger("Top ▲", "btn-outline", nil), items),
-						ui.DropdownWithBoundary(ui.DropdownEnd, ui.DropdownTrigger("Options ⋮", "btn-primary", nil), []ui.DropdownItemProps{
+						return row(
+							ui.DropdownWithBoundary("", ui.DropdownTrigger("Bottom ▼", "btn-outline", nil), items),
+							ui.DropdownWithBoundary(ui.DropdownTop, ui.DropdownTrigger("Top ▲", "btn-outline", nil), items),
+							ui.DropdownWithBoundary(ui.DropdownEnd, ui.DropdownTrigger("Options ⋮", "btn-primary", nil), []ui.DropdownItemProps{
 								{Label: "Edit"},
 								{Label: "Duplicate"},
 								{Divider: true},
@@ -1800,10 +1800,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-		Slug:        "dock-nav",
-		Name:        "Dock",
-		Category:    galleryruntime.CategoryLayout,
-		Subcategory: "Layout",
+			Slug:        "dock-nav",
+			Name:        "Dock",
+			Category:    galleryruntime.CategoryLayout,
+			Subcategory: "Layout",
 			Description: "Bottom dock navigation bar for mobile-style UIs.",
 			Variants: []galleryruntime.GalleryStory{
 				{
@@ -1930,9 +1930,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Foundation / Join, Link ───────────────────────────────────────────────
 		{
-		Slug:        "join",
-		Name:        "Join",
-		Category:    galleryruntime.CategoryLayout,
+			Slug:        "join",
+			Name:        "Join",
+			Category:    galleryruntime.CategoryLayout,
 			Subcategory: "Layout",
 			Description: "Join fuses children into a single rounded group.",
 			Variants: []galleryruntime.GalleryStory{
@@ -1998,9 +1998,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
-		Slug:        "link-styles",
-		Name:        "Links",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "link-styles",
+			Name:        "Links",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "DaisyUI link styles with color variants and hover.",
 			Variants: []galleryruntime.GalleryStory{
@@ -2246,9 +2246,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display extras ────────────────────────────────────────────────
 		{
-		Slug:        "person-cell",
-		Name:        "Person Cell",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "person-cell",
+			Name:        "Person Cell",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Compact avatar + name + subtitle identity block for use in lists, tables, and flex rows.",
 			Variants: []galleryruntime.GalleryStory{
@@ -2342,9 +2342,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 		},
 
 		{
-		Slug:        "progress-card",
-		Name:        "Progress Card",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "progress-card",
+			Name:        "Progress Card",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Cards",
 			Description: "Card with a gradient header, a progress bar, and an optional stats row.",
 			Variants: []galleryruntime.GalleryStory{
@@ -2715,68 +2715,68 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						return ui.NotificationPanelWithBoundary(items, 2, "#")
 					},
 				},
-		{
-			Name:        "Examples",
-			Description: "Panel with unread and read notifications.",
-			SubExamples: []galleryruntime.GallerySubExample{
 				{
-					Label: "Data-driven",
-					RenderFunc: func(_ url.Values) templ.Component {
-						items := []ui.NotificationItem{
-							{Title: "Case assigned", Body: "Johnson v. Smith was assigned to you.", Time: "2 min ago", Unread: true},
-							{Title: "Document uploaded", Body: "A new document was added to Case #142.", Time: "10 min ago", Unread: true},
-							{Title: "Reminder", Body: "Court date in 3 days.", Time: "1 hour ago", Unread: false},
-							{Title: "Workflow complete", Body: "Document review workflow finished.", Time: "2 hours ago", Unread: false},
-						}
-						return ui.NotificationPanelWithBoundary(items, 2, "#")
+					Name:        "Examples",
+					Description: "Panel with unread and read notifications.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Data-driven",
+							RenderFunc: func(_ url.Values) templ.Component {
+								items := []ui.NotificationItem{
+									{Title: "Case assigned", Body: "Johnson v. Smith was assigned to you.", Time: "2 min ago", Unread: true},
+									{Title: "Document uploaded", Body: "A new document was added to Case #142.", Time: "10 min ago", Unread: true},
+									{Title: "Reminder", Body: "Court date in 3 days.", Time: "1 hour ago", Unread: false},
+									{Title: "Workflow complete", Body: "Document review workflow finished.", Time: "2 hours ago", Unread: false},
+								}
+								return ui.NotificationPanelWithBoundary(items, 2, "#")
+							},
+						},
+						{
+							Label: "Composed via children",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									return ui.NotificationPanel(2, "#").Render(templ.WithChildren(ctx, seq(
+										ui.NotificationRowWithBoundary(ui.NotificationItem{
+											IconClass:     "bg-primary/10",
+											IconTextClass: "text-primary",
+											IconName:      "lucide--briefcase",
+											Title:         "New case assigned",
+											Body:          "Johnson v. Smith was assigned to you.",
+											Time:          "2 min ago",
+											Unread:        true,
+										}),
+										ui.NotificationRowWithBoundary(ui.NotificationItem{
+											IconClass:     "bg-warning/10",
+											IconTextClass: "text-warning",
+											IconName:      "lucide--check-square",
+											Title:         "Task deadline tomorrow",
+											Body:          "File motion for Johnson v. Smith due soon.",
+											Time:          "1 hour ago",
+											Unread:        true,
+										}),
+										ui.NotificationRowWithBoundary(ui.NotificationItem{
+											IconClass:     "bg-success/10",
+											IconTextClass: "text-success",
+											IconName:      "lucide--user",
+											Title:         "Client signed in",
+											Body:          "Alice Johnson accessed the client portal.",
+											Time:          "Yesterday",
+											Unread:        false,
+										}),
+									)), w)
+								})
+							},
+						},
 					},
 				},
-				{
-					Label: "Composed via children",
-					RenderFunc: func(_ url.Values) templ.Component {
-						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-							return ui.NotificationPanel(2, "#").Render(templ.WithChildren(ctx, seq(
-								ui.NotificationRowWithBoundary(ui.NotificationItem{
-									IconClass:     "bg-primary/10",
-									IconTextClass: "text-primary",
-									IconName:      "lucide--briefcase",
-									Title:         "New case assigned",
-									Body:          "Johnson v. Smith was assigned to you.",
-									Time:          "2 min ago",
-									Unread:        true,
-								}),
-								ui.NotificationRowWithBoundary(ui.NotificationItem{
-									IconClass:     "bg-warning/10",
-									IconTextClass: "text-warning",
-									IconName:      "lucide--check-square",
-									Title:         "Task deadline tomorrow",
-									Body:          "File motion for Johnson v. Smith due soon.",
-									Time:          "1 hour ago",
-									Unread:        true,
-								}),
-								ui.NotificationRowWithBoundary(ui.NotificationItem{
-									IconClass:     "bg-success/10",
-									IconTextClass: "text-success",
-									IconName:      "lucide--user",
-									Title:         "Client signed in",
-									Body:          "Alice Johnson accessed the client portal.",
-									Time:          "Yesterday",
-									Unread:        false,
-								}),
-							)), w)
-						})
-					},
-				},
-			},
-		},
 			},
 		},
 
 		// ── Overlays extras ───────────────────────────────────────────────────
 		{
-		Slug:        "fab",
-		Name:        "FAB",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "fab",
+			Name:        "FAB",
+			Category:    galleryruntime.CategoryComponents,
 			Description: "CSS-only floating action button with an expandable sub-menu of quick actions. No JS required.",
 			Variants: []galleryruntime.GalleryStory{
 				{
@@ -2984,9 +2984,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Forms extras ──────────────────────────────────────────────────────
 		{
-		Slug:        "filter-bar",
-		Name:        "Filter Bar",
-		Category:    galleryruntime.CategoryNavigation,
+			Slug:        "filter-bar",
+			Name:        "Filter Bar",
+			Category:    galleryruntime.CategoryNavigation,
 			Subcategory: "Filters",
 			Description: "FilterCard wraps filter inputs in a card with Filter/Clear buttons. Set Inline=true for a bare horizontal bar (used above tables).",
 			Variants: []galleryruntime.GalleryStory{
@@ -3814,8 +3814,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 										Required:    true,
 									}),
 									form.FormField(form.FormFieldProps{
-										Type: form.FieldSelect,
-										Name: "case-type",
+										Type:  form.FieldSelect,
+										Name:  "case-type",
 										Label: "Case type",
 										Options: []form.SelectOption{
 											{Value: "civil", Label: "Civil"},
@@ -3836,8 +3836,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 										Rows:        3,
 									}),
 									form.FormField(form.FormFieldProps{
-										Type: form.FieldSelect,
-										Name: "priority",
+										Type:  form.FieldSelect,
+										Name:  "priority",
 										Label: "Priority",
 										Options: []form.SelectOption{
 											{Value: "normal", Label: "Normal"},
@@ -3850,8 +3850,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{
 								Title: "Step 3 — Team",
 								Content: form.FormField(form.FormFieldProps{
-									Type: form.FieldSelect,
-									Name: "lead-attorney",
+									Type:  form.FieldSelect,
+									Name:  "lead-attorney",
 									Label: "Lead attorney",
 									Options: []form.SelectOption{
 										{Value: "alice", Label: "Alice Johnson"},
@@ -4256,9 +4256,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ui.Card
 		{
-		Slug:        "card-real",
-		Name:        "Card",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "card-real",
+			Name:        "Card",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Cards",
 			Description: "A DaisyUI card container with a title.",
 			Variants: []galleryruntime.GalleryStory{
@@ -4545,9 +4545,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ui.StatCard
 		{
-		Slug:        "stat-card-real",
-		Name:        "Stat Card",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "stat-card-real",
+			Name:        "Stat Card",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Cards",
 			Description: "A compact summary stat widget with icon, value, and label.",
 			Variants: []galleryruntime.GalleryStory{
@@ -5671,34 +5671,34 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: MenuTokens(),
 				},
-			{
-				Name:        "Examples",
-				Description: "Menu in default and compact sizes.",
-				SubExamples: []galleryruntime.GallerySubExample{
-					{
-						Label: "Default size",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return nav.MenuWithBoundary("", []nav.MenuItem{
-								{Label: "Dashboard", Icon: "lucide--layout-dashboard", Href: "#", Active: true},
-								{Label: "Cases", Icon: "lucide--folder-open", Href: "#"},
-								{Label: "Contacts", Icon: "lucide--users", Href: "#"},
-								{Label: "Settings", Icon: "lucide--settings", Href: "#"},
-							})
+				{
+					Name:        "Examples",
+					Description: "Menu in default and compact sizes.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Default size",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.MenuWithBoundary("", []nav.MenuItem{
+									{Label: "Dashboard", Icon: "lucide--layout-dashboard", Href: "#", Active: true},
+									{Label: "Cases", Icon: "lucide--folder-open", Href: "#"},
+									{Label: "Contacts", Icon: "lucide--users", Href: "#"},
+									{Label: "Settings", Icon: "lucide--settings", Href: "#"},
+								})
+							},
 						},
-					},
-					{
-						Label: "Compact (xs)",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return nav.MenuWithBoundary("menu-xs", []nav.MenuItem{
-								{Label: "Dashboard", Icon: "lucide--layout-dashboard", Href: "#", Active: true},
-								{Label: "Cases", Icon: "lucide--folder-open", Href: "#"},
-								{Label: "Contacts", Icon: "lucide--users", Href: "#"},
-								{Label: "Settings", Icon: "lucide--settings", Href: "#"},
-							})
+						{
+							Label: "Compact (xs)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return nav.MenuWithBoundary("menu-xs", []nav.MenuItem{
+									{Label: "Dashboard", Icon: "lucide--layout-dashboard", Href: "#", Active: true},
+									{Label: "Cases", Icon: "lucide--folder-open", Href: "#"},
+									{Label: "Contacts", Icon: "lucide--users", Href: "#"},
+									{Label: "Settings", Icon: "lucide--settings", Href: "#"},
+								})
+							},
 						},
 					},
 				},
-			},
 			},
 		},
 
@@ -5740,61 +5740,61 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: ModalTokens(),
 				},
-			{
-				Name:        "Examples",
-				Description: "Modal in SM, MD, and LG sizes.",
-				SubExamples: []galleryruntime.GallerySubExample{
-					{
-						Label: "Small (modal-sm)",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-								if _, err := io.WriteString(w, `<div style="min-height:240px;position:relative;">`); err != nil {
+				{
+					Name:        "Examples",
+					Description: "Modal in SM, MD, and LG sizes.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Small (modal-sm)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									if _, err := io.WriteString(w, `<div style="min-height:240px;position:relative;">`); err != nil {
+										return err
+									}
+									if err := withChildren(modal.ModalWithBoundary("Confirm — SM", modal.ModalSM, modal.ModalDriverVanilla), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
+										return err
+									}
+									_, err := io.WriteString(w, `</div>`)
 									return err
-								}
-								if err := withChildren(modal.ModalWithBoundary("Confirm — SM", modal.ModalSM, modal.ModalDriverVanilla), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
-									return err
-								}
-								_, err := io.WriteString(w, `</div>`)
-								return err
-							})
+								})
+							},
 						},
-					},
-					{
-						Label: "Default (modal-md)",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-								if _, err := io.WriteString(w, `<div style="min-height:280px;position:relative;">`); err != nil {
+						{
+							Label: "Default (modal-md)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									if _, err := io.WriteString(w, `<div style="min-height:280px;position:relative;">`); err != nil {
+										return err
+									}
+									if err := withChildren(modal.ModalWithBoundary("Confirm — MD", modal.ModalMD, modal.ModalDriverVanilla), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
+										return err
+									}
+									_, err := io.WriteString(w, `</div>`)
 									return err
-								}
-								if err := withChildren(modal.ModalWithBoundary("Confirm — MD", modal.ModalMD, modal.ModalDriverVanilla), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
-									return err
-								}
-								_, err := io.WriteString(w, `</div>`)
-								return err
-							})
+								})
+							},
 						},
-					},
-					{
-						Label: "Large (modal-lg)",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-								if _, err := io.WriteString(w, `<div style="min-height:280px;position:relative;">`); err != nil {
+						{
+							Label: "Large (modal-lg)",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									if _, err := io.WriteString(w, `<div style="min-height:280px;position:relative;">`); err != nil {
+										return err
+									}
+									if err := withChildren(modal.ModalWithBoundary("Confirm — LG", modal.ModalLG, modal.ModalDriverVanilla), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
+										return err
+									}
+									_, err := io.WriteString(w, `</div>`)
 									return err
-								}
-								if err := withChildren(modal.ModalWithBoundary("Confirm — LG", modal.ModalLG, modal.ModalDriverVanilla), rawHTML(`<p class="text-sm text-base-content/70 mb-4">Modal body content.</p>`)).Render(ctx, w); err != nil {
-									return err
-								}
-								_, err := io.WriteString(w, `</div>`)
-								return err
-							})
+								})
+							},
 						},
 					},
 				},
 			},
 		},
-	},
 
-	// modal.ConfirmPopup
+		// modal.ConfirmPopup
 		{
 			Slug:        "confirm-popup",
 			Name:        "Confirm Popup",
@@ -5828,46 +5828,46 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: ConfirmPopupTokens(),
 				},
-			{
-				Name:        "Examples",
-				Description: "Confirm dialogs for delete and archive actions.",
-				SubExamples: []galleryruntime.GallerySubExample{
-					{
-						Label: "Delete confirmation",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-								if _, err := io.WriteString(w, `<div style="min-height:240px;position:relative;">`); err != nil {
+				{
+					Name:        "Examples",
+					Description: "Confirm dialogs for delete and archive actions.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Delete confirmation",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									if _, err := io.WriteString(w, `<div style="min-height:240px;position:relative;">`); err != nil {
+										return err
+									}
+									if err := modal.ConfirmPopupWithBoundary("Delete record?", "This action cannot be undone.", "Delete", "#", "delete").Render(ctx, w); err != nil {
+										return err
+									}
+									_, err := io.WriteString(w, `</div>`)
 									return err
-								}
-								if err := modal.ConfirmPopupWithBoundary("Delete record?", "This action cannot be undone.", "Delete", "#", "delete").Render(ctx, w); err != nil {
-									return err
-								}
-								_, err := io.WriteString(w, `</div>`)
-								return err
-							})
+								})
+							},
 						},
-					},
-					{
-						Label: "Archive confirmation",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-								if _, err := io.WriteString(w, `<div style="min-height:240px;position:relative;">`); err != nil {
+						{
+							Label: "Archive confirmation",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									if _, err := io.WriteString(w, `<div style="min-height:240px;position:relative;">`); err != nil {
+										return err
+									}
+									if err := modal.ConfirmPopupWithBoundary("Archive case?", "The case will be moved to your archive.", "Archive", "#", "patch").Render(ctx, w); err != nil {
+										return err
+									}
+									_, err := io.WriteString(w, `</div>`)
 									return err
-								}
-								if err := modal.ConfirmPopupWithBoundary("Archive case?", "The case will be moved to your archive.", "Archive", "#", "patch").Render(ctx, w); err != nil {
-									return err
-								}
-								_, err := io.WriteString(w, `</div>`)
-								return err
-							})
+								})
+							},
 						},
 					},
 				},
 			},
 		},
-	},
 
-	// modal.FormModal
+		// modal.FormModal
 		{
 			Slug:        "form-modal-real",
 			Name:        "Form Modal",
@@ -5947,46 +5947,46 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						},
 					},
 				},
-			{
-				Name:        "Examples",
-				Description: "Form modal at different sizes.",
-				SubExamples: []galleryruntime.GallerySubExample{
-					{
-						Label: "Small form modal",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-								if _, err := io.WriteString(w, `<div style="min-height:300px;position:relative;">`); err != nil {
+				{
+					Name:        "Examples",
+					Description: "Form modal at different sizes.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "Small form modal",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									if _, err := io.WriteString(w, `<div style="min-height:300px;position:relative;">`); err != nil {
+										return err
+									}
+									if err := modal.FormModalWithBoundary(modal.FormModalProps{
+										ID: "ex-form-sm", Title: "New Case", Size: modal.ModalSM, SubmitText: "Create", Action: "#", Method: "post",
+									}, modal.ModalDriverVanilla).Render(ctx, w); err != nil {
+										return err
+									}
+									_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('ex-form-sm');if(d&&d.showModal)d.showModal();});</script>`)
 									return err
-								}
-								if err := modal.FormModalWithBoundary(modal.FormModalProps{
-									ID: "ex-form-sm", Title: "New Case", Size: modal.ModalSM, SubmitText: "Create", Action: "#", Method: "post",
-								}, modal.ModalDriverVanilla).Render(ctx, w); err != nil {
+								})
+							},
+						},
+						{
+							Label: "Destructive form modal",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+									if _, err := io.WriteString(w, `<div style="min-height:300px;position:relative;">`); err != nil {
+										return err
+									}
+									if err := modal.FormModalWithBoundary(modal.FormModalProps{
+										ID: "ex-form-err", Title: "Delete Case", Size: modal.ModalSM, SubmitText: "Delete", CancelText: "Keep", Action: "#", Method: "post", Variant: "error",
+									}, modal.ModalDriverVanilla).Render(ctx, w); err != nil {
+										return err
+									}
+									_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('ex-form-err');if(d&&d.showModal)d.showModal();});</script>`)
 									return err
-								}
-								_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('ex-form-sm');if(d&&d.showModal)d.showModal();});</script>`)
-								return err
-							})
+								})
+							},
 						},
 					},
-					{
-						Label: "Destructive form modal",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-								if _, err := io.WriteString(w, `<div style="min-height:300px;position:relative;">`); err != nil {
-									return err
-								}
-							if err := modal.FormModalWithBoundary(modal.FormModalProps{
-									ID: "ex-form-err", Title: "Delete Case", Size: modal.ModalSM, SubmitText: "Delete", CancelText: "Keep", Action: "#", Method: "post", Variant: "error",
-								}, modal.ModalDriverVanilla).Render(ctx, w); err != nil {
-								return err
-							}
-							_, err := io.WriteString(w, `</div><script>document.addEventListener('DOMContentLoaded',function(){var d=document.getElementById('ex-form-err');if(d&&d.showModal)d.showModal();});</script>`)
-							return err
-						})
-					},
 				},
-				},
-			},
 			},
 		},
 
@@ -6592,31 +6592,31 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: LogsTableTokens(),
 				},
-			{
-				Name:        "Examples",
-				Description: "Log table with all four log types.",
-				SubExamples: []galleryruntime.GallerySubExample{
-					{
-						Label: "All log types",
-						RenderFunc: func(_ url.Values) templ.Component {
-							now := time.Now()
-							return logs.LogsTableWithBoundary([]logs.LogEntry{
-								{Type: "success", Message: "Case created successfully.", CreatedAt: now.Add(-1 * time.Minute)},
-								{Type: "info", Message: "Workflow triggered: document-review.", CreatedAt: now.Add(-3 * time.Minute)},
-								{Type: "warn", Message: "API rate limit at 80% of quota.", CreatedAt: now.Add(-10 * time.Minute)},
-								{Type: "error", Message: "Integration sync failed: connection timeout.", CreatedAt: now.Add(-30 * time.Minute)},
-								{Type: "info", Message: "User logged in from new device.", CreatedAt: now.Add(-1 * time.Hour)},
-							})
+				{
+					Name:        "Examples",
+					Description: "Log table with all four log types.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "All log types",
+							RenderFunc: func(_ url.Values) templ.Component {
+								now := time.Now()
+								return logs.LogsTableWithBoundary([]logs.LogEntry{
+									{Type: "success", Message: "Case created successfully.", CreatedAt: now.Add(-1 * time.Minute)},
+									{Type: "info", Message: "Workflow triggered: document-review.", CreatedAt: now.Add(-3 * time.Minute)},
+									{Type: "warn", Message: "API rate limit at 80% of quota.", CreatedAt: now.Add(-10 * time.Minute)},
+									{Type: "error", Message: "Integration sync failed: connection timeout.", CreatedAt: now.Add(-30 * time.Minute)},
+									{Type: "info", Message: "User logged in from new device.", CreatedAt: now.Add(-1 * time.Hour)},
+								})
+							},
 						},
-					},
-					{
-						Label: "Empty state",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return logs.LogsTableWithBoundary([]logs.LogEntry{})
+						{
+							Label: "Empty state",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return logs.LogsTableWithBoundary([]logs.LogEntry{})
+							},
 						},
 					},
 				},
-			},
 			},
 		},
 
@@ -6831,7 +6831,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Single month",
 					Description: "A styled month calendar built with plain HTML and DaisyUI calendar classes.",
-					Templ: form.CalendarDemoWithBoundary("June", "2025", 0, 30, 17, 23),
+					Templ:       form.CalendarDemoWithBoundary("June", "2025", 0, 30, 17, 23),
 				},
 				{
 					// Two months side by side for a range-picker layout demo.
@@ -6860,9 +6860,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Text Rotate ────────────────────────────────────────────
 		{
-		Slug:        "text-rotate",
-		Name:        "Text Rotate",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "text-rotate",
+			Name:        "Text Rotate",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Animated component that cycles through text lines with an infinite loop.",
 			FrameHeight: "200px",
@@ -6899,9 +6899,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Hover 3D Card ──────────────────────────────────────────
 		{
-		Slug:        "hover-3d",
-		Name:        "Hover 3D Card",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "hover-3d",
+			Name:        "Hover 3D Card",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Card that tilts and rotates in 3D space when hovered.",
 			FrameHeight: "300px",
@@ -6939,9 +6939,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Hover Gallery ──────────────────────────────────────────
 		{
-		Slug:        "hover-gallery",
-		Name:        "Hover Gallery",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "hover-gallery",
+			Name:        "Hover Gallery",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Display",
 			Description: "Horizontal hover image gallery — first image visible by default, others revealed on hover.",
 			FrameHeight: "280px",
@@ -6979,30 +6979,30 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					Tokens: NavbarTokens(),
 				},
-			{
-				Name:        "Examples",
-				Description: "Navbar with different app names.",
-				SubExamples: []galleryruntime.GallerySubExample{
-					{
-						Label: "LegalDesk",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return layout.NavbarWithBoundary("LegalDesk")
+				{
+					Name:        "Examples",
+					Description: "Navbar with different app names.",
+					SubExamples: []galleryruntime.GallerySubExample{
+						{
+							Label: "LegalDesk",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return layout.NavbarWithBoundary("LegalDesk")
+							},
 						},
-					},
-					{
-						Label: "CaseFlow",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return layout.NavbarWithBoundary("CaseFlow")
+						{
+							Label: "CaseFlow",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return layout.NavbarWithBoundary("CaseFlow")
+							},
 						},
-					},
-					{
-						Label: "DocVault",
-						RenderFunc: func(_ url.Values) templ.Component {
-							return layout.NavbarWithBoundary("DocVault")
+						{
+							Label: "DocVault",
+							RenderFunc: func(_ url.Values) templ.Component {
+								return layout.NavbarWithBoundary("DocVault")
+							},
 						},
 					},
 				},
-			},
 			},
 		},
 
@@ -7074,11 +7074,11 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Classic",
 					Description: "Hamburger + search bar, right: notifications, apps, language, avatar dropdown.",
 					Templ: layout.TopbarVariantWithBoundary("classic", layout.TopbarVariantOpts{
-						ShowSearch:         true,
-						ShowNotifications:  true,
-						ShowApps:           true,
-						ShowLanguage:       true,
-						AvatarSrc:          "./images/avatars/1.png",
+						ShowSearch:        true,
+						ShowNotifications: true,
+						ShowApps:          true,
+						ShowLanguage:      true,
+						AvatarSrc:         "./images/avatars/1.png",
 					}),
 					FrameHeight: "64px",
 				},
@@ -7124,9 +7124,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Editor",
 					Description: "Breadcrumb-style title + search, right: save status, avatar group, Edit button.",
 					Templ: layout.TopbarVariantWithBoundary("editor", layout.TopbarVariantOpts{
-						ShowSearch:      true,
+						ShowSearch:        true,
 						SearchPlaceholder: "Search files...",
-						SaveStatus:      "Saved just now",
+						SaveStatus:        "Saved just now",
 					}),
 					FrameHeight: "64px",
 				},
@@ -7152,8 +7152,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Social",
 					Description: "Brand left, copyright center, social icons right.",
 					Templ: nav.FooterVariantWithBoundary("social", nav.FooterVariantOpts{
-						Copyright:  "© 2025 Nexus. All rights reserved.",
-						BrandName:  "Nexus",
+						Copyright: "© 2025 Nexus. All rights reserved.",
+						BrandName: "Nexus",
 						SocialLinks: []nav.SocialLink{
 							{Icon: "lucide--github", Href: "#"},
 							{Icon: "lucide--twitter", Href: "#"},
@@ -7285,10 +7285,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Task",
 					Description: "Schedule title with count badges + Sync/New Event buttons.",
 					Templ: nav.PageTitleVariantWithBoundary("task", nav.PageTitleVariantOpts{
-						Title:          "Today's Schedule",
-						DueCount:       2,
-						ProgressCount:  4,
-						DoneCount:      7,
+						Title:         "Today's Schedule",
+						DueCount:      2,
+						ProgressCount: 4,
+						DoneCount:     7,
 					}),
 				},
 				{
@@ -7326,7 +7326,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "Interactive",
 					Description: "Select sidebar, topbar, and footer variants to compose a live layout.",
-					Templ: layout.LayoutBuilderWithBoundary(),
+					Templ:       layout.LayoutBuilderWithBoundary(),
 					FrameHeight: "100vh",
 				},
 			},
@@ -7334,9 +7334,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Navigation / Notifications ─────────────────────────────────────────────
 		{
-		Slug:        "notification",
-		Name:        "Notification",
-		Category:    galleryruntime.CategoryFeedback,
+			Slug:        "notification",
+			Name:        "Notification",
+			Category:    galleryruntime.CategoryFeedback,
 			Subcategory: "Notifications",
 			Description: "Notification dropdown/drawer variants: basic dropdown, tab dropdown, drawer side panel.",
 			Variants: []galleryruntime.GalleryStory{
@@ -7463,9 +7463,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Default",
 					Description: "Standard avatar dropdown with user info + menu items + sign-out.",
 					Templ: nav.ProfileMenuVariantWithBoundary("default", nav.ProfileMenuVariantOpts{
-						Name:       "Denish Navadiya",
-						Email:      "denish@example.com",
-						Initials:   "DN",
+						Name:        "Denish Navadiya",
+						Email:       "denish@example.com",
+						Initials:    "DN",
 						SignOutHref: "#",
 						Items: []nav.ProfileMenuItem{
 							{Label: "My Profile", Href: "#", Icon: "lucide--user"},
@@ -7478,10 +7478,10 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Switch Account",
 					Description: "Multi-account switcher with current user card + account list + add new.",
 					Templ: nav.ProfileMenuVariantWithBoundary("switch-account", nav.ProfileMenuVariantOpts{
-						Name:       "Denish Navadiya",
-						Email:      "denish@example.com",
-						Initials:   "DN",
-						Role:       "Admin",
+						Name:     "Denish Navadiya",
+						Email:    "denish@example.com",
+						Initials: "DN",
+						Role:     "Admin",
 						Accounts: []nav.ProfileAccount{
 							{Name: "Alex Johnson", Email: "alex@acme.com", Active: true},
 							{Name: "Sarah Chen", Email: "sarah@acme.com"},
@@ -8447,9 +8447,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Cards — Testimonial ──────────────────────────────────
 		{
-		Slug:        "testimonial-card",
-		Name:        "Testimonial Card",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "testimonial-card",
+			Name:        "Testimonial Card",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Cards",
 			Description: "Quote card with star rating, avatar, name, and role. Composes existing Card, Avatar, and Rating primitives.",
 			Variants: []galleryruntime.GalleryStory{
@@ -8513,9 +8513,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Cards — Sparkline Stat Card ──────────────────────────
 		{
-		Slug:        "stat-card-sparkline",
-		Name:        "Stat Card — Sparkline",
-		Category:    galleryruntime.CategoryComponents,
+			Slug:        "stat-card-sparkline",
+			Name:        "Stat Card — Sparkline",
+			Category:    galleryruntime.CategoryComponents,
 			Subcategory: "Cards",
 			Description: "KPI stat card with inline SVG sparkline chart showing trend data.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9039,11 +9039,11 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Content: rawHTML(`<div class="bg-accent text-accent-content text-xl font-bold p-12">Slide 3</div>`), Class: "bg-accent/5"},
 						}
 						return ui.SwiperCarouselWithBoundary(ui.SwiperCarouselProps{
-							ID:           "swiper-demo",
-							Slides:       slides,
-							Navigation:   true,
-							Pagination:   true,
-							Height:       "300px",
+							ID:         "swiper-demo",
+							Slides:     slides,
+							Navigation: true,
+							Pagination: true,
+							Height:     "300px",
 						})
 					},
 					Tokens: []galleryruntime.DesignToken{},
@@ -9053,18 +9053,18 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Carousel with navigation, pagination, autoplay, and multi-slide variants.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						slide := func(label string, bg string) ui.SwiperSlide {
-							return ui.SwiperSlide{Content: rawHTML(`<div class="flex items-center justify-center h-full text-xl font-bold `+bg+`">`+label+`</div>`)}
+							return ui.SwiperSlide{Content: rawHTML(`<div class="flex items-center justify-center h-full text-xl font-bold ` + bg + `">` + label + `</div>`)}
 						}
 						slides := []ui.SwiperSlide{slide("Slide 1", "bg-primary text-primary-content"), slide("Slide 2", "bg-secondary text-secondary-content"), slide("Slide 3", "bg-accent text-accent-content")}
 						return ui.SwiperCarousel(ui.SwiperCarouselProps{
-							ID:           "swiper-example",
-							Slides:       slides,
-							Navigation:   true,
-							Pagination:   true,
-							Autoplay:     true,
+							ID:            "swiper-example",
+							Slides:        slides,
+							Navigation:    true,
+							Pagination:    true,
+							Autoplay:      true,
 							AutoplayDelay: 3000,
-							Loop:         true,
-							Height:       "300px",
+							Loop:          true,
+							Height:        "300px",
 						})
 					},
 				},
@@ -9163,12 +9163,12 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							title = "Sales Overview"
 						}
 						return ui.ChartWithBoundary(ui.ChartProps{
-							ID:     "chart-demo",
-							Type:   chartType,
-							Title:  title,
-							Series: []ui.ChartSeries{{Name: "Sales", Data: []float64{30, 40, 35, 50, 49, 60, 70, 91, 125}}},
+							ID:         "chart-demo",
+							Type:       chartType,
+							Title:      title,
+							Series:     []ui.ChartSeries{{Name: "Sales", Data: []float64{30, 40, 35, 50, 49, 60, 70, 91, 125}}},
 							Categories: []string{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"},
-							Height: "300",
+							Height:     "300",
 						})
 					},
 					Tokens: []galleryruntime.DesignToken{
@@ -9269,9 +9269,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Layout / Pages — Auth ──────────────────────────────────────────────
 		{
-		Slug:        "page-auth",
-		Name:        "Auth Page",
-		Category:    galleryruntime.CategoryPageTemplates,
+			Slug:        "page-auth",
+			Name:        "Auth Page",
+			Category:    galleryruntime.CategoryPageTemplates,
 			Subcategory: "Pages",
 			Description: "Full authentication pages with split layout: login, register, forgot password, and reset password.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9312,9 +9312,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Layout / Pages — Dashboard ──────────────────────────────────────────
 		{
-		Slug:        "page-dashboard",
-		Name:        "Dashboard Page",
-		Category:    galleryruntime.CategoryPageTemplates,
+			Slug:        "page-dashboard",
+			Name:        "Dashboard Page",
+			Category:    galleryruntime.CategoryPageTemplates,
 			Subcategory: "Pages",
 			Description: "CRM dashboard with stat cards, sparklines, charts, and a recent orders table.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9333,9 +9333,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Layout / Pages — Chat ──────────────────────────────────────────────
 		{
-		Slug:        "page-chat",
-		Name:        "Chat Layout",
-		Category:    galleryruntime.CategoryPageTemplates,
+			Slug:        "page-chat",
+			Name:        "Chat Layout",
+			Category:    galleryruntime.CategoryPageTemplates,
 			Subcategory: "Pages",
 			Description: "Full chat interface with conversation sidebar, message list, AI thinking indicator, and chat input.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9354,9 +9354,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Layout / Pages — Settings ───────────────────────────────────────────
 		{
-		Slug:        "page-settings",
-		Name:        "Settings Page",
-		Category:    galleryruntime.CategoryPageTemplates,
+			Slug:        "page-settings",
+			Name:        "Settings Page",
+			Category:    galleryruntime.CategoryPageTemplates,
 			Subcategory: "Pages",
 			Description: "Tabbed settings page with Profile, Account, Appearance, and Notification sections.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9373,9 +9373,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Layout / Pages — Landing ───────────────────────────────────────────
 		{
-		Slug:        "page-landing",
-		Name:        "Landing Page",
-		Category:    galleryruntime.CategoryPageTemplates,
+			Slug:        "page-landing",
+			Name:        "Landing Page",
+			Category:    galleryruntime.CategoryPageTemplates,
 			Subcategory: "Pages",
 			Description: "Marketing landing page with animated gradient hero, feature cards, testimonials, and pricing tiers.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9432,9 +9432,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Overlays — Command Palette ──────────────────────────────────────────
 		{
-		Slug:        "command-palette",
-		Name:        "Command Palette",
-		Category:    galleryruntime.CategoryNavigation,
+			Slug:        "command-palette",
+			Name:        "Command Palette",
+			Category:    galleryruntime.CategoryNavigation,
 			Subcategory: "Dropdowns",
 			Description: "⌘K command palette modal with search filtering. Opens with Cmd+K or Ctrl+K keyboard shortcut.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9491,7 +9491,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 				},
 			},
-			},
+		},
 
 		// ── Overlays / Popover ────────────────────────────────────────────────
 		{
@@ -9506,7 +9506,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Click the button to open the popover.",
 					RenderFunc: func(params url.Values) templ.Component {
 						placement := ui.PopoverPlacement(params.Get("placement"))
-						if placement == "" { placement = ui.PopoverBottom }
+						if placement == "" {
+							placement = ui.PopoverBottom
+						}
 						showArrow := params.Get("showArrow") != "false"
 						return ui.PopoverWithBoundary(placement, showArrow, ui.PopoverTriggerClick)
 					},
@@ -9536,7 +9538,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Aspect ratio container with configurable ratio.",
 					RenderFunc: func(params url.Values) templ.Component {
 						ratio := params.Get("ratio")
-						if ratio == "" { ratio = "16/9" }
+						if ratio == "" {
+							ratio = "16/9"
+						}
 						return ui.AspectRatioWithBoundary(ratio)
 					},
 					Tokens: []galleryruntime.DesignToken{
@@ -9565,7 +9569,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Separator with orientation toggle.",
 					RenderFunc: func(params url.Values) templ.Component {
 						orientation := params.Get("orientation")
-						if orientation == "" { orientation = "horizontal" }
+						if orientation == "" {
+							orientation = "horizontal"
+						}
 						if orientation == "vertical" {
 							return row(shared.StrComp("Left"), ui.SeparatorWithBoundary("vertical"), shared.StrComp("Right"))
 						}
@@ -9594,9 +9600,13 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Hover the button to see the tooltip.",
 					RenderFunc: func(params url.Values) templ.Component {
 						tip := params.Get("tip")
-						if tip == "" { tip = "Helpful hint" }
+						if tip == "" {
+							tip = "Helpful hint"
+						}
 						position := params.Get("position")
-						if position == "" { position = "top" }
+						if position == "" {
+							position = "top"
+						}
 						return ui.TooltipWithBoundary(tip, position)
 					},
 					Tokens: []galleryruntime.DesignToken{
@@ -9625,7 +9635,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Hover the button to see the card.",
 					RenderFunc: func(params url.Values) templ.Component {
 						side := params.Get("side")
-						if side == "" { side = "bottom" }
+						if side == "" {
+							side = "bottom"
+						}
 						return ui.HoverCardWithBoundary(side)
 					},
 					Tokens: []galleryruntime.DesignToken{
@@ -9642,9 +9654,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 
 		// ── Foundation / Collapsible ───────────────────────────────────────
 		{
-		Slug:        "collapsible",
-		Name:        "Collapsible",
-		Category:    galleryruntime.CategoryDataDisplay,
+			Slug:        "collapsible",
+			Name:        "Collapsible",
+			Category:    galleryruntime.CategoryDataDisplay,
 			Subcategory: "Display",
 			Description: "Single-item animated collapse/expand panel with optional icon.",
 			Variants: []galleryruntime.GalleryStory{
@@ -9653,7 +9665,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Click the title to expand/collapse the content.",
 					RenderFunc: func(params url.Values) templ.Component {
 						title := params.Get("title")
-						if title == "" { title = "Collapsible Section" }
+						if title == "" {
+							title = "Collapsible Section"
+						}
 						open := params.Get("open") == "true"
 						return ui.CollapsibleWithBoundary(title, open)
 					},
@@ -9678,9 +9692,13 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Configurable icon name and size.",
 					RenderFunc: func(params url.Values) templ.Component {
 						name := params.Get("name")
-						if name == "" { name = "lucide:star" }
+						if name == "" {
+							name = "lucide:star"
+						}
 						size := params.Get("size")
-						if size == "" { size = "md" }
+						if size == "" {
+							size = "md"
+						}
 						return ui.IconWithBoundary(name, size)
 					},
 					Tokens: []galleryruntime.DesignToken{
@@ -9710,7 +9728,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Sheet sliding in from the configurable side.",
 					RenderFunc: func(params url.Values) templ.Component {
 						side := params.Get("side")
-						if side == "" { side = "left" }
+						if side == "" {
+							side = "left"
+						}
 						open := params.Get("open") != "false"
 						return ui.SheetWithBoundary(side, open)
 					},
