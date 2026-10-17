@@ -6720,7 +6720,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Name:        "Examples",
 					Description: "Label with top text, alt text and bottom hint row.",
 					Templ: rawHTML(`<div class="p-6 flex flex-col gap-6 max-w-sm">
-						<div class="form-control">
+						<div class="flex flex-col">
 							<div class="label">
 								<span class="label-text">Email address</span>
 								<span class="label-text-alt">Required</span>
@@ -6730,7 +6730,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								<span class="label-text-alt">We'll never share your email.</span>
 							</div>
 						</div>
-						<div class="form-control">
+						<div class="flex flex-col">
 							<div class="label">
 								<span class="label-text">Username</span>
 							</div>
@@ -6754,18 +6754,14 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Inputs with built-in HTML5 validation feedback.",
 					FrameHeight: "300px",
 					Templ: rawHTML(`<div class="p-6 flex flex-col gap-6 max-w-sm">
-						<div class="form-control">
+						<div class="flex flex-col">
 							<div class="label"><span class="label-text">Email (required)</span></div>
-							<div class="validator">
-								<input type="email" required class="input w-full" placeholder="you@example.com"/>
-							</div>
+							<input type="email" required class="input validator w-full" placeholder="you@example.com"/>
 							<p class="validator-hint">Please enter a valid email address.</p>
 						</div>
-						<div class="form-control">
+						<div class="flex flex-col">
 							<div class="label"><span class="label-text">Password (min 8 chars)</span></div>
-							<div class="validator">
-								<input type="password" minlength="8" required class="input w-full" placeholder="••••••••"/>
-							</div>
+							<input type="password" minlength="8" required class="input validator w-full" placeholder="••••••••"/>
 							<p class="validator-hint">Password must be at least 8 characters.</p>
 						</div>
 					</div>`),
