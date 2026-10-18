@@ -46,9 +46,7 @@ type FormFieldProps struct {
 templ Field(label string, name string, errMsg string) {
 	<div class="mb-3" { devmode.Attrs(ctx, "form/Field")... }>
 		if label != "" {
-			<label class="label pb-1" for={ name }>
-				<span class="label-text font-medium text-sm text-label">{ label }</span>
-			</label>
+			@Label(LabelProps{For: name}) { { label } }
 		}
 		{ children... }
 		if errMsg != "" {

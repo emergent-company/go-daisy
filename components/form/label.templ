@@ -1,0 +1,19 @@
+package form
+
+import "github.com/emergent-company/go-daisy/devmode"
+
+// LabelProps configures a Label component.
+type LabelProps struct {
+	For   string
+	Class string
+	Attrs templ.Attributes
+}
+
+// Label renders a form label above a control, optionally associated with the
+// control via the For attribute. It is the label fragment shared by Field and
+// the labelled form inputs.
+templ Label(props LabelProps) {
+	<label for={ props.For } class={ "label pb-1", props.Class } { devmode.Attrs(ctx, "form/Label")... } { props.Attrs... }>
+		<span class="label-text text-sm font-medium text-label">{ children... }</span>
+	</label>
+}

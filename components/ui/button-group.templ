@@ -1,0 +1,51 @@
+package ui
+
+import "github.com/emergent-company/go-daisy/devmode"
+
+// ButtonGroupOrientation controls whether the group lays out horizontally or vertically.
+type ButtonGroupOrientation string
+
+const (
+	ButtonGroupHorizontal ButtonGroupOrientation = ""
+	ButtonGroupVertical   ButtonGroupOrientation = "vertical"
+)
+
+// ButtonGroupProps configures a ButtonGroup component.
+type ButtonGroupProps struct {
+	Orientation ButtonGroupOrientation
+	Class       string
+	Attrs       templ.Attributes
+}
+
+// ButtonGroupTextProps configures a ButtonGroupText component.
+type ButtonGroupTextProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// ButtonGroupSeparatorProps configures a ButtonGroupSeparator component.
+type ButtonGroupSeparatorProps struct {
+	Orientation ButtonGroupOrientation
+	Class       string
+	Attrs       templ.Attributes
+}
+
+// ButtonGroup renders a fused button group (join) with optional vertical orientation.
+templ ButtonGroup(props ButtonGroupProps) {
+	<div role="group" data-slot="button-group" class={ "join", templ.KV("join-vertical", props.Orientation == ButtonGroupVertical), props.Class } { devmode.Attrs(ctx, "ui/ButtonGroup")... } { props.Attrs... }>
+		{ children... }
+	</div>
+}
+
+// ButtonGroupText renders an inert text segment inside a button group.
+templ ButtonGroupText(props ButtonGroupTextProps) {
+	<div data-slot="button-group-text" class={ "join-item flex items-center border border-base-300 bg-base-200 px-3 text-sm text-label", props.Class } { devmode.Attrs(ctx, "ui/ButtonGroupText")... } { props.Attrs... }>
+		{ children... }
+	</div>
+}
+
+// ButtonGroupSeparator renders a divider inside a button group. The separator
+// crosses the group, so a horizontal group gets a vertical line and vice versa.
+templ ButtonGroupSeparator(props ButtonGroupSeparatorProps) {
+	<div role="separator" aria-orientation={ ternary(props.Orientation == ButtonGroupVertical, "horizontal", "vertical") } data-slot="button-group-separator" class={ ternary(props.Orientation == ButtonGroupVertical, "join-item h-px w-full bg-base-300", "join-item w-px self-stretch bg-base-300"), props.Class } { devmode.Attrs(ctx, "ui/ButtonGroupSeparator")... } { props.Attrs... }></div>
+}

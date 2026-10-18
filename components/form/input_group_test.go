@@ -71,3 +71,20 @@ func TestInputGroupOmitsEmptyAddons(t *testing.T) {
 		t.Errorf("expected no addon spans, got %d:\n%s", n, got)
 	}
 }
+
+func TestLabelRendersForAndLabelText(t *testing.T) {
+	got := renderFormComponent(t, shared.RenderInto(
+		Label(LabelProps{For: "email"}),
+		shared.StrComp("Email address"),
+	))
+	for _, want := range []string{
+		`for="email"`,
+		"label pb-1",
+		"label-text",
+		">Email address</span>",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("missing %q in:\n%s", want, got)
+		}
+	}
+}

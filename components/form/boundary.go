@@ -6,6 +6,18 @@ import (
 	"github.com/emergent-company/go-daisy/shared"
 )
 
+// LabelWithBoundary wraps Label with a dev-mode component boundary annotation.
+// gallery:token forValue,extraClass
+// gallery:hint forValue:default(demo-email)
+func LabelWithBoundary(forValue string, extraClass string, children ...templ.Component) templ.Component {
+	props := LabelProps{For: forValue, Class: extraClass}
+	inner := shared.RenderInto(Label(props), shared.Compose(children...))
+	return devmode.ComponentBoundary("Label", inner, map[string]any{
+		"for":   forValue,
+		"class": extraClass,
+	})
+}
+
 // TextInputWithBoundary wraps TextInput with a dev-mode component boundary annotation.
 // Deprecated: use FormInputWithBoundary(name, label, value, placeholder, "", "", "", nil) instead.
 // gallery:token label,required

@@ -1570,7 +1570,193 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// ── Forms / Label ─────────────────────────────────────────────────────
+		{
+			Slug:        "label",
+			Name:        "Label",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Layout",
+			Description: "The form field label — a small medium-weight label-text fragment, optionally associated with an input via the for attribute.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Standalone",
+					Description: "A label on its own, tied to an input id.",
+					RenderFunc: func(params url.Values) templ.Component {
+						forValue := params.Get("forValue")
+						if forValue == "" {
+							forValue = "demo-email"
+						}
+						return seq(
+							rawHTML(`<div class="p-6">`),
+							form.LabelWithBoundary(forValue, params.Get("extraClass"), shared.StrComp("Email address")),
+							rawHTML(`</div>`),
+						)
+					},
+					Tokens:      LabelTokens(),
+					FrameHeight: "100px",
+				},
+				{
+					Name:        "With input",
+					Description: "The label as part of a full form field.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.FormFieldWithBoundary(form.FormFieldProps{
+							Type:        form.FieldEmail,
+							Name:        "demo-email",
+							Label:       "Email address",
+							Placeholder: "you@example.com",
+						})
+					},
+					FrameHeight: "120px",
+				},
+			},
+		},
+
+		// ── Components / Button Group ─────────────────────────────────────────
+		{
+			Slug:        "button-group",
+			Name:        "Button Group",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Buttons",
+			Description: "A fused button group — horizontal or vertical join with optional inert text segments and separators.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Horizontal",
+					Description: "Three buttons joined horizontally.",
+					RenderFunc: func(params url.Values) templ.Component {
+						return row(ui.ButtonGroupWithBoundary(ui.ButtonGroupOrientation(params.Get("orientation")),
+							buttonGroupBtn("Button"),
+							buttonGroupBtn("Button"),
+							buttonGroupBtn("Button"),
+						))
+					},
+					Tokens:      ButtonGroupTokens(),
+					FrameHeight: "120px",
+				},
+				{
+					Name:        "Vertical",
+					Description: "Three buttons joined vertically.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return row(ui.ButtonGroupWithBoundary(ui.ButtonGroupVertical,
+							buttonGroupBtn("Button"),
+							buttonGroupBtn("Button"),
+							buttonGroupBtn("Button"),
+						))
+					},
+					FrameHeight: "180px",
+				},
+				{
+					Name:        "With text",
+					Description: "An inert text segment between two buttons.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return row(ui.ButtonGroupWithBoundary(ui.ButtonGroupHorizontal,
+							buttonGroupBtn("Button"),
+							ui.ButtonGroupTextWithBoundary(shared.StrComp("or")),
+							buttonGroupBtn("Button"),
+						))
+					},
+					FrameHeight: "120px",
+				},
+				{
+					Name:        "With separator",
+					Description: "A vertical separator crossing a horizontal group.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return row(ui.ButtonGroupWithBoundary(ui.ButtonGroupHorizontal,
+							buttonGroupBtn("Button"),
+							ui.ButtonGroupSeparatorWithBoundary(ui.ButtonGroupHorizontal),
+							buttonGroupBtn("Button"),
+						))
+					},
+					FrameHeight: "120px",
+				},
+			},
+		},
+
+		// ── Components / Marker ────────────────────────────────────────────────
+		{
+			Slug:        "marker",
+			Name:        "Marker",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Display",
+			Description: "A section marker — icon plus content, with separator-line, border, and link variants.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Icon and content on a plain line.",
+					RenderFunc: func(params url.Values) templ.Component {
+						return seq(
+							rawHTML(`<div class="p-6">`),
+							ui.MarkerWithBoundary(ui.MarkerVariant(params.Get("variant")), params.Get("href"), "",
+								ui.MarkerIconWithBoundary("lucide--map-pin"),
+								ui.MarkerContentWithBoundary(shared.StrComp("Section heading")),
+							),
+							rawHTML(`</div>`),
+						)
+					},
+					Tokens:      MarkerTokens(),
+					FrameHeight: "120px",
+				},
+				{
+					Name:        "Separator",
+					Description: "Three markers stacked, each led and trailed by a line.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							rawHTML(`<div class="p-6 space-y-3">`),
+							ui.MarkerWithBoundary(ui.MarkerSeparator, "", "",
+								ui.MarkerIconWithBoundary("lucide--circle-check"),
+								ui.MarkerContentWithBoundary(shared.StrComp("First step")),
+							),
+							ui.MarkerWithBoundary(ui.MarkerSeparator, "", "",
+								ui.MarkerIconWithBoundary("lucide--circle-check"),
+								ui.MarkerContentWithBoundary(shared.StrComp("Second step")),
+							),
+							ui.MarkerWithBoundary(ui.MarkerSeparator, "", "",
+								ui.MarkerIconWithBoundary("lucide--circle-check"),
+								ui.MarkerContentWithBoundary(shared.StrComp("Third step")),
+							),
+							rawHTML(`</div>`),
+						)
+					},
+					FrameHeight: "200px",
+				},
+				{
+					Name:        "Border",
+					Description: "Boxed marker with padding and border.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							rawHTML(`<div class="p-6">`),
+							ui.MarkerWithBoundary(ui.MarkerBorder, "", "",
+								ui.MarkerIconWithBoundary("lucide--info"),
+								ui.MarkerContentWithBoundary(shared.StrComp("Boxed marker")),
+							),
+							rawHTML(`</div>`),
+						)
+					},
+					FrameHeight: "120px",
+				},
+				{
+					Name:        "Link",
+					Description: "A marker rendered as an anchor.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							rawHTML(`<div class="p-6">`),
+							ui.MarkerWithBoundary(ui.MarkerDefault, "#", "",
+								ui.MarkerIconWithBoundary("lucide--external-link"),
+								ui.MarkerContentWithBoundary(shared.StrComp("Open documentation")),
+							),
+							rawHTML(`</div>`),
+						)
+					},
+					FrameHeight: "120px",
+				},
+			},
+		},
 	}
+}
+
+// buttonGroupBtn renders a primary button with text, used in the Button Group gallery stories.
+func buttonGroupBtn(label string) templ.Component {
+	return withText(label, ui.ButtonWithBoundary("", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, false))
 }
 
 // selectShellDemo shows the intended composition: the trigger text comes from a

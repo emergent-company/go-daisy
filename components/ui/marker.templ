@@ -1,0 +1,70 @@
+package ui
+
+import "github.com/emergent-company/go-daisy/devmode"
+
+// MarkerVariant controls the visual treatment of a Marker.
+type MarkerVariant string
+
+const (
+	MarkerDefault   MarkerVariant = ""
+	MarkerSeparator MarkerVariant = "separator"
+	MarkerBorder    MarkerVariant = "border"
+)
+
+// MarkerProps configures a Marker component.
+type MarkerProps struct {
+	Variant MarkerVariant
+	Href    string
+	Class   string
+	Attrs   templ.Attributes
+}
+
+// MarkerIconProps configures a MarkerIcon component.
+type MarkerIconProps struct {
+	Name  string
+	Size  string
+	Class string
+	Attrs templ.Attributes
+}
+
+// MarkerContentProps configures a MarkerContent component.
+type MarkerContentProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// markerVariantClass maps a MarkerVariant to its extra CSS classes.
+func markerVariantClass(v MarkerVariant) string {
+	switch v {
+	case MarkerSeparator:
+		return "before:h-px before:flex-1 before:bg-base-300 after:h-px after:flex-1 after:bg-base-300"
+	case MarkerBorder:
+		return "rounded-box border border-base-300 bg-base-100 px-3 py-2"
+	default:
+		return ""
+	}
+}
+
+// Marker renders a section marker — an icon plus content, optionally led/trailed
+// by separator lines, boxed with a border, or rendered as a link.
+templ Marker(props MarkerProps) {
+	if props.Href != "" {
+		<a href={ templ.URL(props.Href) } data-slot="marker" data-variant={ string(props.Variant) } class={ "marker relative flex w-full items-center gap-2", markerVariantClass(props.Variant), props.Class } { devmode.Attrs(ctx, "ui/Marker")... } { props.Attrs... }>
+			{ children... }
+		</a>
+	} else {
+		<div data-slot="marker" data-variant={ string(props.Variant) } class={ "marker relative flex w-full items-center gap-2", markerVariantClass(props.Variant), props.Class } { devmode.Attrs(ctx, "ui/Marker")... } { props.Attrs... }>
+			{ children... }
+		</div>
+	}
+}
+
+// MarkerIcon renders the leading icon inside a Marker.
+templ MarkerIcon(props MarkerIconProps) {
+	<span class={ "iconify shrink-0 text-muted", props.Name, templ.KV("size-4", props.Size == ""), props.Size, props.Class } aria-hidden="true" { devmode.Attrs(ctx, "ui/MarkerIcon")... } { props.Attrs... }></span>
+}
+
+// MarkerContent renders the text content inside a Marker.
+templ MarkerContent(props MarkerContentProps) {
+	<div class={ "min-w-0 text-sm text-label", props.Class } { devmode.Attrs(ctx, "ui/MarkerContent")... } { props.Attrs... }>{ children... }</div>
+}

@@ -5,6 +5,26 @@ package gallery
 
 import "github.com/emergent-company/go-daisy/galleryruntime"
 
+// LabelTokens returns the DesignToken slice for LabelWithBoundary.
+func LabelTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "For Value",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "demo-email",
+			QueryParam: "forValue",
+		},
+		{
+			Label:      "Extra Class",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "extraClass",
+		},
+	}
+}
+
 // TextInputTokens returns the DesignToken slice for TextInputWithBoundary.
 func TextInputTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
