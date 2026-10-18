@@ -8,6 +8,23 @@ import (
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
+// TableCard renders a card container for a full table composition, with
+// optional toolbar and footer slots rendered around the child content.
+templ TableCard(props TableCardProps) {
+	<div class={ "card bg-base-100 shadow", props.Class }
+		{ devmode.Attrs(ctx, "table/TableCard")... }
+		{ props.Attrs... }
+	>
+		if props.Toolbar != nil {
+			@props.Toolbar
+		}
+		{ children... }
+		if props.Footer != nil {
+			@props.Footer
+		}
+	</div>
+}
+
 // TableCardWrapper renders a card container for table compositions.
 templ TableCardWrapper() {
 	<div class="card bg-base-100 shadow-sm edge-line" { devmode.Attrs(ctx, "table/TableCardWrapper")... }>

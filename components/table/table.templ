@@ -16,10 +16,34 @@ const (
 	SortNone SortDir = ""
 )
 
+// TableSize controls the DaisyUI size modifier applied to the <table>.
+// It is an alias, not a distinct type, so existing callers that pass a plain
+// string variable keep compiling.
+type TableSize = string
+
+const (
+	TableSizeDefault TableSize = ""   // zero value = default (no modifier class)
+	TableSizeXS      TableSize = "xs" // table-xs
+	TableSizeSM      TableSize = "sm" // table-sm
+	TableSizeLG      TableSize = "lg" // table-lg
+)
+
+// TableDensity controls row density via the data-table-density attribute on the <table>.
+type TableDensity string
+
+const (
+	DensityDefault TableDensity = ""        // zero value = default (no attribute)
+	DensityCompact TableDensity = "compact" // data-table-density="compact"
+)
+
 // TableProps configures the appearance of a TableWithProps component.
 type TableProps struct {
-	// Size controls the DaisyUI size modifier: "xs", "sm", "md" (default/empty), "lg", "xl".
-	Size string
+	// Size controls the DaisyUI size modifier: xs, sm, lg or empty (default).
+	Size TableSize
+	// Density controls row density. DensityCompact emits data-table-density="compact";
+	// the compact row height comes from the CSS token --table-row-height
+	// (see components/css/custom.css).
+	Density TableDensity
 	// Striped adds table-zebra for alternating row colours.
 	Striped bool
 	// PinRows makes <thead> and <tfoot> rows sticky (table-pin-rows).
@@ -70,13 +94,21 @@ templ Table() {
 templ TableWithProps(props TableProps) {
 	if props.Bordered {
 		<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100" { devmode.Attrs(ctx, "table/TableWithProps")... } { props.Attrs... }>
-			<table class={ tableClasses(props) }>
+			<table class={ tableClasses(props) }
+				if props.Density == DensityCompact {
+					data-table-density="compact"
+				}
+			>
 				{ children... }
 			</table>
 		</div>
 	} else {
 		<div class="overflow-x-auto" { devmode.Attrs(ctx, "table/TableWithProps")... } { props.Attrs... }>
-			<table class={ tableClasses(props) }>
+			<table class={ tableClasses(props) }
+				if props.Density == DensityCompact {
+					data-table-density="compact"
+				}
+			>
 				{ children... }
 			</table>
 		</div>
@@ -180,4 +212,14 @@ func sortURL(base string, key string, currentKey string, currentDir SortDir) str
 		dir = "desc"
 	}
 	return base + "&sort=" + key + "&dir=" + dir
+}
+
+// TableSelectAll renders a select-all checkbox header cell.
+templ TableSelectAll(label string) {
+	<th class="w-10 px-6"><input type="checkbox" class="checkbox checkbox-sm" aria-label={ label }/></th>
+}
+
+// TableSelectRow renders a per-row selection checkbox cell.
+templ TableSelectRow(name string, checked bool) {
+	<td class="w-10 px-6"><input type="checkbox" class="checkbox checkbox-sm" name={ name } checked?={ checked } aria-label="Select row"/></td>
 }
