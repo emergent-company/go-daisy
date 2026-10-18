@@ -539,3 +539,13 @@ func InputGroupWithBoundary(prefix string, suffix string, children ...templ.Comp
 		"suffix": suffix,
 	})
 }
+
+// ClipboardCopyWithBoundary wraps ClipboardCopy with a dev-mode component boundary annotation.
+//
+// No gallery:token annotation: the boundary takes a slice of items, so
+// boundarytoken would map nothing — the gallery story writes its controls by hand.
+func ClipboardCopyWithBoundary(items []ClipboardCopyItem) templ.Component {
+	return devmode.ComponentBoundary("ClipboardCopy", ClipboardCopy(items), map[string]any{
+		"items": len(items),
+	})
+}

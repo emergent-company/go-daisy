@@ -3943,7 +3943,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							if _, err := io.WriteString(w, `<div class="p-6 max-w-lg">`); err != nil {
 								return err
 							}
-							if err := form.ClipboardCopy(items).Render(ctx, w); err != nil {
+							if err := form.ClipboardCopyWithBoundary(items).Render(ctx, w); err != nil {
 								return err
 							}
 							_, err := io.WriteString(w, `</div>`)
@@ -3959,11 +3959,12 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							if _, err := io.WriteString(w, `<div class="p-6 max-w-lg">`); err != nil {
 								return err
 							}
-							if err := form.ClipboardCopy([]form.ClipboardCopyItem{
+							items := []form.ClipboardCopyItem{
 								{ID: "ex-copy1", Label: "Case ID", Value: "CASE-2026-00142", ButtonLabel: "Copy"},
 								{ID: "ex-copy2", Label: "Share link", Value: "https://app.example.com/cases/CASE-2026-00142", ButtonLabel: "Copy Link", ButtonClass: "btn-primary"},
 								{ID: "ex-copy3", Label: "API key", Value: "sk-live-abc123xyz789", Mono: true},
-							}).Render(ctx, w); err != nil {
+							}
+							if err := form.ClipboardCopyWithBoundary(items).Render(ctx, w); err != nil {
 								return err
 							}
 							_, err := io.WriteString(w, `</div>`)

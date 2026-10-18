@@ -126,6 +126,7 @@ var ComponentSlugs = map[string]string{
 	"InputSpinner":    "input-spinner",
 	"WizardStepper":   "wizard-stepper",
 	"InputGroup":      "input-group",
+	"ClipboardCopy":   "clipboard-copy",
 
 	// Containers, direction, and file chips
 	"ScrollArea":  "scroll-area",
