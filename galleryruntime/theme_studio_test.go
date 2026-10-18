@@ -24,6 +24,7 @@ func TestThemeStudioRendersControls(t *testing.T) {
 		"Contrast",
 		"Typography",
 		`id="studio-preview"`,
+		`id="studio-settings"`,
 		"Palette",
 		"Actions",
 		"Form controls",
