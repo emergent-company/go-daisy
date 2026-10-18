@@ -55,6 +55,7 @@ func gallerySearchIndex(categories []CategoryGroup) string {
 // Use for direct browser navigation (non-HTMX requests).
 templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, logo templ.Component, content templ.Component) {
 	@layout.PageFull(layout.PageProps{Title: title + " · Gallery", ThemeAttr: ""}) {
+		@templ.Raw(customThemeStyleScript())
 		<style>@media all { .hidden { display: none !important; } }</style>
 		@layout.AppShell(title) {
 			<!-- Sidebar -->
@@ -178,6 +179,7 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 		}
 		<!-- Gallery spotlight search modal -->
 		@gallerySearchModal(categories)
+		@templ.Raw(customThemeApplyScript())
 		<!-- feedback-overlay: element-level feedback tool -->
 		<script
 			src="https://feedback.emergent-company.ai/feedback-overlay.js"

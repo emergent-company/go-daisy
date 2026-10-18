@@ -49,11 +49,18 @@ templ ThemeSwitcher() {
 			var PALETTES = rt.palettes;
 			var DEFAULT_PALETTE = rt.defaultPalette;
 			var MODES = ['light', 'dark', 'system'];
+
+			// A user-generated theme (gallery theme studio) lives in localStorage
+			// and is injected as a scoped [data-theme="custom"] rule by the shell
+			// and by each preview document.
+			function hasCustomTheme() {
+				try { return !!localStorage.getItem('gallery-custom-theme'); } catch(e) { return false; }
+			}
 			var STORAGE_KEY = 'gallery-ui-theme';
 			var PALETTE_KEY = 'gallery-ui-palette';
 			var PREVIEW_KEY = 'gallery-preview-theme';
 
-			function isMode(m) { return m === 'light' || m === 'dark' || m === 'system'; }
+			function isMode(m) { return m === 'light' || m === 'dark' || m === 'system' || m === 'custom'; }
 			function isPalette(p) { return !!PALETTES[p]; }
 
 			function readMode() {
@@ -65,14 +72,22 @@ templ ThemeSwitcher() {
 
 			function effectiveMode(mode) { return rt.effectiveMode(mode); }
 
-			function resolveTheme(mode, palette) { return rt.resolve(mode, palette); }
+			function resolveTheme(mode, palette) {
+				if (mode === 'custom' && hasCustomTheme()) return 'custom';
+				return rt.resolve(mode, palette);
+			}
+
+			function resolvePreviewMode(mode) {
+				if (mode === 'custom' && hasCustomTheme()) return 'custom';
+				return rt.effectiveMode(mode);
+			}
 
 			// Keep the preview key in sync (effective mode) and push the
 			// resolved daisyUI theme into any live preview iframes. With the
 			// default palette this resolves to the historical nord/dracula
 			// mapping, so existing preview behaviour is unchanged.
 			function syncPreviewIframes(mode, palette) {
-				try { localStorage.setItem(PREVIEW_KEY, effectiveMode(mode)); } catch(e) {}
+				try { localStorage.setItem(PREVIEW_KEY, resolvePreviewMode(mode)); } catch(e) {}
 				var daisyTheme = resolveTheme(mode, palette);
 				document.querySelectorAll('[id$="preview-frame"], [id*="examples-frame"]').forEach(function(f) {
 					try {

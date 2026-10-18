@@ -356,23 +356,30 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+%s
   <script>
 %s
-  try {
-    var rt = window.__goDaisyTheme;
-    var saved = null;
-    var palette = null;
-    try { saved = localStorage.getItem('gallery-preview-theme'); } catch (e) {}
-    try { palette = localStorage.getItem('gallery-ui-palette'); } catch (e) {}
-    if (!rt.palettes[palette]) palette = rt.defaultPalette;
-    var mode;
-    if (saved === 'light' || saved === 'dark') {
-      mode = saved;
-    } else {
-      mode = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-    }
-    document.documentElement.setAttribute('data-theme', rt.resolve(mode, palette));
-  } catch(e) {}
+    try {
+      var rt = window.__goDaisyTheme;
+      var saved = null;
+      var palette = null;
+      var custom = null;
+      try { saved = localStorage.getItem('gallery-preview-theme'); } catch (e) {}
+      try { palette = localStorage.getItem('gallery-ui-palette'); } catch (e) {}
+      try { custom = localStorage.getItem('gallery-custom-theme'); } catch (e) {}
+      if (!rt.palettes[palette]) palette = rt.defaultPalette;
+      if (saved === 'custom' && custom) {
+        document.documentElement.setAttribute('data-theme', 'custom');
+      } else {
+        var mode;
+        if (saved === 'light' || saved === 'dark') {
+          mode = saved;
+        } else {
+          mode = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', rt.resolve(mode, palette));
+      }
+    } catch(e) {}
   </script>
 %s%s  <style>
     html { margin: 0; padding: 0; background: transparent; }
@@ -382,5 +389,5 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
 <body>
 %s%s%s
 </body>
-</html>`, ui.ThemeRuntimeJS(), headExtras.String(), initRuntime, snippet, jsDeps.String(), devScript)
+</html>`, customThemeStyleScript(), ui.ThemeRuntimeJS(), headExtras.String(), initRuntime, snippet, jsDeps.String(), devScript)
 }
