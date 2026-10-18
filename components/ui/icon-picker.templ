@@ -149,6 +149,6 @@ var iconPickerScriptOnce = templ.NewOnceHandle()
 // Call it wherever an IconPicker is used; deduplicated via OnceHandle.
 templ IconPickerScript() {
 	@iconPickerScriptOnce.Once() {
-		@templ.Raw(staticfs.Script("/js/go-daisy-icon-picker.js"))
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-icon-picker.js", templ.GetNonce(ctx)))
 	}
 }

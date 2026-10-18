@@ -1,6 +1,9 @@
 package ui
 
-import "github.com/emergent-company/go-daisy/devmode"
+import (
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/staticfs"
+)
 
 type DropdownAlign string
 
@@ -12,24 +15,36 @@ const (
 	DropdownRight  DropdownAlign = "dropdown-right"
 )
 
+var dropdownA11yOnce = templ.NewOnceHandle()
+
+// DropdownScript loads the go-daisy-a11y.js runtime once per page. It provides
+// the shared menu keyboard/focus semantics (roving tabindex, Arrow/Home/End,
+// typeahead, Escape-to-close, aria-expanded) used by Dropdown and ContextMenu.
+templ DropdownScript() {
+	@dropdownA11yOnce.Once() {
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-a11y.js", templ.GetNonce(ctx)))
+	}
+}
+
 // Dropdown wraps a trigger + dropdown-content menu.
 // attrs is optional; pass nil when not needed.
 //
-// NOTE: no aria-expanded/aria-haspopup here. This is daisyUI's CSS-only
-// (focus/focus-within) dropdown, so the open state has no JS hook to toggle
-// aria-expanded — a static "false" would lie to assistive tech. Callers that
-// need ARIA-complete dropdowns should use AlpineDropdown (which binds
-// aria-expanded to its `open` state on the trigger).
+// The root is annotated with data-gd-menu-root so go-daisy-a11y.js upgrades the
+// CSS-only daisyUI dropdown into an ARIA-complete menu: roving tabindex, arrow
+// keys, Home/End, typeahead, Escape-to-close, and a truthful aria-expanded on
+// the trigger. Callers that want Alpine's own state machine should use
+// AlpineDropdown instead.
 templ Dropdown(align DropdownAlign, attrs templ.Attributes) {
-	<div class={ "dropdown", templ.KV(string(align), align != "") } { devmode.Attrs(ctx, "ui/Dropdown")... } { attrs... }>
+	<div class={ "dropdown", templ.KV(string(align), align != "") } data-gd-menu-root { devmode.Attrs(ctx, "ui/Dropdown")... } { attrs... }>
 		{ children... }
+		@DropdownScript()
 	</div>
 }
 
 // DropdownTrigger renders a standard button trigger for a Dropdown.
 // attrs is optional; pass nil when not needed.
 templ DropdownTrigger(label string, variant string, attrs templ.Attributes) {
-	<div tabindex="0" role="button" class={ "btn", "btn-sm", "m-1", variant } { devmode.Attrs(ctx, "ui/DropdownTrigger")... } { attrs... }>
+	<div tabindex="0" role="button" data-gd-menu-trigger class={ "btn", "btn-sm", "m-1", variant } { devmode.Attrs(ctx, "ui/DropdownTrigger")... } { attrs... }>
 		{ label }
 		@IconSpan("lucide--chevron-down", "size-3.5")
 	</div>
@@ -45,7 +60,7 @@ templ DropdownMenu(attrs templ.Attributes) {
 		extraClass = s
 		delete(attrs, "class")
 	} }}
-	<ul tabindex="0" role="menu" class={ twmerge("dropdown-content z-[1] menu menu-sm p-1 bg-base-100 edge-line rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1", extraClass) } { devmode.Attrs(ctx, "ui/DropdownMenu")... } { attrs... }>
+	<ul tabindex="0" role="menu" data-gd-menu class={ twmerge("dropdown-content z-[1] menu menu-sm p-1 bg-base-100 edge-line rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1", extraClass) } { devmode.Attrs(ctx, "ui/DropdownMenu")... } { attrs... }>
 		{ children... }
 	</ul>
 }
@@ -54,7 +69,7 @@ templ DropdownMenu(attrs templ.Attributes) {
 // attrs is optional; pass nil when not needed.
 templ DropdownItem(active bool, danger bool, attrs templ.Attributes) {
 	<li role="none" { devmode.Attrs(ctx, "ui/DropdownItem")... } { attrs... }>
-		<a role="menuitem" class={ "min-w-0 break-words", templ.KV("active", active), templ.KV("text-error", danger) }>
+		<a role="menuitem" data-gd-menu-item class={ "min-w-0 break-words", templ.KV("active", active), templ.KV("text-error", danger) }>
 			{ children... }
 		</a>
 	</li>
