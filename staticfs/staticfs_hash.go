@@ -1,3 +1,3 @@
 package staticfs
 
-const staticFilesHash = "a1fb8f436517e7140bafe1a414c609742678b7b673be35555bce029ec27116bd"
+const staticFilesHash = "d9a0c53df4ecc070aabdd0db2516cb0b4368173393240bb6e3bb893bcfb97778"
