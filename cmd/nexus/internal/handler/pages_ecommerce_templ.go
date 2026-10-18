@@ -513,7 +513,7 @@ func productRow(num, id, name, category, price, rating, ratingCount, orders, sto
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"flex items-center space-x-3 truncate\"><img class=\"rounded-box size-10\" src=\"./images/apps/ecommerce/products/{ num }.jpg\" alt=\"Product\"><div><p class=\"font-medium\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"flex items-center space-x-3 truncate\"><img class=\"rounded-box size-10\" src=\"/images/apps/ecommerce/products/{ num }.jpg\" alt=\"Product\"><div><p class=\"font-medium\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
