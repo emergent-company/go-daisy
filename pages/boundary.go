@@ -27,10 +27,17 @@ func DashboardPageWithBoundary(props DashboardPageProps) templ.Component {
 }
 
 // ChatLayoutWithBoundary wraps ChatLayout with a dev-mode component boundary annotation.
-// gallery:token activeConversation
-// gallery:hint activeConversation:default(Alice Johnson)
+// gallery:token activeConversation,searchPlaceholder,communityLabel,newContactHref
+// gallery:hint activeConversation:default(Alice Johnson),searchPlaceholder:default(Search conversations...),communityLabel:default(Join a Community),newContactHref:default(#)
 func ChatLayoutWithBoundary(props ChatLayoutProps) templ.Component {
 	return devmode.ComponentBoundary("ChatLayout", ChatLayout(props), props)
+}
+
+// ChatContactItemWithBoundary wraps ChatContactItem with a dev-mode component boundary annotation.
+// gallery:token name,time,preview,unread,active
+// gallery:hint name:default(Alice Johnson),time:default(2 min ago),preview:default(Sounds good! Let me know when...),unread:range(0,9,1),active:default(true)
+func ChatContactItemWithBoundary(props ChatContactProps) templ.Component {
+	return devmode.ComponentBoundary("ChatContactItem", ChatContactItem(props), props)
 }
 
 // SettingsPageWithBoundary wraps SettingsPage with a dev-mode component boundary annotation.

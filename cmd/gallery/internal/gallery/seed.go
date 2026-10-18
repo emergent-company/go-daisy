@@ -9425,6 +9425,26 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 					FrameHeight: "600px",
 				},
+				{
+					Name:        "Custom conversation",
+					Description: "Props-driven contacts, peer and messages; no demo fallback.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return pages.ChatLayoutWithBoundary(pages.ChatLayoutProps{
+							ActiveConversation: "Grace Hopper",
+							Conversations: []pages.ChatContactProps{
+								{Name: "Grace Hopper", Time: "09:41", Preview: "The compiler is ready.", Unread: 2},
+								{Name: "Alan Turing", Time: "Yesterday", Preview: "Let's revisit the proof."},
+							},
+							Peer: pages.ChatPeerProps{Name: "Grace Hopper", Status: "Active", Online: true},
+							Messages: []pages.ChatMessageProps{
+								{Sent: false, Author: "Grace Hopper", Timestamp: "09:40", Content: shared.StrComp("The compiler is ready.")},
+								{Sent: true, Author: "You", Timestamp: "09:41", Content: shared.StrComp("Shipping it now.")},
+							},
+							HeaderActions: ui.ButtonWithBoundary("#", ui.ButtonOutline, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeLink, ui.ButtonShapeSquare, "lucide--phone", false, false, false),
+						})
+					},
+					FrameHeight: "600px",
+				},
 			},
 		},
 
