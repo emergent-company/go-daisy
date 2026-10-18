@@ -42,6 +42,22 @@ names; the supported API uses semantic names (`AdminShell`,
    (see `cmd/nexus-compare/`).
 5. `docs/TOKENS.md` must not claim a consumer that does not exist.
 
+## Regression guard
+
+`cmd/nexus/internal/parity` reads the `.templ` sources and fails `go test ./...`
+when a converted area drifts back to hand-rolled markup:
+
+- `shell.templ` must compose `layout.AdminShell` + the `"app"` topbar and must
+  not reintroduce the toggle checkbox, backdrop or duplicated shell CSS.
+- `pages_chat.templ` must use `pages.ChatLayout` and no raw `chat chat-*`
+  bubbles or `data-simplebar` scroll containers.
+- `ProductsList` and `OrdersList` must use `TableCard`/`TableWithProps` and no
+  raw `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<td>` or checkbox inputs.
+
+The check is scoped to functions that are already converted, so the file
+manager and the rest of the dashboards can keep their markup until a component
+exists for them.
+
 ## Remaining gaps
 
 - File manager and parts of the dashboards still contain raw DaisyUI markup;
