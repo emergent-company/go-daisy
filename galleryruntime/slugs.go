@@ -127,6 +127,14 @@ var ComponentSlugs = map[string]string{
 	"AlertDialogFooter":      "alert-dialog",
 	"AlertDialogAction":      "alert-dialog",
 	"AlertDialogCancel":      "alert-dialog",
+	// NavigationMenu
+	"NavigationMenu":            "navigation-menu",
+	"NavigationMenuList":        "navigation-menu",
+	"NavigationMenuItem":        "navigation-menu",
+	"NavigationMenuTrigger":     "navigation-menu",
+	"NavigationMenuContent":     "navigation-menu",
+	"NavigationMenuLink":        "navigation-menu",
+	"NavigationMenuDescription": "navigation-menu",
 	// Menubar
 	"Menubar":          "menubar",
 	"MenubarMenu":      "menubar",

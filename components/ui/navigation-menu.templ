@@ -1,0 +1,193 @@
+package ui
+
+import (
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/staticfs"
+)
+
+// NavigationMenuProps configures a NavigationMenu.
+type NavigationMenuProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// NavigationMenuListProps configures a NavigationMenuList.
+type NavigationMenuListProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// NavigationMenuItemProps configures one top-level NavigationMenuItem: a trigger
+// followed by its content panel.
+type NavigationMenuItemProps struct {
+	// ID is required and is the source of the derived content id
+	// (<id>-content) wired through aria-controls on the trigger and id on the
+	// content panel.
+	ID    string
+	Class string
+	Attrs templ.Attributes
+}
+
+// NavigationMenuTriggerProps configures a NavigationMenuTrigger.
+type NavigationMenuTriggerProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// NavigationMenuContentProps configures a NavigationMenuContent.
+type NavigationMenuContentProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// NavigationMenuLinkProps configures a NavigationMenuLink.
+type NavigationMenuLinkProps struct {
+	Href   string
+	Active bool
+	Class  string
+	Attrs  templ.Attributes
+}
+
+// NavigationMenuDescriptionProps configures a NavigationMenuDescription.
+type NavigationMenuDescriptionProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+var navigationMenuScriptOnce = templ.NewOnceHandle()
+
+// NavigationMenuScript loads the navigation-menu runtime once per page. It does
+// NOT load go-daisy-a11y.js: a navigation panel is a list of links, not a menu,
+// so the disclosure keyboard contract is implemented entirely in
+// go-daisy-navigation-menu.js.
+templ NavigationMenuScript() {
+	@navigationMenuScriptOnce.Once() {
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-navigation-menu.js", templ.GetNonce(ctx)))
+	}
+}
+
+// NavigationMenu renders a site navigation panel of disclosure items.
+//
+// Deviation from shadcn/templui's NavigationMenu: that implementation uses a
+// shared animated viewport and menubar/menu roles (role="menubar", role="menu",
+// aria-haspopup="menu"). A site navigation panel contains ordinary links, not
+// menu commands, so this component implements the APG disclosure navigation
+// pattern instead:
+//
+//   - triggers are <button aria-expanded aria-controls> with the implicit button
+//     role — no menubar/menu roles, no aria-haspopup="menu"
+//   - content is a plain <div> of links
+//   - Enter/Space toggles, Escape closes and restores focus, clicking outside
+//     closes, focus leaving the nav closes
+//   - no focus trap and no shared viewport: each panel is absolutely positioned
+//     under its own item
+//
+// Progressive enhancement: the server renders every panel VISIBLE in flow and
+// the runtime adds data-gd-nav-ready to the root. Only a rule scoped to
+// [data-gd-nav-ready] hides the panels, so a no-JS visitor gets a readable list
+// of links (no flash, no permanently hidden content).
+templ NavigationMenu(props NavigationMenuProps) {
+	<nav
+		data-gd-navigation-menu
+		class={ "relative", props.Class }
+		{ devmode.Attrs(ctx, "ui/NavigationMenu")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</nav>
+	@NavigationMenuScript()
+}
+
+// NavigationMenuList renders the horizontal list of top-level items.
+templ NavigationMenuList(props NavigationMenuListProps) {
+	<ul
+		class={ "flex items-center gap-1", props.Class }
+		{ devmode.Attrs(ctx, "ui/NavigationMenuList")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</ul>
+}
+
+// NavigationMenuItem renders one top-level item: a trigger followed by its
+// content panel. It stores its ID on the render context so the trigger and
+// content derive their aria-controls / id from it.
+templ NavigationMenuItem(props NavigationMenuItemProps) {
+	{{ ctx = WithNavigationMenuItemID(ctx, props.ID) }}
+	<li
+		data-gd-nav-item
+		class={ "relative", props.Class }
+		{ devmode.Attrs(ctx, "ui/NavigationMenuItem")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</li>
+}
+
+// NavigationMenuTrigger renders the disclosure button. aria-expanded is set to
+// "false" statically (the honest no-JS state) and the runtime owns it from then
+// on. aria-controls is omitted when no enclosing NavigationMenuItem supplies an
+// id, rather than emitting an empty one.
+templ NavigationMenuTrigger(props NavigationMenuTriggerProps) {
+	{{ id, _ := navigationMenuItemIDFromCtx(ctx) }}
+	<button
+		type="button"
+		data-gd-nav-trigger
+		aria-expanded="false"
+		if id != "" {
+			aria-controls={ id + "-content" }
+		}
+		class={ "btn btn-ghost btn-sm gap-1", props.Class }
+		{ devmode.Attrs(ctx, "ui/NavigationMenuTrigger")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+		@IconSpan("lucide--chevron-down", "size-3.5 opacity-70")
+	</button>
+}
+
+// NavigationMenuContent renders the panel of links. It carries id="<id>-content"
+// (matching the trigger's aria-controls) and data-gd-nav-content, and is
+// rendered WITHOUT the hidden attribute: the no-JS contract keeps it visible in
+// flow until the runtime stamps data-gd-nav-ready on the root.
+templ NavigationMenuContent(props NavigationMenuContentProps) {
+	{{ id, _ := navigationMenuItemIDFromCtx(ctx) }}
+	<div
+		data-gd-nav-content
+		if id != "" {
+			id={ id + "-content" }
+		}
+		class={ "absolute left-0 top-full z-50 mt-1 min-w-56 rounded-box bg-base-100 p-2 edge-line shadow-lg", props.Class }
+		{ devmode.Attrs(ctx, "ui/NavigationMenuContent")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+}
+
+// NavigationMenuLink renders a single link inside a panel.
+templ NavigationMenuLink(props NavigationMenuLinkProps) {
+	<a
+		data-gd-nav-link
+		href={ templ.URL(props.Href) }
+		if props.Active {
+			aria-current="page"
+		}
+		class={ "block rounded-field px-3 py-2 text-sm hover:bg-base-200", templ.KV("bg-base-200 font-medium", props.Active), props.Class }
+		{ devmode.Attrs(ctx, "ui/NavigationMenuLink")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</a>
+}
+
+// NavigationMenuDescription renders the muted helper line under a link.
+templ NavigationMenuDescription(props NavigationMenuDescriptionProps) {
+	<p
+		class={ "text-xs text-muted", props.Class }
+		{ devmode.Attrs(ctx, "ui/NavigationMenuDescription")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</p>
+}

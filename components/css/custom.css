@@ -642,4 +642,17 @@ html[data-gd-resizing] iframe {
   [data-gd-menubar-menu][data-gd-menu-open] > [data-gd-menu] {
     display: block;
   }
+
+  /* Navigation menu panels. Progressive enhancement: the server renders every
+     panel visible in flow, and the runtime stamps data-gd-nav-ready on the root
+     before taking over. Scoping the hiding rules to [data-gd-nav-ready] means a
+     no-JS visitor reads the links instead of losing them, and there is no
+     visible flash of open panels on first paint. */
+  [data-gd-nav-ready] [data-gd-nav-content] {
+    display: none;
+  }
+
+  [data-gd-nav-ready] [data-gd-nav-item][data-gd-nav-open] > [data-gd-nav-content] {
+    display: block;
+  }
 }

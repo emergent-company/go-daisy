@@ -52,7 +52,7 @@ const TOGGLE_GROUP = `
   <button type="button" data-gd-toggle-value="right" aria-pressed="false">Right</button>
 </div>`;
 
-const JS_FILES = ['go-daisy-a11y.js', 'go-daisy-context-menu.js', 'go-daisy-resizable.js', 'go-daisy-toggle.js', 'go-daisy-messagescroller.js', 'go-daisy-alert-dialog.js', 'go-daisy-menubar.js'];
+const JS_FILES = ['go-daisy-a11y.js', 'go-daisy-context-menu.js', 'go-daisy-resizable.js', 'go-daisy-toggle.js', 'go-daisy-messagescroller.js', 'go-daisy-alert-dialog.js', 'go-daisy-menubar.js', 'go-daisy-navigation-menu.js'];
 
 const MESSAGE_SCROLLER = `
 <div data-gd-messagescroller id="scroller">
@@ -965,4 +965,127 @@ test('menubar: hovering another trigger while a menu is open follows', () => {
 
   assert.ok(doc.getElementById('menu-edit').hasAttribute('data-gd-menu-open'), 'hovered menu opens');
   assert.ok(!doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'), 'previous menu closes');
+});
+
+const NAVIGATION_MENU = `
+<nav data-gd-navigation-menu id="nav">
+  <ul id="nav-list">
+    <li data-gd-nav-item id="item-products">
+      <button type="button" data-gd-nav-trigger aria-expanded="false" aria-controls="products-content" id="products-trigger">Products</button>
+      <div data-gd-nav-content id="products-content">
+        <a data-gd-nav-link id="analytics" href="#">Analytics</a>
+        <a data-gd-nav-link id="automation" href="#">Automation</a>
+      </div>
+    </li>
+    <li data-gd-nav-item id="item-solutions">
+      <button type="button" data-gd-nav-trigger aria-expanded="false" aria-controls="solutions-content" id="solutions-trigger">Solutions</button>
+      <div data-gd-nav-content id="solutions-content">
+        <a data-gd-nav-link id="startups" href="#">Startups</a>
+      </div>
+    </li>
+  </ul>
+</nav>
+<button type="button" id="nav-outside">outside</button>`;
+
+test('navigation menu: runtime marks the root ready', () => {
+  const { window } = setup(NAVIGATION_MENU);
+  const nav = window.document.getElementById('nav');
+  assert.equal(nav.getAttribute('data-gd-nav-ready'), 'true');
+});
+
+test('navigation menu: click toggles an item and closes the others', () => {
+  const { window } = setup(NAVIGATION_MENU);
+  const doc = window.document;
+  const products = doc.getElementById('products-trigger');
+  const solutions = doc.getElementById('solutions-trigger');
+
+  products.click();
+  assert.ok(doc.getElementById('item-products').hasAttribute('data-gd-nav-open'));
+  assert.equal(products.getAttribute('aria-expanded'), 'true');
+
+  solutions.click();
+  assert.ok(doc.getElementById('item-solutions').hasAttribute('data-gd-nav-open'));
+  assert.ok(!doc.getElementById('item-products').hasAttribute('data-gd-nav-open'), 'previous item closes');
+  assert.equal(products.getAttribute('aria-expanded'), 'false');
+
+  solutions.click();
+  assert.ok(!doc.getElementById('item-solutions').hasAttribute('data-gd-nav-open'), 'second click closes');
+  assert.equal(solutions.getAttribute('aria-expanded'), 'false');
+});
+
+test('navigation menu: Enter toggles once and the synthetic click is consumed', () => {
+  const { window } = setup(NAVIGATION_MENU);
+  const doc = window.document;
+  const products = doc.getElementById('products-trigger');
+
+  press(window, products, 'Enter');
+  assert.ok(doc.getElementById('item-products').hasAttribute('data-gd-nav-open'), 'Enter opens');
+
+  // A real button activation fires keydown then click; the click must not undo
+  // the keyboard toggle.
+  products.click();
+  assert.ok(doc.getElementById('item-products').hasAttribute('data-gd-nav-open'), 'synthetic click is consumed');
+
+  // A later genuine click still toggles.
+  press(window, products, ' ');
+  products.click();
+  assert.ok(!doc.getElementById('item-products').hasAttribute('data-gd-nav-open'), 'next click closes');
+});
+
+test('navigation menu: ArrowDown opens and focuses the first link', () => {
+  const { window } = setup(NAVIGATION_MENU);
+  const doc = window.document;
+  const products = doc.getElementById('products-trigger');
+
+  press(window, products, 'ArrowDown');
+
+  assert.equal(doc.activeElement.id, 'analytics');
+  assert.ok(doc.getElementById('item-products').hasAttribute('data-gd-nav-open'));
+});
+
+test('navigation menu: Escape from inside the panel closes and restores focus', () => {
+  const { window } = setup(NAVIGATION_MENU);
+  const doc = window.document;
+  const products = doc.getElementById('products-trigger');
+
+  press(window, products, 'ArrowDown');
+  press(window, doc.activeElement, 'Escape');
+
+  assert.equal(doc.activeElement, products);
+  assert.ok(!doc.getElementById('item-products').hasAttribute('data-gd-nav-open'));
+});
+
+test('navigation menu: ArrowLeft/Right move between triggers, and switch panels when open', () => {
+  const { window } = setup(NAVIGATION_MENU);
+  const doc = window.document;
+  const products = doc.getElementById('products-trigger');
+  const solutions = doc.getElementById('solutions-trigger');
+
+  products.focus();
+  press(window, products, 'ArrowRight');
+  assert.equal(doc.activeElement, solutions, 'moves focus when nothing is open');
+
+  press(window, solutions, 'ArrowRight');
+  assert.equal(doc.activeElement, products, 'wraps');
+
+  products.click();
+  press(window, products, 'ArrowRight');
+  assert.ok(doc.getElementById('item-solutions').hasAttribute('data-gd-nav-open'), 'adjacent panel opens');
+  assert.equal(doc.activeElement.id, 'startups', 'first link of the adjacent panel is focused');
+});
+
+test('navigation menu: outside pointerdown and focus leaving the nav close it', () => {
+  const { window } = setup(NAVIGATION_MENU);
+  const doc = window.document;
+  const products = doc.getElementById('products-trigger');
+
+  products.click();
+  doc.getElementById('nav-outside').dispatchEvent(new window.MouseEvent('pointerdown', { bubbles: true }));
+  assert.ok(!doc.getElementById('item-products').hasAttribute('data-gd-nav-open'), 'outside pointerdown closes');
+
+  products.focus();
+  products.click();
+  assert.ok(doc.getElementById('item-products').hasAttribute('data-gd-nav-open'));
+  doc.getElementById('nav-outside').focus();
+  assert.ok(!doc.getElementById('item-products').hasAttribute('data-gd-nav-open'), 'focus leaving closes');
 });

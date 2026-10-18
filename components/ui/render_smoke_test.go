@@ -828,3 +828,62 @@ func TestMenubarContract(t *testing.T) {
 		t.Errorf("shortcut missing faint tone:\n%s", short)
 	}
 }
+
+func TestNavigationMenuContract(t *testing.T) {
+	item := shared.RenderInto(NavigationMenuItem(NavigationMenuItemProps{ID: "nav-x"}), shared.Compose(
+		shared.RenderInto(NavigationMenuTrigger(NavigationMenuTriggerProps{}), uiStr("Products")),
+		shared.RenderInto(NavigationMenuContent(NavigationMenuContentProps{}), shared.Compose(
+			shared.RenderInto(NavigationMenuLink(NavigationMenuLinkProps{Href: "/a", Active: true}), uiStr("Analytics")),
+			shared.RenderInto(NavigationMenuDescription(NavigationMenuDescriptionProps{}), uiStr("Reports")),
+		)),
+	))
+	got := renderUI(t, shared.RenderInto(
+		NavigationMenu(NavigationMenuProps{}),
+		shared.RenderInto(NavigationMenuList(NavigationMenuListProps{}), item),
+	))
+
+	for _, want := range []string{
+		"<nav",
+		"data-gd-navigation-menu",
+		"data-gd-nav-item",
+		"data-gd-nav-trigger",
+		`aria-expanded="false"`,
+		`aria-controls="nav-x-content"`,
+		`id="nav-x-content"`,
+		"data-gd-nav-content",
+		"data-gd-nav-link",
+		`aria-current="page"`,
+		"go-daisy-navigation-menu.js",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("navigation menu missing %q in:\n%s", want, got)
+		}
+	}
+
+	// A navigation panel is a list of links, not a menu: menu semantics here
+	// would make screen readers announce every link as a menu command.
+	for _, unwanted := range []string{`role="menu"`, `role="menubar"`, `aria-haspopup="menu"`, `role="menuitem"`} {
+		if strings.Contains(got, unwanted) {
+			t.Errorf("navigation menu must not emit %q:\n%s", unwanted, got)
+		}
+	}
+
+	// No-JS contract: panels are rendered visible, the runtime hides them only
+	// after stamping data-gd-nav-ready on the root.
+	if strings.Contains(got, " hidden ") || strings.Contains(got, " hidden>") {
+		t.Errorf("content must not be hidden server-side:\n%s", got)
+	}
+
+	// A trigger outside a NavigationMenuItem omits aria-controls rather than
+	// pointing at a nonsense id.
+	orphan := renderUI(t, NavigationMenuTrigger(NavigationMenuTriggerProps{}))
+	if strings.Contains(orphan, "aria-controls") {
+		t.Errorf("orphan trigger must omit aria-controls:\n%s", orphan)
+	}
+
+	// Hrefs are neutralised.
+	unsafe := renderUI(t, NavigationMenuLink(NavigationMenuLinkProps{Href: "javascript:alert(1)"}))
+	if strings.Contains(unsafe, "javascript:") {
+		t.Errorf("unsafe href not neutralised:\n%s", unsafe)
+	}
+}
