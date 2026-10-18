@@ -625,11 +625,15 @@ html[data-gd-resizing] iframe {
  * arrow-key focus movement between top-level triggers never auto-opens a menu.
  *
  * These rules MUST live in `utilities`, not `components`: daisyUI 5 emits
- * `.menu { display: flex }` in the utilities layer, and a components-layer rule
- * loses the cascade to it no matter how specific the selector is. The two-class
- * `[data-gd-menubar-menu] > [data-gd-menu]` selector then out-ranks `.menu`
- * inside the same layer. (Verified in the compiled bundle: `.menu` sits under
- * `@layer utilities`.) */
+ * `.menu { display: flex }` inside the nested sublayers of `@layer utilities`
+ * (`utilities.daisyui.l1.l2.l3`). Declarations made directly in a layer are
+ * ordered after that layer's sublayers, so an unqualified `utilities` rule wins
+ * over daisyUI's `.menu` without `!important` and without relying on
+ * specificity (ours is 0-2-0 vs `.menu`'s 0-1-0 either way). A rule in
+ * `components` loses the cascade no matter how specific it is, because the
+ * `utilities` layer is declared after `components`. Verified against the
+ * compiled bundle and in the browser (closed menus compute `display:none`,
+ * open ones `display:block`). */
 @layer utilities {
   [data-gd-menubar-menu] > [data-gd-menu] {
     display: none;

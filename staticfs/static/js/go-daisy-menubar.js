@@ -21,9 +21,11 @@
  *   [data-gd-menu]                    its menu surface (the content)
  *
  * The runtime suppresses gdMenu's open-on-focusin by stamping
- * data-gd-menu-closed on every menu at wire time, so tabbing into the bar (or
- * moving focus with the arrows while closed) never auto-opens. gdMenu clears
- * that marker on trigger pointerdown, so a real click still opens.
+ * data-gd-menu-closed on every menu at wire time and again whenever focus
+ * leaves the bar (gdMenu clears the marker on its own focusout, which would
+ * otherwise make a returning Tab auto-open a menu). Tabbing into the bar or
+ * moving focus with the arrows while closed therefore never auto-opens, and
+ * gdMenu clears the marker on trigger pointerdown so a real click still opens.
  */
 (function () {
   'use strict';
@@ -71,6 +73,33 @@
     });
   }
 
+  // Re-stamp the closed marker on every menu in the bar. gdMenu's focusout
+  // handler clears the marker whenever focus leaves a root, so after a Tab-out
+  // a returning Tab would auto-open the menu that happened to have focus. The
+  // bar owns "stay closed until asked" while focus is outside it.
+  function stampClosed(root) {
+    menusOf(root).forEach(function (menu) {
+      if (!isOpen(menu)) menu.setAttribute('data-gd-menu-closed', '');
+    });
+  }
+
+  function triggerMenu(trigger) {
+    var menu = trigger.closest('[data-gd-menubar-menu]');
+    return menu || null;
+  }
+
+  // A click on a trigger keeps that item open and closes the rest. gdMenu opens
+  // on focusin, so the clicked menu may already be open by the time the click
+  // event lands; the bar must never end up with two open menus. Clicking an
+  // already-open trigger deliberately does NOT toggle it closed: hover-follow
+  // opens the item under the pointer before the click, so a toggle would make a
+  // plain "switch to this menu" click close it again.
+  function handleTriggerClick(root, trigger) {
+    var menu = triggerMenu(trigger);
+    if (!menu) return;
+    closeAll(root, menu);
+  }
+
   function rovingFor(root) {
     return window.gdFocus.roving(root, '[data-gd-menubar-trigger]');
   }
@@ -89,7 +118,10 @@
     if (root.getAttribute(WIRED) === 'true') return;
     root.setAttribute(WIRED, 'true');
     menusOf(root).forEach(function (menu) {
-      // Start closed so a Tab into the bar never auto-opens the first menu.
+      // Start closed so a Tab into the bar never auto-opens the first menu, and
+      // keep it that way across focus-leave: gdMenu's own focusout would
+      // otherwise clear the marker and a returning Tab would reopen the menu.
+      menu.setAttribute('data-gd-menu-keep-closed', '');
       menu.setAttribute('data-gd-menu-closed', '');
     });
     primeTriggers(root);
@@ -99,32 +131,36 @@
     menubarRoots().forEach(wire);
   }
 
+  function indexOfTarget(triggers, target) {
+    var trigger = target.closest('[data-gd-menubar-trigger]');
+    if (trigger) return triggers.indexOf(trigger);
+    var menu = target.closest('[data-gd-menubar-menu]');
+    if (!menu) return -1;
+    for (var i = 0; i < triggers.length; i++) {
+      if (triggers[i].closest('[data-gd-menubar-menu]') === menu) return i;
+    }
+    return -1;
+  }
+
   function handleHorizontal(root, event) {
     var triggers = triggersOf(root);
     if (!triggers.length) return;
 
+    var idx = indexOfTarget(triggers, event.target);
+    if (idx < 0) return;
+
     event.preventDefault();
     event.stopPropagation();
 
-    var forward = event.key === 'ArrowRight';
-    var current = event.target;
-    var idx = -1;
-
-    var trigger = current.closest('[data-gd-menubar-trigger]');
-    if (trigger) {
-      idx = triggers.indexOf(trigger);
-    } else {
-      var menu = current.closest('[data-gd-menubar-menu]');
-      if (menu) {
-        for (var i = 0; i < triggers.length; i++) {
-          if (triggers[i].closest('[data-gd-menubar-menu]') === menu) { idx = i; break; }
-        }
-      }
-    }
-    if (idx < 0) return;
-
     var wasOpen = anyOpen(root);
-    var next = ((forward ? idx + 1 : idx - 1) % triggers.length + triggers.length) % triggers.length;
+    var next;
+    if (event.key === 'Home') {
+      next = 0;
+    } else if (event.key === 'End') {
+      next = triggers.length - 1;
+    } else {
+      next = ((event.key === 'ArrowRight' ? idx + 1 : idx - 1) % triggers.length + triggers.length) % triggers.length;
+    }
     var nextTrigger = triggers[next];
     var nextMenu = nextTrigger.closest('[data-gd-menubar-menu]');
 
@@ -145,8 +181,17 @@
     document.addEventListener('keydown', function (event) {
       var root = event.target.closest && event.target.closest('[data-gd-menubar]');
       if (!root) return;
-      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' &&
+          event.key !== 'Home' && event.key !== 'End') return;
       handleHorizontal(root, event);
+    });
+
+    document.addEventListener('click', function (event) {
+      var root = event.target.closest && event.target.closest('[data-gd-menubar]');
+      if (!root) return;
+      var trigger = event.target.closest('[data-gd-menubar-trigger]');
+      if (!trigger) return;
+      handleTriggerClick(root, trigger);
     });
 
     document.addEventListener('pointerover', function (event) {
@@ -165,6 +210,7 @@
       var next = event.relatedTarget;
       if (next && root.contains(next)) return;
       closeAll(root, null);
+      stampClosed(root);
     });
   }
 

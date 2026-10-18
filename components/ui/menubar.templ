@@ -30,8 +30,11 @@ type MenubarMenuProps struct {
 
 // MenubarTriggerProps configures a MenubarTrigger.
 type MenubarTriggerProps struct {
-	Class string
-	Attrs templ.Attributes
+	// Disabled renders a non-focusable top-level item. The roving helpers skip
+	// it, so arrow movement jumps over it.
+	Disabled bool
+	Class    string
+	Attrs    templ.Attributes
 }
 
 // MenubarContentProps configures a MenubarContent (the dropdown menu surface).
@@ -116,17 +119,21 @@ templ MenubarMenu(props MenubarMenuProps) {
 	</div>
 }
 
-// MenubarTrigger renders a top-level trigger. aria-expanded is deliberately
-// omitted — the shared a11y runtime owns it — and aria-haspopup is set
-// statically. The static tabindex="0" is re-written by the menubar runtime's
+// MenubarTrigger renders a top-level trigger with role="menuitem" (the only
+// role a menubar may own). aria-expanded is deliberately omitted — the shared
+// a11y runtime owns it — and aria-haspopup is set statically. The static tabindex="0" is re-written by the menubar runtime's
 // roving pass so exactly one trigger is tabbable.
 templ MenubarTrigger(props MenubarTriggerProps) {
 	<button
 		type="button"
+		role="menuitem"
 		data-gd-menu-trigger
 		data-gd-menubar-trigger
 		tabindex="0"
 		aria-haspopup="menu"
+		if props.Disabled {
+			disabled
+		}
 		class={ "btn btn-ghost btn-sm", props.Class }
 		{ devmode.Attrs(ctx, "ui/MenubarTrigger")... }
 		{ props.Attrs... }

@@ -757,7 +757,108 @@ const MENUBAR = `
       <li role="none"><a role="menuitem" data-gd-menu-item id="zoom" href="#">Zoom</a></li>
     </ul>
   </div>
+</div>
+<button type="button" id="outside">outside</button>`;
+
+const MENUBAR_DISABLED_TRIGGER = `
+<div role="menubar" data-gd-menubar id="bar">
+  <div data-gd-menubar-menu data-gd-menu-root id="menu-a">
+    <button type="button" role="menuitem" data-gd-menu-trigger data-gd-menubar-trigger tabindex="0" aria-haspopup="menu" id="a-trigger">A</button>
+    <ul role="menu" data-gd-menu id="a-content">
+      <li role="none"><a role="menuitem" data-gd-menu-item id="a-item" href="#">A item</a></li>
+    </ul>
+  </div>
+  <div data-gd-menubar-menu data-gd-menu-root id="menu-b">
+    <button type="button" role="menuitem" data-gd-menu-trigger data-gd-menubar-trigger tabindex="0" aria-haspopup="menu" id="b-trigger" disabled>B</button>
+    <ul role="menu" data-gd-menu id="b-content">
+      <li role="none"><a role="menuitem" data-gd-menu-item id="b-item" href="#">B item</a></li>
+    </ul>
+  </div>
+  <div data-gd-menubar-menu data-gd-menu-root id="menu-c">
+    <button type="button" role="menuitem" data-gd-menu-trigger data-gd-menubar-trigger tabindex="0" aria-haspopup="menu" id="c-trigger">C</button>
+    <ul role="menu" data-gd-menu id="c-content">
+      <li role="none"><a role="menuitem" data-gd-menu-item id="c-item" href="#">C item</a></li>
+    </ul>
+  </div>
 </div>`;
+
+test('menubar: tabbing out and back in does not auto-open a menu', () => {
+  // gdMenu's own focusout clears data-gd-menu-closed whenever focus leaves a
+  // root; the menubar runtime must re-stamp every closed menu so a returning
+  // Tab does not reopen whatever had focus last.
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+  const outside = doc.getElementById('outside');
+
+  file.focus();
+  outside.focus();
+  file.focus();
+
+  assert.ok(!doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'), 'bar stays closed');
+  assert.ok(doc.getElementById('menu-file').hasAttribute('data-gd-menu-closed'), 'closed marker is re-stamped');
+});
+
+// clickTrigger mimics the browser order for a real pointer click: jsdom's
+// element.click() neither moves focus nor fires pointerdown, and gdMenu opens
+// on focusin, so a bare .click() would prove nothing.
+function clickTrigger(window, trigger) {
+  trigger.dispatchEvent(new window.MouseEvent('pointerdown', { bubbles: true }));
+  trigger.focus();
+  trigger.click();
+}
+
+test('menubar: clicking a different trigger leaves exactly one menu open', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+  const edit = doc.getElementById('edit-trigger');
+
+  clickTrigger(window, file);
+  clickTrigger(window, edit);
+
+  assert.ok(!doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'), 'previous menu closes');
+  assert.ok(doc.getElementById('menu-edit').hasAttribute('data-gd-menu-open'), 'clicked menu opens');
+  assert.equal(doc.querySelectorAll('[data-gd-menu-open]').length, 1, 'never two open menus');
+});
+
+test('menubar: Home and End jump to the first and last top-level item', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const edit = doc.getElementById('edit-trigger');
+
+  edit.focus();
+  press(window, edit, 'End');
+  assert.equal(doc.activeElement.id, 'view-trigger');
+
+  press(window, doc.activeElement, 'Home');
+  assert.equal(doc.activeElement.id, 'file-trigger');
+});
+
+test('menubar: ArrowUp opens the menu at its last item', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+
+  file.focus();
+  press(window, file, 'ArrowUp');
+
+  assert.equal(doc.activeElement.id, 'open', 'last item is focused');
+  assert.ok(doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'));
+});
+
+test('menubar: arrow movement skips a disabled top-level item', () => {
+  const { window } = setup(MENUBAR_DISABLED_TRIGGER);
+  const doc = window.document;
+  const a = doc.getElementById('a-trigger');
+
+  a.focus();
+  press(window, a, 'ArrowRight');
+  assert.equal(doc.activeElement.id, 'c-trigger', 'disabled B is skipped');
+
+  press(window, doc.activeElement, 'ArrowRight');
+  assert.equal(doc.activeElement.id, 'a-trigger', 'wraps past the disabled item');
+});
 
 test('menubar: clicking a trigger does not throw in the deferred aria-expanded sync', () => {
   // gdMenu's click handler reflects aria-expanded in a setTimeout. Run deferred
