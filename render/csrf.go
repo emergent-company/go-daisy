@@ -93,7 +93,10 @@ func getOrCreateToken(ctx echo.Context, cookieName string) string {
 
 func generateToken() string {
 	b := make([]byte, 32)
-	rand.Read(b)
+	if _, err := rand.Read(b); err != nil {
+		// Fail closed: a zero-filled token would be predictable.
+		panic("csrf: crypto/rand unavailable: " + err.Error())
+	}
 	return hex.EncodeToString(b)
 }
 

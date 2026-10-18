@@ -128,6 +128,11 @@ type GalleryComponent struct {
 	Subcategory string // optional grouping within a category (e.g. "Buttons", "Modal")
 	Description string
 
+	// HidePreview, when true, marks the component as having no previewable
+	// story. It is surfaced in the /api/components summary as hide_preview so
+	// downstream consumers (the panel, MCP) can skip it without rendering it.
+	HidePreview bool
+
 	// Root-level preview fields (backward-compatible; used when Variants is empty).
 	HTML        string          // raw HTML snippet — rendered via srcdoc iframe
 	Templ       templ.Component // full-page templ component — rendered via /gallery/render/{slug}
