@@ -69,7 +69,7 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 						}
 					</a>
 					<!-- Fold / unfold toggle (desktop only) -->
-					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLabel, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeCircle, ExtraClass: "text-base-content/50 max-lg:hidden", Attrs: templ.Attributes{"for": "_layout-sidebar-toggle-trigger", "title": "Toggle sidebar"}}) {
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLabel, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeCircle, ExtraClass: "text-subtle max-lg:hidden", Attrs: templ.Attributes{"for": "_layout-sidebar-toggle-trigger", "title": "Toggle sidebar"}}) {
 						@ui.IconSpan("lucide--panel-left-close", "size-4.5")
 					}
 				</div>
@@ -83,7 +83,7 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 								hx-target="#gallery-content"
 								hx-swap="innerHTML"
 								hx-push-url="true"
-								class="menu-label px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-base-content/50 hover:text-base-content/80 transition-colors duration-150 block"
+								class="menu-label eyebrow px-2.5 py-1.5 hover:text-body transition-colors duration-150 block"
 							>
 								{ string(group.Name) }
 							</a>
@@ -96,7 +96,7 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 										hx-target="#gallery-content"
 										hx-swap="innerHTML"
 										hx-push-url="true"
-										class="px-2.5 pt-2 pb-0.5 text-[11px] font-medium uppercase tracking-wide text-base-content/50 hover:text-primary transition-colors duration-150 block"
+										class="px-2.5 pt-2 pb-0.5 text-[11px] font-medium uppercase tracking-wide text-subtle hover:text-primary transition-colors duration-150 block"
 									>
 										{ sub.Name }
 									</a>
@@ -152,20 +152,20 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 				</div>
 				<!-- Footer note -->
 				<div class="border-line px-3 py-3 border-t shrink-0">
-					<p class="text-xs text-base-content/40 text-center">DaisyUI component gallery</p>
+					<p class="text-xs text-faint text-center">DaisyUI component gallery</p>
 				</div>
 			</div>
 			<!-- Right column: topbar + content -->
 			<div class="flex min-w-0 grow flex-col overflow-hidden">
 				@layout.Navbar("Gallery") {
 					<!-- Search trigger (desktop) -->
-					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong text-base-content/60 hidden h-9 w-72 justify-start gap-2 md:flex", Attrs: templ.Attributes{"id": "gallery-search-trigger", "aria-label": "Search components", "onclick": "gallerySearchOpen();"}}) {
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong text-muted hidden h-9 w-72 justify-start gap-2 md:flex", Attrs: templ.Attributes{"id": "gallery-search-trigger", "aria-label": "Search components", "onclick": "gallerySearchOpen();"}}) {
 						@ui.IconSpan("lucide--search", "size-4")
 						<span class="grow text-left text-sm">Search components…</span>
 						<kbd class="kbd kbd-xs shrink-0">⌘K</kbd>
 					}
 					<!-- Search trigger (mobile icon only) -->
-					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "border-line-strong text-base-content/60 flex size-9 md:hidden", Attrs: templ.Attributes{"aria-label": "Search components", "onclick": "gallerySearchOpen();"}}) {
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "border-line-strong text-muted flex size-9 md:hidden", Attrs: templ.Attributes{"aria-label": "Search components", "onclick": "gallerySearchOpen();"}}) {
 						@ui.IconSpan("lucide--search", "size-4")
 					}
 					@ui.ThemeSwitcher()
@@ -211,7 +211,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 				</form>
 			</div>
 			<!-- Keyboard hint bar -->
-			<div class="border-line-strong bg-base-200/50 flex items-center gap-4 border-b px-4 py-1.5 text-xs text-base-content/50">
+			<div class="border-line-strong bg-base-200/50 flex items-center gap-4 border-b px-4 py-1.5 text-xs text-subtle">
 				<span><kbd class="kbd kbd-xs">↑</kbd><kbd class="kbd kbd-xs ml-0.5">↓</kbd> Navigate</span>
 				<span><kbd class="kbd kbd-xs">↵</kbd> Open</span>
 				<span><kbd class="kbd kbd-xs">Esc</kbd> Close</span>
@@ -224,7 +224,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 			</div>
 			<!-- Footer -->
 			<div class="border-line-strong flex items-center justify-between border-t px-4 py-2">
-				<span id="gallery-search-count" class="text-xs text-base-content/40"></span>
+				<span id="gallery-search-count" class="text-xs text-faint"></span>
 				<span class="text-xs text-base-content/30">go-daisy</span>
 			</div>
 		</div>
@@ -324,7 +324,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 						+ '<div class="grow min-w-0">'
 						+ '<p class="truncate font-medium leading-none">' + esc(g.name) + '</p>'
 						+ '</div>'
-						+ '<span class="si-enter opacity-0 text-xs text-base-content/40 shrink-0">\u21B5</span>'
+						+ '<span class="si-enter opacity-0 text-xs text-faint shrink-0">\u21B5</span>'
 						+ '</a></li>';
 				});
 			}
@@ -347,7 +347,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 						+ '<p class="truncate font-medium leading-none">' + esc(sg.name) + '</p>'
 						+ '<p class="mt-0.5 text-xs opacity-60 leading-none">' + esc(sg.category) + '</p>'
 						+ '</div>'
-						+ '<span class="si-enter opacity-0 text-xs text-base-content/40 shrink-0">\u21B5</span>'
+						+ '<span class="si-enter opacity-0 text-xs text-faint shrink-0">\u21B5</span>'
 						+ '</a></li>';
 				});
 			}
@@ -371,13 +371,13 @@ templ gallerySearchModal(categories []CategoryGroup) {
 						+ '<p class="truncate font-medium leading-none">' + esc(c.name) + '</p>'
 						+ sub
 						+ '</div>'
-						+ '<span class="si-enter opacity-0 text-xs text-base-content/40 shrink-0">\u21B5</span>'
+						+ '<span class="si-enter opacity-0 text-xs text-faint shrink-0">\u21B5</span>'
 						+ '</a></li>';
 				});
 			});
 
 			if (!html) {
-				html = '<li class="px-3 py-6 text-center text-sm text-base-content/40">No results found</li>';
+				html = '<li class="px-3 py-6 text-center text-sm text-faint">No results found</li>';
 			}
 			list.innerHTML = html;
 			counter.textContent = allResults.length + ' result' + (allResults.length === 1 ? '' : 's');

@@ -18,7 +18,7 @@ templ pageHeaderStep(step BreadcrumbItem) {
 			{ step.Label }
 		</a>
 	} else {
-		<span class="text-base-content/50 truncate">{ step.Label }</span>
+		<span class="text-subtle truncate">{ step.Label }</span>
 	}
 }
 
@@ -33,7 +33,7 @@ templ pageHeaderStep(step BreadcrumbItem) {
 // attrs is optional; pass nil when not needed.
 templ PageHeader(steps []BreadcrumbItem, attrs templ.Attributes) {
 	<div class="flex items-center justify-between px-6 py-0 h-16 bg-base-100 border-b border-line shrink-0" { devmode.Attrs(ctx, "nav/PageHeader")... } { attrs... }>
-		<nav class="flex items-center gap-2 text-xl font-semibold overflow-x-hidden min-w-0" aria-label="Breadcrumb">
+		<nav class={ ui.Row, "text-xl font-semibold overflow-x-hidden min-w-0" } aria-label="Breadcrumb">
 			for i, step := range steps {
 				if i > 0 {
 					@ui.IconSpan("lucide--chevron-right", "w-4 h-4 shrink-0 text-base-content/30")
@@ -41,7 +41,7 @@ templ PageHeader(steps []BreadcrumbItem, attrs templ.Attributes) {
 				@devmode.ElementBoundary("BreadcrumbItem", pageHeaderStep(step), step)
 			}
 		</nav>
-		<div class="flex items-center gap-2 shrink-0 ml-4">
+		<div class={ ui.Row, "shrink-0 ml-4" }>
 			{ children... }
 		</div>
 	</div>

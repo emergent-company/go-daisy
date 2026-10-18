@@ -57,7 +57,7 @@ templ PaginationWithProps(props PaginationProps) {
 	if props.TotalPages > 1 {
 		<div class="border-line flex flex-wrap items-center justify-between gap-2 border-t border-dashed p-5" { devmode.Attrs(ctx, "ui/PaginationWithProps")... } { props.Attrs... }>
 			if props.TotalItems > 0 {
-				<p class="text-base-content/70 text-sm">
+				<p class="text-label text-sm">
 					Showing
 					<span class="text-base-content font-medium">{ strconv.FormatInt(props.StartItem(), 10) }–{ strconv.FormatInt(props.EndItem(), 10) }</span>
 					out of

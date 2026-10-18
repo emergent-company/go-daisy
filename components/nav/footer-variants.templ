@@ -45,29 +45,29 @@ templ FooterVariant(style string, opts FooterVariantOpts) {
 	<footer class={ "flex w-full flex-wrap items-center justify-between gap-2 border-t border-dashed px-4 py-4 md:px-8 xl:px-12 2xl:px-20", templ.KV(opts.ExtraClass, opts.ExtraClass != "") } { devmode.Attrs(ctx, "nav/FooterVariant")... }>
 		switch style {
 		case "minimal":
-			<p class="text-base-content/60 mx-auto text-sm">{ opts.Copyright }</p>
+			<p class="text-muted mx-auto text-sm">{ opts.Copyright }</p>
 		case "social":
 			<p class="text-sm font-medium">{ opts.BrandName }</p>
-			<p class="text-base-content/60 text-sm">{ opts.Copyright }</p>
-			<nav class="flex items-center gap-3" aria-label="Social links">
+			<p class="text-muted text-sm">{ opts.Copyright }</p>
+			<nav class={ ui.RowLoose } aria-label="Social links">
 				for _, l := range opts.SocialLinks {
-					<a href={ templ.SafeURL(l.Href) } class="text-base-content/60 hover:text-base-content transition-colors" aria-label={ l.Icon }>
+					<a href={ templ.SafeURL(l.Href) } class="text-muted hover:text-base-content transition-colors" aria-label={ l.Icon }>
 						@ui.IconSpan(l.Icon, "size-4")
 					</a>
 				}
 			</nav>
 		case "branding":
-			<p class="text-base-content/60 text-sm">{ opts.Copyright }</p>
+			<p class="text-muted text-sm">{ opts.Copyright }</p>
 			<p class="text-sm">Built with <span class="text-error">&hearts;</span> daisyUI</p>
 		case "legal":
-			<p class="text-base-content/60 text-sm">{ opts.Copyright }</p>
+			<p class="text-muted text-sm">{ opts.Copyright }</p>
 			<nav class="flex items-center gap-4" aria-label="Legal links">
 				for _, l := range opts.LegalLinks {
-					<a href={ templ.SafeURL(l.Href) } class="text-base-content/60 hover:text-primary text-sm transition-colors">{ l.Label }</a>
+					<a href={ templ.SafeURL(l.Href) } class="text-muted hover:text-primary text-sm transition-colors">{ l.Label }</a>
 				}
 			</nav>
 		case "status":
-			<div class="flex items-center gap-2">
+			<div class={ ui.Row }>
 				<span class={ "size-2 rounded-full", templ.KV("bg-success", opts.StatusOK), templ.KV("bg-error", !opts.StatusOK) }></span>
 				if opts.StatusLabel != "" {
 					<span class="text-sm">{ opts.StatusLabel }</span>
@@ -75,39 +75,39 @@ templ FooterVariant(style string, opts FooterVariantOpts) {
 					<span class="text-sm">System running smoothly</span>
 				}
 			</div>
-			<p class="text-base-content/60 text-sm">{ opts.Copyright }</p>
+			<p class="text-muted text-sm">{ opts.Copyright }</p>
 		case "support":
-			<div class="flex items-center gap-2">
-				@ui.IconSpan("lucide--headset", "size-4 text-base-content/60")
+			<div class={ ui.Row }>
+				@ui.IconSpan("lucide--headset", "size-4 text-muted")
 				if opts.PhoneNumber != "" {
 					<span class="text-sm">{ opts.PhoneNumber }</span>
 				} else {
 					<span class="text-sm">+1 (555) 123-4567</span>
 				}
 			</div>
-			<div class="flex items-center gap-3">
-				<span class="text-base-content/60 text-sm">Follow</span>
+			<div class={ ui.RowLoose }>
+				<span class="text-muted text-sm">Follow</span>
 				for _, l := range opts.SocialLinks {
-					<a href={ templ.SafeURL(l.Href) } class="text-base-content/60 hover:text-base-content transition-colors" aria-label={ l.Icon }>
+					<a href={ templ.SafeURL(l.Href) } class="text-muted hover:text-base-content transition-colors" aria-label={ l.Icon }>
 						@ui.IconSpan(l.Icon, "size-4")
 					</a>
 				}
 			</div>
 		case "language-pills":
-			<p class="text-base-content/60 text-sm">{ opts.Copyright }</p>
-			<div class="flex items-center gap-1.5">
+			<p class="text-muted text-sm">{ opts.Copyright }</p>
+			<div class={ ui.RowTight, ".5" }>
 				for _, l := range opts.Languages {
 					<a href={ templ.SafeURL(l.Href) } class="badge badge-soft badge-sm hover:badge-soft-primary cursor-pointer px-2.5">{ l.Label }</a>
 				}
 			</div>
 		case "language-currency":
-			<p class="text-base-content/60 text-sm">{ opts.Copyright }</p>
-			<div class="flex items-center gap-3">
+			<p class="text-muted text-sm">{ opts.Copyright }</p>
+			<div class={ ui.RowLoose }>
 				<div class="dropdown dropdown-end">
 					<label tabindex="0" class="btn btn-xs btn-ghost gap-1.5 font-normal">
-						@ui.IconSpan("lucide--globe", "size-3.5 text-base-content/60")
+						@ui.IconSpan("lucide--globe", "size-3.5 text-muted")
 						<span class="text-sm">Language</span>
-						@ui.IconSpan("lucide--chevron-down", "size-3 text-base-content/40")
+						@ui.IconSpan("lucide--chevron-down", "size-3 text-faint")
 					</label>
 					<ul tabindex="0" class="dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-36 p-1 edge-line mt-1">
 						for _, l := range opts.Languages {
@@ -117,9 +117,9 @@ templ FooterVariant(style string, opts FooterVariantOpts) {
 				</div>
 				<div class="dropdown dropdown-end">
 					<label tabindex="0" class="btn btn-xs btn-ghost gap-1.5 font-normal">
-						@ui.IconSpan("lucide--circle-dollar-sign", "size-3.5 text-base-content/60")
+						@ui.IconSpan("lucide--circle-dollar-sign", "size-3.5 text-muted")
 						<span class="text-sm">Currency</span>
-						@ui.IconSpan("lucide--chevron-down", "size-3 text-base-content/40")
+						@ui.IconSpan("lucide--chevron-down", "size-3 text-faint")
 					</label>
 					<ul tabindex="0" class="dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-36 p-1 edge-line mt-1">
 						for _, c := range opts.Currencies {
@@ -130,10 +130,10 @@ templ FooterVariant(style string, opts FooterVariantOpts) {
 			</div>
 		case "custom-bg":
 			<p class="text-sm font-medium">{ opts.BrandName }</p>
-			<p class="text-base-content/60 text-sm">{ opts.Copyright }</p>
-			<nav class="flex items-center gap-3" aria-label="Social links">
+			<p class="text-muted text-sm">{ opts.Copyright }</p>
+			<nav class={ ui.RowLoose } aria-label="Social links">
 				for _, l := range opts.SocialLinks {
-					<a href={ templ.SafeURL(l.Href) } class="text-base-content/60 hover:text-base-content transition-colors" aria-label={ l.Icon }>
+					<a href={ templ.SafeURL(l.Href) } class="text-muted hover:text-base-content transition-colors" aria-label={ l.Icon }>
 						@ui.IconSpan(l.Icon, "size-4")
 					</a>
 				}

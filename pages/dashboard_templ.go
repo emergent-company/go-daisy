@@ -120,7 +120,7 @@ func DashboardPage(props DashboardProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<a href=\"#\" class=\"link link-primary text-sm\">View all</a></div></div><div class=\"overflow-x-auto mt-3\"><table class=\"table table-sm w-full\"><thead><tr><th class=\"text-xs uppercase tracking-wider text-base-content/50\">ID</th><th class=\"text-xs uppercase tracking-wider text-base-content/50\">Customer</th><th class=\"text-xs uppercase tracking-wider text-base-content/50\">Price</th><th class=\"text-xs uppercase tracking-wider text-base-content/50\">Payment</th><th class=\"text-xs uppercase tracking-wider text-base-content/50\">Status</th></tr></thead> <tbody>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<a href=\"#\" class=\"link link-primary text-sm\">View all</a></div></div><div class=\"overflow-x-auto mt-3\"><table class=\"table table-sm w-full\"><thead><tr><th class=\"eyebrow\">ID</th><th class=\"eyebrow\">Customer</th><th class=\"eyebrow\">Price</th><th class=\"eyebrow\">Payment</th><th class=\"eyebrow\">Status</th></tr></thead> <tbody>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -227,14 +227,14 @@ func orderRow(id, customer, price string, paid bool, status string) templ.Compon
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</td><td class=\"text-sm text-base-content/60\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</td><td class=\"text-sm text-muted\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(status)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/dashboard.templ`, Line: 110, Col: 51}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/dashboard.templ`, Line: 110, Col: 41}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {

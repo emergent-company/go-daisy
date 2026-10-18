@@ -329,6 +329,16 @@ class={ "base-class", templ.KV("conditional-class", condition), props.Class }
 ```
 Props struct has `Class string` field. Caller-supplied CSS always appended after component's base classes. This is the dominant pattern for props-based components. Use this for new components.
 
+### Text tones (mandatory)
+
+Never write `text-base-content/<opacity>` with opacity ≥ 40. Use the semantic
+tokens from `components/css/tokens.css`: `text-body` (80), `text-label` (70),
+`text-muted` (60), `text-subtle` (50), `text-faint` (40). Raw `/20` and `/30`
+are reserved for decorative icons. Uppercase kickers use `.eyebrow` or
+`ui.Eyebrow`. Common flex shapes use `ui.Row`, `ui.RowLoose`, `ui.RowTight`,
+`ui.RowBetween`, `ui.ColStack`, `ui.ColStackLoose`.
+`components/css/tokens_test.go` enforces the tone rule.
+
 ### Conditional HTMX pattern
 
 Only emit HTMX attrs when both `hxGet` and `hxTarget` are non-empty:

@@ -138,12 +138,12 @@ templ Card(title string, attrs templ.Attributes, compact ...bool) {
 
 // CardBodyText renders a simple paragraph used as card body placeholder content.
 templ CardBodyText(text string) {
-	<p class="text-sm text-base-content/70" { devmode.Attrs(ctx, "ui/CardBodyText")... }>{ text }</p>
+	<p class="text-sm text-label" { devmode.Attrs(ctx, "ui/CardBodyText")... }>{ text }</p>
 }
 
 // CardPlaceholder renders a small labelled card placeholder for examples and gallery stories.
 templ CardPlaceholder(label string) {
-	<div class="card bg-base-100 edge-line w-32 h-16 flex items-center justify-center text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/CardPlaceholder")... }>{ label }</div>
+	<div class="card bg-base-100 edge-line w-32 h-16 flex items-center justify-center text-sm text-subtle" { devmode.Attrs(ctx, "ui/CardPlaceholder")... }>{ label }</div>
 }
 
 // CardCompact renders a compact DaisyUI card with tighter padding.
@@ -216,14 +216,14 @@ templ StatCardMinimal(item StatCardMinimalItem) {
 		<div class="card bg-base-100 relative shadow-sm edge-line" { devmode.Attrs(ctx, "ui/StatCardMinimal")... } { item.Attrs... }>
 			<div class="card-body gap-2">
 				<p class="text-2xl/none font-semibold">{ item.Value }</p>
-				<p class="text-base-content/60 mt-1 text-sm font-medium">{ item.Label }</p>
+				<p class="text-muted mt-1 text-sm font-medium">{ item.Label }</p>
 			if item.TrendLabel != "" {
 				<div class="mt-5 flex items-center gap-2">
 					@BadgeWithBoundary(statTrendIntent(item.Trend), BadgeStyleSoft, BadgeSizeSM, false, statTrendIcon(item.Trend), item.TrendLabel)
 					if item.ComparisonLabel != "" {
-						<p class="text-base-content/60 text-sm">{ item.ComparisonLabel }</p>
+						<p class="text-muted text-sm">{ item.ComparisonLabel }</p>
 					} else {
-						<p class="text-base-content/60 text-sm">vs last month</p>
+						<p class="text-muted text-sm">vs last month</p>
 					}
 				</div>
 			}
@@ -236,7 +236,7 @@ templ StatCardMinimal(item StatCardMinimalItem) {
 		</div>
 	} else {
 		@CardRaw(CardRawProps{Attrs: item.Attrs}) {
-			<p class="text-base-content/60 text-xs font-medium tracking-wide uppercase">{ item.Label }</p>
+			<p class="eyebrow">{ item.Label }</p>
 			<div class="mt-4 flex items-end justify-between gap-2 text-sm">
 				<p class="text-2xl/none font-semibold">{ item.Value }</p>
 			if item.TrendLabel != "" {

@@ -35,11 +35,12 @@ func TestModulesFor(t *testing.T) {
 
 func TestCSSFilesFor(t *testing.T) {
 	got := CSSFilesFor("ui", "layout", "nope")
-	if !reflect.DeepEqual(got, []string{CustomCSS}) {
-		t.Errorf("CSSFilesFor = %v, want [%s]", got, CustomCSS)
+	want := []string{CustomCSS, TokensCSS}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("CSSFilesFor = %v, want %v", got, want)
 	}
-	if got := CSSFilesFor("table"); len(got) != 0 {
-		t.Errorf("table css = %v, want empty", got)
+	if got := CSSFilesFor("table"); !reflect.DeepEqual(got, []string{TokensCSS}) {
+		t.Errorf("table css = %v, want [%s]", got, TokensCSS)
 	}
 }
 

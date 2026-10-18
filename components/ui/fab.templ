@@ -23,8 +23,8 @@ templ FAB(icon string, actions []FABAction) {
 			</div>
 			<div tabindex="0" class="dropdown-content mb-3 space-y-2 flex flex-col items-end">
 				for _, action := range actions {
-					<div class="flex items-center gap-2">
-						<span class="bg-base-100 text-xs font-medium px-2 py-1 rounded shadow text-base-content/70">{ action.Label }</span>
+					<div class={ Row }>
+						<span class="bg-base-100 text-xs font-medium px-2 py-1 rounded shadow text-label">{ action.Label }</span>
 						<a
 							href={ templ.URL(func() string {
 								if action.Href == "" {

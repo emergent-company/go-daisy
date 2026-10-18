@@ -36,9 +36,9 @@ templ ClipboardCopy(items []ClipboardCopyItem) {
 		for _, item := range items {
 			<div>
 				if item.Label != "" {
-					<p class="text-xs text-base-content/60 mb-2 font-semibold uppercase">{ item.Label }</p>
+					<p class="text-xs text-muted mb-2 font-semibold uppercase">{ item.Label }</p>
 				}
-				<div class="flex items-center gap-2">
+				<div class={ ui.Row }>
 					if item.Mono {
 						<code class="bg-base-200 text-base-content px-3 py-1.5 rounded text-sm font-mono flex-1">{ item.Value }</code>
 					} else {

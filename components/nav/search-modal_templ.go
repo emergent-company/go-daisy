@@ -78,7 +78,7 @@ func SearchModal(style string, opts SearchModalOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--search", "text-base-content/60 size-4.5").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.IconSpan("lucide--search", "text-muted size-4.5").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -98,7 +98,7 @@ func SearchModal(style string, opts SearchModalOpts) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = ui.IconSpan("lucide--x", "text-base-content/80 size-4").Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = ui.IconSpan("lucide--x", "text-body size-4").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -187,7 +187,7 @@ func SearchModal(style string, opts SearchModalOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--search", "text-base-content/60 size-4.5").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.IconSpan("lucide--search", "text-muted size-4.5").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -207,7 +207,7 @@ func SearchModal(style string, opts SearchModalOpts) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = ui.IconSpan("lucide--x", "text-base-content/80 size-4").Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = ui.IconSpan("lucide--x", "text-body size-4").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -233,7 +233,7 @@ func SearchModal(style string, opts SearchModalOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div><p class=\"text-base-content/80 ms-1 text-sm\">Navigate</p></div><div class=\"flex items-center gap-0.5 max-sm:hidden\"><div class=\"border-line-strong bg-base-200 flex size-5 items-center justify-center rounded-sm border shadow-xs\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div><p class=\"text-body ms-1 text-sm\">Navigate</p></div><div class=\"flex items-center gap-0.5 max-sm:hidden\"><div class=\"border-line-strong bg-base-200 flex size-5 items-center justify-center rounded-sm border shadow-xs\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -241,7 +241,7 @@ func SearchModal(style string, opts SearchModalOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div><p class=\"text-base-content/80 ms-1 text-sm\">Return</p></div><div class=\"flex items-center gap-0.5\"><div class=\"border-line-strong bg-base-200 flex size-5 items-center justify-center rounded-sm border shadow-xs\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div><p class=\"text-body ms-1 text-sm\">Return</p></div><div class=\"flex items-center gap-0.5\"><div class=\"border-line-strong bg-base-200 flex size-5 items-center justify-center rounded-sm border shadow-xs\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -249,7 +249,7 @@ func SearchModal(style string, opts SearchModalOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</div><p class=\"text-base-content/80 ms-1 text-sm\">Open</p></div><div class=\"ms-auto flex items-center gap-0.5\"><div class=\"border-line-strong bg-base-200 flex h-5 items-center justify-center rounded-sm border px-1 text-sm/none shadow-xs\">esc</div><p class=\"text-base-content/80 ms-1 text-sm\">Close</p></div></div></div><div class=\"mt-2 flex items-center gap-2 px-1\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</div><p class=\"text-body ms-1 text-sm\">Open</p></div><div class=\"ms-auto flex items-center gap-0.5\"><div class=\"border-line-strong bg-base-200 flex h-5 items-center justify-center rounded-sm border px-1 text-sm/none shadow-xs\">esc</div><p class=\"text-body ms-1 text-sm\">Close</p></div></div></div><div class=\"mt-2 flex items-center gap-2 px-1\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -316,14 +316,14 @@ func SearchModal(style string, opts SearchModalOpts) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</p><p class=\"text-base-content/60 text-xs\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</p><p class=\"text-muted text-xs\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(card.Description)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/search-modal.templ`, Line: 125, Col: 66}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/search-modal.templ`, Line: 125, Col: 56}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {

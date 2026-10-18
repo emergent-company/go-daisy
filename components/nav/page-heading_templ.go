@@ -239,14 +239,14 @@ func PageHeading(props PageHeadingProps) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				if props.Subtitle != "" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<p class=\"text-base-content/55 mt-1 text-sm\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<p class=\"text-subtle mt-1 text-sm\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var9 string
 					templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(props.Subtitle)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 94, Col: 67}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 94, Col: 58}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 					if templ_7745c5c3_Err != nil {
@@ -386,7 +386,7 @@ func pageHeadingTitleColumn(props PageHeadingProps) templ.Component {
 				}
 			}
 			if props.Subtitle != "" {
-				var templ_7745c5c3_Var15 = []any{"text-base-content/55 mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm"}
+				var templ_7745c5c3_Var15 = []any{"text-subtle mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm"}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var15...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -411,7 +411,7 @@ func pageHeadingTitleColumn(props PageHeadingProps) templ.Component {
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(props.Subtitle)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 124, Col: 116}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 124, Col: 107}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 				if templ_7745c5c3_Err != nil {
@@ -483,7 +483,7 @@ func pageHeadingTitleColumn(props PageHeadingProps) templ.Component {
 				}
 			}
 			if props.Subtitle != "" {
-				var templ_7745c5c3_Var20 = []any{"text-base-content/55 mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm"}
+				var templ_7745c5c3_Var20 = []any{"text-subtle mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm"}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var20...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -508,7 +508,7 @@ func pageHeadingTitleColumn(props PageHeadingProps) templ.Component {
 				var templ_7745c5c3_Var22 string
 				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(props.Subtitle)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 141, Col: 116}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/nav/page-heading.templ`, Line: 141, Col: 107}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 				if templ_7745c5c3_Err != nil {

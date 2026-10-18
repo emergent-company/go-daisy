@@ -36,8 +36,8 @@ templ NotificationRow(item NotificationItem) {
 		</div>
 		<div class="min-w-0 flex-1">
 			<p class="text-sm font-medium text-base-content">{ item.Title }</p>
-			<p class="text-xs text-base-content/60 mt-0.5">{ item.Body }</p>
-			<p class="text-xs text-base-content/50 mt-1">{ item.Time }</p>
+			<p class="text-xs text-muted mt-0.5">{ item.Body }</p>
+			<p class="text-xs text-subtle mt-1">{ item.Time }</p>
 		</div>
 		if item.Unread {
 			<span class="mt-1 size-2 shrink-0 rounded-full bg-primary"></span>

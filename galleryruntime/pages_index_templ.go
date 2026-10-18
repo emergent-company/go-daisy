@@ -40,7 +40,7 @@ func GalleryIndex() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><h1 class=\"text-3xl font-bold text-base-content\">go-daisy</h1><p class=\"text-base text-base-content/50 max-w-md\">A Go UI component library for building HTMX-driven web interfaces. Type-safe, reusable Templ components styled with DaisyUI.</p></div><div class=\"flex flex-wrap gap-3 justify-center\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><h1 class=\"text-3xl font-bold text-base-content\">go-daisy</h1><p class=\"text-base text-subtle max-w-md\">A Go UI component library for building HTMX-driven web interfaces. Type-safe, reusable Templ components styled with DaisyUI.</p></div><div class=\"flex flex-wrap gap-3 justify-center\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -52,7 +52,7 @@ func GalleryIndex() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><div class=\"flex flex-col items-center gap-2\"><p class=\"text-sm text-base-content/40\">Select a component from the sidebar, or press <kbd class=\"kbd kbd-sm\">⌘K</kbd> to search.</p></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><div class=\"flex flex-col items-center gap-2\"><p class=\"text-sm text-faint\">Select a component from the sidebar, or press <kbd class=\"kbd kbd-sm\">⌘K</kbd> to search.</p></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

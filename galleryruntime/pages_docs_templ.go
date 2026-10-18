@@ -379,7 +379,7 @@ func DocsPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"min-w-0\"><h1 class=\"text-2xl font-bold mb-2\">SDK Reference</h1><p class=\"text-base-content/60 mb-8\">Code examples and usage patterns for every go-daisy package. Click ▼ to expand details.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"min-w-0\"><h1 class=\"text-2xl font-bold mb-2\">SDK Reference</h1><p class=\"text-muted mb-8\">Code examples and usage patterns for every go-daisy package. Click ▼ to expand details.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -410,14 +410,14 @@ func DocsPage() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</h2><p class=\"text-xs text-base-content/50 mt-0.5\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</h2><p class=\"text-xs text-subtle mt-0.5\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(s.Description)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 300, Col: 68}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 300, Col: 59}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -436,7 +436,7 @@ func DocsPage() templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div id=\"docs-packages\" class=\"mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4\"><h2 class=\"text-md font-semibold mb-2\">Packages Reference</h2><p class=\"text-sm text-base-content/60 mb-4\">All go-daisy packages and their import paths.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div id=\"docs-packages\" class=\"mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4\"><h2 class=\"text-md font-semibold mb-2\">Packages Reference</h2><p class=\"text-sm text-muted mb-4\">All go-daisy packages and their import paths.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -543,7 +543,7 @@ func DocsContent() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"min-w-0\"><h1 class=\"text-2xl font-bold mb-2\">SDK Reference</h1><p class=\"text-base-content/60 mb-4\">Code examples and usage patterns for every go-daisy package.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"min-w-0\"><h1 class=\"text-2xl font-bold mb-2\">SDK Reference</h1><p class=\"text-muted mb-4\">Code examples and usage patterns for every go-daisy package.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -574,14 +574,14 @@ func DocsContent() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</h2><p class=\"text-xs text-base-content/50 mt-0.5\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</h2><p class=\"text-xs text-subtle mt-0.5\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(s.Description)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 333, Col: 68}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 333, Col: 59}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -600,7 +600,7 @@ func DocsContent() templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<div id=\"docs-packages\" class=\"mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4\"><h2 class=\"text-md font-semibold mb-2\">Packages Reference</h2><p class=\"text-sm text-base-content/60 mb-4\">All go-daisy packages and their import paths.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<div id=\"docs-packages\" class=\"mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4\"><h2 class=\"text-md font-semibold mb-2\">Packages Reference</h2><p class=\"text-sm text-muted mb-4\">All go-daisy packages and their import paths.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -756,14 +756,14 @@ func docsRefTable() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</td><td class=\"text-xs font-mono text-base-content/60\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</td><td class=\"text-xs font-mono text-muted\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var22 string
 					templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(r.Usage)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 364, Col: 65}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `galleryruntime/pages_docs.templ`, Line: 364, Col: 55}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 					if templ_7745c5c3_Err != nil {

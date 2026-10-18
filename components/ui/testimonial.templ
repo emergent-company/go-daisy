@@ -44,7 +44,7 @@ templ TestimonialCard(props TestimonialCardProps) {
 			</div>
 		}
 		// Quote
-		<blockquote class="text-base text-base-content/80 leading-relaxed mb-4 flex-1">
+		<blockquote class="text-base text-body leading-relaxed mb-4 flex-1">
 			"{ props.Quote }"
 		</blockquote>
 		// Avatar + name/role
@@ -53,7 +53,7 @@ templ TestimonialCard(props TestimonialCardProps) {
 			<div>
 				<p class="text-sm font-semibold text-base-content">{ props.Name }</p>
 				if props.Role != "" {
-					<p class="text-xs text-base-content/50">{ props.Role }</p>
+					<p class="text-xs text-subtle">{ props.Role }</p>
 				}
 			</div>
 		</div>

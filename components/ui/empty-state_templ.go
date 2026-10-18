@@ -515,9 +515,9 @@ func emptyStateTitleClass(v EmptyStateVariant) string {
 // emptyStateDescClass returns the description type scale for a variant.
 func emptyStateDescClass(v EmptyStateVariant) string {
 	if v == EmptyStateHero {
-		return "text-sm text-base-content/55 max-w-md leading-relaxed"
+		return "text-sm text-subtle max-w-md leading-relaxed"
 	}
-	return "text-sm text-base-content/50 max-w-md leading-relaxed"
+	return "text-sm text-subtle max-w-md leading-relaxed"
 }
 
 // emptyStateIconMargin is the gap below the icon (icon → title).

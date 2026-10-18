@@ -52,7 +52,7 @@ type ListProps struct {
 templ List(p ListProps) {
 	<ul class="list bg-base-100 rounded-box edge-line" { devmode.Attrs(ctx, "ui/List")... } { p.Attrs... }>
 		if p.Header != "" {
-			<li class="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">{ p.Header }</li>
+			<li class="eyebrow p-4 pb-2">{ p.Header }</li>
 		}
 		{ children... }
 	</ul>
@@ -74,14 +74,14 @@ templ ListRow(p ListRowProps) {
 			<div class="list-col-grow">
 				<div class="font-medium text-sm">{ p.Title }</div>
 				if p.Subtitle != "" {
-					<div class="text-xs text-base-content/50">{ p.Subtitle }</div>
+					<div class="text-xs text-subtle">{ p.Subtitle }</div>
 				}
 			</div>
 		} else {
 			<div>
 				<div class="font-medium text-sm">{ p.Title }</div>
 				if p.Subtitle != "" {
-					<div class="text-xs text-base-content/50">{ p.Subtitle }</div>
+					<div class="text-xs text-subtle">{ p.Subtitle }</div>
 				}
 			</div>
 		}
@@ -89,7 +89,7 @@ templ ListRow(p ListRowProps) {
 			@t
 		}
 		if p.Description != "" {
-			<div class="list-col-wrap text-xs text-base-content/60 mt-1">{ p.Description }</div>
+			<div class="list-col-wrap text-xs text-muted mt-1">{ p.Description }</div>
 		}
 	</li>
 }

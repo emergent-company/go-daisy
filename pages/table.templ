@@ -30,7 +30,7 @@ templ DataGridPage(props DataGridPageProps) {
 			<div class="mb-6">
 				<h1 class="text-2xl font-bold">{ props.Title }</h1>
 				if props.Subtitle != "" {
-					<p class="text-base-content/60 mt-1">{ props.Subtitle }</p>
+					<p class="text-muted mt-1">{ props.Subtitle }</p>
 				}
 			</div>
 			@table.DataGrid(props.GridProps)

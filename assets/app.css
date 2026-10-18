@@ -273,6 +273,7 @@
 @source inline("bg-base-100/{50,80}");
 @source inline("bg-base-200/{40,60,80}");
 @source inline("text-base-content/{5,10,20,30,40,50,60,65,70,80,90}");
+@source inline("text-body text-label text-muted text-subtle text-faint eyebrow");
 @source inline("bg-base-content/{20,30,40}");
 @source inline("size-{1,2,3,4}");
 @source inline("animate-pulse");
@@ -322,6 +323,7 @@
 }
 
 /* Custom component CSS, co-located for consumers */
+@import "../components/css/tokens.css";
 @import "../components/css/custom.css";
 
 body {

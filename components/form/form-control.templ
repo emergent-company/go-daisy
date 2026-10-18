@@ -21,7 +21,7 @@ templ FormControl(name string, label string, labelPosition LabelPosition, hint s
 				{ children... }
 				if hint != "" && errMsg == "" {
 					<p class="label">
-						<span class="label-text-alt text-base-content/60">{ hint }</span>
+						<span class="label-text-alt text-muted">{ hint }</span>
 					</p>
 				}
 				@FieldError(errMsg)
@@ -35,7 +35,7 @@ templ FormControl(name string, label string, labelPosition LabelPosition, hint s
 			{ children... }
 			if hint != "" && errMsg == "" {
 				<p class="label">
-					<span class="label-text-alt text-base-content/60">{ hint }</span>
+					<span class="label-text-alt text-muted">{ hint }</span>
 				</p>
 			}
 			@FieldError(errMsg)

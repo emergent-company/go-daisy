@@ -60,7 +60,7 @@ func structuredRowCols(cols []StructuredColumn) string {
 templ structuredInputColumn(col StructuredColumn, rowIdx int, props StructuredInputProps) {
 	<div class="flex items-center gap-2">
 		if col.Label != "" {
-			<span class="text-sm font-medium text-base-content/70">{ col.Label }</span>
+			<span class="text-sm font-medium text-label">{ col.Label }</span>
 		}
 		if col.Type == StructuredColumnSelect {
 			<select
@@ -115,7 +115,7 @@ templ StructuredInput(props StructuredInputProps) {
 				for i, col := range props.Columns {
 					@structuredInputColumn(col, 0, props)
 					if col.Separator != "" && i < len(props.Columns)-1 {
-						<span class="text-sm text-base-content/50 px-1">{ col.Separator }</span>
+						<span class="text-sm text-subtle px-1">{ col.Separator }</span>
 					}
 				}
 				if !props.Disabled {

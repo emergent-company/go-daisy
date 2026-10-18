@@ -82,7 +82,7 @@ templ accountTab() {
 
 		@ui.SectionHeader("Danger Zone")
 		<div class="rounded-box border border-error/20 bg-error/5 p-4 space-y-3">
-			<p class="text-sm text-base-content/70">Permanently delete your account and all associated data. This action cannot be undone.</p>
+			<p class="text-sm text-label">Permanently delete your account and all associated data. This action cannot be undone.</p>
 			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonError, Size: ui.ButtonSM, Style: ui.ButtonStyleOutline}) {
 				Delete account
 			}
@@ -96,7 +96,7 @@ templ appearanceTab() {
 		<div class="flex items-center justify-between">
 			<div>
 				<p class="text-sm font-medium text-base-content">Dark mode</p>
-				<p class="text-xs text-base-content/50">Toggle between light and dark themes</p>
+				<p class="text-xs text-subtle">Toggle between light and dark themes</p>
 			</div>
 			@ui.ThemeToggle(ui.ThemeToggleProps{})
 		</div>
@@ -106,14 +106,14 @@ templ appearanceTab() {
 			<div class="flex items-center justify-between">
 				<div>
 					<p class="text-sm font-medium text-base-content">Compact view</p>
-					<p class="text-xs text-base-content/50">Use tighter spacing throughout the UI</p>
+					<p class="text-xs text-subtle">Use tighter spacing throughout the UI</p>
 				</div>
 				@form.ToggleInput(form.ToggleInputProps{Name: "compact", Checked: true, Class: "toggle toggle-primary", Attrs: templ.Attributes{"aria-label": "Compact view"}})
 			</div>
 			<div class="flex items-center justify-between">
 				<div>
 					<p class="text-sm font-medium text-base-content">Reduced motion</p>
-					<p class="text-xs text-base-content/50">Minimize animations and transitions</p>
+					<p class="text-xs text-subtle">Minimize animations and transitions</p>
 				</div>
 				@form.ToggleInput(form.ToggleInputProps{Name: "reduced-motion", Checked: false, Class: "toggle toggle-primary", Attrs: templ.Attributes{"aria-label": "Reduced motion"}})
 			</div>
@@ -152,7 +152,7 @@ templ notificationToggle(name, label, description string, checked bool) {
 	<div class="flex items-start justify-between gap-4 py-2">
 		<div>
 			<p class="text-sm font-medium text-base-content">{ label }</p>
-			<p class="text-xs text-base-content/50">{ description }</p>
+			<p class="text-xs text-subtle">{ description }</p>
 		</div>
 		@form.ToggleInput(form.ToggleInputProps{Name: name, Checked: checked, Class: "toggle toggle-primary", Attrs: templ.Attributes{"aria-label": label}})
 	</div>

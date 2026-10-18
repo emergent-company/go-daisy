@@ -39,7 +39,7 @@ func FooterMinimal(copyright string, links []FooterLink) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<footer class=\"flex w-full flex-wrap items-center justify-between gap-2 border-t border-line px-4 py-3 text-sm text-base-content/80\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<footer class=\"flex w-full flex-wrap items-center justify-between gap-2 border-t border-line px-4 py-3 text-sm text-body\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

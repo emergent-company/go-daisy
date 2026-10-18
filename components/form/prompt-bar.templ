@@ -122,7 +122,7 @@ type PromptBarFeatureItem struct {
 	On bool
 	// Toggle, when true, renders the feature as a standalone icon-only toggle
 	// button in the left toolbar group instead of a row in the features dropdown.
-	// The button tints text-success while On and text-base-content/60 otherwise.
+	// The button tints text-success while On and text-muted otherwise.
 	Toggle bool
 	// AriaLabel overrides the toggle button's aria-label; falls back to Label.
 	AriaLabel string
@@ -168,10 +168,10 @@ templ PromptBarPicker(props PromptBarPickerProps) {
 	<div class={ "dropdown dropdown-start inline-flex min-w-28", templ.KV(props.Class, props.Class != "") } { devmode.Attrs(ctx, "form/PromptBarPicker")... } { props.Attrs... }>
 		<div tabindex="0" role="button" class={ "btn btn-sm btn-ghost min-w-0 shrink gap-2", templ.KV("btn-disabled", props.Disabled) } aria-label={ props.Label } aria-haspopup="menu" if props.Disabled { aria-disabled="true" }>
 			if props.Icon != "" {
-				@ui.IconSpan(props.Icon, "size-4 shrink-0 text-base-content/60")
+				@ui.IconSpan(props.Icon, "size-4 shrink-0 text-muted")
 			}
 			<span class="hidden min-w-0 max-w-28 truncate lg:inline">{ props.Selected }</span>
-			@ui.IconSpan("lucide--chevron-down", "size-3.5 shrink-0 text-base-content/60")
+			@ui.IconSpan("lucide--chevron-down", "size-3.5 shrink-0 text-muted")
 		</div>
 		<ul tabindex="0" class={ "dropdown-content menu bg-base-100 rounded-box z-10", templ.KV("w-64", props.MenuClass == ""), templ.KV(props.MenuClass, props.MenuClass != ""), "p-2 shadow" } role="menu">
 			if len(props.Features) > 0 {
@@ -184,7 +184,7 @@ templ PromptBarPicker(props PromptBarPickerProps) {
 							<span class="min-w-0 flex-1">
 								<span class="block text-sm">{ f.Label }</span>
 								if f.Description != "" {
-									<span class="block text-xs text-base-content/60">{ f.Description }</span>
+									<span class="block text-xs text-muted">{ f.Description }</span>
 								}
 							</span>
 							if f.On {
@@ -230,11 +230,11 @@ templ promptBarPickerRow(item PromptBarPickerItem) {
 	<span class="min-w-0 flex-1">
 		<span class="block text-sm">{ item.Label }</span>
 		if item.Description != "" {
-			<span class="block text-xs text-base-content/60">{ item.Description }</span>
+			<span class="block text-xs text-muted">{ item.Description }</span>
 		}
 	</span>
 	if item.Meta != "" {
-		<span class="ms-auto text-xs text-base-content/60">{ item.Meta }</span>
+		<span class="ms-auto text-xs text-muted">{ item.Meta }</span>
 	}
 	if item.Selected {
 		@ui.IconSpan("lucide--check", "size-4 text-primary")
@@ -298,7 +298,7 @@ templ promptBarAttachmentChip(item PromptBarAttachmentItem) {
 			<img class="size-12 rounded-xl object-cover" src={ templ.URL(item.Thumbnail) } alt=""/>
 		} else {
 			<span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-base-200">
-				@ui.IconSpan(item.Icon, "size-5 text-base-content/60")
+				@ui.IconSpan(item.Icon, "size-5 text-muted")
 			</span>
 		}
 		<span class="flex min-w-0 flex-col">
@@ -308,7 +308,7 @@ templ promptBarAttachmentChip(item PromptBarAttachmentItem) {
 				<span class="text-sm">{ item.Label }</span>
 			}
 			if item.Subtitle != "" {
-				<span class="block text-xs text-base-content/60">{ item.Subtitle }</span>
+				<span class="block text-xs text-muted">{ item.Subtitle }</span>
 			}
 		</span>
 		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeCircle, Icon: "lucide--x", AriaLabel: "Remove " + item.Label, ExtraClass: "md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100", Attrs: item.RemoveAttrs})
@@ -406,19 +406,19 @@ templ promptBarTrackPill(item PromptBarTrackItem) {
 	<div class="dropdown dropdown-start">
 		<div tabindex="0" role="button" class="btn btn-sm btn-ghost h-8 min-h-8 gap-2 rounded-2xl border border-line-strong bg-base-100 px-3 font-normal" aria-haspopup="menu">
 			if item.Icon != "" {
-				@ui.IconSpan(item.Icon, "size-4 text-base-content/60")
+				@ui.IconSpan(item.Icon, "size-4 text-muted")
 			}
 			if item.Label != "" {
 				<span>{ item.Label }</span>
 			}
 			for i, seg := range item.Segments {
 				if i > 0 || item.Label != "" {
-					<span class="text-base-content/40">·</span>
+					<span class="text-faint">·</span>
 				}
 				@promptBarTrackDot(seg.Bucket)
 				<span>{ seg.Text }</span>
 			}
-			@ui.IconSpan("lucide--chevron-up", "size-3.5 text-base-content/60")
+			@ui.IconSpan("lucide--chevron-up", "size-3.5 text-muted")
 		</div>
 		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-80 p-2 shadow" role="menu">
 			if item.Title != "" {
@@ -433,7 +433,7 @@ templ promptBarTrackPill(item PromptBarTrackItem) {
 						<span class="min-w-0 flex-1">
 							<span class={ "block text-sm", templ.KV("line-through", row.Done) }>{ row.Label }</span>
 							if row.Subtitle != "" {
-								<span class="block text-xs text-base-content/60">{ row.Subtitle }</span>
+								<span class="block text-xs text-muted">{ row.Subtitle }</span>
 							}
 						</span>
 					</a>
@@ -540,20 +540,20 @@ templ PromptBarAutocomplete(props PromptBarAutocompleteProps) {
 	>
 		<div data-prompt-bar-detail class="hidden border-b border-line px-3 py-2">
 			<span data-prompt-bar-detail-label class="block text-sm"></span>
-			<span data-prompt-bar-detail-desc class="block text-xs text-base-content/60"></span>
-			<span data-prompt-bar-detail-hint class="block text-xs text-base-content/50"></span>
+			<span data-prompt-bar-detail-desc class="block text-xs text-muted"></span>
+			<span data-prompt-bar-detail-hint class="block text-xs text-subtle"></span>
 		</div>
 		<div data-prompt-bar-options>
 			if props.Loading {
 				<div class="flex items-center gap-2 px-2 py-1.5">
 					<span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
-					<span class="text-sm text-base-content/60">Loading…</span>
+					<span class="text-sm text-muted">Loading…</span>
 				</div>
 			} else {
 				for _, opt := range props.Options {
 					@promptBarAutocompleteRow(opt)
 				}
-				<div data-prompt-bar-empty class={ "px-2 py-1.5 text-sm text-base-content/60", templ.KV("hidden", len(props.Options) > 0) }>{ emptyText }</div>
+				<div data-prompt-bar-empty class={ "px-2 py-1.5 text-sm text-muted", templ.KV("hidden", len(props.Options) > 0) }>{ emptyText }</div>
 			}
 		</div>
 	</div>
@@ -580,16 +580,16 @@ templ promptBarAutocompleteRow(opt PromptBarAutocompleteOption) {
 		class="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left"
 	>
 		if icon != "" {
-			@ui.IconSpan(icon, "size-4 text-base-content/60")
+			@ui.IconSpan(icon, "size-4 text-muted")
 		}
 		<span class="min-w-0 flex-1">
 			<span class="block text-sm">{ opt.Label }</span>
 			if opt.Description != "" {
-				<span class="block text-xs text-base-content/60">{ opt.Description }</span>
+				<span class="block text-xs text-muted">{ opt.Description }</span>
 			}
 		</span>
 		if opt.Detail != "" {
-			<span class="ms-auto shrink-0 text-xs text-base-content/50">{ opt.Detail }</span>
+			<span class="ms-auto shrink-0 text-xs text-subtle">{ opt.Detail }</span>
 		}
 	</button>
 }
@@ -1113,12 +1113,12 @@ templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
 	<div class={ leftClass }>
 		if props.ShowAttach {
 			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": attachLabel, "disabled": props.Loading}}) {
-				@ui.IconSpan(attachIcon, "size-4 text-base-content/60")
+				@ui.IconSpan(attachIcon, "size-4 text-muted")
 			}
 		}
 		if props.ShowImage {
 			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Insert image", "disabled": props.Loading}}) {
-				@ui.IconSpan("lucide--image-plus", "size-4 text-base-content/60")
+				@ui.IconSpan("lucide--image-plus", "size-4 text-muted")
 			}
 		}
 		if len(props.Agents) > 0 {
@@ -1142,15 +1142,15 @@ templ promptBarDefaultToolbar(props PromptBarProps, flagship bool) {
 	</div>
 	if props.ShowTokenCounter && props.TokenMax > 0 {
 		<span class={ tokenClass }>
-			<span class="text-base-content/80">Tokens:</span>
+			<span class="text-body">Tokens:</span>
 			<span class={ templ.KV("text-error font-medium", props.TokenCurrent >= props.TokenMax*80/100) }>{ strconv.Itoa(props.TokenCurrent) }</span>
-			<span class="text-base-content/60">/{ strconv.Itoa(props.TokenMax) }</span>
+			<span class="text-muted">/{ strconv.Itoa(props.TokenMax) }</span>
 		</span>
 	}
 	<div class={ rightClass }>
 		if props.ShowVoice {
 			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Voice input", "disabled": props.Loading}}) {
-				@ui.IconSpan("lucide--mic", "size-4 text-base-content/60")
+				@ui.IconSpan("lucide--mic", "size-4 text-muted")
 			}
 		}
 		if props.RightSlot != nil {
@@ -1178,7 +1178,7 @@ templ promptBarFeatureToggle(f PromptBarFeatureItem) {
 	if label == "" {
 		label = f.Label
 	}
-	color := "text-base-content/60"
+	color := "text-muted"
 	if f.On {
 		color = "text-success"
 	} }}
@@ -1204,9 +1204,9 @@ templ PromptBarAction(placeholder string, actions []PromptBarActionItem, loading
 
 // promptBarActionToolbar builds the toolbar for the Action variant.
 templ promptBarActionToolbar(actions []PromptBarActionItem, loading bool) {
-	<div class="flex items-center gap-2">
+	<div class={ ui.Row }>
 		for _, action := range actions {
-			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong text-base-content/80 gap-1", Attrs: templ.Attributes{"disabled": loading}}) {
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong text-body gap-1", Attrs: templ.Attributes{"disabled": loading}}) {
 				<span class={ "iconify size-4", action.Icon } aria-hidden="true"></span>
 				{ action.Label }
 			}
@@ -1255,7 +1255,7 @@ templ PromptBarModelSelector(props PromptBarModelSelectorProps) {
 	<div class="w-full max-w-2xl" { devmode.Attrs(ctx, "form/PromptBarModelSelector")... } { props.Attrs... }>
 		if props.InfoBanner != "" {
 			<div class="card bg-primary/10 mb-0">
-				<div class="flex items-center gap-2 px-4 py-1.5">
+				<div class={ ui.Row, "px-4 py-1.5" }>
 					@ui.IconSpan("lucide--info", "text-primary size-3.5")
 					<p class="text-primary grow text-xs">{ props.InfoBanner }</p>
 					@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeCircle, ExtraClass: "hover:bg-primary/20 border-0", Type: ui.ButtonTypeButton, Icon: "lucide--x", Attrs: templ.Attributes{"aria-label": "Dismiss"}})
@@ -1276,9 +1276,9 @@ templ promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) {
 		if len(props.Models) > 0 {
 			<div class="dropdown dropdown-start">
 				<div tabindex="0" role="button" class="btn btn-sm btn-ghost gap-2" aria-label="Model selector">
-					@ui.IconSpan("lucide--cpu", "size-4 text-base-content/60")
+					@ui.IconSpan("lucide--cpu", "size-4 text-muted")
 					<span>{ props.SelectedModel }</span>
-					@ui.IconSpan("lucide--chevron-down", "size-3.5 text-base-content/60")
+					@ui.IconSpan("lucide--chevron-down", "size-3.5 text-muted")
 				</div>
 				<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow">
 					for _, m := range props.Models {
@@ -1298,7 +1298,7 @@ templ promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) {
 	if props.ShowTokenCounter && props.TokenMax > 0 {
 		<span class="text-xs">
 			<span class={ templ.KV("text-error font-medium", props.TokenCurrent >= props.TokenMax*80/100) }>{ strconv.Itoa(props.TokenCurrent) }</span>
-			<span class="text-base-content/60"> / { strconv.Itoa(props.TokenMax) } tokens</span>
+			<span class="text-muted"> / { strconv.Itoa(props.TokenMax) } tokens</span>
 		</span>
 	}
 	@promptBarSendButton(props.Loading)
@@ -1340,10 +1340,10 @@ templ PromptBarAbility(props PromptBarAbilityProps) {
 		if props.SavedLabel != "" || props.TokensLeft > 0 {
 			<div class="bg-base-200/50 rounded-t-box flex items-center justify-between gap-2 px-3 py-2.5">
 				if props.SavedLabel != "" {
-					<p class="text-base-content/80 text-sm">{ props.SavedLabel }</p>
+					<p class="text-body text-sm">{ props.SavedLabel }</p>
 				}
 				if props.TokensLeft > 0 {
-					<p class="text-base-content/60 text-xs font-medium ms-auto">
+					<p class="text-muted text-xs font-medium ms-auto">
 						<span class="text-error">{ strconv.Itoa(props.TokensLeft) }</span> Tokens left
 					</p>
 				}
@@ -1363,9 +1363,9 @@ templ promptBarAbilityToolbar(props PromptBarAbilityProps) {
 		if len(props.Abilities) > 0 {
 			<div class="dropdown dropdown-start">
 				<div tabindex="0" role="button" class="btn btn-sm btn-ghost gap-2" aria-label="Ability selector">
-					@ui.IconSpan("lucide--zap", "size-4 text-base-content/60")
+					@ui.IconSpan("lucide--zap", "size-4 text-muted")
 					<span>{ props.SelectedAbility }</span>
-					@ui.IconSpan("lucide--chevron-down", "size-3.5 text-base-content/60")
+					@ui.IconSpan("lucide--chevron-down", "size-3.5 text-muted")
 				</div>
 				<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow">
 					for _, a := range props.Abilities {

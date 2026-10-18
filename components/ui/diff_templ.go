@@ -254,7 +254,7 @@ func DiffItemContent(text string, bold bool) templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var7 = []any{"flex items-center justify-center p-4 text-sm", templ.KV("font-medium", bold), templ.KV("text-base-content/60", !bold)}
+		var templ_7745c5c3_Var7 = []any{"flex items-center justify-center p-4 text-sm", templ.KV("font-medium", bold), templ.KV("text-muted", !bold)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var7...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

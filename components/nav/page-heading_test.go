@@ -56,22 +56,22 @@ func TestPageHeadingDefaultOutputLocked(t *testing.T) {
 		{
 			name:  "kicker_subtitle",
 			props: PageHeadingProps{Title: "T", Kicker: "Eyebrow", Subtitle: "Sub"},
-			want:  `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2 flex flex-wrap items-center justify-between gap-4"><div class="min-w-0"><p class="text-base-content/45 font-semibold tracking-[0.16em] uppercase text-[11px] mb-1">Eyebrow</p><h1 class="text-2xl font-bold tracking-tight">T</h1><p class="text-base-content/55 mt-1 max-w-2xl text-sm">Sub</p></div></div></div>`,
+			want:  `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2 flex flex-wrap items-center justify-between gap-4"><div class="min-w-0"><p class="eyebrow text-[11px] mb-1">Eyebrow</p><h1 class="text-2xl font-bold tracking-tight">T</h1><p class="text-subtle mt-1 max-w-2xl text-sm">Sub</p></div></div></div>`,
 		},
 		{
 			name:  "dashboard",
 			props: PageHeadingProps{Title: "T", Dashboard: true, Subtitle: "Sub"},
-			want:  `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2 flex flex-wrap items-end justify-between gap-4"><div><h1 class="text-2xl font-bold tracking-tight lg:text-3xl">T</h1><p class="text-base-content/55 mt-1 max-w-2xl text-sm">Sub</p></div></div></div>`,
+			want:  `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2 flex flex-wrap items-end justify-between gap-4"><div><h1 class="text-2xl font-bold tracking-tight lg:text-3xl">T</h1><p class="text-subtle mt-1 max-w-2xl text-sm">Sub</p></div></div></div>`,
 		},
 		{
 			name:  "bare",
 			props: PageHeadingProps{Title: "T", Bare: true, Subtitle: "Sub"},
-			want:  `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2"><h1 class="text-2xl font-bold tracking-tight">T</h1><p class="text-base-content/55 mt-1 text-sm">Sub</p></div></div>`,
+			want:  `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2"><h1 class="text-2xl font-bold tracking-tight">T</h1><p class="text-subtle mt-1 text-sm">Sub</p></div></div>`,
 		},
 		{
 			name:  "subtitle_full",
 			props: PageHeadingProps{Title: "T", Subtitle: "Sub", SubtitleFull: true},
-			want:  `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2 flex flex-wrap items-center justify-between gap-4"><div class="min-w-0"><h1 class="text-2xl font-bold tracking-tight">T</h1><p class="text-base-content/55 mt-1 text-sm">Sub</p></div></div></div>`,
+			want:  `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2 flex flex-wrap items-center justify-between gap-4"><div class="min-w-0"><h1 class="text-2xl font-bold tracking-tight">T</h1><p class="text-subtle mt-1 text-sm">Sub</p></div></div></div>`,
 		},
 		{
 			name:  "explicit_margin",
@@ -134,7 +134,7 @@ func TestPageHeadingLeadingSlot(t *testing.T) {
 		Margin:          "mb-6",
 	}, "")
 
-	want := `<div class="mb-6"><div class="shrink-0">ICON</div><div class="mt-2 flex flex-wrap items-center justify-between gap-4"><div class="min-w-0"><p class="text-base-content/45 font-semibold tracking-[0.16em] uppercase text-[11px] mb-1">Workspace</p><h1 class="text-2xl font-bold tracking-tight">Agents</h1><p class="text-base-content/55 mt-1 max-w-2xl text-sm">Manage your agents</p></div><button>New</button></div></div>`
+	want := `<div class="mb-6"><div class="shrink-0">ICON</div><div class="mt-2 flex flex-wrap items-center justify-between gap-4"><div class="min-w-0"><p class="eyebrow text-[11px] mb-1">Workspace</p><h1 class="text-2xl font-bold tracking-tight">Agents</h1><p class="text-subtle mt-1 max-w-2xl text-sm">Manage your agents</p></div><button>New</button></div></div>`
 
 	if got != want {
 		t.Errorf("leading slot output:\n got: %q\nwant: %q", got, want)
@@ -161,7 +161,7 @@ func TestPageHeadingFlatTargetMarkup(t *testing.T) {
 	}
 
 	got := renderPageHeading(t, base, "ACTIONS")
-	want := `<div class="mb-6 flex flex-wrap items-end justify-between gap-4"><div><p class="text-base-content/45 font-semibold tracking-[0.16em] uppercase text-[11px] mb-1">kicker</p><h1 class="text-2xl font-bold tracking-tight lg:text-3xl">TITLE</h1><p class="text-base-content/55 mt-1 text-sm">SUBTITLE</p></div>ACTIONS</div>`
+	want := `<div class="mb-6 flex flex-wrap items-end justify-between gap-4"><div><p class="eyebrow text-[11px] mb-1">kicker</p><h1 class="text-2xl font-bold tracking-tight lg:text-3xl">TITLE</h1><p class="text-subtle mt-1 text-sm">SUBTITLE</p></div>ACTIONS</div>`
 	if got != want {
 		t.Errorf("flat target markup:\n got: %q\nwant: %q", got, want)
 	}
@@ -169,7 +169,7 @@ func TestPageHeadingFlatTargetMarkup(t *testing.T) {
 	// Subtitle absent: the subtitle <p> is omitted entirely.
 	base.Subtitle = ""
 	got = renderPageHeading(t, base, "ACTIONS")
-	want = `<div class="mb-6 flex flex-wrap items-end justify-between gap-4"><div><p class="text-base-content/45 font-semibold tracking-[0.16em] uppercase text-[11px] mb-1">kicker</p><h1 class="text-2xl font-bold tracking-tight lg:text-3xl">TITLE</h1></div>ACTIONS</div>`
+	want = `<div class="mb-6 flex flex-wrap items-end justify-between gap-4"><div><p class="eyebrow text-[11px] mb-1">kicker</p><h1 class="text-2xl font-bold tracking-tight lg:text-3xl">TITLE</h1></div>ACTIONS</div>`
 	if got != want {
 		t.Errorf("flat target markup (no subtitle):\n got: %q\nwant: %q", got, want)
 	}
@@ -198,7 +198,7 @@ func TestPageHeadingNoTopMargin(t *testing.T) {
 // branch), while keeping the items-end alignment and lg:text-3xl title.
 func TestPageHeadingKickerInDashboard(t *testing.T) {
 	got := renderPageHeading(t, PageHeadingProps{Title: "T", Dashboard: true, Kicker: "Eyebrow"}, "")
-	want := `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2 flex flex-wrap items-end justify-between gap-4"><div><p class="text-base-content/45 font-semibold tracking-[0.16em] uppercase text-[11px] mb-1">Eyebrow</p><h1 class="text-2xl font-bold tracking-tight lg:text-3xl">T</h1></div></div></div>`
+	want := `<div class="mb-4"><div class="breadcrumbs text-sm" style="width: 100%;"><ul></ul></div><div class="mt-2 flex flex-wrap items-end justify-between gap-4"><div><p class="eyebrow text-[11px] mb-1">Eyebrow</p><h1 class="text-2xl font-bold tracking-tight lg:text-3xl">T</h1></div></div></div>`
 	if got != want {
 		t.Errorf("kicker in dashboard:\n got: %q\nwant: %q", got, want)
 	}

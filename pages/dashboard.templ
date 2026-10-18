@@ -74,11 +74,11 @@ templ DashboardPage(props DashboardProps) {
 					<table class="table table-sm w-full">
 						<thead>
 							<tr>
-								<th class="text-xs uppercase tracking-wider text-base-content/50">ID</th>
-								<th class="text-xs uppercase tracking-wider text-base-content/50">Customer</th>
-								<th class="text-xs uppercase tracking-wider text-base-content/50">Price</th>
-								<th class="text-xs uppercase tracking-wider text-base-content/50">Payment</th>
-								<th class="text-xs uppercase tracking-wider text-base-content/50">Status</th>
+								<th class="eyebrow">ID</th>
+								<th class="eyebrow">Customer</th>
+								<th class="eyebrow">Price</th>
+								<th class="eyebrow">Payment</th>
+								<th class="eyebrow">Status</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -107,7 +107,7 @@ templ orderRow(id, customer, price string, paid bool, status string) {
 				<span class="badge badge-error badge-soft badge-sm">Pending</span>
 			}
 		</td>
-		<td class="text-sm text-base-content/60">{ status }</td>
+		<td class="text-sm text-muted">{ status }</td>
 	</tr>
 }
 

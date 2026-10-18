@@ -17,7 +17,7 @@ templ Navbar(appName string, logo ...templ.Component) {
 		{ devmode.Attrs(ctx, "layout/Navbar")... }
 	>
 		<!-- LEFT: sidebar toggle + app name or logo -->
-		<div class="flex items-center gap-3">
+		<div class={ ui.RowLoose }>
 		@ui.Button(ui.ButtonProps{
 			Type:      ui.ButtonTypeLabel,
 			Variant:   ui.ButtonGhost,
@@ -32,11 +32,11 @@ templ Navbar(appName string, logo ...templ.Component) {
 			if len(logo) > 0 && logo[0] != nil {
 				@logo[0]
 			} else {
-				<span class="font-semibold text-base-content/80 text-sm hidden md:block">{ appName }</span>
+				<span class="font-semibold text-body text-sm hidden md:block">{ appName }</span>
 			}
 		</div>
 		<!-- RIGHT: slot for theme toggle, user menu, etc. -->
-		<div class="flex items-center gap-1">
+		<div class={ ui.RowTight }>
 			{ children... }
 		</div>
 	</div>
@@ -80,14 +80,14 @@ templ NavbarDropdown(currentLabel string, placeholder string, icon string, hxTar
 			Attrs:      templ.Attributes{"tabindex": "0"},
 		}) {
 			if icon != "" {
-				@ui.IconSpan(icon, "size-4 text-base-content/60")
+				@ui.IconSpan(icon, "size-4 text-muted")
 			}
 			if currentLabel != "" {
 				<span class="max-w-[120px] truncate text-sm">{ currentLabel }</span>
 			} else {
-				<span class="text-sm text-base-content/60">{ placeholder }</span>
+				<span class="text-sm text-muted">{ placeholder }</span>
 			}
-			@ui.IconSpan("lucide--chevron-down", "size-3.5 text-base-content/40")
+			@ui.IconSpan("lucide--chevron-down", "size-3.5 text-faint")
 		}
 			<ul
 				tabindex="0"

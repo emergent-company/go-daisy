@@ -30,14 +30,14 @@ type WizardStepPanel struct {
 templ WizardStepper(id string, steps []WizardStep, panels []WizardStepPanel) {
 	<div class="max-w-lg mx-auto" id={ id } { devmode.Attrs(ctx, "form/WizardStepper")... }>
 		<!-- Step indicator -->
-		<div class="flex items-center gap-2 mb-6">
+		<div class={ ui.Row, "mb-6" }>
 			for i, step := range steps {
 				<div class="wizard-step-indicator flex items-center gap-2 cursor-pointer" data-step={ strconv.Itoa(i+1) } onclick={ templ.JSFuncCall("wizardGoTo_"+id, i+1) }>
 					<div
 						id={ id + "-dot-" + strconv.Itoa(i+1) }
-						class={ "flex size-7 items-center justify-center rounded-full font-semibold text-sm", templ.KV("bg-primary text-primary-content", i == 0), templ.KV("bg-base-200 text-base-content/50", i != 0) }
+						class={ "flex size-7 items-center justify-center rounded-full font-semibold text-sm", templ.KV("bg-primary text-primary-content", i == 0), templ.KV("bg-base-200 text-subtle", i != 0) }
 					>{ strconv.Itoa(i + 1) }</div>
-					<span class={ "font-medium text-sm max-lg:hidden", templ.KV("text-base-content/50", i != 0) }>{ step.Label }</span>
+					<span class={ "font-medium text-sm max-lg:hidden", templ.KV("text-subtle", i != 0) }>{ step.Label }</span>
 				</div>
 				if i < len(steps)-1 {
 					<div class="h-px flex-1 bg-base-300"></div>
@@ -87,7 +87,7 @@ templ wizardScript(id string, total int) {
 	        dot.className = 'flex size-7 items-center justify-center rounded-full font-semibold text-sm bg-primary text-primary-content';
 	        dot.textContent = i;
 	      } else {
-	        dot.className = 'flex size-7 items-center justify-center rounded-full font-semibold text-sm bg-base-200 text-base-content/50';
+	        dot.className = 'flex size-7 items-center justify-center rounded-full font-semibold text-sm bg-base-200 text-subtle';
 	        dot.textContent = i;
 	      }
 	    }

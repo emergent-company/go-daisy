@@ -52,11 +52,11 @@ templ PageTitleEditor(steps []BreadcrumbItem, title, subtitle string, actions []
 			<div>
 				<p class="font-semibold text-base-content sm:text-lg">{ title }</p>
 				if subtitle != "" {
-					<p class="text-base-content/60 mt-0.5 text-sm">{ subtitle }</p>
+					<p class="text-muted mt-0.5 text-sm">{ subtitle }</p>
 				}
 			</div>
 			if len(actions) > 0 {
-				<div class="flex items-center gap-2">
+				<div class={ ui.Row }>
 					for _, action := range actions {
 						@ui.Button(ui.ButtonProps{Type: pageTitleActionType(action.Href), Href: action.Href, ExtraClass: action.Class, Attrs: pageTitleActionAttrs(action.AriaLabel)}) {
 							if action.Icon != "" {
@@ -108,17 +108,17 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 			<div class="flex w-full items-center justify-between">
 				<div>
 					<p class="font-medium">{ opts.Title }</p>
-					<p class="text-base-content/70 text-xs">
+					<p class="text-label text-xs">
 						ID: <span class="text-base-content font-medium">{ opts.OrderID }</span>
 					</p>
 				</div>
 				<div class="flex items-center gap-4">
-					<div class="flex items-center gap-2">
+					<div class={ ui.Row }>
 						@ui.IconSpan("lucide--calendar-days", "size-4")
-						<span class="text-base-content/80 text-sm max-md:hidden">{ opts.Date }</span>
+						<span class="text-body text-sm max-md:hidden">{ opts.Date }</span>
 					</div>
 					<hr class="border-line-strong h-7 w-px border-e border-dashed max-md:hidden" />
-					<div class="flex items-center gap-2 max-md:hidden">
+					<div class={ ui.Row, "max-md:hidden" }>
 						<label class="text-sm font-medium" for="status">Status</label>
 						<select id="status" aria-label="Order status" class="select select-sm w-24">
 							<option>{ opts.Status }</option>
@@ -126,7 +126,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 						</select>
 					</div>
 					<hr class="border-line-strong h-7 w-px border-e border-dashed" />
-					<div class="flex items-center gap-2">
+					<div class={ ui.Row }>
 						@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Size: ui.ButtonSM, ExtraClass: "max-md:btn-square gap-2"}){
 							@ui.IconSpan("lucide--download", "size-4")
 							<span class="max-md:hidden">Invoice</span>
@@ -146,20 +146,20 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 				<div class="mt-1 flex items-end justify-between gap-3">
 					<div>
 						<p class="font-medium sm:text-lg">{ opts.Title }</p>
-						<div class="text-base-content/60 mt-0.5 flex items-center gap-3 text-sm">
+						<div class="text-muted mt-0.5 flex items-center gap-3 text-sm">
 							<div class="flex items-center gap-1">
 								@ui.IconSpan("lucide--settings", "size-3.5")
 								<span>{ opts.Subtitle }</span>
 							</div>
 							if opts.Date != "" {
-								<div class="flex items-center gap-1 max-md:hidden">
+								<div class={ ui.RowTight, "max-md:hidden" }>
 									@ui.IconSpan("lucide--calendar-clock", "size-3.5")
 									<span>Created on { opts.Date }</span>
 								</div>
 							}
 						</div>
 					</div>
-					<div class="flex items-center gap-3">
+					<div class={ ui.RowLoose }>
 						for _, action := range opts.Actions {
 							@ui.Button(ui.ButtonProps{Type: pageTitleActionType(action.Href), Href: action.Href, ExtraClass: action.Class, Attrs: pageTitleActionAttrs(action.AriaLabel)}) {
 								if action.Icon != "" {
@@ -186,7 +186,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 						, <span class="text-success">{ strconv.Itoa(opts.DoneCount) } done</span>
 					</p>
 				</div>
-				<div class="flex items-center gap-3">
+				<div class={ ui.RowLoose }>
 					@ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong max-md:btn-square gap-2"}){
 						@ui.IconSpan("lucide--calendar-clock", "size-4")
 						<span class="max-md:hidden">Sync with Calendar</span>
@@ -222,7 +222,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 					<p class="font-medium sm:text-lg">{ opts.Title }</p>
 					@Breadcrumbs(opts.Steps, BreadcrumbsDividerSlash)
 				</div>
-				<div class="flex items-center gap-3">
+				<div class={ ui.RowLoose }>
 					<div class="dropdown dropdown-end">
 						<label tabindex="0" class="btn btn-outline btn-sm border-line-strong gap-2">
 							@ui.IconSpan("lucide--filter", "size-4")

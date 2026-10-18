@@ -28,9 +28,9 @@ templ LandingPage(props LandingPageProps) {
 			<div class="max-w-6xl mx-auto flex items-center justify-between px-6 h-16">
 				<a href="#" class="text-xl font-bold text-base-content">{ landingBrand(props.BrandName) }</a>
 				<div class="flex items-center gap-6 text-sm">
-					<a href="#" class="link link-hover text-base-content/60 hover:text-base-content">Features</a>
-					<a href="#" class="link link-hover text-base-content/60 hover:text-base-content">Pricing</a>
-					<a href="#" class="link link-hover text-base-content/60 hover:text-base-content">Docs</a>
+					<a href="#" class="link link-hover text-muted hover:text-base-content">Features</a>
+					<a href="#" class="link link-hover text-muted hover:text-base-content">Pricing</a>
+					<a href="#" class="link link-hover text-muted hover:text-base-content">Docs</a>
 					@ui.ThemeToggle(ui.ThemeToggleProps{})
 					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "#", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Glow: true}) {
 						Get Started
@@ -45,7 +45,7 @@ templ LandingPage(props LandingPageProps) {
 				<br />
 				@ui.GradientText(ui.GradientTextProps{Text: landingBrand(props.BrandName), FromColor: "from-primary", ToColor: "to-secondary", Size: "text-5xl", Weight: "font-black", Animate: true})
 			</h1>
-			<p class="text-xl text-base-content/60 max-w-2xl mx-auto mb-8">{ landingTagline(props.Tagline) }</p>
+			<p class="text-xl text-muted max-w-2xl mx-auto mb-8">{ landingTagline(props.Tagline) }</p>
 			<div class="flex items-center justify-center gap-4">
 				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "#", Variant: ui.ButtonPrimary, Size: ui.ButtonLG, Glow: true}) {
 					Get started free
@@ -98,7 +98,7 @@ templ LandingPage(props LandingPageProps) {
 		</section>
 
 		<footer class="border-t border-line py-8">
-			<div class="max-w-6xl mx-auto px-6 text-center text-sm text-base-content/50">
+			<div class="max-w-6xl mx-auto px-6 text-center text-sm text-subtle">
 				<p>&copy; 2026 { landingBrand(props.BrandName) }. Built with DaisyUI and Go.</p>
 			</div>
 		</footer>
@@ -110,7 +110,7 @@ templ featureCard(icon, title, description string) {
 		<div class="card-body p-6">
 			@ui.IconSpan(icon, "size-8 text-primary mb-2")
 			<h3 class="text-lg font-semibold text-base-content">{ title }</h3>
-			<p class="text-sm text-base-content/60">{ description }</p>
+			<p class="text-sm text-muted">{ description }</p>
 		</div>
 	</div>
 }
@@ -126,7 +126,7 @@ templ pricingCard(name, price, period string, features []string, highlighted boo
 		<div class="card-body p-6 text-center">
 			<h3 class="text-lg font-semibold">{ name }</h3>
 			<p class={ "text-4xl font-black mt-2", templ.KV("text-base-content", !highlighted) }>{ price }</p>
-			<p class={ "text-sm mt-1", templ.KV("text-primary-content/60", highlighted), templ.KV("text-base-content/50", !highlighted) }>{ period }</p>
+			<p class={ "text-sm mt-1", templ.KV("text-primary-content/60", highlighted), templ.KV("text-subtle", !highlighted) }>{ period }</p>
 			<ul class="mt-6 space-y-2 text-left">
 				for _, f := range features {
 					<li class="flex items-center gap-2 text-sm">
