@@ -4,6 +4,9 @@ func fillTopbarDefaults(opts TopbarVariantOpts, style string) TopbarVariantOpts 
 	if opts.SearchPlaceholder == "" {
 		opts.SearchPlaceholder = "Search or jump to..."
 	}
+	if opts.SearchDialogID == "" {
+		opts.SearchDialogID = "search-modal"
+	}
 	if opts.Greeting == "" {
 		opts.Greeting = "Good Morning"
 	}

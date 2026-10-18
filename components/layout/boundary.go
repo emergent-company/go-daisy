@@ -10,6 +10,21 @@ func AppShellWithBoundary(appName string) templ.Component {
 	return devmode.ComponentBoundary("AppShell", AppShell(appName), map[string]any{"appName": appName})
 }
 
+// AdminShellWithBoundary wraps AdminShell with a dev-mode component boundary annotation.
+//
+// The four regions are templ.Component slots, not string/bool/slice parameters,
+// so there is no gallery token surface to expose — this mirrors
+// SidebarDenseWithBoundary and RailWithBoundary, whose props-struct boundaries
+// also carry no gallery:token comment.
+func AdminShellWithBoundary(props AdminShellProps) templ.Component {
+	return devmode.ComponentBoundary("AdminShell", AdminShell(props), map[string]any{
+		"hasSidebar":  props.Sidebar != nil,
+		"hasTopbar":   props.Topbar != nil,
+		"hasRightbar": props.Rightbar != nil,
+		"class":       props.Class,
+	})
+}
+
 // SidebarWithBoundary wraps Sidebar with a dev-mode component boundary annotation.
 func SidebarWithBoundary(appName string, groups []SidebarGroup) templ.Component {
 	return devmode.ComponentBoundary("Sidebar", Sidebar(appName, groups), map[string]any{

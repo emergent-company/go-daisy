@@ -8,6 +8,7 @@ import (
 	"github.com/emergent-company/go-daisy/components/alpine"
 	"github.com/emergent-company/go-daisy/components/form"
 	"github.com/emergent-company/go-daisy/components/head"
+	"github.com/emergent-company/go-daisy/components/layout"
 	"github.com/emergent-company/go-daisy/components/nav"
 	"github.com/emergent-company/go-daisy/components/schemaform"
 	"github.com/emergent-company/go-daisy/components/ui"
@@ -1744,6 +1745,66 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 								ui.MarkerIconWithBoundary("lucide--external-link"),
 								ui.MarkerContentWithBoundary(shared.StrComp("Open documentation")),
 							),
+							rawHTML(`</div>`),
+						)
+					},
+					FrameHeight: "120px",
+				},
+			},
+		},
+
+		// ── Layout / Admin Shell ──────────────────────────────────────────────
+		{
+			Slug:        "admin-shell",
+			Name:        "Admin Shell",
+			Category:    galleryruntime.CategoryLayout,
+			Subcategory: "Shells",
+			Description: "Application shell: sidebar column, sticky topbar, scrolling content pane, and an optional right drawer. Pair with the \"app\" topbar style for the reference-dashboard chrome.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "App topbar",
+					Description: "Sidebar + app topbar + content pane. Toggle the hamburger to collapse the sidebar; the search pill targets a dialog with id \"search-modal\".",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return layout.AdminShellWithBoundary(layout.AdminShellProps{
+							Sidebar: layout.SidebarWithBoundary("go-daisy", []layout.SidebarGroup{
+								{Label: "Main", Items: []layout.SidebarItem{
+									{Label: "Dashboard", Icon: "lucide--layout-dashboard", Href: "#", Active: true},
+									{Label: "Orders", Icon: "lucide--shopping-cart", Href: "#"},
+									{Label: "Products", Icon: "lucide--package", Href: "#"},
+								}},
+								{Label: "Settings", Items: []layout.SidebarItem{
+									{Label: "Profile", Icon: "lucide--user", Href: "#"},
+								}},
+							}),
+							Topbar: layout.TopbarVariantWithBoundary("app", layout.TopbarVariantOpts{
+								ShowSearch:  true,
+								ShowTheme:   true,
+								ProfileName: "Ada Lovelace",
+								ProfileRole: "Admin",
+							}),
+							Content: ui.DashboardCardWithBoundary("Main pane", "The AdminShell content region. Replace this card with the page body."),
+						})
+					},
+					FrameHeight: "520px",
+				},
+			},
+		},
+
+		// ── Navigation / Search Trigger ───────────────────────────────────────
+		{
+			Slug:        "search-trigger",
+			Name:        "Search Trigger",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Search",
+			Description: "Search entry point pair: a bordered desktop pill and a square mobile icon button, both opening a dialog by id with showModal().",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Targets id \"search-modal\" by default; set DialogID to point at another dialog.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return shared.Compose(
+							rawHTML(`<div class="p-6">`),
+							nav.SearchTriggerWithBoundary("gallery-search-dialog", "Search components"),
 							rawHTML(`</div>`),
 						)
 					},

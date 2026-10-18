@@ -1,6 +1,7 @@
 package layout
 
 import (
+	"github.com/emergent-company/go-daisy/components/nav"
 	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
@@ -31,6 +32,16 @@ type TopbarVariantOpts struct {
 	AvatarSrc string
 	AvatarAlt string
 
+	// App-topbar (style "app") slots and switches.
+	SearchDialogID   string
+	SettingsDrawerID string
+	ProfileName      string
+	ProfileRole      string
+	ShowSettings     bool
+	ShowTheme        bool
+	Notifications    templ.Component // optional notification slot
+	Profile          templ.Component // optional profile slot (overrides ProfileName)
+
 	ExtraClass string
 }
 
@@ -39,6 +50,9 @@ templ TopbarVariant(style string, inOpts TopbarVariantOpts) {
 }
 
 templ topbarVariantInner(style string, opts TopbarVariantOpts) {
+	if style == "app" {
+		@topbarApp(opts)
+	} else {
 	<div
 		role="navigation"
 		aria-label="Navbar"
@@ -364,6 +378,56 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 				}
 			</div>
 		}
+	</div>
+	}
+}
+
+// topbarApp renders the "app" topbar style — the Nexus-derived application
+// topbar: a left group (sidebar toggle + optional search) and a right group
+// (theme switcher, settings drawer trigger, notification and profile slots).
+//
+// It carries its own root element (id `_layout-topbar`, aria-label "App
+// topbar") rather than the shared shell used by the other styles, because its
+// chrome differs: no dashed border, tighter padding, and composition of
+// whole-component slots instead of inline chrome.
+templ topbarApp(opts TopbarVariantOpts) {
+	<div
+		role="navigation"
+		aria-label="App topbar"
+		id="_layout-topbar"
+		class={ "flex items-center justify-between px-3", opts.ExtraClass }
+		{ devmode.Attrs(ctx, "layout/TopbarVariant")... }
+	>
+		<div class="inline-flex items-center gap-3">
+			<label class="btn btn-square btn-ghost btn-sm" aria-label="Toggle sidebar" for="_layout-sidebar-toggle-trigger">
+				@ui.IconSpan("lucide--menu", "size-5")
+			</label>
+			if opts.ShowSearch {
+				@nav.SearchTrigger(nav.SearchTriggerProps{DialogID: opts.SearchDialogID, Placeholder: opts.SearchPlaceholder})
+			}
+		</div>
+		<div class="inline-flex items-center gap-1.5">
+			if opts.ShowTheme {
+				@ui.ThemeSwitcher()
+			}
+			if opts.ShowSettings && opts.SettingsDrawerID != "" {
+				<label for={ opts.SettingsDrawerID } class="btn btn-circle btn-ghost btn-sm drawer-button" aria-label="Settings">
+					@ui.IconSpan("lucide--settings-2", "size-4.5")
+				</label>
+			}
+			if opts.Notifications != nil {
+				@opts.Notifications
+			}
+			if opts.Profile != nil {
+				@opts.Profile
+			} else if opts.ProfileName != "" {
+				@nav.ProfileMenuVariant("switch-account", nav.ProfileMenuVariantOpts{
+					Name:     opts.ProfileName,
+					Role:     opts.ProfileRole,
+					Initials: initialsFrom(opts.ProfileName),
+				})
+			}
+		</div>
 	</div>
 }
 
