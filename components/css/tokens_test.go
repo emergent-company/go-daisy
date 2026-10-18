@@ -109,3 +109,47 @@ func TestNoRawToneUtilities(t *testing.T) {
 		t.Fatal("guard test scanned no files; path resolution is wrong")
 	}
 }
+
+// TestTypographyTokens locks the typography role contract: body and heading
+// families plus the weights/tracking/leading that make the roles legible.
+// They live in a plain `:root` base-layer block (not @theme) and must drive
+// real element rules, otherwise the theme studio would emit variables that
+// nothing consumes.
+func TestTypographyTokens(t *testing.T) {
+	root := filepath.Join("..", "..")
+	path := filepath.Join(root, "components", "css", filepath.Base(TokensCSS))
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("tokens.css not found at %s: %v", path, err)
+	}
+	src := string(data)
+
+	for _, tok := range []string{
+		"--font-body:", "--font-heading:",
+		"--type-weight-body:", "--type-weight-heading:",
+		"--type-tracking-heading:", "--type-leading-body:",
+	} {
+		if !strings.Contains(src, tok) {
+			t.Errorf("tokens.css missing typography token %s", tok)
+		}
+	}
+
+	// Element rules: a token nobody applies is dead configuration.
+	for _, want := range []string{
+		"html,\n  :where([data-theme])",
+		"font-family: var(--font-body)",
+		"font-family: var(--font-heading)",
+		"font-weight: var(--type-weight-heading)",
+		"@utility font-heading",
+	} {
+		if !strings.Contains(src, want) {
+			t.Errorf("tokens.css missing typography rule %q", want)
+		}
+	}
+
+	// The rules must sit in the base layer: unlayered declarations would beat
+	// `font-bold`/`leading-*`/`tracking-*` utilities.
+	if !strings.Contains(src, "@layer base {") {
+		t.Error("typography role rules must be declared in @layer base so utilities still win")
+	}
+}

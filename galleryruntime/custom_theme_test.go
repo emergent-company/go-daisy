@@ -23,6 +23,12 @@ func TestCustomThemeCSSDeterministic(t *testing.T) {
 	if got, wantSel := theme.CSS(".scope"), `.scope{color-scheme:dark;--color-base-100:oklch(15% 0 0);--color-primary:oklch(60% 0.2 150);--radius-box:0.5rem;}`; got != wantSel {
 		t.Errorf("explicit selector:\n got: %s\nwant: %s", got, wantSel)
 	}
+	// Typography tokens survive verbatim (commas and quotes included): the
+	// studio writes font stacks through the same custom-theme seam.
+	if got := (CustomTheme{Vars: map[string]string{"--font-body": `"Segoe UI", system-ui, sans-serif`}}).CSS(""); got != `[data-theme="custom"]{color-scheme:light;--font-body:"Segoe UI", system-ui, sans-serif;}` {
+		t.Errorf("font stack mangled: %s", got)
+	}
+
 	// Empty scheme defaults to light rather than emitting an empty value.
 	if got := (CustomTheme{Vars: map[string]string{"--a": "b"}}).CSS(""); got != `[data-theme="custom"]{color-scheme:light;--a:b;}` {
 		t.Errorf("scheme default: %s", got)

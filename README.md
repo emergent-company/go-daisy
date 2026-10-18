@@ -277,9 +277,21 @@ contrast for every content pair, and can:
   `gallery-custom-theme` and selects it as `gallery-ui-theme=custom`. The
   gallery shell and every preview iframe inject a scoped
   `[data-theme="custom"]` rule, so no CSS rebuild is needed.
-- **Export** a `@plugin "daisyui/theme"` block for `assets/app.css`.
+- **Edit typography** — body and heading font families (local stacks only,
+  nothing is downloaded), weights, heading letter-spacing and body line-height,
+  previewed against a prose sample.
+- **Export** a `@plugin "daisyui/theme"` block for `assets/app.css`, plus a
+  `[data-theme="…"]` rule for the typography roles (font stacks contain
+  commas, which Tailwind's plugin parser would otherwise split into fallback
+  declarations).
 - **Share** a link (base64 payload in the URL fragment) or import an existing
   theme block.
+
+Colour swatches open the native colour picker. Pickers only speak `#rrggbb`,
+so a token stored as `oklch(...)` is converted back to Oklch (linear-sRGB →
+Oklab → LCh); hex-authored tokens stay hex. Picking is always opaque — alpha
+must be typed in the text field, which accepts any CSS colour including alpha
+and `var()`.
 
 The studio is client-side only and never writes to the repository.
 
@@ -323,6 +335,30 @@ component CSS:
 
 The tokens are declared with `@theme inline` so they resolve against the active
 `data-theme` at the point of use — required for nested theme previews.
+
+### Typography roles
+
+`components/css/tokens.css` also defines two typography roles, so headings and
+body copy can use different fonts:
+
+```css
+--font-body: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+--font-heading: var(--font-body);
+--type-weight-body: 400;
+--type-weight-heading: 600;
+--type-tracking-heading: -0.01em;
+--type-leading-body: 1.5;
+```
+
+The base rules match `:where(html, [data-theme])`, so any scoped theme (preview
+board, preview iframe, `[data-theme="custom"]`) re-resolves the roles per
+subtree, while `font-bold`, `leading-*` and `tracking-*` utilities still win.
+`font-heading` is available as an opt-in utility for display text that is not a
+semantic heading. Weights/tracking use the `--type-*` prefix on purpose:
+`--font-weight-*` would collide with the family utility name.
+
+The role rules live in `@layer base`; do not re-apply `font-sans` in an
+unlayered `body` rule, or a custom theme cannot change the body font.
 
 `.eyebrow` supplies the kicker typography (uppercase, 600, 0.05em tracking,
 50% tone) but deliberately sets no font-size: pair it with `text-xs` or the

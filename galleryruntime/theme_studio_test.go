@@ -22,6 +22,15 @@ func TestThemeStudioRendersControls(t *testing.T) {
 		`data-theme="gd-preview"`,
 		"Apply to gallery",
 		"Contrast",
+		"Typography",
+		"Type preview",
+		`type="color"`,
+		"pickerHex(",
+		"pickColor(",
+		"rgbToOklch(",
+		"'font-heading'",
+		"'type-weight-heading'",
+		"'type-leading-body'",
 		"Import CSS",
 		"@plugin \"daisyui/theme\"",
 		"function themeStudio()",
@@ -31,11 +40,11 @@ func TestThemeStudioRendersControls(t *testing.T) {
 		}
 	}
 
-	// The preview theme appears twice: the scoped board element and the CSS
-	// selector the studio generates. Nothing else may carry it, so the page
-	// itself never switches the gallery theme.
-	if got := strings.Count(html, `data-theme="gd-preview"`); got != 2 {
-		t.Errorf("preview theme occurrences = %d, want 2 (board + selector)", got)
+	// The preview theme appears three times: the colour board, the type
+	// preview, and the CSS selector the studio generates. Nothing else may
+	// carry it, so the page itself never switches the gallery theme.
+	if got := strings.Count(html, `data-theme="gd-preview"`); got != 3 {
+		t.Errorf("preview theme occurrences = %d, want 3 (boards + selector)", got)
 	}
 	if strings.Contains(html, `x-data="themeStudio()" data-theme=`) {
 		t.Error("studio root must not set data-theme")
