@@ -329,7 +329,7 @@ func ChatLayout(props ChatLayoutProps) templ.Component {
 					}
 					return nil
 				})
-				templ_7745c5c3_Err = ui.ChatBubble(false, "Alice Johnson", "10:32 AM", "", false, "bg-base-200", false, nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = ui.ChatBubble(ui.ChatBubbleProps{Sent: false, Author: "Alice Johnson", Timestamp: "10:32 AM", BubbleClass: "bg-base-200"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -355,7 +355,7 @@ func ChatLayout(props ChatLayoutProps) templ.Component {
 					}
 					return nil
 				})
-				templ_7745c5c3_Err = ui.ChatBubble(true, "You", "10:33 AM", "", false, "bg-base-200", false, nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = ui.ChatBubble(ui.ChatBubbleProps{Sent: true, Author: "You", Timestamp: "10:33 AM", BubbleClass: "bg-base-200"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -381,7 +381,7 @@ func ChatLayout(props ChatLayoutProps) templ.Component {
 					}
 					return nil
 				})
-				templ_7745c5c3_Err = ui.ChatBubble(false, "Alice Johnson", "10:34 AM", "", false, "bg-base-200", false, nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = ui.ChatBubble(ui.ChatBubbleProps{Sent: false, Author: "Alice Johnson", Timestamp: "10:34 AM", BubbleClass: "bg-base-200"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -415,7 +415,7 @@ func ChatLayout(props ChatLayoutProps) templ.Component {
 						}
 						return nil
 					})
-					templ_7745c5c3_Err = ui.ChatBubble(m.Sent, m.Author, m.Timestamp, m.AvatarSrc, m.BotIcon, m.BubbleClass, m.ShowActions, nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var14), templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = ui.ChatBubble(ui.ChatBubbleProps{Sent: m.Sent, Author: m.Author, Timestamp: m.Timestamp, AvatarSrc: m.AvatarSrc, BotIcon: m.BotIcon, BubbleClass: m.BubbleClass, ShowActions: m.ShowActions}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var14), templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}

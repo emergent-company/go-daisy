@@ -572,3 +572,122 @@ func TestToggleGroupChildrenInheritDefaults(t *testing.T) {
 		t.Errorf("group with no values must emit an empty JSON array:\n%s", valueless)
 	}
 }
+
+// TestMessagePartsContract locks the data-slot/data-align markers and the
+// group-data alignment variants the message stack relies on. The alignment of
+// the content/header/footer slots is derived from the parent group/message
+// marker, so the slots must not carry their own Go alignment props.
+func TestMessagePartsContract(t *testing.T) {
+	start := renderUI(t, Message(MessageProps{}))
+	for _, want := range []string{
+		`data-slot="message"`,
+		`data-align=""`,
+		"group/message",
+	} {
+		if !strings.Contains(start, want) {
+			t.Errorf("start Message missing %q:\n%s", want, start)
+		}
+	}
+	if strings.Contains(start, "flex-row-reverse") {
+		t.Errorf("start Message must not add flex-row-reverse:\n%s", start)
+	}
+
+	end := renderUI(t, Message(MessageProps{Align: MessageEnd}))
+	if !strings.Contains(end, `data-align="end"`) {
+		t.Errorf("end Message missing data-align=end:\n%s", end)
+	}
+	if !strings.Contains(end, "flex-row-reverse") {
+		t.Errorf("end Message missing flex-row-reverse:\n%s", end)
+	}
+
+	content := renderUI(t, MessageContent(MessageContentProps{}))
+	for _, want := range []string{
+		`data-slot="message-content"`,
+		"group-data-[align=end]/message:items-end",
+		"group-data-[align=end]/message:text-end",
+	} {
+		if !strings.Contains(content, want) {
+			t.Errorf("MessageContent missing %q:\n%s", want, content)
+		}
+	}
+
+	header := renderUI(t, MessageHeader(MessageHeaderProps{}))
+	if !strings.Contains(header, `data-slot="message-header"`) || !strings.Contains(header, "group-data-[align=end]/message:flex-row-reverse") {
+		t.Errorf("MessageHeader missing header contract:\n%s", header)
+	}
+
+	footer := renderUI(t, MessageFooter(MessageFooterProps{}))
+	if !strings.Contains(footer, `data-slot="message-footer"`) || !strings.Contains(footer, "text-muted") {
+		t.Errorf("MessageFooter missing footer contract:\n%s", footer)
+	}
+
+	def := renderUI(t, MessageBubble(MessageBubbleProps{}))
+	if !strings.Contains(def, "bg-base-100") || !strings.Contains(def, "border-base-300") {
+		t.Errorf("default bubble missing default surface:\n%s", def)
+	}
+	primary := renderUI(t, MessageBubble(MessageBubbleProps{Variant: MessageBubblePrimary}))
+	if !strings.Contains(primary, "bg-primary/10") || !strings.Contains(primary, "text-primary") {
+		t.Errorf("primary bubble missing primary surface:\n%s", primary)
+	}
+	muted := renderUI(t, MessageBubble(MessageBubbleProps{Variant: MessageBubbleMuted}))
+	if !strings.Contains(muted, "bg-base-200") {
+		t.Errorf("muted bubble missing muted surface:\n%s", muted)
+	}
+	for _, out := range []string{def, primary, muted} {
+		if !strings.Contains(out, "group-data-[align=end]/message:bg-primary") {
+			t.Errorf("bubble missing end alignment group variant:\n%s", out)
+		}
+	}
+}
+
+// TestMessageScrollerContract locks the data attributes the scroller runtime
+// depends on, the static marker, the jump button, and the height default.
+func TestMessageScrollerContract(t *testing.T) {
+	got := renderUI(t, MessageScroller(MessageScrollerProps{}))
+	for _, want := range []string{
+		"data-gd-messagescroller",
+		"data-gd-messagescroller-viewport",
+		"data-gd-messagescroller-jump",
+		"overflow-y-auto",
+		"h-96",
+		"lucide--arrow-down",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("MessageScroller missing %q:\n%s", want, got)
+		}
+	}
+	if strings.Contains(got, "data-gd-messagescroller-static") {
+		t.Errorf("default MessageScroller must not emit static marker:\n%s", got)
+	}
+
+	static := renderUI(t, MessageScroller(MessageScrollerProps{Static: true}))
+	if !strings.Contains(static, "data-gd-messagescroller-static") {
+		t.Errorf("static MessageScroller missing static marker:\n%s", static)
+	}
+
+	hidden := renderUI(t, MessageScroller(MessageScrollerProps{HideJumpButton: true}))
+	if strings.Contains(hidden, "data-gd-messagescroller-jump") {
+		t.Errorf("HideJumpButton must omit the jump button:\n%s", hidden)
+	}
+
+	custom := renderUI(t, MessageScroller(MessageScrollerProps{HeightClass: "h-64"}))
+	if !strings.Contains(custom, "h-64") {
+		t.Errorf("custom height class missing:\n%s", custom)
+	}
+}
+
+// TestChatBubbleLegacyShim proves the deprecated flat-parameter shim renders the
+// same output as the props-struct API for the same inputs.
+func TestChatBubbleLegacyShim(t *testing.T) {
+	legacy := renderUI(t, ChatBubbleLegacy(true, "You", "10:33 AM", "", false, "bg-base-200", false, nil, uiStr("hi")))
+	props := renderUI(t, shared.RenderInto(ChatBubble(ChatBubbleProps{Sent: true, Author: "You", Timestamp: "10:33 AM", BubbleClass: "bg-base-200"}), uiStr("hi")))
+
+	for _, want := range []string{"chat group", "chat-end", "chat-bubble", "bg-base-200"} {
+		if !strings.Contains(legacy, want) {
+			t.Errorf("legacy shim missing %q:\n%s", want, legacy)
+		}
+	}
+	if legacy != props {
+		t.Errorf("legacy shim output differs from props API:\nlegacy: %s\nprops:  %s", legacy, props)
+	}
+}

@@ -156,19 +156,19 @@ templ ChatLayout(props ChatLayoutProps) {
 				</div>
 				@ui.ChatWindow("h-[calc(100vh-22rem)]", nil) {
 					if len(props.Messages) == 0 {
-						@ui.ChatBubble(false, "Alice Johnson", "10:32 AM", "", false, "bg-base-200", false, nil) {
+						@ui.ChatBubble(ui.ChatBubbleProps{Sent: false, Author: "Alice Johnson", Timestamp: "10:32 AM", BubbleClass: "bg-base-200"}) {
 							Hey! How are you doing?
 						}
-						@ui.ChatBubble(true, "You", "10:33 AM", "", false, "bg-base-200", false, nil) {
+						@ui.ChatBubble(ui.ChatBubbleProps{Sent: true, Author: "You", Timestamp: "10:33 AM", BubbleClass: "bg-base-200"}) {
 							Good thanks! How about you?
 						}
-						@ui.ChatBubble(false, "Alice Johnson", "10:34 AM", "", false, "bg-base-200", false, nil) {
+						@ui.ChatBubble(ui.ChatBubbleProps{Sent: false, Author: "Alice Johnson", Timestamp: "10:34 AM", BubbleClass: "bg-base-200"}) {
 							Just finished reviewing the documents. Have you had a chance to look at them?
 						}
 						@ui.AIThinkingIndicator()
 					} else {
 						for _, m := range props.Messages {
-							@ui.ChatBubble(m.Sent, m.Author, m.Timestamp, m.AvatarSrc, m.BotIcon, m.BubbleClass, m.ShowActions, nil) {
+							@ui.ChatBubble(ui.ChatBubbleProps{Sent: m.Sent, Author: m.Author, Timestamp: m.Timestamp, AvatarSrc: m.AvatarSrc, BotIcon: m.BotIcon, BubbleClass: m.BubbleClass, ShowActions: m.ShowActions}) {
 								if m.Content != nil {
 									@m.Content
 								}

@@ -1,0 +1,62 @@
+package ui
+
+import (
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/staticfs"
+)
+
+// MessageScrollerProps configures a MessageScroller.
+type MessageScrollerProps struct {
+	HeightClass    string // e.g. "h-96"; default "h-96" when empty
+	// Static disables stick-to-bottom auto-scroll. The viewport still starts
+	// scrolled to the bottom on init; it just stops following new content.
+	Static         bool
+	HideJumpButton bool
+	Class          string
+	Attrs          templ.Attributes
+}
+
+var messageScrollerScriptOnce = templ.NewOnceHandle()
+
+// MessageScrollerScript loads the message-scroller runtime once per page. It
+// provides the stick-to-bottom auto-scroll and jump-to-latest behaviour used by
+// MessageScroller.
+templ MessageScrollerScript() {
+	@messageScrollerScriptOnce.Once() {
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-messagescroller.js", templ.GetNonce(ctx)))
+	}
+}
+
+// MessageScroller renders a scrollable message viewport with a jump-to-latest
+// button and (unless Static) stick-to-bottom auto-scroll as content grows.
+templ MessageScroller(props MessageScrollerProps) {
+	{{ heightClass := props.HeightClass
+	if heightClass == "" {
+		heightClass = "h-96"
+	} }}
+	<div
+		data-gd-messagescroller
+		if props.Static {
+			data-gd-messagescroller-static
+		}
+		class={ "relative", props.Class }
+		{ devmode.Attrs(ctx, "ui/MessageScroller")... }
+		{ props.Attrs... }
+	>
+		<div
+			data-gd-messagescroller-viewport
+			role="log"
+			aria-live="polite"
+			tabindex="0"
+			class={ "overflow-y-auto", heightClass, "p-4 space-y-3" }
+		>
+			{ children... }
+		</div>
+		if !props.HideJumpButton {
+			<button type="button" data-gd-messagescroller-jump hidden class="btn btn-circle btn-sm border-base-300 bg-base-100 shadow-md absolute bottom-3 left-1/2 -translate-x-1/2" aria-label="Scroll to latest">
+				@IconSpan("lucide--arrow-down", "size-4")
+			</button>
+		}
+	</div>
+	@MessageScrollerScript()
+}

@@ -1960,7 +1960,137 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// ── Components / Message ─────────────────────────────────────────────
+		{
+			Slug:        "message",
+			Name:        "Message",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Chat",
+			Description: "Composable chat message stack — Message rows with avatar, header, bubble and footer slots. Start/end alignment is driven by the group/message marker, so slots re-flow without extra props.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "A start-aligned message with avatar, header, bubble and footer.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return messageDemoRow(ui.MessageStart, "Alice", "10:32 AM", "Hey! How are you doing?", false, "", ui.MessageBubbleDefault)
+					},
+					FrameHeight: "180px",
+				},
+				{
+					Name:        "End aligned",
+					Description: "The same row end-aligned — content and header mirror automatically.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return messageDemoRow(ui.MessageEnd, "You", "10:33 AM", "Good thanks! How about you?", false, "./images/avatars/1.png", ui.MessageBubbleDefault)
+					},
+					FrameHeight: "180px",
+				},
+				{
+					Name:        "Group",
+					Description: "Three messages in a row — one bot, one user, no avatar on the consecutive reply.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return shared.Compose(
+							messageDemoRow(ui.MessageStart, "Bot", "10:30 AM", "Sure, I can help with that.", true, "", ui.MessageBubbleDefault),
+							messageDemoRow(ui.MessageEnd, "", "", "Great, what's next?", false, "", ui.MessageBubbleDefault),
+							messageDemoRow(ui.MessageStart, "", "", "Let's start with the basics.", false, "", ui.MessageBubbleDefault),
+						)
+					},
+					FrameHeight: "320px",
+				},
+				{
+					Name:        "Variants",
+					Description: "The default, primary and muted bubble surfaces.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return shared.Compose(
+							ui.MessageBubbleWithBoundary(ui.MessageBubbleDefault, "Default surface"),
+							ui.MessageBubbleWithBoundary(ui.MessageBubblePrimary, "Primary surface"),
+							ui.MessageBubbleWithBoundary(ui.MessageBubbleMuted, "Muted surface"),
+						)
+					},
+					FrameHeight: "220px",
+				},
+			},
+		},
+
+		// ── Components / Message Scroller ───────────────────────────────────
+		{
+			Slug:        "message-scroller",
+			Name:        "Message Scroller",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Chat",
+			Description: "Scrollable message viewport that sticks to the bottom as content grows and reveals a jump-to-latest button when you scroll up.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Auto scroll",
+					Description: "Twelve messages with stick-to-bottom auto-scroll enabled.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.MessageScrollerWithBoundary("h-96", false, 12)
+					},
+					FrameHeight: "420px",
+				},
+				{
+					Name:        "Static",
+					Description: "Auto-scroll disabled — the jump button appears once you scroll up.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.MessageScrollerWithBoundary("h-96", true, 12)
+					},
+					FrameHeight: "420px",
+				},
+				{
+					Name:        "Playground",
+					Description: "Viewport height, static mode and message count driven by the token panel.",
+					RenderFunc: func(params url.Values) templ.Component {
+						heightClass := params.Get("heightClass")
+						if heightClass == "" {
+							heightClass = "h-96"
+						}
+						static := params.Get("static") == "true"
+						count := 12
+						if raw := params.Get("messages"); raw != "" {
+							if n, err := strconv.Atoi(raw); err == nil {
+								count = n
+							}
+						}
+						return ui.MessageScrollerWithBoundary(heightClass, static, count)
+					},
+					Tokens:      MessageScrollerTokens(),
+					FrameHeight: "420px",
+				},
+			},
+		},
 	}
+}
+
+// messageDemoRow builds a full Message row (avatar + content) for the gallery
+// Message stories. When botIcon is true the avatar slot renders the bot icon;
+// when avatarSrc is set it renders a squircle image; otherwise the slot is
+// omitted so consecutive messages from the same sender can skip the avatar.
+// Header/footer slots render only when their text is non-empty.
+func messageDemoRow(align ui.MessageAlign, author, time, text string, botIcon bool, avatarSrc string, variant ui.MessageBubbleVariant) templ.Component {
+	var header templ.Component
+	if author != "" || time != "" {
+		label := author
+		if label != "" && time != "" {
+			label += " · " + time
+		} else if label == "" {
+			label = time
+		}
+		header = shared.RenderInto(ui.MessageHeader(ui.MessageHeaderProps{}), shared.StrComp(label))
+	}
+	bubble := shared.RenderInto(ui.MessageBubble(ui.MessageBubbleProps{Variant: variant}), shared.StrComp(text))
+	var parts []templ.Component
+	if header != nil {
+		parts = append(parts, header)
+	}
+	parts = append(parts, bubble)
+	content := shared.RenderInto(ui.MessageContent(ui.MessageContentProps{}), shared.Compose(parts...))
+	if botIcon || avatarSrc != "" {
+		return ui.MessageWithBoundary(align,
+			ui.MessageAvatar(ui.MessageAvatarProps{BotIcon: botIcon, Src: avatarSrc, Name: author}),
+			content,
+		)
+	}
+	return ui.MessageWithBoundary(align, content)
 }
 
 // toggleGroupDemo builds a ToggleGroup of ToggleButtons from labels, marking the

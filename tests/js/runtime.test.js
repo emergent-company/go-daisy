@@ -52,18 +52,42 @@ const TOGGLE_GROUP = `
   <button type="button" data-gd-toggle-value="right" aria-pressed="false">Right</button>
 </div>`;
 
+const JS_FILES = ['go-daisy-a11y.js', 'go-daisy-context-menu.js', 'go-daisy-resizable.js', 'go-daisy-toggle.js', 'go-daisy-messagescroller.js'];
+
+const MESSAGE_SCROLLER = `
+<div data-gd-messagescroller id="scroller">
+  <div data-gd-messagescroller-viewport id="viewport"><div>one</div></div>
+  <button type="button" data-gd-messagescroller-jump id="jump" hidden aria-label="Scroll to latest"></button>
+</div>`;
+
+function loadScripts(dom) {
+  for (const file of JS_FILES) {
+    const code = fs.readFileSync(path.join(JS_DIR, 'js', file), 'utf8');
+    new Function('window', 'document', code)(dom.window, dom.window.document);
+  }
+}
+
 function setup(body) {
   const dom = new JSDOM(`<!DOCTYPE html><html><body>${body}</body></html>`, {
     pretendToBeVisual: true,
     url: 'http://localhost/',
   });
-  // The scripts are written for a browser global scope. jsdom's `window.eval`
-  // does not bind `window` inside the evaluated code, so run them with the
-  // window/document in scope explicitly — same globals a page provides.
-  for (const file of ['go-daisy-a11y.js', 'go-daisy-context-menu.js', 'go-daisy-resizable.js', 'go-daisy-toggle.js']) {
-    const code = fs.readFileSync(path.join(JS_DIR, 'js', file), 'utf8');
-    new Function('window', 'document', code)(dom.window, dom.window.document);
-  }
+  loadScripts(dom);
+  return dom;
+}
+
+// setupScroller loads the scripts after stubbing the viewport's scroll
+// geometry, so the scroller runtime can resolve distances in jsdom (which
+// otherwise reports scrollHeight/clientHeight as 0).
+function setupScroller(body, { scrollHeight = 100, clientHeight = 100 } = {}) {
+  const dom = new JSDOM(`<!DOCTYPE html><html><body>${body}</body></html>`, {
+    pretendToBeVisual: true,
+    url: 'http://localhost/',
+  });
+  const viewport = dom.window.document.querySelector('[data-gd-messagescroller-viewport]');
+  Object.defineProperty(viewport, 'scrollHeight', { configurable: true, get: () => scrollHeight });
+  Object.defineProperty(viewport, 'clientHeight', { configurable: true, get: () => clientHeight });
+  loadScripts(dom);
   return dom;
 }
 
@@ -333,4 +357,77 @@ test('toggle: gd-toggle-change fires with ordered values', () => {
   items[2].click(); // right first
   items[0].click(); // then left
   assert.deepEqual(last, ['left', 'right'], 'values must be reported in DOM order, not click order');
+});
+
+test('message-scroller: jump button hidden at bottom, shown after scrolling up', () => {
+  const { window } = setupScroller(MESSAGE_SCROLLER, { scrollHeight: 500, clientHeight: 100 });
+  const doc = window.document;
+  const viewport = doc.getElementById('viewport');
+  const jump = doc.getElementById('jump');
+
+  assert.equal(jump.hidden, true, 'jump button hidden while at the bottom');
+
+  viewport.scrollTop = 0;
+  viewport.dispatchEvent(new window.Event('scroll'));
+  assert.equal(jump.hidden, false, 'jump button shown after scrolling up');
+});
+
+test('message-scroller: jump button click scrolls to bottom and hides', () => {
+  const { window } = setupScroller(MESSAGE_SCROLLER, { scrollHeight: 500, clientHeight: 100 });
+  const doc = window.document;
+  const viewport = doc.getElementById('viewport');
+  const jump = doc.getElementById('jump');
+
+  viewport.scrollTop = 0;
+  viewport.dispatchEvent(new window.Event('scroll'));
+  assert.equal(jump.hidden, false);
+
+  jump.click();
+  assert.ok(viewport.scrollTop >= viewport.scrollHeight - viewport.clientHeight, 'click scrolls to the bottom');
+  assert.equal(jump.hidden, true, 'button hides after jumping to the bottom');
+});
+
+test('message-scroller: static root does not auto-scroll on mutation', async () => {
+  const markup = MESSAGE_SCROLLER.replace('data-gd-messagescroller id=', 'data-gd-messagescroller data-gd-messagescroller-static id=');
+  const dom = new JSDOM(`<!DOCTYPE html><html><body>${markup}</body></html>`, {
+    pretendToBeVisual: true,
+    url: 'http://localhost/',
+  });
+  const { window } = dom;
+  const viewport = dom.window.document.getElementById('viewport');
+
+  let height = 100;
+  Object.defineProperty(viewport, 'scrollHeight', { configurable: true, get: () => height });
+  Object.defineProperty(viewport, 'clientHeight', { configurable: true, get: () => 100 });
+  loadScripts(dom);
+
+  assert.equal(viewport.scrollTop, 100, 'init scrolls to the bottom');
+
+  height = 200;
+  viewport.appendChild(window.document.createElement('div'));
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
+  assert.equal(viewport.scrollTop, 100, 'static root must not auto-scroll on mutation');
+});
+
+test('message-scroller: non-static root auto-scrolls on mutation', async () => {
+  const dom = new JSDOM(`<!DOCTYPE html><html><body>${MESSAGE_SCROLLER}</body></html>`, {
+    pretendToBeVisual: true,
+    url: 'http://localhost/',
+  });
+  const { window } = dom;
+  const viewport = dom.window.document.getElementById('viewport');
+
+  let height = 100;
+  Object.defineProperty(viewport, 'scrollHeight', { configurable: true, get: () => height });
+  Object.defineProperty(viewport, 'clientHeight', { configurable: true, get: () => 100 });
+  loadScripts(dom);
+
+  assert.equal(viewport.scrollTop, 100, 'init scrolls to the bottom');
+
+  height = 200;
+  viewport.appendChild(window.document.createElement('div'));
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
+  assert.equal(viewport.scrollTop, 200, 'sticky root auto-scrolls to the bottom on mutation');
 });

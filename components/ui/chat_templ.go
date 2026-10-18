@@ -10,15 +10,29 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/emergent-company/go-daisy/devmode"
 
-// ChatBubble renders a chat conversation bubble.
+// ChatBubbleProps configures a ChatBubble conversation bubble.
 //
-// sent=true → chat-end (right), sent=false → chat-start (left)
-// avatarSrc: optional image URL for chat-image slot (squircle avatar)
-// botIcon: when true renders a bot-icon avatar instead of a photo (overrides avatarSrc)
-// bubbleClass: optional modifier e.g. "chat-bubble-primary"
-// showActions: when true renders a hover-reveal action toolbar (Regenerate, Copy, thumbs)
-// attrs: optional extra HTML attributes spread on the root element
-func ChatBubble(sent bool, author string, timestamp string, avatarSrc string, botIcon bool, bubbleClass string, showActions bool, attrs templ.Attributes) templ.Component {
+// Sent=true → chat-end (right), Sent=false → chat-start (left)
+// AvatarSrc: optional image URL for chat-image slot (squircle avatar)
+// BotIcon: when true renders a bot-icon avatar instead of a photo (overrides AvatarSrc)
+// BubbleClass: optional modifier e.g. "chat-bubble-primary"
+// ShowActions: when true renders a hover-reveal action toolbar (Regenerate, Copy, thumbs)
+// Class: additional CSS classes appended to the root element
+// Attrs: optional extra HTML attributes spread on the root element
+type ChatBubbleProps struct {
+	Sent        bool
+	Author      string
+	Timestamp   string
+	AvatarSrc   string
+	BotIcon     bool
+	BubbleClass string
+	ShowActions bool
+	Class       string
+	Attrs       templ.Attributes
+}
+
+// ChatBubble renders a chat conversation bubble.
+func ChatBubble(props ChatBubbleProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -39,7 +53,7 @@ func ChatBubble(sent bool, author string, timestamp string, avatarSrc string, bo
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{"chat group", templ.KV("chat-end", sent), templ.KV("chat-start", !sent)}
+		var templ_7745c5c3_Var2 = []any{"chat group", templ.KV("chat-end", props.Sent), templ.KV("chat-start", !props.Sent), props.Class}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -65,7 +79,7 @@ func ChatBubble(sent bool, author string, timestamp string, avatarSrc string, bo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, attrs)
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, props.Attrs)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -73,7 +87,7 @@ func ChatBubble(sent bool, author string, timestamp string, avatarSrc string, bo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if botIcon {
+		if props.BotIcon {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"chat-image bg-primary/5 text-primary border-primary/10 flex items-center justify-center rounded-full border p-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -86,15 +100,15 @@ func ChatBubble(sent bool, author string, timestamp string, avatarSrc string, bo
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		} else if avatarSrc != "" {
+		} else if props.AvatarSrc != "" {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"chat-image avatar\"><div class=\"w-10\"><img class=\"mask mask-squircle bg-base-200 p-0.5\" src=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
-			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(avatarSrc)
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.AvatarSrc)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 26, Col: 70}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 40, Col: 76}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 			if templ_7745c5c3_Err != nil {
@@ -105,9 +119,9 @@ func ChatBubble(sent bool, author string, timestamp string, avatarSrc string, bo
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(author)
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Author)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 26, Col: 85}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 40, Col: 97}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 			if templ_7745c5c3_Err != nil {
@@ -118,15 +132,15 @@ func ChatBubble(sent bool, author string, timestamp string, avatarSrc string, bo
 				return templ_7745c5c3_Err
 			}
 		}
-		if author != "" {
+		if props.Author != "" {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"chat-header text-xs text-subtle mb-0.5\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(author)
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(props.Author)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 31, Col: 63}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 45, Col: 69}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -137,7 +151,7 @@ func ChatBubble(sent bool, author string, timestamp string, avatarSrc string, bo
 				return templ_7745c5c3_Err
 			}
 		}
-		var templ_7745c5c3_Var7 = []any{"chat-bubble relative", bubbleClass}
+		var templ_7745c5c3_Var7 = []any{"chat-bubble relative", props.BubbleClass}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var7...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -163,7 +177,7 @@ func ChatBubble(sent bool, author string, timestamp string, avatarSrc string, bo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if showActions {
+		if props.ShowActions {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"border-line-strong bg-base-100 absolute end-2 -bottom-8 z-10 flex scale-90 items-center gap-1.5 rounded-full border px-3 py-2 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -265,15 +279,15 @@ func ChatBubble(sent bool, author string, timestamp string, avatarSrc string, bo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if timestamp != "" {
+		if props.Timestamp != "" {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<div class=\"chat-footer text-xs text-muted mt-0.5 opacity-50\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var13 string
-			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(timestamp)
+			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(props.Timestamp)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 49, Col: 76}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 63, Col: 82}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -474,7 +488,7 @@ func ChatInput(showAttach bool, placeholder string, attrs templ.Attributes) temp
 		var templ_7745c5c3_Var20 string
 		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.ResolveAttributeValue(placeholder)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 99, Col: 28}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 113, Col: 28}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var20)
 		if templ_7745c5c3_Err != nil {
