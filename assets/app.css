@@ -326,9 +326,12 @@
 @import "../components/css/tokens.css";
 @import "../components/css/custom.css";
 
-body {
-  @apply font-sans text-base;
-}
+/*
+ * Body typography lives in tokens.css (`--font-body`, `--type-weight-body`,
+ * `--type-leading-body`). Do not re-apply `font-sans` here: an unlayered rule
+ * would beat the token-driven base rule and freeze the body font, so a custom
+ * theme (gallery theme studio) could not change it.
+ */
 
 strong {
   @apply font-medium;

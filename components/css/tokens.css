@@ -48,3 +48,81 @@
     color: color-mix(in oklab, var(--color-base-content) 50%, transparent);
   }
 }
+
+/* ── Typography roles ──────────────────────────────────────────
+ *
+ * Two resolved roles instead of one global font stack:
+ *
+ *   --font-body      body copy, form controls, UI chrome
+ *   --font-heading   semantic headings, display strings
+ *
+ * Plus the properties that make a heading/body role legible:
+ *
+ *   --type-weight-body         400
+ *   --type-weight-heading      600
+ *   --type-tracking-heading    -0.01em
+ *   --type-leading-body        1.5
+ *
+ * Naming: `--font-body` / `--font-heading` live in Tailwind's `--font-*`
+ * family namespace, so `font-heading` is also available as an opt-in utility
+ * for non-<h*> display text. Weights/tracking deliberately use `--type-*`
+ * instead of `--font-weight-*`: that namespace would collide with the family
+ * utility of the same name (`font-heading` would be both weight and family).
+ *
+ * Defaults are declared in a plain `:root` block, not `@theme`: nothing here
+ * needs a generated utility, and this file's contract test forbids a plain
+ * `@theme` block (it would freeze the tone ladder at :root).
+ *
+ * Scoping: the role rules match `[data-theme]` as well as `html` and live in
+ * the base layer (so `font-bold`, `tracking-*`, `leading-*` utilities still
+ * win). The `[data-theme]` half is wrapped in `:where` so it never beats a
+ * component selector; `html` keeps element specificity to win over preflight.
+ * A scoped theme — gallery
+ * preview board, preview iframe, `[data-theme="custom"]` from the theme
+ * studio — inherits the variables and re-resolves them per subtree, while
+ * `font-bold` / `tracking-*` / `leading-*` utilities still win over these
+ * rules. The studio's preview only has to emit the variables.
+ *
+ * The gallery theme studio exposes these six values as the Typography role
+ * and applies them through the custom-theme seam; the exported DaisyUI theme
+ * block carries them verbatim (unknown keys pass through the theme plugin).
+ */
+@layer base {
+  :root {
+    --font-body: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+    --font-heading: var(--font-body);
+    --type-weight-body: 400;
+    --type-weight-heading: 600;
+    --type-tracking-heading: -0.01em;
+    --type-leading-body: 1.5;
+  }
+
+  /* `html` keeps element specificity so it wins over Tailwind preflight's
+   * `html, :host { font-family: var(--default-font-family, …) }`; the scoped
+   * selector stays zero-specificity so it never beats a component rule. */
+  html,
+  :where([data-theme]) {
+    font-family: var(--font-body);
+    font-weight: var(--type-weight-body);
+    line-height: var(--type-leading-body);
+  }
+
+  /* Element specificity, not :where(): preflight's `h1…h6 { font-weight:
+   * inherit }` is element-specific too and would otherwise win on source
+   * order. Component/utility classes still beat these base-layer rules. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: var(--type-weight-heading);
+    letter-spacing: var(--type-tracking-heading);
+  }
+}
+
+/* Opt-in heading family for display text that is not a semantic heading. */
+@utility font-heading {
+  font-family: var(--font-heading);
+}

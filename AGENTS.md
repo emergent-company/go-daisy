@@ -341,6 +341,15 @@ size unless `Size` is set. Interface labels (`.menu-label`) stay on
 `text-label` (70%), not the kicker tone. Common flex shapes use `ui.Row`,
 `ui.RowLoose`, `ui.RowTight`, `ui.RowBetween`, `ui.ColStack`,
 `ui.ColStackLoose`.
+
+Typography is role-based: body copy inherits `--font-body` +
+`--type-weight-body` + `--type-leading-body`; `h1`–`h6` use `--font-heading` +
+`--type-weight-heading` + `--type-tracking-heading`. Never hard-code a font
+stack on a component root — set the role variables (or use `font-heading` for
+non-`<h*>` display text). The base rules are in `@layer base`, so `font-bold`,
+`leading-*` and `tracking-*` utilities still override them. The gallery theme
+studio edits the same six variables and applies them through the custom-theme
+seam.
 `components/css/tokens_test.go` enforces the tone rule.
 
 ### Conditional HTMX pattern
