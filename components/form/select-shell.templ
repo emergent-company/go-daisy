@@ -12,11 +12,21 @@ type SelectShellProps struct {
 	Label        string
 	TriggerLabel string
 	Placeholder  string
-	ValueExpr    string // Alpine expression for trigger text (e.g. "picked")
-	Open         bool   // initial open state
-	Disabled     bool
-	Class        string
-	Attrs        templ.Attributes
+	// ValueExpr is an optional Alpine expression for the trigger text (e.g.
+	// "picked"). It is evaluated in this component's own x-data, which declares
+	// only `open`, so it must resolve from an ancestor x-data (or Alpine magic).
+	//
+	// Leave it empty to render the placeholder as static text: an empty x-text
+	// is not a valid Alpine expression (SyntaxError at init), and an expression
+	// naming an undeclared property throws ReferenceError and clears the
+	// trigger. When set, x-text overwrites the placeholder at init and does not
+	// restore it while the bound value is empty — fold any empty-state text into
+	// the expression itself (see combobox, which does).
+	ValueExpr string
+	Open      bool // initial open state
+	Disabled  bool
+	Class     string
+	Attrs     templ.Attributes
 }
 
 templ SelectShell(props SelectShellProps) {
@@ -42,11 +52,13 @@ templ SelectShell(props SelectShellProps) {
 			aria-haspopup="listbox"
 			:aria-expanded="open"
 		>
-			<span class="block truncate flex-1" x-text={ props.ValueExpr }>
-				{ props.Placeholder }
-			</span>
+			if props.ValueExpr != "" {
+				<span class="block truncate flex-1" x-text={ props.ValueExpr }>{ props.Placeholder }</span>
+			} else {
+				<span class="block truncate flex-1">{ props.Placeholder }</span>
+			}
 			<svg :class="open ? 'rotate-180' : ''" class="size-4 shrink-0 text-base-content/40 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-				<path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+				<path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path>
 			</svg>
 		</button>
 		<div
