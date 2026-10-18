@@ -33,7 +33,9 @@ const (
 	TableSizeDefault TableSize = ""   // zero value = default (no modifier class)
 	TableSizeXS      TableSize = "xs" // table-xs
 	TableSizeSM      TableSize = "sm" // table-sm
+	TableSizeMD      TableSize = "md" // table-md
 	TableSizeLG      TableSize = "lg" // table-lg
+	TableSizeXL      TableSize = "xl" // table-xl
 )
 
 // TableDensity controls row density via the data-table-density attribute on the <table>.
@@ -46,7 +48,7 @@ const (
 
 // TableProps configures the appearance of a TableWithProps component.
 type TableProps struct {
-	// Size controls the DaisyUI size modifier: xs, sm, lg or empty (default).
+	// Size controls the DaisyUI size modifier: xs, sm, md, lg, xl or empty (default).
 	Size TableSize
 	// Density controls row density. DensityCompact emits data-table-density="compact";
 	// the compact row height comes from the CSS token --table-row-height
@@ -383,7 +385,7 @@ func TableHeadCell(label string) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 136, Col: 63}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 138, Col: 63}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -464,7 +466,7 @@ func TableEmpty(colspan int, message string) templ.Component {
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(strconv.Itoa(max(colspan, 1)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 149, Col: 45}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 151, Col: 45}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
 		if templ_7745c5c3_Err != nil {
@@ -477,7 +479,7 @@ func TableEmpty(colspan int, message string) templ.Component {
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 149, Col: 93}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 151, Col: 93}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
@@ -531,7 +533,7 @@ func TableRow(id string, hover bool, attrs templ.Attributes) templ.Component {
 			var templ_7745c5c3_Var17 string
 			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue(id)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 158, Col: 10}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 160, Col: 10}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
 			if templ_7745c5c3_Err != nil {
@@ -712,7 +714,7 @@ func TableHeader(label string, sortKey string, currentSortKey string, currentDir
 			var templ_7745c5c3_Var24 string
 			templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 185, Col: 64}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 187, Col: 64}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 			if templ_7745c5c3_Err != nil {
@@ -752,7 +754,7 @@ func TableHeader(label string, sortKey string, currentSortKey string, currentDir
 			var templ_7745c5c3_Var27 templ.SafeURL
 			templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(sortURL(baseURL, sortKey, currentSortKey, currentDir)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 190, Col: 75}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 192, Col: 75}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 			if templ_7745c5c3_Err != nil {
@@ -765,7 +767,7 @@ func TableHeader(label string, sortKey string, currentSortKey string, currentDir
 			var templ_7745c5c3_Var28 string
 			templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.ResolveAttributeValue(sortURL(baseURL, sortKey, currentSortKey, currentDir))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 191, Col: 66}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 193, Col: 66}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var28)
 			if templ_7745c5c3_Err != nil {
@@ -778,7 +780,7 @@ func TableHeader(label string, sortKey string, currentSortKey string, currentDir
 			var templ_7745c5c3_Var29 string
 			templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 195, Col: 11}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 197, Col: 11}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 			if templ_7745c5c3_Err != nil {
@@ -848,7 +850,7 @@ func TableSelectAll(label string) templ.Component {
 		var templ_7745c5c3_Var31 string
 		templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.ResolveAttributeValue(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 219, Col: 93}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 221, Col: 93}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var31)
 		if templ_7745c5c3_Err != nil {
@@ -891,7 +893,7 @@ func TableSelectRow(name string, checked bool) templ.Component {
 		var templ_7745c5c3_Var33 string
 		templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.ResolveAttributeValue(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 224, Col: 86}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/table.templ`, Line: 226, Col: 86}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var33)
 		if templ_7745c5c3_Err != nil {

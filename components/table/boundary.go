@@ -78,7 +78,8 @@ func TableEmptyWithBoundary(colspan int, message string) templ.Component {
 }
 
 // TableCardWithBoundary wraps TableCard with a dev-mode component boundary annotation.
-// gallery:token toolbar,footer
+// Toolbar and Footer are templ.Component slots, so there is no gallery token
+// surface to expose.
 func TableCardWithBoundary(props TableCardProps) templ.Component {
 	return devmode.ComponentBoundary("TableCard", TableCard(props), map[string]any{
 		"toolbar": props.Toolbar != nil,

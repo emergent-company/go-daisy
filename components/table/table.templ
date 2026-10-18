@@ -25,7 +25,9 @@ const (
 	TableSizeDefault TableSize = ""   // zero value = default (no modifier class)
 	TableSizeXS      TableSize = "xs" // table-xs
 	TableSizeSM      TableSize = "sm" // table-sm
+	TableSizeMD      TableSize = "md" // table-md
 	TableSizeLG      TableSize = "lg" // table-lg
+	TableSizeXL      TableSize = "xl" // table-xl
 )
 
 // TableDensity controls row density via the data-table-density attribute on the <table>.
@@ -38,7 +40,7 @@ const (
 
 // TableProps configures the appearance of a TableWithProps component.
 type TableProps struct {
-	// Size controls the DaisyUI size modifier: xs, sm, lg or empty (default).
+	// Size controls the DaisyUI size modifier: xs, sm, md, lg, xl or empty (default).
 	Size TableSize
 	// Density controls row density. DensityCompact emits data-table-density="compact";
 	// the compact row height comes from the CSS token --table-row-height
