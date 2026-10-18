@@ -83,33 +83,17 @@ func (p SortableTableHeaderProps) ariaLabel() string {
 	return label
 }
 
-// Href returns the path and query for the next sort state of column, using the
-// request path captured by NewSortContext. The current query is cloned, so
-// filters are preserved and the caller's query is never mutated. first is the
-// direction used when column is not active. Pagination is reset by removing the
-// "page" param; other params, including per_page, are preserved.
+// Href returns the path and query for the next sort state of column. The
+// current query is cloned, so filters are preserved and the caller's query is
+// never mutated. first is the direction used when column is not active.
+// Pagination is reset by removing the "page" param; other params, including
+// per_page, are preserved.
 func (c SortContext) Href(column string, first SortDir) string {
-	return c.HrefFor(c.BasePath, column, first)
-}
-
-// HrefFor is Href with an explicit base path. Use it when the sort link must
-// target a different endpoint than the page itself, such as a fragment URL that
-// only returns the table. The context query is merged with the base query (the
-// base wins on conflicts) and the sort parameters are merged into the result;
-// page is removed.
-func (c SortContext) HrefFor(basePath string, column string, first SortDir) string {
-	if basePath == "" || column == "" {
-		return ""
-	}
-	u, err := url.Parse(basePath)
-	if err != nil || u.Path == "" {
+	if c.BasePath == "" || column == "" {
 		return ""
 	}
 	dir := NextSortDirFrom(c.Params, column, first)
 	q := cloneValues(c.Query)
-	for key, values := range u.Query() {
-		q[key] = values
-	}
 	if dir == SortNone {
 		q.Del(c.ByParam())
 		q.Del(c.DirParam())
@@ -118,8 +102,10 @@ func (c SortContext) HrefFor(basePath string, column string, first SortDir) stri
 		q.Set(c.DirParam(), string(dir))
 	}
 	q.Del("page")
-	u.RawQuery = q.Encode()
-	return u.String()
+	if encoded := q.Encode(); encoded != "" {
+		return c.BasePath + "?" + encoded
+	}
+	return c.BasePath
 }
 
 // ParseSortPrefixed extracts <prefix>sort_by and <prefix>sort_dir from query

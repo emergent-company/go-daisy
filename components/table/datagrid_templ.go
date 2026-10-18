@@ -17,12 +17,10 @@ import (
 
 // DataGridColumn defines a single column in a data grid.
 type DataGridColumn struct {
-	Key      string  // data key, used for sort param
-	Label    string  // header text
-	Sortable bool    // render a sort link; requires DataGridProps.Sort and PagePath/BaseURL
-	Width    string  // optional CSS width class (e.g. "w-32"), empty = auto
-	Class    string  // optional extra class on the header cell (e.g. "text-right")
-	FirstDir SortDir // direction used on the first click; defaults to asc
+	Key      string // data key, used for sort param
+	Label    string // header text
+	Sortable bool   // show sort chevron
+	Width    string // optional CSS width class (e.g. "w-32"), empty = auto
 }
 
 // BatchAction defines a batch operation shown in the selection toolbar.
@@ -50,7 +48,7 @@ type DataGridProps struct {
 	TotalPages  int
 	TotalItems  int
 	PageSize    int
-	BaseURL     string // base URL for sort/filter/page links; handlers return the body fragment
+	BaseURL     string // base URL for sort/filter/page links
 
 	// Toolbar
 	SearchName        string          // query param name for search, empty = no search
@@ -69,14 +67,6 @@ type DataGridProps struct {
 	Compact  bool
 	Class    string
 	Attrs    templ.Attributes
-
-	// Server-side sorting
-	Sort SortContext // request sort state; BasePath is the fallback page URL
-	// PagePath is the full page URL used by href and hx-push-url. Set it when
-	// the grid is rendered from a fragment endpoint (for example "/" while
-	// BaseURL is "/datagrid"), otherwise the second sort click pushes the
-	// fragment URL. Empty falls back to Sort.BasePath.
-	PagePath string
 }
 
 // DataGrid renders a composite card-wrapped table with search, filter,
@@ -114,7 +104,7 @@ func DataGrid(props DataGridProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue("datagrid-" + props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 78, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 68, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -195,7 +185,7 @@ func DataGrid(props DataGridProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.SearchName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 98, Col: 31}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 88, Col: 31}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
@@ -208,7 +198,7 @@ func DataGrid(props DataGridProps) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.SearchValue)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 99, Col: 33}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 89, Col: 33}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 			if templ_7745c5c3_Err != nil {
@@ -221,7 +211,7 @@ func DataGrid(props DataGridProps) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(ternary(props.SearchPlaceholder != "", props.SearchPlaceholder, "Search..."))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 100, Col: 98}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 90, Col: 98}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 			if templ_7745c5c3_Err != nil {
@@ -239,7 +229,7 @@ func DataGrid(props DataGridProps) templ.Component {
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.BaseURL)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 103, Col: 31}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 93, Col: 31}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 				if templ_7745c5c3_Err != nil {
@@ -252,7 +242,7 @@ func DataGrid(props DataGridProps) templ.Component {
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue("#datagrid-" + props.ID + "-body")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 104, Col: 54}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 94, Col: 54}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 				if templ_7745c5c3_Err != nil {
@@ -309,7 +299,7 @@ func DataGrid(props DataGridProps) templ.Component {
 				var templ_7745c5c3_Var14 templ.SafeURL
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinURLErrs(action.Href)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 122, Col: 28}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 112, Col: 28}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 				if templ_7745c5c3_Err != nil {
@@ -322,7 +312,7 @@ func DataGrid(props DataGridProps) templ.Component {
 				var templ_7745c5c3_Var15 string
 				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue("selected.length === 0 ? $event.preventDefault() : submitBatchAction($event, " + strconv.Quote(action.Confirm) + ")")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 124, Col: 138}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 114, Col: 138}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
 				if templ_7745c5c3_Err != nil {
@@ -335,7 +325,7 @@ func DataGrid(props DataGridProps) templ.Component {
 				var templ_7745c5c3_Var16 string
 				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.RowIDField)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 128, Col: 32}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 118, Col: 32}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
 				if templ_7745c5c3_Err != nil {
@@ -360,7 +350,7 @@ func DataGrid(props DataGridProps) templ.Component {
 					var templ_7745c5c3_Var18 string
 					templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(action.Label)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 137, Col: 23}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 127, Col: 23}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 					if templ_7745c5c3_Err != nil {
@@ -394,7 +384,7 @@ func DataGrid(props DataGridProps) templ.Component {
 		var templ_7745c5c3_Var19 string
 		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.ResolveAttributeValue("datagrid-" + props.ID + "-body")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 147, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 137, Col: 71}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var19)
 		if templ_7745c5c3_Err != nil {
@@ -441,60 +431,46 @@ func DataGrid(props DataGridProps) templ.Component {
 					}
 					ctx = templ.InitializeContext(ctx)
 					if props.Selectable {
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<th scope=\"col\" class=\"w-10\"><input type=\"checkbox\" class=\"checkbox checkbox-sm\" aria-label=\"Select all rows\" x-model=\"selectAll\" x-on:change=\"toggleAll()\"></th>")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<th class=\"w-10\"><input type=\"checkbox\" class=\"checkbox checkbox-sm\" x-model=\"selectAll\" x-on:change=\"toggleAll()\"></th>")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
 					}
 					for _, col := range props.Columns {
-						if col.Sortable && col.Key != "" {
-							templ_7745c5c3_Err = SortableTableHeader(SortableTableHeaderProps{
-								Label:     col.Label,
-								Column:    col.Key,
-								Sort:      props.sortContext(),
-								FirstDir:  col.FirstDir,
-								Class:     "text-xs font-semibold text-muted uppercase " + col.Width + " " + col.Class,
-								LinkAttrs: props.sortLinkAttrs(col),
-							}).Render(ctx, templ_7745c5c3_Buffer)
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-						} else {
-							var templ_7745c5c3_Var23 = []any{"text-xs font-semibold text-muted uppercase", col.Width, col.Class}
-							templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var23...)
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<th scope=\"col\" class=\"")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							var templ_7745c5c3_Var24 string
-							templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var23).String())
-							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 1, Col: 0}
-							}
-							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var24)
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "\">")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							var templ_7745c5c3_Var25 string
-							templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(col.Label)
-							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 179, Col: 21}
-							}
-							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
-							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</th>")
-							if templ_7745c5c3_Err != nil {
-								return templ_7745c5c3_Err
-							}
+						var templ_7745c5c3_Var23 = []any{"text-xs font-semibold text-muted uppercase", col.Width}
+						templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var23...)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<th class=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var24 string
+						templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var23).String())
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 1, Col: 0}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var24)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "\">")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var25 string
+						templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(col.Label)
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 158, Col: 20}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</th>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
 						}
 					}
 					return nil
@@ -564,7 +540,7 @@ func DataGrid(props DataGridProps) templ.Component {
 									var templ_7745c5c3_Var29 string
 									templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.ResolveAttributeValue(row.ID)
 									if templ_7745c5c3_Err != nil {
-										return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 196, Col: 26}
+										return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 174, Col: 26}
 									}
 									_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var29)
 									if templ_7745c5c3_Err != nil {

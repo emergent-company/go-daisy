@@ -19,7 +19,7 @@
 # Known limitations (robustness gaps, not current bugs — see docs/DEPRECATED.md
 # "Guard limitations"): the marker→declaration heuristic is line-based. None of
 # these shapes exist in the tree today (all live markers are `// Deprecated:`
-# on their own line, directly above a top-level
+# on their own line within 30 lines above a top-level
 # `templ`/`func`/`type`/`const` declaration). Environmental failures now fail
 # closed and coverage is self-checked (see #60), so a broken scan can no longer
 # report "in sync" having parsed nothing.

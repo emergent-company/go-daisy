@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"io"
 	"math"
-	"net/url"
-	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -130,7 +128,6 @@ func buildGridProps(c echo.Context) table.DataGridProps {
 	if pageSize < 1 {
 		pageSize = 5
 	}
-	sortCtx := table.NewSortContext(c.Request(), "", "", table.SortNone)
 
 	usersMu.RLock()
 	defer usersMu.RUnlock()
@@ -152,27 +149,6 @@ func buildGridProps(c echo.Context) table.DataGridProps {
 		}
 		filtered = append(filtered, u)
 	}
-
-	sort.SliceStable(filtered, func(i, j int) bool {
-		var a, b string
-		switch sortCtx.Params.By {
-		case "name":
-			a, b = filtered[i].Name, filtered[j].Name
-		case "email":
-			a, b = filtered[i].Email, filtered[j].Email
-		case "role":
-			a, b = filtered[i].Role, filtered[j].Role
-		case "status":
-			a, b = filtered[i].Status, filtered[j].Status
-		default:
-			return false
-		}
-		a, b = strings.ToLower(a), strings.ToLower(b)
-		if sortCtx.Params.Dir == table.SortDesc {
-			return a > b
-		}
-		return a < b
-	})
 
 	totalItems := len(filtered)
 	totalPages := int(math.Ceil(float64(totalItems) / float64(pageSize)))
@@ -220,19 +196,15 @@ func buildGridProps(c echo.Context) table.DataGridProps {
 	}
 
 	// Build base URL for pagination/search
-	q := url.Values{}
+	qp := []string{}
 	if search != "" {
-		q.Set("search", search)
+		qp = append(qp, "search="+search)
 	}
 	if role != "" {
-		q.Set("role", role)
+		qp = append(qp, "role="+role)
 	}
-	q.Set("pageSize", strconv.Itoa(pageSize))
-	if sortCtx.Params.By != "" {
-		q.Set("sort_by", sortCtx.Params.By)
-		q.Set("sort_dir", string(sortCtx.Params.Dir))
-	}
-	baseURL := "/datagrid?" + q.Encode()
+	qp = append(qp, "pageSize="+strconv.Itoa(pageSize))
+	baseURL := "/datagrid?" + strings.Join(qp, "&")
 
 	// Role filter dropdown
 	roleFilter := roleFilterComponent(baseURL)
@@ -240,10 +212,10 @@ func buildGridProps(c echo.Context) table.DataGridProps {
 	return table.DataGridProps{
 		ID: "users",
 		Columns: []table.DataGridColumn{
-			{Key: "name", Label: "Name", Sortable: true, FirstDir: table.SortAsc},
-			{Key: "email", Label: "Email", Sortable: true, FirstDir: table.SortAsc},
-			{Key: "role", Label: "Role", Sortable: true, FirstDir: table.SortAsc},
-			{Key: "status", Label: "Status", Sortable: true, FirstDir: table.SortAsc},
+			{Key: "name", Label: "Name", Sortable: false},
+			{Key: "email", Label: "Email", Sortable: false},
+			{Key: "role", Label: "Role", Sortable: false},
+			{Key: "status", Label: "Status", Sortable: false},
 			{Key: "actions", Label: "", Sortable: false, Width: "w-20"},
 		},
 		Rows:              rows,
@@ -252,8 +224,6 @@ func buildGridProps(c echo.Context) table.DataGridProps {
 		TotalItems:        totalItems,
 		PageSize:          pageSize,
 		BaseURL:           baseURL,
-		PagePath:          "/",
-		Sort:              sortCtx,
 		SearchName:        "search",
 		SearchValue:       search,
 		SearchPlaceholder: "Search users...",

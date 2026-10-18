@@ -133,29 +133,3 @@ func TestSortableTableHeaderLinkAttrs(t *testing.T) {
 		t.Fatalf("missing escaped hx-get: %s", got)
 	}
 }
-
-func TestDataGridRendersSortableHeader(t *testing.T) {
-	var buf bytes.Buffer
-	err := DataGrid(DataGridProps{
-		ID:      "items",
-		BaseURL: "/items-fragment",
-		Columns: []DataGridColumn{
-			{Key: "name", Label: "Name", Sortable: true},
-			{Key: "state", Label: "State"},
-		},
-		Sort: SortContext{BasePath: "/items", Query: url.Values{}},
-	}).Render(context.Background(), &buf)
-	if err != nil {
-		t.Fatalf("render: %v", err)
-	}
-	got := buf.String()
-	if !strings.Contains(got, `hx-target="#datagrid-items-body"`) {
-		t.Fatalf("sortable DataGrid column missing body target: %s", got)
-	}
-	if !strings.Contains(got, `sort_by=name`) {
-		t.Fatalf("sortable DataGrid column missing sort link: %s", got)
-	}
-	if strings.Contains(got, `sort_by=state`) {
-		t.Fatalf("non-sortable DataGrid column must not have a sort link: %s", got)
-	}
-}

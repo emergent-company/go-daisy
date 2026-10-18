@@ -169,19 +169,6 @@ func TestSortContextHrefPrefixed(t *testing.T) {
 	}
 }
 
-func TestSortContextHrefForMergesBaseQuery(t *testing.T) {
-	sc := SortContext{
-		Params:   SortParams{By: "name", Dir: SortAsc},
-		BasePath: "/",
-		Query:    url.Values{"ignored": {"1"}},
-	}
-	got := sc.HrefFor("/datagrid?role=admin&page=2&pageSize=10", "name", SortAsc)
-	want := "/datagrid?ignored=1&pageSize=10&role=admin&sort_by=name&sort_dir=desc"
-	if got != want {
-		t.Fatalf("HrefFor = %q, want %q", got, want)
-	}
-}
-
 func TestSortContextHrefWithoutBasePath(t *testing.T) {
 	sc := SortContext{Query: url.Values{}}
 	if got := sc.Href("name", SortAsc); got != "" {
