@@ -1742,3 +1742,58 @@ func MenubarWithBoundary() templ.Component {
 	inner := shared.RenderInto(Menubar(MenubarProps{}), shared.Compose(file, edit, view))
 	return devmode.ComponentBoundary("Menubar", inner, MenubarProps{})
 }
+
+// navigationMenuLink renders a NavigationMenuLink with plain text content.
+func navigationMenuLink(label string, href string, active bool) templ.Component {
+	return shared.RenderInto(
+		NavigationMenuLink(NavigationMenuLinkProps{Href: href, Active: active}),
+		shared.StrComp(label),
+	)
+}
+
+// navigationMenuLinkDescribed renders a NavigationMenuLink with a title line and
+// a muted description underneath.
+func navigationMenuLinkDescribed(label string, description string, href string) templ.Component {
+	return shared.RenderInto(
+		NavigationMenuLink(NavigationMenuLinkProps{Href: href}),
+		shared.Compose(
+			shared.StrComp(label),
+			shared.RenderInto(NavigationMenuDescription(NavigationMenuDescriptionProps{}), shared.StrComp(description)),
+		),
+	)
+}
+
+// navigationMenuItem renders a NavigationMenuItem built from a trigger label and
+// the panel content.
+func navigationMenuItem(id string, trigger string, content templ.Component) templ.Component {
+	return shared.RenderInto(NavigationMenuItem(NavigationMenuItemProps{ID: id}), shared.Compose(
+		shared.RenderInto(NavigationMenuTrigger(NavigationMenuTriggerProps{}), shared.StrComp(trigger)),
+		shared.RenderInto(NavigationMenuContent(NavigationMenuContentProps{}), content),
+	))
+}
+
+// NavigationMenuWithBoundary wraps NavigationMenu with a dev-mode component
+// boundary annotation. Zero-arg: the composition is fixed, so the gallery story
+// needs no parameters.
+func NavigationMenuWithBoundary() templ.Component {
+	products := navigationMenuItem("nav-products", "Products", shared.Compose(
+		navigationMenuLinkDescribed("Analytics", "Dashboards and reports for every team.", "/products/analytics"),
+		navigationMenuLinkDescribed("Automation", "Run recurring work without a queue of scripts.", "/products/automation"),
+		navigationMenuLink("Integrations", "/products/integrations", false),
+		navigationMenuLink("Pricing", "/pricing", false),
+	))
+	solutions := navigationMenuItem("nav-solutions", "Solutions", shared.Compose(
+		navigationMenuLink("For startups", "/solutions/startups", false),
+		navigationMenuLink("For enterprise", "/solutions/enterprise", true),
+		navigationMenuLink("For agencies", "/solutions/agencies", false),
+	))
+	docs := navigationMenuItem("nav-docs", "Docs", shared.Compose(
+		navigationMenuLink("Getting started", "/docs/start", false),
+		navigationMenuLink("Component reference", "/docs/components", false),
+	))
+	inner := shared.RenderInto(
+		NavigationMenu(NavigationMenuProps{Class: "min-h-64"}),
+		shared.RenderInto(NavigationMenuList(NavigationMenuListProps{}), shared.Compose(products, solutions, docs)),
+	)
+	return devmode.ComponentBoundary("NavigationMenu", inner, NavigationMenuProps{})
+}

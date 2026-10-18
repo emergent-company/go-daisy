@@ -2150,6 +2150,41 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 
+		// ── Navigation / NavigationMenu ──────────────────────────────────────
+		{
+			Slug:        "navigation-menu",
+			Name:        "Navigation Menu",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Navigation",
+			Description: "A site navigation bar of disclosure panels. Triggers are plain buttons with aria-expanded/aria-controls (no menu roles), panels hold ordinary links, Escape restores focus, and panels render visible in flow when JavaScript is off.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Products, Solutions and Docs with a shared panel style.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.NavigationMenuWithBoundary()
+					},
+					FrameHeight: "300px",
+				},
+				{
+					Name:        "With descriptions",
+					Description: "Panel links with a muted description line.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return navigationMenuDescriptionsDemo()
+					},
+					FrameHeight: "300px",
+				},
+				{
+					Name:        "Active item",
+					Description: "A link marked with aria-current and an active background.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return navigationMenuActiveDemo()
+					},
+					FrameHeight: "300px",
+				},
+			},
+		},
+
 		// ── Navigation / Menubar ─────────────────────────────────────────────
 		{
 			Slug:        "menubar",
@@ -2360,4 +2395,58 @@ func menubarDisabledDemo() templ.Component {
 		menubarItemLabel("Remove", "", true, false),
 	))
 	return shared.RenderInto(ui.Menubar(ui.MenubarProps{}), shared.Compose(view))
+}
+
+// navigationMenuDemoLink renders a panel link with plain text.
+func navigationMenuDemoLink(label string, href string, active bool) templ.Component {
+	return shared.RenderInto(
+		ui.NavigationMenuLink(ui.NavigationMenuLinkProps{Href: href, Active: active}),
+		shared.StrComp(label),
+	)
+}
+
+// navigationMenuDemoLinkDescribed renders a panel link with a description line.
+func navigationMenuDemoLinkDescribed(label string, description string, href string) templ.Component {
+	return shared.RenderInto(
+		ui.NavigationMenuLink(ui.NavigationMenuLinkProps{Href: href}),
+		shared.Compose(
+			shared.StrComp(label),
+			shared.RenderInto(ui.NavigationMenuDescription(ui.NavigationMenuDescriptionProps{}), shared.StrComp(description)),
+		),
+	)
+}
+
+// navigationMenuDemoItem renders one disclosure item: trigger plus panel.
+func navigationMenuDemoItem(id string, trigger string, content templ.Component) templ.Component {
+	return shared.RenderInto(ui.NavigationMenuItem(ui.NavigationMenuItemProps{ID: id}), shared.Compose(
+		shared.RenderInto(ui.NavigationMenuTrigger(ui.NavigationMenuTriggerProps{}), shared.StrComp(trigger)),
+		shared.RenderInto(ui.NavigationMenuContent(ui.NavigationMenuContentProps{}), content),
+	))
+}
+
+// navigationMenuDemoRoot composes items into a list inside a nav.
+func navigationMenuDemoRoot(items ...templ.Component) templ.Component {
+	return shared.RenderInto(
+		ui.NavigationMenu(ui.NavigationMenuProps{Class: "min-h-56"}),
+		shared.RenderInto(ui.NavigationMenuList(ui.NavigationMenuListProps{}), shared.Compose(items...)),
+	)
+}
+
+// navigationMenuDescriptionsDemo shows described links in one panel.
+func navigationMenuDescriptionsDemo() templ.Component {
+	products := navigationMenuDemoItem("nav-menu-desc", "Products", shared.Compose(
+		navigationMenuDemoLinkDescribed("Analytics", "Every dashboard and report in one place.", "/products/analytics"),
+		navigationMenuDemoLinkDescribed("Automation", "Schedule recurring work without scripts.", "/products/automation"),
+	))
+	return navigationMenuDemoRoot(products)
+}
+
+// navigationMenuActiveDemo shows the aria-current treatment for the current page.
+func navigationMenuActiveDemo() templ.Component {
+	docs := navigationMenuDemoItem("nav-menu-active", "Docs", shared.Compose(
+		navigationMenuDemoLink("Getting started", "/docs/start", false),
+		navigationMenuDemoLink("Component reference", "/docs/components", true),
+		navigationMenuDemoLink("Changelog", "/docs/changelog", false),
+	))
+	return navigationMenuDemoRoot(docs)
 }
