@@ -7,17 +7,45 @@ import (
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
+// StatCardLayout selects StatCard's visual arrangement.
+type StatCardLayout string
+
+const (
+	// StatCardLayoutInline places a tinted icon tile beside the value and puts
+	// the label underneath it. Zero value, so existing callers are unchanged.
+	StatCardLayoutInline StatCardLayout = ""
+	// StatCardLayoutMetric puts an uppercase label and a bare icon on a top
+	// row, with the value and an optional helper line beneath it.
+	StatCardLayoutMetric StatCardLayout = "metric"
+)
+
 // StatCardProps configures a summary stat widget.
 type StatCardProps struct {
-	Label     string           // short descriptor, e.g. "Active Sessions"
-	Value     string           // e.g. "12"
-	Icon      string           // Lucide icon suffix, e.g. "lucide--briefcase"
-	IconColor string           // Tailwind classes for icon container, e.g. "bg-primary/10 text-primary"
-	Attrs     templ.Attributes // optional extra HTML attributes, e.g. {"data-testid": "stat-sessions"}
+	Label string // short descriptor, e.g. "Active Sessions"
+	Value string // e.g. "12"
+	Icon  string // Lucide icon suffix, e.g. "lucide--briefcase"
+	// IconColor is the Tailwind colour for the icon, e.g. "text-primary".
+	// The inline layout also uses any bg-* class here to tint the icon tile;
+	// the metric layout applies the classes to the bare icon.
+	IconColor string
+	// Layout selects the arrangement. Zero value is StatCardLayoutInline.
+	Layout StatCardLayout
+	// Helper is a muted supporting line under the value. Metric layout only.
+	Helper string
+	Attrs  templ.Attributes // optional extra HTML attributes, e.g. {"data-testid": "stat-sessions"}
 }
 
 // StatCard renders a compact summary widget: icon + big number + label.
+// Set Layout to StatCardLayoutMetric for the label/icon header and helper line.
 templ StatCard(p StatCardProps) {
+	if p.Layout == StatCardLayoutMetric {
+		@statCardMetric(p)
+	} else {
+		@statCardInline(p)
+	}
+}
+
+templ statCardInline(p StatCardProps) {
 	@CardRaw(CardRawProps{Class: "shadow-sm h-full", BodyClass: "p-4 flex flex-row items-center gap-3 h-full", Attrs: p.Attrs}) {
 		<div class={ "rounded-xl p-2.5 shrink-0 flex items-center justify-center", p.IconColor }>
 			@IconSpan(p.Icon, "size-5")
@@ -26,6 +54,23 @@ templ StatCard(p StatCardProps) {
 			<p class="text-xl font-bold text-base-content leading-none">{ p.Value }</p>
 			<p class="text-xs text-muted mt-1 whitespace-nowrap">{ p.Label }</p>
 		</div>
+	}
+}
+
+// statCardMetric renders the label-and-icon header layout: uppercase label,
+// bare icon, then the value and an optional helper line.
+templ statCardMetric(p StatCardProps) {
+	@CardRaw(CardRawProps{Class: "shadow-sm h-full", BodyClass: "gap-1 p-4 h-full", Attrs: p.Attrs}) {
+		<div class="flex items-center justify-between gap-2">
+			<span class="min-w-0 eyebrow text-xs">{ p.Label }</span>
+			if p.Icon != "" {
+				@IconSpan(p.Icon, "size-4 shrink-0", p.IconColor)
+			}
+		</div>
+		<div class="mt-1 text-2xl font-semibold text-base-content tabular-nums">{ p.Value }</div>
+		if p.Helper != "" {
+			<div class="text-xs break-words text-subtle">{ p.Helper }</div>
+		}
 	}
 }
 
