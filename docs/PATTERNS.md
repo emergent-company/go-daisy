@@ -190,6 +190,8 @@ templ AlpineFoo(props FooProps) {
 - Inner toggled element: `x-show="open"` + `alpine.Transition()` + `style="display:none"`.
 - `x-trap="open"` for modals with focus trapping.
 - `@click.outside="open = false"` on the content panel (not the outer wrapper).
+- **`x-data` must declare every identifier the markup reads or assigns.** Alpine evaluates `x-show`, `x-model` and `x-bind:*` during init, so a property missing from the state object is a hard `ReferenceError` — the binding silently never works. `alpine.Toggle` only provides `open`; a component that tracks something else (`picked`, `show`, `tab`, …) needs a state constructor that declares it (`alpine.PaletteState`, `alpine.TabState`, …).
+- **`x-bind:*` values are JavaScript expressions, never literal data.** To emit a static attribute (`name`, `id`, `href`) use the plain Templ attribute — `x-bind:name={ props.ID }` compiles `demo-palette` as `demo - palette` and throws `demo is not defined`.
 
 ---
 

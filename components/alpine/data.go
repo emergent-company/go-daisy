@@ -92,6 +92,21 @@ func FormState() State {
 	return formState{}
 }
 
+// paletteState is the x-data state for color swatch pickers.
+// Picked holds the current selection ("red-500", "#rrggbb", "white",
+// "transparent" or "" for none); the palette's hidden input mirrors it.
+type paletteState struct {
+	Picked string `json:"picked"`
+}
+
+// PaletteState returns an x-data state for a color swatch picker, seeded with
+// the given selection ("" for none). The palette markup assigns to `picked` from
+// its click handlers and binds it with x-model, so the property must exist in
+// x-data — without it Alpine throws "picked is not defined" on init.
+func PaletteState(picked string) State {
+	return paletteState{Picked: picked}
+}
+
 // modalState is the x-data state for modals with built-in scroll lock.
 type modalState struct {
 	Open bool `json:"open"`
