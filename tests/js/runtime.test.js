@@ -52,7 +52,7 @@ const TOGGLE_GROUP = `
   <button type="button" data-gd-toggle-value="right" aria-pressed="false">Right</button>
 </div>`;
 
-const JS_FILES = ['go-daisy-a11y.js', 'go-daisy-context-menu.js', 'go-daisy-resizable.js', 'go-daisy-toggle.js', 'go-daisy-messagescroller.js'];
+const JS_FILES = ['go-daisy-a11y.js', 'go-daisy-context-menu.js', 'go-daisy-resizable.js', 'go-daisy-toggle.js', 'go-daisy-messagescroller.js', 'go-daisy-alert-dialog.js'];
 
 const MESSAGE_SCROLLER = `
 <div data-gd-messagescroller id="scroller">
@@ -649,4 +649,82 @@ test('command palette: Escape still closes a palette opened without a trap', () 
   press(window, doc.body, 'Escape');
 
   assert.equal(toggle.checked, false, 'document-level Escape fallback still dismisses');
+});
+
+const ALERT_DIALOG = `
+<button type="button" data-gd-alert-dialog-open="alert" id="trigger" class="btn">Delete account</button>
+<dialog id="alert" data-gd-alert-dialog aria-labelledby="alert-title" aria-describedby="alert-desc" class="modal">
+  <form method="dialog" data-slot="alert-dialog-content" class="modal-box">
+    <div data-slot="alert-dialog-header" class="flex flex-col gap-1">
+      <h2 id="alert-title" class="text-lg font-semibold">Delete account</h2>
+      <p id="alert-desc" class="text-sm text-muted">This cannot be undone.</p>
+    </div>
+    <div data-slot="alert-dialog-footer" class="modal-action">
+      <button type="submit" value="cancel" id="cancel" class="btn">Cancel</button>
+      <button type="submit" value="confirm" id="confirm" class="btn btn-error">Delete</button>
+    </div>
+    <button type="button" data-gd-alert-dialog-close id="closebtn" class="btn">Close</button>
+  </form>
+</dialog>`;
+
+function alertDialogIsOpen(dialog) {
+  return dialog.open === true || dialog.getAttribute('open') !== null;
+}
+
+function alertDialogIsClosed(dialog) {
+  return dialog.open !== true && dialog.getAttribute('open') === null;
+}
+
+test('alert-dialog: trigger opens the dialog (showModal or open-attribute fallback)', () => {
+  const { window } = setup(ALERT_DIALOG);
+  const doc = window.document;
+  const dialog = doc.getElementById('alert');
+  const trigger = doc.getElementById('trigger');
+
+  const hasShowModal = typeof dialog.showModal === 'function';
+  let showModalCalls = 0;
+  if (hasShowModal) {
+    const original = dialog.showModal.bind(dialog);
+    dialog.showModal = function () { showModalCalls++; return original(); };
+  }
+
+  trigger.click();
+
+  assert.ok(alertDialogIsOpen(dialog), 'dialog must be open after the trigger click');
+  if (hasShowModal) {
+    assert.equal(showModalCalls, 1, 'showModal must be called once when supported');
+  } else {
+    assert.ok(dialog.classList.contains('modal-open'), 'fallback must add the modal-open class');
+  }
+});
+
+test('alert-dialog: data-gd-alert-dialog-close closes the dialog', () => {
+  const { window } = setup(ALERT_DIALOG);
+  const doc = window.document;
+  const dialog = doc.getElementById('alert');
+  const trigger = doc.getElementById('trigger');
+  const closeBtn = doc.getElementById('closebtn');
+
+  trigger.click();
+  assert.ok(alertDialogIsOpen(dialog), 'dialog must be open before closing');
+
+  closeBtn.click();
+
+  assert.ok(alertDialogIsClosed(dialog), 'close button must close the dialog');
+  assert.ok(!dialog.classList.contains('modal-open'), 'fallback close must remove modal-open');
+});
+
+test('alert-dialog: close event triggers gd-alert-dialog-close with returnValue', () => {
+  const { window } = setup(ALERT_DIALOG);
+  const doc = window.document;
+  const dialog = doc.getElementById('alert');
+
+  let closedDetail = null;
+  dialog.addEventListener('gd-alert-dialog-close', (e) => { closedDetail = e.detail; });
+
+  dialog.returnValue = 'confirm';
+  dialog.dispatchEvent(new window.Event('close', { bubbles: false }));
+
+  assert.ok(closedDetail, 'gd-alert-dialog-close must fire on the native close event');
+  assert.equal(closedDetail.value, 'confirm', 'detail.value must carry the returnValue');
 });
