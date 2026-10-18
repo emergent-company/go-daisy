@@ -1,4 +1,6 @@
-node_modules/
+# No trailing slash: worktrees symlink node_modules to the main checkout's
+# directory, and a "dir-only" pattern does not match a symlink.
+node_modules
 gallery_bin
 tmp/
 
