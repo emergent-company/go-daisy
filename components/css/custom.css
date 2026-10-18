@@ -71,6 +71,56 @@
   --color-line-translucent: color-mix(in oklab, var(--color-base-content) 10%, transparent);
 }
 
+/* ── House edge — the ladder's colour at the theme's border width ──────────
+ *
+ * `edge-line` / `edge-line-strong` draw the house outline on all four sides of
+ * a surface root (card, banner, panel): the width comes from the theme's
+ * `--border` token, the colour from a line-ladder step.
+ *
+ * They exist because the two halves come from different places. A ladder step
+ * (`border-line`) names only a colour, so it is always paired with a width
+ * utility — and Tailwind's `border` utility hard-codes `border-width: 1px`.
+ * daisyUI's `.card-border`, which `ui.Card` used before the ladder, took the
+ * width from the token instead:
+ *
+ *     .card-border { border: var(--border) solid var(--color-base-200) }
+ *     @media (prefers-contrast: more) { :root { --border: 2px } }
+ *
+ * Rendering `border border-line` therefore matched the colour but not the
+ * width: every consumer that migrated off `card-border` quietly stopped
+ * thickening its outlines for high-contrast users (issue #79). Nothing fails
+ * visibly at normal contrast, so only a measurement catches it.
+ *
+ * Declared as plain component CSS rather than a Tailwind `@utility`, for two
+ * reasons:
+ *
+ *   1. It is always emitted. A generated utility only exists when a scanner
+ *      sees the class name — and go-daisy's class names live in Go strings and
+ *      .templ files that a consumer's own Tailwind build does not scan. A
+ *      consumer compiling this file into their bundle would silently get no
+ *      rule at all.
+ *   2. It sits in `components`, below `utilities`, so a caller can still
+ *      override it with an ordinary utility (`border-0`, `border-2`,
+ *      `border-line-strong`) through `props.Class` or attrs — the same override
+ *      path the previous `border border-line` class list offered.
+ *
+ * The `1px` fallback matters: without it, a theme that does not define
+ * `--border` makes the shorthand invalid at computed-value time and the surface
+ * renders with NO outline at all. With it, every theme degrades to the old 1px.
+ *
+ * Width applies to surface outlines only. Internal rules (dividers, separators,
+ * `border-b border-line`) stay on the fixed `border` utility on purpose: daisyUI
+ * gave the token width to card outlines, not to every hairline in a layout. */
+@layer components {
+  .edge-line {
+    border: var(--border, 1px) solid var(--color-line);
+  }
+
+  .edge-line-strong {
+    border: var(--border, 1px) solid var(--color-line-strong);
+  }
+}
+
 /* ── Layout: Sidebar ─────────────────────────────────────────── */
 
 :root {

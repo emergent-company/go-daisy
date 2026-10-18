@@ -58,7 +58,8 @@ class={ templ.KV(custom, custom != ""), templ.KV("default-class", custom == "") 
 
 **Borders always come from the line ladder** (`border-line`, `border-line-strong`,
 `border-line-translucent`) — never `border-base-300` /
-`border-base-content/N`. See §12.
+`border-base-content/N`. Surface outlines draw that colour at the theme's border
+width with `edge-line` / `edge-line-strong`. See §12.
 
 ---
 
@@ -240,9 +241,9 @@ used to compete for the same visual role.
 
 ```templ
 // Right — card outline, divider, popover edge
-class="card bg-base-100 border border-line shadow-sm"
+class="card bg-base-100 edge-line shadow-sm"
 class="px-4 py-3 border-b border-line"
-class="dropdown-content bg-base-100 border border-line rounded-box shadow-lg"
+class="dropdown-content bg-base-100 edge-line rounded-box shadow-lg"
 
 // Right — control outline, separator bar, hairline on a tinted fill
 class="input input-sm w-full border-line-strong"
@@ -254,12 +255,46 @@ class="card bg-base-100 border border-base-300"
 class="rounded-box border border-base-content/10"
 ```
 
+### Width comes from the theme
+
+A ladder step names a *colour* and never a width, so it is always paired with
+one. On a **surface outline** — card, banner, menu panel, accordion item — that
+width is the theme's `--border` token, which daisyUI raises to `2px` under
+`prefers-contrast: more`. Use `edge-line` / `edge-line-strong` there: one class
+that sets width, style and colour together.
+
+```templ
+// Right — 1px normally, 2px for a high-contrast user
+class="card bg-base-100 edge-line shadow-sm"
+class="card bg-base-100 edge-line-strong"
+
+// Wrong — Tailwind's `border` utility pins border-width to 1px, so the outline
+// never thickens. This is exactly what `.card-border` used to get right.
+class="card bg-base-100 border border-line"
+```
+
+`edge-line` is declared in the `components` layer of `components/css/custom.css`,
+below `utilities`, so a caller can still override it (`border-0`, `border-2`,
+`border-line-strong`) through `props.Class` or attrs — the same override path the
+old `border border-line` pair offered. It falls back to `1px` for a theme that
+does not define `--border`, and daisyUI's `forced-colors: active` rule on `.card`
+still wins over it (unlayered, so forced-colors keeps `1px solid ButtonText`).
+
+It is hand-written component CSS rather than a Tailwind `@utility` on purpose: a
+generated utility only exists where a scanner sees the class name, and go-daisy's
+class names live in Go strings and `.templ` files a consumer's own Tailwind build
+does not scan.
+
 Rules that follow:
 
 - **Nothing quieter than `border-line` is a token.** Use Tailwind's opacity
   modifier (`border-line/50`) instead — a sub-visible step would be a phantom.
 - **Directional forms exist**: `border-t-line`, `border-b-line`, `border-e-line`,
   `border-s-line`, and `divide-line` / `divide-line-strong` for row separators.
+- **Surface outline vs internal rule.** `edge-line*` for the outline of a surface
+  that sits on the page; `border border-line` for rules *inside* one. Only the
+  former follows `--border` — daisyUI gave the token width to card outlines, not
+  to every hairline in a layout.
 - **Let the theme own the hue.** The steps derive from `--color-base-200`,
   `--color-base-300` and `--color-base-content`, so every theme (nord, dracula,
   flow) keeps its own colour — never hard-code an `oklch()` border.
