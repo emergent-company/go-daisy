@@ -3,7 +3,9 @@
  *
  * Contract:
  *   [data-gd-alert-dialog-open]     button(s) that open the dialog by id
- *   [data-gd-alert-dialog-close]    button(s) that close their enclosing dialog
+ *   [data-gd-alert-dialog-close]    closes the enclosing dialog; the templ parts
+ *                                   close natively via method="dialog", so this
+ *                                   attribute is for caller-supplied controls
  *   dialog[data-gd-alert-dialog]    the <dialog> element itself
  *
  * Built on the native <dialog> element: showModal() provides the top layer,

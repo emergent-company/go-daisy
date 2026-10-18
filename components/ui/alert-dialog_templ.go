@@ -794,7 +794,9 @@ func AlertDialogCancel(props AlertDialogCancelProps) templ.Component {
 // ("confirm") becomes the dialog's returnValue when the form closes it natively.
 // The Variant controls the visual style (e.g. ButtonPrimary, ButtonError).
 // Callers add hx-post/hx-delete through Attrs when the action should hit the
-// server.
+// server. Note that htmx prevents the native dialog submit, so the dialog stays
+// open until the response closes it (return a gd-alert-dialog-close trigger or
+// call dialog.close() from the response script).
 func AlertDialogAction(props AlertDialogActionProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
