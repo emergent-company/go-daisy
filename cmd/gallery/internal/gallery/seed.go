@@ -4760,6 +4760,18 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						},
 					},
 				},
+				{
+					Name:        "Metric layout",
+					Description: "Label and bare icon on the top row, value and helper line beneath it.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.StatCardsWithBoundary([]ui.StatCardProps{
+							{Label: "Hosts", Value: "32", Icon: "lucide--server", IconColor: "text-primary", Layout: ui.StatCardLayoutMetric, Helper: "28 reporting · 0 down"},
+							{Label: "Total RAM", Value: "128 GB", Icon: "lucide--memory-stick", IconColor: "text-primary", Layout: ui.StatCardLayoutMetric, Helper: "76% allocated"},
+							{Label: "Disk", Value: "412 GB", Icon: "lucide--hard-drive", IconColor: "text-primary", Layout: ui.StatCardLayoutMetric, Helper: "58% used"},
+							{Label: "Alerts", Value: "0", Icon: "lucide--bell", IconColor: "text-success", Layout: ui.StatCardLayoutMetric, Helper: "nothing firing"},
+						})
+					},
+				},
 			},
 		},
 
