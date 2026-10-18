@@ -16,8 +16,8 @@ type SortParams struct {
 // ParseSort extracts sort_by and sort_dir from query params.
 // Defaults to defaultBy and defaultDir when params are absent.
 //
-// ParseSort is the legacy alias for ParseSortPrefixed with an empty prefix, so
-// the two parsers cannot drift.
+// ParseSort is the unprefixed alias for ParseSortPrefixed, so the two parsers
+// cannot drift.
 func ParseSort(q url.Values, defaultBy string, defaultDir SortDir) SortParams {
 	return ParseSortPrefixed(q, "", defaultBy, defaultDir)
 }

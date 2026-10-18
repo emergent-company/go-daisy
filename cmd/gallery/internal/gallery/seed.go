@@ -6735,7 +6735,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Click a column to sort. The direction cycles first -> opposite -> none. The demo re-renders from query parameters, so the URL is bookmarkable.",
 					RenderFunc: func(params url.Values) templ.Component {
 						sc := table.SortContext{
-							Params:   table.ParseSort(params, "", table.SortNone),
+							Params:   table.ParseSortPrefixed(params, "", "", table.SortNone),
 							BasePath: "/gallery/render/sortable-table-header/interactive",
 							Query:    params,
 						}

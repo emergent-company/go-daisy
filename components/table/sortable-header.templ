@@ -50,6 +50,7 @@ templ SortableTableHeader(props SortableTableHeaderProps) {
 templ sortableHeaderLink(props SortableTableHeaderProps, href string) {
 	<a
 		href={ templ.URL(href) }
+		aria-label={ "Sort by " + props.Label }
 		class="inline-flex items-center gap-1 rounded-sm hover:text-base-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 		{ props.LinkAttrs... }
 	>

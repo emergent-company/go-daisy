@@ -42,6 +42,9 @@ func TestSortableTableHeaderRendersActiveAscending(t *testing.T) {
 	if !strings.Contains(got, `lucide--chevron-up`) {
 		t.Fatalf("missing active asc icon: %s", got)
 	}
+	if !strings.Contains(got, `aria-label="Sort by CPU"`) {
+		t.Fatalf("missing sort aria-label: %s", got)
+	}
 }
 
 func TestSortableTableHeaderRendersActiveDescending(t *testing.T) {

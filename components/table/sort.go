@@ -11,7 +11,7 @@ import (
 // use a distinct Prefix for each table (for example "nodes_").
 type SortContext struct {
 	Params   SortParams
-	BasePath string     // request path without a query string
+	BasePath string     // escaped request path without a query string
 	Query    url.Values // full request query, including filters
 	Prefix   string     // optional query-parameter prefix, e.g. "nodes_"
 }
@@ -27,7 +27,7 @@ func NewSortContext(r *http.Request, prefix string, defaultBy string, defaultDir
 	q := r.URL.Query()
 	return SortContext{
 		Params:   ParseSortPrefixed(q, prefix, defaultBy, defaultDir),
-		BasePath: r.URL.Path,
+		BasePath: r.URL.EscapedPath(),
 		Query:    q,
 		Prefix:   prefix,
 	}

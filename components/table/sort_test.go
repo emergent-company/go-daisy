@@ -67,6 +67,13 @@ func TestParseSortMatchesPrefixed(t *testing.T) {
 	}
 }
 
+func TestParseSortNoParamsMeansNoSort(t *testing.T) {
+	got := ParseSort(url.Values{}, "", SortAsc)
+	if got.By != "" || got.Dir != SortNone {
+		t.Fatalf("expected no sort, got %#v", got)
+	}
+}
+
 func TestParseSortPrefixedEmptyByForcesNone(t *testing.T) {
 	q := url.Values{"sort_dir": {"desc"}}
 	got := ParseSortPrefixed(q, "", "", SortAsc)
@@ -165,6 +172,17 @@ func TestSortContextAriaSort(t *testing.T) {
 	sc.Params.Dir = SortNone
 	if got := sc.AriaSort("cpu"); got != "" {
 		t.Fatalf("AriaSort with SortNone = %q, want empty", got)
+	}
+}
+
+func TestNewSortContextUsesEscapedPath(t *testing.T) {
+	r := httptest.NewRequest("GET", "/reports/2024%2F05?sort_by=cpu&sort_dir=asc", nil)
+	sc := NewSortContext(r, "", "", SortNone)
+	if sc.BasePath != "/reports/2024%2F05" {
+		t.Fatalf("BasePath = %q", sc.BasePath)
+	}
+	if got := sc.Href("cpu", SortAsc); got != "/reports/2024%2F05?sort_by=cpu&sort_dir=desc" {
+		t.Fatalf("Href = %q", got)
 	}
 }
 

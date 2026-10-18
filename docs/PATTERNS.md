@@ -368,5 +368,7 @@ rows = sortRows(rows, sc.Params)
 - The handler is responsible for applying `SortParams` to the rows. Keep
   unknown metrics, empty text and zero times last in both directions.
 - Sorting clears the `page` query param. `DataGrid` sort links target
-  `#datagrid-<id>-body`; the handler must return that body-only fragment, the
-  same contract as search and pagination.
+  `#datagrid-<id>-body`; the handler must return the full table fragment for
+  that target (header included), the same contract as search and pagination.
+- `SortParams.By` is user-controlled. Validate it against a known column map in
+  the handler before applying it.

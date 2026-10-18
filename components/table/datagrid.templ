@@ -11,7 +11,7 @@ import (
 type DataGridColumn struct {
 	Key      string  // data key, used for sort param
 	Label    string  // header text
-	Sortable bool    // render a sort link
+	Sortable bool    // render a sort link; requires DataGridProps.Sort.BasePath
 	FirstDir SortDir // direction used on the first click; defaults to asc
 	Width    string  // optional CSS width class (e.g. "w-32"), empty = auto
 	Class    string  // optional extra class on the header cell (e.g. "text-right")
