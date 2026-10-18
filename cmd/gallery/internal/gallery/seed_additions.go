@@ -275,7 +275,6 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 					RenderFunc: func(_ url.Values) templ.Component {
 						return form.SelectShellWithBoundary(form.SelectShellProps{
 							ID: "demo-shell", Label: "Choose", Placeholder: "Select...",
-							ValueExpr: "picked",
 						})
 					},
 					FrameHeight: "200px",
