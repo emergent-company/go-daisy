@@ -91,6 +91,9 @@ templ ThemeScript() {
 				custom = raw ? JSON.parse(raw) : null;
 			} catch (e) { custom = null; }
 			var isCustom = mode === 'custom' && !!(custom && custom.vars && Object.keys(custom.vars).length);
+			// 'custom' selected but the theme is gone: resolve as the OS mode the
+			// gallery would fall back to, so first paint matches the switcher.
+			if (mode === 'custom' && !isCustom) { mode = 'system'; }
 
 			var effective = isCustom ? 'custom' : rt.effectiveMode(mode);
 			var theme = isCustom ? 'custom' : rt.resolve(mode, palette);
