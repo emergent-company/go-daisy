@@ -56,3 +56,38 @@ func TestCompiledCSSContainsEmptyNoteToneUtilities(t *testing.T) {
 		}
 	}
 }
+
+// TestCompiledCSSContainsHouseEdgeUtilities guards the card-outline contract
+// from #79 end-to-end. components/ui/card_test.go pins that the components
+// *emit* edge-line; this pins that the shipped stylesheet actually *defines* it
+// and still raises --border for `prefers-contrast: more`.
+//
+// Both halves are needed: `edge-line` is hand-written component CSS, so a
+// build that dropped the declaration (or a consumer bundle compiled without
+// components/css/custom.css) would leave every card with no outline at all,
+// while the class-string tests would stay green.
+func TestCompiledCSSContainsHouseEdgeUtilities(t *testing.T) {
+	css, err := fs.ReadFile(files, "static/css/app.css")
+	if err != nil {
+		t.Fatalf("read compiled css: %v", err)
+	}
+	src := string(css)
+
+	// The width must be read from --border (with the 1px fallback). A literal
+	// length here re-introduces the fixed-width defect.
+	for _, rule := range []string{
+		`.edge-line{border:var(--border,1px) solid var(--color-line)}`,
+		`.edge-line-strong{border:var(--border,1px) solid var(--color-line-strong)}`,
+	} {
+		if !strings.Contains(src, rule) {
+			t.Errorf("compiled css is missing the house edge rule %q — run `task build:ui`", rule)
+		}
+	}
+
+	// Without this override the token stays 1px and the rule above is inert for
+	// high-contrast users.
+	const highContrast = `@media (prefers-contrast:more){:root{--border:2px}}`
+	if !strings.Contains(src, highContrast) {
+		t.Errorf("compiled css is missing %q — the house edge could never thicken under prefers-contrast: more", highContrast)
+	}
+}

@@ -54,17 +54,23 @@ const (
 	CardElementLi CardElement = "li"
 )
 
-// CardBorder selects the card outline. The zero value renders the default
-// "border border-line"; CardBorderStrong uses the emphasised line-strong step
-// and CardBorderNone removes the outline. It is a CLOSED enum (unlike
+// CardBorder selects the card outline. The zero value renders the default house
+// edge "edge-line"; CardBorderStrong uses the emphasised line-strong step and
+// CardBorderNone removes the outline. It is a CLOSED enum (unlike
 // CardSurface): unknown values panic in devmode and fall back to the default
 // outline outside devmode.
+//
+// The outline width follows the theme's `--border` token (1px, 2px under
+// `prefers-contrast: more`), so a card keeps the high-contrast width that
+// daisyUI's `.card-border` provided. That is why the emitted class is
+// `edge-line` and not `border border-line`: Tailwind's `border` utility pins
+// the width to 1px (issue #79).
 type CardBorder string
 
 const (
-	// CardBorderLine is the zero-value default outline (border border-line).
+	// CardBorderLine is the zero-value default outline (edge-line).
 	CardBorderLine CardBorder = ""
-	// CardBorderStrong uses the emphasised line-strong step.
+	// CardBorderStrong uses the emphasised line-strong step (edge-line-strong).
 	CardBorderStrong CardBorder = "strong"
 	// CardBorderNone removes the outline entirely.
 	CardBorderNone CardBorder = "none"
@@ -76,14 +82,16 @@ type CardRawProps struct {
 	BodyClass string           // additional CSS classes on the card body
 	Surface   CardSurface      // zero = bg-base-100; a non-zero surface replaces it (open passthrough)
 	As        CardElement      // zero = <div>; unknown values panic in devmode, else fall back to <div>
-	Border    CardBorder       // zero = border border-line; CardBorderNone removes it; unknown panics in devmode
+	Border    CardBorder       // zero = edge-line; CardBorderNone removes it; unknown panics in devmode
 	Attrs     templ.Attributes // spread last on the card root
 }
 
 // CardRaw renders a bare DaisyUI card shell with configurable card and body CSS classes.
 // Use this when Card or CardCompact don't fit the layout (e.g. custom padding, flex body).
 // Surface selects the background (zero = bg-base-100), As selects the element
-// (zero = <div>), and Border selects the outline (zero = border border-line).
+// (zero = <div>), and Border selects the outline (zero = edge-line, whose width
+// comes from the theme's --border token so it thickens under
+// prefers-contrast: more).
 func CardRaw(props CardRawProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -507,6 +515,10 @@ func CardRaw(props CardRawProps) templ.Component {
 // attrs is optional; pass nil when not needed.
 // compact is an optional variadic param — when true, uses tighter padding (p-3 gap-2).
 // Backward-compatible: callers omitting compact default to false.
+//
+// The outline is the house edge (edge-line): its width comes from the theme's
+// --border token, so it thickens for prefers-contrast: more instead of staying
+// at Tailwind's fixed 1px `border` (issue #79).
 func Card(title string, attrs templ.Attributes, compact ...bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -532,7 +544,7 @@ func Card(title string, attrs templ.Attributes, compact ...bool) templ.Component
 		if len(compact) > 0 {
 			isCompact = compact[0]
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<div class=\"card bg-base-100 border border-line shadow-sm\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<div class=\"card bg-base-100 edge-line shadow-sm\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -578,7 +590,7 @@ func Card(title string, attrs templ.Attributes, compact ...bool) templ.Component
 			var templ_7745c5c3_Var29 string
 			templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 120, Col: 81}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 132, Col: 81}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 			if templ_7745c5c3_Err != nil {
@@ -638,7 +650,7 @@ func CardBodyText(text string) templ.Component {
 		var templ_7745c5c3_Var31 string
 		templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 129, Col: 92}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 141, Col: 92}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 		if templ_7745c5c3_Err != nil {
@@ -674,7 +686,7 @@ func CardPlaceholder(label string) templ.Component {
 			templ_7745c5c3_Var32 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<div class=\"card bg-base-100 border border-line w-32 h-16 flex items-center justify-center text-sm text-base-content/50\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<div class=\"card bg-base-100 edge-line w-32 h-16 flex items-center justify-center text-sm text-base-content/50\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -689,7 +701,7 @@ func CardPlaceholder(label string) templ.Component {
 		var templ_7745c5c3_Var33 string
 		templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 134, Col: 177}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 146, Col: 168}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
 		if templ_7745c5c3_Err != nil {
@@ -831,7 +843,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		if item.Icon != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"card bg-base-100 relative shadow-sm border border-line\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"card bg-base-100 relative shadow-sm edge-line\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -850,7 +862,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 			var templ_7745c5c3_Var37 string
 			templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(item.Value)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 206, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 218, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
 			if templ_7745c5c3_Err != nil {
@@ -863,7 +875,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 			var templ_7745c5c3_Var38 string
 			templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 207, Col: 73}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 219, Col: 73}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
 			if templ_7745c5c3_Err != nil {
@@ -890,7 +902,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 					var templ_7745c5c3_Var39 string
 					templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(item.ComparisonLabel)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 212, Col: 68}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 224, Col: 68}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
 					if templ_7745c5c3_Err != nil {
@@ -943,7 +955,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 				var templ_7745c5c3_Var41 string
 				templ_7745c5c3_Var41, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 227, Col: 91}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 239, Col: 91}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var41))
 				if templ_7745c5c3_Err != nil {
@@ -956,7 +968,7 @@ func StatCardMinimal(item StatCardMinimalItem) templ.Component {
 				var templ_7745c5c3_Var42 string
 				templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(item.Value)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 229, Col: 55}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/card.templ`, Line: 241, Col: 55}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
 				if templ_7745c5c3_Err != nil {

@@ -11,7 +11,7 @@ templ AccordionItem(title string, open bool) {
 		}
 		contentID := id + "-content"
 	}}
-	<div class="collapse collapse-arrow border border-line bg-base-100" { devmode.Attrs(ctx, "ui/AccordionItem")... }>
+	<div class="collapse collapse-arrow edge-line bg-base-100" { devmode.Attrs(ctx, "ui/AccordionItem")... }>
 		<input type="checkbox" id={ id } checked?={ open } aria-expanded={ ternary(open, "true", "false") } aria-controls={ contentID } />
 		<div class="collapse-title text-xl font-medium">
 			<label for={ id }>{ title }</label>

@@ -16,7 +16,8 @@ type SectionProps struct {
 	// or "mb-8" (list pages). Default "" (no margin).
 	Margin string
 	// CardClass is the card wrapper's class. Default "" (CardRaw provides its
-	// own border, so callers no longer need to add a card-border class).
+	// own outline — the house edge, so callers no longer need to add a
+	// card-border class).
 	CardClass string
 	// BodyClass is the card body's padding class, e.g. "p-0" (lists) or "p-5"
 	// (forms). Default "".
@@ -206,7 +207,7 @@ func Section(title string, props SectionProps) templ.Component {
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/section.templ`, Line: 96, Col: 65}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/section.templ`, Line: 97, Col: 65}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {

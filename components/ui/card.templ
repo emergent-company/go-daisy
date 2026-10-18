@@ -46,17 +46,23 @@ const (
 	CardElementLi CardElement = "li"
 )
 
-// CardBorder selects the card outline. The zero value renders the default
-// "border border-line"; CardBorderStrong uses the emphasised line-strong step
-// and CardBorderNone removes the outline. It is a CLOSED enum (unlike
+// CardBorder selects the card outline. The zero value renders the default house
+// edge "edge-line"; CardBorderStrong uses the emphasised line-strong step and
+// CardBorderNone removes the outline. It is a CLOSED enum (unlike
 // CardSurface): unknown values panic in devmode and fall back to the default
 // outline outside devmode.
+//
+// The outline width follows the theme's `--border` token (1px, 2px under
+// `prefers-contrast: more`), so a card keeps the high-contrast width that
+// daisyUI's `.card-border` provided. That is why the emitted class is
+// `edge-line` and not `border border-line`: Tailwind's `border` utility pins
+// the width to 1px (issue #79).
 type CardBorder string
 
 const (
-	// CardBorderLine is the zero-value default outline (border border-line).
+	// CardBorderLine is the zero-value default outline (edge-line).
 	CardBorderLine CardBorder = ""
-	// CardBorderStrong uses the emphasised line-strong step.
+	// CardBorderStrong uses the emphasised line-strong step (edge-line-strong).
 	CardBorderStrong CardBorder = "strong"
 	// CardBorderNone removes the outline entirely.
 	CardBorderNone CardBorder = "none"
@@ -68,14 +74,16 @@ type CardRawProps struct {
 	BodyClass  string           // additional CSS classes on the card body
 	Surface    CardSurface      // zero = bg-base-100; a non-zero surface replaces it (open passthrough)
 	As         CardElement      // zero = <div>; unknown values panic in devmode, else fall back to <div>
-	Border     CardBorder       // zero = border border-line; CardBorderNone removes it; unknown panics in devmode
+	Border     CardBorder       // zero = edge-line; CardBorderNone removes it; unknown panics in devmode
 	Attrs      templ.Attributes // spread last on the card root
 }
 
 // CardRaw renders a bare DaisyUI card shell with configurable card and body CSS classes.
 // Use this when Card or CardCompact don't fit the layout (e.g. custom padding, flex body).
 // Surface selects the background (zero = bg-base-100), As selects the element
-// (zero = <div>), and Border selects the outline (zero = border border-line).
+// (zero = <div>), and Border selects the outline (zero = edge-line, whose width
+// comes from the theme's --border token so it thickens under
+// prefers-contrast: more).
 templ CardRaw(props CardRawProps) {
 	{{ as := cardElement(props.As, ctx)
 	surface := cardSurfaceClass(props.Surface)
@@ -111,10 +119,14 @@ templ CardRaw(props CardRawProps) {
 // attrs is optional; pass nil when not needed.
 // compact is an optional variadic param — when true, uses tighter padding (p-3 gap-2).
 // Backward-compatible: callers omitting compact default to false.
+//
+// The outline is the house edge (edge-line): its width comes from the theme's
+// --border token, so it thickens for prefers-contrast: more instead of staying
+// at Tailwind's fixed 1px `border` (issue #79).
 templ Card(title string, attrs templ.Attributes, compact ...bool) {
 	{{ isCompact := false
 	if len(compact) > 0 { isCompact = compact[0] } }}
-	<div class="card bg-base-100 border border-line shadow-sm" { devmode.Attrs(ctx, "ui/Card")... } { attrs... }>
+	<div class="card bg-base-100 edge-line shadow-sm" { devmode.Attrs(ctx, "ui/Card")... } { attrs... }>
 		<div class={ "card-body", templ.KV("p-4", !isCompact), templ.KV("p-3 gap-2", isCompact) }>
 			if title != "" {
 				<h2 class="card-title text-base font-semibold text-base-content mb-3">{ title }</h2>
@@ -131,7 +143,7 @@ templ CardBodyText(text string) {
 
 // CardPlaceholder renders a small labelled card placeholder for examples and gallery stories.
 templ CardPlaceholder(label string) {
-	<div class="card bg-base-100 border border-line w-32 h-16 flex items-center justify-center text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/CardPlaceholder")... }>{ label }</div>
+	<div class="card bg-base-100 edge-line w-32 h-16 flex items-center justify-center text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/CardPlaceholder")... }>{ label }</div>
 }
 
 // CardCompact renders a compact DaisyUI card with tighter padding.
@@ -201,7 +213,7 @@ type StatCardMinimalItem struct {
 // floating icon badge and a soft trend pill; otherwise as the minimal layout.
 templ StatCardMinimal(item StatCardMinimalItem) {
 	if item.Icon != "" {
-		<div class="card bg-base-100 relative shadow-sm border border-line" { devmode.Attrs(ctx, "ui/StatCardMinimal")... } { item.Attrs... }>
+		<div class="card bg-base-100 relative shadow-sm edge-line" { devmode.Attrs(ctx, "ui/StatCardMinimal")... } { item.Attrs... }>
 			<div class="card-body gap-2">
 				<p class="text-2xl/none font-semibold">{ item.Value }</p>
 				<p class="text-base-content/60 mt-1 text-sm font-medium">{ item.Label }</p>

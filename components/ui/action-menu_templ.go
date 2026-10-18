@@ -115,7 +115,7 @@ func ActionMenu(items []ActionMenuItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, " role=\"menu\" class=\"dropdown-content menu bg-base-100 rounded-box shadow-lg border border-line z-50 w-max min-w-44 max-w-[calc(100vw-2rem)] p-1 mt-1\" style=\"display:none\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, " role=\"menu\" class=\"dropdown-content menu bg-base-100 rounded-box shadow-lg edge-line z-50 w-max min-w-44 max-w-[calc(100vw-2rem)] p-1 mt-1\" style=\"display:none\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
