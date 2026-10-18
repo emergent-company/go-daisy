@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"sort"
 	"strings"
 	"time"
 
@@ -6716,6 +6717,88 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								)
 							},
 						},
+					},
+				},
+			},
+		},
+
+		// table.SortableTableHeader
+		{
+			Slug:        "sortable-table-header",
+			Name:        "Sortable Table Header",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Tables",
+			Description: "Accessible server-side column sorting for a table. SortableTableHeader renders a real link, preserves existing query filters, and sets aria-sort on the active column.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Click a column to sort. The direction cycles first -> opposite -> none. The demo re-renders from query parameters, so the URL is bookmarkable.",
+					RenderFunc: func(params url.Values) templ.Component {
+						sc := table.SortContext{
+							Params:   table.ParseSortPrefixed(params, "", "", table.SortNone),
+							BasePath: "/gallery/render/sortable-table-header/interactive",
+							Query:    params,
+						}
+						type rowData struct {
+							Name   string
+							Score  int
+							Status string
+						}
+						rows := []rowData{
+							{"Alice Johnson", 92, "active"},
+							{"Bob Martinez", 74, "pending"},
+							{"Carol White", 88, "active"},
+							{"David Kim", 61, "closed"},
+						}
+						sort.SliceStable(rows, func(i, j int) bool {
+							desc := sc.Params.Dir == table.SortDesc
+							switch sc.Params.By {
+							case "name":
+								if desc {
+									return strings.ToLower(rows[i].Name) > strings.ToLower(rows[j].Name)
+								}
+								return strings.ToLower(rows[i].Name) < strings.ToLower(rows[j].Name)
+							case "score":
+								if desc {
+									return rows[i].Score > rows[j].Score
+								}
+								return rows[i].Score < rows[j].Score
+							case "status":
+								if desc {
+									return rows[i].Status > rows[j].Status
+								}
+								return rows[i].Status < rows[j].Status
+							default:
+								return false
+							}
+						})
+
+						headClass := "text-xs font-semibold text-muted uppercase"
+						rowComponents := make([]templ.Component, len(rows))
+						for i, r := range rows {
+							rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
+								withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
+								withChildren(table.TableCellWithBoundary("text-right tabular-nums"), rawHTML(fmt.Sprintf("%d", r.Score))),
+								withChildren(table.TableCellWithBoundary(""), ui.StatusBadgeWithBoundary(r.Status)),
+							))
+						}
+						return withChildren(
+							table.TableWithPropsWithBoundary(table.TableProps{}),
+							seq(
+								withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+									table.SortableTableHeaderWithBoundary(table.SortableTableHeaderProps{
+										Label: "Name", Column: "name", Sort: sc, FirstDir: table.SortAsc, Class: headClass,
+									}),
+									table.SortableTableHeaderWithBoundary(table.SortableTableHeaderProps{
+										Label: "Score", Column: "score", Sort: sc, FirstDir: table.SortDesc, Class: headClass + " text-right",
+									}),
+									table.SortableTableHeaderWithBoundary(table.SortableTableHeaderProps{
+										Label: "Status", Column: "status", Sort: sc, FirstDir: table.SortAsc, Class: headClass,
+									}),
+								))),
+								withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
+							),
+						)
 					},
 				},
 			},
