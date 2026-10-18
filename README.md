@@ -267,6 +267,22 @@ task gallery
 
 The gallery is also importable as a package (`galleryruntime`) for embedding a component showcase in any project.
 
+### Theme studio
+
+`/gallery/theme-studio` is a DaisyUI theme generator. It reads the active
+theme's custom properties, edits them on a scoped preview board, reports WCAG
+contrast for every content pair, and can:
+
+- **Apply to gallery** — writes the theme to `localStorage` under
+  `gallery-custom-theme` and selects it as `gallery-ui-theme=custom`. The
+  gallery shell and every preview iframe inject a scoped
+  `[data-theme="custom"]` rule, so no CSS rebuild is needed.
+- **Export** a `@plugin "daisyui/theme"` block for `assets/app.css`.
+- **Share** a link (base64 payload in the URL fragment) or import an existing
+  theme block.
+
+The studio is client-side only and never writes to the repository.
+
 ---
 
 ## Building
