@@ -280,14 +280,14 @@ func ChatBubble(props ChatBubbleProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if props.Timestamp != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<div class=\"chat-footer text-xs text-muted mt-0.5 opacity-50\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<div class=\"chat-footer text-faint mt-0.5 text-xs\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(props.Timestamp)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 63, Col: 82}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chat.templ`, Line: 63, Col: 71}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {

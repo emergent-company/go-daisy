@@ -10,29 +10,14 @@ import (
 templ NexusShell(content templ.Component, activeSlug string) {
 	@layout.PageFull(layout.PageProps{Title: "Nexus - Admin Dashboard", ThemeAttr: "", BodyEnd: FeedbackOverlay()}) {
 		<style>
-		#_layout-sidebar { width: var(--layout-sidebar-width); min-width: var(--layout-sidebar-width); max-height: 100vh; position: relative; top: 0; bottom: 0; display: flex; flex-direction: column; transition: margin .3s; }
-		#_layout-sidebar-toggle-trigger:checked~#_layout-sidebar { margin-inline-start: calc(var(--layout-sidebar-width) * -1); }
-		@media(max-width:1024px){#_layout-sidebar{position:fixed;z-index:500}#_layout-sidebar-toggle-trigger:not(:checked)~#_layout-sidebar{margin-inline-start:calc(var(--layout-sidebar-width)*-1)}#_layout-sidebar-toggle-trigger:checked~#_layout-sidebar{margin-inline-start:0}#_layout-sidebar-toggle-trigger:checked~#_layout-sidebar-backdrop{background:color-mix(in oklab, var(--color-base-content) 5%, transparent);position:fixed;inset:0;z-index:499}}
-		#_layout-topbar { position: sticky; top: 0; z-index: 50; max-height: 64px; min-height: 64px; border-bottom: 1px solid var(--color-base-200); background-color: var(--color-base-100); }
 		#sidebar-menu { margin-bottom: 16px; width: 100%; height: 100%; padding: 0 8px; display: flex; flex-direction: column; gap: 2px; }
-		#_layout-sidebar { border-right: 1px solid var(--color-base-200); }
-		#main-content { padding: 24px; }
 		</style>
-		<div class="flex h-screen overflow-hidden" { devmode.Attrs(ctx, "shell/NexusShell")... }>
-			<input type="checkbox" id="_layout-sidebar-toggle-trigger" class="hidden" aria-label="Toggle layout sidebar"/>
-			<label for="_layout-sidebar-toggle-trigger" id="_layout-sidebar-backdrop"></label>
-
-			@nexusSidebar(activeSlug)
-
-			<div class="flex min-w-0 grow flex-col overflow-auto">
-				@nexusTopbar()
-				<div id="layout-content">
-					@content
-				</div>
-			</div>
-		</div>
-
-		@nexusRightbar()
+		@layout.AdminShell(layout.AdminShellProps{
+			Sidebar:  nexusSidebar(activeSlug),
+			Topbar:   nexusTopbar(),
+			Rightbar: nexusRightbar(),
+			Content:  content,
+		})
 	}
 }
 
@@ -171,50 +156,47 @@ templ nexusSidebar(activeSlug string) {
 }
 
 templ nexusTopbar() {
-	<div role="navigation" aria-label="Navbar" id="_layout-topbar" class="flex items-center justify-between px-3" style="background-color: var(--color-base-100)" { devmode.Attrs(ctx, "shell/nexusTopbar")... }>
-		<div class="inline-flex items-center gap-3">
-			<label class="btn btn-square btn-ghost btn-sm" aria-label="Leftmenu toggle" for="_layout-sidebar-toggle-trigger">
-				@ui.IconSpan("lucide--menu", "size-5")
-			</label>
-			<button class="btn btn-outline btn-sm btn-ghost border-line-strong text-base-content/70 hidden h-9 w-48 justify-start gap-2 !text-sm md:flex" onclick="document.querySelector('#topbar-search-modal')?.showModal()">
-				<span class="iconify lucide--search size-4"></span>Search
-			</button>
-			<button class="btn btn-outline btn-sm btn-square btn-ghost border-line-strong text-base-content/70 flex size-9 md:hidden" aria-label="Search" onclick="document.querySelector('#topbar-search-modal')?.showModal()">
-				@ui.IconSpan("lucide--search", "size-4")
-			</button>
-		</div>
-		<div class="inline-flex items-center gap-1.5">
-			@ui.ThemeSwitcher()
-			<label for="layout-rightbar-drawer" class="btn btn-circle btn-ghost btn-sm drawer-button" aria-label="Settings">
-				@ui.IconSpan("lucide--settings-2", "size-4.5")
-			</label>
-			@nav.NotificationVariant("basic", nav.NotificationVariantOpts{Tabs: []nav.NotificationTab{
+	@layout.TopbarVariant("app", layout.TopbarVariantOpts{
+		ShowSearch:        true,
+		SearchDialogID:    "topbar-search-modal",
+		SearchPlaceholder: "Search",
+		ShowTheme:         true,
+		ShowSettings:      true,
+		SettingsDrawerID:  "layout-rightbar-drawer",
+		ExtraClass:        "bg-base-100",
+		Notifications: nav.NotificationVariant("basic", nav.NotificationVariantOpts{
+			Tabs: []nav.NotificationTab{
 				{Label: "All", Active: true, Badge: 12},
 				{Label: "Unread", Active: false, Badge: 5},
-			}, Items: nexusNotifications()})
-			<div class="dropdown dropdown-bottom dropdown-end">
-				<div tabindex="0" role="button" class="btn btn-ghost rounded-btn px-1.5">
-					<div class="flex items-center gap-2">
-					<div class="avatar"><img alt="Avatar" class="mask mask-squircle bg-base-200 w-8" src="/images/avatars/1.png"/></div>
-						<div class="-space-y-0.5 text-start"><p class="text-sm">Denish</p><p class="text-base-content/60 text-xs">Profile</p></div>
-					</div>
-				</div>
-				<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-4 w-44 shadow-lg border border-line z-50">
-					<ul class="menu w-full p-2">
-						<li><a href="/pages/settings">@ui.IconSpan("lucide--user", "size-4")  My Profile</a></li>
-						<li><a href="/pages/settings">@ui.IconSpan("lucide--settings", "size-4")  Settings</a></li>
-						<li><a href="/pages/get-help">@ui.IconSpan("lucide--help-circle", "size-4")  Help</a></li>
-					</ul>
-					<hr class="border-line-strong"/>
-					<ul class="menu w-full p-2">
-						<li><div>@ui.IconSpan("lucide--arrow-left-right", "size-4")  Switch Account</div></li>
-						<li><a class="text-error hover:bg-error/10" href="/auth/login">@ui.IconSpan("lucide--log-out", "size-4")  Logout</a></li>
-					</ul>
-				</div>
+			},
+			Items: nexusNotifications(),
+		}),
+		Profile: nexusProfileMenu(),
+	})
+	@nexusSearchModal()
+}
+
+templ nexusProfileMenu() {
+	<div class="dropdown dropdown-bottom dropdown-end" { devmode.Attrs(ctx, "shell/nexusProfileMenu")... }>
+		<div tabindex="0" role="button" class="btn btn-ghost rounded-btn px-1.5">
+			<div class="flex items-center gap-2">
+				<div class="avatar"><img alt="Avatar" class="mask mask-squircle bg-base-200 w-8" src="/images/avatars/1.png"/></div>
+				<div class="-space-y-0.5 text-start"><p class="text-sm">Denish</p><p class="text-base-content/60 text-xs">Profile</p></div>
 			</div>
 		</div>
+		<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-4 w-44 shadow-lg border border-line z-50">
+			<ul class="menu w-full p-2">
+				<li><a href="/pages/settings">@ui.IconSpan("lucide--user", "size-4")  My Profile</a></li>
+				<li><a href="/pages/settings">@ui.IconSpan("lucide--settings", "size-4")  Settings</a></li>
+				<li><a href="/pages/get-help">@ui.IconSpan("lucide--help-circle", "size-4")  Help</a></li>
+			</ul>
+			<hr class="border-line-strong"/>
+			<ul class="menu w-full p-2">
+				<li><div>@ui.IconSpan("lucide--arrow-left-right", "size-4")  Switch Account</div></li>
+				<li><a class="text-error hover:bg-error/10" href="/auth/login">@ui.IconSpan("lucide--log-out", "size-4")  Logout</a></li>
+			</ul>
+		</div>
 	</div>
-	@nexusSearchModal()
 }
 
 templ nexusSearchModal() {

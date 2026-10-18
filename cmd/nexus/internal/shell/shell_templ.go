@@ -48,43 +48,16 @@ func NexusShell(content templ.Component, activeSlug string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n\t\t#_layout-sidebar { width: var(--layout-sidebar-width); min-width: var(--layout-sidebar-width); max-height: 100vh; position: relative; top: 0; bottom: 0; display: flex; flex-direction: column; transition: margin .3s; }\n\t\t#_layout-sidebar-toggle-trigger:checked~#_layout-sidebar { margin-inline-start: calc(var(--layout-sidebar-width) * -1); }\n\t\t@media(max-width:1024px){#_layout-sidebar{position:fixed;z-index:500}#_layout-sidebar-toggle-trigger:not(:checked)~#_layout-sidebar{margin-inline-start:calc(var(--layout-sidebar-width)*-1)}#_layout-sidebar-toggle-trigger:checked~#_layout-sidebar{margin-inline-start:0}#_layout-sidebar-toggle-trigger:checked~#_layout-sidebar-backdrop{background:color-mix(in oklab, var(--color-base-content) 5%, transparent);position:fixed;inset:0;z-index:499}}\n\t\t#_layout-topbar { position: sticky; top: 0; z-index: 50; max-height: 64px; min-height: 64px; border-bottom: 1px solid var(--color-base-200); background-color: var(--color-base-100); }\n\t\t#sidebar-menu { margin-bottom: 16px; width: 100%; height: 100%; padding: 0 8px; display: flex; flex-direction: column; gap: 2px; }\n\t\t#_layout-sidebar { border-right: 1px solid var(--color-base-200); }\n\t\t#main-content { padding: 24px; }\n\t\t</style> <div class=\"flex h-screen overflow-hidden\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n\t\t#sidebar-menu { margin-bottom: 16px; width: 100%; height: 100%; padding: 0 8px; display: flex; flex-direction: column; gap: 2px; }\n\t\t</style> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "shell/NexusShell"))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "><input type=\"checkbox\" id=\"_layout-sidebar-toggle-trigger\" class=\"hidden\" aria-label=\"Toggle layout sidebar\"> <label for=\"_layout-sidebar-toggle-trigger\" id=\"_layout-sidebar-backdrop\"></label>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = nexusSidebar(activeSlug).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"flex min-w-0 grow flex-col overflow-auto\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = nexusTopbar().Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div id=\"layout-content\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = content.Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div></div></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = nexusRightbar().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = layout.AdminShell(layout.AdminShellProps{
+				Sidebar:  nexusSidebar(activeSlug),
+				Topbar:   nexusTopbar(),
+				Rightbar: nexusRightbar(),
+				Content:  content,
+			}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -119,7 +92,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div id=\"_layout-sidebar\" class=\"flex flex-col bg-base-100\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div id=\"_layout-sidebar\" class=\"flex flex-col bg-base-100\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -127,7 +100,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "><div class=\"flex min-h-16 items-center justify-center\"><img id=\"logo-dark\" alt=\"Nexus\" class=\"h-5.5\" src=\"/images/logo/logo-dark.png\" style=\"display:none\"> <img id=\"logo-light\" alt=\"Nexus\" class=\"h-5.5\" src=\"/images/logo/logo-light.png\"></div><div class=\"relative min-h-0 grow\"><div class=\"size-full\"><div id=\"sidebar-menu\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "><div class=\"flex min-h-16 items-center justify-center\"><img id=\"logo-dark\" alt=\"Nexus\" class=\"h-5.5\" src=\"/images/logo/logo-dark.png\" style=\"display:none\"> <img id=\"logo-light\" alt=\"Nexus\" class=\"h-5.5\" src=\"/images/logo/logo-light.png\"></div><div class=\"relative min-h-0 grow\"><div class=\"size-full\"><div id=\"sidebar-menu\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -260,7 +233,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<a class=\"sidebar-menu-item\" href=\"https://google.com\" target=\"_blank\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<a class=\"sidebar-menu-item\" href=\"https://google.com\" target=\"_blank\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -268,7 +241,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "External Links</a> <a class=\"sidebar-menu-item\" href=\"#\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "External Links</a> <a class=\"sidebar-menu-item\" href=\"#\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -276,7 +249,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "Label<div class=\"bg-secondary text-secondary-content rounded-box px-1.5 text-[12px] leading-normal ml-auto\">+8</div></a> <a class=\"sidebar-menu-item\" href=\"https://nexus.daisyui.com/docs\" target=\"_blank\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "Label<div class=\"bg-secondary text-secondary-content rounded-box px-1.5 text-[12px] leading-normal ml-auto\">+8</div></a> <a class=\"sidebar-menu-item\" href=\"https://nexus.daisyui.com/docs\" target=\"_blank\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -284,20 +257,20 @@ func nexusSidebar(activeSlug string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "Documentation</a></div></div><div class=\"pointer-events-none absolute start-0 end-0 bottom-0 h-7 bg-gradient-to-t from-base-100/60 to-transparent\"></div></div><div class=\"mb-2\"><hr class=\"border-line-strong\"><ul class=\"menu w-full\"><li><a href=\"/pages/settings\" class=\"flex items-center gap-2\"><span class=\"iconify lucide--settings-2 size-4\"></span>Settings<div class=\"border-primary/20 bg-primary/5 text-primary rounded-box ms-auto border px-1 text-[11px]\">New</div></a></li><li><a href=\"/pages/get-help\" class=\"flex items-center gap-2\"><span class=\"iconify lucide--circle-help size-4\"></span>Get Help<div class=\"border-primary/20 bg-primary/5 text-primary rounded-box ms-auto border px-1 text-[11px]\">New</div></a></li></ul><div class=\"dropdown dropdown-top dropdown-end w-full\"><div tabindex=\"0\" role=\"button\" class=\"bg-base-200 hover:bg-base-300 rounded-box mx-2 mt-0 flex cursor-pointer items-center gap-2.5 px-3 py-2 transition-all\"><div class=\"avatar\"><div class=\"mask mask-squircle bg-base-200 w-8\"><img src=\"/images/avatars/1.png\" alt=\"Avatar\"></div></div><div class=\"grow -space-y-0.5\"><p class=\"text-sm font-medium\">Denish N</p><p class=\"text-base-content/60 text-xs\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "Documentation</a></div></div><div class=\"pointer-events-none absolute start-0 end-0 bottom-0 h-7 bg-gradient-to-t from-base-100/60 to-transparent\"></div></div><div class=\"mb-2\"><hr class=\"border-line-strong\"><ul class=\"menu w-full\"><li><a href=\"/pages/settings\" class=\"flex items-center gap-2\"><span class=\"iconify lucide--settings-2 size-4\"></span>Settings<div class=\"border-primary/20 bg-primary/5 text-primary rounded-box ms-auto border px-1 text-[11px]\">New</div></a></li><li><a href=\"/pages/get-help\" class=\"flex items-center gap-2\"><span class=\"iconify lucide--circle-help size-4\"></span>Get Help<div class=\"border-primary/20 bg-primary/5 text-primary rounded-box ms-auto border px-1 text-[11px]\">New</div></a></li></ul><div class=\"dropdown dropdown-top dropdown-end w-full\"><div tabindex=\"0\" role=\"button\" class=\"bg-base-200 hover:bg-base-300 rounded-box mx-2 mt-0 flex cursor-pointer items-center gap-2.5 px-3 py-2 transition-all\"><div class=\"avatar\"><div class=\"mask mask-squircle bg-base-200 w-8\"><img src=\"/images/avatars/1.png\" alt=\"Avatar\"></div></div><div class=\"grow -space-y-0.5\"><p class=\"text-sm font-medium\">Denish N</p><p class=\"text-base-content/60 text-xs\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("@withden")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/shell/shell.templ`, Line: 158, Col: 131}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/shell/shell.templ`, Line: 143, Col: 131}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</p></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</p></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -305,7 +278,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div><ul tabindex=\"0\" class=\"dropdown-content menu bg-base-100 rounded-box mb-1 w-48 p-1 shadow-lg border border-line z-50\"><li><a href=\"/pages/settings\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><ul tabindex=\"0\" class=\"dropdown-content menu bg-base-100 rounded-box mb-1 w-48 p-1 shadow-lg border border-line z-50\"><li><a href=\"/pages/settings\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -313,7 +286,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "My Profile</a></li><li><a href=\"/pages/settings\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "My Profile</a></li><li><a href=\"/pages/settings\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -321,7 +294,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "Settings</a></li><li><a href=\"/pages/get-help\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "Settings</a></li><li><a href=\"/pages/get-help\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -329,7 +302,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "Help</a></li><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "Help</a></li><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -337,7 +310,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "Notification</div></li><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "Notification</div></li><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -345,7 +318,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "Switch Account</div></li></ul></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "Switch Account</div></li></ul></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -374,58 +347,64 @@ func nexusTopbar() templ.Component {
 			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<div role=\"navigation\" aria-label=\"Navbar\" id=\"_layout-topbar\" class=\"flex items-center justify-between px-3\" style=\"background-color: var(--color-base-100)\"")
+		templ_7745c5c3_Err = layout.TopbarVariant("app", layout.TopbarVariantOpts{
+			ShowSearch:        true,
+			SearchDialogID:    "topbar-search-modal",
+			SearchPlaceholder: "Search",
+			ShowTheme:         true,
+			ShowSettings:      true,
+			SettingsDrawerID:  "layout-rightbar-drawer",
+			ExtraClass:        "bg-base-100",
+			Notifications: nav.NotificationVariant("basic", nav.NotificationVariantOpts{
+				Tabs: []nav.NotificationTab{
+					{Label: "All", Active: true, Badge: 12},
+					{Label: "Unread", Active: false, Badge: 5},
+				},
+				Items: nexusNotifications(),
+			}),
+			Profile: nexusProfileMenu(),
+		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "shell/nexusTopbar"))
+		templ_7745c5c3_Err = nexusSearchModal().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "><div class=\"inline-flex items-center gap-3\"><label class=\"btn btn-square btn-ghost btn-sm\" aria-label=\"Leftmenu toggle\" for=\"_layout-sidebar-toggle-trigger\">")
+		return nil
+	})
+}
+
+func nexusProfileMenu() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var6 == nil {
+			templ_7745c5c3_Var6 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"dropdown dropdown-bottom dropdown-end\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "shell/nexusProfileMenu"))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</label> <button class=\"btn btn-outline btn-sm btn-ghost border-line-strong text-base-content/70 hidden h-9 w-48 justify-start gap-2 !text-sm md:flex\" onclick=\"document.querySelector('#topbar-search-modal')?.showModal()\"><span class=\"iconify lucide--search size-4\"></span>Search</button> <button class=\"btn btn-outline btn-sm btn-square btn-ghost border-line-strong text-base-content/70 flex size-9 md:hidden\" aria-label=\"Search\" onclick=\"document.querySelector('#topbar-search-modal')?.showModal()\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = ui.IconSpan("lucide--search", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</button></div><div class=\"inline-flex items-center gap-1.5\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = ui.ThemeSwitcher().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<label for=\"layout-rightbar-drawer\" class=\"btn btn-circle btn-ghost btn-sm drawer-button\" aria-label=\"Settings\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = ui.IconSpan("lucide--settings-2", "size-4.5").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</label>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = nav.NotificationVariant("basic", nav.NotificationVariantOpts{Tabs: []nav.NotificationTab{
-			{Label: "All", Active: true, Badge: 12},
-			{Label: "Unread", Active: false, Badge: 5},
-		}, Items: nexusNotifications()}).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<div class=\"dropdown dropdown-bottom dropdown-end\"><div tabindex=\"0\" role=\"button\" class=\"btn btn-ghost rounded-btn px-1.5\"><div class=\"flex items-center gap-2\"><div class=\"avatar\"><img alt=\"Avatar\" class=\"mask mask-squircle bg-base-200 w-8\" src=\"/images/avatars/1.png\"></div><div class=\"-space-y-0.5 text-start\"><p class=\"text-sm\">Denish</p><p class=\"text-base-content/60 text-xs\">Profile</p></div></div></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-4 w-44 shadow-lg border border-line z-50\"><ul class=\"menu w-full p-2\"><li><a href=\"/pages/settings\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "><div tabindex=\"0\" role=\"button\" class=\"btn btn-ghost rounded-btn px-1.5\"><div class=\"flex items-center gap-2\"><div class=\"avatar\"><img alt=\"Avatar\" class=\"mask mask-squircle bg-base-200 w-8\" src=\"/images/avatars/1.png\"></div><div class=\"-space-y-0.5 text-start\"><p class=\"text-sm\">Denish</p><p class=\"text-base-content/60 text-xs\">Profile</p></div></div></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-4 w-44 shadow-lg border border-line z-50\"><ul class=\"menu w-full p-2\"><li><a href=\"/pages/settings\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -433,7 +412,7 @@ func nexusTopbar() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "My Profile</a></li><li><a href=\"/pages/settings\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "My Profile</a></li><li><a href=\"/pages/settings\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -441,7 +420,7 @@ func nexusTopbar() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "Settings</a></li><li><a href=\"/pages/get-help\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "Settings</a></li><li><a href=\"/pages/get-help\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -449,7 +428,7 @@ func nexusTopbar() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "Help</a></li></ul><hr class=\"border-line-strong\"><ul class=\"menu w-full p-2\"><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "Help</a></li></ul><hr class=\"border-line-strong\"><ul class=\"menu w-full p-2\"><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -457,7 +436,7 @@ func nexusTopbar() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "Switch Account</div></li><li><a class=\"text-error hover:bg-error/10\" href=\"/auth/login\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "Switch Account</div></li><li><a class=\"text-error hover:bg-error/10\" href=\"/auth/login\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -465,11 +444,7 @@ func nexusTopbar() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "Logout</a></li></ul></div></div></div></div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = nexusSearchModal().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "Logout</a></li></ul></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -493,12 +468,12 @@ func nexusSearchModal() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var6 == nil {
-			templ_7745c5c3_Var6 = templ.NopComponent
+		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var7 == nil {
+			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<dialog id=\"topbar-search-modal\" class=\"modal p-0\"><div class=\"modal-box p-0\"><div class=\"input border-line-strong w-full rounded-none border-0 border-b focus:!outline-0\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<dialog id=\"topbar-search-modal\" class=\"modal p-0\"><div class=\"modal-box p-0\"><div class=\"input border-line-strong w-full rounded-none border-0 border-b focus:!outline-0\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -506,7 +481,7 @@ func nexusSearchModal() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<input type=\"search\" class=\"grow\" placeholder=\"Search\" aria-label=\"Search\"><form method=\"dialog\"><button class=\"btn btn-sm btn-circle btn-ghost\" aria-label=\"Close\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<input type=\"search\" class=\"grow\" placeholder=\"Search\" aria-label=\"Search\"><form method=\"dialog\"><button class=\"btn btn-sm btn-circle btn-ghost\" aria-label=\"Close\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -514,7 +489,7 @@ func nexusSearchModal() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</button></form></div><ul class=\"menu w-full pt-0\"><li class=\"menu-title\">Actions</li><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</button></form></div><ul class=\"menu w-full pt-0\"><li class=\"menu-title\">Actions</li><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -522,7 +497,7 @@ func nexusSearchModal() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<p class=\"grow text-sm\">Create a new folder</p></div></li><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<p class=\"grow text-sm\">Create a new folder</p></div></li><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -530,7 +505,7 @@ func nexusSearchModal() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<p class=\"grow text-sm\">Upload new document</p></div></li><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<p class=\"grow text-sm\">Upload new document</p></div></li><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -538,7 +513,7 @@ func nexusSearchModal() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<p class=\"grow text-sm\">Invite to project</p></div></li></ul><hr class=\"border-line-strong h-px\"><ul class=\"menu w-full pt-0\"><li class=\"menu-title\">Quick Links</li><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<p class=\"grow text-sm\">Invite to project</p></div></li></ul><hr class=\"border-line-strong h-px\"><ul class=\"menu w-full pt-0\"><li class=\"menu-title\">Quick Links</li><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -546,7 +521,7 @@ func nexusSearchModal() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<p class=\"grow text-sm\">File Manager</p></div></li><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<p class=\"grow text-sm\">File Manager</p></div></li><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -554,7 +529,7 @@ func nexusSearchModal() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<p class=\"grow text-sm\">Profile</p></div></li><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<p class=\"grow text-sm\">Profile</p></div></li><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -562,7 +537,7 @@ func nexusSearchModal() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<p class=\"grow text-sm\">Dashboard</p></div></li><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<p class=\"grow text-sm\">Dashboard</p></div></li><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -570,7 +545,7 @@ func nexusSearchModal() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "<p class=\"grow text-sm\">Support</p></div></li><li><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<p class=\"grow text-sm\">Support</p></div></li><li><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -578,7 +553,7 @@ func nexusSearchModal() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<p class=\"grow text-sm\">Keyboard Shortcuts</p></div></li></ul></div><form method=\"dialog\" class=\"modal-backdrop\"><button>close</button></form></dialog>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<p class=\"grow text-sm\">Keyboard Shortcuts</p></div></li></ul></div><form method=\"dialog\" class=\"modal-backdrop\"><button>close</button></form></dialog>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -602,12 +577,12 @@ func nexusRightbar() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var7 == nil {
-			templ_7745c5c3_Var7 = templ.NopComponent
+		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var8 == nil {
+			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"drawer drawer-end\"><input id=\"layout-rightbar-drawer\" type=\"checkbox\" class=\"drawer-toggle\"><div class=\"drawer-content\"></div><div class=\"drawer-side z-50\"><label for=\"layout-rightbar-drawer\" aria-label=\"close sidebar\" class=\"drawer-overlay\" aria-hidden=\"true\"></label><div class=\"bg-base-100 text-base-content h-full w-72 sm:w-96\"><div class=\"bg-base-200 flex justify-between px-5 py-4\"><p class=\"text-lg font-medium\">Customization</p><div class=\"inline-flex gap-1\"><button class=\"btn-ghost btn btn-sm btn-circle relative\" aria-label=\"Reset\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"drawer drawer-end\"><input id=\"layout-rightbar-drawer\" type=\"checkbox\" class=\"drawer-toggle\"><div class=\"drawer-content\"></div><div class=\"drawer-side z-50\"><label for=\"layout-rightbar-drawer\" aria-label=\"close sidebar\" class=\"drawer-overlay\" aria-hidden=\"true\"></label><div class=\"bg-base-100 text-base-content h-full w-72 sm:w-96\"><div class=\"bg-base-200 flex justify-between px-5 py-4\"><p class=\"text-lg font-medium\">Customization</p><div class=\"inline-flex gap-1\"><button class=\"btn-ghost btn btn-sm btn-circle relative\" aria-label=\"Reset\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -615,7 +590,7 @@ func nexusRightbar() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</button> <button class=\"btn btn-ghost btn-sm btn-circle\" aria-label=\"Full Screen\" onclick=\"document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</button> <button class=\"btn btn-ghost btn-sm btn-circle\" aria-label=\"Full Screen\" onclick=\"document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -623,7 +598,7 @@ func nexusRightbar() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "</button> <label for=\"layout-rightbar-drawer\" aria-label=\"close sidebar\" class=\"btn btn-ghost btn-sm btn-circle\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</button> <label for=\"layout-rightbar-drawer\" aria-label=\"close sidebar\" class=\"btn btn-ghost btn-sm btn-circle\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -631,7 +606,7 @@ func nexusRightbar() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</label></div></div><div class=\"p-5\"><p class=\"font-medium\">Theme</p><div class=\"mt-3 grid grid-cols-3 gap-3\"><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"nord\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">Light</p></div></div><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"contrast\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">Contrast</p></div></div><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"material\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">Material</p></div></div><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"dracula\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">Dark</p></div></div><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"flow\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">Flow</p></div></div><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"system\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">System</p></div></div></div><p class=\"mt-6 font-medium\">Sidebar</p><div class=\"mt-3 grid grid-cols-2 gap-3\"><div class=\"border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2\" onclick=\"document.getElementById('_layout-sidebar').dataset.theme='light'\"><span class=\"iconify lucide--sun size-4.5\"></span>Light</div><div class=\"border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2\" onclick=\"document.getElementById('_layout-sidebar').dataset.theme='dark'\"><span class=\"iconify lucide--moon size-4.5\"></span>Dark</div></div><p class=\"mt-6 font-medium\">Direction</p><div class=\"mt-3 grid grid-cols-2 gap-3\"><div class=\"border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2\" onclick=\"document.documentElement.dir='ltr'\"><span class=\"iconify lucide--pilcrow-left size-4.5\"></span>LTR</div><div class=\"border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2\" onclick=\"document.documentElement.dir='rtl'\"><span class=\"iconify lucide--pilcrow-right size-4.5\"></span>RTL</div></div></div></div></div></div><script>\n\t(function(){if(window._nexusThemeInit)return;window._nexusThemeInit=true;\n\tfunction updateTheme(){var t=document.documentElement.getAttribute('data-theme');var isDark=t==='dracula'||t==='dim'||t==='dark';var el;el=document.getElementById('logo-dark');if(el)el.style.display=isDark?'':'none';el=document.getElementById('logo-light');if(el)el.style.display=isDark?'none':'';el=document.getElementById('hero-dark');if(el)el.style.display=isDark?'':'none';el=document.getElementById('hero-light');if(el)el.style.display=isDark?'none':''}\n\tupdateTheme();\n\tdocument.querySelectorAll('[data-theme-btn]').forEach(function(el){el.addEventListener('click',function(){var t=this.getAttribute('data-theme-btn');if(t==='system'){document.documentElement.removeAttribute('data-theme');localStorage.removeItem('theme')}else{document.documentElement.setAttribute('data-theme',t);localStorage.setItem('theme',t)}setTimeout(updateTheme,50)})})})();\n\t</script><script src=\"https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.3.0/apexcharts.min.js\"></script><script>\n\tif(!window._apexChartInit){window._apexChartInit=true;\n\tfunction initApexChart(el){try{var o=JSON.parse(el.dataset.options);el._chart=new ApexCharts(el,o);el._chart.render()}catch(e){console.warn('Chart init failed:',e)}}\n\tdocument.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('[data-chart]').forEach(initApexChart)});\n\tif(document.readyState==='complete'||document.readyState==='interactive'){document.querySelectorAll('[data-chart]').forEach(initApexChart)}\n\tdocument.addEventListener('htmx:after:settle',function(e){e.target.querySelectorAll('[data-chart]:not(._ac-initialized)').forEach(function(el){el.classList.add('_ac-initialized');initApexChart(el)})})}\n\t</script><script src=\"https://cdnjs.cloudflare.com/ajax/libs/simplebar/6.2.7/simplebar.min.js\"></script><link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/filepond/4.32.6/filepond.min.css\"><script src=\"https://cdnjs.cloudflare.com/ajax/libs/filepond/4.32.6/filepond.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/filepond-plugin-image-preview@4.6.12/dist/filepond-plugin-image-preview.min.js\"></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</label></div></div><div class=\"p-5\"><p class=\"font-medium\">Theme</p><div class=\"mt-3 grid grid-cols-3 gap-3\"><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"nord\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">Light</p></div></div><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"contrast\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">Contrast</p></div></div><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"material\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">Material</p></div></div><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"dracula\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">Dark</p></div></div><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"flow\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">Flow</p></div></div><div class=\"rounded-box group relative cursor-pointer\" data-theme-btn=\"system\"><div class=\"bg-base-200 rounded-box pt-5 pb-3 text-center\"><div class=\"flex items-center justify-center gap-1\"><span class=\"rounded-box bg-primary h-6 w-2\"></span><span class=\"rounded-box bg-secondary h-6 w-2\"></span><span class=\"rounded-box bg-accent h-6 w-2\"></span><span class=\"rounded-box bg-success h-6 w-2\"></span></div><p class=\"mt-1.5 text-sm\">System</p></div></div></div><p class=\"mt-6 font-medium\">Sidebar</p><div class=\"mt-3 grid grid-cols-2 gap-3\"><div class=\"border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2\" onclick=\"document.getElementById('_layout-sidebar').dataset.theme='light'\"><span class=\"iconify lucide--sun size-4.5\"></span>Light</div><div class=\"border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2\" onclick=\"document.getElementById('_layout-sidebar').dataset.theme='dark'\"><span class=\"iconify lucide--moon size-4.5\"></span>Dark</div></div><p class=\"mt-6 font-medium\">Direction</p><div class=\"mt-3 grid grid-cols-2 gap-3\"><div class=\"border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2\" onclick=\"document.documentElement.dir='ltr'\"><span class=\"iconify lucide--pilcrow-left size-4.5\"></span>LTR</div><div class=\"border-line-strong hover:bg-base-200 rounded-box inline-flex cursor-pointer items-center justify-center gap-2 border p-2\" onclick=\"document.documentElement.dir='rtl'\"><span class=\"iconify lucide--pilcrow-right size-4.5\"></span>RTL</div></div></div></div></div></div><script>\n\t(function(){if(window._nexusThemeInit)return;window._nexusThemeInit=true;\n\tfunction updateTheme(){var t=document.documentElement.getAttribute('data-theme');var isDark=t==='dracula'||t==='dim'||t==='dark';var el;el=document.getElementById('logo-dark');if(el)el.style.display=isDark?'':'none';el=document.getElementById('logo-light');if(el)el.style.display=isDark?'none':'';el=document.getElementById('hero-dark');if(el)el.style.display=isDark?'':'none';el=document.getElementById('hero-light');if(el)el.style.display=isDark?'none':''}\n\tupdateTheme();\n\tdocument.querySelectorAll('[data-theme-btn]').forEach(function(el){el.addEventListener('click',function(){var t=this.getAttribute('data-theme-btn');if(t==='system'){document.documentElement.removeAttribute('data-theme');localStorage.removeItem('theme')}else{document.documentElement.setAttribute('data-theme',t);localStorage.setItem('theme',t)}setTimeout(updateTheme,50)})})})();\n\t</script><script src=\"https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.3.0/apexcharts.min.js\"></script><script>\n\tif(!window._apexChartInit){window._apexChartInit=true;\n\tfunction initApexChart(el){try{var o=JSON.parse(el.dataset.options);el._chart=new ApexCharts(el,o);el._chart.render()}catch(e){console.warn('Chart init failed:',e)}}\n\tdocument.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('[data-chart]').forEach(initApexChart)});\n\tif(document.readyState==='complete'||document.readyState==='interactive'){document.querySelectorAll('[data-chart]').forEach(initApexChart)}\n\tdocument.addEventListener('htmx:after:settle',function(e){e.target.querySelectorAll('[data-chart]:not(._ac-initialized)').forEach(function(el){el.classList.add('_ac-initialized');initApexChart(el)})})}\n\t</script><script src=\"https://cdnjs.cloudflare.com/ajax/libs/simplebar/6.2.7/simplebar.min.js\"></script><link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/filepond/4.32.6/filepond.min.css\"><script src=\"https://cdnjs.cloudflare.com/ajax/libs/filepond/4.32.6/filepond.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/filepond-plugin-image-preview@4.6.12/dist/filepond-plugin-image-preview.min.js\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

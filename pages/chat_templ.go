@@ -144,7 +144,7 @@ func ChatLayout(props ChatLayoutProps) templ.Component {
 		if communityLabel == "" {
 			communityLabel = "Join a Community"
 		}
-		var templ_7745c5c3_Var2 = []any{"grid grid-cols-1 gap-4 lg:grid-cols-12", props.Class}
+		var templ_7745c5c3_Var2 = []any{"grid grid-cols-1 gap-6 lg:grid-cols-12", props.Class}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -174,7 +174,7 @@ func ChatLayout(props ChatLayoutProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "><div class=\"lg:col-span-4 2xl:col-span-3\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body\"><div class=\"flex items-center gap-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "><div class=\"flex lg:col-span-5 xl:col-span-4 2xl:col-span-3\"><div class=\"card bg-base-100 shadow h-full w-full\"><div class=\"card-body flex min-h-0 flex-col\"><div class=\"flex items-center gap-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -186,7 +186,7 @@ func ChatLayout(props ChatLayoutProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><div class=\"mt-4 max-h-96 overflow-y-auto\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><div class=\"mt-4 min-h-0 max-lg:max-h-96 flex-1 overflow-y-auto\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -228,7 +228,7 @@ func ChatLayout(props ChatLayoutProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></div></div></div><div class=\"lg:col-span-8 2xl:col-span-9\"><div class=\"card bg-base-100 shadow flex flex-col\"><div class=\"flex items-center gap-3 px-4 py-3 border-b border-line\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></div></div></div><div class=\"lg:col-span-7 xl:col-span-8 2xl:col-span-9\"><div class=\"card bg-base-100 shadow flex flex-col\"><div class=\"flex items-center gap-3 px-4 py-3 border-b border-line\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
