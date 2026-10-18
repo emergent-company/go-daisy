@@ -2,7 +2,6 @@ package ui
 
 import (
 	"context"
-	"html"
 
 	"github.com/a-h/templ"
 	"github.com/emergent-company/go-daisy/shared"
@@ -15,11 +14,7 @@ import (
 // wraps it; those wrappers must use this helper instead of string concatenation
 // so a strict `script-src 'nonce-…'` policy keeps working.
 func ThemeRuntimeTag(ctx context.Context) string {
-	js := ThemeRuntimeJS()
-	if n := templ.GetNonce(ctx); n != "" {
-		return `<script nonce="` + html.EscapeString(n) + `">` + js + "</script>"
-	}
-	return "<script>" + js + "</script>"
+	return shared.ScriptTagNonce(templ.GetNonce(ctx), ThemeRuntimeJS())
 }
 
 // nonceAttrs returns the render-context CSP nonce as an attribute set, or nil

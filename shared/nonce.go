@@ -20,12 +20,29 @@ func NonceAttrs(ctx context.Context) templ.Attributes {
 	return nil
 }
 
+// NonceAttr renders the ` nonce="…"` attribute fragment (leading space) for a
+// nonce, HTML-escaped, or an empty string when the nonce is empty.
+//
+// Every hand-built script tag goes through this (directly or via
+// ScriptTagNonce) so escaping and the omit-when-empty rule cannot drift between
+// callers.
+func NonceAttr(nonce string) string {
+	if nonce == "" {
+		return ""
+	}
+	return ` nonce="` + html.EscapeString(nonce) + `"`
+}
+
+// ScriptTagNonce renders an inline script body in a <script> tag carrying the
+// given nonce. An empty nonce renders a plain tag, byte-identical to pre-CSP
+// output.
+func ScriptTagNonce(nonce, js string) string {
+	return "<script" + NonceAttr(nonce) + ">" + js + "</script>"
+}
+
 // ScriptTag renders an inline script body wrapped in a <script> tag that carries
 // the context nonce. Prefer this over hand-writing a <script> tag in Go string
 // concatenation (e.g. theme runtime bootstraps).
 func ScriptTag(ctx context.Context, js string) string {
-	if n := templ.GetNonce(ctx); n != "" {
-		return `<script nonce="` + html.EscapeString(n) + `">` + js + "</script>"
-	}
-	return "<script>" + js + "</script>"
+	return ScriptTagNonce(templ.GetNonce(ctx), js)
 }
