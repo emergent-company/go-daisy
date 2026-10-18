@@ -403,7 +403,7 @@ templ topbarApp(opts TopbarVariantOpts) {
 				@ui.IconSpan("lucide--menu", "size-5")
 			</label>
 			if opts.ShowSearch {
-				@nav.SearchTrigger(nav.SearchTriggerProps{DialogID: opts.SearchDialogID})
+				@nav.SearchTrigger(nav.SearchTriggerProps{DialogID: opts.SearchDialogID, Placeholder: opts.SearchPlaceholder})
 			}
 		</div>
 		<div class="inline-flex items-center gap-1.5">

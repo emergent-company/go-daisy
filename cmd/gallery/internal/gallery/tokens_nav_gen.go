@@ -241,6 +241,13 @@ func LinkTokens() []galleryruntime.DesignToken {
 func SearchTriggerTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
 		{
+			Label:      "Dialog ID",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "search-modal",
+			QueryParam: "dialogID",
+		},
+		{
 			Label:      "Placeholder",
 			Group:      "Component",
 			Type:       galleryruntime.TokenTypeText,

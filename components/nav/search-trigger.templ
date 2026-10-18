@@ -1,6 +1,8 @@
 package nav
 
 import (
+	"strconv"
+
 	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
@@ -37,11 +39,11 @@ templ SearchTrigger(props SearchTriggerProps) {
 		{ devmode.Attrs(ctx, "nav/SearchTrigger")... }
 		{ props.Attrs... }
 	>
-		<button class="btn btn-outline btn-sm btn-ghost border-line-strong hidden h-9 w-48 justify-start gap-2 md:flex" onclick={ templ.JSUnsafeFuncCall("document.querySelector('#" + searchTriggerDialogID(props) + "')?.showModal()") }>
-			@ui.IconSpan("lucide--search", "size-4")
-			<span class="text-muted text-sm font-normal">{ searchTriggerPlaceholder(props) }</span>
+		<button class="btn btn-outline btn-sm btn-ghost border-line-strong hidden h-9 w-48 justify-start gap-2 md:flex" onclick={ templ.JSUnsafeFuncCall("document.getElementById(" + strconv.Quote(searchTriggerDialogID(props)) + ")?.showModal()") }>
+			@ui.IconSpan("lucide--search", "size-4 shrink-0")
+			<span class="text-muted truncate text-sm font-normal">{ searchTriggerPlaceholder(props) }</span>
 		</button>
-		<button class="btn btn-outline btn-sm btn-square btn-ghost border-line-strong flex size-9 md:hidden" aria-label="Search" onclick={ templ.JSUnsafeFuncCall("document.querySelector('#" + searchTriggerDialogID(props) + "')?.showModal()") }>
+		<button class="btn btn-outline btn-sm btn-square btn-ghost border-line-strong flex size-9 md:hidden" aria-label="Search" onclick={ templ.JSUnsafeFuncCall("document.getElementById(" + strconv.Quote(searchTriggerDialogID(props)) + ")?.showModal()") }>
 			@ui.IconSpan("lucide--search", "size-4")
 		</button>
 	</div>

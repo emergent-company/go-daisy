@@ -1355,7 +1355,7 @@ func topbarApp(opts TopbarVariantOpts) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if opts.ShowSearch {
-			templ_7745c5c3_Err = nav.SearchTrigger(nav.SearchTriggerProps{DialogID: opts.SearchDialogID}).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = nav.SearchTrigger(nav.SearchTriggerProps{DialogID: opts.SearchDialogID, Placeholder: opts.SearchPlaceholder}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
