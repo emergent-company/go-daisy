@@ -15,9 +15,10 @@ import (
 // SortableTableHeaderProps configures a sortable <th> cell.
 //
 // Column is the sort key. Leave it empty to render a plain, non-sortable
-// header. Class is applied to the <th>; LinkAttrs is applied to the <a>, which
-// lets callers add HTMX attributes or data-* hooks without changing the
-// component.
+// header. If Column is set but Sort has no base path, the header also renders
+// as plain text rather than as a broken link. Class is applied to the <th>;
+// LinkAttrs is applied to the <a>, which lets callers add HTMX attributes or
+// data-* hooks without changing the component.
 type SortableTableHeaderProps struct {
 	Label     string
 	Column    string
@@ -87,7 +88,7 @@ func SortableTableHeader(props SortableTableHeaderProps) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(aria)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/sortable-header.templ`, Line: 36, Col: 20}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/sortable-header.templ`, Line: 37, Col: 20}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 				if templ_7745c5c3_Err != nil {
@@ -148,7 +149,7 @@ func SortableTableHeader(props SortableTableHeaderProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/sortable-header.templ`, Line: 44, Col: 16}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/sortable-header.templ`, Line: 45, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -192,7 +193,7 @@ func sortableHeaderLink(props SortableTableHeaderProps, href string) templ.Compo
 		var templ_7745c5c3_Var9 templ.SafeURL
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(href))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/sortable-header.templ`, Line: 52, Col: 24}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/sortable-header.templ`, Line: 53, Col: 24}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -205,7 +206,7 @@ func sortableHeaderLink(props SortableTableHeaderProps, href string) templ.Compo
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ariaLabel())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/sortable-header.templ`, Line: 53, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/sortable-header.templ`, Line: 54, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
@@ -226,7 +227,7 @@ func sortableHeaderLink(props SortableTableHeaderProps, href string) templ.Compo
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/sortable-header.templ`, Line: 57, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/sortable-header.templ`, Line: 58, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {

@@ -89,6 +89,14 @@ func TestParseSortPrefixedEmptyByForcesNone(t *testing.T) {
 	}
 }
 
+func TestParseSortPrefixedDirWithoutByDoesNotActivateDefault(t *testing.T) {
+	q := url.Values{"sort_dir": {"desc"}}
+	got := ParseSortPrefixed(q, "", "host", SortNone)
+	if got.By != "host" || got.Dir != SortNone {
+		t.Fatalf("expected default host with no sort, got %#v", got)
+	}
+}
+
 func TestNextSortDirFromCyclesFirstOppositeNone(t *testing.T) {
 	tests := []struct {
 		name  string

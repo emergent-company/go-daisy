@@ -67,10 +67,18 @@ func (p SortableTableHeaderProps) ariaLabel() string {
 	label := "Sort by " + p.Label
 	if p.Sort.Active(p.Column) {
 		if p.Sort.Params.Dir == SortAsc {
-			label += ", ascending"
+			label += ", currently ascending"
 		} else {
-			label += ", descending"
+			label += ", currently descending"
 		}
+	}
+	switch NextSortDirFrom(p.Sort.Params, p.Column, p.FirstDir) {
+	case SortAsc:
+		label += "; activate to sort ascending"
+	case SortDesc:
+		label += "; activate to sort descending"
+	default:
+		label += "; activate to clear sorting"
 	}
 	return label
 }
@@ -120,10 +128,10 @@ func (c SortContext) HrefFor(basePath string, column string, first SortDir) stri
 // as "keep the natural row order".
 //
 // A query sort_by with an absent or invalid sort_dir uses defaultDir; if
-// defaultDir is SortNone or invalid, it becomes ascending. A handler-supplied
-// defaultBy with defaultDir SortNone keeps SortNone, so the handler's natural
-// row order is preserved until a click. An invalid defaultDir is treated as
-// SortNone.
+// defaultDir is SortNone or invalid, it becomes ascending. sort_dir without a
+// sort_by is ignored. A handler-supplied defaultBy with defaultDir SortNone
+// keeps SortNone, so the handler's natural row order is preserved until a
+// click. An invalid defaultDir is treated as SortNone.
 func ParseSortPrefixed(q url.Values, prefix string, defaultBy string, defaultDir SortDir) SortParams {
 	requestedBy := strings.TrimSpace(q.Get(prefix + "sort_by"))
 	by := requestedBy
@@ -135,11 +143,15 @@ func ParseSortPrefixed(q url.Values, prefix string, defaultBy string, defaultDir
 	if dir != SortAsc && dir != SortDesc {
 		dir = SortNone
 	}
-	switch strings.ToLower(strings.TrimSpace(q.Get(prefix + "sort_dir"))) {
-	case "asc":
-		dir = SortAsc
-	case "desc":
-		dir = SortDesc
+	// A direction without a column is meaningless: it must not activate a
+	// handler-supplied defaultBy.
+	if requestedBy != "" {
+		switch strings.ToLower(strings.TrimSpace(q.Get(prefix + "sort_dir"))) {
+		case "asc":
+			dir = SortAsc
+		case "desc":
+			dir = SortDesc
+		}
 	}
 	if by == "" {
 		dir = SortNone

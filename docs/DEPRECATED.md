@@ -137,7 +137,7 @@ deletions: 12 `templ` components, 2 types, 13 `*WithBoundary` wrappers.
 
 `scripts/lint-deprecated.sh` is a line-based heuristic over source text, not a
 type-checker. The following are known robustness gaps, not current bugs — none
-of these shapes exist in the tree today (all 24 live markers are
+of these shapes exist in the tree today (all 25 live markers are
 `// Deprecated:` on their own line within 30 lines above a top-level
 `templ`/`func`/`type`/`const` declaration). They are documented rather than
 fixed here. The separate *fail-open* class — an environmental failure silently

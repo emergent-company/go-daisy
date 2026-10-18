@@ -371,8 +371,11 @@ typography your table uses; the component does not impose one.
 - The handler is responsible for applying `SortParams` to the rows. Keep
   unknown metrics, empty text and zero times last in both directions.
 - Sorting clears the `page` query param. `DataGrid` sort links use `BaseURL` for
-  `hx-get` and `Sort.BasePath` for `href`/`hx-push-url`, and target
-  `#datagrid-<id>-body`; the handler must return the full table fragment for
-  that target (header included), the same contract as search and pagination.
+  `hx-get` and `PagePath` (or `Sort.BasePath` when empty) for
+  `href`/`hx-push-url`, and target `#datagrid-<id>-body`; the handler must
+  return the full table fragment for that target (header included), the same
+  contract as search and pagination. Set `PagePath` when the grid is rendered
+  from a fragment endpoint, otherwise the second click pushes the fragment URL.
+  With no `BaseURL`, sort links are plain page navigations.
 - `SortParams.By` is user-controlled. Validate it against a known column map in
   the handler before applying it.

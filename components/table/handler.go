@@ -18,8 +18,9 @@ type SortParams struct {
 //
 // An empty sort_by yields SortNone. A query sort_by with an absent or invalid
 // sort_dir uses defaultDir; if defaultDir is SortNone or invalid, it becomes
-// ascending. A handler-supplied defaultBy with defaultDir SortNone stays
-// SortNone (natural row order). An invalid defaultDir is treated as SortNone.
+// ascending. sort_dir without a sort_by is ignored. A handler-supplied defaultBy
+// with defaultDir SortNone stays SortNone (natural row order). An invalid
+// defaultDir is treated as SortNone.
 //
 // ParseSort is the unprefixed alias for ParseSortPrefixed, so the two parsers
 // cannot drift.

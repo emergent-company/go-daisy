@@ -42,7 +42,7 @@ func TestSortableTableHeaderRendersActiveAscending(t *testing.T) {
 	if !strings.Contains(got, `lucide--chevron-up`) {
 		t.Fatalf("missing active asc icon: %s", got)
 	}
-	if !strings.Contains(got, `aria-label="Sort by CPU, ascending"`) {
+	if !strings.Contains(got, `aria-label="Sort by CPU, currently ascending; activate to sort descending"`) {
 		t.Fatalf("missing sort aria-label: %s", got)
 	}
 }
@@ -137,7 +137,8 @@ func TestSortableTableHeaderLinkAttrs(t *testing.T) {
 func TestDataGridRendersSortableHeader(t *testing.T) {
 	var buf bytes.Buffer
 	err := DataGrid(DataGridProps{
-		ID: "items",
+		ID:      "items",
+		BaseURL: "/items-fragment",
 		Columns: []DataGridColumn{
 			{Key: "name", Label: "Name", Sortable: true},
 			{Key: "state", Label: "State"},

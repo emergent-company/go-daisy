@@ -7,9 +7,10 @@ import (
 // SortableTableHeaderProps configures a sortable <th> cell.
 //
 // Column is the sort key. Leave it empty to render a plain, non-sortable
-// header. Class is applied to the <th>; LinkAttrs is applied to the <a>, which
-// lets callers add HTMX attributes or data-* hooks without changing the
-// component.
+// header. If Column is set but Sort has no base path, the header also renders
+// as plain text rather than as a broken link. Class is applied to the <th>;
+// LinkAttrs is applied to the <a>, which lets callers add HTMX attributes or
+// data-* hooks without changing the component.
 type SortableTableHeaderProps struct {
 	Label     string
 	Column    string

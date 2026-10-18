@@ -6,12 +6,15 @@ import (
 )
 
 func TestDataGridSortLinkUsesBaseURLForFragment(t *testing.T) {
+	// Simulate a fragment render: the request path is /datagrid, but the full
+	// page is /. PagePath must keep hx-push-url on the page.
 	p := DataGridProps{
-		ID:      "users",
-		BaseURL: "/datagrid?role=admin",
+		ID:       "users",
+		BaseURL:  "/datagrid?role=admin",
+		PagePath: "/",
 		Sort: SortContext{
 			Params:   SortParams{By: "name", Dir: SortAsc},
-			BasePath: "/",
+			BasePath: "/datagrid",
 			Query:    url.Values{},
 		},
 	}
@@ -28,7 +31,7 @@ func TestDataGridSortLinkUsesBaseURLForFragment(t *testing.T) {
 	}
 }
 
-func TestDataGridSortLinkFallsBackToPageHref(t *testing.T) {
+func TestDataGridSortLinkWithoutBaseURLUsesPlainNavigation(t *testing.T) {
 	p := DataGridProps{
 		ID: "users",
 		Sort: SortContext{
@@ -36,12 +39,7 @@ func TestDataGridSortLinkFallsBackToPageHref(t *testing.T) {
 			Query:    url.Values{},
 		},
 	}
-	attrs := p.sortLinkAttrs(DataGridColumn{Key: "name", FirstDir: SortAsc})
-
-	if got := attrs["hx-get"]; got != "/datagrid?sort_by=name&sort_dir=asc" {
-		t.Fatalf("hx-get = %#v", got)
-	}
-	if got := attrs["hx-push-url"]; got != "/datagrid?sort_by=name&sort_dir=asc" {
-		t.Fatalf("hx-push-url = %#v", got)
+	if attrs := p.sortLinkAttrs(DataGridColumn{Key: "name", FirstDir: SortAsc}); attrs != nil {
+		t.Fatalf("expected no HTMX attrs without BaseURL, got %#v", attrs)
 	}
 }
