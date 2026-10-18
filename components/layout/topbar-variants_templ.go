@@ -9,6 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"github.com/emergent-company/go-daisy/components/nav"
 	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
@@ -38,6 +39,16 @@ type TopbarVariantOpts struct {
 
 	AvatarSrc string
 	AvatarAlt string
+
+	// App-topbar (style "app") slots and switches.
+	SearchDialogID   string
+	SettingsDrawerID string
+	ProfileName      string
+	ProfileRole      string
+	ShowSettings     bool
+	ShowTheme        bool
+	Notifications    templ.Component // optional notification slot
+	Profile          templ.Component // optional profile slot (overrides ProfileName)
 
 	ExtraClass string
 }
@@ -92,25 +103,1238 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var3 = []any{"border-line-strong/80 bg-base-100 sticky top-0 z-1 flex h-16 items-center justify-between border-b border-dashed px-4 md:px-8 xl:px-12 2xl:px-20", templ.KV(opts.ExtraClass, opts.ExtraClass != "")}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
+		if style == "app" {
+			templ_7745c5c3_Err = topbarApp(opts).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			var templ_7745c5c3_Var3 = []any{"border-line-strong/80 bg-base-100 sticky top-0 z-1 flex h-16 items-center justify-between border-b border-dashed px-4 md:px-8 xl:px-12 2xl:px-20", templ.KV(opts.ExtraClass, opts.ExtraClass != "")}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div role=\"navigation\" aria-label=\"Navbar\" class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var3).String())
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" id=\"_layout-topbar\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, devmode.Attrs(ctx, "layout/TopbarVariant"))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, ">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			switch style {
+			case "classic":
+				var templ_7745c5c3_Var5 = []any{ui.RowLoose}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var5...)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var6 string
+				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var5).String())
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Var7 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
+					Type:       ui.ButtonTypeLabel,
+					Variant:    ui.ButtonGhost,
+					Size:       ui.ButtonSM,
+					Shape:      ui.ButtonShapeSquare,
+					ExtraClass: "group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:hidden",
+					AriaLabel:  "Sidebar toggle",
+					Attrs:      templ.Attributes{"for": "_layout-sidebar-toggle-trigger"},
+				}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Var8 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
+					Type:       ui.ButtonTypeLabel,
+					Variant:    ui.ButtonGhost,
+					Size:       ui.ButtonSM,
+					Shape:      ui.ButtonShapeSquare,
+					ExtraClass: "hidden group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:flex",
+					AriaLabel:  "Leftmenu toggle",
+					Attrs:      templ.Attributes{"for": "_layout-sidebar-hover-trigger"},
+				}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if opts.ShowSearch {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"btn btn-outline border-line-strong btn-sm max-sm:btn-square w-56 gap-2 sm:justify-start\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = ui.IconSpan("lucide--search", "size-3.5").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<p class=\"text-muted text-sm font-normal max-sm:hidden\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var9 string
+					templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(opts.SearchPlaceholder)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 92, Col: 86}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</p></div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><div class=\"flex items-center\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if opts.ShowNotifications {
+					templ_7745c5c3_Var10 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Err = ui.IconSpan("lucide--bell-ring", "size-5").Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "me-3", Attrs: templ.Attributes{"aria-label": "Notifications"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var10), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				if opts.ShowApps {
+					templ_7745c5c3_Var11 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Err = ui.IconSpan("lucide--component", "text-body size-5.5 rotate-45").Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeCircle, ExtraClass: "me-3", Attrs: templ.Attributes{"aria-label": "Apps"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				if opts.ShowLanguage {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"dropdown dropdown-bottom dropdown-center me-3\"><div tabindex=\"0\" class=\"cursor-pointer\"><img alt=\"Language\" class=\"rounded-box size-5.5 object-cover\" src=\"https://flagcdn.com/us.svg\"></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-40 shadow\"><ul class=\"menu w-full p-2\"><li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var12 = []any{ui.Row}
+					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var12...)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<a class=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var13 string
+					templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var12).String())
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" href=\"#\"><img alt=\"US\" class=\"rounded-box size-4.5 object-cover\" src=\"https://flagcdn.com/us.svg\"><span>English</span></a></li><li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var14 = []any{ui.Row}
+					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var14...)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<a class=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var15 string
+					templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var14).String())
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" href=\"#\"><img alt=\"IN\" class=\"rounded-box size-4.5 object-cover\" src=\"https://flagcdn.com/in.svg\"><span>Hindi</span></a></li><li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var16 = []any{ui.Row}
+					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var16...)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<a class=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var17 string
+					templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var16).String())
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" href=\"#\"><img alt=\"ES\" class=\"rounded-box size-4.5 object-cover\" src=\"https://flagcdn.com/es.svg\"><span>Spanish</span></a></li><li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var18 = []any{ui.Row}
+					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var18...)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<a class=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var19 string
+					templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var18).String())
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var19)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "\" href=\"#\"><img alt=\"CN\" class=\"rounded-box size-4.5 object-cover\" src=\"https://flagcdn.com/cn.svg\"><span>Chinese</span></a></li><li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var20 = []any{ui.Row}
+					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var20...)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<a class=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var21 string
+					templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var20).String())
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var21)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" href=\"#\"><img alt=\"RS\" class=\"rounded-box size-4.5 object-cover\" src=\"https://flagcdn.com/rs.svg\"><span>Arabic</span></a></li></ul></div></div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"border-line-strong me-3 h-7 border-e\"></div><div class=\"dropdown dropdown-bottom dropdown-end\"><div tabindex=\"0\" class=\"cursor-pointer\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
+					Name:      opts.AvatarAlt,
+					Initials:  "U",
+					Src:       opts.AvatarSrc,
+					Size:      ui.AvatarSize7,
+					Mask:      "rounded-box",
+					TextClass: "text-xs",
+					// #61: FrameClass restores the bg-base-200 backdrop the
+					// hand-rolled avatar carried behind a transparent or
+					// failed-to-load image (dropped when this site migrated
+					// to AvatarFull in #57, whose image branch had no hook).
+					FrameClass: "bg-base-200",
+				}).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-44 shadow\"><ul class=\"menu w-full p-2\"><li><a href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--user", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "My Profile</a></li><li><a href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--settings", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "Settings</a></li><li><a href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--help-circle", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "Help</a></li></ul><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--arrow-left-right", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "Switch Account</div></li><li><a class=\"text-error hover:bg-error/10\" href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--log-out", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "Logout</a></li></ul></div></div></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			case "greeting":
+				var templ_7745c5c3_Var22 = []any{ui.Row, "sm:gap-3"}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var22...)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var23 string
+				templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var22).String())
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var23)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Var24 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
+					Type:       ui.ButtonTypeLabel,
+					Variant:    ui.ButtonGhost,
+					Size:       ui.ButtonSM,
+					Shape:      ui.ButtonShapeSquare,
+					ExtraClass: "group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:hidden",
+					AriaLabel:  "Sidebar toggle",
+					Attrs:      templ.Attributes{"for": "_layout-sidebar-toggle-trigger"},
+				}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var24), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Var25 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
+					Type:       ui.ButtonTypeLabel,
+					Variant:    ui.ButtonGhost,
+					Size:       ui.ButtonSM,
+					Shape:      ui.ButtonShapeSquare,
+					ExtraClass: "hidden group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:flex",
+					AriaLabel:  "Leftmenu toggle",
+					Attrs:      templ.Attributes{"for": "_layout-sidebar-hover-trigger"},
+				}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var25), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div><p class=\"leading-none font-medium md:text-lg\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var26 string
+				templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(opts.Greeting)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 180, Col: 67}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<span class=\"max-sm:hidden\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var27 string
+				templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(", " + opts.UserName)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 180, Col: 119}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "!</span></p><p class=\"text-muted mt-1 text-sm/none max-sm:hidden\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var28 string
+				templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(opts.Subtitle)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 181, Col: 74}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</p></div></div><div class=\"flex items-center gap-4\"><div class=\"dropdown dropdown-bottom dropdown-end\"><div tabindex=\"0\" class=\"flex cursor-pointer items-center gap-2\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
+					Name:      opts.AvatarAlt,
+					Initials:  "U",
+					Src:       opts.AvatarSrc,
+					Size:      ui.AvatarSize7,
+					Mask:      "rounded-box",
+					TextClass: "text-xs",
+					// #61: FrameClass restores the bg-base-200 backdrop the
+					// hand-rolled avatar carried behind a transparent or
+					// failed-to-load image (dropped when this site migrated
+					// to AvatarFull in #57, whose image branch had no hook).
+					FrameClass: "bg-base-200",
+				}).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<div><p class=\"leading-none font-medium\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var29 string
+				templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(opts.UserName)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 201, Col: 58}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p><p class=\"text-muted mt-0 text-xs/none\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var30 string
+				templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs("@" + opts.UserName)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 202, Col: 68}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</p></div></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-44 shadow\"><ul class=\"menu w-full p-2\"><li><a href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--user", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "My Profile</a></li><li><a href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--settings", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "Settings</a></li><li><a href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--help-circle", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "Help</a></li></ul><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--arrow-left-right", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "Switch Account</div></li><li><a class=\"text-error hover:bg-error/10\" href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--log-out", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "Logout</a></li></ul></div></div></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			case "nav-menu-1", "nav-menu-2":
+				var templ_7745c5c3_Var31 = []any{ui.RowLoose}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var31...)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var32 string
+				templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var31).String())
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var32)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Var33 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
+					Type:       ui.ButtonTypeLabel,
+					Variant:    ui.ButtonGhost,
+					Size:       ui.ButtonSM,
+					Shape:      ui.ButtonShapeSquare,
+					ExtraClass: "group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:hidden",
+					AriaLabel:  "Sidebar toggle",
+					Attrs:      templ.Attributes{"for": "_layout-sidebar-toggle-trigger"},
+				}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var33), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Var34 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
+					Type:       ui.ButtonTypeLabel,
+					Variant:    ui.ButtonGhost,
+					Size:       ui.ButtonSM,
+					Shape:      ui.ButtonShapeSquare,
+					ExtraClass: "hidden group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:flex",
+					AriaLabel:  "Leftmenu toggle",
+					Attrs:      templ.Attributes{"for": "_layout-sidebar-hover-trigger"},
+				}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var34), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<nav class=\"hidden items-center gap-1 md:flex\" aria-label=\"Top nav\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				for _, link := range opts.NavLinks {
+					var templ_7745c5c3_Var35 = []any{"px-2 py-1 text-sm rounded-md transition-colors", templ.KV("text-primary font-medium", link.Active), templ.KV("text-label hover:text-base-content hover:bg-base-200/50", !link.Active)}
+					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var35...)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "<a href=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var36 templ.SafeURL
+					templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(link.Href))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 246, Col: 40}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "\" class=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var37 string
+					templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var35).String())
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var37)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var38 string
+					templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(link.Label)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 246, Col: 248}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</a>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</nav></div><div class=\"flex items-center\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if opts.ShowSearch {
+					templ_7745c5c3_Var39 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Err = ui.IconSpan("lucide--search", "size-4.5").Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "me-2", Attrs: templ.Attributes{"aria-label": "Search"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var39), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				if opts.ShowNotifications {
+					templ_7745c5c3_Var40 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Err = ui.IconSpan("lucide--bell-ring", "size-4.5").Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "me-2", Attrs: templ.Attributes{"aria-label": "Notifications"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var40), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				if opts.ShowApps {
+					templ_7745c5c3_Var41 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+						if !templ_7745c5c3_IsBuffer {
+							defer func() {
+								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err == nil {
+									templ_7745c5c3_Err = templ_7745c5c3_BufErr
+								}
+							}()
+						}
+						ctx = templ.InitializeContext(ctx)
+						templ_7745c5c3_Err = ui.IconSpan("lucide--component", "text-body size-5 rotate-45").Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						return nil
+					})
+					templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeCircle, ExtraClass: "me-2", Attrs: templ.Attributes{"aria-label": "Apps"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var41), templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				if opts.ShowLanguage {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"dropdown dropdown-bottom dropdown-center me-2\"><div tabindex=\"0\" class=\"cursor-pointer\"><img alt=\"Language\" class=\"rounded-box size-5 object-cover\" src=\"https://flagcdn.com/us.svg\"></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-40 shadow\"><ul class=\"menu menu-xs w-full p-1\"><li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var42 = []any{ui.Row}
+					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var42...)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<a class=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var43 string
+					templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var42).String())
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var43)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "\" href=\"#\"><img alt=\"US\" class=\"rounded-box size-4 object-cover\" src=\"https://flagcdn.com/us.svg\"><span>English</span></a></li><li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var44 = []any{ui.Row}
+					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var44...)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "<a class=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var45 string
+					templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var44).String())
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var45)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "\" href=\"#\"><img alt=\"IN\" class=\"rounded-box size-4 object-cover\" src=\"https://flagcdn.com/in.svg\"><span>Hindi</span></a></li><li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var46 = []any{ui.Row}
+					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var46...)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<a class=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var47 string
+					templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var46).String())
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var47)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "\" href=\"#\"><img alt=\"ES\" class=\"rounded-box size-4 object-cover\" src=\"https://flagcdn.com/es.svg\"><span>Spanish</span></a></li></ul></div></div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<div class=\"border-line-strong ms-1 h-7 border-e\"></div><div class=\"dropdown dropdown-bottom dropdown-end ms-2\"><div tabindex=\"0\" class=\"cursor-pointer\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
+					Name:      opts.AvatarAlt,
+					Initials:  "U",
+					Src:       opts.AvatarSrc,
+					Size:      ui.AvatarSize7,
+					Mask:      "rounded-box",
+					TextClass: "text-xs",
+					// #61: FrameClass restores the bg-base-200 backdrop the
+					// hand-rolled avatar carried behind a transparent or
+					// failed-to-load image (dropped when this site migrated
+					// to AvatarFull in #57, whose image branch had no hook).
+					FrameClass: "bg-base-200",
+				}).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-44 shadow\"><ul class=\"menu w-full p-2\"><li><a href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--user", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "My Profile</a></li><li><a href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--settings", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "Settings</a></li><li><a href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--help-circle", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "Help</a></li></ul><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><a class=\"text-error hover:bg-error/10\" href=\"#\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--log-out", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "Logout</a></li></ul></div></div></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			case "editor":
+				var templ_7745c5c3_Var48 = []any{ui.RowLoose}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var48...)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<div class=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var49 string
+				templ_7745c5c3_Var49, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var48).String())
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var49)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Var50 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
+					Type:       ui.ButtonTypeLabel,
+					Variant:    ui.ButtonGhost,
+					Size:       ui.ButtonSM,
+					Shape:      ui.ButtonShapeSquare,
+					ExtraClass: "group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:hidden",
+					AriaLabel:  "Sidebar toggle",
+					Attrs:      templ.Attributes{"for": "_layout-sidebar-toggle-trigger"},
+				}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var50), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Var51 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
+					Type:       ui.ButtonTypeLabel,
+					Variant:    ui.ButtonGhost,
+					Size:       ui.ButtonSM,
+					Shape:      ui.ButtonShapeSquare,
+					ExtraClass: "hidden group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:flex",
+					AriaLabel:  "Leftmenu toggle",
+					Attrs:      templ.Attributes{"for": "_layout-sidebar-hover-trigger"},
+				}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var51), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<div class=\"hidden items-center gap-1.5 text-sm md:flex\"><span class=\"text-muted\">Design Draft</span>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--chevron-right", "size-3.5 text-base-content/30").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "<span class=\"text-muted\">Projects</span>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.IconSpan("lucide--chevron-right", "size-3.5 text-base-content/30").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "<span class=\"text-base-content font-medium\">Client</span></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if opts.ShowSearch {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<div class=\"btn btn-outline border-line-strong btn-sm max-sm:btn-square w-48 gap-2 sm:justify-start max-md:hidden\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = ui.IconSpan("lucide--search", "size-3.5").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<p class=\"text-muted text-sm font-normal\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var52 string
+					templ_7745c5c3_Var52, templ_7745c5c3_Err = templ.JoinStringErrs(opts.SearchPlaceholder)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 345, Col: 72}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var52))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "</p></div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var53 = []any{ui.RowLoose}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var53...)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "<div class=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var54 string
+				templ_7745c5c3_Var54, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var53).String())
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var54)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if opts.SaveStatus != "" {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "<span class=\"text-faint text-sm max-md:hidden\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var55 string
+					templ_7745c5c3_Var55, templ_7745c5c3_Err = templ.JoinStringErrs(opts.SaveStatus)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 351, Col: 69}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var55))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "</span>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "<div class=\"flex -space-x-2\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
+					Initials:   "U1",
+					Size:       ui.AvatarSize7,
+					TextClass:  "text-[10px]",
+					InnerClass: "border-2 border-base-100",
+				}).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
+					Initials:   "U2",
+					Size:       ui.AvatarSize7,
+					BadgeClass: "bg-secondary text-secondary-content font-semibold",
+					TextClass:  "text-[10px]",
+					InnerClass: "border-2 border-base-100",
+				}).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
+					Initials:   "U3",
+					Size:       ui.AvatarSize7,
+					BadgeClass: "bg-accent text-accent-content font-semibold",
+					TextClass:  "text-[10px]",
+					InnerClass: "border-2 border-base-100",
+				}).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "</div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Var56 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = ui.IconSpan("lucide--pencil", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, " <span class=\"max-md:hidden\">Edit</span>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Size: ui.ButtonSM, ExtraClass: "max-md:btn-square gap-2"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var56), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "</div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "</div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		return nil
+	})
+}
+
+// topbarApp renders the "app" topbar style — the Nexus-derived application
+// topbar: a left group (sidebar toggle + optional search) and a right group
+// (theme switcher, settings drawer trigger, notification and profile slots).
+//
+// It carries its own root element (id `_layout-topbar`, aria-label "App
+// topbar") rather than the shared shell used by the other styles, because its
+// chrome differs: no dashed border, tighter padding, and composition of
+// whole-component slots instead of inline chrome.
+func topbarApp(opts TopbarVariantOpts) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var57 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var57 == nil {
+			templ_7745c5c3_Var57 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		var templ_7745c5c3_Var58 = []any{"flex items-center justify-between px-3", opts.ExtraClass}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var58...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div role=\"navigation\" aria-label=\"Navbar\" class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "<div role=\"navigation\" aria-label=\"App topbar\" id=\"_layout-topbar\" class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var3).String())
+		var templ_7745c5c3_Var59 string
+		templ_7745c5c3_Var59, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var58).String())
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var59)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" id=\"_layout-topbar\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -118,1150 +1342,83 @@ func topbarVariantInner(style string, opts TopbarVariantOpts) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "><div class=\"inline-flex items-center gap-3\"><label class=\"btn btn-square btn-ghost btn-sm\" aria-label=\"Toggle sidebar\" for=\"_layout-sidebar-toggle-trigger\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		switch style {
-		case "classic":
-			var templ_7745c5c3_Var5 = []any{ui.RowLoose}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var5...)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var5).String())
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Var7 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-				if !templ_7745c5c3_IsBuffer {
-					defer func() {
-						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err == nil {
-							templ_7745c5c3_Err = templ_7745c5c3_BufErr
-						}
-					}()
-				}
-				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				return nil
-			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
-				Type:       ui.ButtonTypeLabel,
-				Variant:    ui.ButtonGhost,
-				Size:       ui.ButtonSM,
-				Shape:      ui.ButtonShapeSquare,
-				ExtraClass: "group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:hidden",
-				AriaLabel:  "Sidebar toggle",
-				Attrs:      templ.Attributes{"for": "_layout-sidebar-toggle-trigger"},
-			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Var8 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-				if !templ_7745c5c3_IsBuffer {
-					defer func() {
-						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err == nil {
-							templ_7745c5c3_Err = templ_7745c5c3_BufErr
-						}
-					}()
-				}
-				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				return nil
-			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
-				Type:       ui.ButtonTypeLabel,
-				Variant:    ui.ButtonGhost,
-				Size:       ui.ButtonSM,
-				Shape:      ui.ButtonShapeSquare,
-				ExtraClass: "hidden group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:flex",
-				AriaLabel:  "Leftmenu toggle",
-				Attrs:      templ.Attributes{"for": "_layout-sidebar-hover-trigger"},
-			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if opts.ShowSearch {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"btn btn-outline border-line-strong btn-sm max-sm:btn-square w-56 gap-2 sm:justify-start\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = ui.IconSpan("lucide--search", "size-3.5").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<p class=\"text-muted text-sm font-normal max-sm:hidden\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var9 string
-				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(opts.SearchPlaceholder)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 78, Col: 86}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</p></div>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><div class=\"flex items-center\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if opts.ShowNotifications {
-				templ_7745c5c3_Var10 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-					if !templ_7745c5c3_IsBuffer {
-						defer func() {
-							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-							if templ_7745c5c3_Err == nil {
-								templ_7745c5c3_Err = templ_7745c5c3_BufErr
-							}
-						}()
-					}
-					ctx = templ.InitializeContext(ctx)
-					templ_7745c5c3_Err = ui.IconSpan("lucide--bell-ring", "size-5").Render(ctx, templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					return nil
-				})
-				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "me-3", Attrs: templ.Attributes{"aria-label": "Notifications"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var10), templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			if opts.ShowApps {
-				templ_7745c5c3_Var11 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-					if !templ_7745c5c3_IsBuffer {
-						defer func() {
-							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-							if templ_7745c5c3_Err == nil {
-								templ_7745c5c3_Err = templ_7745c5c3_BufErr
-							}
-						}()
-					}
-					ctx = templ.InitializeContext(ctx)
-					templ_7745c5c3_Err = ui.IconSpan("lucide--component", "text-body size-5.5 rotate-45").Render(ctx, templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					return nil
-				})
-				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeCircle, ExtraClass: "me-3", Attrs: templ.Attributes{"aria-label": "Apps"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			if opts.ShowLanguage {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"dropdown dropdown-bottom dropdown-center me-3\"><div tabindex=\"0\" class=\"cursor-pointer\"><img alt=\"Language\" class=\"rounded-box size-5.5 object-cover\" src=\"https://flagcdn.com/us.svg\"></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-40 shadow\"><ul class=\"menu w-full p-2\"><li>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var12 = []any{ui.Row}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var12...)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<a class=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var13 string
-				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var12).String())
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" href=\"#\"><img alt=\"US\" class=\"rounded-box size-4.5 object-cover\" src=\"https://flagcdn.com/us.svg\"><span>English</span></a></li><li>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var14 = []any{ui.Row}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var14...)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<a class=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var15 string
-				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var14).String())
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" href=\"#\"><img alt=\"IN\" class=\"rounded-box size-4.5 object-cover\" src=\"https://flagcdn.com/in.svg\"><span>Hindi</span></a></li><li>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var16 = []any{ui.Row}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var16...)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<a class=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var17 string
-				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var16).String())
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" href=\"#\"><img alt=\"ES\" class=\"rounded-box size-4.5 object-cover\" src=\"https://flagcdn.com/es.svg\"><span>Spanish</span></a></li><li>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var18 = []any{ui.Row}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var18...)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<a class=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var19 string
-				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var18).String())
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var19)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "\" href=\"#\"><img alt=\"CN\" class=\"rounded-box size-4.5 object-cover\" src=\"https://flagcdn.com/cn.svg\"><span>Chinese</span></a></li><li>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var20 = []any{ui.Row}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var20...)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<a class=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var21 string
-				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var20).String())
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var21)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" href=\"#\"><img alt=\"RS\" class=\"rounded-box size-4.5 object-cover\" src=\"https://flagcdn.com/rs.svg\"><span>Arabic</span></a></li></ul></div></div>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"border-line-strong me-3 h-7 border-e\"></div><div class=\"dropdown dropdown-bottom dropdown-end\"><div tabindex=\"0\" class=\"cursor-pointer\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
-				Name:      opts.AvatarAlt,
-				Initials:  "U",
-				Src:       opts.AvatarSrc,
-				Size:      ui.AvatarSize7,
-				Mask:      "rounded-box",
-				TextClass: "text-xs",
-				// #61: FrameClass restores the bg-base-200 backdrop the
-				// hand-rolled avatar carried behind a transparent or
-				// failed-to-load image (dropped when this site migrated
-				// to AvatarFull in #57, whose image branch had no hook).
-				FrameClass: "bg-base-200",
-			}).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-44 shadow\"><ul class=\"menu w-full p-2\"><li><a href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--user", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "My Profile</a></li><li><a href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--settings", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "Settings</a></li><li><a href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--help-circle", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "Help</a></li></ul><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--arrow-left-right", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "Switch Account</div></li><li><a class=\"text-error hover:bg-error/10\" href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--log-out", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "Logout</a></li></ul></div></div></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		case "greeting":
-			var templ_7745c5c3_Var22 = []any{ui.Row, "sm:gap-3"}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var22...)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var23 string
-			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var22).String())
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var23)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Var24 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-				if !templ_7745c5c3_IsBuffer {
-					defer func() {
-						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err == nil {
-							templ_7745c5c3_Err = templ_7745c5c3_BufErr
-						}
-					}()
-				}
-				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				return nil
-			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
-				Type:       ui.ButtonTypeLabel,
-				Variant:    ui.ButtonGhost,
-				Size:       ui.ButtonSM,
-				Shape:      ui.ButtonShapeSquare,
-				ExtraClass: "group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:hidden",
-				AriaLabel:  "Sidebar toggle",
-				Attrs:      templ.Attributes{"for": "_layout-sidebar-toggle-trigger"},
-			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var24), templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Var25 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-				if !templ_7745c5c3_IsBuffer {
-					defer func() {
-						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err == nil {
-							templ_7745c5c3_Err = templ_7745c5c3_BufErr
-						}
-					}()
-				}
-				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				return nil
-			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
-				Type:       ui.ButtonTypeLabel,
-				Variant:    ui.ButtonGhost,
-				Size:       ui.ButtonSM,
-				Shape:      ui.ButtonShapeSquare,
-				ExtraClass: "hidden group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:flex",
-				AriaLabel:  "Leftmenu toggle",
-				Attrs:      templ.Attributes{"for": "_layout-sidebar-hover-trigger"},
-			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var25), templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div><p class=\"leading-none font-medium md:text-lg\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var26 string
-			templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(opts.Greeting)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 166, Col: 67}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<span class=\"max-sm:hidden\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var27 string
-			templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(", " + opts.UserName)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 166, Col: 119}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "!</span></p><p class=\"text-muted mt-1 text-sm/none max-sm:hidden\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var28 string
-			templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(opts.Subtitle)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 167, Col: 74}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</p></div></div><div class=\"flex items-center gap-4\"><div class=\"dropdown dropdown-bottom dropdown-end\"><div tabindex=\"0\" class=\"flex cursor-pointer items-center gap-2\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
-				Name:      opts.AvatarAlt,
-				Initials:  "U",
-				Src:       opts.AvatarSrc,
-				Size:      ui.AvatarSize7,
-				Mask:      "rounded-box",
-				TextClass: "text-xs",
-				// #61: FrameClass restores the bg-base-200 backdrop the
-				// hand-rolled avatar carried behind a transparent or
-				// failed-to-load image (dropped when this site migrated
-				// to AvatarFull in #57, whose image branch had no hook).
-				FrameClass: "bg-base-200",
-			}).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<div><p class=\"leading-none font-medium\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var29 string
-			templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(opts.UserName)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 187, Col: 58}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p><p class=\"text-muted mt-0 text-xs/none\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var30 string
-			templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs("@" + opts.UserName)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 188, Col: 68}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</p></div></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-44 shadow\"><ul class=\"menu w-full p-2\"><li><a href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--user", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "My Profile</a></li><li><a href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--settings", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "Settings</a></li><li><a href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--help-circle", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "Help</a></li></ul><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--arrow-left-right", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "Switch Account</div></li><li><a class=\"text-error hover:bg-error/10\" href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--log-out", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "Logout</a></li></ul></div></div></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		case "nav-menu-1", "nav-menu-2":
-			var templ_7745c5c3_Var31 = []any{ui.RowLoose}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var31...)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var32 string
-			templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var31).String())
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var32)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Var33 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-				if !templ_7745c5c3_IsBuffer {
-					defer func() {
-						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err == nil {
-							templ_7745c5c3_Err = templ_7745c5c3_BufErr
-						}
-					}()
-				}
-				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				return nil
-			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
-				Type:       ui.ButtonTypeLabel,
-				Variant:    ui.ButtonGhost,
-				Size:       ui.ButtonSM,
-				Shape:      ui.ButtonShapeSquare,
-				ExtraClass: "group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:hidden",
-				AriaLabel:  "Sidebar toggle",
-				Attrs:      templ.Attributes{"for": "_layout-sidebar-toggle-trigger"},
-			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var33), templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Var34 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-				if !templ_7745c5c3_IsBuffer {
-					defer func() {
-						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err == nil {
-							templ_7745c5c3_Err = templ_7745c5c3_BufErr
-						}
-					}()
-				}
-				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				return nil
-			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
-				Type:       ui.ButtonTypeLabel,
-				Variant:    ui.ButtonGhost,
-				Size:       ui.ButtonSM,
-				Shape:      ui.ButtonShapeSquare,
-				ExtraClass: "hidden group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:flex",
-				AriaLabel:  "Leftmenu toggle",
-				Attrs:      templ.Attributes{"for": "_layout-sidebar-hover-trigger"},
-			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var34), templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<nav class=\"hidden items-center gap-1 md:flex\" aria-label=\"Top nav\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			for _, link := range opts.NavLinks {
-				var templ_7745c5c3_Var35 = []any{"px-2 py-1 text-sm rounded-md transition-colors", templ.KV("text-primary font-medium", link.Active), templ.KV("text-label hover:text-base-content hover:bg-base-200/50", !link.Active)}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var35...)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "<a href=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var36 templ.SafeURL
-				templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(link.Href))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 232, Col: 40}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "\" class=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var37 string
-				templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var35).String())
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var37)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var38 string
-				templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(link.Label)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 232, Col: 248}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</a>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</nav></div><div class=\"flex items-center\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if opts.ShowSearch {
-				templ_7745c5c3_Var39 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-					if !templ_7745c5c3_IsBuffer {
-						defer func() {
-							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-							if templ_7745c5c3_Err == nil {
-								templ_7745c5c3_Err = templ_7745c5c3_BufErr
-							}
-						}()
-					}
-					ctx = templ.InitializeContext(ctx)
-					templ_7745c5c3_Err = ui.IconSpan("lucide--search", "size-4.5").Render(ctx, templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					return nil
-				})
-				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "me-2", Attrs: templ.Attributes{"aria-label": "Search"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var39), templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			if opts.ShowNotifications {
-				templ_7745c5c3_Var40 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-					if !templ_7745c5c3_IsBuffer {
-						defer func() {
-							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-							if templ_7745c5c3_Err == nil {
-								templ_7745c5c3_Err = templ_7745c5c3_BufErr
-							}
-						}()
-					}
-					ctx = templ.InitializeContext(ctx)
-					templ_7745c5c3_Err = ui.IconSpan("lucide--bell-ring", "size-4.5").Render(ctx, templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					return nil
-				})
-				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, ExtraClass: "me-2", Attrs: templ.Attributes{"aria-label": "Notifications"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var40), templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			if opts.ShowApps {
-				templ_7745c5c3_Var41 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-					if !templ_7745c5c3_IsBuffer {
-						defer func() {
-							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-							if templ_7745c5c3_Err == nil {
-								templ_7745c5c3_Err = templ_7745c5c3_BufErr
-							}
-						}()
-					}
-					ctx = templ.InitializeContext(ctx)
-					templ_7745c5c3_Err = ui.IconSpan("lucide--component", "text-body size-5 rotate-45").Render(ctx, templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					return nil
-				})
-				templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeCircle, ExtraClass: "me-2", Attrs: templ.Attributes{"aria-label": "Apps"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var41), templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			if opts.ShowLanguage {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"dropdown dropdown-bottom dropdown-center me-2\"><div tabindex=\"0\" class=\"cursor-pointer\"><img alt=\"Language\" class=\"rounded-box size-5 object-cover\" src=\"https://flagcdn.com/us.svg\"></div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-40 shadow\"><ul class=\"menu menu-xs w-full p-1\"><li>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var42 = []any{ui.Row}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var42...)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<a class=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var43 string
-				templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var42).String())
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var43)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "\" href=\"#\"><img alt=\"US\" class=\"rounded-box size-4 object-cover\" src=\"https://flagcdn.com/us.svg\"><span>English</span></a></li><li>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var44 = []any{ui.Row}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var44...)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "<a class=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var45 string
-				templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var44).String())
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var45)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "\" href=\"#\"><img alt=\"IN\" class=\"rounded-box size-4 object-cover\" src=\"https://flagcdn.com/in.svg\"><span>Hindi</span></a></li><li>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var46 = []any{ui.Row}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var46...)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<a class=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var47 string
-				templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var46).String())
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var47)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "\" href=\"#\"><img alt=\"ES\" class=\"rounded-box size-4 object-cover\" src=\"https://flagcdn.com/es.svg\"><span>Spanish</span></a></li></ul></div></div>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<div class=\"border-line-strong ms-1 h-7 border-e\"></div><div class=\"dropdown dropdown-bottom dropdown-end ms-2\"><div tabindex=\"0\" class=\"cursor-pointer\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
-				Name:      opts.AvatarAlt,
-				Initials:  "U",
-				Src:       opts.AvatarSrc,
-				Size:      ui.AvatarSize7,
-				Mask:      "rounded-box",
-				TextClass: "text-xs",
-				// #61: FrameClass restores the bg-base-200 backdrop the
-				// hand-rolled avatar carried behind a transparent or
-				// failed-to-load image (dropped when this site migrated
-				// to AvatarFull in #57, whose image branch had no hook).
-				FrameClass: "bg-base-200",
-			}).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-44 shadow\"><ul class=\"menu w-full p-2\"><li><a href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--user", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "My Profile</a></li><li><a href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--settings", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "Settings</a></li><li><a href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--help-circle", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "Help</a></li></ul><hr class=\"border-line\"><ul class=\"menu w-full p-2\"><li><a class=\"text-error hover:bg-error/10\" href=\"#\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--log-out", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "Logout</a></li></ul></div></div></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		case "editor":
-			var templ_7745c5c3_Var48 = []any{ui.RowLoose}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var48...)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<div class=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var49 string
-			templ_7745c5c3_Var49, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var48).String())
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var49)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Var50 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-				if !templ_7745c5c3_IsBuffer {
-					defer func() {
-						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err == nil {
-							templ_7745c5c3_Err = templ_7745c5c3_BufErr
-						}
-					}()
-				}
-				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				return nil
-			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
-				Type:       ui.ButtonTypeLabel,
-				Variant:    ui.ButtonGhost,
-				Size:       ui.ButtonSM,
-				Shape:      ui.ButtonShapeSquare,
-				ExtraClass: "group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:hidden",
-				AriaLabel:  "Sidebar toggle",
-				Attrs:      templ.Attributes{"for": "_layout-sidebar-toggle-trigger"},
-			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var50), templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Var51 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-				if !templ_7745c5c3_IsBuffer {
-					defer func() {
-						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err == nil {
-							templ_7745c5c3_Err = templ_7745c5c3_BufErr
-						}
-					}()
-				}
-				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				return nil
-			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{
-				Type:       ui.ButtonTypeLabel,
-				Variant:    ui.ButtonGhost,
-				Size:       ui.ButtonSM,
-				Shape:      ui.ButtonShapeSquare,
-				ExtraClass: "hidden group-has-[[id=_layout-sidebar-hover-trigger]:checked]/html:flex",
-				AriaLabel:  "Leftmenu toggle",
-				Attrs:      templ.Attributes{"for": "_layout-sidebar-hover-trigger"},
-			}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var51), templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<div class=\"hidden items-center gap-1.5 text-sm md:flex\"><span class=\"text-muted\">Design Draft</span>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--chevron-right", "size-3.5 text-base-content/30").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "<span class=\"text-muted\">Projects</span>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--chevron-right", "size-3.5 text-base-content/30").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "<span class=\"text-base-content font-medium\">Client</span></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if opts.ShowSearch {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<div class=\"btn btn-outline border-line-strong btn-sm max-sm:btn-square w-48 gap-2 sm:justify-start max-md:hidden\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = ui.IconSpan("lucide--search", "size-3.5").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<p class=\"text-muted text-sm font-normal\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var52 string
-				templ_7745c5c3_Var52, templ_7745c5c3_Err = templ.JoinStringErrs(opts.SearchPlaceholder)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 331, Col: 72}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var52))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "</p></div>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var53 = []any{ui.RowLoose}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var53...)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "<div class=\"")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var54 string
-			templ_7745c5c3_Var54, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var53).String())
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 1, Col: 0}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var54)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if opts.SaveStatus != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "<span class=\"text-faint text-sm max-md:hidden\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var55 string
-				templ_7745c5c3_Var55, templ_7745c5c3_Err = templ.JoinStringErrs(opts.SaveStatus)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 337, Col: 69}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var55))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "</span>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "<div class=\"flex -space-x-2\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
-				Initials:   "U1",
-				Size:       ui.AvatarSize7,
-				TextClass:  "text-[10px]",
-				InnerClass: "border-2 border-base-100",
-			}).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
-				Initials:   "U2",
-				Size:       ui.AvatarSize7,
-				BadgeClass: "bg-secondary text-secondary-content font-semibold",
-				TextClass:  "text-[10px]",
-				InnerClass: "border-2 border-base-100",
-			}).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = ui.AvatarFull(ui.AvatarProps{
-				Initials:   "U3",
-				Size:       ui.AvatarSize7,
-				BadgeClass: "bg-accent text-accent-content font-semibold",
-				TextClass:  "text-[10px]",
-				InnerClass: "border-2 border-base-100",
-			}).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "</div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Var56 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-				if !templ_7745c5c3_IsBuffer {
-					defer func() {
-						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err == nil {
-							templ_7745c5c3_Err = templ_7745c5c3_BufErr
-						}
-					}()
-				}
-				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = ui.IconSpan("lucide--pencil", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, " <span class=\"max-md:hidden\">Edit</span>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				return nil
-			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Size: ui.ButtonSM, ExtraClass: "max-md:btn-square gap-2"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var56), templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "</div>")
+		templ_7745c5c3_Err = ui.IconSpan("lucide--menu", "size-5").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "</label> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if opts.ShowSearch {
+			templ_7745c5c3_Err = nav.SearchTrigger(nav.SearchTriggerProps{DialogID: opts.SearchDialogID}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "</div><div class=\"inline-flex items-center gap-1.5\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if opts.ShowTheme {
+			templ_7745c5c3_Err = ui.ThemeSwitcher().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		if opts.ShowSettings && opts.SettingsDrawerID != "" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "<label for=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var60 string
+			templ_7745c5c3_Var60, templ_7745c5c3_Err = templ.ResolveAttributeValue(opts.SettingsDrawerID)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/topbar-variants.templ`, Line: 414, Col: 38}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var60)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "\" class=\"btn btn-circle btn-ghost btn-sm drawer-button\" aria-label=\"Settings\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.IconSpan("lucide--settings-2", "size-4.5").Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "</label> ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		if opts.Notifications != nil {
+			templ_7745c5c3_Err = opts.Notifications.Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		if opts.Profile != nil {
+			templ_7745c5c3_Err = opts.Profile.Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else if opts.ProfileName != "" {
+			templ_7745c5c3_Err = nav.ProfileMenuVariant("switch-account", nav.ProfileMenuVariantOpts{
+				Name:     opts.ProfileName,
+				Role:     opts.ProfileRole,
+				Initials: initialsFrom(opts.ProfileName),
+			}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
