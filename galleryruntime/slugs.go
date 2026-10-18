@@ -137,10 +137,15 @@ func ComponentSlugsJSON() string {
 }
 
 // ComponentSlugsScript returns a templ.Component that renders a <script> tag
-// defining COMPONENT_SLUGS as a global JS variable.
+// defining COMPONENT_SLUGS as a global JS variable. The tag carries the
+// render-context CSP nonce when one is set.
 func ComponentSlugsScript() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		_, err := fmt.Fprintf(w, "<script>var COMPONENT_SLUGS=%s;</script>", ComponentSlugsJSON())
+		nonce := ""
+		if n := templ.GetNonce(ctx); n != "" {
+			nonce = ` nonce="` + n + `"`
+		}
+		_, err := fmt.Fprintf(w, "<script%s>var COMPONENT_SLUGS=%s;</script>", nonce, ComponentSlugsJSON())
 		return err
 	})
 }

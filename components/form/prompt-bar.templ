@@ -836,7 +836,7 @@ templ promptBarStopActionButton(props PromptBarProps) {
 // composers on one page share a single listener set.
 templ promptBarKeyboardScript() {
 	@promptBarScriptOnce.Once() {
-		<script>
+		<script nonce={ templ.GetNonce(ctx) }>
 	if (!window._promptBarInit) {
 		window._promptBarInit = true;
 

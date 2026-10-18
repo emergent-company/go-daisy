@@ -599,7 +599,20 @@ func apexChartScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<script>\n\t(function () {\n\t  window.initApexChart = function(el) {\n\t    if (typeof ApexCharts === 'undefined') {\n\t      var s = document.createElement('script');\n\t      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.3.0/apexcharts.min.js';\n\t      s.onload = function() { renderApexChart(el); };\n\t      document.head.appendChild(s);\n\t    } else {\n\t      renderApexChart(el);\n\t    }\n\t  };\n\n\t  function renderApexChart(el) {\n\t    if (el._chart) {\n\t      el._chart.updateOptions(JSON.parse(el.dataset.options));\n\t      return;\n\t    }\n\t    try {\n\t      var opts = JSON.parse(el.dataset.options);\n\t      el._chart = new ApexCharts(el, opts);\n\t      el._chart.render();\n\t    } catch(e) { console.warn('ApexChart init failed:', e); }\n\t  }\n\n\t  gdBehaviour('apexChartInit', function () {\n\t    document.addEventListener('DOMContentLoaded', function() {\n\t      document.querySelectorAll('[data-chart]').forEach(initApexChart);\n\t    });\n\t    // Also scan immediately in case page is already loaded\n\t    if (document.readyState === 'complete' || document.readyState === 'interactive') {\n\t      document.querySelectorAll('[data-chart]').forEach(initApexChart);\n\t    }\n\t  }, function () {\n\t    document.querySelectorAll('[data-chart]:not(._ac-initialized)').forEach(function(el) {\n\t      el.classList.add('_ac-initialized');\n\t      initApexChart(el);\n\t    });\n\t  });\n\t})();\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<script nonce=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var7 string
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chart.templ`, Line: 479, Col: 37}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\">\n\t(function () {\n\t  window.initApexChart = function(el) {\n\t    if (typeof ApexCharts === 'undefined') {\n\t      var s = document.createElement('script');\n\t      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.3.0/apexcharts.min.js';\n\t      s.onload = function() { renderApexChart(el); };\n\t      document.head.appendChild(s);\n\t    } else {\n\t      renderApexChart(el);\n\t    }\n\t  };\n\n\t  function renderApexChart(el) {\n\t    if (el._chart) {\n\t      el._chart.updateOptions(JSON.parse(el.dataset.options));\n\t      return;\n\t    }\n\t    try {\n\t      var opts = JSON.parse(el.dataset.options);\n\t      el._chart = new ApexCharts(el, opts);\n\t      el._chart.render();\n\t    } catch(e) { console.warn('ApexChart init failed:', e); }\n\t  }\n\n\t  gdBehaviour('apexChartInit', function () {\n\t    document.addEventListener('DOMContentLoaded', function() {\n\t      document.querySelectorAll('[data-chart]').forEach(initApexChart);\n\t    });\n\t    // Also scan immediately in case page is already loaded\n\t    if (document.readyState === 'complete' || document.readyState === 'interactive') {\n\t      document.querySelectorAll('[data-chart]').forEach(initApexChart);\n\t    }\n\t  }, function () {\n\t    document.querySelectorAll('[data-chart]:not(._ac-initialized)').forEach(function(el) {\n\t      el.classList.add('_ac-initialized');\n\t      initApexChart(el);\n\t    });\n\t  });\n\t})();\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

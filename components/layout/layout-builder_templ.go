@@ -225,7 +225,20 @@ func LayoutBuilder() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div></div></div></div></div></div><script defer src=\"https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js\"></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div></div></div></div></div></div><script nonce=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/layout-builder.templ`, Line: 145, Col: 36}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\" defer src=\"https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

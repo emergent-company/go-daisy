@@ -90,7 +90,20 @@ func OTPInput(id string, digits int) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<script>\n\t(function() {\n\t\tvar id = { \"'\" + id + \"'\" };\n\t\tvar digits = { strconv.Itoa(digits) };\n\t\tfor (var i = 0; i < digits; i++) (function(idx) {\n\t\t\tvar el = document.getElementById(id + '-' + idx);\n\t\t\tif (!el) return;\n\t\t\tel.addEventListener('input', function(e) {\n\t\t\t\te.target.value = e.target.value.replace(/[^0-9]/g, '');\n\t\t\t\tif (e.target.value && idx < digits - 1) {\n\t\t\t\t\tvar next = document.getElementById(id + '-' + (idx + 1));\n\t\t\t\t\tif (next) next.focus();\n\t\t\t\t}\n\t\t\t});\n\t\t\tel.addEventListener('keydown', function(e) {\n\t\t\t\tif (e.key === 'Backspace' && !e.target.value && idx > 0) {\n\t\t\t\t\tvar prev = document.getElementById(id + '-' + (idx - 1));\n\t\t\t\t\tif (prev) prev.focus();\n\t\t\t\t}\n\t\t\t});\n\t\t\tel.addEventListener('paste', function(e) {\n\t\t\t\te.preventDefault();\n\t\t\t\tvar paste = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');\n\t\t\t\tfor (var j = 0; j < digits && j < paste.length; j++) {\n\t\t\t\t\tvar target = document.getElementById(id + '-' + j);\n\t\t\t\t\tif (target) { target.value = paste[j]; target.dispatchEvent(new Event('input', {bubbles: true})); }\n\t\t\t\t}\n\t\t\t\tvar nextIdx = Math.min(paste.length, digits - 1);\n\t\t\t\tvar focusEl = document.getElementById(id + '-' + nextIdx);\n\t\t\t\tif (focusEl) focusEl.focus();\n\t\t\t});\n\t\t})(i);\n\t})();\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<script nonce=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/otp.templ`, Line: 30, Col: 37}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\">\n\t(function() {\n\t\tvar id = { \"'\" + id + \"'\" };\n\t\tvar digits = { strconv.Itoa(digits) };\n\t\tfor (var i = 0; i < digits; i++) (function(idx) {\n\t\t\tvar el = document.getElementById(id + '-' + idx);\n\t\t\tif (!el) return;\n\t\t\tel.addEventListener('input', function(e) {\n\t\t\t\te.target.value = e.target.value.replace(/[^0-9]/g, '');\n\t\t\t\tif (e.target.value && idx < digits - 1) {\n\t\t\t\t\tvar next = document.getElementById(id + '-' + (idx + 1));\n\t\t\t\t\tif (next) next.focus();\n\t\t\t\t}\n\t\t\t});\n\t\t\tel.addEventListener('keydown', function(e) {\n\t\t\t\tif (e.key === 'Backspace' && !e.target.value && idx > 0) {\n\t\t\t\t\tvar prev = document.getElementById(id + '-' + (idx - 1));\n\t\t\t\t\tif (prev) prev.focus();\n\t\t\t\t}\n\t\t\t});\n\t\t\tel.addEventListener('paste', function(e) {\n\t\t\t\te.preventDefault();\n\t\t\t\tvar paste = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');\n\t\t\t\tfor (var j = 0; j < digits && j < paste.length; j++) {\n\t\t\t\t\tvar target = document.getElementById(id + '-' + j);\n\t\t\t\t\tif (target) { target.value = paste[j]; target.dispatchEvent(new Event('input', {bubbles: true})); }\n\t\t\t\t}\n\t\t\t\tvar nextIdx = Math.min(paste.length, digits - 1);\n\t\t\t\tvar focusEl = document.getElementById(id + '-' + nextIdx);\n\t\t\t\tif (focusEl) focusEl.focus();\n\t\t\t});\n\t\t})(i);\n\t})();\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

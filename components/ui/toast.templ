@@ -13,7 +13,7 @@ var toastScriptOnceHandle = templ.NewOnceHandle()
 // with the "toast-auto-dismiss" class. Include once in the page layout.
 templ ToastScript() {
 	@toastScriptOnceHandle.Once() {
-			<script>
+			<script nonce={ templ.GetNonce(ctx) }>
 			(function(){
 				function dismissToast(el){
 					var d = parseInt(el.dataset.duration)||4000;

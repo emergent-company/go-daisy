@@ -95,11 +95,24 @@ func ThemeScript() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templ.Raw("<script>"+ThemeRuntimeJS()+"</script>").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templ.Raw(ThemeRuntimeTag(ctx)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script>\n\t(function() {\n\t\ttry {\n\t\t\tvar rt = window.__goDaisyTheme;\n\t\t\tvar MODE_KEY = 'gallery-ui-theme';\n\t\t\tvar PALETTE_KEY = 'gallery-ui-palette';\n\t\t\tvar PREVIEW_KEY = 'gallery-preview-theme';\n\n\t\t\tvar mode = null;\n\t\t\tvar palette = null;\n\t\t\ttry { mode = localStorage.getItem(MODE_KEY); } catch (e) {}\n\t\t\ttry { palette = localStorage.getItem(PALETTE_KEY); } catch (e) {}\n\t\t\tif (mode !== 'light' && mode !== 'dark' && mode !== 'system' && mode !== 'custom') { mode = 'system'; }\n\t\t\tif (!rt.palettes[palette]) { palette = rt.defaultPalette; }\n\n\t\t\t// A user-generated theme (gallery theme studio) wins over the\n\t\t\t// palette x mode mapping when the user selected it and one is stored.\n\t\t\tvar custom = null;\n\t\t\ttry {\n\t\t\t\tvar raw = localStorage.getItem('gallery-custom-theme');\n\t\t\t\tcustom = raw ? JSON.parse(raw) : null;\n\t\t\t} catch (e) { custom = null; }\n\t\t\tvar isCustom = mode === 'custom' && !!(custom && custom.vars && Object.keys(custom.vars).length);\n\n\t\t\tvar effective = isCustom ? 'custom' : rt.effectiveMode(mode);\n\t\t\tvar theme = isCustom ? 'custom' : rt.resolve(mode, palette);\n\n\t\t\tdocument.documentElement.setAttribute('data-theme', theme);\n\n\t\t\t// Seed the preview key for embedded iframes; tolerate storage errors.\n\t\t\ttry { localStorage.setItem(PREVIEW_KEY, effective); } catch (e) {}\n\n\t\t\t// Share the resolution with the switcher so it does not repeat the work.\n\t\t\twindow.__goDaisyThemeState = { mode: mode, palette: palette, theme: theme, effective: effective };\n\t\t} catch (e) {}\n\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script nonce=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-script.templ`, Line: 71, Col: 36}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\">\n\t(function() {\n\t\ttry {\n\t\t\tvar rt = window.__goDaisyTheme;\n\t\t\tvar MODE_KEY = 'gallery-ui-theme';\n\t\t\tvar PALETTE_KEY = 'gallery-ui-palette';\n\t\t\tvar PREVIEW_KEY = 'gallery-preview-theme';\n\n\t\t\tvar mode = null;\n\t\t\tvar palette = null;\n\t\t\ttry { mode = localStorage.getItem(MODE_KEY); } catch (e) {}\n\t\t\ttry { palette = localStorage.getItem(PALETTE_KEY); } catch (e) {}\n\t\t\tif (mode !== 'light' && mode !== 'dark' && mode !== 'system') { mode = 'system'; }\n\t\t\tif (!rt.palettes[palette]) { palette = rt.defaultPalette; }\n\n\t\t\tvar effective = rt.effectiveMode(mode);\n\t\t\tvar theme = rt.resolve(mode, palette);\n\n\t\t\tdocument.documentElement.setAttribute('data-theme', theme);\n\n\t\t\t// Seed the preview key for embedded iframes; tolerate storage errors.\n\t\t\ttry { localStorage.setItem(PREVIEW_KEY, effective); } catch (e) {}\n\n\t\t\t// Share the resolution with the switcher so it does not repeat the work.\n\t\t\twindow.__goDaisyThemeState = { mode: mode, palette: palette, theme: theme, effective: effective };\n\t\t} catch (e) {}\n\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

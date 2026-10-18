@@ -67,7 +67,7 @@ templ SidebarDense(props SidebarDenseProps) {
 
 templ sidebarDenseScript() {
 	@sidebarDenseOnce.Once() {
-		<script>
+		<script nonce={ templ.GetNonce(ctx) }>
 	gdOnce('sidebarDenseInit', function () {
 
 	  // Inject CSS

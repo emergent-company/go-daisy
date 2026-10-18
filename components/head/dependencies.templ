@@ -6,21 +6,27 @@ import (
 	"github.com/emergent-company/go-daisy/staticfs"
 )
 
+// Dependencies emits the page's CSS/JS tags.
+//
+// Every tag carries the render-context CSP nonce (templ.WithNonce) so a host can
+// serve a strict `script-src 'nonce-…'` policy. Without a nonce in the context
+// the output is byte-identical to the pre-CSP version.
 templ Dependencies(props DepsProps) {
+	{{ nonce := templ.GetNonce(ctx) }}
 	@ui.ThemeScript()
 	@behaviors.Tag()
 	@templ.Raw(staticfs.Stylesheet("/css/app.css"))
-	@templ.Raw(staticfs.Script("/js/htmx.js"))
+	@templ.Raw(staticfs.ScriptNonce("/js/htmx.js", nonce))
 	if props.Alpine {
-		@templ.Raw(staticfs.Script("/js/alpine.js"))
+		@templ.Raw(staticfs.ScriptNonce("/js/alpine.js", nonce))
 	}
 	if props.Morph {
-		@templ.Raw(staticfs.Script("/js/morph.js"))
+		@templ.Raw(staticfs.ScriptNonce("/js/morph.js", nonce))
 	}
 	if props.SSE {
-		@templ.Raw(staticfs.Script("/js/hx-sse.js"))
+		@templ.Raw(staticfs.ScriptNonce("/js/hx-sse.js", nonce))
 	}
 	if props.WS {
-		@templ.Raw(staticfs.Script("/js/hx-ws.js"))
+		@templ.Raw(staticfs.ScriptNonce("/js/hx-ws.js", nonce))
 	}
 }

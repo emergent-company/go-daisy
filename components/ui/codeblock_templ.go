@@ -238,7 +238,20 @@ func CodeBlock(props CodeBlockProps) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<script>\n\tgdOnce('copyBlockCode', function () {\n\t  window.copyBlockCode = function(el) {\n\t    var pre = el.closest('.code-block-root');\n\t    var code = pre ? pre.querySelector('pre') || pre.querySelector('code') : null;\n\t    var text = code ? code.textContent : '';\n\t    if (navigator.clipboard && navigator.clipboard.writeText) {\n\t      navigator.clipboard.writeText(text).then(function() {\n\t        el.dataset.tip = 'Copied!';\n\t        setTimeout(function() { el.dataset.tip = 'Copy'; }, 1500);\n\t      }).catch(function() {});\n\t    }\n\t  };\n\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<script nonce=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var11 string
+			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/codeblock.templ`, Line: 66, Col: 37}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\">\n\tgdOnce('copyBlockCode', function () {\n\t  window.copyBlockCode = function(el) {\n\t    var pre = el.closest('.code-block-root');\n\t    var code = pre ? pre.querySelector('pre') || pre.querySelector('code') : null;\n\t    var text = code ? code.textContent : '';\n\t    if (navigator.clipboard && navigator.clipboard.writeText) {\n\t      navigator.clipboard.writeText(text).then(function() {\n\t        el.dataset.tip = 'Copied!';\n\t        setTimeout(function() { el.dataset.tip = 'Copy'; }, 1500);\n\t      }).catch(function() {});\n\t    }\n\t  };\n\t});\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

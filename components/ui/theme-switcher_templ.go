@@ -82,11 +82,24 @@ func ThemeSwitcher() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templ.Raw("<script>"+ThemeRuntimeJS()+"</script>").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = templ.Raw(ThemeRuntimeTag(ctx)).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, " <script>\n\t\t(function() {\n\t\t\t// Palette registry + resolver come from the single source of truth\n\t\t\t// (ThemeRuntimeJS, injected just above); never re-declare them here.\n\t\t\tvar rt = window.__goDaisyTheme;\n\t\t\tvar PALETTES = rt.palettes;\n\t\t\tvar DEFAULT_PALETTE = rt.defaultPalette;\n\t\t\tvar MODES = ['light', 'dark', 'system'];\n\n\t\t\t// A user-generated theme (gallery theme studio) lives in localStorage\n\t\t\t// and is injected as a scoped [data-theme=\"custom\"] rule by the shell\n\t\t\t// and by each preview document.\n\t\t\tfunction hasCustomTheme() {\n\t\t\t\ttry {\n\t\t\t\t\tvar raw = localStorage.getItem('gallery-custom-theme');\n\t\t\t\t\tif (!raw) return false;\n\t\t\t\t\tvar t = JSON.parse(raw);\n\t\t\t\t\treturn !!(t && t.vars && Object.keys(t.vars).length);\n\t\t\t\t} catch(e) { return false; }\n\t\t\t}\n\t\t\tvar STORAGE_KEY = 'gallery-ui-theme';\n\t\t\tvar PALETTE_KEY = 'gallery-ui-palette';\n\t\t\tvar PREVIEW_KEY = 'gallery-preview-theme';\n\n\t\t\tfunction isMode(m) { return m === 'light' || m === 'dark' || m === 'system' || m === 'custom'; }\n\t\t\tfunction isPalette(p) { return !!PALETTES[p]; }\n\n\t\t\tfunction readMode() {\n\t\t\t\ttry { var m = localStorage.getItem(STORAGE_KEY); return isMode(m) ? m : null; } catch(e) { return null; }\n\t\t\t}\n\t\t\tfunction readPalette() {\n\t\t\t\ttry { var p = localStorage.getItem(PALETTE_KEY); return isPalette(p) ? p : null; } catch(e) { return null; }\n\t\t\t}\n\n\t\t\tfunction effectiveMode(mode) { return rt.effectiveMode(mode); }\n\n\t\t\tfunction resolveTheme(mode, palette) {\n\t\t\t\tif (mode === 'custom' && hasCustomTheme()) return 'custom';\n\t\t\t\treturn rt.resolve(mode, palette);\n\t\t\t}\n\n\t\t\tfunction resolvePreviewMode(mode) {\n\t\t\t\tif (mode === 'custom' && hasCustomTheme()) return 'custom';\n\t\t\t\treturn rt.effectiveMode(mode);\n\t\t\t}\n\n\t\t\t// Keep the preview key in sync (effective mode) and push the\n\t\t\t// resolved daisyUI theme into any live preview iframes. With the\n\t\t\t// default palette this resolves to the historical nord/dracula\n\t\t\t// mapping, so existing preview behaviour is unchanged.\n\t\t\tfunction syncPreviewIframes(mode, palette) {\n\t\t\t\ttry { localStorage.setItem(PREVIEW_KEY, resolvePreviewMode(mode)); } catch(e) {}\n\t\t\t\tvar daisyTheme = resolveTheme(mode, palette);\n\t\t\t\tdocument.querySelectorAll('[id$=\"preview-frame\"], [id*=\"examples-frame\"]').forEach(function(f) {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar d = f.contentDocument || f.contentWindow.document;\n\t\t\t\t\t\tif (d && d.documentElement) {\n\t\t\t\t\t\t\td.documentElement.setAttribute('data-theme', daisyTheme);\n\t\t\t\t\t\t}\n\t\t\t\t\t} catch(e) {}\n\t\t\t\t});\n\t\t\t}\n\n\t\t\tvar current = { mode: 'system', palette: DEFAULT_PALETTE };\n\t\t\tvar _applying = false;\n\t\t\tfunction applyTheme(mode, palette) {\n\t\t\t\tif (_applying) return;\n\t\t\t\t_applying = true;\n\t\t\t\ttry {\n\t\t\t\t\tif (!isMode(mode)) { mode = 'system'; }\n\t\t\t\t\tif (!isPalette(palette)) { palette = DEFAULT_PALETTE; }\n\n\t\t\t\t\tvar themeAttr = resolveTheme(mode, palette);\n\t\t\t\t\tvar html = document.documentElement;\n\t\t\t\t\tif (html.getAttribute('data-theme') !== themeAttr) {\n\t\t\t\t\t\thtml.setAttribute('data-theme', themeAttr);\n\t\t\t\t\t}\n\n\t\t\t\t\tMODES.forEach(function(m) {\n\t\t\t\t\t\tvar el = document.getElementById('theme-icon-' + m);\n\t\t\t\t\t\tif (el) el.style.display = m === mode ? '' : 'none';\n\t\t\t\t\t\tvar ck = document.getElementById('check-' + m);\n\t\t\t\t\t\tif (ck) ck.style.display = m === mode ? '' : 'none';\n\t\t\t\t\t});\n\n\t\t\t\t\tObject.keys(PALETTES).forEach(function(p) {\n\t\t\t\t\t\tvar selected = p === palette;\n\t\t\t\t\t\tvar pk = document.getElementById('palette-check-' + p);\n\t\t\t\t\t\tif (pk) pk.style.display = selected ? '' : 'none';\n\t\t\t\t\t\tvar btn = document.querySelector('[data-palette-option=\"' + p + '\"]');\n\t\t\t\t\t\tif (btn) btn.setAttribute('aria-pressed', selected ? 'true' : 'false');\n\t\t\t\t\t});\n\n\t\t\t\t\tcurrent.mode = mode;\n\t\t\t\t\tcurrent.palette = palette;\n\n\t\t\t\t\ttry { localStorage.setItem(STORAGE_KEY, mode); } catch(e) {}\n\t\t\t\t\ttry { localStorage.setItem(PALETTE_KEY, palette); } catch(e) {}\n\t\t\t\t\tsyncPreviewIframes(mode, palette);\n\t\t\t\t} finally { _applying = false; }\n\t\t\t}\n\n\t\t\t// Reuse the pre-paint resolution from ThemeScript() when present so\n\t\t\t// we do not repeat the work (and do not rewrite data-theme).\n\t\t\tvar head = window.__goDaisyThemeState;\n\t\t\tvar initMode = (head && isMode(head.mode)) ? head.mode : (readMode() || 'system');\n\t\t\tvar initPalette = (head && isPalette(head.palette)) ? head.palette : (readPalette() || DEFAULT_PALETTE);\n\t\t\tapplyTheme(initMode, initPalette);\n\n\t\t\tvar mq = window.matchMedia('(prefers-color-scheme: dark)');\n\t\t\tmq.addEventListener('change', function() {\n\t\t\t\tif (current.mode === 'system') { applyTheme('system', current.palette); }\n\t\t\t});\n\n\t\t\tdocument.addEventListener('htmx:after:settle', function() {\n\t\t\t\tsyncPreviewIframes(current.mode, current.palette);\n\t\t\t});\n\n\t\t\tdocument.addEventListener('click', function(e) {\n\t\t\t\tvar target = e.target;\n\t\t\t\tif (!target || !target.closest) return;\n\t\t\t\tvar modeOption = target.closest('[data-theme-option]');\n\t\t\t\tif (modeOption) {\n\t\t\t\t\tapplyTheme(modeOption.getAttribute('data-theme-option'), current.palette);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t\tvar paletteOption = target.closest('[data-palette-option]');\n\t\t\t\tif (paletteOption) {\n\t\t\t\t\tapplyTheme(current.mode, paletteOption.getAttribute('data-palette-option'));\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, " <script nonce=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 44, Col: 37}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\">\n\t\t(function() {\n\t\t\t// Palette registry + resolver come from the single source of truth\n\t\t\t// (ThemeRuntimeJS, injected just above); never re-declare them here.\n\t\t\tvar rt = window.__goDaisyTheme;\n\t\t\tvar PALETTES = rt.palettes;\n\t\t\tvar DEFAULT_PALETTE = rt.defaultPalette;\n\t\t\tvar MODES = ['light', 'dark', 'system'];\n\t\t\tvar STORAGE_KEY = 'gallery-ui-theme';\n\t\t\tvar PALETTE_KEY = 'gallery-ui-palette';\n\t\t\tvar PREVIEW_KEY = 'gallery-preview-theme';\n\n\t\t\tfunction isMode(m) { return m === 'light' || m === 'dark' || m === 'system'; }\n\t\t\tfunction isPalette(p) { return !!PALETTES[p]; }\n\n\t\t\tfunction readMode() {\n\t\t\t\ttry { var m = localStorage.getItem(STORAGE_KEY); return isMode(m) ? m : null; } catch(e) { return null; }\n\t\t\t}\n\t\t\tfunction readPalette() {\n\t\t\t\ttry { var p = localStorage.getItem(PALETTE_KEY); return isPalette(p) ? p : null; } catch(e) { return null; }\n\t\t\t}\n\n\t\t\tfunction effectiveMode(mode) { return rt.effectiveMode(mode); }\n\n\t\t\tfunction resolveTheme(mode, palette) { return rt.resolve(mode, palette); }\n\n\t\t\t// Keep the preview key in sync (effective mode) and push the\n\t\t\t// resolved daisyUI theme into any live preview iframes. With the\n\t\t\t// default palette this resolves to the historical nord/dracula\n\t\t\t// mapping, so existing preview behaviour is unchanged.\n\t\t\tfunction syncPreviewIframes(mode, palette) {\n\t\t\t\ttry { localStorage.setItem(PREVIEW_KEY, effectiveMode(mode)); } catch(e) {}\n\t\t\t\tvar daisyTheme = resolveTheme(mode, palette);\n\t\t\t\tdocument.querySelectorAll('[id$=\"preview-frame\"], [id*=\"examples-frame\"]').forEach(function(f) {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar d = f.contentDocument || f.contentWindow.document;\n\t\t\t\t\t\tif (d && d.documentElement) {\n\t\t\t\t\t\t\td.documentElement.setAttribute('data-theme', daisyTheme);\n\t\t\t\t\t\t}\n\t\t\t\t\t} catch(e) {}\n\t\t\t\t});\n\t\t\t}\n\n\t\t\tvar current = { mode: 'system', palette: DEFAULT_PALETTE };\n\t\t\tvar _applying = false;\n\t\t\tfunction applyTheme(mode, palette) {\n\t\t\t\tif (_applying) return;\n\t\t\t\t_applying = true;\n\t\t\t\ttry {\n\t\t\t\t\tif (!isMode(mode)) { mode = 'system'; }\n\t\t\t\t\tif (!isPalette(palette)) { palette = DEFAULT_PALETTE; }\n\n\t\t\t\t\tvar themeAttr = resolveTheme(mode, palette);\n\t\t\t\t\tvar html = document.documentElement;\n\t\t\t\t\tif (html.getAttribute('data-theme') !== themeAttr) {\n\t\t\t\t\t\thtml.setAttribute('data-theme', themeAttr);\n\t\t\t\t\t}\n\n\t\t\t\t\tMODES.forEach(function(m) {\n\t\t\t\t\t\tvar el = document.getElementById('theme-icon-' + m);\n\t\t\t\t\t\tif (el) el.style.display = m === mode ? '' : 'none';\n\t\t\t\t\t\tvar ck = document.getElementById('check-' + m);\n\t\t\t\t\t\tif (ck) ck.style.display = m === mode ? '' : 'none';\n\t\t\t\t\t});\n\n\t\t\t\t\tObject.keys(PALETTES).forEach(function(p) {\n\t\t\t\t\t\tvar selected = p === palette;\n\t\t\t\t\t\tvar pk = document.getElementById('palette-check-' + p);\n\t\t\t\t\t\tif (pk) pk.style.display = selected ? '' : 'none';\n\t\t\t\t\t\tvar btn = document.querySelector('[data-palette-option=\"' + p + '\"]');\n\t\t\t\t\t\tif (btn) btn.setAttribute('aria-pressed', selected ? 'true' : 'false');\n\t\t\t\t\t});\n\n\t\t\t\t\tcurrent.mode = mode;\n\t\t\t\t\tcurrent.palette = palette;\n\n\t\t\t\t\ttry { localStorage.setItem(STORAGE_KEY, mode); } catch(e) {}\n\t\t\t\t\ttry { localStorage.setItem(PALETTE_KEY, palette); } catch(e) {}\n\t\t\t\t\tsyncPreviewIframes(mode, palette);\n\t\t\t\t} finally { _applying = false; }\n\t\t\t}\n\n\t\t\t// Reuse the pre-paint resolution from ThemeScript() when present so\n\t\t\t// we do not repeat the work (and do not rewrite data-theme).\n\t\t\tvar head = window.__goDaisyThemeState;\n\t\t\tvar initMode = (head && isMode(head.mode)) ? head.mode : (readMode() || 'system');\n\t\t\tvar initPalette = (head && isPalette(head.palette)) ? head.palette : (readPalette() || DEFAULT_PALETTE);\n\t\t\tapplyTheme(initMode, initPalette);\n\n\t\t\tvar mq = window.matchMedia('(prefers-color-scheme: dark)');\n\t\t\tmq.addEventListener('change', function() {\n\t\t\t\tif (current.mode === 'system') { applyTheme('system', current.palette); }\n\t\t\t});\n\n\t\t\tdocument.addEventListener('htmx:after:settle', function() {\n\t\t\t\tsyncPreviewIframes(current.mode, current.palette);\n\t\t\t});\n\n\t\t\tdocument.addEventListener('click', function(e) {\n\t\t\t\tvar target = e.target;\n\t\t\t\tif (!target || !target.closest) return;\n\t\t\t\tvar modeOption = target.closest('[data-theme-option]');\n\t\t\t\tif (modeOption) {\n\t\t\t\t\tapplyTheme(modeOption.getAttribute('data-theme-option'), current.palette);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\t\t\t\tvar paletteOption = target.closest('[data-palette-option]');\n\t\t\t\tif (paletteOption) {\n\t\t\t\t\tapplyTheme(current.mode, paletteOption.getAttribute('data-palette-option'));\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -120,116 +133,116 @@ func paletteSwatch(id string, label string, primary string, accent string, selec
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var3 == nil {
-			templ_7745c5c3_Var3 = templ.NopComponent
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<button type=\"button\" data-palette-option=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(id)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 187, Col: 26}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"flex items-center gap-1 rounded-full border border-base-300 bg-base-200 px-1.5 py-1 transition hover:bg-base-300\" aria-label=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<button type=\"button\" data-palette-option=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(label + " palette")
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(id)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 189, Col: 33}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 167, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" aria-pressed=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" class=\"flex items-center gap-1 rounded-full border border-base-300 bg-base-200 px-1.5 py-1 transition hover:bg-base-300\" aria-label=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(ternary(selected, "true", "false"))
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(label + " palette")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 190, Col: 51}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 169, Col: 33}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" title=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" aria-pressed=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
-		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(label)
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(ternary(selected, "true", "false"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 191, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 170, Col: 51}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\"><span class=\"block size-3 rounded-full\" style=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" title=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
-		templ_7745c5c3_Var8, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues("background:" + primary)
+		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 193, Col: 73}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 171, Col: 15}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\"></span> <span class=\"block size-3 rounded-full\" style=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\"><span class=\"block size-3 rounded-full\" style=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var9 string
-		templ_7745c5c3_Var9, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues("background:" + accent)
+		templ_7745c5c3_Var9, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues("background:" + primary)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 194, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 173, Col: 73}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\"></span> <span id=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\"></span> <span class=\"block size-3 rounded-full\" style=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var10 string
-		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue("palette-check-" + id)
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues("background:" + accent)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 195, Col: 34}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 174, Col: 72}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" class=\"iconify lucide--check size-3\" style=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\"></span> <span id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(checkDisplay(selected))
+		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue("palette-check-" + id)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 195, Col: 104}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 175, Col: 34}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" aria-hidden=\"true\"></span></button>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" class=\"iconify lucide--check size-3\" style=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var12 string
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(checkDisplay(selected))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/theme-switcher.templ`, Line: 175, Col: 104}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" aria-hidden=\"true\"></span></button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

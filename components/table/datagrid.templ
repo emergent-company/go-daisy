@@ -209,7 +209,7 @@ templ DataGrid(props DataGridProps) {
 
 // dataGridAlpineScript injects the Alpine.js store factory for DataGrid instances.
 templ dataGridAlpineScript() {
-	<script type="text/javascript">
+	<script type="text/javascript" nonce={ templ.GetNonce(ctx) }>
 		gdOnce('dataGridStore', function () {
 			window.dataGridStore = function() {
 				return {

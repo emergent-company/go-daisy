@@ -18,9 +18,11 @@ import (
 
 // Tag returns the go-daisy init runtime script tag. It must be placed in the
 // <head> before any component script that calls gdOnce or gdBehaviour.
+//
+// The tag carries the render-context CSP nonce (templ.WithNonce) when present.
 func Tag() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		_, err := io.WriteString(w, staticfs.Script("/js/go-daisy-init.js"))
+		_, err := io.WriteString(w, staticfs.ScriptNonce("/js/go-daisy-init.js", templ.GetNonce(ctx)))
 		return err
 	})
 }

@@ -38,7 +38,7 @@ templ InputSpinner(id string, value int, min int, max int, hasMinMax bool, btnCl
 // spinnerScript emits the shared spinner JS once per page (deduplicated by templ).
 templ spinnerScript() {
 	@spinnerScriptOnce.Once() {
-		<script>
+		<script nonce={ templ.GetNonce(ctx) }>
 	gdOnce('spinnerInit', function () {
 	  window.spinnerGet = function(id) { return document.getElementById(id); };
 	  window.spinnerIncrement = function(id, step) {

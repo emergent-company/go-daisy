@@ -77,7 +77,7 @@ func clipboardOnClick(id string, value string, mono bool) templ.ComponentScript 
 
 templ clipboardScript() {
 	@clipboardScriptOnce.Once() {
-		<script>
+		<script nonce={ templ.GetNonce(ctx) }>
 	gdOnce('clipboardInit', function () {
 	  function clipboardFlash(btn, html) {
 	    var orig = btn.innerHTML;

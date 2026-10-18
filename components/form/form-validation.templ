@@ -65,7 +65,7 @@ func validationRulesJSON(rules []ValidationRule) string {
 
 templ formValidationScript() {
 	@formValidationOnce.Once() {
-		<script>
+		<script nonce={ templ.GetNonce(ctx) }>
 	(function () {
 	  function attachValidation(form) {
 	    var rules = [];

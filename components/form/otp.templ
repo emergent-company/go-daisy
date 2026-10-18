@@ -27,7 +27,7 @@ templ OTPInput(id string, digits int) {
 		}
 	</div>
 	@otpScriptOnce.Once() {
-		<script>
+		<script nonce={ templ.GetNonce(ctx) }>
 	(function() {
 		var id = { "'" + id + "'" };
 		var digits = { strconv.Itoa(digits) };

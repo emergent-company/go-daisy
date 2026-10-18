@@ -166,7 +166,20 @@ func Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) tem
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<script>\n\t\tgdOnce('sidebarInit', function () {\n\t\t\tvar sidebar = document.getElementById('_layout-sidebar');\n\t\t\tif (!sidebar) return;\n\n\t\t\tsidebar.addEventListener('click', function(e) {\n\t\t\t\tif (window.innerWidth >= 1024) return;\n\t\t\t\tvar link = e.target.closest('a');\n\t\t\t\tif (!link) return;\n\t\t\t\tvar cb = document.getElementById('_layout-sidebar-toggle-trigger');\n\t\t\t\tif (cb) cb.checked = false;\n\t\t\t});\n\n\t\t\tfunction updateActiveSidebarItem(path) {\n\t\t\t\tpath = path || window.location.pathname;\n\t\t\t\tvar links = sidebar.querySelectorAll('a.menu-item[href]');\n\t\t\t\tvar bestMatch = null;\n\t\t\t\tvar bestLen = 0;\n\t\t\t\tlinks.forEach(function(link) {\n\t\t\t\t\tlink.classList.remove('active');\n\t\t\t\t\tvar href = link.getAttribute('href');\n\t\t\t\t\tif (href && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {\n\t\t\t\t\t\tbestMatch = link;\n\t\t\t\t\t\tbestLen = href.length;\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t\tif (bestMatch) bestMatch.classList.add('active');\n\t\t\t}\n\n\t\t\tupdateActiveSidebarItem();\n\t\t\tdocument.addEventListener('htmx:after:history:push', function(e) {\n\t\t\t\tupdateActiveSidebarItem(e.detail && e.detail.path);\n\t\t\t});\n\t\t\tdocument.addEventListener('htmx:after:history:replace', function(e) {\n\t\t\t\tupdateActiveSidebarItem(e.detail && e.detail.path);\n\t\t\t});\n\t\t});\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<script nonce=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var7 string
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 63, Col: 37}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\">\n\t\tgdOnce('sidebarInit', function () {\n\t\t\tvar sidebar = document.getElementById('_layout-sidebar');\n\t\t\tif (!sidebar) return;\n\n\t\t\tsidebar.addEventListener('click', function(e) {\n\t\t\t\tif (window.innerWidth >= 1024) return;\n\t\t\t\tvar link = e.target.closest('a');\n\t\t\t\tif (!link) return;\n\t\t\t\tvar cb = document.getElementById('_layout-sidebar-toggle-trigger');\n\t\t\t\tif (cb) cb.checked = false;\n\t\t\t});\n\n\t\t\tfunction updateActiveSidebarItem(path) {\n\t\t\t\tpath = path || window.location.pathname;\n\t\t\t\tvar links = sidebar.querySelectorAll('a.menu-item[href]');\n\t\t\t\tvar bestMatch = null;\n\t\t\t\tvar bestLen = 0;\n\t\t\t\tlinks.forEach(function(link) {\n\t\t\t\t\tlink.classList.remove('active');\n\t\t\t\t\tvar href = link.getAttribute('href');\n\t\t\t\t\tif (href && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {\n\t\t\t\t\t\tbestMatch = link;\n\t\t\t\t\t\tbestLen = href.length;\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t\tif (bestMatch) bestMatch.classList.add('active');\n\t\t\t}\n\n\t\t\tupdateActiveSidebarItem();\n\t\t\tdocument.addEventListener('htmx:after:history:push', function(e) {\n\t\t\t\tupdateActiveSidebarItem(e.detail && e.detail.path);\n\t\t\t});\n\t\t\tdocument.addEventListener('htmx:after:history:replace', function(e) {\n\t\t\t\tupdateActiveSidebarItem(e.detail && e.detail.path);\n\t\t\t});\n\t\t});\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -202,17 +215,17 @@ func SidebarNavItem(item SidebarItem) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var7 == nil {
-			templ_7745c5c3_Var7 = templ.NopComponent
+		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var8 == nil {
+			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var8 = []any{"menu-item", templ.KV("active", item.Active)}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var8...)
+		var templ_7745c5c3_Var9 = []any{"menu-item", templ.KV("active", item.Active)}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var9...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<a")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<a")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -224,100 +237,100 @@ func SidebarNavItem(item SidebarItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, " href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, " href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var9 templ.SafeURL
-		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(item.Href))
+		var templ_7745c5c3_Var10 templ.SafeURL
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(item.Href))
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 114, Col: 29}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" hx-get=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var10 string
-		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.Href)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 115, Col: 20}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" hx-indicator=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue("#" + SidebarIndicatorID(item.Href))
+		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.Href)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 119, Col: 52}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 115, Col: 20}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" hx-indicator=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var12 string
-		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var8).String())
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue("#" + SidebarIndicatorID(item.Href))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 1, Col: 0}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 119, Col: 52}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\" class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var13 string
+		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var9).String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 1, Col: 0}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if item.Icon != "" {
-			var templ_7745c5c3_Var13 = []any{"iconify size-4 " + item.Icon}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var13...)
+			var templ_7745c5c3_Var14 = []any{"iconify size-4 " + item.Icon}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var14...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<span class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<span class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var14 string
-			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var13).String())
+			var templ_7745c5c3_Var15 string
+			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var14).String())
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 1, Col: 0}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\"></span> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\"></span> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<span class=\"grow\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<span class=\"grow\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var15 string
-		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
+		var templ_7745c5c3_Var16 string
+		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/layout/sidebar.templ`, Line: 125, Col: 33}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</span> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</span> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -331,7 +344,7 @@ func SidebarNavItem(item SidebarItem) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</a>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</a>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

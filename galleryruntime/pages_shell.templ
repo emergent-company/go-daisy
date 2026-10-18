@@ -245,7 +245,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 		<form method="dialog" class="modal-backdrop"><button>close</button></form>
 	</dialog>
 	<div id="gallery-search-index" data-index={ gallerySearchIndex(categories) } hidden></div>
-	<script>
+	<script nonce={ templ.GetNonce(ctx) }>
 	(function () {
 		var INDEX = JSON.parse(document.getElementById('gallery-search-index').dataset.index);
 
@@ -423,7 +423,7 @@ templ gallerySearchModal(categories []CategoryGroup) {
 		}
 	}());
 	</script>
-	<script>
+	<script nonce={ templ.GetNonce(ctx) }>
 	(function() {
 		function syncSidebarActive() {
 			var curPath = window.location.pathname;

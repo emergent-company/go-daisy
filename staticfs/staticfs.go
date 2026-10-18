@@ -94,6 +94,15 @@ func Stylesheet(p string) string {
 // is stripped to serve the unminified variant (e.g. "file.min.js" → "file.js").
 // Falls back to the original path if the unminified variant doesn't exist.
 func Script(p string) string {
+	return ScriptNonce(p, "")
+}
+
+// ScriptNonce is Script with a CSP nonce attribute.
+//
+// Pass templ.GetNonce(ctx) to render a tag that satisfies a strict
+// `script-src 'nonce-…'` policy. An empty nonce renders no attribute, so callers
+// that do not use CSP keep the plain Script output.
+func ScriptNonce(p, nonce string) string {
 	resolved := p
 	if UseUnminified {
 		unmin := strings.Replace(p, ".min.js", ".js", 1)
@@ -103,8 +112,23 @@ func Script(p string) string {
 			}
 		}
 	}
-	return fmt.Sprintf(`<script src="/static%s?v=%s" data-asset-track="reload"></script>`,
-		html.EscapeString(resolved), staticFilesHash[:12])
+	return fmt.Sprintf(`<script src="/static%s?v=%s" data-asset-track="reload"%s></script>`,
+		html.EscapeString(resolved), staticFilesHash[:12], nonceAttr(nonce))
+}
+
+// InlineScript returns an inline <script> block, with a nonce attribute when
+// nonce is non-empty. Use it to emit component scripts under a strict CSP
+// instead of hand-writing a <script> tag.
+func InlineScript(nonce, js string) string {
+	return fmt.Sprintf(`<script%s>%s</script>`, nonceAttr(nonce), js)
+}
+
+// nonceAttr renders the nonce attribute fragment, or "" when unset.
+func nonceAttr(nonce string) string {
+	if nonce == "" {
+		return ""
+	}
+	return fmt.Sprintf(` nonce="%s"`, html.EscapeString(nonce))
 }
 
 // AssetPath returns the full URL path for a static file with cache-busting hash.
