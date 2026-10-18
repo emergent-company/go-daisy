@@ -788,7 +788,7 @@ func Combobox(props ComboboxProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "<div class=\"combobox-popover absolute z-50 mt-1 w-full bg-base-100 border border-line rounded-box shadow-lg max-h-60 overflow-auto p-1\" x-show=\"open\" x-transition @click.outside=\"open = false\" x-trap.noscroll=\"open\" style=\"display:none\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "<div class=\"combobox-popover absolute z-50 mt-1 w-full bg-base-100 edge-line rounded-box shadow-lg max-h-60 overflow-auto p-1\" x-show=\"open\" x-transition @click.outside=\"open = false\" x-trap.noscroll=\"open\" style=\"display:none\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

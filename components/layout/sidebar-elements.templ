@@ -132,7 +132,7 @@ templ SidebarAvatarDropdown(avatarSrc string, avatarAlt string) {
 }
 
 templ SidebarPromoCard(daysLeft int, message string) {
-	<div class="border-line rounded-box relative mx-3 mb-3 mt-auto border p-3">
+	<div class="rounded-box relative mx-3 mb-3 mt-auto edge-line p-3">
 		<p class="font-medium">{ sprintTrial(daysLeft) } Days left!</p>
 		<progress class="progress progress-warning h-1 align-super" max="100" value={ sprintTrialProgress(daysLeft) }></progress>
 		<p class="text-base-content/80 -mt-1.5 text-sm leading-tight">
@@ -165,7 +165,7 @@ templ SidebarProjectSwitcher(items []SidebarProjectItem) {
 			<span class="grow text-left truncate text-sm">{ firstItem(items).Name }</span>
 			@ui.IconSpan("lucide--chevron-down", "size-3.5 text-base-content/40")
 		</label>
-		<ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-full p-1 border border-line mt-1">
+		<ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-full p-1 edge-line mt-1">
 			for _, item := range items {
 				<li><a href={ templ.SafeURL(item.Href) }><span class={ "iconify size-4 " + item.Icon }></span>{ item.Name }</a></li>
 			}
@@ -174,7 +174,7 @@ templ SidebarProjectSwitcher(items []SidebarProjectItem) {
 }
 
 templ SidebarMeetingBar(participants []string, meetingLabel string) {
-	<div class="border-line mx-3 mb-3 mt-auto rounded-box border p-3">
+	<div class="mx-3 mb-3 mt-auto rounded-box edge-line p-3">
 		<div class="flex items-center gap-2">
 			<div class="flex -space-x-2">
 				for _, p := range participants {
@@ -233,7 +233,7 @@ templ SidebarVersionSwitcher(versions []string, current string) {
 			<span class="grow text-left truncate">{ current }</span>
 			@ui.IconSpan("lucide--chevron-down", "size-3 text-base-content/40")
 		</label>
-		<ul tabindex="0" class="dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-full p-1 border border-line mt-1">
+		<ul tabindex="0" class="dropdown-content menu menu-xs bg-base-100 rounded-box shadow-lg z-50 w-full p-1 edge-line mt-1">
 			for _, v := range sprintVersions(current, versions) {
 				<li><a class={ templ.KV("active", v == current) }>{ v }</a></li>
 			}
@@ -242,7 +242,7 @@ templ SidebarVersionSwitcher(versions []string, current string) {
 }
 
 templ SidebarDocCard(icon string, title string, desc string, bgClass string) {
-	<div class="rounded-box border border-line p-3">
+	<div class="rounded-box edge-line p-3">
 		<div class="flex items-center gap-3">
 			<div class={ "rounded-box flex size-10 items-center justify-center " + bgClass }>
 				<span class={ "iconify size-5 " + icon }></span>

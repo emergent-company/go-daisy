@@ -86,7 +86,7 @@ func NotificationDropdown(props NotificationDropdownProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</label><div class=\"dropdown-content bg-base-100 rounded-box shadow-sm border border-line mt-2 w-80 z-20 p-0\"><div class=\"flex items-center justify-between px-4 py-3 border-b border-line\"><h3 class=\"text-sm font-semibold text-base-content\">Notifications</h3><button class=\"btn btn-ghost btn-xs\" onclick=\"markAllRead('{ props.ID }')\" aria-label=\"Mark all as read\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</label><div class=\"dropdown-content bg-base-100 rounded-box shadow-sm edge-line mt-2 w-80 z-20 p-0\"><div class=\"flex items-center justify-between px-4 py-3 border-b border-line\"><h3 class=\"text-sm font-semibold text-base-content\">Notifications</h3><button class=\"btn btn-ghost btn-xs\" onclick=\"markAllRead('{ props.ID }')\" aria-label=\"Mark all as read\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

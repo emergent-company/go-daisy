@@ -78,7 +78,7 @@ func SearchDropdown(placeholder string, sections []SearchDropdownSection) templ.
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" class=\"grow bg-transparent text-sm focus:outline-none\" type=\"text\"></label><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-1 w-full shadow-lg border border-line z-50\"><ul class=\"menu menu-sm w-full p-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" class=\"grow bg-transparent text-sm focus:outline-none\" type=\"text\"></label><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-1 w-full shadow-lg edge-line z-50\"><ul class=\"menu menu-sm w-full p-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

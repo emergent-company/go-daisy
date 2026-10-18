@@ -108,7 +108,7 @@ templ PopoverContent(props ...PopoverContentProps) {
 		data-gd-popover-placement={ string(p.Placement) }
 		data-gd-popover-offset={ strconv.Itoa(p.Offset) }
 		class={
-			"z-50 rounded-box bg-base-100 border border-line shadow-lg p-0",
+			"z-50 rounded-box bg-base-100 edge-line shadow-lg p-0",
 			"m-0 [&:popover-open]:opacity-100 opacity-0 transition-opacity duration-150",
 			p.Class,
 		}

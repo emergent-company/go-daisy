@@ -42,7 +42,7 @@ type DataTableProps struct {
 templ DataTable(props DataTableProps) {
 	<div
 		id={ props.ID }
-		class="card bg-base-100 shadow-sm border border-line"
+		class="card bg-base-100 shadow-sm edge-line"
 		data-datatable
 		data-columns={ columnJSON(props.Columns) }
 		data-rows={ rowsJSON(props.Rows) }
@@ -73,7 +73,7 @@ templ DataTable(props DataTableProps) {
 					@ui.IconSpan("lucide--columns", "size-4")
 					Columns
 				</button>
-				<div class="dropdown-content bg-base-100 rounded-box shadow-sm border border-line mt-1 p-3 min-w-40 z-10" x-show="open">
+				<div class="dropdown-content bg-base-100 rounded-box shadow-sm edge-line mt-1 p-3 min-w-40 z-10" x-show="open">
 					<template x-for="(col, i) in columns" :key="col.id">
 						<label class="flex items-center gap-2 py-1 text-sm">
 							<input type="checkbox" class="checkbox checkbox-xs" x-model="col.hidden" @change="filterRows()" />

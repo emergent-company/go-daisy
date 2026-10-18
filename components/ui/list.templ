@@ -50,7 +50,7 @@ type ListProps struct {
 
 // List renders a DaisyUI list container with an optional header row.
 templ List(p ListProps) {
-	<ul class="list bg-base-100 rounded-box border border-line" { devmode.Attrs(ctx, "ui/List")... } { p.Attrs... }>
+	<ul class="list bg-base-100 rounded-box edge-line" { devmode.Attrs(ctx, "ui/List")... } { p.Attrs... }>
 		if p.Header != "" {
 			<li class="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">{ p.Header }</li>
 		}

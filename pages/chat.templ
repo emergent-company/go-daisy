@@ -9,7 +9,7 @@ import (
 // ChatLayout renders a full chat interface with conversation sidebar and message area.
 templ ChatLayout(props ChatLayoutProps) {
 	<div class="flex h-[calc(100vh-8rem)] gap-4" { devmode.Attrs(ctx, "pages/ChatLayout")... }>
-		<div class="w-72 shrink-0 flex flex-col border border-line rounded-box bg-base-100">
+		<div class="w-72 shrink-0 flex flex-col edge-line rounded-box bg-base-100">
 			<div class="p-3 border-b border-line">
 				@form.SearchInput("chat-search", "", "Search conversations...", "", "#", "input-sm")
 			</div>
@@ -21,7 +21,7 @@ templ ChatLayout(props ChatLayoutProps) {
 			</div>
 		</div>
 
-		<div class="flex-1 flex flex-col border border-line rounded-box bg-base-100">
+		<div class="flex-1 flex flex-col edge-line rounded-box bg-base-100">
 			<div class="flex items-center gap-3 p-4 border-b border-line">
 				@ui.AvatarFull(ui.AvatarProps{Name: "Alice Johnson", Size: ui.AvatarSM})
 				<div>

@@ -14,7 +14,7 @@ templ SkeletonText(widths ...string) {
 
 // SkeletonCard renders a card-shaped skeleton with image + text placeholder.
 templ SkeletonCard() {
-	<div class="card border border-line shadow-sm" { devmode.Attrs(ctx, "ui/SkeletonCard")... }>
+	<div class="card edge-line shadow-sm" { devmode.Attrs(ctx, "ui/SkeletonCard")... }>
 		<div class="skeleton h-48 w-full rounded-none"></div>
 		<div class="card-body">
 			<div class="skeleton h-6 w-3/4"></div>

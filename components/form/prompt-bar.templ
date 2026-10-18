@@ -527,7 +527,7 @@ templ PromptBarAutocomplete(props PromptBarAutocompleteProps) {
 	} }}
 	<div
 		id={ props.ID }
-		class={ "absolute inset-x-0 bottom-full z-20 mb-2 max-h-56 overflow-auto rounded-box border border-line bg-base-100 p-1 shadow-lg", templ.KV(props.Class, props.Class != "") }
+		class={ "absolute inset-x-0 bottom-full z-20 mb-2 max-h-56 overflow-auto rounded-box edge-line bg-base-100 p-1 shadow-lg", templ.KV(props.Class, props.Class != "") }
 		data-prompt-bar-autocomplete
 		if props.HxGet != "" {
 			data-prompt-bar-hx-get={ props.HxGet }

@@ -11,7 +11,7 @@ templ Diff() {
 
 // DiffContainer renders a sized, styled diff wrapper for the gallery.
 templ DiffContainer() {
-	<div class="diff aspect-[16/6] w-full max-w-lg rounded-box overflow-hidden border border-line" { devmode.Attrs(ctx, "ui/DiffContainer")... }>
+	<div class="diff aspect-[16/6] w-full max-w-lg rounded-box overflow-hidden edge-line" { devmode.Attrs(ctx, "ui/DiffContainer")... }>
 		{ children... }
 	</div>
 }

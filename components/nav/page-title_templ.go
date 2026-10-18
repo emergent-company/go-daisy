@@ -38,7 +38,7 @@ func PageTitleMinimal(title string, steps []BreadcrumbItem) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"bg-base-100 rounded-lg edge-line px-4 py-3\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -121,7 +121,7 @@ func PageTitleEditor(steps []BreadcrumbItem, title, subtitle string, actions []P
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"bg-base-100 rounded-lg edge-line px-4 py-3\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -279,7 +279,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		switch style {
 		case "minimal":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"bg-base-100 rounded-lg edge-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -313,7 +313,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "ecommerce":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<div class=\"bg-base-100 rounded-lg edge-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -438,7 +438,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "editor":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<div class=\"bg-base-100 rounded-lg edge-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -569,7 +569,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "task":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<div class=\"bg-base-100 rounded-lg edge-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -690,7 +690,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "stepper":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"bg-base-100 rounded-lg edge-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -796,7 +796,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "analytics":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<div class=\"bg-base-100 rounded-lg border border-line px-4 py-3 shadow\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<div class=\"bg-base-100 rounded-lg edge-line px-4 py-3 shadow\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -833,7 +833,7 @@ func PageTitleVariant(style string, opts PageTitleVariantOpts) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<span class=\"max-md:hidden\">Filter</span></label><ul tabindex=\"0\" class=\"dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-40 p-1 border border-line mt-1\"><li><a>This Week</a></li><li><a>This Month</a></li><li><a>This Year</a></li></ul></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<span class=\"max-md:hidden\">Filter</span></label><ul tabindex=\"0\" class=\"dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-40 p-1 edge-line mt-1\"><li><a>This Week</a></li><li><a>This Month</a></li><li><a>This Year</a></li></ul></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

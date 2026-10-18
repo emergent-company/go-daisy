@@ -71,7 +71,7 @@ func ProfileMenu(name, email, initials string, items []ProfileMenuItem, signOutH
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-line\"><div class=\"px-4 py-3 border-b border-line\"><p class=\"font-semibold text-sm\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg edge-line\"><div class=\"px-4 py-3 border-b border-line\"><p class=\"font-semibold text-sm\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -288,7 +288,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-64 shadow-lg border border-line\"><div class=\"border-line border-b p-4\"><div class=\"flex items-center justify-between\"><div class=\"flex items-center gap-3\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-64 shadow-lg edge-line\"><div class=\"border-line border-b p-4\"><div class=\"flex items-center justify-between\"><div class=\"flex items-center gap-3\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -515,7 +515,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-line\"><div class=\"p-4 text-center\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg edge-line\"><div class=\"p-4 text-center\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -674,7 +674,7 @@ func ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-line\"><div class=\"border-line border-b p-4\"><div class=\"flex items-center gap-3\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</div><div tabindex=\"0\" class=\"dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg edge-line\"><div class=\"border-line border-b p-4\"><div class=\"flex items-center gap-3\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

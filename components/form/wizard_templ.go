@@ -202,7 +202,7 @@ func WizardStepper(id string, steps []WizardStep, panels []WizardStepPanel) temp
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div><!-- Step panels --><div class=\"bg-base-100 border border-line rounded-box p-5 min-h-40\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div><!-- Step panels --><div class=\"bg-base-100 edge-line rounded-box p-5 min-h-40\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

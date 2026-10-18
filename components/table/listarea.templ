@@ -9,7 +9,7 @@ import (
 
 // ListArea renders a self-contained filterable+paginated (or scroll-load) list area.
 templ ListArea(props ListAreaProps) {
-	<div id={ props.ID } class="rounded-box border border-line bg-base-100" { devmode.Attrs(ctx, "table/ListArea")... }>
+	<div id={ props.ID } class="rounded-box edge-line bg-base-100" { devmode.Attrs(ctx, "table/ListArea")... }>
 		<form
 			id={ props.ID + "-form" }
 			hx-get={ props.URL }

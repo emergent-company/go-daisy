@@ -38,7 +38,7 @@ templ DashboardPage(props DashboardProps) {
 
 		// Charts row
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-			<div class="card bg-base-100 shadow-sm border border-line">
+			<div class="card bg-base-100 shadow-sm edge-line">
 				<div class="card-body p-4">
 					<h3 class="text-sm font-semibold text-base-content mb-2">Monthly Revenue</h3>
 					@ui.Chart(ui.ChartProps{
@@ -48,7 +48,7 @@ templ DashboardPage(props DashboardProps) {
 					})
 				</div>
 			</div>
-			<div class="card bg-base-100 shadow-sm border border-line">
+			<div class="card bg-base-100 shadow-sm edge-line">
 				<div class="card-body p-4">
 					<h3 class="text-sm font-semibold text-base-content mb-2">Sales by Category</h3>
 					@ui.Chart(ui.ChartProps{
@@ -61,7 +61,7 @@ templ DashboardPage(props DashboardProps) {
 		</div>
 
 		// Recent orders table
-		<div class="card bg-base-100 shadow-sm border border-line">
+		<div class="card bg-base-100 shadow-sm edge-line">
 			<div class="card-body p-0">
 				<div class="flex items-center justify-between px-5 pt-5">
 					<h3 class="text-sm font-semibold text-base-content">Recent Orders</h3>

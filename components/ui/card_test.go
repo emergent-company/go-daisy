@@ -270,6 +270,25 @@ func TestSurfaceRootsEmitHouseEdge(t *testing.T) {
 		{"AccordionItem", AccordionItem("Details", false)},
 		{"AlpineAccordionItem", AlpineAccordionItem("Details", false)},
 		{"ActionMenu", ActionMenu([]ActionMenuItem{{Label: "Edit", Href: "#"}})},
+
+		// The remaining surface roots converted in #82: the outline that says
+		// "this is a card / panel / floating surface". Cheap to instantiate, so
+		// they are pinned here rather than by a snapshot of a whole tree.
+		{"DashboardCard", DashboardCard("Revenue", "")},
+		{"FilterCard", FilterCard(FilterCardProps{})},
+		{"SkeletonCard", SkeletonCard()},
+		{"StatsGroup", StatsGroup([]StatsGroupItem{{Title: "Open", Value: "1"}})},
+		{"List", List(ListProps{})},
+		{"CodeBlock", CodeBlock(CodeBlockProps{Language: "go", Code: "x"})},
+		{"DiffContainer", DiffContainer()},
+		{"NotificationPanel", NotificationPanel(0, "#")},
+		{"Collapsible", Collapsible()},
+		{"PopoverContent", PopoverContent()},
+		{"SearchDropdown", SearchDropdown("Search", nil)},
+		{"NotificationDropdown", NotificationDropdown(NotificationDropdownProps{})},
+		{"DropdownMenu", DropdownMenu(nil)},
+		{"AlpineDropdownMenu", AlpineDropdownMenu()},
+		{"PersonCellCompact", PersonCell(PersonCellProps{Name: "Ada", Compact: true})},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

@@ -81,7 +81,7 @@ func DataTable(props DataTableProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"card bg-base-100 shadow-sm border border-line\" data-datatable data-columns=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"card bg-base-100 shadow-sm edge-line\" data-datatable data-columns=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -215,7 +215,7 @@ func DataTable(props DataTableProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "Columns</button><div class=\"dropdown-content bg-base-100 rounded-box shadow-sm border border-line mt-1 p-3 min-w-40 z-10\" x-show=\"open\"><template x-for=\"(col, i) in columns\" :key=\"col.id\"><label class=\"flex items-center gap-2 py-1 text-sm\"><input type=\"checkbox\" class=\"checkbox checkbox-xs\" x-model=\"col.hidden\" @change=\"filterRows()\"> <span x-text=\"col.label\"></span></label></template></div></div></div><div class=\"overflow-x-auto\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "Columns</button><div class=\"dropdown-content bg-base-100 rounded-box shadow-sm edge-line mt-1 p-3 min-w-40 z-10\" x-show=\"open\"><template x-for=\"(col, i) in columns\" :key=\"col.id\"><label class=\"flex items-center gap-2 py-1 text-sm\"><input type=\"checkbox\" class=\"checkbox checkbox-xs\" x-model=\"col.hidden\" @change=\"filterRows()\"> <span x-text=\"col.label\"></span></label></template></div></div></div><div class=\"overflow-x-auto\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -30,7 +30,7 @@ templ CodeBlock(props CodeBlockProps) {
 		if label == "" { label = props.Language }
 		if label == "" { label = "Code" } }}
 	<div
-		class={ "code-block-root relative border border-line rounded-box overflow-hidden", templ.KV(props.Class, props.Class != "") }
+		class={ "code-block-root relative edge-line rounded-box overflow-hidden", templ.KV(props.Class, props.Class != "") }
 		{ devmode.Attrs(ctx, "ui/CodeBlock")... }
 		{ props.Attrs... }
 	>

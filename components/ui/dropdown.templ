@@ -45,7 +45,7 @@ templ DropdownMenu(attrs templ.Attributes) {
 		extraClass = s
 		delete(attrs, "class")
 	} }}
-	<ul tabindex="0" role="menu" class={ twmerge("dropdown-content z-[1] menu menu-sm p-1 bg-base-100 border border-line rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1", extraClass) } { devmode.Attrs(ctx, "ui/DropdownMenu")... } { attrs... }>
+	<ul tabindex="0" role="menu" class={ twmerge("dropdown-content z-[1] menu menu-sm p-1 bg-base-100 edge-line rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1", extraClass) } { devmode.Attrs(ctx, "ui/DropdownMenu")... } { attrs... }>
 		{ children... }
 	</ul>
 }

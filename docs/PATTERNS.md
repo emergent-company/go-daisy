@@ -295,6 +295,19 @@ Rules that follow:
   that sits on the page; `border border-line` for rules *inside* one. Only the
   former follows `--border` — daisyUI gave the token width to card outlines, not
   to every hairline in a layout.
+- **A surface root, not a border anywhere.** `edge-line*` belongs on the element
+  that owns one rounded outline for a card, panel, list, table wrapper,
+  page-title bar or *floating* surface (dropdown content, popover, notification
+  panel). Everything else stays on the fixed utility even when its colour is a
+  ladder step: control outlines (input, trigger, swatch, editor shell, draggable
+  handle, keyboard chip), hairlines (`border-t`, `divide-*`, a popover's arrow),
+  decorative frames (mockup browser/window, dashed skeleton placeholders) and the
+  translucent inset panels above. An edge that carries a state variant
+  (`hover:border-*`, `focus-within:border-primary`, an `aria-pressed` colour rule)
+  keeps its utilities: `edge-line` is plain component CSS and has no variants. A
+  filled surface whose outline is `currentColor` rather than a ladder step — the
+  highlighted `pricingCard` on the landing page — keeps `border` for the same
+  reason: there is no `edge-line-current`.
 - **Let the theme own the hue.** The steps derive from `--color-base-200`,
   `--color-base-300` and `--color-base-content`, so every theme (nord, dracula,
   flow) keeps its own colour — never hard-code an `oklch()` border.
