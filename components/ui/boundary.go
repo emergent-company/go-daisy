@@ -757,6 +757,34 @@ func ListWithBoundary(props ListProps, items []ListRowProps) templ.Component {
 	return devmode.ComponentBoundary("List", outer, map[string]any{"itemCount": len(items), "header": props.Header})
 }
 
+// ListRowWithBoundary wraps ListRow with a dev-mode component boundary annotation.
+func ListRowWithBoundary(props ListRowProps) templ.Component {
+	return devmode.ComponentBoundary("ListRow", ListRow(props), map[string]any{
+		"variant":      string(props.Variant),
+		"size":         string(props.Size),
+		"mediaVariant": string(props.MediaVariant),
+	})
+}
+
+// ItemSeparatorWithBoundary wraps ItemSeparator with a dev-mode component boundary annotation.
+func ItemSeparatorWithBoundary() templ.Component {
+	return devmode.ComponentBoundary("ItemSeparator", ItemSeparator())
+}
+
+// ItemGroupWithBoundary wraps ItemGroup with a dev-mode component boundary annotation.
+func ItemGroupWithBoundary(props ListProps, items []ListRowProps) templ.Component {
+	children := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		for _, item := range items {
+			if err := ListRow(item).Render(ctx, w); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	outer := shared.RenderInto(ItemGroup(props), children)
+	return devmode.ComponentBoundary("ItemGroup", outer, map[string]any{"itemCount": len(items), "header": props.Header})
+}
+
 // FilterTabsWithBoundary wraps FilterTabs with a dev-mode component boundary annotation.
 // gallery:token selected
 func FilterTabsWithBoundary(name string, selected string, tabs []string) templ.Component {
