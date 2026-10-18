@@ -52,7 +52,7 @@ templ PersonCell(p PersonCellProps) {
 			<div class="min-w-0">
 				<div class="font-medium text-sm leading-tight truncate">{ p.Name }</div>
 				if p.Subtitle != "" {
-					<div class="text-xs text-base-content/50 leading-tight truncate">{ p.Subtitle }</div>
+					<div class="text-xs text-subtle leading-tight truncate">{ p.Subtitle }</div>
 				}
 			</div>
 		</div>
@@ -97,13 +97,13 @@ templ PersonCellCompact(p PersonCellProps) {
 				<div class="pb-0.5 min-w-0">
 					<p class="text-sm font-semibold text-base-content leading-tight truncate">{ p.Name }</p>
 					if p.Subtitle != "" {
-						<p class="text-xs text-base-content/50 leading-tight">{ p.Subtitle }</p>
+						<p class="text-xs text-subtle leading-tight">{ p.Subtitle }</p>
 					}
 				</div>
 			</div>
 			<div class="px-4 pb-4 space-y-2">
 				if p.Email != "" {
-					<div class="flex items-center gap-2 text-xs text-base-content/60">
+					<div class="flex items-center gap-2 text-xs text-muted">
 						<svg class="size-3.5 shrink-0 text-base-content/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
 						<span class="truncate">{ p.Email }</span>
 					</div>

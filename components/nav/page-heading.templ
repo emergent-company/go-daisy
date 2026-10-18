@@ -91,7 +91,7 @@ templ PageHeading(props PageHeadingProps) {
 				<div class={ templ.KV("mt-2", !props.NoTopMargin) }>
 					<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
 					if props.Subtitle != "" {
-						<p class="text-base-content/55 mt-1 text-sm">{ props.Subtitle }</p>
+						<p class="text-subtle mt-1 text-sm">{ props.Subtitle }</p>
 					}
 				</div>
 			} else {
@@ -121,7 +121,7 @@ templ pageHeadingTitleColumn(props PageHeadingProps) {
 				<h1 class="text-2xl font-bold tracking-tight lg:text-3xl">{ props.Title }</h1>
 			}
 			if props.Subtitle != "" {
-				<p class={ "text-base-content/55 mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm" }>{ props.Subtitle }</p>
+				<p class={ "text-subtle mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm" }>{ props.Subtitle }</p>
 			}
 		</div>
 	} else {
@@ -138,7 +138,7 @@ templ pageHeadingTitleColumn(props PageHeadingProps) {
 				<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
 			}
 			if props.Subtitle != "" {
-				<p class={ "text-base-content/55 mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm" }>{ props.Subtitle }</p>
+				<p class={ "text-subtle mt-1", templ.KV("max-w-2xl", !props.SubtitleFull), "text-sm" }>{ props.Subtitle }</p>
 			}
 		</div>
 	}

@@ -101,7 +101,7 @@ templ TableHeadRow() {
 
 // TableHeadCell renders a plain (non-sortable) <th> column header.
 templ TableHeadCell(label string) {
-	<th class="text-xs font-semibold text-base-content/60 uppercase">{ label }</th>
+	<th class="text-xs font-semibold text-muted uppercase">{ label }</th>
 }
 
 // TableBody renders a <tbody> wrapper accepting row children.
@@ -114,7 +114,7 @@ templ TableBody() {
 // TableEmpty renders a full-width empty-state row inside a <tbody>.
 templ TableEmpty(colspan int, message string) {
 	<tr>
-		<td colspan={ strconv.Itoa(max(colspan, 1)) } class="text-center text-base-content/60 py-8">{ message }</td>
+		<td colspan={ strconv.Itoa(max(colspan, 1)) } class="text-center text-muted py-8">{ message }</td>
 	</tr>
 }
 
@@ -150,11 +150,11 @@ templ TableActionCell() {
 // TableHeader renders a <th> cell that is optionally sortable.
 templ TableHeader(label string, sortKey string, currentSortKey string, currentDir SortDir, baseURL string) {
 	if sortKey == "" {
-		<th class="text-xs font-semibold text-base-content/60 uppercase">{ label }</th>
+		<th class="text-xs font-semibold text-muted uppercase">{ label }</th>
 	} else {
-		<th class="text-xs font-semibold text-base-content/60 uppercase">
+		<th class="text-xs font-semibold text-muted uppercase">
 			<a
-				class="flex items-center gap-1 hover:text-base-content cursor-pointer"
+				class={ ui.RowTight, "hover:text-base-content cursor-pointer" }
 				href={ templ.URL(sortURL(baseURL, sortKey, currentSortKey, currentDir)) }
 				hx-get={ sortURL(baseURL, sortKey, currentSortKey, currentDir) }
 				hx-target="closest table"

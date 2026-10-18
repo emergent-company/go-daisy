@@ -34,7 +34,7 @@ func TestClipboardCopyRendersMarkup(t *testing.T) {
 				{ID: "copy-input-1", Label: "Case ID", Value: "CASE-2026-00142", ButtonLabel: "Copy"},
 			},
 			contains: []string{
-				`<p class="text-xs text-base-content/60 mb-2 font-semibold uppercase">Case ID</p>`,
+				`<p class="text-xs text-muted mb-2 font-semibold uppercase">Case ID</p>`,
 				`id="copy-input-1" type="text" value="CASE-2026-00142" readonly class="input input-sm flex-1 font-mono text-sm"`,
 				`onclick="clipboardCopyInput(&#34;copy-input-1&#34;,this)"`,
 				// The copy button must be a plain button, not an implicit submit.

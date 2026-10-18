@@ -19,6 +19,6 @@ templ InfoTip(tip string, props ...InfoTipProps) {
 	pos := p.Position
 	if pos == "" { pos = "top" } }}
 	<span class={ "tooltip tooltip-"+pos } data-tip={ tip } { devmode.Attrs(ctx, "ui/InfoTip")... }>
-		@IconSpan("lucide--info", "size-3.5 shrink-0 text-base-content/40 cursor-help")
+		@IconSpan("lucide--info", "size-3.5 shrink-0 text-faint cursor-help")
 	</span>
 }

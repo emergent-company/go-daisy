@@ -72,7 +72,7 @@ func LandingPage(props LandingPageProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</a><div class=\"flex items-center gap-6 text-sm\"><a href=\"#\" class=\"link link-hover text-base-content/60 hover:text-base-content\">Features</a> <a href=\"#\" class=\"link link-hover text-base-content/60 hover:text-base-content\">Pricing</a> <a href=\"#\" class=\"link link-hover text-base-content/60 hover:text-base-content\">Docs</a>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</a><div class=\"flex items-center gap-6 text-sm\"><a href=\"#\" class=\"link link-hover text-muted hover:text-base-content\">Features</a> <a href=\"#\" class=\"link link-hover text-muted hover:text-base-content\">Pricing</a> <a href=\"#\" class=\"link link-hover text-muted hover:text-base-content\">Docs</a>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -110,14 +110,14 @@ func LandingPage(props LandingPageProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</h1><p class=\"text-xl text-base-content/60 max-w-2xl mx-auto mb-8\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</h1><p class=\"text-xl text-muted max-w-2xl mx-auto mb-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(landingTagline(props.Tagline))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/landing.templ`, Line: 48, Col: 97}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/landing.templ`, Line: 48, Col: 87}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -240,7 +240,7 @@ func LandingPage(props LandingPageProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div></section><footer class=\"border-t border-line py-8\"><div class=\"max-w-6xl mx-auto px-6 text-center text-sm text-base-content/50\"><p>&copy; 2026 ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div></section><footer class=\"border-t border-line py-8\"><div class=\"max-w-6xl mx-auto px-6 text-center text-sm text-subtle\"><p>&copy; 2026 ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -303,14 +303,14 @@ func featureCard(icon, title, description string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</h3><p class=\"text-sm text-base-content/60\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</h3><p class=\"text-sm text-muted\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/landing.templ`, Line: 113, Col: 56}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/landing.templ`, Line: 113, Col: 46}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -417,7 +417,7 @@ func pricingCard(name, price, period string, features []string, highlighted bool
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var18 = []any{"text-sm mt-1", templ.KV("text-primary-content/60", highlighted), templ.KV("text-base-content/50", !highlighted)}
+		var templ_7745c5c3_Var18 = []any{"text-sm mt-1", templ.KV("text-primary-content/60", highlighted), templ.KV("text-subtle", !highlighted)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var18...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -442,7 +442,7 @@ func pricingCard(name, price, period string, features []string, highlighted bool
 		var templ_7745c5c3_Var20 string
 		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(period)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/landing.templ`, Line: 129, Col: 137}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/landing.templ`, Line: 129, Col: 128}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {

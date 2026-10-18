@@ -90,7 +90,7 @@ func CommandPaletteButton(id string, placeholder string, props ...CommandPalette
 			Variant:    ButtonOutline,
 			Icon:       "lucide--search",
 			AriaLabel:  "Search",
-			ExtraClass: twmerge("btn-ghost border-base-content/15 text-base-content/60 h-9 w-9 justify-center gap-2 rounded-box px-0 text-sm font-normal hover:bg-base-200 hover:text-base-content md:w-56 md:justify-start md:px-3", p.Class),
+			ExtraClass: twmerge("btn-ghost border-base-content/15 text-muted h-9 w-9 justify-center gap-2 rounded-box px-0 text-sm font-normal hover:bg-base-200 hover:text-base-content md:w-56 md:justify-start md:px-3", p.Class),
 			Attrs:      commandPaletteButtonAttrs(id, p.Attrs),
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {

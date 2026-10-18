@@ -49,7 +49,7 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 
 		switch style {
 		case "classic":
-			<div class="flex items-center gap-3">
+			<div class={ ui.RowLoose }>
 			@ui.Button(ui.ButtonProps{
 				Type:       ui.ButtonTypeLabel,
 				Variant:    ui.ButtonGhost,
@@ -75,7 +75,7 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 				if opts.ShowSearch {
 					<div class="btn btn-outline border-line-strong btn-sm max-sm:btn-square w-56 gap-2 sm:justify-start">
 						@ui.IconSpan("lucide--search", "size-3.5")
-						<p class="text-base-content/60 text-sm font-normal max-sm:hidden">{ opts.SearchPlaceholder }</p>
+						<p class="text-muted text-sm font-normal max-sm:hidden">{ opts.SearchPlaceholder }</p>
 					</div>
 				}
 			</div>
@@ -87,7 +87,7 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 			}
 			if opts.ShowApps {
 				@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeCircle, ExtraClass: "me-3", Attrs: templ.Attributes{"aria-label": "Apps"}}){
-					@ui.IconSpan("lucide--component", "text-base-content/80 size-5.5 rotate-45")
+					@ui.IconSpan("lucide--component", "text-body size-5.5 rotate-45")
 				}
 			}
 				if opts.ShowLanguage {
@@ -97,11 +97,11 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 						</div>
 						<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-40 shadow">
 							<ul class="menu w-full p-2">
-								<li><a class="flex items-center gap-2" href="#"><img alt="US" class="rounded-box size-4.5 object-cover" src="https://flagcdn.com/us.svg" /><span>English</span></a></li>
-								<li><a class="flex items-center gap-2" href="#"><img alt="IN" class="rounded-box size-4.5 object-cover" src="https://flagcdn.com/in.svg" /><span>Hindi</span></a></li>
-								<li><a class="flex items-center gap-2" href="#"><img alt="ES" class="rounded-box size-4.5 object-cover" src="https://flagcdn.com/es.svg" /><span>Spanish</span></a></li>
-								<li><a class="flex items-center gap-2" href="#"><img alt="CN" class="rounded-box size-4.5 object-cover" src="https://flagcdn.com/cn.svg" /><span>Chinese</span></a></li>
-								<li><a class="flex items-center gap-2" href="#"><img alt="RS" class="rounded-box size-4.5 object-cover" src="https://flagcdn.com/rs.svg" /><span>Arabic</span></a></li>
+								<li><a class={ ui.Row } href="#"><img alt="US" class="rounded-box size-4.5 object-cover" src="https://flagcdn.com/us.svg" /><span>English</span></a></li>
+								<li><a class={ ui.Row } href="#"><img alt="IN" class="rounded-box size-4.5 object-cover" src="https://flagcdn.com/in.svg" /><span>Hindi</span></a></li>
+								<li><a class={ ui.Row } href="#"><img alt="ES" class="rounded-box size-4.5 object-cover" src="https://flagcdn.com/es.svg" /><span>Spanish</span></a></li>
+								<li><a class={ ui.Row } href="#"><img alt="CN" class="rounded-box size-4.5 object-cover" src="https://flagcdn.com/cn.svg" /><span>Chinese</span></a></li>
+								<li><a class={ ui.Row } href="#"><img alt="RS" class="rounded-box size-4.5 object-cover" src="https://flagcdn.com/rs.svg" /><span>Arabic</span></a></li>
 							</ul>
 						</div>
 					</div>
@@ -139,7 +139,7 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 			</div>
 
 		case "greeting":
-			<div class="flex items-center gap-2 sm:gap-3">
+			<div class={ ui.Row, "sm:gap-3" }>
 			@ui.Button(ui.ButtonProps{
 				Type:       ui.ButtonTypeLabel,
 				Variant:    ui.ButtonGhost,
@@ -164,7 +164,7 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 			}
 				<div>
 					<p class="leading-none font-medium md:text-lg">{ opts.Greeting }<span class="max-sm:hidden">{ ", " + opts.UserName }!</span></p>
-					<p class="text-base-content/60 mt-1 text-sm/none max-sm:hidden">{ opts.Subtitle }</p>
+					<p class="text-muted mt-1 text-sm/none max-sm:hidden">{ opts.Subtitle }</p>
 				</div>
 			</div>
 			<div class="flex items-center gap-4">
@@ -185,7 +185,7 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 					})
 						<div>
 							<p class="leading-none font-medium">{ opts.UserName }</p>
-							<p class="text-base-content/60 mt-0 text-xs/none">{ "@" + opts.UserName }</p>
+							<p class="text-muted mt-0 text-xs/none">{ "@" + opts.UserName }</p>
 						</div>
 					</div>
 					<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-44 shadow">
@@ -204,7 +204,7 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 			</div>
 
 		case "nav-menu-1", "nav-menu-2":
-			<div class="flex items-center gap-3">
+			<div class={ ui.RowLoose }>
 			@ui.Button(ui.ButtonProps{
 				Type:       ui.ButtonTypeLabel,
 				Variant:    ui.ButtonGhost,
@@ -229,7 +229,7 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 			}
 				<nav class="hidden items-center gap-1 md:flex" aria-label="Top nav">
 					for _, link := range opts.NavLinks {
-						<a href={ templ.SafeURL(link.Href) } class={ "px-2 py-1 text-sm rounded-md transition-colors", templ.KV("text-primary font-medium", link.Active), templ.KV("text-base-content/70 hover:text-base-content hover:bg-base-200/50", !link.Active) }>{ link.Label }</a>
+						<a href={ templ.SafeURL(link.Href) } class={ "px-2 py-1 text-sm rounded-md transition-colors", templ.KV("text-primary font-medium", link.Active), templ.KV("text-label hover:text-base-content hover:bg-base-200/50", !link.Active) }>{ link.Label }</a>
 					}
 				</nav>
 			</div>
@@ -246,7 +246,7 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 				}
 				if opts.ShowApps {
 					@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeCircle, ExtraClass: "me-2", Attrs: templ.Attributes{"aria-label": "Apps"}}){
-						@ui.IconSpan("lucide--component", "text-base-content/80 size-5 rotate-45")
+						@ui.IconSpan("lucide--component", "text-body size-5 rotate-45")
 					}
 				}
 				if opts.ShowLanguage {
@@ -256,9 +256,9 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 						</div>
 						<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-40 shadow">
 							<ul class="menu menu-xs w-full p-1">
-								<li><a class="flex items-center gap-2" href="#"><img alt="US" class="rounded-box size-4 object-cover" src="https://flagcdn.com/us.svg" /><span>English</span></a></li>
-								<li><a class="flex items-center gap-2" href="#"><img alt="IN" class="rounded-box size-4 object-cover" src="https://flagcdn.com/in.svg" /><span>Hindi</span></a></li>
-								<li><a class="flex items-center gap-2" href="#"><img alt="ES" class="rounded-box size-4 object-cover" src="https://flagcdn.com/es.svg" /><span>Spanish</span></a></li>
+								<li><a class={ ui.Row } href="#"><img alt="US" class="rounded-box size-4 object-cover" src="https://flagcdn.com/us.svg" /><span>English</span></a></li>
+								<li><a class={ ui.Row } href="#"><img alt="IN" class="rounded-box size-4 object-cover" src="https://flagcdn.com/in.svg" /><span>Hindi</span></a></li>
+								<li><a class={ ui.Row } href="#"><img alt="ES" class="rounded-box size-4 object-cover" src="https://flagcdn.com/es.svg" /><span>Spanish</span></a></li>
 							</ul>
 						</div>
 					</div>
@@ -295,7 +295,7 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 			</div>
 
 		case "editor":
-			<div class="flex items-center gap-3">
+			<div class={ ui.RowLoose }>
 			@ui.Button(ui.ButtonProps{
 				Type:       ui.ButtonTypeLabel,
 				Variant:    ui.ButtonGhost,
@@ -319,22 +319,22 @@ templ topbarVariantInner(style string, opts TopbarVariantOpts) {
 				@ui.IconSpan("lucide--menu", "size-5")
 			}
 				<div class="hidden items-center gap-1.5 text-sm md:flex">
-					<span class="text-base-content/60">Design Draft</span>
+					<span class="text-muted">Design Draft</span>
 					@ui.IconSpan("lucide--chevron-right", "size-3.5 text-base-content/30")
-					<span class="text-base-content/60">Projects</span>
+					<span class="text-muted">Projects</span>
 					@ui.IconSpan("lucide--chevron-right", "size-3.5 text-base-content/30")
 					<span class="text-base-content font-medium">Client</span>
 				</div>
 				if opts.ShowSearch {
 					<div class="btn btn-outline border-line-strong btn-sm max-sm:btn-square w-48 gap-2 sm:justify-start max-md:hidden">
 						@ui.IconSpan("lucide--search", "size-3.5")
-						<p class="text-base-content/60 text-sm font-normal">{ opts.SearchPlaceholder }</p>
+						<p class="text-muted text-sm font-normal">{ opts.SearchPlaceholder }</p>
 					</div>
 				}
 			</div>
-			<div class="flex items-center gap-3">
+			<div class={ ui.RowLoose }>
 				if opts.SaveStatus != "" {
-					<span class="text-base-content/40 text-sm max-md:hidden">{ opts.SaveStatus }</span>
+					<span class="text-faint text-sm max-md:hidden">{ opts.SaveStatus }</span>
 				}
 				<div class="flex -space-x-2">
 					@ui.AvatarFull(ui.AvatarProps{

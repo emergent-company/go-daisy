@@ -33,7 +33,7 @@ templ MockupBrowser(url string) {
 
 // MockupBrowserPlaceholder renders placeholder content for the MockupBrowser gallery example.
 templ MockupBrowserPlaceholder() {
-	<div class="flex justify-center px-4 py-8 border-t border-line-strong bg-base-200 text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/MockupBrowserPlaceholder")... }>Page content here</div>
+	<div class="flex justify-center px-4 py-8 border-t border-line-strong bg-base-200 text-sm text-subtle" { devmode.Attrs(ctx, "ui/MockupBrowserPlaceholder")... }>Page content here</div>
 }
 
 // MockupPhone renders a phone frame mockup.
@@ -48,7 +48,7 @@ templ MockupPhone() {
 
 // MockupPhonePlaceholder renders placeholder content for the MockupPhone gallery example.
 templ MockupPhonePlaceholder() {
-	<div class="artboard artboard-demo phone-1 bg-base-200 flex items-center justify-center text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/MockupPhonePlaceholder")... }>App screen</div>
+	<div class="artboard artboard-demo phone-1 bg-base-200 flex items-center justify-center text-sm text-subtle" { devmode.Attrs(ctx, "ui/MockupPhonePlaceholder")... }>App screen</div>
 }
 
 // MockupWindow renders a desktop window frame mockup.
@@ -60,5 +60,5 @@ templ MockupWindow() {
 
 // MockupWindowPlaceholder renders placeholder content for the MockupWindow gallery example.
 templ MockupWindowPlaceholder() {
-	<div class="flex justify-center px-4 py-8 border-t border-line-strong bg-base-200 text-sm text-base-content/50" { devmode.Attrs(ctx, "ui/MockupWindowPlaceholder")... }>Window content here</div>
+	<div class="flex justify-center px-4 py-8 border-t border-line-strong bg-base-200 text-sm text-subtle" { devmode.Attrs(ctx, "ui/MockupWindowPlaceholder")... }>Window content here</div>
 }

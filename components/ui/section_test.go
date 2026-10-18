@@ -92,7 +92,7 @@ func TestSectionDefaultOutputLocked(t *testing.T) {
 			title: "Object types",
 			props: SectionProps{Empty: true, EmptyIcon: "lucide--box", EmptyTitle: "No types", EmptyDesc: "None yet"},
 			child: `<div>r0</div>`,
-			want:  `<section class=""><h2 class="mb-3 text-lg font-semibold tracking-tight">Object types</h2><div class="card bg-base-100 edge-line"><div class="card-body"><div class="flex flex-col items-center justify-center py-16 text-center px-4"><span class="iconify size-12 text-base-content/20 mb-4 lucide--box"></span><h3 class="text-base font-semibold text-base-content mb-1">No types</h3><p class="text-sm text-base-content/50 mb-4">None yet</p></div></div></div></section>`,
+			want:  `<section class=""><h2 class="mb-3 text-lg font-semibold tracking-tight">Object types</h2><div class="card bg-base-100 edge-line"><div class="card-body"><div class="flex flex-col items-center justify-center py-16 text-center px-4"><span class="iconify size-12 text-base-content/20 mb-4 lucide--box"></span><h3 class="text-base font-semibold text-base-content mb-1">No types</h3><p class="text-sm text-subtle mb-4">None yet</p></div></div></div></section>`,
 		},
 	}
 
@@ -173,7 +173,7 @@ func TestSectionWrapperlessEmptySupported(t *testing.T) {
 		BodyClass: "p-0",
 	}, `<div>r0</div>`)
 
-	want := `<div class="card bg-base-100 edge-line"><div class="card-body"><div class="flex flex-col items-center justify-center py-16 text-center px-4"><span class="iconify size-12 text-base-content/20 mb-4 lucide--box"></span><h3 class="text-base font-semibold text-base-content mb-1">No types</h3><p class="text-sm text-base-content/50 mb-4">None yet</p></div></div></div>`
+	want := `<div class="card bg-base-100 edge-line"><div class="card-body"><div class="flex flex-col items-center justify-center py-16 text-center px-4"><span class="iconify size-12 text-base-content/20 mb-4 lucide--box"></span><h3 class="text-base font-semibold text-base-content mb-1">No types</h3><p class="text-sm text-subtle mb-4">None yet</p></div></div></div>`
 
 	if got != want {
 		t.Errorf("wrapperless empty output:\n got: %q\nwant: %q", got, want)

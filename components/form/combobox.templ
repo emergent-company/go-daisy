@@ -73,12 +73,12 @@ templ comboboxTrigger(props ComboboxProps) {
 	>
 		if props.Mode == ComboboxSingle {
 			<span
-				class={ "text-sm truncate", templ.KV("text-base-content/50", len(props.Selected) == 0) }
+				class={ "text-sm truncate", templ.KV("text-subtle", len(props.Selected) == 0) }
 				x-text={ "selected.length ? (labels[selected[0]] || selected[0]) : '" + comboboxPlaceholder(props.Placeholder) + "'" }
 			>{ comboboxPlaceholder(props.Placeholder) }</span>
 		} else {
 			<span
-				class={ "text-sm truncate", templ.KV("text-base-content/50", len(props.Selected) == 0) }
+				class={ "text-sm truncate", templ.KV("text-subtle", len(props.Selected) == 0) }
 				x-text={ "selected.length ? selected.length + ' selected' : '" + comboboxPlaceholder(props.Placeholder) + "'" }
 			>{ comboboxPlaceholder(props.Placeholder) }</span>
 		}
@@ -186,7 +186,7 @@ templ comboboxLazyOptions(props ComboboxProps) {
 		hx-trigger="load"
 		hx-swap="innerHTML"
 	>
-		<div class="px-3 py-2 text-sm text-base-content/50">Loading...</div>
+		<div class="px-3 py-2 text-sm text-subtle">Loading...</div>
 	</div>
 }
 

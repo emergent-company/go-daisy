@@ -57,7 +57,7 @@ templ NotificationVariant(style string, opts NotificationVariantOpts) {
 								<img class="bg-base-200 mask mask-squircle size-10 px-0.5 pt-0.5" alt={ item.AvatarAlt } src={ item.AvatarSrc } />
 								<p class="grow text-sm leading-tight">
 									{ item.Message }
-									<span class="text-base-content/60 float-end ms-2 text-xs">{ item.TimeAgo }</span>
+									<span class="text-muted float-end ms-2 text-xs">{ item.TimeAgo }</span>
 								</p>
 							</div>
 						}
@@ -110,7 +110,7 @@ templ NotificationVariant(style string, opts NotificationVariantOpts) {
 							})
 							<div class="grow">
 								<p class="text-sm leading-tight">{ item.Message }</p>
-								<p class="text-base-content/60 text-xs">{ item.TimeAgo }</p>
+								<p class="text-muted text-xs">{ item.TimeAgo }</p>
 								if len(item.Actions) > 0 {
 									<div class="mt-2 flex items-center gap-2">
 										for _, a := range item.Actions {
@@ -164,7 +164,7 @@ templ NotificationVariant(style string, opts NotificationVariantOpts) {
 									})
 									<div class="grow">
 										<p class="text-sm leading-tight">{ item.Message }</p>
-										<p class="text-base-content/60 text-xs">{ item.TimeAgo }</p>
+										<p class="text-muted text-xs">{ item.TimeAgo }</p>
 									</div>
 								</div>
 							}

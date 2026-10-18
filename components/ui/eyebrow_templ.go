@@ -46,7 +46,7 @@ func Eyebrow(text string, props ...EyebrowProps) templ.Component {
 		if len(props) > 0 {
 			p = props[0]
 		}
-		var templ_7745c5c3_Var2 = []any{"text-base-content/45 font-semibold tracking-[0.16em] uppercase", templ.KV(p.Size, p.Size != ""), templ.KV(p.Margin, p.Margin != "")}
+		var templ_7745c5c3_Var2 = []any{"eyebrow", templ.KV(p.Size, p.Size != ""), templ.KV(p.Margin, p.Margin != "")}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -79,7 +79,7 @@ func Eyebrow(text string, props ...EyebrowProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/eyebrow.templ`, Line: 19, Col: 193}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/eyebrow.templ`, Line: 19, Col: 138}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {

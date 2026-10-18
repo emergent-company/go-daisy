@@ -142,7 +142,7 @@ func TableCardFooter(props TableCardFooterProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "><div class=\"text-base-content/80 hover:text-base-content flex gap-2 text-sm\"><span class=\"hidden sm:inline\">Per page</span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "><div class=\"text-body hover:text-base-content flex gap-2 text-sm\"><span class=\"hidden sm:inline\">Per page</span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -208,7 +208,7 @@ func TableCardFooter(props TableCardFooterProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div><span class=\"text-base-content/80 hidden text-sm lg:inline\">Showing <span class=\"text-base-content font-medium\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div><span class=\"text-body hidden text-sm lg:inline\">Showing <span class=\"text-base-content font-medium\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

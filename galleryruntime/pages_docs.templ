@@ -292,12 +292,12 @@ templ DocsPage() {
 		}
 		<div class="min-w-0">
 			<h1 class="text-2xl font-bold mb-2">SDK Reference</h1>
-			<p class="text-base-content/60 mb-8">Code examples and usage patterns for every go-daisy package. Click ▼ to expand details.</p>
+			<p class="text-muted mb-8">Code examples and usage patterns for every go-daisy package. Click ▼ to expand details.</p>
 			for _, s := range docSections {
 				<div id={ sectionID(s.ID) } class="mb-8 pb-6 px-4 border-b border-line scroll-mt-4">
 					<div class="mb-3">
 						<h2 class="text-base font-semibold">{ s.Title }</h2>
-						<p class="text-xs text-base-content/50 mt-0.5">{ s.Description }</p>
+						<p class="text-xs text-subtle mt-0.5">{ s.Description }</p>
 					</div>
 					<div class="grid grid-cols-1 lg:grid-cols-1 gap-4">
 						@ui.CodeBlock(ui.CodeBlockProps{Language: s.Lang, Label: s.Lang, Code: s.Code, Highlight: ui.Highlight(s.Code, s.Lang)})
@@ -306,7 +306,7 @@ templ DocsPage() {
 			}
 			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4">
 				<h2 class="text-md font-semibold mb-2">Packages Reference</h2>
-				<p class="text-sm text-base-content/60 mb-4">All go-daisy packages and their import paths.</p>
+				<p class="text-sm text-muted mb-4">All go-daisy packages and their import paths.</p>
 				@docsRefTable()
 			</div>
 		</div>
@@ -325,12 +325,12 @@ templ DocsContent() {
 		}
 		<div class="min-w-0">
 			<h1 class="text-2xl font-bold mb-2">SDK Reference</h1>
-			<p class="text-base-content/60 mb-4">Code examples and usage patterns for every go-daisy package.</p>
+			<p class="text-muted mb-4">Code examples and usage patterns for every go-daisy package.</p>
 			for _, s := range docSections {
 				<div id={ sectionID(s.ID) } class="mb-8 pb-6 px-4 border-b border-line scroll-mt-4">
 					<div class="mb-3">
 						<h2 class="text-base font-semibold">{ s.Title }</h2>
-						<p class="text-xs text-base-content/50 mt-0.5">{ s.Description }</p>
+						<p class="text-xs text-subtle mt-0.5">{ s.Description }</p>
 					</div>
 					<div class="grid grid-cols-1 lg:grid-cols-1 gap-4">
 						@ui.CodeBlock(ui.CodeBlockProps{Language: s.Lang, Label: s.Lang, Code: s.Code, Highlight: ui.Highlight(s.Code, s.Lang)})
@@ -339,7 +339,7 @@ templ DocsContent() {
 			}
 			<div id="docs-packages" class="mt-8 p-4 bg-base-200 rounded-box border border-line-translucent scroll-mt-4">
 				<h2 class="text-md font-semibold mb-2">Packages Reference</h2>
-				<p class="text-sm text-base-content/60 mb-4">All go-daisy packages and their import paths.</p>
+				<p class="text-sm text-muted mb-4">All go-daisy packages and their import paths.</p>
 				@docsRefTable()
 			</div>
 		</div>
@@ -361,7 +361,7 @@ templ docsRefTable() {
 				<tr class="hover hover:bg-base-200 transition-colors">
 					<td class="font-mono text-sm font-semibold">{ r.Topic }</td>
 					<td class="text-sm">{ r.Desc }</td>
-					<td class="text-xs font-mono text-base-content/60">{ r.Usage }</td>
+					<td class="text-xs font-mono text-muted">{ r.Usage }</td>
 					<td><span class="badge badge-ghost badge-xs">{ r.Category }</span></td>
 				</tr>
 			}

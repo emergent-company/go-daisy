@@ -80,7 +80,7 @@ func ChatLayout(props ChatLayoutProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div><p class=\"text-sm font-semibold text-base-content\">Alice Johnson</p><p class=\"text-xs text-base-content/50\">Online</p></div></div><div class=\"flex-1 overflow-y-auto p-4 space-y-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div><p class=\"text-sm font-semibold text-base-content\">Alice Johnson</p><p class=\"text-xs text-subtle\">Online</p></div></div><div class=\"flex-1 overflow-y-auto p-4 space-y-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -254,14 +254,14 @@ func conversationItem(name, lastMessage, time string, active, unread bool) templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</p><span class=\"text-xs text-base-content/40 shrink-0\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</p><span class=\"text-xs text-faint shrink-0\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(time)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/chat.templ`, Line: 61, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/chat.templ`, Line: 61, Col: 52}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -271,7 +271,7 @@ func conversationItem(name, lastMessage, time string, active, unread bool) templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var12 = []any{"text-xs truncate mt-0.5", templ.KV("text-base-content/50", !unread), templ.KV("text-base-content/70 font-medium", unread)}
+		var templ_7745c5c3_Var12 = []any{"text-xs truncate mt-0.5", templ.KV("text-subtle", !unread), templ.KV("text-label font-medium", unread)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var12...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -296,7 +296,7 @@ func conversationItem(name, lastMessage, time string, active, unread bool) templ
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(lastMessage)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/chat.templ`, Line: 63, Col: 152}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/chat.templ`, Line: 63, Col: 133}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {

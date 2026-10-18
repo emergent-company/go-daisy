@@ -42,7 +42,7 @@ templ TimelineItem(p TimelineItemProps, first bool, last bool) {
 				<hr/>
 			}
 		}
-		<div class="timeline-start text-xs text-base-content/40">{ p.Date }</div>
+		<div class="timeline-start text-xs text-faint">{ p.Date }</div>
 		<div class="timeline-middle">
 			if p.Done {
 				<span class={ "iconify size-4 text-primary", p.iconOn() }></span>
@@ -53,7 +53,7 @@ templ TimelineItem(p TimelineItemProps, first bool, last bool) {
 		if p.Done {
 			<div class="timeline-end timeline-box text-sm">{ p.Label }</div>
 		} else {
-			<div class="timeline-end timeline-box text-sm text-base-content/50">{ p.Label }</div>
+			<div class="timeline-end timeline-box text-sm text-subtle">{ p.Label }</div>
 		}
 		if !last {
 			if p.Done {

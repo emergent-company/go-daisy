@@ -27,7 +27,7 @@ templ TableCardHeader() {
 // TableCardFooter renders per-page selector, item count, and circle pagination.
 templ TableCardFooter(props TableCardFooterProps) {
 	<div class="flex items-center justify-between p-6" { devmode.Attrs(ctx, "table/TableCardFooter")... } { props.Attrs... }>
-		<div class="text-base-content/80 hover:text-base-content flex gap-2 text-sm">
+		<div class="text-body hover:text-base-content flex gap-2 text-sm">
 			<span class="hidden sm:inline">Per page</span>
 			@form.FilterSelect("pageSize", props.TargetID, props.BaseURL, "select-xs w-18") {
 				<option value="10" if props.PageSize == 10 { selected="" }>10</option>
@@ -36,7 +36,7 @@ templ TableCardFooter(props TableCardFooterProps) {
 				<option value="100" if props.PageSize == 100 { selected="" }>100</option>
 			}
 		</div>
-		<span class="text-base-content/80 hidden text-sm lg:inline">
+		<span class="text-body hidden text-sm lg:inline">
 			Showing
 			<span class="text-base-content font-medium">{ strconv.FormatInt(props.StartItem(), 10) }–{ strconv.FormatInt(props.EndItem(), 10) }</span>
 			of

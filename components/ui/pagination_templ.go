@@ -100,7 +100,7 @@ func PaginationWithProps(props PaginationProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if props.TotalItems > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<p class=\"text-base-content/70 text-sm\">Showing <span class=\"text-base-content font-medium\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<p class=\"text-label text-sm\">Showing <span class=\"text-base-content font-medium\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

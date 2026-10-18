@@ -80,7 +80,7 @@ func SidebarDense(props SidebarDenseProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><button type=\"button\" class=\"btn btn-circle btn-ghost btn-sm text-base-content/50 sidebar-dense-toggle shrink-0\" onclick=\"toggleSidebarDense()\" aria-label=\"Toggle sidebar\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><button type=\"button\" class=\"btn btn-circle btn-ghost btn-sm text-subtle sidebar-dense-toggle shrink-0\" onclick=\"toggleSidebarDense()\" aria-label=\"Toggle sidebar\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

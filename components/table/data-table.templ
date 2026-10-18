@@ -56,7 +56,7 @@ templ DataTable(props DataTableProps) {
 		{ devmode.Attrs(ctx, "table/DataTable")... }
 		{ props.Attrs... }
 	>
-		<div class="flex items-center gap-3 px-5 pt-5" x-show="columns.length > 0">
+		<div class={ ui.RowLoose, "px-5 pt-5" } x-show="columns.length > 0">
 			if props.Searchable {
 				<div class="join flex-1 max-w-sm">
 					<input
@@ -75,7 +75,7 @@ templ DataTable(props DataTableProps) {
 				</button>
 				<div class="dropdown-content bg-base-100 rounded-box shadow-sm edge-line mt-1 p-3 min-w-40 z-10" x-show="open">
 					<template x-for="(col, i) in columns" :key="col.id">
-						<label class="flex items-center gap-2 py-1 text-sm">
+						<label class={ ui.Row, "py-1 text-sm" }>
 							<input type="checkbox" class="checkbox checkbox-xs" x-model="col.hidden" @change="filterRows()" />
 							<span x-text="col.label"></span>
 						</label>
@@ -93,7 +93,7 @@ templ DataTable(props DataTableProps) {
 						<template x-for="col in visibleColumns" :key="col.id">
 							<th
 								x-text="col.label"
-								:class="'text-xs uppercase tracking-wider text-base-content/50' + (sortable ? ' cursor-pointer hover:text-base-content' : '') + ' ' + (col.width || '')"
+								:class="'eyebrow' + (sortable ? ' cursor-pointer hover:text-base-content' : '') + ' ' + (col.width || '')"
 								x-on:click="if (sortable) sortBy(col.id)"
 							>
 							</th>
@@ -103,7 +103,7 @@ templ DataTable(props DataTableProps) {
 				<tbody>
 					<template x-if="paginatedRows.length === 0">
 						<tr>
-							<td :colspan="visibleColumns.length" class="text-center py-8 text-base-content/50">
+							<td :colspan="visibleColumns.length" class="text-center py-8 text-subtle">
 								No results found.
 							</td>
 						</tr>
@@ -120,7 +120,7 @@ templ DataTable(props DataTableProps) {
 		</div>
 
 		<div class="flex items-center justify-between p-4 border-t border-line">
-			<div class="flex items-center gap-2 text-sm text-base-content/60">
+			<div class={ ui.Row, "text-sm text-muted" }>
 				<span>Rows per page:</span>
 				<select class="select select-xs w-20" x-model="pageSize" @change="currentPage = 1; filterRows()">
 					<template x-for="opt in pageSizeOptions" :key="opt">

@@ -93,7 +93,7 @@ func Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) tem
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<label for=\"_layout-sidebar-toggle-trigger\" title=\"Toggle sidebar\" class=\"btn btn-circle btn-ghost btn-sm text-base-content/50 max-lg:hidden\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<label for=\"_layout-sidebar-toggle-trigger\" title=\"Toggle sidebar\" class=\"btn btn-circle btn-ghost btn-sm text-subtle max-lg:hidden\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

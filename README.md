@@ -289,6 +289,25 @@ task dev:ui
 
 ---
 
+## Design tokens
+
+`components/css/tokens.css` ships the semantic text tone ladder
+(`text-body` … `text-faint`) and the `.eyebrow` utility on top of DaisyUI's
+`--color-base-content`.
+
+Consumers that compile their own stylesheet must import it alongside the
+component CSS:
+
+```css
+@import "tailwindcss";
+@plugin "daisyui";
+@import "../components/css/tokens.css";
+@import "../components/css/custom.css";
+```
+
+The tokens are declared with `@theme inline` so they resolve against the active
+`data-theme` at the point of use — required for nested theme previews.
+
 ## Tech stack
 
 | Layer | Tool |

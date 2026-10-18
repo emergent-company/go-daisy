@@ -67,7 +67,7 @@ templ IconPicker(props IconPickerProps) {
 					<span id={ p.GlyphID } data-gd-icon-glyph class="contents">
 						<span class={ "iconify size-5", p.GlyphClass } aria-hidden="true"></span>
 					</span>
-					<span id={ p.LabelID } data-gd-icon-label class={ "truncate text-left", templ.KV("text-base-content/50", p.IsDefault) }>{ p.Label }</span>
+					<span id={ p.LabelID } data-gd-icon-label class={ "truncate text-left", templ.KV("text-subtle", p.IsDefault) }>{ p.Label }</span>
 				</span>
 				@IconSpan("lucide--chevron-down", "size-4 shrink-0 opacity-60")
 			}
@@ -106,7 +106,7 @@ templ IconPicker(props IconPickerProps) {
 						aria-label={ p.DefaultLabel }
 						title={ p.DefaultLabel }
 						tabindex={ iconPickerTabindex(p.IsDefault) }
-						class={ "grid size-11 place-items-center rounded-lg border border-dashed border-base-content/25 text-base-content/70 transition-colors hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:size-9", templ.KV("bg-primary/10 text-primary ring-1 ring-primary/30 ring-inset", p.IsDefault) }
+						class={ "grid size-11 place-items-center rounded-lg border border-dashed border-base-content/25 text-label transition-colors hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:size-9", templ.KV("bg-primary/10 text-primary ring-1 ring-primary/30 ring-inset", p.IsDefault) }
 					>
 						<span class={ "iconify size-5", p.DefaultClass } aria-hidden="true"></span>
 					</button>
@@ -124,13 +124,13 @@ templ IconPicker(props IconPickerProps) {
 							aria-label={ opt.Label }
 							title={ opt.Label }
 							tabindex={ iconPickerTabindex(active) }
-							class={ "grid size-11 place-items-center rounded-lg border border-transparent text-base-content/70 transition-colors hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:size-9", templ.KV("bg-primary/10 text-primary ring-1 ring-primary/30 ring-inset", active) }
+							class={ "grid size-11 place-items-center rounded-lg border border-transparent text-label transition-colors hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:size-9", templ.KV("bg-primary/10 text-primary ring-1 ring-primary/30 ring-inset", active) }
 						>
 							<span class={ "iconify size-5", opt.Class } aria-hidden="true"></span>
 						</button>
 					}
 				</div>
-				<p id={ p.EmptyID } data-gd-icon-empty class="text-base-content/50 hidden px-2 py-6 text-center text-xs">{ p.EmptyLabel }</p>
+				<p id={ p.EmptyID } data-gd-icon-empty class="text-subtle hidden px-2 py-6 text-center text-xs">{ p.EmptyLabel }</p>
 				<div class="mt-2 border-t border-line pt-2">
 					<button type="button" data-gd-icon-reset class="btn btn-ghost btn-xs w-full" style={ iconPickerResetStyle(p.IsDefault) }>
 						{ p.ResetLabel }

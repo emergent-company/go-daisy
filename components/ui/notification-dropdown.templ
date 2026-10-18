@@ -46,7 +46,7 @@ templ NotificationDropdown(props NotificationDropdownProps) {
 					@dropdownNotificationRow(props.ID, item)
 				}
 				if len(props.Items) == 0 {
-					<div class="p-6 text-center text-sm text-base-content/50">No notifications</div>
+					<div class="p-6 text-center text-sm text-subtle">No notifications</div>
 				}
 			</div>
 
@@ -71,9 +71,9 @@ templ dropdownNotificationRow(dropdownID string, item NotificationItem) {
 		<div class="flex-1 min-w-0">
 			<p class={ "text-sm truncate", templ.KV("font-semibold", item.Unread) }>{ item.Title }</p>
 			if item.Body != "" {
-				<p class="text-xs text-base-content/50 truncate mt-0.5">{ item.Body }</p>
+				<p class="text-xs text-subtle truncate mt-0.5">{ item.Body }</p>
 			}
-			<p class="text-xs text-base-content/40 mt-1">{ item.Time }</p>
+			<p class="text-xs text-faint mt-1">{ item.Time }</p>
 		</div>
 		if item.Unread {
 			<button class="btn btn-ghost btn-xs shrink-0 mt-1" onclick="markNotifRead(this, '{ dropdownID }')" aria-label="Mark as read">

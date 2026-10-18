@@ -14,7 +14,7 @@ var spinnerScriptOnce = templ.NewOnceHandle()
 // It includes a small inline <script> to handle button clicks — no library needed.
 // id must be unique on the page.
 templ InputSpinner(id string, value int, min int, max int, hasMinMax bool, btnClass string, inputClass string) {
-	<div class="flex items-center gap-3" { devmode.Attrs(ctx, "form/InputSpinner")... }>
+	<div class={ ui.RowLoose } { devmode.Attrs(ctx, "form/InputSpinner")... }>
 		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeSquare, ExtraClass: btnClass, OnClick: templ.JSFuncCall("spinnerDecrement", id), Attrs: templ.Attributes{"aria-label": "Decrement"}}) {
 			@ui.IconSpan("lucide--minus", "size-4")
 		}

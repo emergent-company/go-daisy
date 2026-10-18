@@ -225,7 +225,7 @@ func MockupBrowserPlaceholder() templ.Component {
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"flex justify-center px-4 py-8 border-t border-line-strong bg-base-200 text-sm text-base-content/50\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"flex justify-center px-4 py-8 border-t border-line-strong bg-base-200 text-sm text-subtle\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -309,7 +309,7 @@ func MockupPhonePlaceholder() templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<div class=\"artboard artboard-demo phone-1 bg-base-200 flex items-center justify-center text-sm text-base-content/50\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<div class=\"artboard artboard-demo phone-1 bg-base-200 flex items-center justify-center text-sm text-subtle\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -393,7 +393,7 @@ func MockupWindowPlaceholder() templ.Component {
 			templ_7745c5c3_Var12 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<div class=\"flex justify-center px-4 py-8 border-t border-line-strong bg-base-200 text-sm text-base-content/50\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<div class=\"flex justify-center px-4 py-8 border-t border-line-strong bg-base-200 text-sm text-subtle\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -149,7 +149,7 @@ func avatarFallbackIconName(icon string) string {
 // replace the colors without losing layout.
 func avatarToneClasses(tone AvatarTone) string {
 	if tone == AvatarToneMuted {
-		return "bg-base-300 font-semibold text-base-content/70"
+		return "bg-base-300 font-semibold text-label"
 	}
 	return "bg-primary font-semibold text-primary-content"
 }
@@ -412,7 +412,7 @@ func AvatarFull(props AvatarProps) templ.Component {
 				}
 			}
 		} else if props.Icon != "" {
-			var templ_7745c5c3_Var15 = []any{sc, "avatar-placeholder", shape, "bg-base-300 flex items-center justify-center text-base-content/60", props.InnerClass}
+			var templ_7745c5c3_Var15 = []any{sc, "avatar-placeholder", shape, "bg-base-300 flex items-center justify-center text-muted", props.InnerClass}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var15...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

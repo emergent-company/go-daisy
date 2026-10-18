@@ -20,9 +20,9 @@ const (
 type EmptyNoteTone string
 
 const (
-	// EmptyNoteToneDefault is the zero-value default: text-base-content/50.
+	// EmptyNoteToneDefault is the zero-value default: text-subtle.
 	EmptyNoteToneDefault EmptyNoteTone = ""
-	// EmptyNoteToneQuiet is the de-emphasised step: text-base-content/40. It
+	// EmptyNoteToneQuiet is the de-emphasised step: text-faint. It
 	// reproduces the pre-Tone default byte-for-byte, so consumers that need the
 	// old shade can pin it explicitly rather than fight Class ordering.
 	EmptyNoteToneQuiet EmptyNoteTone = "quiet"
@@ -39,10 +39,10 @@ type EmptyNoteProps struct {
 	Hidden bool
 	// Size selects the type scale: text-sm (default) or text-xs ("xs").
 	Size EmptyNoteSize
-	// Tone selects the foreground step: Default (text-base-content/50, the
-	// zero value), Quiet (text-base-content/40) or Strong (text-base-content/65).
+	// Tone selects the foreground step: Default (text-subtle, the
+	// zero value), Quiet (text-faint) or Strong (text-base-content/65).
 	// The step is rendered by the component, not via Class, because
-	// text-base-content/40 and a consumer's own text-muted are equal-specificity
+	// text-faint and a consumer's own text-muted are equal-specificity
 	// utilities whose winner is decided by compiled stylesheet order.
 	Tone EmptyNoteTone
 	// Icon, when non-empty, renders a leading lucide icon and switches the note
@@ -71,10 +71,10 @@ type EmptyNoteProps struct {
 // (text-[11px], the micro tier for dense metadata — timestamps, keyboard hints).
 //
 // Tone picks the foreground step. The zero value emits
-// <p class="text-base-content/50 text-sm">…</p> — the majority muted-prose
+// <p class="text-subtle text-sm">…</p> — the majority muted-prose
 // level in the wild, and the same step ui.EmptyState's compact description and
 // ui.Empty's description use, so a note is never fainter than the empty-state
-// copy sitting directly above it. Quiet ("quiet") emits text-base-content/40 —
+// copy sitting directly above it. Quiet ("quiet") emits text-faint —
 // the pre-Tone default, byte-for-byte — and Strong ("strong") emits
 // text-base-content/65.
 //
@@ -82,7 +82,7 @@ type EmptyNoteProps struct {
 // muted token, because go-daisy ships no foreground ladder (a generic primitive
 // cannot reference a consumer's --color-muted-*). Consumers that define their
 // own ladder can still append a step through Class, but they should prefer Tone:
-// text-base-content/40 and a consumer's text-muted are equal-specificity
+// text-faint and a consumer's text-muted are equal-specificity
 // utilities, so the winner would be decided by compiled stylesheet order, not
 // class-attribute order.
 templ EmptyNote(props ...EmptyNoteProps) {
@@ -98,10 +98,10 @@ templ EmptyNote(props ...EmptyNoteProps) {
 		case EmptyNoteSize2XS:
 			size = "text-[11px]"
 		}
-		cls := "text-base-content/50"
+		cls := "text-subtle"
 		switch p.Tone {
 		case EmptyNoteToneQuiet:
-			cls = "text-base-content/40"
+			cls = "text-faint"
 		case EmptyNoteToneStrong:
 			cls = "text-base-content/65"
 		}

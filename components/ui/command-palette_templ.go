@@ -106,7 +106,7 @@ func CommandPalette(props CommandPaletteProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconSpan("lucide--search", "size-5 text-base-content/40").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconSpan("lucide--search", "size-5 text-faint").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -303,14 +303,14 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 			return templ_7745c5c3_Err
 		}
 		if group != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<p class=\"text-xs font-semibold uppercase tracking-wider text-base-content/40 px-3 pt-3 pb-1.5\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<p class=\"eyebrow px-3 pt-3 pb-1.5\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(group)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 99, Col: 106}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 99, Col: 46}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -375,7 +375,7 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 					return templ_7745c5c3_Err
 				}
 				if item.Icon != "" {
-					var templ_7745c5c3_Var15 = []any{"iconify size-4 shrink-0 text-base-content/50 " + item.Icon}
+					var templ_7745c5c3_Var15 = []any{"iconify size-4 shrink-0 text-subtle " + item.Icon}
 					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var15...)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
@@ -416,14 +416,14 @@ func paletteGroup(paletteID, group string, items []CommandPaletteItem) templ.Com
 					return templ_7745c5c3_Err
 				}
 				if item.Description != "" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<p class=\"text-xs text-base-content/40 truncate\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<p class=\"text-xs text-faint truncate\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var18 string
 					templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(item.Description)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 116, Col: 74}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/command-palette.templ`, Line: 116, Col: 64}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 					if templ_7745c5c3_Err != nil {
@@ -551,7 +551,7 @@ func commandPaletteScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "<script>\n\tgdOnce('paletteFilterInit', function () {\n\n\t  window.filterPaletteItems = function(input) {\n\t    var q = input.value.toLowerCase().trim();\n\t    var modal = input.closest('.modal');\n\t    var results = modal ? modal.querySelector('[id$=\"-results\"]') : document.getElementById(input.id.replace('-input', '-results'));\n\t    if (!results) return;\n\n\t    if (results.dataset.itemsUrl && !window['_paletteFetched' + results.id]) {\n\t      window['_paletteFetched' + results.id] = true;\n\t      var xhr = new XMLHttpRequest();\n\t      xhr.open('GET', results.dataset.itemsUrl);\n\t      xhr.onload = function() {\n\t        if (xhr.status === 200) {\n\t          try {\n\t            var data = JSON.parse(xhr.responseText);\n\t            window['_paletteRemote' + results.id] = data;\n\t          } catch(e) {}\n\t        }\n\t        filterResults(q, results);\n\t      };\n\t      xhr.send();\n\t      return;\n\t    }\n\t    filterResults(q, results);\n\t  };\n\n\t  function filterResults(q, results) {\n\t    var remote = window['_paletteRemote' + results.id] || [];\n\t    if (remote.length) {\n\t      var existing = results.querySelector('[data-remote-results]');\n\t      if (existing) existing.remove();\n\t      var div = document.createElement('div');\n\t      div.setAttribute('data-remote-results', '');\n\t      var found = 0;\n\t      remote.forEach(function(item) {\n\t        var label = (item.label || item.title || '').toLowerCase();\n\t        var desc = (item.description || '').toLowerCase();\n\t        var section = (item.section || item.group || '').toLowerCase();\n\t        if (q && !label.includes(q) && !desc.includes(q) && !section.includes(q)) return;\n\t        found++;\n\t        var a = document.createElement('a');\n\t        a.className = 'flex items-center gap-3 px-3 py-2.5 rounded-box hover:bg-base-200 cursor-pointer transition-colors';\n\t        a.href = item.href || '#';\n\t        if (item.icon) {\n\t          var icon = document.createElement('span');\n\t          icon.className = 'iconify size-4 shrink-0 text-base-content/50 ' + item.icon;\n\t          a.appendChild(icon);\n\t        }\n\t        var body = document.createElement('div');\n\t        body.className = 'flex-1 min-w-0';\n\t        var title = document.createElement('p');\n\t        title.className = 'text-sm font-medium text-base-content truncate';\n\t        title.textContent = item.label || item.title;\n\t        body.appendChild(title);\n\t        if (item.description) {\n\t          var d = document.createElement('p');\n\t          d.className = 'text-xs text-base-content/40 truncate';\n\t          d.textContent = item.description;\n\t          body.appendChild(d);\n\t        }\n\t        a.appendChild(body);\n\t        div.appendChild(a);\n\t      });\n\t      if (found === 0 && q) {\n\t        var empty = document.createElement('p');\n\t        empty.className = 'text-sm text-base-content/40 text-center py-4';\n\t        empty.textContent = 'No results found.';\n\t        div.appendChild(empty);\n\t      }\n\t      results.appendChild(div);\n\t    }\n\t    results.querySelectorAll('[data-palette-group]').forEach(function(group) {\n\t      var items = group.querySelectorAll('[data-label]');\n\t      var hasVisible = false;\n\t      items.forEach(function(item) {\n\t        var text = (item.dataset.label || '').toLowerCase();\n\t        var match = !q || text.includes(q);\n\t        item.style.display = match ? '' : 'none';\n\t        if (match) hasVisible = true;\n\t      });\n\t      var header = group.querySelector('p');\n\t      if (header) header.style.display = hasVisible ? '' : 'none';\n\t    });\n\t  }\n\t});\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "<script>\n\tgdOnce('paletteFilterInit', function () {\n\n\t  window.filterPaletteItems = function(input) {\n\t    var q = input.value.toLowerCase().trim();\n\t    var modal = input.closest('.modal');\n\t    var results = modal ? modal.querySelector('[id$=\"-results\"]') : document.getElementById(input.id.replace('-input', '-results'));\n\t    if (!results) return;\n\n\t    if (results.dataset.itemsUrl && !window['_paletteFetched' + results.id]) {\n\t      window['_paletteFetched' + results.id] = true;\n\t      var xhr = new XMLHttpRequest();\n\t      xhr.open('GET', results.dataset.itemsUrl);\n\t      xhr.onload = function() {\n\t        if (xhr.status === 200) {\n\t          try {\n\t            var data = JSON.parse(xhr.responseText);\n\t            window['_paletteRemote' + results.id] = data;\n\t          } catch(e) {}\n\t        }\n\t        filterResults(q, results);\n\t      };\n\t      xhr.send();\n\t      return;\n\t    }\n\t    filterResults(q, results);\n\t  };\n\n\t  function filterResults(q, results) {\n\t    var remote = window['_paletteRemote' + results.id] || [];\n\t    if (remote.length) {\n\t      var existing = results.querySelector('[data-remote-results]');\n\t      if (existing) existing.remove();\n\t      var div = document.createElement('div');\n\t      div.setAttribute('data-remote-results', '');\n\t      var found = 0;\n\t      remote.forEach(function(item) {\n\t        var label = (item.label || item.title || '').toLowerCase();\n\t        var desc = (item.description || '').toLowerCase();\n\t        var section = (item.section || item.group || '').toLowerCase();\n\t        if (q && !label.includes(q) && !desc.includes(q) && !section.includes(q)) return;\n\t        found++;\n\t        var a = document.createElement('a');\n\t        a.className = 'flex items-center gap-3 px-3 py-2.5 rounded-box hover:bg-base-200 cursor-pointer transition-colors';\n\t        a.href = item.href || '#';\n\t        if (item.icon) {\n\t          var icon = document.createElement('span');\n\t          icon.className = 'iconify size-4 shrink-0 text-subtle ' + item.icon;\n\t          a.appendChild(icon);\n\t        }\n\t        var body = document.createElement('div');\n\t        body.className = 'flex-1 min-w-0';\n\t        var title = document.createElement('p');\n\t        title.className = 'text-sm font-medium text-base-content truncate';\n\t        title.textContent = item.label || item.title;\n\t        body.appendChild(title);\n\t        if (item.description) {\n\t          var d = document.createElement('p');\n\t          d.className = 'text-xs text-faint truncate';\n\t          d.textContent = item.description;\n\t          body.appendChild(d);\n\t        }\n\t        a.appendChild(body);\n\t        div.appendChild(a);\n\t      });\n\t      if (found === 0 && q) {\n\t        var empty = document.createElement('p');\n\t        empty.className = 'text-sm text-faint text-center py-4';\n\t        empty.textContent = 'No results found.';\n\t        div.appendChild(empty);\n\t      }\n\t      results.appendChild(div);\n\t    }\n\t    results.querySelectorAll('[data-palette-group]').forEach(function(group) {\n\t      var items = group.querySelectorAll('[data-label]');\n\t      var hasVisible = false;\n\t      items.forEach(function(item) {\n\t        var text = (item.dataset.label || '').toLowerCase();\n\t        var match = !q || text.includes(q);\n\t        item.style.display = match ? '' : 'none';\n\t        if (match) hasVisible = true;\n\t      });\n\t      var header = group.querySelector('p');\n\t      if (header) header.style.display = hasVisible ? '' : 'none';\n\t    });\n\t  }\n\t});\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

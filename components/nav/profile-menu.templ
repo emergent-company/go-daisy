@@ -34,7 +34,7 @@ templ ProfileMenu(name, email, initials string, items []ProfileMenuItem, signOut
 		<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg edge-line">
 			<div class="px-4 py-3 border-b border-line">
 				<p class="font-semibold text-sm">{ name }</p>
-				<p class="text-base-content/60 text-xs mt-0.5">{ email }</p>
+				<p class="text-muted text-xs mt-0.5">{ email }</p>
 			</div>
 			<ul class="menu w-full p-2">
 				for _, item := range items {
@@ -99,11 +99,11 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-64 shadow-lg edge-line">
 				<div class="border-line border-b p-4">
 					<div class="flex items-center justify-between">
-						<div class="flex items-center gap-3">
+						<div class={ ui.RowLoose }>
 							@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarMD})
 							<div>
 								<p class="font-semibold text-sm">{ opts.Name }</p>
-								<p class="text-base-content/60 text-xs">{ opts.Email }</p>
+								<p class="text-muted text-xs">{ opts.Email }</p>
 								if opts.Role != "" {
 									@ui.Badge(ui.BadgeProps{Label: opts.Role, Variant: ui.BadgePrimary, Style: ui.BadgeStyleSoft, Size: ui.BadgeSizeXS, Attrs: templ.Attributes{"class": "mt-0.5"}})
 								}
@@ -119,10 +119,10 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 					<p class="menu-label text-[11px] px-2 pb-1">Switch Account</p>
 					for _, acct := range opts.Accounts {
 						<div class="hover:bg-base-200 flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 transition-colors">
-							@ui.AvatarFull(ui.AvatarProps{Initials: firstChars(acct.Name, 2), Size: ui.AvatarSM, BadgeClass: "bg-base-300 text-base-content/80 font-semibold", TextClass: "text-xs"})
+							@ui.AvatarFull(ui.AvatarProps{Initials: firstChars(acct.Name, 2), Size: ui.AvatarSM, BadgeClass: "bg-base-300 text-body font-semibold", TextClass: "text-xs"})
 							<div class="grow">
 								<p class="text-sm font-medium">{ acct.Name }</p>
-								<p class="text-base-content/60 text-xs">{ acct.Email }</p>
+								<p class="text-muted text-xs">{ acct.Email }</p>
 							</div>
 							if acct.Active {
 								@ui.IconSpan("lucide--check", "size-4 text-primary")
@@ -136,7 +136,7 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 				</ul>
 				<hr class="border-line mx-2" />
 				<ul class="menu w-full p-2">
-					<li><div class="text-base-content/60 text-xs">Version 3.0.0</div></li>
+					<li><div class="text-muted text-xs">Version 3.0.0</div></li>
 				</ul>
 			</div>
 		</div>
@@ -147,9 +147,9 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 				@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarSM, TextClass: "text-sm"})
 				<div class="max-md:hidden">
 					<p class="text-sm font-medium leading-tight">{ opts.Name }</p>
-					<p class="text-base-content/60 text-xs leading-tight">{ opts.Email }</p>
+					<p class="text-muted text-xs leading-tight">{ opts.Email }</p>
 				</div>
-				@ui.IconSpan("lucide--chevron-down", "size-3.5 text-base-content/40 max-md:hidden")
+				@ui.IconSpan("lucide--chevron-down", "size-3.5 text-faint max-md:hidden")
 			</div>
 			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg edge-line">
 				<div class="p-4 text-center">
@@ -158,7 +158,7 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 						<div class="inline-flex items-center gap-1 badge badge-soft badge-primary badge-xs">Shield verified</div>
 					</div>
 					<p class="mt-2 font-semibold">{ opts.Name }</p>
-					<p class="text-base-content/60 text-xs">{ opts.Email }</p>
+					<p class="text-muted text-xs">{ opts.Email }</p>
 				</div>
 				<hr class="border-line" />
 				<ul class="menu w-full p-2">
@@ -180,11 +180,11 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 			</div>
 			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg edge-line">
 				<div class="border-line border-b p-4">
-					<div class="flex items-center gap-3">
+					<div class={ ui.RowLoose }>
 						@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarMD})
 						<div>
 							<p class="font-semibold text-sm">{ opts.Name }</p>
-							<p class="text-base-content/60 text-xs">{ opts.Email }</p>
+							<p class="text-muted text-xs">{ opts.Email }</p>
 						</div>
 					</div>
 				</div>
@@ -201,7 +201,7 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 						</div>
 						<div>
 							<p class="font-medium text-sm">Refer a friend</p>
-							<p class="text-base-content/60 text-xs">5 invites waiting</p>
+							<p class="text-muted text-xs">5 invites waiting</p>
 						</div>
 					</div>
 				</div>

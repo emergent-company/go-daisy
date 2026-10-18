@@ -26,7 +26,7 @@ templ ChatLayout(props ChatLayoutProps) {
 				@ui.AvatarFull(ui.AvatarProps{Name: "Alice Johnson", Size: ui.AvatarSM})
 				<div>
 					<p class="text-sm font-semibold text-base-content">Alice Johnson</p>
-					<p class="text-xs text-base-content/50">Online</p>
+					<p class="text-xs text-subtle">Online</p>
 				</div>
 			</div>
 
@@ -58,9 +58,9 @@ templ conversationItem(name, lastMessage, time string, active, unread bool) {
 		<div class="flex-1 min-w-0">
 			<div class="flex items-center justify-between">
 				<p class={ "text-sm truncate", templ.KV("font-semibold", unread) }>{ name }</p>
-				<span class="text-xs text-base-content/40 shrink-0">{ time }</span>
+				<span class="text-xs text-faint shrink-0">{ time }</span>
 			</div>
-			<p class={ "text-xs truncate mt-0.5", templ.KV("text-base-content/50", !unread), templ.KV("text-base-content/70 font-medium", unread) }>{ lastMessage }</p>
+			<p class={ "text-xs truncate mt-0.5", templ.KV("text-subtle", !unread), templ.KV("text-label font-medium", unread) }>{ lastMessage }</p>
 		</div>
 		if unread {
 			<span class="badge badge-primary badge-xs"></span>

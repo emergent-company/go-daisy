@@ -91,14 +91,14 @@ func CodeBlock(props CodeBlockProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "><div class=\"flex items-center justify-between px-4 py-2 bg-base-200/50 border-b border-line\"><span class=\"text-xs font-mono text-base-content/60 select-none\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "><div class=\"flex items-center justify-between px-4 py-2 bg-base-200/50 border-b border-line\"><span class=\"text-xs font-mono text-muted select-none\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/codeblock.templ`, Line: 38, Col: 75}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/codeblock.templ`, Line: 38, Col: 65}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {

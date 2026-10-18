@@ -146,7 +146,7 @@ func AuthPage(props AuthPageProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div></div><div class=\"hidden lg:flex flex-1 bg-base-200 items-center justify-center p-12\"><div class=\"max-w-sm text-center\"><div class=\"text-6xl mb-6\">🚀</div><h2 class=\"text-2xl font-bold text-base-content mb-3\">Build faster with go-daisy</h2><p class=\"text-base-content/60 mb-6\">Type-safe Templ components styled with DaisyUI for HTMX-driven web applications.</p><div class=\"border-t border-line pt-6 mt-6\"><p class=\"text-sm text-base-content/50 italic\">\"The component library that makes Go web development a joy.\"</p><p class=\"text-sm font-semibold text-base-content mt-2\">— Team go-daisy</p></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div></div><div class=\"hidden lg:flex flex-1 bg-base-200 items-center justify-center p-12\"><div class=\"max-w-sm text-center\"><div class=\"text-6xl mb-6\">🚀</div><h2 class=\"text-2xl font-bold text-base-content mb-3\">Build faster with go-daisy</h2><p class=\"text-muted mb-6\">Type-safe Templ components styled with DaisyUI for HTMX-driven web applications.</p><div class=\"border-t border-line pt-6 mt-6\"><p class=\"text-sm text-subtle italic\">\"The component library that makes Go web development a joy.\"</p><p class=\"text-sm font-semibold text-base-content mt-2\">— Team go-daisy</p></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -187,7 +187,7 @@ func loginForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"flex items-center justify-between text-sm\"><label class=\"flex items-center gap-2\"><input type=\"checkbox\" class=\"checkbox checkbox-xs\" checked> <span class=\"text-base-content/60\">Remember me</span></label> <a href=\"#\" class=\"link link-primary text-sm\">Forgot password?</a></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"flex items-center justify-between text-sm\"><label class=\"flex items-center gap-2\"><input type=\"checkbox\" class=\"checkbox checkbox-xs\" checked> <span class=\"text-muted\">Remember me</span></label> <a href=\"#\" class=\"link link-primary text-sm\">Forgot password?</a></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -213,7 +213,7 @@ func loginForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</form><p class=\"text-center text-sm text-base-content/50 mt-6\">Don't have an account? <a href=\"#\" class=\"link link-primary\">Sign up</a></p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</form><p class=\"text-center text-sm text-subtle mt-6\">Don't have an account? <a href=\"#\" class=\"link link-primary\">Sign up</a></p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -262,7 +262,7 @@ func registerForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<label class=\"flex items-start gap-2 text-sm\"><input type=\"checkbox\" class=\"checkbox checkbox-xs mt-0.5\" required> <span class=\"text-base-content/60\">I agree to the <a href=\"#\" class=\"link link-primary\">Terms of Service</a> and <a href=\"#\" class=\"link link-primary\">Privacy Policy</a></span></label>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<label class=\"flex items-start gap-2 text-sm\"><input type=\"checkbox\" class=\"checkbox checkbox-xs mt-0.5\" required> <span class=\"text-muted\">I agree to the <a href=\"#\" class=\"link link-primary\">Terms of Service</a> and <a href=\"#\" class=\"link link-primary\">Privacy Policy</a></span></label>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -288,7 +288,7 @@ func registerForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</form><p class=\"text-center text-sm text-base-content/50 mt-6\">Already have an account? <a href=\"#\" class=\"link link-primary\">Sign in</a></p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</form><p class=\"text-center text-sm text-subtle mt-6\">Already have an account? <a href=\"#\" class=\"link link-primary\">Sign in</a></p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -317,7 +317,7 @@ func forgotForm() templ.Component {
 			templ_7745c5c3_Var11 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<form class=\"space-y-4\"><p class=\"text-sm text-base-content/60 mb-4\">Enter your email address and we'll send you a link to reset your password.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<form class=\"space-y-4\"><p class=\"text-sm text-muted mb-4\">Enter your email address and we'll send you a link to reset your password.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -347,7 +347,7 @@ func forgotForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</form><p class=\"text-center text-sm text-base-content/50 mt-6\"><a href=\"#\" class=\"link link-primary\">Back to sign in</a></p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</form><p class=\"text-center text-sm text-subtle mt-6\"><a href=\"#\" class=\"link link-primary\">Back to sign in</a></p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -376,7 +376,7 @@ func resetForm() templ.Component {
 			templ_7745c5c3_Var13 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<form class=\"space-y-4\"><p class=\"text-sm text-base-content/60 mb-4\">Enter your new password below.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<form class=\"space-y-4\"><p class=\"text-sm text-muted mb-4\">Enter your new password below.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -410,7 +410,7 @@ func resetForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</form><p class=\"text-center text-sm text-base-content/50 mt-6\"><a href=\"#\" class=\"link link-primary\">Back to sign in</a></p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</form><p class=\"text-center text-sm text-subtle mt-6\"><a href=\"#\" class=\"link link-primary\">Back to sign in</a></p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

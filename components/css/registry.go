@@ -24,6 +24,14 @@ import (
 //	@import "../components/css/custom.css";
 const CustomCSS = "css/custom.css"
 
+// TokensCSS is the semantic design-token layer every go-daisy package relies
+// on: the text tone ladder (text-body…text-faint) and the .eyebrow utility.
+// It must be imported by any consumer that compiles its own Tailwind
+// stylesheet instead of loading the bundled app.css:
+//
+//	@import "../components/css/tokens.css";
+const TokensCSS = "css/tokens.css"
+
 // PackageAssets describes the CSS a go-daisy component package needs.
 type PackageAssets struct {
 	// DaisyUIModules lists the daisyUI modules the package's components
@@ -36,26 +44,26 @@ type PackageAssets struct {
 
 // Registry maps each component package directory name to its CSS assets.
 var Registry = map[string]PackageAssets{
-	"alpine": {DaisyUIModules: nil, CSSFiles: []string{CustomCSS}},
+	"alpine": {DaisyUIModules: nil, CSSFiles: []string{TokensCSS, CustomCSS}},
 	"form": {DaisyUIModules: []string{
 		"badge", "button", "calendar", "card", "dropdown", "fieldset", "input",
 		"join", "label", "loading", "menu", "progress", "textarea", "validator",
-	}},
+	}, CSSFiles: []string{TokensCSS}},
 	"layout": {DaisyUIModules: []string{
 		"avatar", "button", "collapse", "dropdown", "input", "menu", "progress",
 		"select", "toast",
-	}, CSSFiles: []string{CustomCSS}},
-	"modal":      {DaisyUIModules: []string{"loading", "modal"}},
-	"nav":        {DaisyUIModules: []string{"avatar", "badge", "breadcrumbs", "button", "dock", "drawer", "dropdown", "input", "mask", "menu", "modal", "select", "steps"}, CSSFiles: []string{CustomCSS}},
-	"schemaform": {DaisyUIModules: []string{"badge"}},
-	"table":      {DaisyUIModules: []string{"button", "card", "checkbox", "dropdown", "input", "join", "loading", "select", "table"}},
+	}, CSSFiles: []string{TokensCSS, CustomCSS}},
+	"modal":      {DaisyUIModules: []string{"loading", "modal"}, CSSFiles: []string{TokensCSS}},
+	"nav":        {DaisyUIModules: []string{"avatar", "badge", "breadcrumbs", "button", "dock", "drawer", "dropdown", "input", "mask", "menu", "modal", "select", "steps"}, CSSFiles: []string{TokensCSS, CustomCSS}},
+	"schemaform": {DaisyUIModules: []string{"badge"}, CSSFiles: []string{TokensCSS}},
+	"table":      {DaisyUIModules: []string{"button", "card", "checkbox", "dropdown", "input", "join", "loading", "select", "table"}, CSSFiles: []string{TokensCSS}},
 	"ui": {DaisyUIModules: []string{
 		"alert", "avatar", "badge", "button", "card", "collapse", "countdown",
 		"diff", "divider", "dropdown", "fieldset", "hero", "indicator", "input",
 		"join", "kbd", "label", "link", "list", "loading", "mask", "menu",
 		"modal", "progress", "rating", "skeleton", "stack", "stat", "steps",
 		"swap", "tab", "timeline", "tooltip", "validator",
-	}, CSSFiles: []string{CustomCSS}},
+	}, CSSFiles: []string{TokensCSS, CustomCSS}},
 }
 
 // ModulesFor returns the union of daisyUI modules used by the given component

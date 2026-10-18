@@ -1234,7 +1234,7 @@ func SheetWithBoundary(side string, open bool) templ.Component {
 			if err := panelTitle.Render(ctx, w); err != nil {
 				return err
 			}
-			_, err = io.WriteString(w, `</h3><p class="text-sm text-base-content/70">`)
+			_, err = io.WriteString(w, `</h3><p class="text-sm text-label">`)
 			if err != nil {
 				return err
 			}

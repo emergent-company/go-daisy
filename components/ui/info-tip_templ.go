@@ -93,7 +93,7 @@ func InfoTip(tip string, props ...InfoTipProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = IconSpan("lucide--info", "size-3.5 shrink-0 text-base-content/40 cursor-help").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = IconSpan("lucide--info", "size-3.5 shrink-0 text-faint cursor-help").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -38,49 +38,49 @@ func TestEmptyNoteOutputLocked(t *testing.T) {
 			name:  "default",
 			body:  "No pending invitations.",
 			props: EmptyNoteProps{},
-			want:  `<p class="text-base-content/50 text-sm">No pending invitations.</p>`,
+			want:  `<p class="text-subtle text-sm">No pending invitations.</p>`,
 		},
 		{
 			name:  "xs",
 			body:  "No projects in this organization yet.",
 			props: EmptyNoteProps{Size: EmptyNoteSizeXS},
-			want:  `<p class="text-base-content/50 text-xs">No projects in this organization yet.</p>`,
+			want:  `<p class="text-subtle text-xs">No projects in this organization yet.</p>`,
 		},
 		{
 			name:  "2xs_micro",
 			body:  "Enter to send · Shift+Enter for a new line",
 			props: EmptyNoteProps{Size: EmptyNoteSize2XS},
-			want:  `<p class="text-base-content/50 text-[11px]">Enter to send · Shift+Enter for a new line</p>`,
+			want:  `<p class="text-subtle text-[11px]">Enter to send · Shift+Enter for a new line</p>`,
 		},
 		{
 			name:  "hidden_id",
 			body:  "Nothing matches.",
 			props: EmptyNoteProps{ID: "picker-empty", Hidden: true, Size: EmptyNoteSizeXS},
-			want:  `<p id="picker-empty" class="text-base-content/50 hidden text-xs">Nothing matches.</p>`,
+			want:  `<p id="picker-empty" class="text-subtle hidden text-xs">Nothing matches.</p>`,
 		},
 		{
 			name:  "class_appended",
 			body:  "No emails sent yet.",
 			props: EmptyNoteProps{Size: EmptyNoteSizeXS, Class: "mt-1"},
-			want:  `<p class="text-base-content/50 text-xs mt-1">No emails sent yet.</p>`,
+			want:  `<p class="text-subtle text-xs mt-1">No emails sent yet.</p>`,
 		},
 		{
 			name:  "icon",
 			body:  `Restore is not available yet — it ships in a later release.`,
 			props: EmptyNoteProps{Size: EmptyNoteSizeXS, Icon: "lucide--info"},
-			want:  `<p class="text-base-content/50 flex items-center gap-1.5 text-xs"><span class="iconify lucide--info size-3.5 shrink-0" aria-hidden="true"></span>Restore is not available yet — it ships in a later release.</p>`,
+			want:  `<p class="text-subtle flex items-center gap-1.5 text-xs"><span class="iconify lucide--info size-3.5 shrink-0" aria-hidden="true"></span>Restore is not available yet — it ships in a later release.</p>`,
 		},
 		{
 			name:  "icon_class_override",
 			body:  "Runs on the memory host.",
 			props: EmptyNoteProps{Size: EmptyNoteSizeXS, Icon: "lucide--shield-check", IconClass: "size-3.5 shrink-0 text-warning"},
-			want:  `<p class="text-base-content/50 flex items-center gap-1.5 text-xs"><span class="iconify lucide--shield-check size-3.5 shrink-0 text-warning" aria-hidden="true"></span>Runs on the memory host.</p>`,
+			want:  `<p class="text-subtle flex items-center gap-1.5 text-xs"><span class="iconify lucide--shield-check size-3.5 shrink-0 text-warning" aria-hidden="true"></span>Runs on the memory host.</p>`,
 		},
 		{
 			name:  "attrs",
 			body:  "Truncated.",
 			props: EmptyNoteProps{Size: EmptyNoteSizeXS, Attrs: templ.Attributes{"data-testid": "preview-truncated"}},
-			want:  `<p class="text-base-content/50 text-xs" data-testid="preview-truncated">Truncated.</p>`,
+			want:  `<p class="text-subtle text-xs" data-testid="preview-truncated">Truncated.</p>`,
 		},
 	}
 
@@ -95,7 +95,7 @@ func TestEmptyNoteOutputLocked(t *testing.T) {
 }
 
 // TestEmptyNoteToneSteps pins each foreground step's class string. The tone is
-// the leading class — the same slot the hardcoded text-base-content/40 occupied
+// the leading class — the same slot the hardcoded text-faint occupied
 // before the Tone axis — so the class order contract is unchanged.
 func TestEmptyNoteToneSteps(t *testing.T) {
 	cases := []struct {
@@ -103,8 +103,8 @@ func TestEmptyNoteToneSteps(t *testing.T) {
 		tone EmptyNoteTone
 		want string
 	}{
-		{"default", EmptyNoteToneDefault, `<p class="text-base-content/50 text-sm">note</p>`},
-		{"quiet", EmptyNoteToneQuiet, `<p class="text-base-content/40 text-sm">note</p>`},
+		{"default", EmptyNoteToneDefault, `<p class="text-subtle text-sm">note</p>`},
+		{"quiet", EmptyNoteToneQuiet, `<p class="text-faint text-sm">note</p>`},
 		{"strong", EmptyNoteToneStrong, `<p class="text-base-content/65 text-sm">note</p>`},
 	}
 	for _, tc := range cases {
@@ -119,10 +119,10 @@ func TestEmptyNoteToneSteps(t *testing.T) {
 
 // TestEmptyNoteToneQuietReproducesLegacyDefault pins the byte-identity proof
 // that lets the gateway adopt the primitive without a visual change: Tone: Quiet
-// renders exactly the pre-Tone default output (text-base-content/40), so a call
+// renders exactly the pre-Tone default output (text-faint), so a call
 // site pinning Quiet is indistinguishable from the old hardcoded shade.
 func TestEmptyNoteToneQuietReproducesLegacyDefault(t *testing.T) {
-	const legacyDefault = `<p class="text-base-content/40 text-sm">No pending invitations.</p>`
+	const legacyDefault = `<p class="text-faint text-sm">No pending invitations.</p>`
 	got := renderEmptyNote(t, "No pending invitations.", EmptyNoteProps{Tone: EmptyNoteToneQuiet})
 	if got != legacyDefault {
 		t.Errorf("Tone: Quiet diverged from the legacy default:\n got: %q\nwant: %q", got, legacyDefault)
@@ -162,7 +162,7 @@ func TestEmptyNoteSizeStepsAreExclusive(t *testing.T) {
 // a note renders a single <p>, never EmptyState's flex column or its title.
 func TestEmptyNoteIsNotEmptyState(t *testing.T) {
 	got := renderEmptyNote(t, "None yet.", EmptyNoteProps{})
-	if got != `<p class="text-base-content/50 text-sm">None yet.</p>` {
+	if got != `<p class="text-subtle text-sm">None yet.</p>` {
 		t.Errorf("a note must be a single <p>:\n got: %q", got)
 	}
 }

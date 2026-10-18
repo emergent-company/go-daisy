@@ -25,7 +25,7 @@ func renderPages(t *testing.T, c templ.Component) string {
 // component-rendered label, and the accessible name comes from the row title.
 func TestNotificationToggleOutputLocked(t *testing.T) {
 	got := renderPages(t, notificationToggle("mentions", "Mentions", "Get notified when someone mentions you", true))
-	want := `<div class="flex items-start justify-between gap-4 py-2"><div><p class="text-sm font-medium text-base-content">Mentions</p><p class="text-xs text-base-content/50">Get notified when someone mentions you</p></div><input type="checkbox" name="mentions" class="toggle toggle-primary" checked aria-label="Mentions"></div>`
+	want := `<div class="flex items-start justify-between gap-4 py-2"><div><p class="text-sm font-medium text-base-content">Mentions</p><p class="text-xs text-subtle">Get notified when someone mentions you</p></div><input type="checkbox" name="mentions" class="toggle toggle-primary" checked aria-label="Mentions"></div>`
 	if got != want {
 		t.Errorf("output changed:\n got: %q\nwant: %q", got, want)
 	}

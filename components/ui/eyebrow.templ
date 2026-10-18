@@ -16,5 +16,5 @@ type EyebrowProps struct {
 templ Eyebrow(text string, props ...EyebrowProps) {
 	{{ var p EyebrowProps
 	if len(props) > 0 { p = props[0] } }}
-	<p class={ "text-base-content/45 font-semibold tracking-[0.16em] uppercase", templ.KV(p.Size, p.Size != ""), templ.KV(p.Margin, p.Margin != "") } { devmode.Attrs(ctx, "ui/Eyebrow")... }>{ text }</p>
+	<p class={ "eyebrow", templ.KV(p.Size, p.Size != ""), templ.KV(p.Margin, p.Margin != "") } { devmode.Attrs(ctx, "ui/Eyebrow")... }>{ text }</p>
 }

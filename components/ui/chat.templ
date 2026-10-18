@@ -28,7 +28,7 @@ templ ChatBubble(sent bool, author string, timestamp string, avatarSrc string, b
 			</div>
 		}
 		if author != "" {
-			<div class="chat-header text-xs text-base-content/50 mb-0.5">{ author }</div>
+			<div class="chat-header text-xs text-subtle mb-0.5">{ author }</div>
 		}
 		<div class={ "chat-bubble relative", bubbleClass }>
 			{ children... }
@@ -46,7 +46,7 @@ templ ChatBubble(sent bool, author string, timestamp string, avatarSrc string, b
 			}
 		</div>
 		if timestamp != "" {
-			<div class="chat-footer text-xs text-base-content/60 mt-0.5 opacity-50">{ timestamp }</div>
+			<div class="chat-footer text-xs text-muted mt-0.5 opacity-50">{ timestamp }</div>
 		}
 	</div>
 }

@@ -254,7 +254,7 @@ func IconPicker(props IconPickerProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var15 = []any{"truncate text-left", templ.KV("text-base-content/50", p.IsDefault)}
+				var templ_7745c5c3_Var15 = []any{"truncate text-left", templ.KV("text-subtle", p.IsDefault)}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var15...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -292,7 +292,7 @@ func IconPicker(props IconPickerProps) templ.Component {
 				var templ_7745c5c3_Var18 string
 				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(p.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/icon-picker.templ`, Line: 70, Col: 134}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/icon-picker.templ`, Line: 70, Col: 125}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 				if templ_7745c5c3_Err != nil {
@@ -387,7 +387,7 @@ func IconPicker(props IconPickerProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var23 = []any{"grid size-11 place-items-center rounded-lg border border-dashed border-base-content/25 text-base-content/70 transition-colors hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:size-9", templ.KV("bg-primary/10 text-primary ring-1 ring-primary/30 ring-inset", p.IsDefault)}
+				var templ_7745c5c3_Var23 = []any{"grid size-11 place-items-center rounded-lg border border-dashed border-base-content/25 text-label transition-colors hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:size-9", templ.KV("bg-primary/10 text-primary ring-1 ring-primary/30 ring-inset", p.IsDefault)}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var23...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -537,7 +537,7 @@ func IconPicker(props IconPickerProps) templ.Component {
 				}
 				for i, opt := range p.Options {
 					active := p.ActiveIndex == i
-					var templ_7745c5c3_Var35 = []any{"grid size-11 place-items-center rounded-lg border border-transparent text-base-content/70 transition-colors hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:size-9", templ.KV("bg-primary/10 text-primary ring-1 ring-primary/30 ring-inset", active)}
+					var templ_7745c5c3_Var35 = []any{"grid size-11 place-items-center rounded-lg border border-transparent text-label transition-colors hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:size-9", templ.KV("bg-primary/10 text-primary ring-1 ring-primary/30 ring-inset", active)}
 					templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var35...)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
@@ -699,14 +699,14 @@ func IconPicker(props IconPickerProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "\" data-gd-icon-empty class=\"text-base-content/50 hidden px-2 py-6 text-center text-xs\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "\" data-gd-icon-empty class=\"text-subtle hidden px-2 py-6 text-center text-xs\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var48 string
 				templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs(p.EmptyLabel)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/icon-picker.templ`, Line: 133, Col: 123}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/icon-picker.templ`, Line: 133, Col: 114}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
 				if templ_7745c5c3_Err != nil {

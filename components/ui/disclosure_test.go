@@ -45,44 +45,44 @@ func TestDisclosureDefaultOutputLocked(t *testing.T) {
 			name:   "zero",
 			props:  DisclosureProps{},
 			header: "HDR",
-			want:   `<details class="group rounded-box border border-line-translucent bg-base-200/40 "><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center ">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-base-content/40 transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
+			want:   `<details class="group rounded-box border border-line-translucent bg-base-200/40 "><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center ">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-faint transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
 		},
 		{
 			name:   "open",
 			props:  DisclosureProps{Open: true},
 			header: "HDR",
-			want:   `<details class="group rounded-box border border-line-translucent bg-base-200/40 " open><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center ">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-base-content/40 transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
+			want:   `<details class="group rounded-box border border-line-translucent bg-base-200/40 " open><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center ">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-faint transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
 		},
 		{
 			name:   "items_start",
 			props:  DisclosureProps{ItemsStart: true},
 			header: "HDR",
-			want:   `<details class="group rounded-box border border-line-translucent bg-base-200/40 "><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-start ">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-base-content/40 transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
+			want:   `<details class="group rounded-box border border-line-translucent bg-base-200/40 "><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-start ">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-faint transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
 		},
 		{
 			name:   "appended_classes",
 			props:  DisclosureProps{Class: "my-details", SummaryClass: "my-sum", BodyClass: "my-body"},
 			header: "HDR",
-			want:   `<details class="group rounded-box border border-line-translucent bg-base-200/40 my-details"><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center my-sum">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-base-content/40 transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 my-body"></div></details>`,
+			want:   `<details class="group rounded-box border border-line-translucent bg-base-200/40 my-details"><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center my-sum">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-faint transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 my-body"></div></details>`,
 		},
 		{
 			name:   "named_group",
 			props:  DisclosureProps{GroupClass: "group/cap"},
 			header: "HDR",
-			want:   `<details class="group/cap rounded-box border border-line-translucent bg-base-200/40 "><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center ">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-base-content/40 transition-transform group-open/cap:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
+			want:   `<details class="group/cap rounded-box border border-line-translucent bg-base-200/40 "><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center ">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-faint transition-transform group-open/cap:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
 		},
 		{
 			name:     "trailing",
 			props:    DisclosureProps{},
 			header:   "HDR",
 			trailing: "TRAIL",
-			want:     `<details class="group rounded-box border border-line-translucent bg-base-200/40 "><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center ">HDR<div class="flex shrink-0 items-center gap-2">TRAIL<span class="iconify lucide--chevron-down size-4 shrink-0 text-base-content/40 transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
+			want:     `<details class="group rounded-box border border-line-translucent bg-base-200/40 "><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center ">HDR<div class="flex shrink-0 items-center gap-2">TRAIL<span class="iconify lucide--chevron-down size-4 shrink-0 text-faint transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
 		},
 		{
 			name:   "attrs",
 			props:  DisclosureProps{Attrs: templ.Attributes{"data-x": "1"}},
 			header: "HDR",
-			want:   `<details class="group rounded-box border border-line-translucent bg-base-200/40 " data-x="1"><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center ">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-base-content/40 transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
+			want:   `<details class="group rounded-box border border-line-translucent bg-base-200/40 " data-x="1"><summary class="flex cursor-pointer list-none justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden items-center ">HDR<div class="flex shrink-0 items-center gap-2"><span class="iconify lucide--chevron-down size-4 shrink-0 text-faint transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 "></div></details>`,
 		},
 	}
 
@@ -111,7 +111,7 @@ func TestDisclosureTargetVariants(t *testing.T) {
 		BodyBase:    "flex flex-col border-t border-line-translucent",
 	}, "HDR", "TRAIL", "BODY")
 
-	sourceWant := `<details class="group rounded-box border border-line-translucent bg-base-200/40 "><summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden ">HDR<div class="flex shrink-0 items-center gap-2">TRAIL<span class="iconify lucide--chevron-down size-4 shrink-0 text-base-content/40 transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col border-t border-line-translucent ">BODY</div></details>`
+	sourceWant := `<details class="group rounded-box border border-line-translucent bg-base-200/40 "><summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden ">HDR<div class="flex shrink-0 items-center gap-2">TRAIL<span class="iconify lucide--chevron-down size-4 shrink-0 text-faint transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col border-t border-line-translucent ">BODY</div></details>`
 
 	if source != sourceWant {
 		t.Errorf("source variant:\n got: %q\nwant: %q", source, sourceWant)
@@ -123,7 +123,7 @@ func TestDisclosureTargetVariants(t *testing.T) {
 		BodyBase:    "flex flex-col border-t border-primary/15",
 	}, "HDR", "TRAIL", "BODY")
 
-	relayWant := `<details class="group rounded-box border border-primary/25 bg-primary/[0.04] "><summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden ">HDR<div class="flex shrink-0 items-center gap-2">TRAIL<span class="iconify lucide--chevron-down size-4 shrink-0 text-base-content/40 transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col border-t border-primary/15 ">BODY</div></details>`
+	relayWant := `<details class="group rounded-box border border-primary/25 bg-primary/[0.04] "><summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden ">HDR<div class="flex shrink-0 items-center gap-2">TRAIL<span class="iconify lucide--chevron-down size-4 shrink-0 text-faint transition-transform group-open:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col border-t border-primary/15 ">BODY</div></details>`
 
 	if relay != relayWant {
 		t.Errorf("relay variant:\n got: %q\nwant: %q", relay, relayWant)
@@ -143,7 +143,7 @@ func TestDisclosureSummaryAttrsAndNamedGroup(t *testing.T) {
 		Attrs:        templ.Attributes{"data-testid": "tool-group", "data-tool-group": "grp1"},
 	}, "HDR", "TRAIL", "BODY")
 
-	want := `<details class="group/cap rounded-box border border-line-translucent bg-base-200/40 " data-testid="tool-group" data-tool-group="grp1"><summary class="flex cursor-pointer list-none items-start justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden " data-testid="tool-group-header-grp1">HDR<div class="flex shrink-0 items-center gap-2">TRAIL<span class="iconify lucide--chevron-down size-4 shrink-0 text-base-content/40 transition-transform group-open/cap:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 ">BODY</div></details>`
+	want := `<details class="group/cap rounded-box border border-line-translucent bg-base-200/40 " data-testid="tool-group" data-tool-group="grp1"><summary class="flex cursor-pointer list-none items-start justify-between gap-3 px-3 py-2.5 select-none [&amp;::-webkit-details-marker]:hidden " data-testid="tool-group-header-grp1">HDR<div class="flex shrink-0 items-center gap-2">TRAIL<span class="iconify lucide--chevron-down size-4 shrink-0 text-faint transition-transform group-open/cap:rotate-180" aria-hidden="true"></span></div></summary><div class="flex flex-col gap-2 border-t border-line-translucent p-3 ">BODY</div></details>`
 
 	if got != want {
 		t.Errorf("capability variant:\n got: %q\nwant: %q", got, want)

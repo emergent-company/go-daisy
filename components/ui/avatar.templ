@@ -141,7 +141,7 @@ func avatarFallbackIconName(icon string) string {
 // replace the colors without losing layout.
 func avatarToneClasses(tone AvatarTone) string {
 	if tone == AvatarToneMuted {
-		return "bg-base-300 font-semibold text-base-content/70"
+		return "bg-base-300 font-semibold text-label"
 	}
 	return "bg-primary font-semibold text-primary-content"
 }
@@ -230,7 +230,7 @@ templ AvatarFull(props AvatarProps) {
 				</div>
 			}
 		} else if props.Icon != "" {
-			<div class={ sc, "avatar-placeholder", shape, "bg-base-300 flex items-center justify-center text-base-content/60", props.InnerClass }>
+			<div class={ sc, "avatar-placeholder", shape, "bg-base-300 flex items-center justify-center text-muted", props.InnerClass }>
 				<span class={ "iconify size-[55%] " + props.Icon }></span>
 			</div>
 		} else {

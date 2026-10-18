@@ -43,7 +43,7 @@ templ CommandPalette(props CommandPaletteProps) {
 	<div class="modal" role="dialog" { devmode.Attrs(ctx, "ui/CommandPalette")... } { props.Attrs... }>
 		<div class="modal-box p-0 max-w-lg">
 			<div class="flex items-center gap-3 px-4 py-3 border-b border-line">
-				@IconSpan("lucide--search", "size-5 text-base-content/40")
+				@IconSpan("lucide--search", "size-5 text-faint")
 				<input
 					type="text"
 					id={ props.ID + "-input" }
@@ -96,7 +96,7 @@ func paletteItemDataAttrs(item CommandPaletteItem) templ.Attributes {
 templ paletteGroup(paletteID, group string, items []CommandPaletteItem) {
 	<div data-palette-group={ group }>
 		if group != "" {
-			<p class="text-xs font-semibold uppercase tracking-wider text-base-content/40 px-3 pt-3 pb-1.5">{ group }</p>
+			<p class="eyebrow px-3 pt-3 pb-1.5">{ group }</p>
 		}
 		for _, item := range items {
 			if item.Group == group || (group == "" && item.Group == "") {
@@ -108,12 +108,12 @@ templ paletteGroup(paletteID, group string, items []CommandPaletteItem) {
 					{ item.Attrs... }
 				>
 					if item.Icon != "" {
-						<span class={ "iconify size-4 shrink-0 text-base-content/50 " + item.Icon }></span>
+						<span class={ "iconify size-4 shrink-0 text-subtle " + item.Icon }></span>
 					}
 					<div class="flex-1 min-w-0">
 						<p class="text-sm font-medium text-base-content truncate">{ item.Label }</p>
 						if item.Description != "" {
-							<p class="text-xs text-base-content/40 truncate">{ item.Description }</p>
+							<p class="text-xs text-faint truncate">{ item.Description }</p>
 						}
 					</div>
 					if item.Shortcut != "" {
@@ -208,7 +208,7 @@ templ commandPaletteScript() {
 	        a.href = item.href || '#';
 	        if (item.icon) {
 	          var icon = document.createElement('span');
-	          icon.className = 'iconify size-4 shrink-0 text-base-content/50 ' + item.icon;
+	          icon.className = 'iconify size-4 shrink-0 text-subtle ' + item.icon;
 	          a.appendChild(icon);
 	        }
 	        var body = document.createElement('div');
@@ -219,7 +219,7 @@ templ commandPaletteScript() {
 	        body.appendChild(title);
 	        if (item.description) {
 	          var d = document.createElement('p');
-	          d.className = 'text-xs text-base-content/40 truncate';
+	          d.className = 'text-xs text-faint truncate';
 	          d.textContent = item.description;
 	          body.appendChild(d);
 	        }
@@ -228,7 +228,7 @@ templ commandPaletteScript() {
 	      });
 	      if (found === 0 && q) {
 	        var empty = document.createElement('p');
-	        empty.className = 'text-sm text-base-content/40 text-center py-4';
+	        empty.className = 'text-sm text-faint text-center py-4';
 	        empty.textContent = 'No results found.';
 	        div.appendChild(empty);
 	      }

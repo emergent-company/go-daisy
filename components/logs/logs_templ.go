@@ -39,7 +39,7 @@ func LogsTable(entries []LogEntry) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		if len(entries) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<p class=\"text-base-content/60\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<p class=\"text-muted\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

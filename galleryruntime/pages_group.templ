@@ -55,7 +55,7 @@ templ galleryGroupGrid(components []GalleryComponent) {
 			}) {
 				<h3 class="card-title text-base font-semibold">{ comp.Name }</h3>
 				if comp.Description != "" {
-					<p class="text-sm text-base-content/60 mt-1 line-clamp-2">{ comp.Description }</p>
+					<p class="text-sm text-muted mt-1 line-clamp-2">{ comp.Description }</p>
 				}
 				<div class="mt-2 flex items-center gap-1 text-xs text-primary font-medium">
 					<span>View component</span>
@@ -78,7 +78,7 @@ templ GallerySubGroup(cat Category, sub SubcategoryGroup) {
 				hx-target="#gallery-content"
 				hx-swap="innerHTML"
 				hx-push-url="true"
-				class="text-sm text-base-content/40 hover:text-primary transition-colors"
+				class="text-sm text-faint hover:text-primary transition-colors"
 			>
 				{ string(cat) }
 			</a>
@@ -86,7 +86,7 @@ templ GallerySubGroup(cat Category, sub SubcategoryGroup) {
 		<!-- Header -->
 		<div class="mb-8">
 			<h1 class="text-3xl font-bold text-base-content">{ sub.Name }</h1>
-			<p class="mt-1 text-sm text-base-content/40">
+			<p class="mt-1 text-sm text-faint">
 				if len(sub.Components) == 1 {
 					<span>1 component</span>
 				} else {
@@ -105,8 +105,8 @@ templ GalleryGroup(cat Category, subcategories []SubcategoryGroup) {
 		<!-- Header -->
 		<div class="mb-8">
 			<h1 class="text-3xl font-bold text-base-content">{ string(cat) }</h1>
-			<p class="mt-2 text-base text-base-content/60">{ CategoryDescription(cat) }</p>
-			<p class="mt-1 text-sm text-base-content/40">
+			<p class="mt-2 text-base text-muted">{ CategoryDescription(cat) }</p>
+			<p class="mt-1 text-sm text-faint">
 				if subcategoryTotal(subcategories) == 1 {
 					<span>1 component</span>
 				} else {

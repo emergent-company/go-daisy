@@ -53,7 +53,7 @@ templ ComponentDetail(c GalleryComponent) {
 					<h1 class="text-xl font-bold text-base-content">{ c.Name }</h1>
 				@ui.Badge(ui.BadgeProps{Variant: ui.BadgeNeutral, Size: ui.BadgeSizeSM, Label: string(c.Category)})
 				</div>
-				<p class="text-sm text-base-content/50">{ c.Description }</p>
+				<p class="text-sm text-subtle">{ c.Description }</p>
 			</div>
 		</div>
 
@@ -165,7 +165,7 @@ templ ComponentDetail(c GalleryComponent) {
 				<div class="flex flex-col">
 					<!-- Preview toolbar -->
 					<div class="flex items-center justify-between mb-2 gap-3 flex-wrap">
-						<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Preview</span>
+						<span class="eyebrow">Preview</span>
 						<div class="flex items-center gap-2">
 							<!-- Responsive breakpoint buttons -->
 							<div class="join">
@@ -185,7 +185,7 @@ templ ComponentDetail(c GalleryComponent) {
 							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-line gap-1", Icon: "lucide--external-link", Href: "/gallery/render/" + c.Slug, Attrs: templ.Attributes{"title": "Open in new tab", "target": "_blank"}}) {
 								Open
 							}
-							<span class="text-xs text-base-content/40">Theme:</span>
+							<span class="text-xs text-faint">Theme:</span>
 							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-line", Attrs: templ.Attributes{"id": "preview-theme-toggle", "onclick": "toggleGalleryTheme()"}}) {
 								&#9728; Light
 							}
@@ -207,17 +207,17 @@ templ ComponentDetail(c GalleryComponent) {
 		<!-- Component Tree panel (hidden by default; shown when iframe posts boundary data) -->
 		<div id="component-tree-panel" class="hidden flex flex-col gap-2">
 			<div class="flex items-center justify-between gap-2">
-				<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Component Tree</span>
+				<span class="eyebrow">Component Tree</span>
 				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-line gap-1", Icon: "lucide--rotate-ccw", Attrs: templ.Attributes{"onclick": "resetAllParams()", "title": "Reset all props and parameters to defaults"}}) {
 					Reset
 				}
 			</div>
 			<div id="component-tree-body" class="rounded-xl border border-line bg-base-200 shadow-sm overflow-hidden">
-				<p class="p-4 text-xs text-base-content/40">Loading…</p>
+				<p class="p-4 text-xs text-faint">Loading…</p>
 			</div>
 			<!-- Parameters section: query-param tokens rendered by JS below the tree -->
 			<div id="tree-params-panel" class="hidden flex flex-col gap-2">
-				<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">Parameters</span>
+				<span class="eyebrow">Parameters</span>
 				<div id="tree-params-body" class="rounded-xl border border-line bg-base-200 shadow-sm overflow-hidden">
 					<div class="p-4 space-y-3"></div>
 				</div>
@@ -228,7 +228,7 @@ templ ComponentDetail(c GalleryComponent) {
 				if !isTemplPage(c) {
 					<div class="flex flex-col">
 						<div class="flex items-center justify-between mb-2">
-							<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">HTML Source</span>
+							<span class="eyebrow">HTML Source</span>
 						</div>
 						@ui.CodeBlock(ui.CodeBlockProps{Language: "html", Code: c.HTML, Label: "HTML", Highlight: ui.Highlight(c.HTML, "html")})
 					</div>
@@ -269,7 +269,7 @@ templ ComponentDetail(c GalleryComponent) {
 					</button>
 				</div>
 				<!-- Theme toggle -->
-				<span class="text-xs text-base-content/40">Theme:</span>
+				<span class="text-xs text-faint">Theme:</span>
 				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-line", Attrs: templ.Attributes{"id": "fullscreen-theme-toggle", "onclick": "toggleFullscreenTheme()"}}) {
 					&#9728; Light
 				}
@@ -510,7 +510,7 @@ templ ComponentDetail(c GalleryComponent) {
 				var html = '';
 				order.forEach(function(grpName) {
 					html += '<div class="token-group mb-4">';
-					html += '<p class="text-xs font-semibold text-base-content/40 uppercase tracking-wide mb-2">' + escT(grpName) + '</p>';
+					html += '<p class="eyebrow mb-2">' + escT(grpName) + '</p>';
 					html += '<div class="space-y-3">';
 					byName[grpName].forEach(function(tok) {
 						var def = tok.Default || '';
@@ -518,9 +518,9 @@ templ ComponentDetail(c GalleryComponent) {
 						var safeId = qp.replace(/[^a-zA-Z0-9]/g, '-');
 						html += '<div class="flex flex-col gap-1" data-default="' + escT(def) + '" data-query-param="' + escT(qp) + '">';
 						html += '<div class="flex items-center justify-between">';
-						html += '<label class="text-xs text-base-content/60">' + escT(tok.Label || qp) + '</label>';
+						html += '<label class="text-xs text-muted">' + escT(tok.Label || qp) + '</label>';
 						if (tok.Type === 'range') {
-							html += '<span class="text-xs text-base-content/40 font-mono" id="param-val-' + safeId + '">' + escT(def) + '</span>';
+							html += '<span class="text-xs text-faint font-mono" id="param-val-' + safeId + '">' + escT(def) + '</span>';
 						}
 						html += '</div>';
 						if (tok.Type === 'range') {
@@ -875,7 +875,7 @@ templ ComponentDetail(c GalleryComponent) {
 	}
 
 	window.renderTree = function(nodes, coveredQPs) {
-		if (!nodes || nodes.length === 0) return '<p class="p-4 text-xs text-base-content/40">No component boundaries found.</p>';
+		if (!nodes || nodes.length === 0) return '<p class="p-4 text-xs text-faint">No component boundaries found.</p>';
 		var html = '<ul class="py-1">';
 		for (var i = 0; i < nodes.length; i++) {
 			var n = nodes[i];
@@ -896,7 +896,7 @@ templ ComponentDetail(c GalleryComponent) {
 				html += '<span class="font-mono text-xs font-semibold text-base-content">' + escHtml(n.name) + '</span>';
 			}
 			// Toggle button for HTML block
-			html += '<button onclick="devTreeToggle(\'' + nodeId + '\')" class="ml-auto text-base-content/20 group-hover:text-base-content/50 text-xs pr-1 hover:text-base-content/80" style="flex-shrink:0">\u2039/\u203a</button>';
+			html += '<button onclick="devTreeToggle(\'' + nodeId + '\')" class="ml-auto text-base-content/20 group-hover:text-subtle text-xs pr-1 hover:text-body" style="flex-shrink:0">\u2039/\u203a</button>';
 			html += '</div>';
 			// Props table (always visible)
 			if (propsHtml) html += propsHtml;
@@ -989,9 +989,9 @@ templ ComponentExamples(c GalleryComponent) {
 				<!-- SubExamples mode: one iframe + component tree per sub-example -->
 				<div class="flex flex-col gap-6">
 					<div class="flex items-center gap-2 min-w-0">
-						<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">{ story.Name }</span>
+						<span class="eyebrow">{ story.Name }</span>
 						if story.Description != "" {
-							<span class="text-xs text-base-content/40">{ story.Description }</span>
+							<span class="text-xs text-faint">{ story.Description }</span>
 						}
 					</div>
 					for ei, sub := range story.SubExamples {
@@ -999,14 +999,14 @@ templ ComponentExamples(c GalleryComponent) {
 						<!-- Sub-example toolbar -->
 						<div class="flex items-center justify-between mb-1 gap-3 flex-wrap">
 							<div class="flex items-center gap-2 min-w-0">
-								<span class="text-xs font-semibold text-base-content/60">{ sub.Label }</span>
+								<span class="text-xs font-semibold text-muted">{ sub.Label }</span>
 							</div>
 							<div class="flex items-center gap-2">
 								@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-line gap-1", Icon: "lucide--external-link", Href: fmt.Sprintf("/gallery/render/%s/examples?s=%d&e=%d", c.Slug, si, ei), Attrs: templ.Attributes{"target": "_blank", "title": "Open in new tab"}}) {
 								Open
 							}
 							<!-- Theme toggle -->
-							<span class="text-xs text-base-content/40">Theme:</span>
+							<span class="text-xs text-faint">Theme:</span>
 							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-line examples-theme-btn", Attrs: templ.Attributes{"data-frame-id": fmt.Sprintf("examples-sub-frame-%d-%d", si, ei), "onclick": templ.JSFuncCall("toggleExamplesSubTheme", fmt.Sprintf("examples-sub-frame-%d-%d", si, ei))}}) {
 								&#9728; Light
 							}
@@ -1027,7 +1027,7 @@ templ ComponentExamples(c GalleryComponent) {
 						<!-- Per-sub-example component tree panel (hidden until iframe sends data) -->
 						<div id={ fmt.Sprintf("examples-sub-tree-%d-%d", si, ei) } class="hidden rounded-xl border border-line overflow-hidden bg-base-100 shadow-sm">
 							<div class="px-3 py-2 border-b border-line bg-base-200/40">
-								<span class="text-xs font-semibold text-base-content/50 uppercase tracking-wide">Component Tree</span>
+								<span class="eyebrow">Component Tree</span>
 							</div>
 							<div id={ fmt.Sprintf("examples-sub-tree-body-%d-%d", si, ei) } class="overflow-auto max-h-64"></div>
 						</div>
@@ -1040,9 +1040,9 @@ templ ComponentExamples(c GalleryComponent) {
 					<!-- Story toolbar: label + controls matching the Interactive toolbar -->
 					<div class="flex items-center justify-between mb-2 gap-3 flex-wrap">
 						<div class="flex items-center gap-2 min-w-0">
-							<span class="text-xs font-semibold text-base-content/40 uppercase tracking-wide">{ story.Name }</span>
+							<span class="eyebrow">{ story.Name }</span>
 							if story.Description != "" {
-								<span class="text-xs text-base-content/40">{ story.Description }</span>
+								<span class="text-xs text-faint">{ story.Description }</span>
 							}
 						</div>
 						<div class="flex items-center gap-2">
@@ -1053,7 +1053,7 @@ templ ComponentExamples(c GalleryComponent) {
 								Open
 							}
 							<!-- Theme toggle -->
-							<span class="text-xs text-base-content/40">Theme:</span>
+							<span class="text-xs text-faint">Theme:</span>
 							@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-line examples-theme-btn", Attrs: templ.Attributes{"data-frame-idx": fmt.Sprintf("%d", si), "onclick": templ.JSFuncCall("toggleExamplesTheme", si)}}) {
 								&#9728; Light
 							}
@@ -1244,7 +1244,7 @@ templ ComponentExamples(c GalleryComponent) {
 		var isHidden = el.classList.toggle('hidden');
 	};
 	function renderSubTree(nodes) {
-			if (!nodes || nodes.length === 0) return '<p class="p-4 text-xs text-base-content/40">No component boundaries found.</p>';
+			if (!nodes || nodes.length === 0) return '<p class="p-4 text-xs text-faint">No component boundaries found.</p>';
 			var html = '<ul class="py-1">';
 			for (var i = 0; i < nodes.length; i++) {
 				var n = nodes[i], col = window.depthColor(n.depth), indent = n.depth * 12;
@@ -1261,7 +1261,7 @@ templ ComponentExamples(c GalleryComponent) {
 				} else {
 					html += '<span class="font-mono text-xs font-semibold text-base-content">' + window.escHtml(n.name) + '</span>';
 				}
-				html += '<button onclick="subDevTreeToggle(\'' + nodeId + '\')" class="ml-auto text-base-content/20 group-hover:text-base-content/50 text-xs pr-1 hover:text-base-content/80" style="flex-shrink:0">\u2039/\u203a</button>';
+				html += '<button onclick="subDevTreeToggle(\'' + nodeId + '\')" class="ml-auto text-base-content/20 group-hover:text-subtle text-xs pr-1 hover:text-body" style="flex-shrink:0">\u2039/\u203a</button>';
 				html += '</div>';
 				if (propsHtml) html += propsHtml;
 				html += '<div id="' + nodeId + '" class="mt-1 mb-1" style="padding-left:8px">';

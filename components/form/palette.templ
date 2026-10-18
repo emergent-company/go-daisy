@@ -97,7 +97,7 @@ templ Palette(props PaletteProps) {
 			if strings.HasPrefix(hue, "#") {
 				<div class="flex gap-1 flex-wrap">
 					if props.ShowHex {
-						<span class="text-xs text-base-content/60 w-full">{ hue }</span>
+						<span class="text-xs text-muted w-full">{ hue }</span>
 					}
 					<button
 						type="button"
@@ -111,7 +111,7 @@ templ Palette(props PaletteProps) {
 			} else {
 				<div class="flex gap-1 flex-wrap">
 					if props.ShowHex {
-						<span class="text-xs text-base-content/60 w-full">{ hue }</span>
+						<span class="text-xs text-muted w-full">{ hue }</span>
 					}
 					for _, shade := range tailwindShades(props.Shades) {
 		{{

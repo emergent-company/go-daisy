@@ -118,7 +118,7 @@ func comboboxTrigger(props ComboboxProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if props.Mode == ComboboxSingle {
-			var templ_7745c5c3_Var4 = []any{"text-sm truncate", templ.KV("text-base-content/50", len(props.Selected) == 0)}
+			var templ_7745c5c3_Var4 = []any{"text-sm truncate", templ.KV("text-subtle", len(props.Selected) == 0)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -167,7 +167,7 @@ func comboboxTrigger(props ComboboxProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			var templ_7745c5c3_Var8 = []any{"text-sm truncate", templ.KV("text-base-content/50", len(props.Selected) == 0)}
+			var templ_7745c5c3_Var8 = []any{"text-sm truncate", templ.KV("text-subtle", len(props.Selected) == 0)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var8...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -662,7 +662,7 @@ func comboboxLazyOptions(props ComboboxProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "\" hx-trigger=\"load\" hx-swap=\"innerHTML\"><div class=\"px-3 py-2 text-sm text-base-content/50\">Loading...</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "\" hx-trigger=\"load\" hx-swap=\"innerHTML\"><div class=\"px-3 py-2 text-sm text-subtle\">Loading...</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -74,7 +74,7 @@ func TabMenu(tabs []Tab, attrs templ.Attributes, target string) templ.Component 
 			for _, tab := range tabs {
 				var templ_7745c5c3_Var2 = []any{"inline-flex items-center px-4 py-3 text-sm font-medium border-b-2 transition-colors",
 					templ.KV("border-primary text-primary", tab.Active),
-					templ.KV("border-transparent text-base-content/50 hover:text-base-content hover:border-line-strong", !tab.Active)}
+					templ.KV("border-transparent text-subtle hover:text-base-content hover:border-line-strong", !tab.Active)}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err

@@ -1,0 +1,46 @@
+/* ── Semantic tone scale ────────────────────────────────────────
+ *
+ * DaisyUI exposes one text color (--color-base-content). The library needs a
+ * consistent ladder of intensity steps instead of ad-hoc opacity utilities.
+ *
+ * IMPORTANT: `@theme inline` is required, not optional.
+ *   - Plain `@theme` resolves `var(--color-base-content)` at `:root` and
+ *     freezes the value, so a scoped `[data-theme="…"]` (theme preview,
+ *     gallery theme studio) would not update.
+ *   - `inline` emits the color-mix expression into each utility, so the value
+ *     resolves per element against the active theme.
+ *
+ * Ladder (dark → light):
+ *   text-body    80%  long-form paragraphs
+ *   text-label   70%  form labels, nav links, prominent metadata
+ *   text-muted   60%  secondary text, captions
+ *   text-subtle  50%  tertiary text, table headers, hints
+ *   text-faint   40%  timestamps, meta, placeholders
+ *
+ * Opacity below 40% stays raw (`text-base-content/20`, `/30`) and is reserved
+ * for decorative icons.
+ */
+
+@theme inline {
+  --color-body: color-mix(in oklab, var(--color-base-content) 80%, transparent);
+  --color-label: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+  --color-muted: color-mix(in oklab, var(--color-base-content) 60%, transparent);
+  --color-subtle: color-mix(in oklab, var(--color-base-content) 50%, transparent);
+  --color-faint: color-mix(in oklab, var(--color-base-content) 40%, transparent);
+}
+
+/* Canonical overline / kicker label. Replaces the previously drifting
+ * combinations of uppercase + tracking-wide/wider + text-base-content/40..60.
+ * Uses --color-base-content directly (not --color-subtle) so it keeps working
+ * even if theme-variable emission changes under `inline`. */
+@utility eyebrow {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-base-content);
+
+  @supports (color: color-mix(in lab, red, red)) {
+    color: color-mix(in oklab, var(--color-base-content) 50%, transparent);
+  }
+}

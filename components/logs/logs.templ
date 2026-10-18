@@ -11,7 +11,7 @@ import (
 // LogsTable renders a table of log entries.
 templ LogsTable(entries []LogEntry) {
 	if len(entries) == 0 {
-		<p class="text-base-content/60" { devmode.Attrs(ctx, "logs/LogsTable")... }>No logs found</p>
+		<p class="text-muted" { devmode.Attrs(ctx, "logs/LogsTable")... }>No logs found</p>
 	} else {
 		@tablecomp.TableWithBoundary() {
 			@tablecomp.TableHeadWithBoundary() {

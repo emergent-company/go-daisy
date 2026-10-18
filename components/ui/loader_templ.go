@@ -151,7 +151,7 @@ func SectionHeader(title string) templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"divider divider-start text-xs font-semibold text-base-content/50 uppercase tracking-wide my-2\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"divider divider-start eyebrow my-2\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -166,7 +166,7 @@ func SectionHeader(title string) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/loader.templ`, Line: 31, Col: 161}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/loader.templ`, Line: 31, Col: 102}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -218,7 +218,7 @@ func NoPermissions() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<p class=\"text-base-content/50 text-sm\">You don't have permission to view this.</p></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<p class=\"text-subtle text-sm\">You don't have permission to view this.</p></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -330,12 +330,12 @@ func SkeletonDashboard(blocks []SkeletonDashboardBlock) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			for range [4]struct{}{} {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"border-line-strong/80 bg-base-200/20 rounded-box flex h-28 flex-col items-center justify-center border border-dashed text-center\"><p class=\"text-base-content/80 font-medium text-sm\">Stats</p><p class=\"text-base-content/50 text-xs\">1 / 4</p></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"border-line-strong/80 bg-base-200/20 rounded-box flex h-28 flex-col items-center justify-center border border-dashed text-center\"><p class=\"text-body font-medium text-sm\">Stats</p><p class=\"text-subtle text-xs\">1 / 4</p></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div><div class=\"grid grid-cols-12 gap-4\"><div class=\"border-line-strong/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-8\"><p class=\"text-base-content/80 font-medium text-sm\">Primary Chart</p><p class=\"text-base-content/50 text-xs\">8 / 12</p></div><div class=\"border-line-strong/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-4\"><p class=\"text-base-content/80 font-medium text-sm\">Side Panel</p><p class=\"text-base-content/50 text-xs\">4 / 12</p></div></div><div class=\"border-line-strong/80 bg-base-200/20 rounded-box flex h-48 flex-col items-center justify-center border border-dashed text-center\"><p class=\"text-base-content/80 font-medium text-sm\">Full-Width Table</p><p class=\"text-base-content/50 text-xs\">12 / 12</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div><div class=\"grid grid-cols-12 gap-4\"><div class=\"border-line-strong/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-8\"><p class=\"text-body font-medium text-sm\">Primary Chart</p><p class=\"text-subtle text-xs\">8 / 12</p></div><div class=\"border-line-strong/80 bg-base-200/20 rounded-box col-span-12 flex h-64 flex-col items-center justify-center border border-dashed text-center lg:col-span-4\"><p class=\"text-body font-medium text-sm\">Side Panel</p><p class=\"text-subtle text-xs\">4 / 12</p></div></div><div class=\"border-line-strong/80 bg-base-200/20 rounded-box flex h-48 flex-col items-center justify-center border border-dashed text-center\"><p class=\"text-body font-medium text-sm\">Full-Width Table</p><p class=\"text-subtle text-xs\">12 / 12</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -363,14 +363,14 @@ func SkeletonDashboard(blocks []SkeletonDashboardBlock) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\"><p class=\"text-base-content/80 font-medium text-sm\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\"><p class=\"text-body font-medium text-sm\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(b.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/loader.templ`, Line: 86, Col: 67}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/loader.templ`, Line: 86, Col: 56}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 				if templ_7745c5c3_Err != nil {
