@@ -60,19 +60,19 @@ const MESSAGE_SCROLLER = `
   <button type="button" data-gd-messagescroller-jump id="jump" hidden aria-label="Scroll to latest"></button>
 </div>`;
 
-function loadScripts(dom) {
-  for (const file of JS_FILES) {
+function loadScripts(dom, extraScripts = []) {
+  for (const file of [...JS_FILES, ...extraScripts]) {
     const code = fs.readFileSync(path.join(JS_DIR, 'js', file), 'utf8');
     new Function('window', 'document', code)(dom.window, dom.window.document);
   }
 }
 
-function setup(body) {
+function setup(body, extraScripts = []) {
   const dom = new JSDOM(`<!DOCTYPE html><html><body>${body}</body></html>`, {
     pretendToBeVisual: true,
     url: 'http://localhost/',
   });
-  loadScripts(dom);
+  loadScripts(dom, extraScripts);
   return dom;
 }
 
@@ -430,4 +430,121 @@ test('message-scroller: non-static root auto-scrolls on mutation', async () => {
   await new Promise((resolve) => setTimeout(resolve, 0));
 
   assert.equal(viewport.scrollTop, 200, 'sticky root auto-scrolls to the bottom on mutation');
+});
+
+const COMMAND_PALETTE = `
+<button id="opener" type="button">Search</button>
+<input type="checkbox" id="spotlight-toggle" class="modal-toggle" data-command-palette="true">
+<div class="modal" role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="modal-box">
+    <input type="text" id="spotlight-input" placeholder="Search">
+    <div id="spotlight-results">
+      <div data-palette-group="Navigate">
+        <p>Navigate</p>
+        <a id="item-one" href="#one" data-label="Overview">Overview</a>
+        <a id="item-two" href="#two" data-label="Hosts">Hosts</a>
+      </div>
+    </div>
+    <label for="spotlight-toggle">Esc</label>
+  </div>
+  <label class="modal-backdrop" for="spotlight-toggle"></label>
+</div>`;
+
+test('command palette: opening focuses the input and traps Tab', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const input = doc.getElementById('spotlight-input');
+  const last = doc.getElementById('item-two');
+
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
+
+  assert.equal(toggle.checked, true, 'open checks the toggle');
+  assert.equal(doc.activeElement, input, 'initial focus lands in the input');
+
+  last.focus();
+  const forward = press(window, last, 'Tab');
+  assert.equal(forward.defaultPrevented, true, 'Tab from the last item is trapped');
+  assert.equal(doc.activeElement, input, 'Tab wraps to the first focusable');
+
+  const backward = press(window, input, 'Tab', { shiftKey: true });
+  assert.equal(backward.defaultPrevented, true, 'Shift+Tab from the first item is trapped');
+  assert.equal(doc.activeElement, last, 'Shift+Tab wraps to the last focusable');
+});
+
+test('command palette: Escape closes and restores focus to the opener', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const input = doc.getElementById('spotlight-input');
+
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
+  press(window, input, 'Escape');
+
+  assert.equal(toggle.checked, false, 'Escape closes the palette');
+  assert.equal(doc.activeElement, opener, 'focus returns to the element that opened it');
+});
+
+test('command palette: Cmd/Ctrl+K toggles and restores focus', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const input = doc.getElementById('spotlight-input');
+
+  opener.focus();
+  const open = press(window, doc.body, 'k', { metaKey: true });
+  assert.equal(open.defaultPrevented, true, 'browser find is suppressed');
+  assert.equal(toggle.checked, true);
+  assert.equal(doc.activeElement, input);
+
+  press(window, doc.body, 'k', { metaKey: true });
+  assert.equal(toggle.checked, false);
+  assert.equal(doc.activeElement, opener);
+});
+
+test('command palette: activating a result closes it and restores focus', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const item = doc.getElementById('item-one');
+
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
+  item.dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true }));
+
+  assert.equal(toggle.checked, false, 'clicking a row dismisses the palette');
+  assert.equal(doc.activeElement, opener, 'focus does not stay in the hidden dialog');
+});
+
+test('command palette: data-command-palette-keep-open leaves the palette open', () => {
+  const fixture = COMMAND_PALETTE.replace(
+    '<a id="item-two"',
+    '<a id="item-keep" href="#keep" data-command-palette-keep-open data-label="Copy">Copy</a><a id="item-two"',
+  );
+  const { window } = setup(fixture, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const toggle = doc.getElementById('spotlight-toggle');
+
+  window.gdCommandPalette.open('spotlight');
+  doc.getElementById('item-keep').dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true }));
+
+  assert.equal(toggle.checked, true, 'opting out keeps the palette open');
+});
+
+test('command palette: filterPaletteItems still filters local rows', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const input = doc.getElementById('spotlight-input');
+
+  input.value = 'over';
+  window.filterPaletteItems(input);
+
+  assert.equal(doc.getElementById('item-one').style.display, '', 'matching row stays visible');
+  assert.equal(doc.getElementById('item-two').style.display, 'none', 'non-matching row is hidden');
 });

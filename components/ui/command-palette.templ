@@ -2,9 +2,9 @@ package ui
 
 import (
 	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/staticfs"
 )
 
-var commandPaletteTriggerOnce = templ.NewOnceHandle()
 var commandPaletteScriptOnce = templ.NewOnceHandle()
 
 // CommandPaletteItem represents a single action in the command palette.
@@ -34,13 +34,17 @@ type CommandPaletteProps struct {
 	// to the top (clear of safe-area insets), the results fill and scroll, and
 	// the "Esc" label swaps to a tap-sized ✕. CSS selectors are derived from ID.
 	FullScreenMobile bool
-	Attrs            templ.Attributes
+	// AriaLabel is the dialog's accessible name; defaults to "Command palette".
+	AriaLabel string
+	Attrs     templ.Attributes
 }
 
 // CommandPalette renders a ⌘K-style command palette modal.
 templ CommandPalette(props CommandPaletteProps) {
+	{{ label := props.AriaLabel
+	if label == "" { label = "Command palette" } }}
 	<input type="checkbox" id={ props.ID + "-toggle" } data-command-palette="true" class="modal-toggle" checked?={ props.Open } />
-	<div class="modal" role="dialog" { devmode.Attrs(ctx, "ui/CommandPalette")... } { props.Attrs... }>
+	<div class="modal" role="dialog" aria-modal="true" aria-label={ label } { devmode.Attrs(ctx, "ui/CommandPalette")... } { props.Attrs... }>
 		<div class="modal-box p-0 max-w-lg">
 			<div class="flex items-center gap-3 px-4 py-3 border-b border-line">
 				@IconSpan("lucide--search", "size-5 text-faint")
@@ -76,7 +80,6 @@ templ CommandPalette(props CommandPaletteProps) {
 	if props.FullScreenMobile {
 		@templ.Raw("<style>" + commandPaletteMobileCSS(props.ID) + "</style>")
 	}
-	@commandPaletteTrigger()
 	@commandPaletteScript()
 }
 
@@ -125,129 +128,13 @@ templ paletteGroup(paletteID, group string, items []CommandPaletteItem) {
 	</div>
 }
 
-templ commandPaletteTrigger() {
-	@commandPaletteTriggerOnce.Once() {
-		<script { nonceAttrs(ctx)... }>
-	gdOnce('paletteTriggerInit', function () {
 
-	  // Templ does not interpolate Go expressions inside <script>, so palette
-	  // ids cannot be baked into this handler. Palette toggles are instead
-	  // marked with data-command-palette and resolved at runtime: ⌘K opens the
-	  // first command palette on the page, Escape closes any open one. This
-	  // keeps a single global listener while supporting any palette id.
-	  document.addEventListener('keydown', function(e) {
-	    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-	      e.preventDefault();
-	      var cb = document.querySelector('input.modal-toggle[data-command-palette]');
-	      if (cb) {
-	        cb.checked = !cb.checked;
-	        if (cb.checked) {
-	          var modal = cb.nextElementSibling;
-	          var input = modal ? modal.querySelector('input[type="text"]') : null;
-	          if (input) input.focus();
-	        }
-	      }
-	    } else if (e.key === 'Escape') {
-	      var toggles = document.querySelectorAll('input.modal-toggle[data-command-palette]');
-	      for (var i = 0; i < toggles.length; i++) {
-	        if (toggles[i].checked) toggles[i].checked = false;
-	      }
-	    }
-	  });
-	});
-		</script>
-	}
-}
-
+// commandPaletteScript loads the palette runtime once per page. The runtime
+// handles Cmd/Ctrl+K, initial focus, the focus trap and filterPaletteItems;
+// gdFocus.trap comes from go-daisy-a11y.js, so both files load together.
 templ commandPaletteScript() {
 	@commandPaletteScriptOnce.Once() {
-		<script { nonceAttrs(ctx)... }>
-	gdOnce('paletteFilterInit', function () {
-
-	  window.filterPaletteItems = function(input) {
-	    var q = input.value.toLowerCase().trim();
-	    var modal = input.closest('.modal');
-	    var results = modal ? modal.querySelector('[id$="-results"]') : document.getElementById(input.id.replace('-input', '-results'));
-	    if (!results) return;
-
-	    if (results.dataset.itemsUrl && !window['_paletteFetched' + results.id]) {
-	      window['_paletteFetched' + results.id] = true;
-	      var xhr = new XMLHttpRequest();
-	      xhr.open('GET', results.dataset.itemsUrl);
-	      xhr.onload = function() {
-	        if (xhr.status === 200) {
-	          try {
-	            var data = JSON.parse(xhr.responseText);
-	            window['_paletteRemote' + results.id] = data;
-	          } catch(e) {}
-	        }
-	        filterResults(q, results);
-	      };
-	      xhr.send();
-	      return;
-	    }
-	    filterResults(q, results);
-	  };
-
-	  function filterResults(q, results) {
-	    var remote = window['_paletteRemote' + results.id] || [];
-	    if (remote.length) {
-	      var existing = results.querySelector('[data-remote-results]');
-	      if (existing) existing.remove();
-	      var div = document.createElement('div');
-	      div.setAttribute('data-remote-results', '');
-	      var found = 0;
-	      remote.forEach(function(item) {
-	        var label = (item.label || item.title || '').toLowerCase();
-	        var desc = (item.description || '').toLowerCase();
-	        var section = (item.section || item.group || '').toLowerCase();
-	        if (q && !label.includes(q) && !desc.includes(q) && !section.includes(q)) return;
-	        found++;
-	        var a = document.createElement('a');
-	        a.className = 'flex items-center gap-3 px-3 py-2.5 rounded-box hover:bg-base-200 cursor-pointer transition-colors';
-	        a.href = item.href || '#';
-	        if (item.icon) {
-	          var icon = document.createElement('span');
-	          icon.className = 'iconify size-4 shrink-0 text-subtle ' + item.icon;
-	          a.appendChild(icon);
-	        }
-	        var body = document.createElement('div');
-	        body.className = 'flex-1 min-w-0';
-	        var title = document.createElement('p');
-	        title.className = 'text-sm font-medium text-base-content truncate';
-	        title.textContent = item.label || item.title;
-	        body.appendChild(title);
-	        if (item.description) {
-	          var d = document.createElement('p');
-	          d.className = 'text-xs text-faint truncate';
-	          d.textContent = item.description;
-	          body.appendChild(d);
-	        }
-	        a.appendChild(body);
-	        div.appendChild(a);
-	      });
-	      if (found === 0 && q) {
-	        var empty = document.createElement('p');
-	        empty.className = 'text-sm text-faint text-center py-4';
-	        empty.textContent = 'No results found.';
-	        div.appendChild(empty);
-	      }
-	      results.appendChild(div);
-	    }
-	    results.querySelectorAll('[data-palette-group]').forEach(function(group) {
-	      var items = group.querySelectorAll('[data-label]');
-	      var hasVisible = false;
-	      items.forEach(function(item) {
-	        var text = (item.dataset.label || '').toLowerCase();
-	        var match = !q || text.includes(q);
-	        item.style.display = match ? '' : 'none';
-	        if (match) hasVisible = true;
-	      });
-	      var header = group.querySelector('p');
-	      if (header) header.style.display = hasVisible ? '' : 'none';
-	    });
-	  }
-	});
-	</script>
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-a11y.js", templ.GetNonce(ctx)))
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-command-palette.js", templ.GetNonce(ctx)))
 	}
 }
