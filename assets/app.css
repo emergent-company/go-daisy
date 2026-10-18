@@ -1,34 +1,54 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 
 /*
- * Reproducibility guard for the CSS build.
+ * Explicit source allowlist.
  *
- * Tailwind's automatic source detection is rooted at the working directory
- * and governed by an extension *denylist* — files with no extension are
- * scanned in full with no size limit.  Three accidentally-committed, compiled
- * Go binaries are git-tracked at the repo root and get mined as candidate
- * class sources: `gallery`, `boundarytoken`, and `install`.  None is produced
- * by any Taskfile target (`task gallery` uses `go run ./cmd/gallery`; `task
- * build` is `go build ./...`, which writes no binary), and nothing references
- * them.  Without these exclusions the built stylesheet changes depending on
- * whether the binaries happen to be present on disk, so the directives keep
- * the CSS build reproducible.
- */
-@source not "../gallery";       /* accidentally-committed root Go binary, scanned in full */
-@source not "../boundarytoken"; /* accidentally-committed root Go binary, scanned in full */
-@source not "../install";       /* accidentally-committed root Go binary, scanned in full */
-
-/*
- * The generated stylesheet is NOT a content source.
+ * `source(none)` disables Tailwind's automatic source detection, which is
+ * rooted at the process cwd and governed by an extension *denylist* — files
+ * with no extension are read in full with no size limit.  Three
+ * accidentally-committed, compiled root Go binaries (`gallery`, `boundarytoken`,
+ * `install`) got mined as candidate class sources that way whenever they
+ * happened to be present on disk.  An explicit allowlist is deterministic and
+ * independent of stray files at the repo root.
  *
- * The compiled stylesheet (`staticfs/static/css/app.css`) is excluded from the
- * Tailwind source scan.  In practice the Tailwind CLI already ignores its own
- * `-o` output, so this directive is currently defensive (a build with and
- * without it is byte-identical); it is kept so a future CLI/config change that
- * *does* scan the generated bundle cannot re-introduce the self-perpetuating-
- * utility trap the issue describes.
+ * MAINTENANCE RULE: every directory whose source carries markup or class
+ * strings must have an `@source` entry below.  With `source(none)` there is no
+ * automatic fallback — a newly added source directory that is not listed here
+ * silently drops its classes from the built stylesheet.  Add a matching
+ * `@source` line when you add a top-level source directory.
+ *
+ * Deliberately excluded:
+ *   - the generated stylesheet `staticfs/static/css/app.css` (build output,
+ *     never a source) — only `staticfs/static/js` is listed;
+ *   - `gallery.log` (a tracked stale log, not source);
+ *   - root config files (`*.json`, `*.toml`, `*.yml`, `*.mod`, `*.sum`,
+ *     `LICENSE`) — they carry no markup;
+ *   - `node_modules/` and `.git/` — never named, and nothing below names a
+ *     path inside them.  `@source` honours .gitignore for globs and
+ *     directories: a gitignored file inside a listed directory is skipped,
+ *     and a recursive glob does not descend into `node_modules/`.  The one
+ *     exception is an entry that points *into* an ignored directory — that is
+ *     scanned anyway, so never write `@source "./node_modules/..."`.
  */
-@source not "../staticfs/static/css/app.css";       /* generated stylesheet — emitted utilities are not sources (defensive: CLI already ignores its own output) */
+@source "../components";
+@source "../pages";
+@source "../cmd";
+@source "../galleryruntime";
+@source "../render";
+@source "../shared";
+@source "../stream";
+@source "../streamhub";
+@source "../devmode";
+@source "../webcomponents";
+@source "../tests";
+@source "../docs";
+@source "../examples";
+@source "../assets";
+@source "../.agents";
+@source "../.vscode";
+@source "../staticfs/static/js";
+@source "../scripts";
+@source "../*.md";
 
 /*
  * Safelist for the dynamically-built palette swatches.
