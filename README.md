@@ -283,7 +283,8 @@ contrast for every content pair, and can:
 - **Preview a component sheet** — palette surfaces and semantic colours,
   actions, form controls, feedback, navigation, data display (card, stats,
   table, chat) and a typography sample, all resolved from the edited tokens
-  inside one scrollable `[data-theme="gd-preview"]` scope.
+  inside one full-height `[data-theme="gd-preview"]` scope that sits in the left
+  column beside the settings panels.
 - **Export** a `@plugin "daisyui/theme"` block for `assets/app.css`, plus a
   `[data-theme="…"]` rule for the typography roles (font stacks contain
   commas, which Tailwind's plugin parser would otherwise split into fallback

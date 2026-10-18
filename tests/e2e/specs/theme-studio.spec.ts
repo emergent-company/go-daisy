@@ -58,6 +58,32 @@ test.describe('Theme studio', () => {
     await expect(preview.getByText('Data display')).toBeVisible();
   });
 
+  test('preview sits full height beside the settings rail', async ({ page }) => {
+    // Pin a width above the xl breakpoint so the two-column layout is the
+    // contract under test, not the runner's default viewport.
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await bootStudio(page);
+
+    const preview = page.locator('#studio-preview');
+    const settings = page.locator('#studio-settings');
+
+    // The board grows with the page instead of scrolling inside the card.
+    const scroll = await preview.evaluate((el) => ({
+      overflowY: getComputedStyle(el).overflowY,
+      scrollHeight: el.scrollHeight,
+      clientHeight: el.clientHeight,
+    }));
+    expect(scroll.overflowY).toBe('visible');
+    expect(scroll.scrollHeight).toBeLessThanOrEqual(scroll.clientHeight + 1);
+
+    // Settings live in the right column on desktop.
+    const previewBox = await preview.boundingBox();
+    const settingsBox = await settings.boundingBox();
+    expect(previewBox).not.toBeNull();
+    expect(settingsBox).not.toBeNull();
+    expect(settingsBox!.x).toBeGreaterThan(previewBox!.x + previewBox!.width - 1);
+  });
+
   test('typography roles drive the preview and survive Apply to gallery', async ({ page }) => {
     await bootStudio(page);
 
