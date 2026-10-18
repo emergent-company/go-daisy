@@ -6773,10 +6773,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							}
 						})
 
-						headClass := "text-xs font-semibold text-base-content/60 uppercase"
+						headClass := "text-xs font-semibold text-muted uppercase"
 						rowComponents := make([]templ.Component, len(rows))
 						for i, r := range rows {
-							r := r
 							rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
 								withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
 								withChildren(table.TableCellWithBoundary("text-right tabular-nums"), rawHTML(fmt.Sprintf("%d", r.Score))),

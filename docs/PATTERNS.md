@@ -352,9 +352,12 @@ rows = sortRows(rows, sc.Params)
     Column:   "cpu",
     Sort:     sc,
     FirstDir: table.SortDesc,
-    Class:    "text-right",
+    Class:    "text-xs font-semibold text-muted uppercase text-right",
 })
 ```
+
+`Class` is the header cell's full class, not an add-on. Pass the same header
+typography your table uses; the component does not impose one.
 
 - `SortContext` clones the request query, so filters survive a sort click.
 - `FirstDir` chooses the useful first click per column (`desc` for metrics,
@@ -367,7 +370,8 @@ rows = sortRows(rows, sc.Params)
   `table.NewSortContext(r, "guests_", "", table.SortNone)`.
 - The handler is responsible for applying `SortParams` to the rows. Keep
   unknown metrics, empty text and zero times last in both directions.
-- Sorting clears the `page` query param. `DataGrid` sort links target
+- Sorting clears the `page` query param. `DataGrid` sort links use `BaseURL` for
+  `hx-get` and `Sort.BasePath` for `href`/`hx-push-url`, and target
   `#datagrid-<id>-body`; the handler must return the full table fragment for
   that target (header included), the same contract as search and pagination.
 - `SortParams.By` is user-controlled. Validate it against a known column map in

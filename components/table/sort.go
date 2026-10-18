@@ -61,17 +61,47 @@ func (c SortContext) AriaSort(column string) string {
 	return "descending"
 }
 
-// Href returns the path and query for the next sort state of column. The
-// current query is cloned, so filters are preserved and the caller's query is
-// never mutated. first is the direction used when column is not active.
-// Pagination is reset by removing the "page" param; other params, including
-// per_page, are preserved.
+// ariaLabel returns the accessible name for a sort link, including the current
+// direction when the column is active.
+func (p SortableTableHeaderProps) ariaLabel() string {
+	label := "Sort by " + p.Label
+	if p.Sort.Active(p.Column) {
+		if p.Sort.Params.Dir == SortAsc {
+			label += ", ascending"
+		} else {
+			label += ", descending"
+		}
+	}
+	return label
+}
+
+// Href returns the path and query for the next sort state of column, using the
+// request path captured by NewSortContext. The current query is cloned, so
+// filters are preserved and the caller's query is never mutated. first is the
+// direction used when column is not active. Pagination is reset by removing the
+// "page" param; other params, including per_page, are preserved.
 func (c SortContext) Href(column string, first SortDir) string {
-	if c.BasePath == "" || column == "" {
+	return c.HrefFor(c.BasePath, column, first)
+}
+
+// HrefFor is Href with an explicit base path. Use it when the sort link must
+// target a different endpoint than the page itself, such as a fragment URL that
+// only returns the table. The context query is merged with the base query (the
+// base wins on conflicts) and the sort parameters are merged into the result;
+// page is removed.
+func (c SortContext) HrefFor(basePath string, column string, first SortDir) string {
+	if basePath == "" || column == "" {
+		return ""
+	}
+	u, err := url.Parse(basePath)
+	if err != nil || u.Path == "" {
 		return ""
 	}
 	dir := NextSortDirFrom(c.Params, column, first)
 	q := cloneValues(c.Query)
+	for key, values := range u.Query() {
+		q[key] = values
+	}
 	if dir == SortNone {
 		q.Del(c.ByParam())
 		q.Del(c.DirParam())
@@ -80,10 +110,8 @@ func (c SortContext) Href(column string, first SortDir) string {
 		q.Set(c.DirParam(), string(dir))
 	}
 	q.Del("page")
-	if encoded := q.Encode(); encoded != "" {
-		return c.BasePath + "?" + encoded
-	}
-	return c.BasePath
+	u.RawQuery = q.Encode()
+	return u.String()
 }
 
 // ParseSortPrefixed extracts <prefix>sort_by and <prefix>sort_dir from query
@@ -91,10 +119,11 @@ func (c SortContext) Href(column string, first SortDir) string {
 // empty sort column always results in SortNone, so callers can treat "no sort"
 // as "keep the natural row order".
 //
-// A sort_by supplied in the query without a usable sort_dir is treated as
-// ascending. A handler-supplied defaultBy with defaultDir SortNone keeps
-// SortNone, so the handler's natural row order is preserved until a click.
-// An invalid defaultDir is treated as SortNone.
+// A query sort_by with an absent or invalid sort_dir uses defaultDir; if
+// defaultDir is SortNone or invalid, it becomes ascending. A handler-supplied
+// defaultBy with defaultDir SortNone keeps SortNone, so the handler's natural
+// row order is preserved until a click. An invalid defaultDir is treated as
+// SortNone.
 func ParseSortPrefixed(q url.Values, prefix string, defaultBy string, defaultDir SortDir) SortParams {
 	requestedBy := strings.TrimSpace(q.Get(prefix + "sort_by"))
 	by := requestedBy
