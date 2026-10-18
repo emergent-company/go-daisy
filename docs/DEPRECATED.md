@@ -96,6 +96,7 @@ input.
 - `nav.SimpleTabs`
 - `ui.Avatar`
 - `ui.CardCompact`
+- `ui.ChatBubbleLegacy`
 - `ui.IconSpanColored`
 - `ui.IconSpanColoredWithBoundary`
 - `ui.PaginationCircle`

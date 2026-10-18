@@ -2,37 +2,51 @@ package ui
 
 import "github.com/emergent-company/go-daisy/devmode"
 
-// ChatBubble renders a chat conversation bubble.
+// ChatBubbleProps configures a ChatBubble conversation bubble.
 //
-// sent=true → chat-end (right), sent=false → chat-start (left)
-// avatarSrc: optional image URL for chat-image slot (squircle avatar)
-// botIcon: when true renders a bot-icon avatar instead of a photo (overrides avatarSrc)
-// bubbleClass: optional modifier e.g. "chat-bubble-primary"
-// showActions: when true renders a hover-reveal action toolbar (Regenerate, Copy, thumbs)
-// attrs: optional extra HTML attributes spread on the root element
-templ ChatBubble(sent bool, author string, timestamp string, avatarSrc string, botIcon bool, bubbleClass string, showActions bool, attrs templ.Attributes) {
+// Sent=true → chat-end (right), Sent=false → chat-start (left)
+// AvatarSrc: optional image URL for chat-image slot (squircle avatar)
+// BotIcon: when true renders a bot-icon avatar instead of a photo (overrides AvatarSrc)
+// BubbleClass: optional modifier e.g. "chat-bubble-primary"
+// ShowActions: when true renders a hover-reveal action toolbar (Regenerate, Copy, thumbs)
+// Class: additional CSS classes appended to the root element
+// Attrs: optional extra HTML attributes spread on the root element
+type ChatBubbleProps struct {
+	Sent        bool
+	Author      string
+	Timestamp   string
+	AvatarSrc   string
+	BotIcon     bool
+	BubbleClass string
+	ShowActions bool
+	Class       string
+	Attrs       templ.Attributes
+}
+
+// ChatBubble renders a chat conversation bubble.
+templ ChatBubble(props ChatBubbleProps) {
 	<div
-		class={ "chat group", templ.KV("chat-end", sent), templ.KV("chat-start", !sent) }
+		class={ "chat group", templ.KV("chat-end", props.Sent), templ.KV("chat-start", !props.Sent), props.Class }
 		{ devmode.Attrs(ctx, "ui/ChatBubble")... }
-		{ attrs... }
+		{ props.Attrs... }
 	>
-		if botIcon {
+		if props.BotIcon {
 			<div class="chat-image bg-primary/5 text-primary border-primary/10 flex items-center justify-center rounded-full border p-2">
 				@IconSpan("lucide--bot", "size-6")
 			</div>
-		} else if avatarSrc != "" {
+		} else if props.AvatarSrc != "" {
 			<div class="chat-image avatar">
 				<div class="w-10">
-					<img class="mask mask-squircle bg-base-200 p-0.5" src={ avatarSrc } alt={ author }/>
+					<img class="mask mask-squircle bg-base-200 p-0.5" src={ props.AvatarSrc } alt={ props.Author }/>
 				</div>
 			</div>
 		}
-		if author != "" {
-			<div class="chat-header text-xs text-subtle mb-0.5">{ author }</div>
+		if props.Author != "" {
+			<div class="chat-header text-xs text-subtle mb-0.5">{ props.Author }</div>
 		}
-		<div class={ "chat-bubble relative", bubbleClass }>
+		<div class={ "chat-bubble relative", props.BubbleClass }>
 			{ children... }
-			if showActions {
+			if props.ShowActions {
 				<div class="border-line-strong bg-base-100 absolute end-2 -bottom-8 z-10 flex scale-90 items-center gap-1.5 rounded-full border px-3 py-2 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100">
 					@Button(ButtonProps{Type: ButtonTypeButton, Size: ButtonXS}) { Regenerate }
 					@Button(ButtonProps{Type: ButtonTypeButton, Size: ButtonXS}) { Copy }
@@ -45,8 +59,8 @@ templ ChatBubble(sent bool, author string, timestamp string, avatarSrc string, b
 				</div>
 			}
 		</div>
-		if timestamp != "" {
-			<div class="chat-footer text-xs text-muted mt-0.5 opacity-50">{ timestamp }</div>
+		if props.Timestamp != "" {
+			<div class="chat-footer text-xs text-muted mt-0.5 opacity-50">{ props.Timestamp }</div>
 		}
 	</div>
 }

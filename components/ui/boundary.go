@@ -2,6 +2,7 @@ package ui
 
 import (
 	"context"
+	"fmt"
 	"io"
 
 	"github.com/a-h/templ"
@@ -394,7 +395,16 @@ func TagWithBoundary(label string, removeHref string) templ.Component {
 // gallery:hint timestamp:default(10:32 AM)
 // gallery:hint message:default(Hey! How are you doing?)
 func ChatBubbleWithBoundary(sent bool, author, timestamp, avatarSrc string, botIcon bool, bubbleClass string, showActions bool, message string) templ.Component {
-	inner := shared.RenderInto(ChatBubble(sent, author, timestamp, avatarSrc, botIcon, bubbleClass, showActions, nil), shared.StrComp(message))
+	props := ChatBubbleProps{
+		Sent:        sent,
+		Author:      author,
+		Timestamp:   timestamp,
+		AvatarSrc:   avatarSrc,
+		BotIcon:     botIcon,
+		BubbleClass: bubbleClass,
+		ShowActions: showActions,
+	}
+	inner := shared.RenderInto(ChatBubble(props), shared.StrComp(message))
 	return devmode.ComponentBoundary("ChatBubble", inner, map[string]any{
 		"sent":        sent,
 		"author":      author,
@@ -404,6 +414,56 @@ func ChatBubbleWithBoundary(sent bool, author, timestamp, avatarSrc string, botI
 		"bubbleClass": bubbleClass,
 		"showActions": showActions,
 		"message":     message,
+	})
+}
+
+// MessageWithBoundary wraps Message with a dev-mode component boundary annotation.
+func MessageWithBoundary(align MessageAlign, children ...templ.Component) templ.Component {
+	props := MessageProps{Align: align}
+	inner := shared.RenderInto(Message(props), shared.Compose(children...))
+	return devmode.ComponentBoundary("Message", inner, map[string]any{"align": string(align)})
+}
+
+// MessageBubbleWithBoundary wraps MessageBubble with a dev-mode component boundary annotation.
+func MessageBubbleWithBoundary(variant MessageBubbleVariant, text string) templ.Component {
+	props := MessageBubbleProps{Variant: variant}
+	inner := shared.RenderInto(MessageBubble(props), shared.StrComp(text))
+	return devmode.ComponentBoundary("MessageBubble", inner, map[string]any{
+		"variant": string(variant),
+		"text":    text,
+	})
+}
+
+// MessageScrollerWithBoundary wraps MessageScroller with a dev-mode component
+// boundary annotation. It renders `messages` synthetic Message rows (alternating
+// start/end using MessageBubble) so the gallery shows a scrollable stack.
+// gallery:token heightClass,static,messages
+// gallery:hint heightClass:default(h-96)
+// gallery:hint static:default(false)
+// gallery:hint messages:range(1,20,1)
+// gallery:hint messages:default(12)
+func MessageScrollerWithBoundary(heightClass string, static bool, messages int) templ.Component {
+	children := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		for i := 0; i < messages; i++ {
+			align := MessageStart
+			if i%2 == 1 {
+				align = MessageEnd
+			}
+			body := shared.StrComp(fmt.Sprintf("Message %d", i+1))
+			bubble := shared.RenderInto(MessageBubble(MessageBubbleProps{}), body)
+			row := shared.RenderInto(Message(MessageProps{Align: align}), bubble)
+			if err := row.Render(ctx, w); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	props := MessageScrollerProps{HeightClass: heightClass, Static: static}
+	inner := shared.RenderInto(MessageScroller(props), children)
+	return devmode.ComponentBoundary("MessageScroller", inner, map[string]any{
+		"heightClass": heightClass,
+		"static":      static,
+		"messages":    messages,
 	})
 }
 

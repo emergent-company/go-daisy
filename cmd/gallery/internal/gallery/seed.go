@@ -193,16 +193,16 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							if _, err := io.WriteString(w, `<div class="flex flex-col gap-2 p-4 max-w-lg mx-auto">`); err != nil {
 								return err
 							}
-							if err := withText("Hey! How are you doing?", ui.ChatBubble(false, "Alice", "10:32 AM", "./images/avatars/2.png", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+							if err := withText("Hey! How are you doing?", ui.ChatBubble(ui.ChatBubbleProps{Sent: false, Author: "Alice", Timestamp: "10:32 AM", AvatarSrc: "./images/avatars/2.png", BubbleClass: "bg-base-200"})).Render(ctx, w); err != nil {
 								return err
 							}
-							if err := withText("Good thanks! How about you?", ui.ChatBubble(true, "You", "10:33 AM", "./images/avatars/1.png", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+							if err := withText("Good thanks! How about you?", ui.ChatBubble(ui.ChatBubbleProps{Sent: true, Author: "You", Timestamp: "10:33 AM", AvatarSrc: "./images/avatars/1.png", BubbleClass: "bg-base-200"})).Render(ctx, w); err != nil {
 								return err
 							}
-							if err := withText("Just finished a great book. Have any recommendations?", ui.ChatBubble(false, "Alice", "10:34 AM", "./images/avatars/2.png", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+							if err := withText("Just finished a great book. Have any recommendations?", ui.ChatBubble(ui.ChatBubbleProps{Sent: false, Author: "Alice", Timestamp: "10:34 AM", AvatarSrc: "./images/avatars/2.png", BubbleClass: "bg-base-200"})).Render(ctx, w); err != nil {
 								return err
 							}
-							if err := withText("I'd recommend 'The Silent Observer' — it's a must-read!", ui.ChatBubble(true, "You", "10:36 AM", "./images/avatars/1.png", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+							if err := withText("I'd recommend 'The Silent Observer' — it's a must-read!", ui.ChatBubble(ui.ChatBubbleProps{Sent: true, Author: "You", Timestamp: "10:36 AM", AvatarSrc: "./images/avatars/1.png", BubbleClass: "bg-base-200"})).Render(ctx, w); err != nil {
 								return err
 							}
 							_, err := io.WriteString(w, `</div>`)
@@ -219,15 +219,15 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								return err
 							}
 							// User message
-							if err := withText("Can you provide an estimated timeline for completion?", ui.ChatBubble(true, "", "Weeks ago", "", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+							if err := withText("Can you provide an estimated timeline for completion?", ui.ChatBubble(ui.ChatBubbleProps{Sent: true, Timestamp: "Weeks ago", BubbleClass: "bg-base-200"})).Render(ctx, w); err != nil {
 								return err
 							}
 							// AI response with bot icon and hover actions
-							if err := withText("Certainly! Based on our current progress, we estimate the project will be completed within 4–6 weeks. Let me know if you'd like a detailed breakdown.", ui.ChatBubble(false, "", "Week ago", "", true, "bg-base-200", true, nil)).Render(ctx, w); err != nil {
+							if err := withText("Certainly! Based on our current progress, we estimate the project will be completed within 4–6 weeks. Let me know if you'd like a detailed breakdown.", ui.ChatBubble(ui.ChatBubbleProps{Sent: false, Timestamp: "Week ago", BotIcon: true, BubbleClass: "bg-base-200", ShowActions: true})).Render(ctx, w); err != nil {
 								return err
 							}
 							// Another user message
-							if err := withText("Can you generate a follow-up summary?", ui.ChatBubble(true, "", "now", "", false, "bg-base-200", false, nil)).Render(ctx, w); err != nil {
+							if err := withText("Can you generate a follow-up summary?", ui.ChatBubble(ui.ChatBubbleProps{Sent: true, Timestamp: "now", BubbleClass: "bg-base-200"})).Render(ctx, w); err != nil {
 								return err
 							}
 							// AI thinking indicator
@@ -261,7 +261,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 								{"Error alert", "chat-bubble-error", true},
 							}
 							for _, b := range bubbles {
-								if err := withText(b.text, ui.ChatBubble(b.sent, "", "", "", false, b.class, false, nil)).Render(ctx, w); err != nil {
+								if err := withText(b.text, ui.ChatBubble(ui.ChatBubbleProps{Sent: b.sent, BubbleClass: b.class})).Render(ctx, w); err != nil {
 									return err
 								}
 							}

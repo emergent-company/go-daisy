@@ -856,6 +856,40 @@ func ChatBubbleTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// MessageScrollerTokens returns the DesignToken slice for MessageScrollerWithBoundary.
+func MessageScrollerTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Height Class",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "h-96",
+			QueryParam: "heightClass",
+		},
+		{
+			Label:      "Static",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "static",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Messages",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeRange,
+			Default:    "12",
+			QueryParam: "messages",
+			Min:        1,
+			Max:        20,
+			Step:       1,
+		},
+	}
+}
+
 // ChatInputTokens returns the DesignToken slice for ChatInputWithBoundary.
 func ChatInputTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{

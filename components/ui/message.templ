@@ -1,0 +1,165 @@
+package ui
+
+import "github.com/emergent-company/go-daisy/devmode"
+
+// MessageAlign controls which side of the message stack a Message renders on.
+type MessageAlign string
+
+const (
+	MessageStart MessageAlign = ""
+	MessageEnd   MessageAlign = "end"
+)
+
+// MessageProps configures a Message stack row.
+type MessageProps struct {
+	Align MessageAlign
+	Class string
+	Attrs templ.Attributes
+}
+
+// MessageAvatarProps configures a MessageAvatar.
+type MessageAvatarProps struct {
+	Src     string
+	Name    string
+	BotIcon bool
+	Class   string
+	Attrs   templ.Attributes
+}
+
+// MessageContentProps configures a MessageContent column.
+type MessageContentProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// MessageHeaderProps configures a MessageHeader row.
+type MessageHeaderProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// MessageFooterProps configures a MessageFooter row.
+type MessageFooterProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// MessageBubbleVariant controls the visual treatment of a MessageBubble.
+type MessageBubbleVariant string
+
+const (
+	MessageBubbleDefault MessageBubbleVariant = ""
+	MessageBubblePrimary MessageBubbleVariant = "primary"
+	MessageBubbleMuted   MessageBubbleVariant = "muted"
+)
+
+// MessageBubbleProps configures a MessageBubble.
+type MessageBubbleProps struct {
+	Variant MessageBubbleVariant
+	Class   string
+	Attrs   templ.Attributes
+}
+
+// messageBubbleVariantClass maps a MessageBubbleVariant to its surface classes.
+func messageBubbleVariantClass(v MessageBubbleVariant) string {
+	switch v {
+	case MessageBubblePrimary:
+		return "bg-primary/10 text-primary"
+	case MessageBubbleMuted:
+		return "bg-base-200"
+	default:
+		return "bg-base-100 border border-base-300"
+	}
+}
+
+// Message renders a single message stack row. Alignment is driven by the
+// group/message marker on the root, so the MessageContent/Header/Footer slots
+// pick up their start/end alignment from group-data variants without needing
+// their own Go props.
+templ Message(props MessageProps) {
+	<div
+		data-slot="message"
+		data-align={ string(props.Align) }
+		class={ "group/message flex w-full gap-2", templ.KV("flex-row-reverse", props.Align == MessageEnd), props.Class }
+		{ devmode.Attrs(ctx, "ui/Message")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+}
+
+// MessageAvatar renders the avatar slot of a Message. When BotIcon is set it
+// renders the bot icon box (same visual classes as ChatBubble's bot avatar);
+// otherwise, when Src is set, it renders a squircle image avatar. Class/Attrs
+// land on the root slot div.
+templ MessageAvatar(props MessageAvatarProps) {
+	<div
+		data-slot="message-avatar"
+		class={ "shrink-0 self-end", props.Class }
+		{ devmode.Attrs(ctx, "ui/MessageAvatar")... }
+		{ props.Attrs... }
+	>
+		if props.BotIcon {
+			<div class="bg-primary/5 text-primary border-primary/10 flex items-center justify-center rounded-full border p-2">
+				@IconSpan("lucide--bot", "size-6")
+			</div>
+		} else if props.Src != "" {
+			<div class="avatar">
+				<div class="w-10">
+					<img class="mask mask-squircle bg-base-200 p-0.5" src={ props.Src } alt={ props.Name }/>
+				</div>
+			</div>
+		}
+	</div>
+}
+
+// MessageContent renders the growing content column of a Message. Start/end
+// alignment is derived from the parent group/message marker.
+templ MessageContent(props MessageContentProps) {
+	<div
+		data-slot="message-content"
+		class={ "flex min-w-0 flex-col gap-1 items-start group-data-[align=end]/message:items-end text-start group-data-[align=end]/message:text-end", props.Class }
+		{ devmode.Attrs(ctx, "ui/MessageContent")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+}
+
+// MessageHeader renders the header row of a Message (author, timestamp, etc.).
+// Row direction follows the parent group/message marker.
+templ MessageHeader(props MessageHeaderProps) {
+	<div
+		data-slot="message-header"
+		class={ "flex items-center gap-2 text-xs text-subtle group-data-[align=end]/message:flex-row-reverse", props.Class }
+		{ devmode.Attrs(ctx, "ui/MessageHeader")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+}
+
+// MessageFooter renders the footer row of a Message.
+templ MessageFooter(props MessageFooterProps) {
+	<div
+		data-slot="message-footer"
+		class={ "text-xs text-muted", props.Class }
+		{ devmode.Attrs(ctx, "ui/MessageFooter")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+}
+
+// MessageBubble renders the message body surface. Sent messages (MessageEnd)
+// flip to a solid primary surface via group-data variants.
+templ MessageBubble(props MessageBubbleProps) {
+	<div
+		data-slot="message-bubble"
+		class={ "rounded-box px-3 py-2 text-sm", messageBubbleVariantClass(props.Variant), "group-data-[align=end]/message:bg-primary group-data-[align=end]/message:text-primary-content group-data-[align=end]/message:border-primary", props.Class }
+		{ devmode.Attrs(ctx, "ui/MessageBubble")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+}
