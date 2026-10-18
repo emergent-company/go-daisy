@@ -55,7 +55,7 @@ go-daisy/
 │   └── pages_docs.templ  # SDK documentation reference page
 ├── assets/               # Tailwind CSS source (app.css)
 ├── .agents/skills/       # AI agent skills (DaisyUI reference)
-├── docs/                 # ROADMAP.md, PATTERNS.md
+├── docs/                 # ROADMAP.md, PATTERNS.md, TOKENS.md
 ├── tests/e2e/            # Playwright E2E test suite
 ├── Taskfile.yml          # Build tasks
 ├── go.mod                # Module definition
