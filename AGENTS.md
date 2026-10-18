@@ -155,7 +155,7 @@ Page headers, tab menus, breadcrumbs, footer (~16 components). `PageHeader`, `Ta
 Form inputs, field wrappers, validators, editors (~26 components). `FormField`, `TextInput`, `TextareaInput`, `SelectInput`, `EnhancedSelect`, `SearchInput`, `FilterSelect`, `CheckboxInput`, `Toggle`, `RadioGroup`, `RangeInput`, `FileInput`, `FileUpload`, `Rating`, `OTP`, `PasswordField`, `PasswordMeter`, `DatePicker`, `Clipboard`, `RichTextEditor`, `CalendarWrapper`, `ColorInput`, `Spinner`, `Wizard`.
 
 ### `components/table`
-`Table`, `DataTable`, `TableCard`, `ListArea` (infinite-scroll container), `ScrollRows` (6 components).
+`Table`, `DataTable`, `DataGrid`, `SortableTableHeader`, `TableCard`, `ListArea` (infinite-scroll container), `ScrollRows` (6 components). `SortableTableHeader` is the server-side column-sorting primitive: it renders an accessible header link, preserves query filters, and pairs with `SortContext`/`ParseSort` helpers.
 
 ### `components/modal`
 Modal dialogs (3 components): `Modal`, `FormModal`, `AlpineFormModal`, `ConfirmPopup`, `LoaderModal`, `OpenModalButton`.

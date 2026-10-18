@@ -332,3 +332,37 @@ Rules that follow:
   `--color-*` scale in a plain `@theme` block, steps derived from the theme's own
   variables. It does **not** borrow the `-bright` slot adjective, precisely so the
   two scales can't be misread against each other.
+
+## 13. Server-side table sorting
+
+Use `table.SortContext` and `table.SortableTableHeader` for column sorting that
+is driven by the request URL and rendered by the server. Do not hand-build sort
+query strings or render a clickable `<th>` without `aria-sort`.
+
+```go
+sc := table.NewSortContext(r, "", "", table.SortNone)
+// later, after collecting rows:
+rows = sortRows(rows, sc.Params)
+```
+
+```templ
+@table.SortableTableHeader(table.SortableTableHeaderProps{
+    Label:    "CPU",
+    Column:   "cpu",
+    Sort:     sc,
+    FirstDir: table.SortDesc,
+    Class:    "text-right",
+})
+```
+
+- `SortContext` clones the request query, so filters survive a sort click.
+- `FirstDir` chooses the useful first click per column (`desc` for metrics,
+  `asc` for names).
+- The direction cycles first -> opposite -> none. `none` removes the sort
+  parameters and returns to the handler's default row order.
+- The component emits `aria-sort` only on the active column and uses a muted
+  double-chevron on inactive columns so sorting is discoverable.
+- Multi-table pages use a unique prefix per table, e.g.
+  `table.NewSortContext(r, "guests_", "", table.SortNone)`.
+- The handler is responsible for applying `SortParams` to the rows. Keep
+  unknown metrics, empty text and zero times last in both directions.

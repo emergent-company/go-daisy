@@ -24,7 +24,7 @@ Components live under `components/` and are organized by package:
 | `components/form` | Form field wrappers, inputs, selects, wizards, OTP, ColorInput, DatalistInput |
 | `components/layout` | Full-page shell, sidebar, navbar, LayoutCustomizer |
 | `components/nav` | PageHeader, TabMenu, TopBar, Megamenu, breadcrumbs, menus |
-| `components/table` | Table, ListArea (infinite-scroll), ScrollRows |
+| `components/table` | Table, DataTable, DataGrid, SortableTableHeader, ListArea (infinite-scroll), ScrollRows |
 | `components/modal` | JS-driver-and-header modal family: vanilla/Alpine drivers, FormModal, ConfirmPopup, DeleteButton, OpenModalButton, LoaderModal |
 | `components/logs` | Log stream display |
 | `components/alpine` | Alpine.js attribute helpers + pre-built data states |

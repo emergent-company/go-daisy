@@ -1,0 +1,69 @@
+package table
+
+import (
+	ui "github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+// SortableTableHeaderProps configures a sortable <th> cell.
+//
+// Column is the sort key. Leave it empty to render a plain, non-sortable
+// header. Class is applied to the <th>; LinkAttrs is applied to the <a>, which
+// lets callers add HTMX attributes or data-* hooks without changing the
+// component.
+type SortableTableHeaderProps struct {
+	Label     string
+	Column    string
+	Sort      SortContext
+	FirstDir  SortDir
+	Class     string
+	LinkAttrs templ.Attributes
+	Attrs     templ.Attributes
+}
+
+// SortableTableHeader renders a sortable column header.
+//
+// The header is a real link, so it works without JavaScript. When the column is
+// active the <th> carries aria-sort="ascending" or aria-sort="descending";
+// inactive headers omit the attribute entirely. The direction cycles
+// first -> opposite -> none; "none" removes the sort parameters and returns to
+// the handler's natural row order.
+templ SortableTableHeader(props SortableTableHeaderProps) {
+	if href := props.Sort.Href(props.Column, props.FirstDir); href != "" {
+		<th
+			scope="col"
+			class={ props.Class }
+			if aria := props.Sort.AriaSort(props.Column); aria != "" {
+				aria-sort={ aria }
+			}
+			{ devmode.Attrs(ctx, "table/SortableTableHeader")... }
+			{ props.Attrs... }
+		>
+			@sortableHeaderLink(props, href)
+		</th>
+	} else {
+		<th scope="col" class={ props.Class } { devmode.Attrs(ctx, "table/SortableTableHeader")... } { props.Attrs... }>
+			{ props.Label }
+		</th>
+	}
+}
+
+// sortableHeaderLink renders the anchor and direction icon for a header.
+templ sortableHeaderLink(props SortableTableHeaderProps, href string) {
+	<a
+		href={ templ.URL(href) }
+		class="inline-flex items-center gap-1 rounded-sm hover:text-base-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+		{ props.LinkAttrs... }
+	>
+		<span>{ props.Label }</span>
+		if props.Sort.Active(props.Column) {
+			if props.Sort.Params.Dir == SortAsc {
+				@ui.IconSpan("lucide--chevron-up", "size-3.5")
+			} else {
+				@ui.IconSpan("lucide--chevron-down", "size-3.5")
+			}
+		} else {
+			@ui.IconSpan("lucide--chevrons-up-down", "size-3.5 opacity-30")
+		}
+	</a>
+}

@@ -34,8 +34,18 @@ func TableHeadCellWithBoundary(label string) templ.Component {
 
 // TableHeaderWithBoundary wraps TableHeader with a dev-mode element boundary annotation.
 // Uses ElementBoundary because TableHeader renders a <th> element directly.
+//
+// The canonical wrapper stays available even though TableHeader is deprecated;
+// new code should use SortableTableHeaderWithBoundary.
 func TableHeaderWithBoundary(label string, sortKey string, currentSortKey string, currentDir SortDir, baseURL string) templ.Component {
 	return devmode.ElementBoundary("TableHeader", TableHeader(label, sortKey, currentSortKey, currentDir, baseURL), map[string]any{"label": label, "sortKey": sortKey})
+}
+
+// SortableTableHeaderWithBoundary wraps SortableTableHeader with a dev-mode
+// element boundary annotation. Uses ElementBoundary because SortableTableHeader
+// renders a <th> element directly.
+func SortableTableHeaderWithBoundary(props SortableTableHeaderProps) templ.Component {
+	return devmode.ElementBoundary("SortableTableHeader", SortableTableHeader(props), props)
 }
 
 // TableBodyWithBoundary wraps TableBody with a dev-mode element boundary annotation.

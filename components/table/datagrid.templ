@@ -9,10 +9,12 @@ import (
 
 // DataGridColumn defines a single column in a data grid.
 type DataGridColumn struct {
-	Key      string // data key, used for sort param
-	Label    string // header text
-	Sortable bool   // show sort chevron
-	Width    string // optional CSS width class (e.g. "w-32"), empty = auto
+	Key      string  // data key, used for sort param
+	Label    string  // header text
+	Sortable bool    // render a sort link
+	FirstDir SortDir // direction used on the first click; defaults to asc
+	Width    string  // optional CSS width class (e.g. "w-32"), empty = auto
+	Class    string  // optional extra class on the header cell (e.g. "text-right")
 }
 
 // BatchAction defines a batch operation shown in the selection toolbar.
@@ -41,6 +43,7 @@ type DataGridProps struct {
 	TotalItems       int
 	PageSize         int
 	BaseURL          string            // base URL for sort/filter/page links
+	Sort             SortContext       // server-side sort state; BasePath is required for sort links
 
 	// Toolbar
 	SearchName        string            // query param name for search, empty = no search
@@ -154,9 +157,25 @@ templ DataGrid(props DataGridProps) {
 								</th>
 							}
 							for _, col := range props.Columns {
-								<th class={ "text-xs font-semibold text-muted uppercase", col.Width }>
-									{ col.Label }
-								</th>
+								if col.Sortable && col.Key != "" {
+									@SortableTableHeader(SortableTableHeaderProps{
+										Label:    col.Label,
+										Column:   col.Key,
+										Sort:     props.Sort,
+										FirstDir: col.FirstDir,
+										Class:    "text-xs font-semibold text-muted uppercase " + col.Width + " " + col.Class,
+										LinkAttrs: templ.Attributes{
+											"hx-get":      props.Sort.Href(col.Key, col.FirstDir),
+											"hx-target":   "#datagrid-" + props.ID + "-body",
+											"hx-swap":     "innerHTML",
+											"hx-push-url": "true",
+										},
+									})
+								} else {
+									<th class={ "text-xs font-semibold text-muted uppercase", col.Width, col.Class }>
+										{ col.Label }
+									</th>
+								}
 							}
 						}
 					}
