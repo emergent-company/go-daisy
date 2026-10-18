@@ -1,0 +1,103 @@
+package ui
+
+import (
+	"strconv"
+
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+// ToggleGroupOrientation controls whether the group lays out horizontally or vertically.
+type ToggleGroupOrientation string
+
+const (
+	ToggleGroupHorizontal ToggleGroupOrientation = ""
+	ToggleGroupVertical   ToggleGroupOrientation = "vertical"
+)
+
+// ToggleGroupProps configures a ToggleGroup component.
+type ToggleGroupProps struct {
+	Orientation  ToggleGroupOrientation
+	Multiple     bool
+	Value []string // controlled: non-nil means the server owns state
+	// DefaultValue sets the initially pressed items of an uncontrolled group.
+	// It is authoritative: the runtime applies it on load and overrides any
+	// child Pressed value that is not listed here.
+	DefaultValue []string
+	// Spacing is the gap between items: nil = 2, 0 = joined (DaisyUI .join).
+	// Supported gaps are 1-6; values outside that range collapse to 2.
+	Spacing *int
+	Variant      ToggleVariant
+	Size         ToggleSize
+	Disabled bool
+	// AriaLabel names the group for assistive technology.
+	AriaLabel string
+	Class     string
+	Attrs     templ.Attributes
+}
+
+// ToggleGroup renders a group of ToggleButtons with roving-tabindex keyboard
+// behaviour. Children inherit the group's variant/size/disabled via the render
+// context. Use Value for a server-controlled group; otherwise DefaultValue sets
+// the initial pressed items (read by go-daisy-toggle.js), and every child needs
+// a distinct Value or the runtime will not track it.
+templ ToggleGroup(props ToggleGroupProps) {
+	{{ spacing := 2
+	if props.Spacing != nil {
+		spacing = *props.Spacing
+	}
+	vertical := props.Orientation == ToggleGroupVertical
+	joined := spacing == 0
+	controlled := props.Value != nil
+	values := props.DefaultValue
+	if controlled {
+		values = props.Value
+	}
+	valueJSON := toggleGroupValueJSON(values)
+	gapClass := ""
+	if !joined {
+		gapClass = "flex gap-2"
+		switch spacing {
+		case 1:
+			gapClass = "flex gap-1"
+		case 3:
+			gapClass = "flex gap-3"
+		case 4:
+			gapClass = "flex gap-4"
+		case 5:
+			gapClass = "flex gap-5"
+		case 6:
+			gapClass = "flex gap-6"
+		}
+		if vertical {
+			gapClass += " flex-col"
+		} else {
+			gapClass += " flex-wrap"
+		}
+	}
+	ctx = WithToggleGroupDefaults(ctx, props.Variant, props.Size, props.Disabled) }}
+	<div
+		role="group"
+		data-gd-toggle-group
+		data-orientation={ string(props.Orientation) }
+		if props.Multiple {
+			data-multiple
+		}
+		if controlled {
+			data-controlled
+		}
+		data-gd-toggle-values={ valueJSON }
+		data-spacing={ strconv.Itoa(spacing) }
+		if props.AriaLabel != "" {
+			aria-label={ props.AriaLabel }
+		}
+		class={ templ.KV("join", joined),
+			templ.KV("join-vertical", joined && vertical),
+			gapClass,
+			props.Class }
+		{ devmode.Attrs(ctx, "ui/ToggleGroup")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+	@ToggleScript()
+}

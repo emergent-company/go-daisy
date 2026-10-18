@@ -1812,7 +1812,179 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+		// ── Components / Toggle ─────────────────────────────────────────────
+		{
+			Slug:        "toggle",
+			Name:        "Toggle",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Buttons",
+			Description: "A button in an aria-pressed toggle state — DaisyUI btn with btn-active/btn-outline variants, sizes, disabled, and icon support.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Default toggle button.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ToggleButtonWithBoundary(ui.ToggleDefault, ui.ToggleSizeDefault, false, false, "", "", shared.StrComp("Toggle"))
+					},
+					FrameHeight: "100px",
+				},
+				{
+					Name:        "Outline",
+					Description: "Outline variant toggle.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ToggleButtonWithBoundary(ui.ToggleOutline, ui.ToggleSizeDefault, false, false, "", "", shared.StrComp("Outline"))
+					},
+					FrameHeight: "100px",
+				},
+				{
+					Name:        "Sizes",
+					Description: "Small, default, and large toggles.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return row(
+							ui.ToggleButtonWithBoundary(ui.ToggleDefault, ui.ToggleSizeSM, false, false, "", "", shared.StrComp("Small")),
+							ui.ToggleButtonWithBoundary(ui.ToggleDefault, ui.ToggleSizeDefault, false, false, "", "", shared.StrComp("Default")),
+							ui.ToggleButtonWithBoundary(ui.ToggleDefault, ui.ToggleSizeLG, false, false, "", "", shared.StrComp("Large")),
+						)
+					},
+					FrameHeight: "100px",
+				},
+				{
+					Name:        "Pressed",
+					Description: "Controlled pressed state.",
+					RenderFunc: func(params url.Values) templ.Component {
+						pressed := params.Get("pressed") == "true"
+						return ui.ToggleButtonWithBoundary(ui.ToggleDefault, ui.ToggleSizeDefault, pressed, false, "", "", shared.StrComp("Pressed"))
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Pressed", Group: "State", Type: galleryruntime.TokenTypeSelect, Default: "true", QueryParam: "pressed", Options: []galleryruntime.TokenOption{
+							{Value: "true", Label: "True"},
+							{Value: "false", Label: "False"},
+						}},
+					},
+					FrameHeight: "100px",
+				},
+				{
+					Name:        "Disabled",
+					Description: "Disabled toggle, controlled pressed state.",
+					RenderFunc: func(params url.Values) templ.Component {
+						pressed := params.Get("pressed") == "true"
+						return ui.ToggleButtonWithBoundary(ui.ToggleDefault, ui.ToggleSizeDefault, pressed, true, "", "", shared.StrComp("Disabled"))
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Pressed", Group: "State", Type: galleryruntime.TokenTypeSelect, Default: "false", QueryParam: "pressed", Options: []galleryruntime.TokenOption{
+							{Value: "true", Label: "True"},
+							{Value: "false", Label: "False"},
+						}},
+					},
+					FrameHeight: "100px",
+				},
+				{
+					Name:        "Icon only",
+					Description: "Icon-only toggle with an aria-label.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ToggleButtonWithBoundary(ui.ToggleDefault, ui.ToggleSizeDefault, false, false, "Bold", "lucide--bold")
+					},
+					FrameHeight: "100px",
+				},
+			},
+		},
+
+		// ── Components / Toggle Group ───────────────────────────────────────
+		{
+			Slug:        "toggle-group",
+			Name:        "Toggle Group",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Buttons",
+			Description: "A roving-tabindex group of toggle buttons — single or multi select, horizontal or vertical, joined or spaced, with keyboard navigation.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Single",
+					Description: "Single-select group with a default value.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return toggleGroupDemo([]string{"left", "center", "right"}, []string{"center"}, false, ui.ToggleGroupHorizontal, 2, false)
+					},
+					FrameHeight: "100px",
+				},
+				{
+					Name:        "Multiple",
+					Description: "Multi-select group with two default values.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return toggleGroupDemo([]string{"bold", "italic", "underline"}, []string{"bold", "italic"}, true, ui.ToggleGroupHorizontal, 2, false)
+					},
+					FrameHeight: "100px",
+				},
+				{
+					Name:        "Vertical",
+					Description: "Vertically stacked group.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return toggleGroupDemo([]string{"top", "center", "bottom"}, []string{"center"}, false, ui.ToggleGroupVertical, 2, false)
+					},
+					FrameHeight: "160px",
+				},
+				{
+					Name:        "Joined",
+					Description: "Fused group (Spacing 0 → DaisyUI join).",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return toggleGroupDemo([]string{"left", "center", "right"}, []string{"center"}, false, ui.ToggleGroupHorizontal, 0, false)
+					},
+					FrameHeight: "100px",
+				},
+				{
+					Name:        "Disabled",
+					Description: "Disabled group.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return toggleGroupDemo([]string{"left", "center", "right"}, []string{"center"}, false, ui.ToggleGroupHorizontal, 2, true)
+					},
+					FrameHeight: "100px",
+				},
+				{
+					Name:        "Playground",
+					Description: "Every group token driven by the token panel.",
+					RenderFunc: func(params url.Values) templ.Component {
+						multiple := params.Get("multiple") == "true"
+						disabled := params.Get("disabled") == "true"
+						orientation := ui.ToggleGroupHorizontal
+						if params.Get("orientation") == string(ui.ToggleGroupVertical) {
+							orientation = ui.ToggleGroupVertical
+						}
+						spacing := 2
+						if raw := params.Get("spacing"); raw != "" {
+							if n, err := strconv.Atoi(raw); err == nil {
+								spacing = n
+							}
+						}
+						return toggleGroupDemo([]string{"left", "center", "right"}, []string{"center"}, multiple, orientation, spacing, disabled)
+					},
+					Tokens:      ToggleGroupTokens(),
+					FrameHeight: "140px",
+				},
+			},
+		},
 	}
+}
+
+// toggleGroupDemo builds a ToggleGroup of ToggleButtons from labels, marking the
+// default values pressed and using each label as its button's toggle value.
+func toggleGroupDemo(labels []string, defaults []string, multiple bool, orientation ui.ToggleGroupOrientation, spacing int, disabled bool) templ.Component {
+	pressed := make(map[string]bool, len(defaults))
+	for _, v := range defaults {
+		pressed[v] = true
+	}
+	children := make([]templ.Component, 0, len(labels))
+	for _, label := range labels {
+		children = append(children, withText(label, ui.ToggleButton(ui.ToggleButtonProps{
+			Pressed: pressed[label],
+			Value:   label,
+		})))
+	}
+	sp := spacing
+	return shared.RenderInto(ui.ToggleGroup(ui.ToggleGroupProps{
+		Orientation:  orientation,
+		Multiple:     multiple,
+		DefaultValue: defaults,
+		Spacing:      &sp,
+		Disabled:     disabled,
+	}), shared.Compose(children...))
 }
 
 // buttonGroupBtn renders a primary button with text, used in the Button Group gallery stories.
