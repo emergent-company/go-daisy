@@ -548,3 +548,35 @@ test('command palette: filterPaletteItems still filters local rows', () => {
   assert.equal(doc.getElementById('item-one').style.display, '', 'matching row stays visible');
   assert.equal(doc.getElementById('item-two').style.display, 'none', 'non-matching row is hidden');
 });
+
+test('command palette: opening an already-checked box installs the trap', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const input = doc.getElementById('spotlight-input');
+
+  opener.focus();
+  toggle.checked = true; // initial Open prop, or app code setting it directly
+  window.gdCommandPalette.open('spotlight');
+
+  assert.equal(doc.activeElement, input, 'open() traps even without a change event');
+});
+
+test('command palette: closing an already-unchecked box still releases the trap', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const item = doc.getElementById('item-one');
+
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
+
+  // Apps such as the infra panel's dashboard.js dismiss with
+  // `toggle.checked = false`, which emits no change event.
+  toggle.checked = false;
+  item.dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true }));
+
+  assert.equal(doc.activeElement, opener, 'a result click after a silent close still restores focus');
+});

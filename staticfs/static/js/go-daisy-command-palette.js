@@ -80,15 +80,27 @@
   }
 
   function open(cb) {
-    if (!cb || cb.checked) return;
-    cb.checked = true;
-    sync(cb);
+    if (!cb) return;
+    if (!cb.checked) {
+      cb.checked = true;
+      sync(cb);
+      return;
+    }
+    // Already checked (initial Open, or app code set .checked directly) but
+    // possibly never trapped: make sure focus and the trap are installed.
+    activate(cb);
   }
 
   function close(cb) {
-    if (!cb || !cb.checked) return;
-    cb.checked = false;
-    sync(cb);
+    if (!cb) return;
+    if (cb.checked) {
+      cb.checked = false;
+      sync(cb);
+      return;
+    }
+    // Apps commonly close with `toggle.checked = false` and no change event.
+    // Release the trap (and restore focus) even when the box is already off.
+    deactivate(cb);
   }
 
   function initOpen() {
