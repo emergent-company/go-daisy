@@ -120,7 +120,7 @@ func DashboardPage(props DashboardProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<a href=\"#\" class=\"link link-primary text-sm\">View all</a></div></div><div class=\"overflow-x-auto mt-3\"><table class=\"table table-sm w-full\"><thead><tr><th class=\"eyebrow\">ID</th><th class=\"eyebrow\">Customer</th><th class=\"eyebrow\">Price</th><th class=\"eyebrow\">Payment</th><th class=\"eyebrow\">Status</th></tr></thead> <tbody>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<a href=\"#\" class=\"link link-primary text-sm\">View all</a></div></div><div class=\"overflow-x-auto mt-3\"><table class=\"table table-sm w-full\"><thead><tr><th class=\"eyebrow text-xs\">ID</th><th class=\"eyebrow text-xs\">Customer</th><th class=\"eyebrow text-xs\">Price</th><th class=\"eyebrow text-xs\">Payment</th><th class=\"eyebrow text-xs\">Status</th></tr></thead> <tbody>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

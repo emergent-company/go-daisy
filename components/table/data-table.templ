@@ -93,7 +93,7 @@ templ DataTable(props DataTableProps) {
 						<template x-for="col in visibleColumns" :key="col.id">
 							<th
 								x-text="col.label"
-								:class="'eyebrow' + (sortable ? ' cursor-pointer hover:text-base-content' : '') + ' ' + (col.width || '')"
+								:class="'eyebrow text-xs' + (sortable ? ' cursor-pointer hover:text-base-content' : '') + ' ' + (col.width || '')"
 								x-on:click="if (sortable) sortBy(col.id)"
 							>
 							</th>

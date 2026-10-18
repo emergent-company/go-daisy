@@ -324,6 +324,11 @@ component CSS:
 The tokens are declared with `@theme inline` so they resolve against the active
 `data-theme` at the point of use — required for nested theme previews.
 
+`.eyebrow` supplies the kicker typography (uppercase, 600, 0.05em tracking,
+50% tone) but deliberately sets no font-size: pair it with `text-xs` or the
+size the context needs. `ui.Eyebrow` inherits the surrounding size unless its
+`Size` prop is set.
+
 ## Tech stack
 
 | Layer | Tool |

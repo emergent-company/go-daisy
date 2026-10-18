@@ -32,9 +32,13 @@
 /* Canonical overline / kicker label. Replaces the previously drifting
  * combinations of uppercase + tracking-wide/wider + text-base-content/40..60.
  * Uses --color-base-content directly (not --color-subtle) so it keeps working
- * even if theme-variable emission changes under `inline`. */
+ * even if theme-variable emission changes under `inline`.
+ *
+ * Deliberately sets NO font-size: a utility that forces a size cannot be
+ * overridden by `text-[11px]`/`ui.Eyebrow{Size}` (same cascade layer) and
+ * changed `ui.Eyebrow`, which used to inherit its size. Pair `.eyebrow` with
+ * `text-xs` (or the desired size) at the call site. */
 @utility eyebrow {
-  font-size: var(--text-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;

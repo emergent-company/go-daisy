@@ -165,7 +165,7 @@ templ ComponentDetail(c GalleryComponent) {
 				<div class="flex flex-col">
 					<!-- Preview toolbar -->
 					<div class="flex items-center justify-between mb-2 gap-3 flex-wrap">
-						<span class="eyebrow">Preview</span>
+						<span class="eyebrow text-xs">Preview</span>
 						<div class="flex items-center gap-2">
 							<!-- Responsive breakpoint buttons -->
 							<div class="join">
@@ -207,7 +207,7 @@ templ ComponentDetail(c GalleryComponent) {
 		<!-- Component Tree panel (hidden by default; shown when iframe posts boundary data) -->
 		<div id="component-tree-panel" class="hidden flex flex-col gap-2">
 			<div class="flex items-center justify-between gap-2">
-				<span class="eyebrow">Component Tree</span>
+				<span class="eyebrow text-xs">Component Tree</span>
 				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Size: ui.ButtonXS, Variant: ui.ButtonGhost, ExtraClass: "border border-line gap-1", Icon: "lucide--rotate-ccw", Attrs: templ.Attributes{"onclick": "resetAllParams()", "title": "Reset all props and parameters to defaults"}}) {
 					Reset
 				}
@@ -217,7 +217,7 @@ templ ComponentDetail(c GalleryComponent) {
 			</div>
 			<!-- Parameters section: query-param tokens rendered by JS below the tree -->
 			<div id="tree-params-panel" class="hidden flex flex-col gap-2">
-				<span class="eyebrow">Parameters</span>
+				<span class="eyebrow text-xs">Parameters</span>
 				<div id="tree-params-body" class="rounded-xl border border-line bg-base-200 shadow-sm overflow-hidden">
 					<div class="p-4 space-y-3"></div>
 				</div>
@@ -228,7 +228,7 @@ templ ComponentDetail(c GalleryComponent) {
 				if !isTemplPage(c) {
 					<div class="flex flex-col">
 						<div class="flex items-center justify-between mb-2">
-							<span class="eyebrow">HTML Source</span>
+							<span class="eyebrow text-xs">HTML Source</span>
 						</div>
 						@ui.CodeBlock(ui.CodeBlockProps{Language: "html", Code: c.HTML, Label: "HTML", Highlight: ui.Highlight(c.HTML, "html")})
 					</div>
@@ -530,7 +530,7 @@ templ ComponentDetail(c GalleryComponent) {
 				var html = '';
 				order.forEach(function(grpName) {
 					html += '<div class="token-group mb-4">';
-					html += '<p class="eyebrow mb-2">' + escT(grpName) + '</p>';
+					html += '<p class="eyebrow text-xs mb-2">' + escT(grpName) + '</p>';
 					html += '<div class="space-y-3">';
 					byName[grpName].forEach(function(tok) {
 						var def = tok.Default || '';
@@ -1009,7 +1009,7 @@ templ ComponentExamples(c GalleryComponent) {
 				<!-- SubExamples mode: one iframe + component tree per sub-example -->
 				<div class="flex flex-col gap-6">
 					<div class="flex items-center gap-2 min-w-0">
-						<span class="eyebrow">{ story.Name }</span>
+						<span class="eyebrow text-xs">{ story.Name }</span>
 						if story.Description != "" {
 							<span class="text-xs text-faint">{ story.Description }</span>
 						}
@@ -1047,7 +1047,7 @@ templ ComponentExamples(c GalleryComponent) {
 						<!-- Per-sub-example component tree panel (hidden until iframe sends data) -->
 						<div id={ fmt.Sprintf("examples-sub-tree-%d-%d", si, ei) } class="hidden rounded-xl border border-line overflow-hidden bg-base-100 shadow-sm">
 							<div class="px-3 py-2 border-b border-line bg-base-200/40">
-								<span class="eyebrow">Component Tree</span>
+								<span class="eyebrow text-xs">Component Tree</span>
 							</div>
 							<div id={ fmt.Sprintf("examples-sub-tree-body-%d-%d", si, ei) } class="overflow-auto max-h-64"></div>
 						</div>
@@ -1060,7 +1060,7 @@ templ ComponentExamples(c GalleryComponent) {
 					<!-- Story toolbar: label + controls matching the Interactive toolbar -->
 					<div class="flex items-center justify-between mb-2 gap-3 flex-wrap">
 						<div class="flex items-center gap-2 min-w-0">
-							<span class="eyebrow">{ story.Name }</span>
+							<span class="eyebrow text-xs">{ story.Name }</span>
 							if story.Description != "" {
 								<span class="text-xs text-faint">{ story.Description }</span>
 							}

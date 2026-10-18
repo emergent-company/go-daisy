@@ -129,7 +129,15 @@
 
 .sidebar-menu {
   .menu-label {
-    @apply eyebrow;
+    /* Interface labels are louder than kickers, so they use the label tone
+       (70%) rather than .eyebrow's 50%. Declared explicitly because
+       `@apply eyebrow` carries a color that cannot be overridden afterwards
+       (its @supports fallback wins the cascade). */
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-label);
   }
 
   .menu-item {

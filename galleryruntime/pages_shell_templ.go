@@ -199,7 +199,7 @@ func GalleryPage(title string, activeSlug string, categories []CategoryGroup, lo
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"menu-label eyebrow px-2.5 py-1.5 hover:text-body transition-colors duration-150 block\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" hx-target=\"#gallery-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"menu-label px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-label hover:text-body transition-colors duration-150 block\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
