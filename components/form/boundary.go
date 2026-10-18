@@ -467,12 +467,11 @@ func FormFieldsetWithBoundary(props FieldsetProps) templ.Component {
 }
 
 // SelectShellWithBoundary wraps SelectShell with a dev-mode component boundary annotation.
-// gallery:token triggerLabel
-// gallery:hint triggerLabel:default(Select...)
-func SelectShellWithBoundary(props SelectShellProps) templ.Component {
-	return devmode.ComponentBoundary("SelectShell", SelectShell(props), map[string]any{
-		"label":        props.Label,
-		"triggerLabel": props.TriggerLabel,
+// Optional children render inside the dropdown panel.
+func SelectShellWithBoundary(props SelectShellProps, children ...templ.Component) templ.Component {
+	inner := shared.RenderInto(SelectShell(props), shared.Compose(children...))
+	return devmode.ComponentBoundary("SelectShell", inner, map[string]any{
+		"label": props.Label,
 	})
 }
 
