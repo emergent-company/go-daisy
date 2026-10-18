@@ -53,6 +53,9 @@ var ComponentSlugs = map[string]string{
 	"TableWithProps": "table",
 	"Table":          "table",
 	"ListArea":       "list-basic",
+	"ListRow":        "list-basic",
+	"ItemGroup":      "list-basic",
+	"ItemSeparator":  "list-basic",
 	// Navigation
 	"ActionMenu":       "action-menu-real",
 	"FilterTabs":       "filter-tabs",
