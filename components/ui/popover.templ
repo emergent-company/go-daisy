@@ -137,6 +137,6 @@ var popoverScriptOnce = templ.NewOnceHandle()
 // Include wherever popovers are used; deduplicated via OnceHandle.
 templ PopoverScript() {
 	@popoverScriptOnce.Once() {
-		@templ.Raw(staticfs.Script("/js/go-daisy-popover.js"))
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-popover.js", templ.GetNonce(ctx)))
 	}
 }

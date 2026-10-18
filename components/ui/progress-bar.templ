@@ -21,7 +21,7 @@ templ ProgressBar() {
 		{ devmode.Attrs(ctx, "ui/ProgressBar")... }
 	></div>
 	@progressBarScriptOnce.Once() {
-		<script>
+		<script { nonceAttrs(ctx)... }>
 	gdOnce('goDaisyProgressInit', function () {
 		var bar = document.getElementById('progress-bar');
 			if (!bar) return;

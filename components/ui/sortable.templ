@@ -54,7 +54,7 @@ templ SortableHandle() {
 
 templ sortableScript() {
 	@sortableScriptOnce.Once() {
-		<script>
+		<script { nonceAttrs(ctx)... }>
 	(function () {
 	  window.initSortable = function(el) {
 	    if (typeof Sortable === 'undefined') {

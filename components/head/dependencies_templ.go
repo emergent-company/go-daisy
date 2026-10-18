@@ -14,6 +14,11 @@ import (
 	"github.com/emergent-company/go-daisy/staticfs"
 )
 
+// Dependencies emits the page's CSS/JS tags.
+//
+// Every tag carries the render-context CSP nonce (templ.WithNonce) so a host can
+// serve a strict `script-src 'nonce-…'` policy. Without a nonce in the context
+// the output is byte-identical to the pre-CSP version.
 func Dependencies(props DepsProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -35,6 +40,7 @@ func Dependencies(props DepsProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		nonce := templ.GetNonce(ctx)
 		templ_7745c5c3_Err = ui.ThemeScript().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -47,30 +53,30 @@ func Dependencies(props DepsProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.Raw(staticfs.Script("/js/htmx.js")).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templ.Raw(staticfs.ScriptNonce("/js/htmx.js", nonce)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if props.Alpine {
-			templ_7745c5c3_Err = templ.Raw(staticfs.Script("/js/alpine.js")).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = templ.Raw(staticfs.ScriptNonce("/js/alpine.js", nonce)).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
 		if props.Morph {
-			templ_7745c5c3_Err = templ.Raw(staticfs.Script("/js/morph.js")).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = templ.Raw(staticfs.ScriptNonce("/js/morph.js", nonce)).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
 		if props.SSE {
-			templ_7745c5c3_Err = templ.Raw(staticfs.Script("/js/hx-sse.js")).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = templ.Raw(staticfs.ScriptNonce("/js/hx-sse.js", nonce)).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
 		if props.WS {
-			templ_7745c5c3_Err = templ.Raw(staticfs.Script("/js/hx-ws.js")).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = templ.Raw(staticfs.ScriptNonce("/js/hx-ws.js", nonce)).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

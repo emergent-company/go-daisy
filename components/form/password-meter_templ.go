@@ -296,7 +296,15 @@ func passwordMeterScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<script>\n\tgdOnce('pwMeterInit', function () {\n\n\t  window.updatePasswordMeter = function(input) {\n\t    var val = input.value;\n\t    var score = 0;\n\t    if (val.length >= 8) score++;\n\t    if (val.length >= 12) score++;\n\t    if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;\n\t    if (/\\d/.test(val) && /[^A-Za-z0-9]/.test(val)) score++;\n\n\t    var meter = document.getElementById(input.name + '-progress');\n\t    var label = document.getElementById(input.name + '-label');\n\t    if (!meter || !label) return;\n\n\t    meter.value = score;\n\t    var colors = ['progress-ghost', 'progress-error', 'progress-warning', 'progress-info', 'progress-success'];\n\t    for (var i = 0; i < colors.length; i++) meter.classList.toggle(colors[i], i === score);\n\t    var labels = ['Weak', 'Fair', 'Good', 'Strong', 'Very strong'];\n\t    label.textContent = labels[score] || 'Weak';\n\t  };\n\t});\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<script")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, nonceAttrs(ctx))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, ">\n\tgdOnce('pwMeterInit', function () {\n\n\t  window.updatePasswordMeter = function(input) {\n\t    var val = input.value;\n\t    var score = 0;\n\t    if (val.length >= 8) score++;\n\t    if (val.length >= 12) score++;\n\t    if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;\n\t    if (/\\d/.test(val) && /[^A-Za-z0-9]/.test(val)) score++;\n\n\t    var meter = document.getElementById(input.name + '-progress');\n\t    var label = document.getElementById(input.name + '-label');\n\t    if (!meter || !label) return;\n\n\t    meter.value = score;\n\t    var colors = ['progress-ghost', 'progress-error', 'progress-warning', 'progress-info', 'progress-success'];\n\t    for (var i = 0; i < colors.length; i++) meter.classList.toggle(colors[i], i === score);\n\t    var labels = ['Weak', 'Fair', 'Good', 'Strong', 'Very strong'];\n\t    label.textContent = labels[score] || 'Weak';\n\t  };\n\t});\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -152,7 +152,15 @@ func topbarScrollScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<script>\n\tgdOnce('topbarScrollInit', function () {\n\n\t  var topbar = document.getElementById('_scroll-topbar');\n\t  if (!topbar || !topbar.dataset.scrollTopbar) return;\n\n\t  var lastScrollY = window.scrollY;\n\t  var ticking = false;\n\n\t  window.addEventListener('scroll', function() {\n\t    if (!ticking) {\n\t      window.requestAnimationFrame(function() {\n\t        var currentScrollY = window.scrollY;\n\t        if (currentScrollY > 100) {\n\t          if (currentScrollY > lastScrollY) {\n\t            topbar.style.transform = 'translateY(-100%)';\n\t          } else {\n\t            topbar.style.transform = 'translateY(0)';\n\t          }\n\t        } else {\n\t          topbar.style.transform = 'translateY(0)';\n\t        }\n\t        lastScrollY = currentScrollY;\n\t        ticking = false;\n\t      });\n\t      ticking = true;\n\t    }\n\t  });\n\t});\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<script")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, nonceAttrs(ctx))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, ">\n\tgdOnce('topbarScrollInit', function () {\n\n\t  var topbar = document.getElementById('_scroll-topbar');\n\t  if (!topbar || !topbar.dataset.scrollTopbar) return;\n\n\t  var lastScrollY = window.scrollY;\n\t  var ticking = false;\n\n\t  window.addEventListener('scroll', function() {\n\t    if (!ticking) {\n\t      window.requestAnimationFrame(function() {\n\t        var currentScrollY = window.scrollY;\n\t        if (currentScrollY > 100) {\n\t          if (currentScrollY > lastScrollY) {\n\t            topbar.style.transform = 'translateY(-100%)';\n\t          } else {\n\t            topbar.style.transform = 'translateY(0)';\n\t          }\n\t        } else {\n\t          topbar.style.transform = 'translateY(0)';\n\t        }\n\t        lastScrollY = currentScrollY;\n\t        ticking = false;\n\t      });\n\t      ticking = true;\n\t    }\n\t  });\n\t});\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

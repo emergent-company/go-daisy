@@ -67,8 +67,8 @@ func ThemeRuntimeJS() string {
 // component, and devmode.ComponentBoundary would inject a <div>, which is
 // invalid inside <head>.
 templ ThemeScript() {
-	@templ.Raw("<script>" + ThemeRuntimeJS() + "</script>")
-	<script>
+	@templ.Raw(ThemeRuntimeTag(ctx))
+	<script { nonceAttrs(ctx)... }>
 	(function() {
 		try {
 			var rt = window.__goDaisyTheme;

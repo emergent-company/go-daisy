@@ -1,0 +1,63 @@
+package form
+
+import (
+	ui "github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+// InputGroupProps configures a joined input row with leading/trailing addons.
+type InputGroupProps struct {
+	// Prefix is text shown before the input (e.g. "https://").
+	Prefix string
+	// PrefixIcon is an optional Lucide icon before the input. Ignored when
+	// Prefix is set, because the text already carries the meaning.
+	PrefixIcon string
+	// Suffix is text shown after the input (e.g. ".com" or "USD").
+	Suffix string
+	// SuffixIcon is an optional Lucide icon after the input.
+	SuffixIcon string
+	// Class is appended to the join wrapper.
+	Class string
+	Attrs templ.Attributes
+}
+
+// InputGroup joins a leading addon, the caller's input, and a trailing addon
+// into a single focus ring.
+//
+// The input must carry `join-item` (and any `input` variant classes):
+//
+//	@form.InputGroup(form.InputGroupProps{Prefix: "https://"}) {
+//	    <input class="input join-item w-full" name="host" />
+//	}
+//
+// Addons are non-interactive text/icon spans; use a real <button class="btn
+// join-item"> child when the addon is clickable.
+templ InputGroup(props ...InputGroupProps) {
+	{{ var p InputGroupProps
+	if len(props) > 0 { p = props[0] } }}
+	<div
+		class={ "join w-full", p.Class }
+		{ devmode.Attrs(ctx, "form/InputGroup")... }
+		{ p.Attrs... }
+	>
+		if p.Prefix != "" || p.PrefixIcon != "" {
+			<span class="join-item flex select-none items-center gap-1.5 border border-base-300 bg-base-200 px-3 text-sm text-label">
+				if p.Prefix != "" {
+					{ p.Prefix }
+				} else {
+					@ui.IconSpan(p.PrefixIcon, "size-4")
+				}
+			</span>
+		}
+		{ children... }
+		if p.Suffix != "" || p.SuffixIcon != "" {
+			<span class="join-item flex select-none items-center gap-1.5 border border-base-300 bg-base-200 px-3 text-sm text-label">
+				if p.Suffix != "" {
+					{ p.Suffix }
+				} else {
+					@ui.IconSpan(p.SuffixIcon, "size-4")
+				}
+			</span>
+		}
+	</div>
+}

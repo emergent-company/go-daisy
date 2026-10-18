@@ -52,7 +52,15 @@ func ToastScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script>\n\t\t\t(function(){\n\t\t\t\tfunction dismissToast(el){\n\t\t\t\t\tvar d = parseInt(el.dataset.duration)||4000;\n\t\t\t\t\tsetTimeout(function(){\n\t\t\t\t\t\tel.style.opacity='0';\n\t\t\t\t\t\tel.style.transition='opacity 0.3s';\n\t\t\t\t\t\tsetTimeout(function(){ el.remove(); }, 300);\n\t\t\t\t\t}, d);\n\t\t\t\t}\n\t\t\t\tdocument.querySelectorAll('.toast-auto-dismiss').forEach(dismissToast);\n\t\t\t\tvar obs = new MutationObserver(function(mutations){\n\t\t\t\t\tmutations.forEach(function(m){\n\t\t\t\t\t\tm.addedNodes.forEach(function(n){\n\t\t\t\t\t\t\tif(n.nodeType===1){\n\t\t\t\t\t\t\t\tif(n.classList && n.classList.contains('toast-auto-dismiss')) dismissToast(n);\n\t\t\t\t\t\t\t\tn.querySelectorAll && n.querySelectorAll('.toast-auto-dismiss').forEach(dismissToast);\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t});\n\t\t\t\t\t});\n\t\t\t\t});\n\t\t\t\tobs.observe(document.body, {childList:true, subtree:true});\n\t\t\t})();\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, nonceAttrs(ctx))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, ">\n\t\t\t(function(){\n\t\t\t\tfunction dismissToast(el){\n\t\t\t\t\tvar d = parseInt(el.dataset.duration)||4000;\n\t\t\t\t\tsetTimeout(function(){\n\t\t\t\t\t\tel.style.opacity='0';\n\t\t\t\t\t\tel.style.transition='opacity 0.3s';\n\t\t\t\t\t\tsetTimeout(function(){ el.remove(); }, 300);\n\t\t\t\t\t}, d);\n\t\t\t\t}\n\t\t\t\tdocument.querySelectorAll('.toast-auto-dismiss').forEach(dismissToast);\n\t\t\t\tvar obs = new MutationObserver(function(mutations){\n\t\t\t\t\tmutations.forEach(function(m){\n\t\t\t\t\t\tm.addedNodes.forEach(function(n){\n\t\t\t\t\t\t\tif(n.nodeType===1){\n\t\t\t\t\t\t\t\tif(n.classList && n.classList.contains('toast-auto-dismiss')) dismissToast(n);\n\t\t\t\t\t\t\t\tn.querySelectorAll && n.querySelectorAll('.toast-auto-dismiss').forEach(dismissToast);\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t});\n\t\t\t\t\t});\n\t\t\t\t});\n\t\t\t\tobs.observe(document.body, {childList:true, subtree:true});\n\t\t\t})();\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -102,7 +110,7 @@ func toastAlert(typ ToastType, message string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -115,7 +123,7 @@ func toastAlert(typ ToastType, message string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" role=\"alert\" data-duration=\"4000\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" role=\"alert\" data-duration=\"4000\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -123,7 +131,7 @@ func toastAlert(typ ToastType, message string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "><span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "><span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -136,7 +144,7 @@ func toastAlert(typ ToastType, message string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -174,7 +182,7 @@ func Toast(props ToastProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else if props.OutOfBand {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div hx-swap-oob=\"beforeend:#toast-container\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div hx-swap-oob=\"beforeend:#toast-container\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -182,7 +190,7 @@ func Toast(props ToastProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, ">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, ">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -190,7 +198,7 @@ func Toast(props ToastProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -250,7 +258,7 @@ func alpineToast(message string, toastType string, durationMs int) templ.Compone
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -258,7 +266,7 @@ func alpineToast(message string, toastType string, durationMs int) templ.Compone
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, " x-init=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " x-init=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -271,7 +279,7 @@ func alpineToast(message string, toastType string, durationMs int) templ.Compone
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" x-show=\"open\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0 translate-x-4\" x-transition:enter-end=\"opacity-100 translate-x-0\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100 translate-x-0\" x-transition:leave-end=\"opacity-0 translate-x-4\" class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" x-show=\"open\" x-transition:enter=\"transition ease-out duration-300\" x-transition:enter-start=\"opacity-0 translate-x-4\" x-transition:enter-end=\"opacity-100 translate-x-0\" x-transition:leave=\"transition ease-in duration-200\" x-transition:leave-start=\"opacity-100 translate-x-0\" x-transition:leave-end=\"opacity-0 translate-x-4\" class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -284,7 +292,7 @@ func alpineToast(message string, toastType string, durationMs int) templ.Compone
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -292,7 +300,7 @@ func alpineToast(message string, toastType string, durationMs int) templ.Compone
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "><span>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "><span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -305,7 +313,7 @@ func alpineToast(message string, toastType string, durationMs int) templ.Compone
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</span></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

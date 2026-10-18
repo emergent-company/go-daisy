@@ -490,3 +490,23 @@ func StructuredInputTokens() []galleryruntime.DesignToken {
 func TagListTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{}
 }
+
+// InputGroupTokens returns the DesignToken slice for InputGroupWithBoundary.
+func InputGroupTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Prefix",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "https://",
+			QueryParam: "prefix",
+		},
+		{
+			Label:      "Suffix",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    ".com",
+			QueryParam: "suffix",
+		},
+	}
+}

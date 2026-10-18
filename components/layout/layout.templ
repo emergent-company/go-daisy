@@ -50,9 +50,9 @@ templ PageFull(props PageProps) {
 		<!-- Main content slot -->
 		{ children... }
 		<!-- HTMX -->
-		<script src={ "/static/js/htmx.js?v=" + staticfs.Hash() }></script>
+		<script { nonceAttrs(ctx)... } src={ "/static/js/htmx.js?v=" + staticfs.Hash() }></script>
 		@layoutAriaBusyOnce.Once() {
-			<script>
+			<script { nonceAttrs(ctx)... }>
 			(function() {
 			document.addEventListener('htmx:before:request', function() {
 				document.documentElement.setAttribute('aria-busy', 'true');
@@ -64,20 +64,20 @@ templ PageFull(props PageProps) {
 			</script>
 		}
 		if props.Morph {
-			<script src={ "/static/js/morph.js?v=" + staticfs.Hash() }></script>
+			<script { nonceAttrs(ctx)... } src={ "/static/js/morph.js?v=" + staticfs.Hash() }></script>
 		}
 		if props.Alpine {
-			<script defer src={ "/static/js/alpine.js?v=" + staticfs.Hash() }></script>
+			<script { nonceAttrs(ctx)... } defer src={ "/static/js/alpine.js?v=" + staticfs.Hash() }></script>
 		}
 		if props.SSE {
-			<script src={ "/static/js/hx-sse.js?v=" + staticfs.Hash() }></script>
+			<script { nonceAttrs(ctx)... } src={ "/static/js/hx-sse.js?v=" + staticfs.Hash() }></script>
 		}
 		if props.WS {
-			<script src={ "/static/js/hx-ws.js?v=" + staticfs.Hash() }></script>
+			<script { nonceAttrs(ctx)... } src={ "/static/js/hx-ws.js?v=" + staticfs.Hash() }></script>
 		}
 		if props.Prefetch {
 			@layoutPrefetchOnce.Once() {
-				<script>
+				<script { nonceAttrs(ctx)... }>
 				(function() {
 				var timer;
 				document.addEventListener('mouseover', function(e) {
@@ -100,7 +100,7 @@ templ PageFull(props PageProps) {
 		}
 		if props.ViewTransitions {
 			@layoutViewTransitionsOnce.Once() {
-				<script>
+				<script { nonceAttrs(ctx)... }>
 				(function() {
 				document.addEventListener('htmx:before:history:update', function() {
 					document.documentElement.setAttribute('data-navigation-direction', 'forward');

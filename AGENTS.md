@@ -105,7 +105,7 @@ Embedded static assets with cache-busting content hashes.
 | `Hash()` | 12-char content hash for cache busting |
 | `FS()` | Embedded `fs.FS` rooted at `static/` |
 
-**Bundled JS (12 files):** `htmx.js`, `morph.js`, `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js` (behaviour-init runtime — see `components/behaviors`), `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`.
+**Bundled JS (15 files):** `htmx.js`, `morph.js`, `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js` (behaviour-init runtime — see `components/behaviors`), `go-daisy-a11y.js` (keyboard/focus primitives: `gdFocus` + `gdMenu`), `go-daisy-context-menu.js`, `go-daisy-resizable.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`.
 
 **Bundled CSS:** `app.css` (compiled Tailwind + DaisyUI), `frappe-gantt.css`.
 
@@ -289,7 +289,7 @@ Both need `*WithBoundary` wrappers. The demo variant is only for gallery registr
 
 CSS is compiled from `assets/app.css` → `staticfs/static/css/app.css` and served at `/static/css/app.css`. The `staticfs` package embeds this file into the binary. Do not edit the output file directly; edit `assets/app.css` and re-run `task build:ui`.
 
-**Bundled JavaScript** lives in `staticfs/static/js/` — 12 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
+**Bundled JavaScript** lives in `staticfs/static/js/` — 15 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js`, `go-daisy-a11y.js`, `go-daisy-context-menu.js`, `go-daisy-resizable.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
 
 **Cache busting**: `staticfs.Hash()` returns a 12-char content hash updated via `go generate`. `Stylesheet()` and `Script()` helpers append `?v={hash}` query params automatically. Use `data-asset-track="reload"` on tags to trigger full reload on version mismatch.
 
@@ -414,6 +414,42 @@ func ButtonWithBoundary(...)
 ```
 
 Hints support `default()`, `range(min,max,step)`, and `slice(n)` types. Tokens become interactive controls in the gallery.
+
+### Keyboard and focus primitives (`go-daisy-a11y.js`)
+
+Menu-like widgets do not re-implement keyboard handling. Load the shared runtime
+(`components/ui` exposes `DropdownScript()`; any component can emit
+`staticfs.ScriptNonce("/js/go-daisy-a11y.js", templ.GetNonce(ctx))` behind a
+`templ.NewOnceHandle`) and annotate the markup:
+
+```templ
+<div data-gd-menu-root>
+    <button data-gd-menu-trigger>Actions</button>
+    <ul role="menu" data-gd-menu>
+        <li><a role="menuitem" data-gd-menu-item>Rename</a></li>
+    </ul>
+</div>
+```
+
+`gdMenu` wires roving tabindex, Arrow/Home/End, buffered typeahead, Enter/Space
+open, Escape-close with focus restore, click-outside close, and a truthful
+`aria-expanded`; it rescans after every htmx settle. The primitives are public:
+`gdFocus.trap(container, {onEscape, initial})` (Tab cycling + focus restore),
+`gdFocus.roving(container, itemSelector)`, `gdFocus.typeahead()`.
+`ui.ContextMenu` positions its menu itself and uses the same roving primitive.
+
+For inline `<script>` blocks, always emit the context nonce:
+`<script nonce={ templ.GetNonce(ctx) }>`. Asset tags go through
+`staticfs.ScriptNonce` / `ui.ThemeRuntimeTag` so a host can run
+`script-src 'nonce-…'` instead of `'unsafe-inline'`.
+
+### CSP nonce plumbing
+
+`head.Dependencies`, `behaviors.Tag`, `ui.ThemeRuntimeTag`, and
+`galleryruntime.ComponentSlugsScript` all forward `templ.GetNonce(ctx)`. A host
+sets the nonce with `templ.WithNonce(ctx, nonce)` in middleware and emits the same
+value in its `Content-Security-Policy` header. With no nonce in the context the
+rendered HTML is byte-identical to the pre-CSP output.
 
 ### Inline JS singleton pattern
 

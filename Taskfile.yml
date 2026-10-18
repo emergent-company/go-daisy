@@ -246,6 +246,11 @@ tasks:
         rm -f /tmp/go-daisy-e2e.pid;
         else lsof -ti:11001 | xargs kill -9 2>/dev/null || true; fi'
 
+  "test:js":
+    desc: Run the bundled component-script DOM tests (jsdom)
+    cmds:
+      - node --test tests/js/runtime.test.js
+
   "test:e2e":
     desc: Run Playwright E2E tests
     cmds:

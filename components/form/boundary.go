@@ -526,3 +526,26 @@ func TagListWithBoundary(props TagListProps) templ.Component {
 		"values": len(props.Values),
 	})
 }
+
+// InputGroupWithBoundary wraps InputGroup with a dev-mode component boundary annotation.
+// gallery:token prefix,suffix
+// gallery:hint prefix:default(https://)
+// gallery:hint suffix:default(.com)
+func InputGroupWithBoundary(prefix string, suffix string, children ...templ.Component) templ.Component {
+	props := InputGroupProps{Prefix: prefix, Suffix: suffix}
+	inner := shared.RenderInto(InputGroup(props), shared.Compose(children...))
+	return devmode.ComponentBoundary("InputGroup", inner, map[string]any{
+		"prefix": prefix,
+		"suffix": suffix,
+	})
+}
+
+// ClipboardCopyWithBoundary wraps ClipboardCopy with a dev-mode component boundary annotation.
+//
+// No gallery:token annotation: the boundary takes a slice of items, so
+// boundarytoken would map nothing — the gallery story writes its controls by hand.
+func ClipboardCopyWithBoundary(items []ClipboardCopyItem) templ.Component {
+	return devmode.ComponentBoundary("ClipboardCopy", ClipboardCopy(items), map[string]any{
+		"items": len(items),
+	})
+}

@@ -241,7 +241,15 @@ func themeToggleScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<script>\n\t\tgdOnce('themeToggleInit', function () {\n\n\t\t  window.themeToggleAnimated = function(cb) {\n\t\t    var current = document.documentElement.getAttribute('data-theme') || 'nord';\n\t\t    var next = current === 'nord' || current === 'flow' ? 'dracula' : 'nord';\n\t\t    document.documentElement.setAttribute('data-theme', next);\n\t\t    try {\n\t\t      var cfg = JSON.parse(localStorage.getItem('__NEXUS_CONFIG_v3.0__') || '{}');\n\t\t      cfg.theme = next;\n\t\t      localStorage.setItem('__NEXUS_CONFIG_v3.0__', JSON.stringify(cfg));\n\t\t    } catch(e) {}\n\t\t  };\n\n\t\t  // Sync checkbox state on load\n\t\t  (function() {\n\t\t    var current = document.documentElement.getAttribute('data-theme') || 'nord';\n\t\t    var isDark = current === 'dracula' || current === 'dim' || current === 'sunset';\n\t\t    document.querySelectorAll('.theme-controller').forEach(function(el) {\n\t\t      el.checked = isDark;\n\t\t    });\n\t\t  })();\n\t\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<script")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, nonceAttrs(ctx))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, ">\n\t\tgdOnce('themeToggleInit', function () {\n\n\t\t  window.themeToggleAnimated = function(cb) {\n\t\t    var current = document.documentElement.getAttribute('data-theme') || 'nord';\n\t\t    var next = current === 'nord' || current === 'flow' ? 'dracula' : 'nord';\n\t\t    document.documentElement.setAttribute('data-theme', next);\n\t\t    try {\n\t\t      var cfg = JSON.parse(localStorage.getItem('__NEXUS_CONFIG_v3.0__') || '{}');\n\t\t      cfg.theme = next;\n\t\t      localStorage.setItem('__NEXUS_CONFIG_v3.0__', JSON.stringify(cfg));\n\t\t    } catch(e) {}\n\t\t  };\n\n\t\t  // Sync checkbox state on load\n\t\t  (function() {\n\t\t    var current = document.documentElement.getAttribute('data-theme') || 'nord';\n\t\t    var isDark = current === 'dracula' || current === 'dim' || current === 'sunset';\n\t\t    document.querySelectorAll('.theme-controller').forEach(function(el) {\n\t\t      el.checked = isDark;\n\t\t    });\n\t\t  })();\n\t\t});\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

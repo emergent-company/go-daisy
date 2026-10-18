@@ -63,7 +63,7 @@ templ CodeBlock(props CodeBlockProps) {
 		</div>
 	</div>
 	@codeBlockScriptOnce.Once() {
-		<script>
+		<script { nonceAttrs(ctx)... }>
 	gdOnce('copyBlockCode', function () {
 	  window.copyBlockCode = function(el) {
 	    var pre = el.closest('.code-block-root');

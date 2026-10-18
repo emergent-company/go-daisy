@@ -2,6 +2,7 @@ package gallery
 
 import (
 	"net/url"
+	"strconv"
 
 	"github.com/a-h/templ"
 	"github.com/emergent-company/go-daisy/components/alpine"
@@ -376,7 +377,7 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Skeleton Loaders ────────────────────────────────────
 		{
-			Slug:        "skeleton",
+			Slug:        "skeleton-loaders",
 			Name:        "Skeleton Loaders",
 			Category:    galleryruntime.CategoryFeedback,
 			Subcategory: "Loading",
@@ -1361,6 +1362,211 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 							},
 						},
 					},
+				},
+			},
+		},
+		// ── Layout / Scroll Area ───────────────────────────────────────────────
+		{
+			Slug:        "scroll-area",
+			Name:        "Scroll Area",
+			Category:    galleryruntime.CategoryLayout,
+			Subcategory: "Containers",
+			Description: "Scroll container with a slim, theme-aware scrollbar (pure CSS, no JS).",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Vertical",
+					Description: "Max-height panel with a themed scrollbar.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						rows := ""
+						for i := 1; i <= 14; i++ {
+							rows += `<div class="flex items-center justify-between border-b border-line px-3 py-2 text-sm last:border-0"><span>Row ` + strconv.Itoa(i) + `</span><span class="text-base-content/50">scroll</span></div>`
+						}
+						return ui.ScrollAreaWithBoundary(ui.ScrollAreaProps{MaxHeight: "220px", Class: "rounded-box border border-line bg-base-100"}, shared.StrComp(rows))
+					},
+					FrameHeight: "280px",
+				},
+			},
+		},
+
+		// ── Foundation / Direction ─────────────────────────────────────────────
+		{
+			Slug:        "direction",
+			Name:        "Direction",
+			Category:    galleryruntime.CategoryFoundation,
+			Subcategory: "Layout",
+			Description: "LTR/RTL writing-direction scope. Logical utilities (ms-/me-/ps-/pe-/start-/end-) mirror automatically.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "RTL island",
+					Description: "The same markup rendered LTR and RTL side by side.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						card := `<div class="rounded-box border border-line bg-base-100 p-3"><p class="text-sm font-medium">مرحبا بالعالم</p><p class="ms-2 text-xs text-base-content/60">ms-2 indents from the start edge</p></div>`
+						return shared.Compose(
+							shared.StrComp(`<div class="grid w-full max-w-2xl gap-4 sm:grid-cols-2">`),
+							shared.Compose(
+								ui.DirectionWithBoundary(ui.DirectionProps{Dir: "ltr", Class: "space-y-2"}, shared.Compose(
+									shared.StrComp(`<p class="text-xs uppercase tracking-wide text-base-content/50">ltr</p>`),
+									shared.StrComp(card),
+								)),
+							),
+							ui.DirectionWithBoundary(ui.DirectionProps{Dir: "rtl", Class: "space-y-2"}, shared.Compose(
+								shared.StrComp(`<p class="text-xs uppercase tracking-wide text-base-content/50">rtl</p>`),
+								shared.StrComp(card),
+							)),
+							shared.StrComp(`</div>`),
+						)
+					},
+					FrameHeight: "200px",
+				},
+			},
+		},
+
+		// ── Overlays / Context Menu ────────────────────────────────────────────
+		{
+			Slug:        "context-menu",
+			Name:        "Context Menu",
+			Category:    galleryruntime.CategoryOverlays,
+			Subcategory: "Menus",
+			Description: "Right-click menu positioned at the pointer, with roving focus, Escape-to-close, and Shift+F10 keyboard invocation.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Right-click (or focus and press Shift+F10) inside the dashed area.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ContextMenuWithBoundary(ui.ContextMenuProps{
+							ID: "demo-context-menu",
+							Items: []ui.ContextMenuItem{
+								{Label: "Open", Icon: "lucide--external-link", Href: "#"},
+								{Label: "Rename", Icon: "lucide--pencil", Href: "#"},
+								{Label: "Duplicate", Icon: "lucide--copy", Href: "#"},
+								{Divider: true},
+								{Label: "Delete", Icon: "lucide--trash-2", Danger: true, Href: "#"},
+							},
+						}, shared.StrComp(`<div class="grid h-40 w-full place-items-center rounded-box border border-dashed border-line bg-base-100 text-sm text-base-content/60">Right-click inside this area</div>`))
+					},
+					FrameHeight: "220px",
+				},
+			},
+		},
+
+		// ── Layout / Resizable ─────────────────────────────────────────────────
+		{
+			Slug:        "resizable",
+			Name:        "Resizable",
+			Category:    galleryruntime.CategoryLayout,
+			Subcategory: "Containers",
+			Description: "Two-pane split view with a draggable, keyboard-resizable divider and ARIA separator semantics.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Drag the divider, or focus it and use arrow keys. Double-click resets.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ResizableWithBoundary(ui.ResizableProps{
+							ID:      "demo-resizable",
+							Initial: "40%",
+							Min:     "20%",
+							Max:     "75%",
+							Start: shared.StrComp(`<div class="grid h-full place-items-center bg-base-200 p-4 text-sm">
+								<span class="text-base-content/60">Start pane</span>
+							</div>`),
+							End: shared.StrComp(`<div class="grid h-full place-items-center bg-base-100 p-4 text-sm">
+								<span class="text-base-content/60">End pane</span>
+							</div>`),
+							Class: "h-48 rounded-box border border-line",
+						})
+					},
+					FrameHeight: "220px",
+				},
+			},
+		},
+
+		// ── Components / Attachment ────────────────────────────────────────────
+		{
+			Slug:        "attachment",
+			Name:        "Attachment",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Display",
+			Description: "File attachment chip with kind icon or thumbnail, size, and optional download/remove actions.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Document chip with size metadata.",
+					RenderFunc: func(params url.Values) templ.Component {
+						name := params.Get("name")
+						if name == "" {
+							name = "quarterly-report.pdf"
+						}
+						size := params.Get("size")
+						if size == "" {
+							size = "1.2 MB"
+						}
+						kind := params.Get("kind")
+						if kind == "" {
+							kind = "file"
+						}
+						return ui.AttachmentWithBoundary(name, size, kind)
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "File name", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "quarterly-report.pdf", QueryParam: "name"},
+						{Label: "Size", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "1.2 MB", QueryParam: "size"},
+						{Label: "Kind", Group: "Content", Type: galleryruntime.TokenTypeSelect, Default: "file", QueryParam: "kind", Options: []galleryruntime.TokenOption{
+							{Value: "file", Label: "File"},
+							{Value: "image", Label: "Image"},
+							{Value: "audio", Label: "Audio"},
+							{Value: "video", Label: "Video"},
+							{Value: "archive", Label: "Archive"},
+							{Value: "code", Label: "Code"},
+						}},
+					},
+					FrameHeight: "140px",
+				},
+				{
+					Name:        "With actions",
+					Description: "Chip with a thumbnail, download link, and remove button.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.Attachment(ui.AttachmentProps{
+							Name:         "screenshot.png",
+							Size:         "840 KB",
+							Kind:         "image",
+							Href:         "#",
+							RemoveAction: "#",
+							RemoveTarget: "closest .attachment",
+							Class:        "max-w-sm",
+						})
+					},
+					FrameHeight: "140px",
+				},
+			},
+		},
+
+		// ── Forms / Input Group ────────────────────────────────────────────────
+		{
+			Slug:        "input-group",
+			Name:        "Input Group",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Inputs",
+			Description: "Joined input row with leading/trailing text or icon addons sharing one focus ring.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Protocol prefix and domain suffix around the input.",
+					RenderFunc: func(params url.Values) templ.Component {
+						prefix := params.Get("prefix")
+						if prefix == "" {
+							prefix = "https://"
+						}
+						suffix := params.Get("suffix")
+						if suffix == "" {
+							suffix = ".com"
+						}
+						return form.InputGroupWithBoundary(prefix, suffix,
+							shared.StrComp(`<input class="input join-item w-full" placeholder="example" aria-label="Host name"/>`))
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Prefix", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "https://", QueryParam: "prefix"},
+						{Label: "Suffix", Group: "Content", Type: galleryruntime.TokenTypeText, Default: ".com", QueryParam: "suffix"},
+					},
+					FrameHeight: "140px",
 				},
 			},
 		},

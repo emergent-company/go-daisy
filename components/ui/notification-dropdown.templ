@@ -85,7 +85,7 @@ templ dropdownNotificationRow(dropdownID string, item NotificationItem) {
 
 templ notificationDropdownScript(id string) {
 	@notificationDropdownScriptOnce.Once() {
-		<script>
+		<script { nonceAttrs(ctx)... }>
 	gdOnce('notifDropdownInit', function () {
 
 	  window.markNotifRead = function(btn, dropdownId) {

@@ -2563,7 +2563,15 @@ func promptBarKeyboardScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 158, "<script>\n\tif (!window._promptBarInit) {\n\t\twindow._promptBarInit = true;\n\n\t\t// ---- slash/mention autocomplete helpers ----\n\t\tfunction promptBarPopoverFor(ta) {\n\t\t\tvar id = ta.getAttribute(\"data-prompt-bar-autocomplete\");\n\t\t\treturn id ? document.getElementById(id) : null;\n\t\t}\n\t\tfunction promptBarOptionRows(pop) {\n\t\t\treturn pop.querySelectorAll(\"[data-prompt-bar-option]\");\n\t\t}\n\t\tfunction promptBarVisibleRows(pop) {\n\t\t\tvar rows = promptBarOptionRows(pop);\n\t\t\tvar visible = [];\n\t\t\tfor (var i = 0; i < rows.length; i++) {\n\t\t\t\tif (!rows[i].classList.contains(\"hidden\")) visible.push(rows[i]);\n\t\t\t}\n\t\t\treturn visible;\n\t\t}\n\t\tfunction promptBarClose(pop) {\n\t\t\tpop.classList.add(\"hidden\");\n\t\t\tvar rows = promptBarOptionRows(pop);\n\t\t\tfor (var i = 0; i < rows.length; i++) rows[i].classList.remove(\"bg-base-200\");\n\t\t\tpop._pbActive = -1;\n\t\t\tvar detail = pop.querySelector(\"[data-prompt-bar-detail]\");\n\t\t\tif (detail) detail.classList.add(\"hidden\");\n\t\t}\n\t\tfunction promptBarUpdateDetail(pop, row) {\n\t\t\tvar detail = pop.querySelector(\"[data-prompt-bar-detail]\");\n\t\t\tif (!detail) return;\n\t\t\tif (row && (row.getAttribute(\"data-description\") || row.getAttribute(\"data-detail\"))) {\n\t\t\t\tdetail.classList.remove(\"hidden\");\n\t\t\t\tvar l = detail.querySelector(\"[data-prompt-bar-detail-label]\");\n\t\t\t\tvar d = detail.querySelector(\"[data-prompt-bar-detail-desc]\");\n\t\t\t\tvar h = detail.querySelector(\"[data-prompt-bar-detail-hint]\");\n\t\t\t\tif (l) l.textContent = row.getAttribute(\"data-label\") || \"\";\n\t\t\t\tif (d) d.textContent = row.getAttribute(\"data-description\") || \"\";\n\t\t\t\tif (h) h.textContent = row.getAttribute(\"data-detail\") || \"\";\n\t\t\t} else {\n\t\t\t\tdetail.classList.add(\"hidden\");\n\t\t\t}\n\t\t}\n\t\tfunction promptBarSetActive(pop, idx) {\n\t\t\tvar rows = promptBarVisibleRows(pop);\n\t\t\tif (!rows.length) { pop._pbActive = -1; return; }\n\t\t\tidx = ((idx % rows.length) + rows.length) % rows.length;\n\t\t\tpop._pbActive = idx;\n\t\t\tvar all = promptBarOptionRows(pop);\n\t\t\tfor (var i = 0; i < all.length; i++) {\n\t\t\t\tall[i].classList.toggle(\"bg-base-200\", all[i] === rows[idx]);\n\t\t\t}\n\t\t\tpromptBarUpdateDetail(pop, rows[idx]);\n\t\t}\n\t\tfunction promptBarMatchQuery(text) {\n\t\t\tfor (var i = text.length - 1; i >= 0; i--) {\n\t\t\t\tvar c = text.charAt(i);\n\t\t\t\tif (c === \"/\" || c === \"@\") {\n\t\t\t\t\tif (i > 0 && !/\\s/.test(text.charAt(i - 1))) continue;\n\t\t\t\t\tvar query = text.slice(i + 1);\n\t\t\t\t\tif (/[\\s\\/@]/.test(query)) continue;\n\t\t\t\t\treturn { trigger: c, query: query, start: i };\n\t\t\t\t}\n\t\t\t\tif (/\\s/.test(c)) break;\n\t\t\t}\n\t\t\treturn null;\n\t\t}\n\t\tfunction promptBarFilter(pop, query) {\n\t\t\tvar q = query.toLowerCase();\n\t\t\tvar trigger = pop._pbTrigger || \"\";\n\t\t\tvar rows = promptBarOptionRows(pop);\n\t\t\tvar visible = 0;\n\t\t\tfor (var i = 0; i < rows.length; i++) {\n\t\t\t\tvar row = rows[i];\n\t\t\t\tvar kind = row.getAttribute(\"data-kind\") || \"\";\n\t\t\t\tvar kindOk = true;\n\t\t\t\tif (trigger === \"/\") {\n\t\t\t\t\tkindOk = kind === \"\" || kind === \"command\";\n\t\t\t\t} else if (trigger === \"@\") {\n\t\t\t\t\tkindOk = kind === \"\" || kind === \"file\" || kind === \"directory\" || kind === \"agent\";\n\t\t\t\t}\n\t\t\t\tvar label = (row.getAttribute(\"data-label\") || \"\").toLowerCase();\n\t\t\t\tvar value = (row.getAttribute(\"data-value\") || \"\").toLowerCase();\n\t\t\t\tvar ok = kindOk && (label.indexOf(q) !== -1 || value.indexOf(q) !== -1);\n\t\t\t\trow.classList.toggle(\"hidden\", !ok);\n\t\t\t\tif (ok) visible++;\n\t\t\t}\n\t\t\tvar empty = pop.querySelector(\"[data-prompt-bar-empty]\");\n\t\t\tif (empty) empty.classList.toggle(\"hidden\", visible > 0);\n\t\t\tpromptBarSetActive(pop, 0);\n\t\t}\n\t\tfunction promptBarOpen(pop, m) {\n\t\t\tpop._pbTrigger = m.trigger;\n\t\t\tpop.classList.remove(\"hidden\");\n\t\t\tvar hxGet = pop.getAttribute(\"data-prompt-bar-hx-get\") || \"\";\n\t\t\tif (hxGet && typeof htmx !== \"undefined\") {\n\t\t\t\tvar list = pop.querySelector(\"[data-prompt-bar-options]\");\n\t\t\t\tvar target = pop.getAttribute(\"data-prompt-bar-hx-target\") || list;\n\t\t\t\thtmx.ajax(\"GET\", hxGet, { target: target, values: { q: m.query, trigger: m.trigger } });\n\t\t\t} else {\n\t\t\t\tpromptBarFilter(pop, m.query);\n\t\t\t}\n\t\t}\n\t\tfunction promptBarAccept(pop, ta, row) {\n\t\t\tvar value = row.getAttribute(\"data-value\") || \"\";\n\t\t\tvar caret = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;\n\t\t\tvar before = ta.value.slice(0, caret);\n\t\t\tvar m = promptBarMatchQuery(before);\n\t\t\tif (m) {\n\t\t\t\tvar end = (ta.selectionEnd != null) ? ta.selectionEnd : caret;\n\t\t\t\tta.value = before.slice(0, m.start) + value + \" \" + ta.value.slice(end);\n\t\t\t\tvar newCaret = m.start + value.length + 1;\n\t\t\t\tta.setSelectionRange(newCaret, newCaret);\n\t\t\t}\n\t\t\tpromptBarClose(pop);\n\t\t\tta.focus();\n\t\t\tta.dispatchEvent(new Event(\"input\", { bubbles: true }));\n\t\t}\n\n\t\t// ---- input: detect trigger + query ----\n\t\tdocument.addEventListener(\"input\", function (event) {\n\t\t\tvar ta = event.target;\n\t\t\tif (!(ta instanceof HTMLTextAreaElement) || !ta.hasAttribute(\"data-prompt-bar-input\")) return;\n\t\t\tvar pop = promptBarPopoverFor(ta);\n\t\t\tif (!pop) return;\n\t\t\tvar caret = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;\n\t\t\tvar m = promptBarMatchQuery(ta.value.slice(0, caret));\n\t\t\tif (m) {\n\t\t\t\tpromptBarOpen(pop, m);\n\t\t\t} else {\n\t\t\t\tpromptBarClose(pop);\n\t\t\t}\n\t\t});\n\n\t\t// ---- click: accept a row, or close when clicking outside ----\n\t\tdocument.addEventListener(\"click\", function (event) {\n\t\t\tvar target = event.target;\n\t\t\tvar row = (target && target.closest) ? target.closest(\"[data-prompt-bar-option]\") : null;\n\t\t\tif (row) {\n\t\t\t\tvar pop = row.closest(\"[data-prompt-bar-autocomplete]\");\n\t\t\t\tvar ta = pop ? pop.parentElement.querySelector(\"textarea[data-prompt-bar-input]\") : null;\n\t\t\t\tif (ta && pop) promptBarAccept(pop, ta, row);\n\t\t\t\treturn;\n\t\t\t}\n\t\t\tvar pops = document.querySelectorAll(\"[data-prompt-bar-autocomplete]\");\n\t\t\tfor (var i = 0; i < pops.length; i++) {\n\t\t\t\tif (!pops[i].classList.contains(\"hidden\") && !pops[i].contains(target)) {\n\t\t\t\t\tpromptBarClose(pops[i]);\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\n\t\t// ---- keydown: autocomplete first, then Enter-to-send ----\n\t\tdocument.addEventListener(\"keydown\", function (event) {\n\t\t\tif (event.isComposing) return;\n\t\t\tvar ta = event.target;\n\t\t\tif (ta instanceof HTMLTextAreaElement && ta.hasAttribute(\"data-prompt-bar-input\")) {\n\t\t\t\tvar pop = promptBarPopoverFor(ta);\n\t\t\t\tif (pop && !pop.classList.contains(\"hidden\")) {\n\t\t\t\t\tvar rows = promptBarVisibleRows(pop);\n\t\t\t\t\tif (event.key === \"ArrowDown\") {\n\t\t\t\t\t\tevent.preventDefault();\n\t\t\t\t\t\tevent.stopImmediatePropagation();\n\t\t\t\t\t\tvar cur = (typeof pop._pbActive === \"number\" && pop._pbActive >= 0) ? pop._pbActive : -1;\n\t\t\t\t\t\tpromptBarSetActive(pop, cur + 1);\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t\tif (event.key === \"ArrowUp\") {\n\t\t\t\t\t\tevent.preventDefault();\n\t\t\t\t\t\tevent.stopImmediatePropagation();\n\t\t\t\t\t\tvar cur = (typeof pop._pbActive === \"number\" && pop._pbActive >= 0) ? pop._pbActive : 0;\n\t\t\t\t\t\tpromptBarSetActive(pop, cur - 1);\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t\tif (event.key === \"Enter\" || event.key === \"Tab\") {\n\t\t\t\t\t\tevent.preventDefault();\n\t\t\t\t\t\tevent.stopImmediatePropagation();\n\t\t\t\t\t\tvar active = (typeof pop._pbActive === \"number\" && pop._pbActive >= 0) ? pop._pbActive : 0;\n\t\t\t\t\t\tif (rows[active]) promptBarAccept(pop, ta, rows[active]);\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t\tif (event.key === \"Escape\") {\n\t\t\t\t\t\tevent.preventDefault();\n\t\t\t\t\t\tevent.stopImmediatePropagation();\n\t\t\t\t\t\tpromptBarClose(pop);\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\tif (event.key !== \"Enter\") return;\n\t\t\tif (event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return;\n\t\t\tif (!(ta instanceof HTMLTextAreaElement) || !ta.hasAttribute(\"data-prompt-bar-input\")) return;\n\t\t\tvar form = ta.closest(\"form\");\n\t\t\tif (!form) return;\n\t\t\tif (form.getAttribute(\"data-prompt-bar-allow-empty\") !== \"true\" && !ta.value.trim()) {\n\t\t\t\tevent.preventDefault();\n\t\t\t\treturn;\n\t\t\t}\n\t\t\tevent.preventDefault();\n\t\t\tform.requestSubmit();\n\t\t});\n\n\t\tdocument.addEventListener(\"submit\", function (event) {\n\t\t\tvar form = event.target;\n\t\t\tif (!(form instanceof HTMLFormElement)) return;\n\t\t\tif (form.getAttribute(\"data-prompt-bar-allow-empty\") === \"true\") return;\n\t\t\tvar ta = form.querySelector(\"textarea[data-prompt-bar-input]\");\n\t\t\tif (ta && !ta.value.trim()) {\n\t\t\t\tevent.preventDefault();\n\t\t\t}\n\t\t}, true);\n\t}\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 158, "<script")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, nonceAttrs(ctx))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 159, ">\n\tif (!window._promptBarInit) {\n\t\twindow._promptBarInit = true;\n\n\t\t// ---- slash/mention autocomplete helpers ----\n\t\tfunction promptBarPopoverFor(ta) {\n\t\t\tvar id = ta.getAttribute(\"data-prompt-bar-autocomplete\");\n\t\t\treturn id ? document.getElementById(id) : null;\n\t\t}\n\t\tfunction promptBarOptionRows(pop) {\n\t\t\treturn pop.querySelectorAll(\"[data-prompt-bar-option]\");\n\t\t}\n\t\tfunction promptBarVisibleRows(pop) {\n\t\t\tvar rows = promptBarOptionRows(pop);\n\t\t\tvar visible = [];\n\t\t\tfor (var i = 0; i < rows.length; i++) {\n\t\t\t\tif (!rows[i].classList.contains(\"hidden\")) visible.push(rows[i]);\n\t\t\t}\n\t\t\treturn visible;\n\t\t}\n\t\tfunction promptBarClose(pop) {\n\t\t\tpop.classList.add(\"hidden\");\n\t\t\tvar rows = promptBarOptionRows(pop);\n\t\t\tfor (var i = 0; i < rows.length; i++) rows[i].classList.remove(\"bg-base-200\");\n\t\t\tpop._pbActive = -1;\n\t\t\tvar detail = pop.querySelector(\"[data-prompt-bar-detail]\");\n\t\t\tif (detail) detail.classList.add(\"hidden\");\n\t\t}\n\t\tfunction promptBarUpdateDetail(pop, row) {\n\t\t\tvar detail = pop.querySelector(\"[data-prompt-bar-detail]\");\n\t\t\tif (!detail) return;\n\t\t\tif (row && (row.getAttribute(\"data-description\") || row.getAttribute(\"data-detail\"))) {\n\t\t\t\tdetail.classList.remove(\"hidden\");\n\t\t\t\tvar l = detail.querySelector(\"[data-prompt-bar-detail-label]\");\n\t\t\t\tvar d = detail.querySelector(\"[data-prompt-bar-detail-desc]\");\n\t\t\t\tvar h = detail.querySelector(\"[data-prompt-bar-detail-hint]\");\n\t\t\t\tif (l) l.textContent = row.getAttribute(\"data-label\") || \"\";\n\t\t\t\tif (d) d.textContent = row.getAttribute(\"data-description\") || \"\";\n\t\t\t\tif (h) h.textContent = row.getAttribute(\"data-detail\") || \"\";\n\t\t\t} else {\n\t\t\t\tdetail.classList.add(\"hidden\");\n\t\t\t}\n\t\t}\n\t\tfunction promptBarSetActive(pop, idx) {\n\t\t\tvar rows = promptBarVisibleRows(pop);\n\t\t\tif (!rows.length) { pop._pbActive = -1; return; }\n\t\t\tidx = ((idx % rows.length) + rows.length) % rows.length;\n\t\t\tpop._pbActive = idx;\n\t\t\tvar all = promptBarOptionRows(pop);\n\t\t\tfor (var i = 0; i < all.length; i++) {\n\t\t\t\tall[i].classList.toggle(\"bg-base-200\", all[i] === rows[idx]);\n\t\t\t}\n\t\t\tpromptBarUpdateDetail(pop, rows[idx]);\n\t\t}\n\t\tfunction promptBarMatchQuery(text) {\n\t\t\tfor (var i = text.length - 1; i >= 0; i--) {\n\t\t\t\tvar c = text.charAt(i);\n\t\t\t\tif (c === \"/\" || c === \"@\") {\n\t\t\t\t\tif (i > 0 && !/\\s/.test(text.charAt(i - 1))) continue;\n\t\t\t\t\tvar query = text.slice(i + 1);\n\t\t\t\t\tif (/[\\s\\/@]/.test(query)) continue;\n\t\t\t\t\treturn { trigger: c, query: query, start: i };\n\t\t\t\t}\n\t\t\t\tif (/\\s/.test(c)) break;\n\t\t\t}\n\t\t\treturn null;\n\t\t}\n\t\tfunction promptBarFilter(pop, query) {\n\t\t\tvar q = query.toLowerCase();\n\t\t\tvar trigger = pop._pbTrigger || \"\";\n\t\t\tvar rows = promptBarOptionRows(pop);\n\t\t\tvar visible = 0;\n\t\t\tfor (var i = 0; i < rows.length; i++) {\n\t\t\t\tvar row = rows[i];\n\t\t\t\tvar kind = row.getAttribute(\"data-kind\") || \"\";\n\t\t\t\tvar kindOk = true;\n\t\t\t\tif (trigger === \"/\") {\n\t\t\t\t\tkindOk = kind === \"\" || kind === \"command\";\n\t\t\t\t} else if (trigger === \"@\") {\n\t\t\t\t\tkindOk = kind === \"\" || kind === \"file\" || kind === \"directory\" || kind === \"agent\";\n\t\t\t\t}\n\t\t\t\tvar label = (row.getAttribute(\"data-label\") || \"\").toLowerCase();\n\t\t\t\tvar value = (row.getAttribute(\"data-value\") || \"\").toLowerCase();\n\t\t\t\tvar ok = kindOk && (label.indexOf(q) !== -1 || value.indexOf(q) !== -1);\n\t\t\t\trow.classList.toggle(\"hidden\", !ok);\n\t\t\t\tif (ok) visible++;\n\t\t\t}\n\t\t\tvar empty = pop.querySelector(\"[data-prompt-bar-empty]\");\n\t\t\tif (empty) empty.classList.toggle(\"hidden\", visible > 0);\n\t\t\tpromptBarSetActive(pop, 0);\n\t\t}\n\t\tfunction promptBarOpen(pop, m) {\n\t\t\tpop._pbTrigger = m.trigger;\n\t\t\tpop.classList.remove(\"hidden\");\n\t\t\tvar hxGet = pop.getAttribute(\"data-prompt-bar-hx-get\") || \"\";\n\t\t\tif (hxGet && typeof htmx !== \"undefined\") {\n\t\t\t\tvar list = pop.querySelector(\"[data-prompt-bar-options]\");\n\t\t\t\tvar target = pop.getAttribute(\"data-prompt-bar-hx-target\") || list;\n\t\t\t\thtmx.ajax(\"GET\", hxGet, { target: target, values: { q: m.query, trigger: m.trigger } });\n\t\t\t} else {\n\t\t\t\tpromptBarFilter(pop, m.query);\n\t\t\t}\n\t\t}\n\t\tfunction promptBarAccept(pop, ta, row) {\n\t\t\tvar value = row.getAttribute(\"data-value\") || \"\";\n\t\t\tvar caret = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;\n\t\t\tvar before = ta.value.slice(0, caret);\n\t\t\tvar m = promptBarMatchQuery(before);\n\t\t\tif (m) {\n\t\t\t\tvar end = (ta.selectionEnd != null) ? ta.selectionEnd : caret;\n\t\t\t\tta.value = before.slice(0, m.start) + value + \" \" + ta.value.slice(end);\n\t\t\t\tvar newCaret = m.start + value.length + 1;\n\t\t\t\tta.setSelectionRange(newCaret, newCaret);\n\t\t\t}\n\t\t\tpromptBarClose(pop);\n\t\t\tta.focus();\n\t\t\tta.dispatchEvent(new Event(\"input\", { bubbles: true }));\n\t\t}\n\n\t\t// ---- input: detect trigger + query ----\n\t\tdocument.addEventListener(\"input\", function (event) {\n\t\t\tvar ta = event.target;\n\t\t\tif (!(ta instanceof HTMLTextAreaElement) || !ta.hasAttribute(\"data-prompt-bar-input\")) return;\n\t\t\tvar pop = promptBarPopoverFor(ta);\n\t\t\tif (!pop) return;\n\t\t\tvar caret = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;\n\t\t\tvar m = promptBarMatchQuery(ta.value.slice(0, caret));\n\t\t\tif (m) {\n\t\t\t\tpromptBarOpen(pop, m);\n\t\t\t} else {\n\t\t\t\tpromptBarClose(pop);\n\t\t\t}\n\t\t});\n\n\t\t// ---- click: accept a row, or close when clicking outside ----\n\t\tdocument.addEventListener(\"click\", function (event) {\n\t\t\tvar target = event.target;\n\t\t\tvar row = (target && target.closest) ? target.closest(\"[data-prompt-bar-option]\") : null;\n\t\t\tif (row) {\n\t\t\t\tvar pop = row.closest(\"[data-prompt-bar-autocomplete]\");\n\t\t\t\tvar ta = pop ? pop.parentElement.querySelector(\"textarea[data-prompt-bar-input]\") : null;\n\t\t\t\tif (ta && pop) promptBarAccept(pop, ta, row);\n\t\t\t\treturn;\n\t\t\t}\n\t\t\tvar pops = document.querySelectorAll(\"[data-prompt-bar-autocomplete]\");\n\t\t\tfor (var i = 0; i < pops.length; i++) {\n\t\t\t\tif (!pops[i].classList.contains(\"hidden\") && !pops[i].contains(target)) {\n\t\t\t\t\tpromptBarClose(pops[i]);\n\t\t\t\t}\n\t\t\t}\n\t\t});\n\n\t\t// ---- keydown: autocomplete first, then Enter-to-send ----\n\t\tdocument.addEventListener(\"keydown\", function (event) {\n\t\t\tif (event.isComposing) return;\n\t\t\tvar ta = event.target;\n\t\t\tif (ta instanceof HTMLTextAreaElement && ta.hasAttribute(\"data-prompt-bar-input\")) {\n\t\t\t\tvar pop = promptBarPopoverFor(ta);\n\t\t\t\tif (pop && !pop.classList.contains(\"hidden\")) {\n\t\t\t\t\tvar rows = promptBarVisibleRows(pop);\n\t\t\t\t\tif (event.key === \"ArrowDown\") {\n\t\t\t\t\t\tevent.preventDefault();\n\t\t\t\t\t\tevent.stopImmediatePropagation();\n\t\t\t\t\t\tvar cur = (typeof pop._pbActive === \"number\" && pop._pbActive >= 0) ? pop._pbActive : -1;\n\t\t\t\t\t\tpromptBarSetActive(pop, cur + 1);\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t\tif (event.key === \"ArrowUp\") {\n\t\t\t\t\t\tevent.preventDefault();\n\t\t\t\t\t\tevent.stopImmediatePropagation();\n\t\t\t\t\t\tvar cur = (typeof pop._pbActive === \"number\" && pop._pbActive >= 0) ? pop._pbActive : 0;\n\t\t\t\t\t\tpromptBarSetActive(pop, cur - 1);\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t\tif (event.key === \"Enter\" || event.key === \"Tab\") {\n\t\t\t\t\t\tevent.preventDefault();\n\t\t\t\t\t\tevent.stopImmediatePropagation();\n\t\t\t\t\t\tvar active = (typeof pop._pbActive === \"number\" && pop._pbActive >= 0) ? pop._pbActive : 0;\n\t\t\t\t\t\tif (rows[active]) promptBarAccept(pop, ta, rows[active]);\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t\tif (event.key === \"Escape\") {\n\t\t\t\t\t\tevent.preventDefault();\n\t\t\t\t\t\tevent.stopImmediatePropagation();\n\t\t\t\t\t\tpromptBarClose(pop);\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\tif (event.key !== \"Enter\") return;\n\t\t\tif (event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return;\n\t\t\tif (!(ta instanceof HTMLTextAreaElement) || !ta.hasAttribute(\"data-prompt-bar-input\")) return;\n\t\t\tvar form = ta.closest(\"form\");\n\t\t\tif (!form) return;\n\t\t\tif (form.getAttribute(\"data-prompt-bar-allow-empty\") !== \"true\" && !ta.value.trim()) {\n\t\t\t\tevent.preventDefault();\n\t\t\t\treturn;\n\t\t\t}\n\t\t\tevent.preventDefault();\n\t\t\tform.requestSubmit();\n\t\t});\n\n\t\tdocument.addEventListener(\"submit\", function (event) {\n\t\t\tvar form = event.target;\n\t\t\tif (!(form instanceof HTMLFormElement)) return;\n\t\t\tif (form.getAttribute(\"data-prompt-bar-allow-empty\") === \"true\") return;\n\t\t\tvar ta = form.querySelector(\"textarea[data-prompt-bar-input]\");\n\t\t\tif (ta && !ta.value.trim()) {\n\t\t\t\tevent.preventDefault();\n\t\t\t}\n\t\t}, true);\n\t}\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2660,7 +2668,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 159, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 160, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -2673,7 +2681,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 160, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 161, "\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -2761,7 +2769,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 161, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 162, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -2771,7 +2779,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 162, "<span class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 163, "<span class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2784,7 +2792,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 163, "\"><span class=\"text-body\">Tokens:</span> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 164, "\"><span class=\"text-body\">Tokens:</span> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2793,7 +2801,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 164, "<span class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 165, "<span class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2806,7 +2814,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 165, "\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 166, "\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2819,7 +2827,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 166, "</span> <span class=\"text-muted\">/")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 167, "</span> <span class=\"text-muted\">/")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2832,7 +2840,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 167, "</span></span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 168, "</span></span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2842,7 +2850,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 168, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 169, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -2855,7 +2863,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 169, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 170, "\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -2912,7 +2920,7 @@ func promptBarDefaultToolbar(props PromptBarProps, flagship bool) templ.Componen
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 170, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 171, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -3045,7 +3053,7 @@ func promptBarActionToolbar(actions []PromptBarActionItem, loading bool) templ.C
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 171, "<div class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 172, "<div class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -3058,7 +3066,7 @@ func promptBarActionToolbar(actions []PromptBarActionItem, loading bool) templ.C
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 172, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 173, "\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -3080,7 +3088,7 @@ func promptBarActionToolbar(actions []PromptBarActionItem, loading bool) templ.C
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 173, "<span class=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 174, "<span class=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3093,7 +3101,7 @@ func promptBarActionToolbar(actions []PromptBarActionItem, loading bool) templ.C
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 174, "\" aria-hidden=\"true\"></span> ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 175, "\" aria-hidden=\"true\"></span> ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3113,7 +3121,7 @@ func promptBarActionToolbar(actions []PromptBarActionItem, loading bool) templ.C
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 175, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 176, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -3182,7 +3190,7 @@ func PromptBarModelSelector(props PromptBarModelSelectorProps) templ.Component {
 			templ_7745c5c3_Var118 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 176, "<div class=\"w-full max-w-2xl\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 177, "<div class=\"w-full max-w-2xl\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -3194,12 +3202,12 @@ func PromptBarModelSelector(props PromptBarModelSelectorProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 177, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 178, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if props.InfoBanner != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 178, "<div class=\"card bg-primary/10 mb-0\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 179, "<div class=\"card bg-primary/10 mb-0\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3208,7 +3216,7 @@ func PromptBarModelSelector(props PromptBarModelSelectorProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 179, "<div class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 180, "<div class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3221,7 +3229,7 @@ func PromptBarModelSelector(props PromptBarModelSelectorProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 180, "\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 181, "\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3229,7 +3237,7 @@ func PromptBarModelSelector(props PromptBarModelSelectorProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 181, "<p class=\"text-primary grow text-xs\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 182, "<p class=\"text-primary grow text-xs\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3242,7 +3250,7 @@ func PromptBarModelSelector(props PromptBarModelSelectorProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 182, "</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 183, "</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3250,7 +3258,7 @@ func PromptBarModelSelector(props PromptBarModelSelectorProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 183, "</div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 184, "</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3263,7 +3271,7 @@ func PromptBarModelSelector(props PromptBarModelSelectorProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 184, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 185, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -3293,12 +3301,12 @@ func promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) templ.Comp
 			templ_7745c5c3_Var122 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 185, "<div class=\"flex items-center\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 186, "<div class=\"flex items-center\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(props.Models) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 186, "<div class=\"dropdown dropdown-start\"><div tabindex=\"0\" role=\"button\" class=\"btn btn-sm btn-ghost gap-2\" aria-label=\"Model selector\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 187, "<div class=\"dropdown dropdown-start\"><div tabindex=\"0\" role=\"button\" class=\"btn btn-sm btn-ghost gap-2\" aria-label=\"Model selector\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3306,7 +3314,7 @@ func promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) templ.Comp
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 187, "<span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 188, "<span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3319,7 +3327,7 @@ func promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) templ.Comp
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 188, "</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 189, "</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3327,12 +3335,12 @@ func promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) templ.Comp
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 189, "</div><ul tabindex=\"0\" class=\"dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 190, "</div><ul tabindex=\"0\" class=\"dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, m := range props.Models {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 190, "<li><a>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 191, "<li><a>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3342,7 +3350,7 @@ func promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) templ.Comp
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 191, "<span class=\"")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 192, "<span class=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -3355,7 +3363,7 @@ func promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) templ.Comp
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 192, "\" aria-hidden=\"true\"></span> ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 193, "\" aria-hidden=\"true\"></span> ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -3369,22 +3377,22 @@ func promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) templ.Comp
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 193, "</a></li>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 194, "</a></li>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 194, "</ul></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 195, "</ul></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 195, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 196, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if props.ShowTokenCounter && props.TokenMax > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 196, "<span class=\"text-xs\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 197, "<span class=\"text-xs\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3393,7 +3401,7 @@ func promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) templ.Comp
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 197, "<span class=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 198, "<span class=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3406,7 +3414,7 @@ func promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) templ.Comp
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 198, "\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 199, "\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3419,7 +3427,7 @@ func promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) templ.Comp
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 199, "</span> <span class=\"text-muted\">/ ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 200, "</span> <span class=\"text-muted\">/ ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3432,7 +3440,7 @@ func promptBarModelSelectorToolbar(props PromptBarModelSelectorProps) templ.Comp
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 200, " tokens</span></span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 201, " tokens</span></span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3497,7 +3505,7 @@ func PromptBarAbility(props PromptBarAbilityProps) templ.Component {
 			templ_7745c5c3_Var131 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 201, "<div class=\"w-full max-w-2xl\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 202, "<div class=\"w-full max-w-2xl\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -3509,17 +3517,17 @@ func PromptBarAbility(props PromptBarAbilityProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 202, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 203, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if props.SavedLabel != "" || props.TokensLeft > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 203, "<div class=\"bg-base-200/50 rounded-t-box flex items-center justify-between gap-2 px-3 py-2.5\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 204, "<div class=\"bg-base-200/50 rounded-t-box flex items-center justify-between gap-2 px-3 py-2.5\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if props.SavedLabel != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 204, "<p class=\"text-body text-sm\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 205, "<p class=\"text-body text-sm\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3532,13 +3540,13 @@ func PromptBarAbility(props PromptBarAbilityProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 205, "</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 206, "</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 			if props.TokensLeft > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 206, "<p class=\"text-muted text-xs font-medium ms-auto\"><span class=\"text-error\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 207, "<p class=\"text-muted text-xs font-medium ms-auto\"><span class=\"text-error\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3551,12 +3559,12 @@ func PromptBarAbility(props PromptBarAbilityProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 207, "</span> Tokens left</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 208, "</span> Tokens left</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 208, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 209, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3569,7 +3577,7 @@ func PromptBarAbility(props PromptBarAbilityProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 209, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 210, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -3599,12 +3607,12 @@ func promptBarAbilityToolbar(props PromptBarAbilityProps) templ.Component {
 			templ_7745c5c3_Var134 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 210, "<div class=\"flex items-center gap-0.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 211, "<div class=\"flex items-center gap-0.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(props.Abilities) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 211, "<div class=\"dropdown dropdown-start\"><div tabindex=\"0\" role=\"button\" class=\"btn btn-sm btn-ghost gap-2\" aria-label=\"Ability selector\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 212, "<div class=\"dropdown dropdown-start\"><div tabindex=\"0\" role=\"button\" class=\"btn btn-sm btn-ghost gap-2\" aria-label=\"Ability selector\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3612,7 +3620,7 @@ func promptBarAbilityToolbar(props PromptBarAbilityProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 212, "<span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 213, "<span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3625,7 +3633,7 @@ func promptBarAbilityToolbar(props PromptBarAbilityProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 213, "</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 214, "</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3633,12 +3641,12 @@ func promptBarAbilityToolbar(props PromptBarAbilityProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 214, "</div><ul tabindex=\"0\" class=\"dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 215, "</div><ul tabindex=\"0\" class=\"dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, a := range props.Abilities {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 215, "<li><a>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 216, "<li><a>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3648,7 +3656,7 @@ func promptBarAbilityToolbar(props PromptBarAbilityProps) templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 216, "<span class=\"")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 217, "<span class=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -3661,7 +3669,7 @@ func promptBarAbilityToolbar(props PromptBarAbilityProps) templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 217, "\" aria-hidden=\"true\"></span> ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 218, "\" aria-hidden=\"true\"></span> ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -3675,17 +3683,17 @@ func promptBarAbilityToolbar(props PromptBarAbilityProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 218, "</a></li>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 219, "</a></li>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 219, "</ul></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 220, "</ul></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 220, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 221, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

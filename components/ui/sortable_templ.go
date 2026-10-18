@@ -282,7 +282,15 @@ func sortableScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<script>\n\t(function () {\n\t  window.initSortable = function(el) {\n\t    if (typeof Sortable === 'undefined') {\n\t      var s = document.createElement('script');\n\t      s.src = 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js';\n\t      s.onload = function() { initSortableElement(el); };\n\t      document.head.appendChild(s);\n\t    } else {\n\t      initSortableElement(el);\n\t    }\n\t  };\n\n\t  function initSortableElement(el) {\n\t    if (el._sortable) return;\n\t    try {\n\t      el._sortable = new Sortable(el, {\n\t        animation: parseInt(el.dataset.animation) || 150,\n\t        handle: el.dataset.handle || undefined,\n\t        direction: el.dataset.direction || undefined,\n\t      });\n\t    } catch(e) { console.warn('Sortable init failed:', e); }\n\t  }\n\n\t  gdBehaviour('sortableInit', function () {\n\t    document.addEventListener('DOMContentLoaded', function() {\n\t      document.querySelectorAll('[data-sortable]').forEach(initSortableElement);\n\t    });\n\t  }, function () {\n\t    document.querySelectorAll('[data-sortable]:not(._sortable-initialized)').forEach(function(el) {\n\t      el.classList.add('_sortable-initialized');\n\t      initSortableElement(el);\n\t    });\n\t  });\n\t})();\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<script")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, nonceAttrs(ctx))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, ">\n\t(function () {\n\t  window.initSortable = function(el) {\n\t    if (typeof Sortable === 'undefined') {\n\t      var s = document.createElement('script');\n\t      s.src = 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js';\n\t      s.onload = function() { initSortableElement(el); };\n\t      document.head.appendChild(s);\n\t    } else {\n\t      initSortableElement(el);\n\t    }\n\t  };\n\n\t  function initSortableElement(el) {\n\t    if (el._sortable) return;\n\t    try {\n\t      el._sortable = new Sortable(el, {\n\t        animation: parseInt(el.dataset.animation) || 150,\n\t        handle: el.dataset.handle || undefined,\n\t        direction: el.dataset.direction || undefined,\n\t      });\n\t    } catch(e) { console.warn('Sortable init failed:', e); }\n\t  }\n\n\t  gdBehaviour('sortableInit', function () {\n\t    document.addEventListener('DOMContentLoaded', function() {\n\t      document.querySelectorAll('[data-sortable]').forEach(initSortableElement);\n\t    });\n\t  }, function () {\n\t    document.querySelectorAll('[data-sortable]:not(._sortable-initialized)').forEach(function(el) {\n\t      el.classList.add('_sortable-initialized');\n\t      initSortableElement(el);\n\t    });\n\t  });\n\t})();\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

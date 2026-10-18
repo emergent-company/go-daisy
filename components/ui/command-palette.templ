@@ -127,7 +127,7 @@ templ paletteGroup(paletteID, group string, items []CommandPaletteItem) {
 
 templ commandPaletteTrigger() {
 	@commandPaletteTriggerOnce.Once() {
-		<script>
+		<script { nonceAttrs(ctx)... }>
 	gdOnce('paletteTriggerInit', function () {
 
 	  // Templ does not interpolate Go expressions inside <script>, so palette
@@ -161,7 +161,7 @@ templ commandPaletteTrigger() {
 
 templ commandPaletteScript() {
 	@commandPaletteScriptOnce.Once() {
-		<script>
+		<script { nonceAttrs(ctx)... }>
 	gdOnce('paletteFilterInit', function () {
 
 	  window.filterPaletteItems = function(input) {

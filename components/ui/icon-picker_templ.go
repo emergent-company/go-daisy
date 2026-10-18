@@ -813,7 +813,7 @@ func IconPickerScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templ.Raw(staticfs.Script("/js/go-daisy-icon-picker.js")).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = templ.Raw(staticfs.ScriptNonce("/js/go-daisy-icon-picker.js", templ.GetNonce(ctx))).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

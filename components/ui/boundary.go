@@ -1383,3 +1383,62 @@ func SoftBoxWithBoundary(props SoftBoxProps, children templ.Component) templ.Com
 		"class":   props.Class,
 	})
 }
+
+// ScrollAreaWithBoundary wraps ScrollArea with a dev-mode component boundary annotation.
+func ScrollAreaWithBoundary(props ScrollAreaProps, children templ.Component) templ.Component {
+	inner := shared.RenderInto(ScrollArea(props), children)
+	return devmode.ComponentBoundary("ScrollArea", inner, map[string]any{
+		"orientation": props.Orientation,
+		"maxHeight":   props.MaxHeight,
+		"class":       props.Class,
+	})
+}
+
+// DirectionWithBoundary wraps Direction with a dev-mode component boundary annotation.
+func DirectionWithBoundary(props DirectionProps, children templ.Component) templ.Component {
+	inner := shared.RenderInto(Direction(props), children)
+	return devmode.ComponentBoundary("Direction", inner, map[string]any{
+		"dir":   props.DirValue(),
+		"class": props.Class,
+	})
+}
+
+// ContextMenuWithBoundary wraps ContextMenu with a dev-mode component boundary annotation.
+//
+// No gallery:token annotation: the boundary takes a struct, so boundarytoken
+// maps nothing — the gallery seed writes its controls by hand.
+func ContextMenuWithBoundary(props ContextMenuProps, children templ.Component) templ.Component {
+	inner := shared.RenderInto(ContextMenu(props), children)
+	return devmode.ComponentBoundary("ContextMenu", inner, map[string]any{
+		"id":    props.ID,
+		"items": len(props.Items),
+	})
+}
+
+// ResizableWithBoundary wraps Resizable with a dev-mode component boundary annotation.
+//
+// No gallery:token annotation: the boundary takes a struct, so boundarytoken
+// maps nothing — the gallery seed writes its controls by hand.
+func ResizableWithBoundary(props ResizableProps) templ.Component {
+	return devmode.ComponentBoundary("Resizable", Resizable(props), map[string]any{
+		"id":          props.ID,
+		"orientation": props.Orientation,
+		"initial":     props.Initial,
+		"min":         props.Min,
+		"max":         props.Max,
+		"persist":     props.PersistKey,
+	})
+}
+
+// AttachmentWithBoundary wraps Attachment with a dev-mode component boundary annotation.
+// gallery:token name,size,kind
+// gallery:hint name:default(report.pdf)
+// gallery:hint size:default(1.2 MB)
+func AttachmentWithBoundary(name string, size string, kind string) templ.Component {
+	props := AttachmentProps{Name: name, Size: size, Kind: kind}
+	return devmode.ComponentBoundary("Attachment", Attachment(props), map[string]any{
+		"name": name,
+		"size": size,
+		"kind": kind,
+	})
+}
