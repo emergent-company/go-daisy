@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"html"
 	"io"
 
 	"github.com/a-h/templ"
+
+	"github.com/emergent-company/go-daisy/shared"
 )
 
 // ComponentSlugs maps component data-component names to their gallery page slugs.
@@ -151,11 +152,8 @@ func ComponentSlugsJSON() string {
 // render-context CSP nonce when one is set.
 func ComponentSlugsScript() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
-		nonce := ""
-		if n := templ.GetNonce(ctx); n != "" {
-			nonce = ` nonce="` + html.EscapeString(n) + `"`
-		}
-		_, err := fmt.Fprintf(w, "<script%s>var COMPONENT_SLUGS=%s;</script>", nonce, ComponentSlugsJSON())
+		_, err := fmt.Fprintf(w, "<script%s>var COMPONENT_SLUGS=%s;</script>",
+			shared.NonceAttr(templ.GetNonce(ctx)), ComponentSlugsJSON())
 		return err
 	})
 }

@@ -24,6 +24,8 @@ import (
 	"path"
 	"sort"
 	"strings"
+
+	"github.com/emergent-company/go-daisy/shared"
 )
 
 //go:embed all:static
@@ -113,22 +115,14 @@ func ScriptNonce(p, nonce string) string {
 		}
 	}
 	return fmt.Sprintf(`<script src="/static%s?v=%s" data-asset-track="reload"%s></script>`,
-		html.EscapeString(resolved), staticFilesHash[:12], nonceAttr(nonce))
+		html.EscapeString(resolved), staticFilesHash[:12], shared.NonceAttr(nonce))
 }
 
 // InlineScript returns an inline <script> block, with a nonce attribute when
 // nonce is non-empty. Use it to emit component scripts under a strict CSP
 // instead of hand-writing a <script> tag.
 func InlineScript(nonce, js string) string {
-	return fmt.Sprintf(`<script%s>%s</script>`, nonceAttr(nonce), js)
-}
-
-// nonceAttr renders the nonce attribute fragment, or "" when unset.
-func nonceAttr(nonce string) string {
-	if nonce == "" {
-		return ""
-	}
-	return fmt.Sprintf(` nonce="%s"`, html.EscapeString(nonce))
+	return fmt.Sprintf(`<script%s>%s</script>`, shared.NonceAttr(nonce), js)
 }
 
 // AssetPath returns the full URL path for a static file with cache-busting hash.
