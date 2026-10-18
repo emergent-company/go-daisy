@@ -96,7 +96,7 @@ func paletteItemDataAttrs(item CommandPaletteItem) templ.Attributes {
 templ paletteGroup(paletteID, group string, items []CommandPaletteItem) {
 	<div data-palette-group={ group }>
 		if group != "" {
-			<p class="eyebrow px-3 pt-3 pb-1.5">{ group }</p>
+			<p class="eyebrow text-xs px-3 pt-3 pb-1.5">{ group }</p>
 		}
 		for _, item := range items {
 			if item.Group == group || (group == "" && item.Group == "") {

@@ -4,7 +4,8 @@ var themeSwitcherScriptOnce = templ.NewOnceHandle()
 
 // ThemeSwitcher renders a dropdown with two independent axes:
 //
-//   - Mode: Light / Dark / System (localStorage key "gallery-ui-theme").
+//   - Mode: Light / Dark / System / Custom (localStorage key "gallery-ui-theme").
+//     Custom is offered only while a theme-studio theme exists.
 //   - Palette: a compact swatch row (localStorage key "gallery-ui-palette").
 //
 // The active daisyUI theme is resolved as palette x mode. The persisted
@@ -14,7 +15,7 @@ var themeSwitcherScriptOnce = templ.NewOnceHandle()
 // preview sync (via contentDocument).
 //
 // Storage keys:
-//   - gallery-ui-theme     : 'light' | 'dark' | 'system'
+//   - gallery-ui-theme     : 'light' | 'dark' | 'system' | 'custom'
 //   - gallery-ui-palette   : 'default' | 'flow' | 'ember' | 'slate'
 //   - gallery-preview-theme: effective 'light' | 'dark' (kept for iframe harness)
 templ ThemeSwitcher() {
@@ -23,11 +24,13 @@ templ ThemeSwitcher() {
 			<span id="theme-icon-light" class="iconify lucide--sun size-4.5" aria-hidden="true"></span>
 			<span id="theme-icon-dark" class="iconify lucide--moon size-4.5" style="display:none" aria-hidden="true"></span>
 			<span id="theme-icon-system" class="iconify lucide--monitor-dot size-4.5" style="display:none" aria-hidden="true"></span>
+			<span id="theme-icon-custom" class="iconify lucide--palette size-4.5" style="display:none" aria-hidden="true"></span>
 		</label>
 		<ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-50 w-48 p-2 shadow-sm" data-testid="theme-dropdown">
 			<li><button data-theme-option="light" class="flex items-center gap-2 w-full text-left"><span class="iconify lucide--sun size-4"></span>Light<span id="check-light" class="iconify lucide--check size-4 ms-auto" style="display:none"></span></button></li>
 			<li><button data-theme-option="dark" class="flex items-center gap-2 w-full text-left"><span class="iconify lucide--moon size-4"></span>Dark<span id="check-dark" class="iconify lucide--check size-4 ms-auto" style="display:none"></span></button></li>
 			<li><button data-theme-option="system" class="flex items-center gap-2 w-full text-left"><span class="iconify lucide--monitor-dot size-4"></span>System<span id="check-system" class="iconify lucide--check size-4 ms-auto" style="display:none"></span></button></li>
+			<li id="theme-option-custom" style="display:none"><button data-theme-option="custom" class="flex items-center gap-2 w-full text-left"><span class="iconify lucide--palette size-4"></span>Custom<span id="check-custom" class="iconify lucide--check size-4 ms-auto" style="display:none"></span></button></li>
 			<li class="menu-title mt-1"><span class="opacity-60">Palette</span></li>
 			<li>
 				<div class="flex flex-wrap items-center gap-1.5 p-1">
@@ -48,7 +51,7 @@ templ ThemeSwitcher() {
 			var rt = window.__goDaisyTheme;
 			var PALETTES = rt.palettes;
 			var DEFAULT_PALETTE = rt.defaultPalette;
-			var MODES = ['light', 'dark', 'system'];
+			var MODES = ['light', 'dark', 'system', 'custom'];
 
 			// A user-generated theme (gallery theme studio) lives in localStorage
 			// and is injected as a scoped [data-theme="custom"] rule by the shell
@@ -61,6 +64,18 @@ templ ThemeSwitcher() {
 					return !!(t && t.vars && Object.keys(t.vars).length);
 				} catch(e) { return false; }
 			}
+			// The Custom entry only exists once the theme studio has produced a
+			// theme; until then the mode is not offered (and never persisted).
+			function syncCustomVisibility() {
+				var has = hasCustomTheme();
+				var item = document.getElementById('theme-option-custom');
+				if (item) item.style.display = has ? '' : 'none';
+				if (!has) {
+					var icon = document.getElementById('theme-icon-custom');
+					if (icon) icon.style.display = 'none';
+				}
+			}
+
 			var STORAGE_KEY = 'gallery-ui-theme';
 			var PALETTE_KEY = 'gallery-ui-palette';
 			var PREVIEW_KEY = 'gallery-preview-theme';
@@ -80,6 +95,32 @@ templ ThemeSwitcher() {
 			function resolveTheme(mode, palette) {
 				if (mode === 'custom' && hasCustomTheme()) return 'custom';
 				return rt.resolve(mode, palette);
+			}
+
+			// Re-inject the scoped custom-theme rule from storage. The shell boot
+			// script writes it once; this keeps a second tab's edit (storage
+			// event) visible without a reload.
+			function refreshCustomStyle() {
+				try {
+					var old = document.getElementById('gallery-custom-theme');
+					if (old) old.remove();
+					var raw = localStorage.getItem('gallery-custom-theme');
+					if (!raw) return;
+					var t = JSON.parse(raw);
+					if (!t || !t.vars || !Object.keys(t.vars).length) return;
+					var css = '[data-theme="custom"]{color-scheme:' + (t.scheme || 'light') + ';';
+					for (var k in t.vars) {
+						if (!Object.prototype.hasOwnProperty.call(t.vars, k)) continue;
+						if (!/^--[a-z0-9-]+$/i.test(k)) continue;
+						var v = String(t.vars[k] == null ? '' : t.vars[k]).replace(/[;{}<>]/g, '').trim();
+						if (v) css += k + ':' + v + ';';
+					}
+					css += '}';
+					var style = document.createElement('style');
+					style.id = 'gallery-custom-theme';
+					style.textContent = css;
+					document.head.appendChild(style);
+				} catch (e) {}
 			}
 
 			function resolvePreviewMode(mode) {
@@ -111,6 +152,9 @@ templ ThemeSwitcher() {
 				_applying = true;
 				try {
 					if (!isMode(mode)) { mode = 'system'; }
+					// A custom selection without a stored theme has no rule to
+					// apply; fall back instead of leaving the page unthemed.
+					if (mode === 'custom' && !hasCustomTheme()) { mode = 'system'; }
 					if (!isPalette(palette)) { palette = DEFAULT_PALETTE; }
 
 					var themeAttr = resolveTheme(mode, palette);
@@ -149,6 +193,18 @@ templ ThemeSwitcher() {
 			var initMode = (head && isMode(head.mode)) ? head.mode : (readMode() || 'system');
 			var initPalette = (head && isPalette(head.palette)) ? head.palette : (readPalette() || DEFAULT_PALETTE);
 			applyTheme(initMode, initPalette);
+
+			syncCustomVisibility();
+
+			window.addEventListener('storage', function(e) {
+				if (e.key === 'gallery-custom-theme') {
+					refreshCustomStyle();
+					syncCustomVisibility();
+					if (current.mode === 'custom') {
+						applyTheme(hasCustomTheme() ? 'custom' : 'system', current.palette);
+					}
+				}
+			});
 
 			var mq = window.matchMedia('(prefers-color-scheme: dark)');
 			mq.addEventListener('change', function() {

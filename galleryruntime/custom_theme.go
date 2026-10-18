@@ -1,6 +1,9 @@
 package galleryruntime
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"sort"
+)
 
 // CustomThemeStorageKey is the localStorage key holding the user-generated
 // theme. The value is a JSON CustomTheme. The gallery theme studio writes it;
@@ -33,8 +36,14 @@ func (t CustomTheme) CSS(selector string) string {
 		scheme = "light"
 	}
 	out := selector + "{color-scheme:" + scheme + ";"
-	for k, v := range t.Vars {
-		out += k + ":" + v + ";"
+	// Map iteration order is random; sort so the emitted rule is stable.
+	keys := make([]string, 0, len(t.Vars))
+	for k := range t.Vars {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		out += k + ":" + t.Vars[k] + ";"
 	}
 	return out + "}"
 }

@@ -72,7 +72,7 @@ templ ThemeStudio() {
 							</div>
 							<div class="mt-4 grid gap-3 sm:grid-cols-2">
 								<div class="rounded-box border border-base-300 bg-base-200 p-3">
-									<p class="eyebrow">Base 200</p>
+									<p class="eyebrow text-xs">Base 200</p>
 									<p class="mt-1 text-sm text-body">Body copy on the secondary surface.</p>
 									<p class="text-xs text-faint">Faint metadata · 2 min ago</p>
 								</div>
@@ -103,7 +103,7 @@ templ ThemeStudio() {
 						</div>
 						<template x-for="group in colorGroups" x-bind:key="group.label">
 							<div>
-								<p class="eyebrow mb-2" x-text="group.label"></p>
+								<p class="eyebrow text-xs mb-2" x-text="group.label"></p>
 								<div class="grid gap-2 md:grid-cols-2">
 									<template x-for="key in group.keys" x-bind:key="key">
 										<label class="flex flex-col gap-1">

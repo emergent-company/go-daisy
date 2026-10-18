@@ -335,8 +335,12 @@ Never write `text-base-content/<opacity>` with opacity ≥ 40. Use the semantic
 tokens from `components/css/tokens.css`: `text-body` (80), `text-label` (70),
 `text-muted` (60), `text-subtle` (50), `text-faint` (40). Raw `/20` and `/30`
 are reserved for decorative icons. Uppercase kickers use `.eyebrow` or
-`ui.Eyebrow`. Common flex shapes use `ui.Row`, `ui.RowLoose`, `ui.RowTight`,
-`ui.RowBetween`, `ui.ColStack`, `ui.ColStackLoose`.
+`ui.Eyebrow`; `.eyebrow` sets weight/tracking/case/colour but **no font-size**,
+so pair it with `text-xs` (or the size you want) — `ui.Eyebrow` inherits its
+size unless `Size` is set. Interface labels (`.menu-label`) stay on
+`text-label` (70%), not the kicker tone. Common flex shapes use `ui.Row`,
+`ui.RowLoose`, `ui.RowTight`, `ui.RowBetween`, `ui.ColStack`,
+`ui.ColStackLoose`.
 `components/css/tokens_test.go` enforces the tone rule.
 
 ### Conditional HTMX pattern

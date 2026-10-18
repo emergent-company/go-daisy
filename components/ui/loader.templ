@@ -28,7 +28,7 @@ templ HTMXIndicator(id string) {
 
 // SectionHeader renders a section label with a DaisyUI divider.
 templ SectionHeader(title string) {
-	<div class="divider divider-start eyebrow my-2" { devmode.Attrs(ctx, "ui/SectionHeader")... }>{ title }</div>
+	<div class="divider divider-start eyebrow text-xs my-2" { devmode.Attrs(ctx, "ui/SectionHeader")... }>{ title }</div>
 }
 
 // NoPermissions renders a permission-denied placeholder.

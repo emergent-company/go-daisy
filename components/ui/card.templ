@@ -236,7 +236,7 @@ templ StatCardMinimal(item StatCardMinimalItem) {
 		</div>
 	} else {
 		@CardRaw(CardRawProps{Attrs: item.Attrs}) {
-			<p class="eyebrow">{ item.Label }</p>
+			<p class="eyebrow text-xs">{ item.Label }</p>
 			<div class="mt-4 flex items-end justify-between gap-2 text-sm">
 				<p class="text-2xl/none font-semibold">{ item.Value }</p>
 			if item.TrendLabel != "" {

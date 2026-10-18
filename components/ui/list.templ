@@ -52,7 +52,7 @@ type ListProps struct {
 templ List(p ListProps) {
 	<ul class="list bg-base-100 rounded-box edge-line" { devmode.Attrs(ctx, "ui/List")... } { p.Attrs... }>
 		if p.Header != "" {
-			<li class="eyebrow p-4 pb-2">{ p.Header }</li>
+			<li class="eyebrow text-xs p-4 pb-2">{ p.Header }</li>
 		}
 		{ children... }
 	</ul>
