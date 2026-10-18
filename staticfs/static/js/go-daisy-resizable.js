@@ -28,7 +28,9 @@
   }
 
   function splitOf(root) {
-    var value = parseFloat(getComputedStyle(root).getPropertyValue('--gd-split'));
+    var raw = window.getComputedStyle(root).getPropertyValue('--gd-split');
+    if (!raw) raw = root.style.getPropertyValue('--gd-split');
+    var value = parseFloat(raw);
     return isNaN(value) ? 50 : value;
   }
 
@@ -128,9 +130,8 @@
 
   document.addEventListener('htmx:after:settle', rescan);
   document.addEventListener('htmx:afterSettle', rescan);
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', rescan);
-  } else {
-    rescan();
-  }
+  document.addEventListener('DOMContentLoaded', rescan);
+  // Wire immediately as well: component scripts can load after
+  // DOMContentLoaded (htmx swaps, deferred chunks).
+  rescan();
 })();

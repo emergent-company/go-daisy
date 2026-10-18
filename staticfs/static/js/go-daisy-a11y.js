@@ -189,6 +189,10 @@
 
   function close(root, restoreFocus) {
     var trigger = triggerOf(root);
+    // daisyUI opens on :focus-within, so restoring focus to the trigger would
+    // immediately re-open the menu. The attribute suppresses that one case and
+    // is cleared as soon as the user interacts again.
+    root.setAttribute('data-gd-menu-closed', '');
     setExpanded(root, false);
     var active = document.activeElement;
     if (active && root.contains(active)) active.blur();
@@ -199,6 +203,7 @@
 
   function open(root, toFirst) {
     var trigger = triggerOf(root);
+    root.removeAttribute('data-gd-menu-closed');
     if (trigger) {
       try { trigger.focus(); } catch (e) {}
     }
@@ -242,6 +247,10 @@
       }
     });
 
+    trigger.addEventListener('pointerdown', function () {
+      root.removeAttribute('data-gd-menu-closed');
+    });
+
     trigger.addEventListener('click', function () {
       // The trigger owns focus on click; reflect it in aria-expanded.
       window.setTimeout(function () { setExpanded(root, isOpen()); }, 0);
@@ -282,8 +291,24 @@
       if (!root.contains(e.target)) close(root, false);
     });
 
-    // Reflect the CSS-driven open state (DaisyUI opens on :focus-within).
-    root.addEventListener('focusin', function () { setExpanded(root, true); });
+    // Reflect the CSS-driven open state (DaisyUI opens on :focus-within), but
+    // never while the explicit closed marker is set — that is what makes
+    // Escape-then-restore-focus actually stay closed.
+    root.addEventListener('focusin', function () {
+      if (!root.hasAttribute('data-gd-menu-closed')) setExpanded(root, true);
+    });
+
+    root.addEventListener('focusout', function (event) {
+      var next = event.relatedTarget;
+      if (!next || !root.contains(next)) {
+        window.setTimeout(function () {
+          if (!root.contains(document.activeElement)) {
+            root.removeAttribute('data-gd-menu-closed');
+            setExpanded(root, false);
+          }
+        }, 0);
+      }
+    });
   }
 
   var gdMenu = window.gdMenu || {
@@ -303,10 +328,9 @@
     window.__gdMenuBound = true;
     document.addEventListener('htmx:after:settle', gdMenu.rescan);
     document.addEventListener('htmx:afterSettle', gdMenu.rescan);
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', gdMenu.rescan);
-    } else {
-      gdMenu.rescan();
-    }
+    document.addEventListener('DOMContentLoaded', gdMenu.rescan);
+    // Also wire immediately: a component script injected after DOMContentLoaded
+    // (partial swap, lazy chunk) would otherwise never see its rescan run.
+    gdMenu.rescan();
   }
 })();

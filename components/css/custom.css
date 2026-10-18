@@ -542,3 +542,17 @@ html[data-gd-resizing="row"] {
 html[data-gd-resizing] iframe {
   pointer-events: none;
 }
+
+/* ── Menu closed state ─────────────────────────────────────────────────────
+ *
+ * daisyUI shows `.dropdown-content` whenever the root has :focus-within. When
+ * go-daisy-a11y.js closes a menu with Escape it restores focus to the trigger
+ * (the accessible behaviour), which would re-open the CSS-only dropdown. The
+ * runtime stamps `data-gd-menu-closed` for exactly that case and removes it on
+ * the next trigger interaction.
+ */
+.dropdown[data-gd-menu-closed]:focus-within > .dropdown-content {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
