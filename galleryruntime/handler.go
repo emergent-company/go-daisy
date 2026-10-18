@@ -38,6 +38,11 @@ func newGalleryHandler(title string, logo templ.Component, components []GalleryC
 
 // register mounts all gallery routes on the Echo instance.
 func (h *galleryHandler) register(e *echo.Echo) {
+	// Production contract routes — registered for every gallery, no auth.
+	e.GET("/healthz", h.handleHealthz)
+	e.GET("/version", h.handleVersion)
+	e.GET("/api/components", h.handleComponents)
+
 	e.GET("/gallery", h.handleIndex)
 	e.GET("/gallery/docs", h.handleDocs)
 	e.GET("/gallery/docs/:slug.md", h.handleComponentMarkdown)

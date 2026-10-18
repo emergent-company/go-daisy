@@ -1,0 +1,79 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  go:
+    name: Go checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - name: Install templ
+        run: go install github.com/a-h/templ/cmd/templ@v0.3.1020
+
+      - name: Generate templ
+        run: templ generate ./...
+
+      - name: Fail if templ generate changed files
+        run: |
+          if ! git diff --exit-code -- . >/dev/null 2>&1; then
+            git diff -- .
+            echo "::error::templ generate produced uncommitted changes; commit the generated *_templ.go files"
+            exit 1
+          fi
+          if [ -n "$(git status --porcelain)" ]; then
+            git status --porcelain
+            echo "::error::templ generate produced untracked files"
+            exit 1
+          fi
+
+      - name: Build
+        run: go build ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test ./...
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: v2.13.2
+
+  css:
+    name: CSS check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile Tailwind CSS
+        run: ./node_modules/.bin/tailwindcss -i ./assets/app.css -o ./staticfs/static/css/app.css --minify
+
+      - name: Fail if CSS changed
+        run: |
+          if ! git diff --exit-code -- staticfs/static/css/app.css >/dev/null 2>&1; then
+            git diff -- staticfs/static/css/app.css
+            echo "::error::Tailwind build changed staticfs/static/css/app.css; commit the compiled CSS"
+            exit 1
+          fi

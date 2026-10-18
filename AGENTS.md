@@ -444,6 +444,31 @@ The gallery server publishes a machine-readable surface generated entirely from 
 
 Both are implemented in `galleryruntime/markdown.go` and must stay **deterministic** for a fixed registry (stable category and component ordering) so agents can diff them. Note the Echo route quirk: `/gallery/docs/:slug.md` names its param literally `slug.md`, so the handler reads `c.Param("slug.md")` and trims the extension. Design tokens render as a `Parameter` column showing `CSSVar` or `?QueryParam` (registry tokens are usually query-param-driven, not CSS-variable-driven).
 
+### Production endpoints (gallery contract)
+
+Every gallery server (registered in `galleryruntime/handler.go` `register`) also
+exposes three unauthenticated JSON routes for deployment health checks and the
+panel/MCP (see `specs/contracts.md` in the infra repo):
+
+| Route | Response |
+|---|---|
+| `GET /healthz` | `200 {"status":"ok"}` — no auth, no dependencies |
+| `GET /version` | `200 {"version":<Version>,"commit":<Commit>}` — build-injected |
+| `GET /api/components` | `200 {"count":N,"components":[ComponentSummary…]}` |
+
+`ComponentSummary` (`galleryruntime/api.go`) carries `slug`, `name`, `category`,
+`subcategory`, `description`, `hide_preview`, `variants` (names), `variant_count`,
+and `token_count`; it contains no rendered HTML or function values and marshals
+deterministically in registry order. Variant names/count come from
+`EffectiveVariants()`; `token_count` is `len(Tokens)` plus the sum of each
+story's `Tokens`.
+
+`galleryruntime.Version` (default `"dev"`) and `galleryruntime.Commit` (default
+`""`) are package vars injected at build time via
+`-ldflags "-X github.com/emergent-company/go-daisy/galleryruntime.Version=$VERSION -X …Commit=$COMMIT"`.
+`cmd/gallery` reads `GALLERY_DEV_MODE` (default `true`), `GALLERY_TITLE`
+(default `"go-daisy"`), and `GALLERY_PORT`, and logs version/commit at startup.
+
 ### Variant dispatch pattern
 
 Multi-variant components use a `switch` on a `Style` string to render different hardcoded layouts. Each case calls a dedicated sub-component.
