@@ -21,8 +21,7 @@ test.describe('Theme studio', () => {
     const picker = page.locator('input[aria-label="Pick primary color"]');
     await expect(picker).toBeAttached();
 
-    const row = page.locator('label', { has: picker });
-    const text = row.locator('input[type="text"]');
+    const text = page.locator('input[aria-label="primary value"]');
     const before = await text.inputValue();
     expect(before).toMatch(/^oklch\(/);
 
@@ -44,6 +43,19 @@ test.describe('Theme studio', () => {
       input.dispatchEvent(new Event('input', { bubbles: true }));
     });
     await expect(text).toHaveValue('#00FF00');
+  });
+
+  test('one preview board showcases components and typography', async ({ page }) => {
+    await bootStudio(page);
+
+    const preview = page.locator('#studio-preview');
+    await expect(preview).toHaveCount(1);
+    await expect(preview.locator('table')).toBeVisible();
+    await expect(preview.locator('input[type="range"]')).toBeVisible();
+    await expect(preview.locator('.alert')).toHaveCount(4);
+    await expect(preview.locator('[role="tablist"]')).toBeVisible();
+    await expect(preview.locator('h1')).toHaveCount(1);
+    await expect(preview.getByText('Data display')).toBeVisible();
   });
 
   test('typography roles drive the preview and survive Apply to gallery', async ({ page }) => {
