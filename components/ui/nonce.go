@@ -19,4 +19,3 @@ func ThemeRuntimeTag(ctx context.Context) string {
 	}
 	return "<script>" + js + "</script>"
 }
-

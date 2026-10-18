@@ -1,6 +1,7 @@
 package staticfs
 
 import (
+	"strings"
 	"testing"
 	"testing/fstest"
 )
@@ -42,5 +43,41 @@ func TestComputeHashGolden(t *testing.T) {
 	if got != want {
 		t.Fatalf("computeHash format changed:\n  got:  %s\n  want: %s\nif this is intentional, keep the //go:generate pipeline in staticfs.go in sync",
 			got, want)
+	}
+}
+
+// TestScriptNonce locks the CSP tag contract: without a nonce the output must
+// stay byte-identical to the pre-CSP Script(), and with one the attribute is
+// present and escaped.
+func TestScriptNonce(t *testing.T) {
+	plain := Script("/js/htmx.js")
+	if strings.Contains(plain, "nonce=") {
+		t.Errorf("empty nonce should render no attribute: %s", plain)
+	}
+	if got := ScriptNonce("/js/htmx.js", ""); got != plain {
+		t.Errorf("ScriptNonce with empty nonce diverged from Script:\n%s\n%s", got, plain)
+	}
+
+	nonced := ScriptNonce("/js/htmx.js", "abc123")
+	if !strings.Contains(nonced, `nonce="abc123"`) {
+		t.Errorf("nonce attribute missing: %s", nonced)
+	}
+	if !strings.Contains(nonced, "/static/js/htmx.js?v=") {
+		t.Errorf("resolved asset path lost: %s", nonced)
+	}
+
+	escaped := ScriptNonce("/js/htmx.js", `a"b<c`)
+	if !strings.Contains(escaped, `nonce="a&#34;b&lt;c"`) {
+		t.Errorf("nonce was not escaped: %s", escaped)
+	}
+}
+
+// TestInlineScriptNonce covers the helper used for hand-built inline blocks.
+func TestInlineScriptNonce(t *testing.T) {
+	if got := InlineScript("", "var x = 1;"); got != `<script>var x = 1;</script>` {
+		t.Errorf("no-nonce inline script = %s", got)
+	}
+	if got := InlineScript("n1", "var x = 1;"); got != `<script nonce="n1">var x = 1;</script>` {
+		t.Errorf("nonced inline script = %s", got)
 	}
 }

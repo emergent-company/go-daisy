@@ -41,18 +41,14 @@ templ ResizableScript() {
 }
 
 // splitPercent normalises a "NN%" value to its number, defaulting when the
-// value is missing or malformed.
+// value is missing, malformed, or outside 0-100.
 func splitPercent(value string, fallback int) string {
 	v := strings.TrimSuffix(strings.TrimSpace(value), "%")
-	if v == "" {
+	f, err := strconv.ParseFloat(v, 64)
+	if err != nil || f < 0 || f > 100 {
 		return strconv.Itoa(fallback)
 	}
-	for _, r := range v {
-		if (r < '0' || r > '9') && r != '.' {
-			return strconv.Itoa(fallback)
-		}
-	}
-	return v
+	return strconv.FormatFloat(f, 'f', -1, 64)
 }
 
 // Resizable renders a two-pane split view. The divider is draggable with the

@@ -377,7 +377,7 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 
 		// ── Data Display / Skeleton Loaders ────────────────────────────────────
 		{
-			Slug:        "skeleton",
+			Slug:        "skeleton-loaders",
 			Name:        "Skeleton Loaders",
 			Category:    galleryruntime.CategoryFeedback,
 			Subcategory: "Loading",

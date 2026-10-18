@@ -1698,3 +1698,30 @@ func CommandPaletteButtonTokens() []galleryruntime.DesignToken {
 		},
 	}
 }
+
+// AttachmentTokens returns the DesignToken slice for AttachmentWithBoundary.
+func AttachmentTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Name",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "report.pdf",
+			QueryParam: "name",
+		},
+		{
+			Label:      "Size",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "1.2 MB",
+			QueryParam: "size",
+		},
+		{
+			Label:      "Kind",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "kind",
+		},
+	}
+}
