@@ -997,6 +997,61 @@ func JoinTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// ButtonGroupTokens returns the DesignToken slice for ButtonGroupWithBoundary.
+func ButtonGroupTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Orientation",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "",
+			QueryParam: "orientation",
+			Options: []galleryruntime.TokenOption{
+				{Value: "", Label: "Horizontal"},
+				{Value: "vertical", Label: "Vertical"},
+			},
+		},
+	}
+}
+
+// MarkerTokens returns the DesignToken slice for MarkerWithBoundary.
+func MarkerTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Variant",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "",
+			QueryParam: "variant",
+			Options: []galleryruntime.TokenOption{
+				{Value: "border", Label: "Border"},
+				{Value: "", Label: "Default"},
+				{Value: "separator", Label: "Separator"},
+			},
+		},
+		{
+			Label:      "Href",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "#",
+			QueryParam: "href",
+		},
+	}
+}
+
+// MarkerIconTokens returns the DesignToken slice for MarkerIconWithBoundary.
+func MarkerIconTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Name",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "name",
+		},
+	}
+}
+
 // DiffTokens returns the DesignToken slice for DiffWithBoundary.
 func DiffTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{

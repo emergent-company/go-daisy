@@ -6709,39 +6709,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 
-		// ── Forms / Label ─────────────────────────────────────────────────────────
-		{
-			Slug:        "label",
-			Name:        "Label",
-			Category:    galleryruntime.CategoryForms,
-			Subcategory: "Layout",
-			Description: "DaisyUI label wrapper with primary text and optional alt/hint text slots.",
-			Variants: []galleryruntime.GalleryStory{
-				{
-					Name:        "Examples",
-					Description: "Label with top text, alt text and bottom hint row.",
-					Templ: rawHTML(`<div class="p-6 flex flex-col gap-6 max-w-sm">
-						<div class="flex flex-col">
-							<div class="label">
-								<span class="label-text">Email address</span>
-								<span class="label-text-alt">Required</span>
-							</div>
-							<input type="email" class="input w-full" placeholder="you@example.com"/>
-							<div class="label">
-								<span class="label-text-alt">We'll never share your email.</span>
-							</div>
-						</div>
-						<div class="flex flex-col">
-							<div class="label">
-								<span class="label-text">Username</span>
-							</div>
-							<input type="text" class="input w-full" placeholder="johndoe"/>
-						</div>
-					</div>`),
-				},
-			},
-		},
-
 		// ── Forms / Validator ─────────────────────────────────────────────────────
 		{
 			Slug:        "validator",

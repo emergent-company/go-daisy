@@ -286,3 +286,73 @@ func TestDocumentDirectionScriptInterpolatesDir(t *testing.T) {
 		t.Errorf("empty nonce must be omitted, got:\n%s", got)
 	}
 }
+
+func TestButtonGroupContract(t *testing.T) {
+	horizontal := renderUI(t, shared.RenderInto(ButtonGroup(ButtonGroupProps{}), uiStr("x")))
+	for _, want := range []string{`role="group"`, `data-slot="button-group"`} {
+		if !strings.Contains(horizontal, want) {
+			t.Errorf("horizontal group missing %q:\n%s", want, horizontal)
+		}
+	}
+	if strings.Contains(horizontal, "join-vertical") {
+		t.Errorf("horizontal group must not add join-vertical:\n%s", horizontal)
+	}
+
+	vertical := renderUI(t, shared.RenderInto(ButtonGroup(ButtonGroupProps{Orientation: ButtonGroupVertical}), uiStr("x")))
+	if !strings.Contains(vertical, "join-vertical") {
+		t.Errorf("vertical group missing join-vertical:\n%s", vertical)
+	}
+}
+
+func TestButtonGroupSeparatorOrientation(t *testing.T) {
+	horizontal := renderUI(t, ButtonGroupSeparator(ButtonGroupSeparatorProps{Orientation: ButtonGroupHorizontal}))
+	for _, want := range []string{`role="separator"`, `aria-orientation="vertical"`, "w-px self-stretch"} {
+		if !strings.Contains(horizontal, want) {
+			t.Errorf("horizontal separator missing %q:\n%s", want, horizontal)
+		}
+	}
+	if strings.Contains(horizontal, "h-px w-full") {
+		t.Errorf("horizontal separator must not render a horizontal line:\n%s", horizontal)
+	}
+
+	vertical := renderUI(t, ButtonGroupSeparator(ButtonGroupSeparatorProps{Orientation: ButtonGroupVertical}))
+	for _, want := range []string{`aria-orientation="horizontal"`, "h-px w-full"} {
+		if !strings.Contains(vertical, want) {
+			t.Errorf("vertical separator missing %q:\n%s", want, vertical)
+		}
+	}
+}
+
+func TestMarkerVariants(t *testing.T) {
+	def := renderUI(t, shared.RenderInto(Marker(MarkerProps{}), uiStr("content")))
+	if !strings.Contains(def, `<div data-slot="marker"`) {
+		t.Errorf("default marker should render a div:\n%s", def)
+	}
+	if !strings.Contains(def, `data-variant=""`) {
+		t.Errorf("default marker missing data-variant:\n%s", def)
+	}
+
+	sep := renderUI(t, shared.RenderInto(Marker(MarkerProps{Variant: MarkerSeparator}), uiStr("content")))
+	if !strings.Contains(sep, "before:h-px before:flex-1") || !strings.Contains(sep, "after:h-px after:flex-1") {
+		t.Errorf("separator variant missing line classes:\n%s", sep)
+	}
+
+	border := renderUI(t, shared.RenderInto(Marker(MarkerProps{Variant: MarkerBorder}), uiStr("content")))
+	if !strings.Contains(border, "rounded-box border border-base-300") {
+		t.Errorf("border variant missing box classes:\n%s", border)
+	}
+
+	link := renderUI(t, shared.RenderInto(Marker(MarkerProps{Href: "#"}), uiStr("content")))
+	if !strings.Contains(link, `<a href="#"`) {
+		t.Errorf("marker with href should render an anchor:\n%s", link)
+	}
+	if strings.Contains(link, `<div data-slot="marker"`) {
+		t.Errorf("marker with href must not render a div:\n%s", link)
+	}
+
+	// hrefs are caller-supplied, so unsafe schemes must be neutralised by templ.URL.
+	unsafe := renderUI(t, shared.RenderInto(Marker(MarkerProps{Href: "javascript:alert(1)"}), uiStr("content")))
+	if strings.Contains(unsafe, "javascript:") {
+		t.Errorf("unsafe href was not sanitised:\n%s", unsafe)
+	}
+}
