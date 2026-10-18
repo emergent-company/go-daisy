@@ -36,11 +36,6 @@ type DashboardPageProps struct {
 // DashboardProps is an alias for DashboardPageProps (used in the template).
 type DashboardProps = DashboardPageProps
 
-// ChatLayoutProps configures a chat layout page.
-type ChatLayoutProps struct {
-	ActiveConversation string
-}
-
 // LandingPageProps configures a landing page.
 type LandingPageProps struct {
 	BrandName string

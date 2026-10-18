@@ -1,69 +1,215 @@
 package pages
 
 import (
+	"strconv"
+
 	"github.com/emergent-company/go-daisy/components/form"
 	ui "github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
-// ChatLayout renders a full chat interface with conversation sidebar and message area.
+// ChatContactProps configures a single contact row in the chat sidebar.
+type ChatContactProps struct {
+	Name      string
+	AvatarSrc string
+	Time      string
+	Preview   string
+	Unread    int
+	Active    bool
+	Href      string
+	Attrs     templ.Attributes
+}
+
+// ChatPeerProps configures the conversation peer header shown above the messages.
+type ChatPeerProps struct {
+	Name      string
+	AvatarSrc string
+	Status    string
+	Online    bool
+}
+
+// ChatMessageProps configures a single chat bubble.
+type ChatMessageProps struct {
+	Sent        bool
+	Author      string
+	Timestamp   string
+	AvatarSrc   string
+	BotIcon     bool
+	BubbleClass string
+	ShowActions bool
+	Content     templ.Component
+}
+
+// ChatLayoutProps configures the chat layout page.
+type ChatLayoutProps struct {
+	Conversations      []ChatContactProps
+	ActiveConversation string
+	Peer               ChatPeerProps
+	Messages           []ChatMessageProps
+	HeaderActions      templ.Component
+	NewContactHref     string
+	CommunityLabel     string
+	SearchPlaceholder  string
+	Class              string
+	Attrs              templ.Attributes
+}
+
+// demoChatContacts returns the built-in demo conversation list used when no
+// conversations are supplied.
+func demoChatContacts() []ChatContactProps {
+	return []ChatContactProps{
+		{Name: "Alice Johnson", Preview: "Sounds good! Let me know when...", Time: "2 min ago", Unread: 1},
+		{Name: "Bob Smith", Preview: "The report is ready for review", Time: "1 hour ago"},
+		{Name: "Carol White", Preview: "Can we reschedule?", Time: "3 hours ago"},
+		{Name: "Dave Miller", Preview: "Thanks for the update", Time: "Yesterday"},
+	}
+}
+
+// chatContactItemBaseClass returns the base Tailwind classes for a contact row.
+func chatContactItemBaseClass() string {
+	return "rounded-box hover:bg-base-200 my-0.5 flex cursor-pointer items-center gap-3 p-2 px-3"
+}
+
+// ChatLayout renders a full chat interface with a conversation sidebar and message area.
 templ ChatLayout(props ChatLayoutProps) {
-	<div class="flex h-[calc(100vh-8rem)] gap-4" { devmode.Attrs(ctx, "pages/ChatLayout")... }>
-		<div class="w-72 shrink-0 flex flex-col edge-line rounded-box bg-base-100">
-			<div class="p-3 border-b border-line">
-				@form.SearchInput("chat-search", "", "Search conversations...", "", "#", "input-sm")
-			</div>
-			<div class="flex-1 overflow-y-auto divide-y divide-line">
-				@conversationItem("Alice Johnson", "Sounds good! Let me know when...", "2 min ago", true, true)
-				@conversationItem("Bob Smith", "The report is ready for review", "1 hour ago", false, false)
-				@conversationItem("Carol White", "Can we reschedule?", "3 hours ago", false, false)
-				@conversationItem("Dave Miller", "Thanks for the update", "Yesterday", false, false)
+	{{ convs := props.Conversations
+	if len(convs) == 0 {
+		convs = demoChatContacts()
+	}
+	activeName := ""
+	for i, c := range convs {
+		if i == 0 {
+			activeName = c.Name
+		}
+		if props.ActiveConversation != "" && c.Name == props.ActiveConversation {
+			activeName = c.Name
+		}
+	}
+	peer := props.Peer
+	if peer.Name == "" && len(convs) > 0 {
+		for _, c := range convs {
+			if c.Name == activeName {
+				peer.Name = c.Name
+				peer.AvatarSrc = c.AvatarSrc
+				break
+			}
+		}
+		if peer.Name == "" {
+			peer.Name = convs[0].Name
+			peer.AvatarSrc = convs[0].AvatarSrc
+		}
+	}
+	online := peer.Online
+	if peer.Status == "" {
+		peer.Status = "Active"
+		online = true
+	}
+	searchPh := props.SearchPlaceholder
+	if searchPh == "" {
+		searchPh = "Search conversations..."
+	}
+	newContactHref := props.NewContactHref
+	if newContactHref == "" {
+		newContactHref = "#"
+	}
+	communityLabel := props.CommunityLabel
+	if communityLabel == "" {
+		communityLabel = "Join a Community"
+	} }}
+	<div class={ "grid grid-cols-1 gap-4 lg:grid-cols-12", props.Class } { devmode.Attrs(ctx, "pages/ChatLayout")... } { props.Attrs... }>
+		<div class="lg:col-span-4 2xl:col-span-3">
+			<div class="card bg-base-100 shadow">
+				<div class="card-body">
+					<div class="flex items-center gap-3">
+						@form.SearchInput("chat-search", "", searchPh, "", "", "")
+						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: newContactHref, Variant: ui.ButtonOutline, Shape: ui.ButtonShapeSquare, Size: ui.ButtonSM, AriaLabel: "New Contact", Icon: "lucide--plus"})
+					</div>
+					<div class="mt-4 max-h-96 overflow-y-auto">
+						for _, c := range convs {
+							{{ c.Active = c.Name == activeName }}
+							@ChatContactItem(c)
+						}
+					</div>
+					<div class="mt-3 text-center">
+						@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Style: ui.ButtonStyleSoft, Size: ui.ButtonSM, Icon: "lucide--user-plus"}) {
+							{ communityLabel }
+						}
+					</div>
+				</div>
 			</div>
 		</div>
 
-		<div class="flex-1 flex flex-col edge-line rounded-box bg-base-100">
-			<div class="flex items-center gap-3 p-4 border-b border-line">
-				@ui.AvatarFull(ui.AvatarProps{Name: "Alice Johnson", Size: ui.AvatarSM})
-				<div>
-					<p class="text-sm font-semibold text-base-content">Alice Johnson</p>
-					<p class="text-xs text-subtle">Online</p>
+		<div class="lg:col-span-8 2xl:col-span-9">
+			<div class="card bg-base-100 shadow flex flex-col">
+				<div class="flex items-center gap-3 px-4 py-3 border-b border-line">
+					@ui.AvatarFull(ui.AvatarProps{Name: peer.Name, Src: peer.AvatarSrc})
+					<div class="grow min-w-0">
+						<p class="font-medium leading-none truncate">{ peer.Name }</p>
+						<div class="mt-0.5 flex items-center gap-2">
+							<div class={ "status", templ.KV("status-success", online) }></div>
+							<p class="text-label text-xs">{ peer.Status }</p>
+						</div>
+					</div>
+					if props.HeaderActions != nil {
+						@props.HeaderActions
+					}
 				</div>
-			</div>
-
-			<div class="flex-1 overflow-y-auto p-4 space-y-4">
-				@ui.ChatBubble(false, "Alice Johnson", "10:32 AM", "", false, "bg-base-200", false, nil) {
-					Hey! How are you doing?
+				@ui.ChatWindow("h-[calc(100vh-22rem)]", nil) {
+					if len(props.Messages) == 0 {
+						@ui.ChatBubble(false, "Alice Johnson", "10:32 AM", "", false, "bg-base-200", false, nil) {
+							Hey! How are you doing?
+						}
+						@ui.ChatBubble(true, "You", "10:33 AM", "", false, "bg-base-200", false, nil) {
+							Good thanks! How about you?
+						}
+						@ui.ChatBubble(false, "Alice Johnson", "10:34 AM", "", false, "bg-base-200", false, nil) {
+							Just finished reviewing the documents. Have you had a chance to look at them?
+						}
+						@ui.AIThinkingIndicator()
+					} else {
+						for _, m := range props.Messages {
+							@ui.ChatBubble(m.Sent, m.Author, m.Timestamp, m.AvatarSrc, m.BotIcon, m.BubbleClass, m.ShowActions, nil) {
+								if m.Content != nil {
+									@m.Content
+								}
+							}
+						}
+					}
 				}
-				@ui.ChatBubble(true, "You", "10:33 AM", "", false, "bg-base-200", false, nil) {
-					Good thanks! How about you?
-				}
-				@ui.ChatBubble(false, "Alice Johnson", "10:34 AM", "", false, "bg-base-200", false, nil) {
-					Just finished reviewing the documents. Have you had a chance to look at them?
-				}
-				@ui.AIThinkingIndicator()
-			</div>
-
-			<div class="p-4 border-t border-line">
 				@ui.ChatInput(true, "Type a message...", nil)
 			</div>
 		</div>
 	</div>
 }
 
-templ conversationItem(name, lastMessage, time string, active, unread bool) {
-	<div class={ "flex items-center gap-3 px-3 py-3 cursor-pointer",
-		templ.KV("bg-base-200", active),
-		templ.KV("hover:bg-base-200", !active) }>
-		@ui.AvatarFull(ui.AvatarProps{Name: name, Size: ui.AvatarSM})
-		<div class="flex-1 min-w-0">
-			<div class="flex items-center justify-between">
-				<p class={ "text-sm truncate", templ.KV("font-semibold", unread) }>{ name }</p>
-				<span class="text-xs text-faint shrink-0">{ time }</span>
-			</div>
-			<p class={ "text-xs truncate mt-0.5", templ.KV("text-subtle", !unread), templ.KV("text-label font-medium", unread) }>{ lastMessage }</p>
+// ChatContactItem renders a single contact row for the chat sidebar.
+// When Href is set the row renders as a link; otherwise as a plain row.
+templ ChatContactItem(props ChatContactProps) {
+	if props.Href != "" {
+		<a href={ templ.URL(props.Href) } class={ chatContactItemBaseClass(), templ.KV("bg-base-200", props.Active) } { devmode.Attrs(ctx, "pages/ChatContactItem")... } { props.Attrs... }>
+			@chatContactItemContent(props)
+		</a>
+	} else {
+		<div class={ chatContactItemBaseClass(), templ.KV("bg-base-200", props.Active) } { devmode.Attrs(ctx, "pages/ChatContactItem")... } { props.Attrs... }>
+			@chatContactItemContent(props)
 		</div>
-		if unread {
-			<span class="badge badge-primary badge-xs"></span>
-		}
+	}
+}
+
+// chatContactItemContent renders the avatar, name/time row, preview and unread
+// badge shared by the link and plain-row variants of ChatContactItem.
+templ chatContactItemContent(props ChatContactProps) {
+	@ui.AvatarFull(ui.AvatarProps{Name: props.Name, Src: props.AvatarSrc, Size: ui.AvatarSM})
+	<div class="grow min-w-0">
+		<div class="flex items-center justify-between gap-1">
+			<p class="truncate text-sm font-medium">{ props.Name }</p>
+			<span class="text-xs text-muted shrink-0">{ props.Time }</span>
+		</div>
+		<div class="flex items-center justify-between gap-3">
+			<p class="text-label line-clamp-1 text-sm">{ props.Preview }</p>
+			if props.Unread > 0 {
+				<span class="badge badge-success badge-xs shrink-0">{ strconv.Itoa(props.Unread) }</span>
+			}
+		</div>
 	</div>
 }
