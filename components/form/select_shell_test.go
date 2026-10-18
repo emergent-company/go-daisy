@@ -45,3 +45,36 @@ func TestSelectShellTriggerTextBinding(t *testing.T) {
 		})
 	}
 }
+
+// TestSelectShellHonoursSelectClose locks the contract the component's own doc
+// comment states ("Dispatch select-close on pick"): children in the panel are
+// expected to dispatch that event to close the shell. Master documented it but
+// never listened for it, so an option click left the panel open — Escape and
+// click-outside were the only ways to close it.
+//
+// The listener must be element-scoped. `$dispatch` bubbles, so a `.window`
+// modifier would close every SelectShell on the page instead of the one whose
+// option was clicked; options are DOM descendants of this root, so a plain
+// listener already sees the event.
+func TestSelectShellHonoursSelectClose(t *testing.T) {
+	html := renderForm(t, SelectShell(SelectShellProps{ID: "shell", Placeholder: "Select..."}))
+
+	if !strings.Contains(html, `@select-close="open = false"`) {
+		t.Errorf("SelectShell does not listen for the documented select-close event:\n%s", html)
+	}
+	if strings.Contains(html, "@select-close.window") {
+		t.Errorf("select-close listener is window-scoped and will close other shells:\n%s", html)
+	}
+}
+
+// TestSelectShellPanelIsWired checks the trigger/listbox ARIA wiring: the panel
+// needs an id for the trigger to point at.
+func TestSelectShellPanelIsWired(t *testing.T) {
+	html := renderForm(t, SelectShell(SelectShellProps{ID: "shell", Placeholder: "Select..."}))
+
+	for _, want := range []string{`aria-controls="shell-panel"`, `id="shell-panel"`} {
+		if !strings.Contains(html, want) {
+			t.Errorf("missing %q in:\n%s", want, html)
+		}
+	}
+}

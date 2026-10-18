@@ -267,15 +267,13 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 			Name:        "Select Shell",
 			Category:    galleryruntime.CategoryForms,
 			Subcategory: "Inputs",
-			Description: "Composable Alpine dropdown trigger+panel. Chevron rotates, click-outside closes, custom children inside.",
+			Description: "Composable Alpine dropdown trigger+panel. Chevron rotates, click-outside closes, children pick from a parent Alpine scope.",
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Interactive",
-					Description: "Select shell with stat options.",
+					Description: "Options nested in a parent x-data; picking one updates the trigger and closes the panel via select-close.",
 					RenderFunc: func(_ url.Values) templ.Component {
-						return form.SelectShellWithBoundary(form.SelectShellProps{
-							ID: "demo-shell", Label: "Choose", Placeholder: "Select...",
-						})
+						return selectShellDemo()
 					},
 					FrameHeight: "200px",
 				},
@@ -1367,4 +1365,29 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 	}
+}
+
+// selectShellDemo shows the intended composition: the trigger text comes from a
+// parent Alpine scope (`picked`), the options live in the panel as children, and
+// each option dispatches select-close so the shell closes itself. The fallback
+// inside ValueExpr keeps the empty-state label visible once Alpine binds x-text.
+func selectShellDemo() templ.Component {
+	options := []string{"Healthy", "Degraded", "Down"}
+	children := make([]templ.Component, 0, len(options))
+	for _, name := range options {
+		children = append(children, shared.StrComp(
+			`<button type="button" role="option" :aria-selected="picked === '`+name+`'" class="block w-full text-left px-3 py-2 text-sm hover:bg-base-200 aria-selected:bg-base-200" @click="picked = '`+name+`'; $dispatch('select-close')">`+name+`</button>`,
+		))
+	}
+	shell := form.SelectShellWithBoundary(form.SelectShellProps{
+		ID:          "demo-shell",
+		Label:       "Status",
+		Placeholder: "Select status...",
+		ValueExpr:   "picked || 'Select status...'",
+	}, children...)
+	return shared.Compose(
+		shared.StrComp(`<div x-data="{picked: ''}" class="w-64">`),
+		shell,
+		shared.StrComp(`</div>`),
+	)
 }

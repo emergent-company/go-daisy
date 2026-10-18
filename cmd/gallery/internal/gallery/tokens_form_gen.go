@@ -443,11 +443,6 @@ func FormFieldsetTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{}
 }
 
-// SelectShellTokens returns the DesignToken slice for SelectShellWithBoundary.
-func SelectShellTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
-}
-
 // FormActionsWithLoadingTokens returns the DesignToken slice for FormActionsWithLoadingWithBoundary.
 func FormActionsWithLoadingTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
