@@ -62,7 +62,7 @@ func tailwindHex(hue, shade string) string {
 
 templ Palette(props PaletteProps) {
 	<div
-		{ alpine.XData(alpine.Toggle(false))... }
+		{ alpine.XData(alpine.PaletteState(""))... }
 		class={ "space-y-3", templ.KV(props.Class, props.Class != "") }
 		{ devmode.Attrs(ctx, "form/Palette")... }
 		{ props.Attrs... }
@@ -140,6 +140,6 @@ templ Palette(props PaletteProps) {
 				>Reset</button>
 			</div>
 		}
-		<input type="hidden" x-model={ "picked" } x-bind:name={ props.ID }/>
+		<input type="hidden" x-model={ "picked" } name={ props.ID }/>
 	</div>
 }

@@ -77,7 +77,7 @@ templ Banner(props BannerProps) {
 		<div
 			{ alpine.XData(alpine.Toggle(true))... }
 			class={ "card bg-base-100 shadow-lg edge-line max-w-sm p-6 space-y-4", pos, templ.KV(props.Class, props.Class != "") }
-			x-show="show"
+			x-show="open"
 			x-transition
 			{ devmode.Attrs(ctx, "ui/Banner")... }
 			{ props.Attrs... }
@@ -88,12 +88,12 @@ templ Banner(props BannerProps) {
 				<button
 					type="button"
 					class="btn btn-sm btn-ghost"
-					@click="show = false"
+					@click="open = false"
 				>{ props.RejectLabel }</button>
 				<button
 					type="button"
 					class="btn btn-sm btn-primary"
-					@click="show = false"
+					@click="open = false"
 				>{ props.AcceptLabel }</button>
 			</div>
 		</div>
@@ -101,7 +101,7 @@ templ Banner(props BannerProps) {
 		<div
 			{ alpine.XData(alpine.Toggle(true))... }
 			class={ "alert rounded-none", variant, pos, templ.KV(props.Class, props.Class != "") }
-			x-show="show"
+			x-show="open"
 			x-transition
 			role="alert"
 			{ devmode.Attrs(ctx, "ui/Banner")... }
@@ -120,7 +120,7 @@ templ Banner(props BannerProps) {
 					<button
 						type="button"
 						class="btn btn-sm btn-ghost btn-square"
-						@click="show = false"
+						@click="open = false"
 						aria-label="Dismiss"
 					>&times;</button>
 				}
