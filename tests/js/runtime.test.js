@@ -60,19 +60,19 @@ const MESSAGE_SCROLLER = `
   <button type="button" data-gd-messagescroller-jump id="jump" hidden aria-label="Scroll to latest"></button>
 </div>`;
 
-function loadScripts(dom) {
-  for (const file of JS_FILES) {
+function loadScripts(dom, extraScripts = []) {
+  for (const file of [...JS_FILES, ...extraScripts]) {
     const code = fs.readFileSync(path.join(JS_DIR, 'js', file), 'utf8');
     new Function('window', 'document', code)(dom.window, dom.window.document);
   }
 }
 
-function setup(body) {
+function setup(body, extraScripts = []) {
   const dom = new JSDOM(`<!DOCTYPE html><html><body>${body}</body></html>`, {
     pretendToBeVisual: true,
     url: 'http://localhost/',
   });
-  loadScripts(dom);
+  loadScripts(dom, extraScripts);
   return dom;
 }
 
@@ -430,4 +430,223 @@ test('message-scroller: non-static root auto-scrolls on mutation', async () => {
   await new Promise((resolve) => setTimeout(resolve, 0));
 
   assert.equal(viewport.scrollTop, 200, 'sticky root auto-scrolls to the bottom on mutation');
+});
+
+const COMMAND_PALETTE = `
+<button id="opener" type="button">Search</button>
+<input type="checkbox" id="spotlight-toggle" class="modal-toggle" data-command-palette="true">
+<div class="modal" role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="modal-box">
+    <input type="text" id="spotlight-input" placeholder="Search">
+    <div id="spotlight-results">
+      <div data-palette-group="Navigate">
+        <p>Navigate</p>
+        <a id="item-one" href="#one" data-label="Overview">Overview</a>
+        <a id="item-two" href="#two" data-label="Hosts">Hosts</a>
+      </div>
+    </div>
+    <label for="spotlight-toggle">Esc</label>
+  </div>
+  <label class="modal-backdrop" for="spotlight-toggle"></label>
+</div>`;
+
+test('command palette: opening focuses the input and traps Tab', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const input = doc.getElementById('spotlight-input');
+  const last = doc.getElementById('item-two');
+
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
+
+  assert.equal(toggle.checked, true, 'open checks the toggle');
+  assert.equal(doc.activeElement, input, 'initial focus lands in the input');
+
+  last.focus();
+  const forward = press(window, last, 'Tab');
+  assert.equal(forward.defaultPrevented, true, 'Tab from the last item is trapped');
+  assert.equal(doc.activeElement, input, 'Tab wraps to the first focusable');
+
+  const backward = press(window, input, 'Tab', { shiftKey: true });
+  assert.equal(backward.defaultPrevented, true, 'Shift+Tab from the first item is trapped');
+  assert.equal(doc.activeElement, last, 'Shift+Tab wraps to the last focusable');
+});
+
+test('command palette: Escape closes and restores focus to the opener', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const input = doc.getElementById('spotlight-input');
+
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
+  press(window, input, 'Escape');
+
+  assert.equal(toggle.checked, false, 'Escape closes the palette');
+  assert.equal(doc.activeElement, opener, 'focus returns to the element that opened it');
+});
+
+test('command palette: Cmd/Ctrl+K toggles and restores focus', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const input = doc.getElementById('spotlight-input');
+
+  opener.focus();
+  const open = press(window, doc.body, 'k', { metaKey: true });
+  assert.equal(open.defaultPrevented, true, 'browser find is suppressed');
+  assert.equal(toggle.checked, true);
+  assert.equal(doc.activeElement, input);
+
+  press(window, doc.body, 'k', { metaKey: true });
+  assert.equal(toggle.checked, false);
+  assert.equal(doc.activeElement, opener);
+});
+
+test('command palette: activating a result closes it and restores focus', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const item = doc.getElementById('item-one');
+
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
+  item.dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true }));
+
+  assert.equal(toggle.checked, false, 'clicking a row dismisses the palette');
+  assert.equal(doc.activeElement, opener, 'focus does not stay in the hidden dialog');
+});
+
+test('command palette: data-command-palette-keep-open leaves the palette open', () => {
+  const fixture = COMMAND_PALETTE.replace(
+    '<a id="item-two"',
+    '<a id="item-keep" href="#keep" data-command-palette-keep-open data-label="Copy">Copy</a><a id="item-two"',
+  );
+  const { window } = setup(fixture, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const toggle = doc.getElementById('spotlight-toggle');
+
+  window.gdCommandPalette.open('spotlight');
+  doc.getElementById('item-keep').dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true }));
+
+  assert.equal(toggle.checked, true, 'opting out keeps the palette open');
+});
+
+test('command palette: filterPaletteItems still filters local rows', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const input = doc.getElementById('spotlight-input');
+
+  input.value = 'over';
+  window.filterPaletteItems(input);
+
+  assert.equal(doc.getElementById('item-one').style.display, '', 'matching row stays visible');
+  assert.equal(doc.getElementById('item-two').style.display, 'none', 'non-matching row is hidden');
+});
+
+test('command palette: opening an already-checked box installs the trap', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const input = doc.getElementById('spotlight-input');
+
+  opener.focus();
+  toggle.checked = true; // initial Open prop, or app code setting it directly
+  window.gdCommandPalette.open('spotlight');
+
+  assert.equal(doc.activeElement, input, 'open() traps even without a change event');
+});
+
+test('command palette: close() releases the trap after a silent uncheck', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
+
+  // Apps such as the infra panel's dashboard.js dismiss with
+  // `toggle.checked = false`, which emits no change event; they must then
+  // call close() so the trap is released.
+  toggle.checked = false;
+  window.gdCommandPalette.close('spotlight');
+
+  assert.equal(doc.activeElement, opener, 'close() releases the trap and restores focus');
+});
+
+test('command palette: an Open palette inserted by an HTMX settle is trapped', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+
+  // Simulate a swap inserting a palette rendered with Open=true. Dispatch on
+  // the inserted node so the event has to bubble to the document listener.
+  const host = doc.createElement('div');
+  host.innerHTML = `
+<input type="checkbox" id="late-toggle" class="modal-toggle" data-command-palette="true" checked>
+<div class="modal" role="dialog" aria-modal="true" aria-label="Late">
+  <div class="modal-box"><input type="text" id="late-input"></div>
+</div>`;
+  doc.body.appendChild(host);
+  host.dispatchEvent(new window.Event('htmx:after:settle', { bubbles: true }));
+
+  assert.equal(doc.activeElement, doc.getElementById('late-input'), 'colon-separated settle traps the inserted palette');
+
+  window.gdCommandPalette.close('late');
+  doc.getElementById('late-toggle').checked = true;
+  doc.dispatchEvent(new window.Event('htmx:afterSettle', { bubbles: true }));
+  assert.equal(doc.activeElement, doc.getElementById('late-input'), 'camelCase settle traps too');
+});
+
+test('command palette: reopening after a silent uncheck focuses the input', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
+  const toggle = doc.getElementById('spotlight-toggle');
+  const input = doc.getElementById('spotlight-input');
+
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
+  toggle.checked = false; // silent close: no change event, no close()
+  input.blur(); // a hidden dialog drops focus in a real browser
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
+
+  assert.equal(doc.activeElement, input, 'a stale trap must not make the reopen skip the input');
+});
+
+test('command palette: Cmd+K closes the open palette, not the first', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+
+  const host = doc.createElement('div');
+  host.innerHTML = `
+<input type="checkbox" id="second-toggle" class="modal-toggle" data-command-palette="true">
+<div class="modal" role="dialog" aria-modal="true" aria-label="Second">
+  <div class="modal-box"><input type="text" id="second-input"></div>
+</div>`;
+  doc.body.appendChild(host);
+
+  window.gdCommandPalette.open('second');
+  press(window, doc.body, 'k', { metaKey: true });
+
+  assert.equal(doc.getElementById('second-toggle').checked, false, 'the open palette closes');
+  assert.equal(doc.getElementById('spotlight-toggle').checked, false, 'the first palette is not opened');
+});
+
+test('command palette: Escape still closes a palette opened without a trap', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const toggle = doc.getElementById('spotlight-toggle');
+
+  toggle.checked = true; // legacy path: set directly, no change event, no trap
+  press(window, doc.body, 'Escape');
+
+  assert.equal(toggle.checked, false, 'document-level Escape fallback still dismisses');
 });

@@ -77,3 +77,21 @@ jobs:
             echo "::error::Tailwind build changed staticfs/static/css/app.css; commit the compiled CSS"
             exit 1
           fi
+
+  js:
+    name: JS checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run component-script DOM tests
+        run: node --test tests/js/runtime.test.js
