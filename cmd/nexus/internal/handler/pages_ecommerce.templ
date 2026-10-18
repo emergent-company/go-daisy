@@ -136,7 +136,7 @@ templ productRow(num, id, name, category, price, rating, ratingCount, orders, st
 		}
 		@table.TableCell("", nil) {
 			<div class="flex items-center space-x-3 truncate">
-				<img class="rounded-box size-10" src="/images/apps/ecommerce/products/{ num }.jpg" alt="Product"/>
+				<img class="rounded-box size-10" src={ "/images/apps/ecommerce/products/" + num + ".jpg" } alt="Product"/>
 				<div>
 					<p class="font-medium">{ productNameOnly(name) }</p>
 					<p class="text-base-content/60 text-xs">{ productSKU(name) }</p>
