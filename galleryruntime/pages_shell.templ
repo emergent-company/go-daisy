@@ -192,14 +192,7 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 		<!-- Gallery spotlight search modal -->
 		@gallerySearchModal(categories)
 		@templ.Raw(customThemeApplyScript())
-		<!-- feedback-overlay: element-level feedback tool -->
-		<script
-			src="https://feedback.emergent-company.ai/emergent-feedback.js"
-			data-api="https://feedback.emergent-company.ai"
-			data-repo="emergent-company/go-daisy"
-			data-label="feedback"
-			async
-		></script>
+		@feedbackOverlayScript()
 	}
 }
 
@@ -459,4 +452,18 @@ templ gallerySearchModal(categories []CategoryGroup) {
 // GalleryPageContent renders only the content area for HTMX partial swaps.
 templ GalleryPageContent(title string, activeSlug string, categories []CategoryGroup, logo templ.Component, content templ.Component) {
 	@content
+}
+
+// feedbackOverlayScript mounts the emergent.feedback element-level feedback
+// tool. The bundle path and data attributes are the service's install snippet —
+// keep them in sync with https://feedback.emergent-company.ai/README.md, since a
+// stale path is answered with 401 and the browser blocks the script.
+templ feedbackOverlayScript() {
+	<script
+		src="https://feedback.emergent-company.ai/emergent-feedback.js"
+		data-api="https://feedback.emergent-company.ai"
+		data-repo="emergent-company/go-daisy"
+		data-label="feedback"
+		async
+	></script>
 }

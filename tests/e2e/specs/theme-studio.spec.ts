@@ -21,8 +21,7 @@ test.describe('Theme studio', () => {
     const picker = page.locator('input[aria-label="Pick primary color"]');
     await expect(picker).toBeAttached();
 
-    const row = page.locator('label', { has: picker });
-    const text = row.locator('input[type="text"]');
+    const text = page.locator('input[aria-label="primary value"]');
     const before = await text.inputValue();
     expect(before).toMatch(/^oklch\(/);
 
@@ -44,6 +43,45 @@ test.describe('Theme studio', () => {
       input.dispatchEvent(new Event('input', { bubbles: true }));
     });
     await expect(text).toHaveValue('#00FF00');
+  });
+
+  test('one preview board showcases components and typography', async ({ page }) => {
+    await bootStudio(page);
+
+    const preview = page.locator('#studio-preview');
+    await expect(preview).toHaveCount(1);
+    await expect(preview.locator('table')).toBeVisible();
+    await expect(preview.locator('input[type="range"]')).toBeVisible();
+    await expect(preview.locator('.alert')).toHaveCount(4);
+    await expect(preview.locator('[role="tablist"]')).toBeVisible();
+    await expect(preview.locator('h1')).toHaveCount(1);
+    await expect(preview.getByText('Data display')).toBeVisible();
+  });
+
+  test('preview sits full height beside the settings rail', async ({ page }) => {
+    // Pin a width above the xl breakpoint so the two-column layout is the
+    // contract under test, not the runner's default viewport.
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await bootStudio(page);
+
+    const preview = page.locator('#studio-preview');
+    const settings = page.locator('#studio-settings');
+
+    // The board grows with the page instead of scrolling inside the card.
+    const scroll = await preview.evaluate((el) => ({
+      overflowY: getComputedStyle(el).overflowY,
+      scrollHeight: el.scrollHeight,
+      clientHeight: el.clientHeight,
+    }));
+    expect(scroll.overflowY).toBe('visible');
+    expect(scroll.scrollHeight).toBeLessThanOrEqual(scroll.clientHeight + 1);
+
+    // Settings live in the right column on desktop.
+    const previewBox = await preview.boundingBox();
+    const settingsBox = await settings.boundingBox();
+    expect(previewBox).not.toBeNull();
+    expect(settingsBox).not.toBeNull();
+    expect(settingsBox!.x).toBeGreaterThan(previewBox!.x + previewBox!.width - 1);
   });
 
   test('typography roles drive the preview and survive Apply to gallery', async ({ page }) => {

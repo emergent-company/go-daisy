@@ -1207,6 +1207,118 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 				},
+				{
+					Name:        "Variants",
+					Description: "Default, outline, and muted rows. The outline row follows the variant token.",
+					RenderFunc: func(params url.Values) templ.Component {
+						variant := params.Get("variant")
+						if variant == "" {
+							variant = "outline"
+						}
+						return ui.ItemGroupWithBoundary(ui.ListProps{}, []ui.ListRowProps{
+							{
+								Title:    "Default row",
+								Subtitle: "No extra classes",
+								Trailing: []templ.Component{ui.BadgeWithBoundary(ui.BadgeNeutral, ui.BadgeStyleSoft, ui.BadgeSizeSM, false, "", "default")},
+							},
+							{
+								Variant:  ui.ListRowVariant(variant),
+								Title:    "Outline row",
+								Subtitle: "rounded-box border",
+								Trailing: []templ.Component{ui.BadgeWithBoundary(ui.BadgeNeutral, ui.BadgeStyleSoft, ui.BadgeSizeSM, false, "", variant)},
+							},
+							{
+								Variant:  ui.ListRowMuted,
+								Title:    "Muted row",
+								Subtitle: "bg-base-200",
+								Trailing: []templ.Component{ui.BadgeWithBoundary(ui.BadgeNeutral, ui.BadgeStyleSoft, ui.BadgeSizeSM, false, "", "muted")},
+							},
+						})
+					},
+					Tokens: []galleryruntime.DesignToken{
+						{Label: "Variant", Group: "Component", Type: galleryruntime.TokenTypeSelect, Default: "outline", QueryParam: "variant", Options: []galleryruntime.TokenOption{
+							{Value: "", Label: "Default"},
+							{Value: "outline", Label: "Outline"},
+							{Value: "muted", Label: "Muted"},
+						}},
+					},
+				},
+				{
+					Name:        "Sizes",
+					Description: "Default, sm, and xs row padding.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ItemGroupWithBoundary(ui.ListProps{}, []ui.ListRowProps{
+							{Size: ui.ListRowSizeDefault, Title: "Default size", Subtitle: "list-row default padding"},
+							{Size: ui.ListRowSizeSM, Title: "Small size", Subtitle: "py-1"},
+							{Size: ui.ListRowSizeXS, Title: "Extra small size", Subtitle: "py-0.5"},
+						})
+					},
+				},
+				{
+					Name:        "Media",
+					Description: "Icon and image leading media wrappers.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ItemGroupWithBoundary(ui.ListProps{}, []ui.ListRowProps{
+							{
+								MediaVariant: ui.ListMediaIcon,
+								Leading:      ui.IconSpan("lucide--bell", "size-5"),
+								Title:        "Icon media",
+								Subtitle:     "9×9 centred box",
+							},
+							{
+								MediaVariant: ui.ListMediaImage,
+								Leading:      ui.AvatarWithBoundary("Jane Smith", "https://picsum.photos/96/96", "", ui.AvatarSM),
+								Title:        "Image media",
+								Subtitle:     "overflow-hidden box",
+							},
+						})
+					},
+				},
+				{
+					Name:        "Link row",
+					Description: "Rows wrapped in an anchor that fills the whole row.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ItemGroupWithBoundary(ui.ListProps{}, []ui.ListRowProps{
+							{
+								Href:     "#",
+								Title:    "In-page link",
+								Subtitle: "href=#",
+								Trailing: []templ.Component{ui.IconSpan("lucide--chevron-right", "size-4 text-faint")},
+							},
+							{
+								Href:     "https://example.com",
+								Target:   "_blank",
+								Title:    "External link",
+								Subtitle: "target=_blank",
+								Trailing: []templ.Component{ui.IconSpan("lucide--external-link", "size-4 text-faint")},
+							},
+						})
+					},
+				},
+				{
+					Name:        "Header and footer",
+					Description: "Header line above the title and footer line below the description, with a separator.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return shared.RenderInto(
+							ui.ItemGroup(ui.ListProps{}),
+							seq(
+								ui.ListRow(ui.ListRowProps{
+									Header:      shared.StrComp("Section label"),
+									Title:       "Primary row",
+									Subtitle:    "With a header and footer",
+									Description: "Description text above the footer line.",
+									Footer:      shared.StrComp("2.4 MB · Updated 3 days ago"),
+									Trailing:    []templ.Component{ui.BadgeWithBoundary(ui.BadgeInfo, ui.BadgeStyleSoft, ui.BadgeSizeSM, false, "", "New")},
+								}),
+								ui.ItemSeparator(),
+								ui.ListRow(ui.ListRowProps{
+									Title:    "Secondary row",
+									Subtitle: "After a separator",
+								}),
+							),
+						)
+					},
+				},
 			},
 		},
 
@@ -6709,39 +6821,6 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 
-		// ── Forms / Label ─────────────────────────────────────────────────────────
-		{
-			Slug:        "label",
-			Name:        "Label",
-			Category:    galleryruntime.CategoryForms,
-			Subcategory: "Layout",
-			Description: "DaisyUI label wrapper with primary text and optional alt/hint text slots.",
-			Variants: []galleryruntime.GalleryStory{
-				{
-					Name:        "Examples",
-					Description: "Label with top text, alt text and bottom hint row.",
-					Templ: rawHTML(`<div class="p-6 flex flex-col gap-6 max-w-sm">
-						<div class="flex flex-col">
-							<div class="label">
-								<span class="label-text">Email address</span>
-								<span class="label-text-alt">Required</span>
-							</div>
-							<input type="email" class="input w-full" placeholder="you@example.com"/>
-							<div class="label">
-								<span class="label-text-alt">We'll never share your email.</span>
-							</div>
-						</div>
-						<div class="flex flex-col">
-							<div class="label">
-								<span class="label-text">Username</span>
-							</div>
-							<input type="text" class="input w-full" placeholder="johndoe"/>
-						</div>
-					</div>`),
-				},
-			},
-		},
-
 		// ── Forms / Validator ─────────────────────────────────────────────────────
 		{
 			Slug:        "validator",
@@ -9342,6 +9421,26 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					RenderFunc: func(_ url.Values) templ.Component {
 						return pages.ChatLayoutWithBoundary(pages.ChatLayoutProps{
 							ActiveConversation: "Alice Johnson",
+						})
+					},
+					FrameHeight: "600px",
+				},
+				{
+					Name:        "Custom conversation",
+					Description: "Props-driven contacts, peer and messages; no demo fallback.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return pages.ChatLayoutWithBoundary(pages.ChatLayoutProps{
+							ActiveConversation: "Grace Hopper",
+							Conversations: []pages.ChatContactProps{
+								{Name: "Grace Hopper", Time: "09:41", Preview: "The compiler is ready.", Unread: 2},
+								{Name: "Alan Turing", Time: "Yesterday", Preview: "Let's revisit the proof."},
+							},
+							Peer: pages.ChatPeerProps{Name: "Grace Hopper", Status: "Active", Online: true},
+							Messages: []pages.ChatMessageProps{
+								{Sent: false, Author: "Grace Hopper", Timestamp: "09:40", Content: shared.StrComp("The compiler is ready.")},
+								{Sent: true, Author: "You", Timestamp: "09:41", Content: shared.StrComp("Shipping it now.")},
+							},
+							HeaderActions: ui.ButtonWithBoundary("#", ui.ButtonOutline, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeLink, ui.ButtonShapeSquare, "lucide--phone", false, false, false),
 						})
 					},
 					FrameHeight: "600px",

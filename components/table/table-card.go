@@ -2,6 +2,20 @@ package table
 
 import "github.com/a-h/templ"
 
+// TableCardProps configures the composite TableCard container.
+type TableCardProps struct {
+	// Toolbar is an optional component rendered above the child content
+	// (e.g. a search/filter/actions row). nil renders nothing.
+	Toolbar templ.Component
+	// Footer is an optional component rendered below the child content
+	// (e.g. per-page selector + pagination). nil renders nothing.
+	Footer templ.Component
+	// Class is appended to the root card's class list.
+	Class string
+	// Attrs are optional extra HTML attributes on the root card div.
+	Attrs templ.Attributes
+}
+
 // TableCardFooterProps configures the rich footer with per-page, item count, and circle pagination.
 type TableCardFooterProps struct {
 	CurrentPage int

@@ -286,3 +286,160 @@ func TestDocumentDirectionScriptInterpolatesDir(t *testing.T) {
 		t.Errorf("empty nonce must be omitted, got:\n%s", got)
 	}
 }
+
+func TestButtonGroupContract(t *testing.T) {
+	horizontal := renderUI(t, shared.RenderInto(ButtonGroup(ButtonGroupProps{}), uiStr("x")))
+	for _, want := range []string{`role="group"`, `data-slot="button-group"`} {
+		if !strings.Contains(horizontal, want) {
+			t.Errorf("horizontal group missing %q:\n%s", want, horizontal)
+		}
+	}
+	if strings.Contains(horizontal, "join-vertical") {
+		t.Errorf("horizontal group must not add join-vertical:\n%s", horizontal)
+	}
+
+	vertical := renderUI(t, shared.RenderInto(ButtonGroup(ButtonGroupProps{Orientation: ButtonGroupVertical}), uiStr("x")))
+	if !strings.Contains(vertical, "join-vertical") {
+		t.Errorf("vertical group missing join-vertical:\n%s", vertical)
+	}
+}
+
+func TestButtonGroupSeparatorOrientation(t *testing.T) {
+	horizontal := renderUI(t, ButtonGroupSeparator(ButtonGroupSeparatorProps{Orientation: ButtonGroupHorizontal}))
+	for _, want := range []string{`role="separator"`, `aria-orientation="vertical"`, "w-px self-stretch"} {
+		if !strings.Contains(horizontal, want) {
+			t.Errorf("horizontal separator missing %q:\n%s", want, horizontal)
+		}
+	}
+	if strings.Contains(horizontal, "h-px w-full") {
+		t.Errorf("horizontal separator must not render a horizontal line:\n%s", horizontal)
+	}
+
+	vertical := renderUI(t, ButtonGroupSeparator(ButtonGroupSeparatorProps{Orientation: ButtonGroupVertical}))
+	for _, want := range []string{`aria-orientation="horizontal"`, "h-px w-full"} {
+		if !strings.Contains(vertical, want) {
+			t.Errorf("vertical separator missing %q:\n%s", want, vertical)
+		}
+	}
+}
+
+func TestMarkerVariants(t *testing.T) {
+	def := renderUI(t, shared.RenderInto(Marker(MarkerProps{}), uiStr("content")))
+	if !strings.Contains(def, `<div data-slot="marker"`) {
+		t.Errorf("default marker should render a div:\n%s", def)
+	}
+	if !strings.Contains(def, `data-variant=""`) {
+		t.Errorf("default marker missing data-variant:\n%s", def)
+	}
+
+	sep := renderUI(t, shared.RenderInto(Marker(MarkerProps{Variant: MarkerSeparator}), uiStr("content")))
+	if !strings.Contains(sep, "before:h-px before:flex-1") || !strings.Contains(sep, "after:h-px after:flex-1") {
+		t.Errorf("separator variant missing line classes:\n%s", sep)
+	}
+
+	border := renderUI(t, shared.RenderInto(Marker(MarkerProps{Variant: MarkerBorder}), uiStr("content")))
+	if !strings.Contains(border, "rounded-box border border-base-300") {
+		t.Errorf("border variant missing box classes:\n%s", border)
+	}
+
+	link := renderUI(t, shared.RenderInto(Marker(MarkerProps{Href: "#"}), uiStr("content")))
+	if !strings.Contains(link, `<a href="#"`) {
+		t.Errorf("marker with href should render an anchor:\n%s", link)
+	}
+	if strings.Contains(link, `<div data-slot="marker"`) {
+		t.Errorf("marker with href must not render a div:\n%s", link)
+	}
+
+	// hrefs are caller-supplied, so unsafe schemes must be neutralised by templ.URL.
+	unsafe := renderUI(t, shared.RenderInto(Marker(MarkerProps{Href: "javascript:alert(1)"}), uiStr("content")))
+	if strings.Contains(unsafe, "javascript:") {
+		t.Errorf("unsafe href was not sanitised:\n%s", unsafe)
+	}
+}
+
+func TestListRowVariants(t *testing.T) {
+	def := renderUI(t, ListRow(ListRowProps{Title: "A"}))
+	if !strings.Contains(def, "list-row") {
+		t.Errorf("default row missing list-row:\n%s", def)
+	}
+	if strings.Contains(def, "border-base-300") {
+		t.Errorf("default row must not have border-base-300:\n%s", def)
+	}
+
+	outline := renderUI(t, ListRow(ListRowProps{Title: "A", Variant: ListRowOutline}))
+	if !strings.Contains(outline, "rounded-box border border-base-300") {
+		t.Errorf("outline row missing box classes:\n%s", outline)
+	}
+
+	muted := renderUI(t, ListRow(ListRowProps{Title: "A", Variant: ListRowMuted}))
+	if !strings.Contains(muted, "bg-base-200") {
+		t.Errorf("muted row missing bg-base-200:\n%s", muted)
+	}
+
+	sm := renderUI(t, ListRow(ListRowProps{Title: "A", Size: ListRowSizeSM}))
+	if !strings.Contains(sm, "py-1") {
+		t.Errorf("sm row missing py-1:\n%s", sm)
+	}
+	xs := renderUI(t, ListRow(ListRowProps{Title: "A", Size: ListRowSizeXS}))
+	if !strings.Contains(xs, "py-0.5") {
+		t.Errorf("xs row missing py-0.5:\n%s", xs)
+	}
+	if !strings.Contains(xs, "text-xs") {
+		t.Errorf("xs row title should be text-xs:\n%s", xs)
+	}
+
+	icon := renderUI(t, ListRow(ListRowProps{Title: "A", Leading: uiStr("x"), MediaVariant: ListMediaIcon}))
+	if !strings.Contains(icon, "size-9") || !strings.Contains(icon, "text-muted") {
+		t.Errorf("icon media wrapper missing classes:\n%s", icon)
+	}
+	image := renderUI(t, ListRow(ListRowProps{Title: "A", Leading: uiStr("x"), MediaVariant: ListMediaImage}))
+	if !strings.Contains(image, "overflow-hidden") || !strings.Contains(image, "[&_img]:object-cover") {
+		t.Errorf("image media wrapper missing classes:\n%s", image)
+	}
+
+	hf := renderUI(t, ListRow(ListRowProps{Title: "A", Header: uiStr("HDR"), Footer: uiStr("FTR")}))
+	if !strings.Contains(hf, "HDR") || !strings.Contains(hf, "FTR") {
+		t.Errorf("header/footer text missing:\n%s", hf)
+	}
+	if !strings.Contains(hf, "text-label") || !strings.Contains(hf, "text-subtle") {
+		t.Errorf("header/footer tone classes missing:\n%s", hf)
+	}
+	// Header lives inside the growing content column and Footer shares the
+	// single wrapped cell, so neither may add a second list-col-wrap grid item.
+	if strings.Count(hf, "list-col-wrap") != 1 {
+		t.Errorf("header/footer must not add extra grid rows (want 1 list-col-wrap):\n%s", hf)
+	}
+	if strings.Contains(hf, `class="list-col-wrap text-xs font-semibold`) {
+		t.Errorf("header must not be rendered as a wrapped row:\n%s", hf)
+	}
+
+	// MediaVariant is ignored when LeadingGrow is set, so the growing slot
+	// keeps its list-col-grow wrapper.
+	growMedia := renderUI(t, ListRow(ListRowProps{Title: "A", Leading: uiStr("x"), LeadingGrow: true, MediaVariant: ListMediaIcon}))
+	if strings.Contains(growMedia, "size-9") {
+		t.Errorf("LeadingGrow must win over MediaVariant:\n%s", growMedia)
+	}
+	if !strings.Contains(growMedia, `list-col-grow`) {
+		t.Errorf("LeadingGrow media slot lost list-col-grow:\n%s", growMedia)
+	}
+
+	link := renderUI(t, ListRow(ListRowProps{Title: "A", Href: "https://example.com"}))
+	if !strings.Contains(link, `<a class="list-row"`) || !strings.Contains(link, "href=") {
+		t.Errorf("href row missing anchor:\n%s", link)
+	}
+
+	unsafe := renderUI(t, ListRow(ListRowProps{Title: "A", Href: "javascript:alert(1)"}))
+	if strings.Contains(unsafe, "javascript:") {
+		t.Errorf("unsafe href was not neutralised:\n%s", unsafe)
+	}
+
+	blank := renderUI(t, ListRow(ListRowProps{Title: "A", Href: "https://example.com", Target: "_blank"}))
+	if !strings.Contains(blank, `rel="noopener noreferrer"`) {
+		t.Errorf("_blank target missing rel:\n%s", blank)
+	}
+
+	sep := renderUI(t, ItemSeparator())
+	if !strings.Contains(sep, `role="separator"`) {
+		t.Errorf("separator missing role:\n%s", sep)
+	}
+}

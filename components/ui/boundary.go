@@ -572,6 +572,56 @@ func JoinWithBoundary(vertical bool, children ...templ.Component) templ.Componen
 	return devmode.ComponentBoundary("Join", outer, map[string]any{"vertical": vertical})
 }
 
+// ButtonGroupWithBoundary wraps ButtonGroup with a dev-mode component boundary annotation.
+// gallery:token orientation
+func ButtonGroupWithBoundary(orientation ButtonGroupOrientation, children ...templ.Component) templ.Component {
+	props := ButtonGroupProps{Orientation: orientation}
+	inner := shared.RenderInto(ButtonGroup(props), shared.Compose(children...))
+	return devmode.ComponentBoundary("ButtonGroup", inner, map[string]any{
+		"orientation": string(orientation),
+	})
+}
+
+// ButtonGroupTextWithBoundary wraps ButtonGroupText with a dev-mode component boundary annotation.
+func ButtonGroupTextWithBoundary(children ...templ.Component) templ.Component {
+	inner := shared.RenderInto(ButtonGroupText(ButtonGroupTextProps{}), shared.Compose(children...))
+	return devmode.ComponentBoundary("ButtonGroupText", inner)
+}
+
+// ButtonGroupSeparatorWithBoundary wraps ButtonGroupSeparator with a dev-mode component boundary annotation.
+func ButtonGroupSeparatorWithBoundary(orientation ButtonGroupOrientation) templ.Component {
+	props := ButtonGroupSeparatorProps{Orientation: orientation}
+	return devmode.ComponentBoundary("ButtonGroupSeparator", ButtonGroupSeparator(props), map[string]any{
+		"orientation": string(orientation),
+	})
+}
+
+// MarkerWithBoundary wraps Marker with a dev-mode component boundary annotation.
+// gallery:token variant,href
+// gallery:hint href:default(#)
+func MarkerWithBoundary(variant MarkerVariant, href string, extraClass string, children ...templ.Component) templ.Component {
+	props := MarkerProps{Variant: variant, Href: href, Class: extraClass}
+	inner := shared.RenderInto(Marker(props), shared.Compose(children...))
+	return devmode.ComponentBoundary("Marker", inner, map[string]any{
+		"variant": string(variant),
+		"href":    href,
+		"class":   extraClass,
+	})
+}
+
+// MarkerIconWithBoundary wraps MarkerIcon with a dev-mode component boundary annotation.
+// gallery:token name
+func MarkerIconWithBoundary(name string) templ.Component {
+	props := MarkerIconProps{Name: name}
+	return devmode.ComponentBoundary("MarkerIcon", MarkerIcon(props), map[string]any{"name": name})
+}
+
+// MarkerContentWithBoundary wraps MarkerContent with a dev-mode component boundary annotation.
+func MarkerContentWithBoundary(children ...templ.Component) templ.Component {
+	inner := shared.RenderInto(MarkerContent(MarkerContentProps{}), shared.Compose(children...))
+	return devmode.ComponentBoundary("MarkerContent", inner)
+}
+
 // IndicatorWithBoundary wraps IndicatorWrapper with a dev-mode component boundary annotation.
 func IndicatorWithBoundary(badgeClass string, badgeContent templ.Component, content templ.Component) templ.Component {
 	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
@@ -705,6 +755,34 @@ func ListWithBoundary(props ListProps, items []ListRowProps) templ.Component {
 	})
 	outer := shared.RenderInto(List(props), children)
 	return devmode.ComponentBoundary("List", outer, map[string]any{"itemCount": len(items), "header": props.Header})
+}
+
+// ListRowWithBoundary wraps ListRow with a dev-mode component boundary annotation.
+func ListRowWithBoundary(props ListRowProps) templ.Component {
+	return devmode.ComponentBoundary("ListRow", ListRow(props), map[string]any{
+		"variant":      string(props.Variant),
+		"size":         string(props.Size),
+		"mediaVariant": string(props.MediaVariant),
+	})
+}
+
+// ItemSeparatorWithBoundary wraps ItemSeparator with a dev-mode component boundary annotation.
+func ItemSeparatorWithBoundary() templ.Component {
+	return devmode.ComponentBoundary("ItemSeparator", ItemSeparator())
+}
+
+// ItemGroupWithBoundary wraps ItemGroup with a dev-mode component boundary annotation.
+func ItemGroupWithBoundary(props ListProps, items []ListRowProps) templ.Component {
+	children := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		for _, item := range items {
+			if err := ListRow(item).Render(ctx, w); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	outer := shared.RenderInto(ItemGroup(props), children)
+	return devmode.ComponentBoundary("ItemGroup", outer, map[string]any{"itemCount": len(items), "header": props.Header})
 }
 
 // FilterTabsWithBoundary wraps FilterTabs with a dev-mode component boundary annotation.

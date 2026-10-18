@@ -508,6 +508,7 @@ func constLabel(constName, typeName string) string {
 	prefix = strings.TrimSuffix(prefix, "Intent")
 	prefix = strings.TrimSuffix(prefix, "Kind")
 	prefix = strings.TrimSuffix(prefix, "Shape")
+	prefix = strings.TrimSuffix(prefix, "Orientation")
 	stripped := strings.TrimPrefix(constName, prefix)
 	if stripped == "" || stripped == constName {
 		return constName

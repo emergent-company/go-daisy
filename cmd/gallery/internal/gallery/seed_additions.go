@@ -8,6 +8,7 @@ import (
 	"github.com/emergent-company/go-daisy/components/alpine"
 	"github.com/emergent-company/go-daisy/components/form"
 	"github.com/emergent-company/go-daisy/components/head"
+	"github.com/emergent-company/go-daisy/components/layout"
 	"github.com/emergent-company/go-daisy/components/nav"
 	"github.com/emergent-company/go-daisy/components/schemaform"
 	"github.com/emergent-company/go-daisy/components/ui"
@@ -1570,7 +1571,253 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// ── Forms / Label ─────────────────────────────────────────────────────
+		{
+			Slug:        "label",
+			Name:        "Label",
+			Category:    galleryruntime.CategoryForms,
+			Subcategory: "Layout",
+			Description: "The form field label — a small medium-weight label-text fragment, optionally associated with an input via the for attribute.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Standalone",
+					Description: "A label on its own, tied to an input id.",
+					RenderFunc: func(params url.Values) templ.Component {
+						forValue := params.Get("forValue")
+						if forValue == "" {
+							forValue = "demo-email"
+						}
+						return seq(
+							rawHTML(`<div class="p-6">`),
+							form.LabelWithBoundary(forValue, params.Get("extraClass"), shared.StrComp("Email address")),
+							rawHTML(`</div>`),
+						)
+					},
+					Tokens:      LabelTokens(),
+					FrameHeight: "100px",
+				},
+				{
+					Name:        "With input",
+					Description: "The label as part of a full form field.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.FormFieldWithBoundary(form.FormFieldProps{
+							Type:        form.FieldEmail,
+							Name:        "demo-email",
+							Label:       "Email address",
+							Placeholder: "you@example.com",
+						})
+					},
+					FrameHeight: "120px",
+				},
+			},
+		},
+
+		// ── Components / Button Group ─────────────────────────────────────────
+		{
+			Slug:        "button-group",
+			Name:        "Button Group",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Buttons",
+			Description: "A fused button group — horizontal or vertical join with optional inert text segments and separators.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Horizontal",
+					Description: "Three buttons joined horizontally.",
+					RenderFunc: func(params url.Values) templ.Component {
+						return row(ui.ButtonGroupWithBoundary(ui.ButtonGroupOrientation(params.Get("orientation")),
+							buttonGroupBtn("Button"),
+							buttonGroupBtn("Button"),
+							buttonGroupBtn("Button"),
+						))
+					},
+					Tokens:      ButtonGroupTokens(),
+					FrameHeight: "120px",
+				},
+				{
+					Name:        "Vertical",
+					Description: "Three buttons joined vertically.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return row(ui.ButtonGroupWithBoundary(ui.ButtonGroupVertical,
+							buttonGroupBtn("Button"),
+							buttonGroupBtn("Button"),
+							buttonGroupBtn("Button"),
+						))
+					},
+					FrameHeight: "180px",
+				},
+				{
+					Name:        "With text",
+					Description: "An inert text segment between two buttons.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return row(ui.ButtonGroupWithBoundary(ui.ButtonGroupHorizontal,
+							buttonGroupBtn("Button"),
+							ui.ButtonGroupTextWithBoundary(shared.StrComp("or")),
+							buttonGroupBtn("Button"),
+						))
+					},
+					FrameHeight: "120px",
+				},
+				{
+					Name:        "With separator",
+					Description: "A vertical separator crossing a horizontal group.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return row(ui.ButtonGroupWithBoundary(ui.ButtonGroupHorizontal,
+							buttonGroupBtn("Button"),
+							ui.ButtonGroupSeparatorWithBoundary(ui.ButtonGroupHorizontal),
+							buttonGroupBtn("Button"),
+						))
+					},
+					FrameHeight: "120px",
+				},
+			},
+		},
+
+		// ── Components / Marker ────────────────────────────────────────────────
+		{
+			Slug:        "marker",
+			Name:        "Marker",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Display",
+			Description: "A section marker — icon plus content, with separator-line, border, and link variants.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Icon and content on a plain line.",
+					RenderFunc: func(params url.Values) templ.Component {
+						return seq(
+							rawHTML(`<div class="p-6">`),
+							ui.MarkerWithBoundary(ui.MarkerVariant(params.Get("variant")), params.Get("href"), "",
+								ui.MarkerIconWithBoundary("lucide--map-pin"),
+								ui.MarkerContentWithBoundary(shared.StrComp("Section heading")),
+							),
+							rawHTML(`</div>`),
+						)
+					},
+					Tokens:      MarkerTokens(),
+					FrameHeight: "120px",
+				},
+				{
+					Name:        "Separator",
+					Description: "Three markers stacked, each led and trailed by a line.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							rawHTML(`<div class="p-6 space-y-3">`),
+							ui.MarkerWithBoundary(ui.MarkerSeparator, "", "",
+								ui.MarkerIconWithBoundary("lucide--circle-check"),
+								ui.MarkerContentWithBoundary(shared.StrComp("First step")),
+							),
+							ui.MarkerWithBoundary(ui.MarkerSeparator, "", "",
+								ui.MarkerIconWithBoundary("lucide--circle-check"),
+								ui.MarkerContentWithBoundary(shared.StrComp("Second step")),
+							),
+							ui.MarkerWithBoundary(ui.MarkerSeparator, "", "",
+								ui.MarkerIconWithBoundary("lucide--circle-check"),
+								ui.MarkerContentWithBoundary(shared.StrComp("Third step")),
+							),
+							rawHTML(`</div>`),
+						)
+					},
+					FrameHeight: "200px",
+				},
+				{
+					Name:        "Border",
+					Description: "Boxed marker with padding and border.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							rawHTML(`<div class="p-6">`),
+							ui.MarkerWithBoundary(ui.MarkerBorder, "", "",
+								ui.MarkerIconWithBoundary("lucide--info"),
+								ui.MarkerContentWithBoundary(shared.StrComp("Boxed marker")),
+							),
+							rawHTML(`</div>`),
+						)
+					},
+					FrameHeight: "120px",
+				},
+				{
+					Name:        "Link",
+					Description: "A marker rendered as an anchor.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return seq(
+							rawHTML(`<div class="p-6">`),
+							ui.MarkerWithBoundary(ui.MarkerDefault, "#", "",
+								ui.MarkerIconWithBoundary("lucide--external-link"),
+								ui.MarkerContentWithBoundary(shared.StrComp("Open documentation")),
+							),
+							rawHTML(`</div>`),
+						)
+					},
+					FrameHeight: "120px",
+				},
+			},
+		},
+
+		// ── Layout / Admin Shell ──────────────────────────────────────────────
+		{
+			Slug:        "admin-shell",
+			Name:        "Admin Shell",
+			Category:    galleryruntime.CategoryLayout,
+			Subcategory: "Shells",
+			Description: "Application shell: sidebar column, sticky topbar, scrolling content pane, and an optional right drawer. Pair with the \"app\" topbar style for the reference-dashboard chrome.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "App topbar",
+					Description: "Sidebar + app topbar + content pane. Toggle the hamburger to collapse the sidebar; the search pill targets a dialog with id \"search-modal\".",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return layout.AdminShellWithBoundary(layout.AdminShellProps{
+							Sidebar: layout.SidebarWithBoundary("go-daisy", []layout.SidebarGroup{
+								{Label: "Main", Items: []layout.SidebarItem{
+									{Label: "Dashboard", Icon: "lucide--layout-dashboard", Href: "#", Active: true},
+									{Label: "Orders", Icon: "lucide--shopping-cart", Href: "#"},
+									{Label: "Products", Icon: "lucide--package", Href: "#"},
+								}},
+								{Label: "Settings", Items: []layout.SidebarItem{
+									{Label: "Profile", Icon: "lucide--user", Href: "#"},
+								}},
+							}),
+							Topbar: layout.TopbarVariantWithBoundary("app", layout.TopbarVariantOpts{
+								ShowSearch:  true,
+								ShowTheme:   true,
+								ProfileName: "Ada Lovelace",
+								ProfileRole: "Admin",
+							}),
+							Content: ui.DashboardCardWithBoundary("Main pane", "The AdminShell content region. Replace this card with the page body."),
+						})
+					},
+					FrameHeight: "520px",
+				},
+			},
+		},
+
+		// ── Navigation / Search Trigger ───────────────────────────────────────
+		{
+			Slug:        "search-trigger",
+			Name:        "Search Trigger",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Search",
+			Description: "Search entry point pair: a bordered desktop pill and a square mobile icon button, both opening a dialog by id with showModal().",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Targets id \"search-modal\" by default; set DialogID to point at another dialog.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return shared.Compose(
+							rawHTML(`<div class="p-6">`),
+							nav.SearchTriggerWithBoundary("gallery-search-dialog", "Search components"),
+							rawHTML(`</div>`),
+						)
+					},
+					FrameHeight: "120px",
+				},
+			},
+		},
 	}
+}
+
+// buttonGroupBtn renders a primary button with text, used in the Button Group gallery stories.
+func buttonGroupBtn(label string) templ.Component {
+	return withText(label, ui.ButtonWithBoundary("", ui.ButtonPrimary, ui.ButtonMD, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "", false, false, false))
 }
 
 // selectShellDemo shows the intended composition: the trigger text comes from a

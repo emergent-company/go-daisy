@@ -31,13 +31,16 @@ templ ThemeStudio() {
 		</div>
 
 		<div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
-			<!-- Left: preview + colors -->
-			<div class={ ui.ColStackLoose }>
-				<!-- Preview board -->
+			<!-- Left: preview (below the settings on narrow screens) -->
+			<div class={ ui.ColStackLoose + " order-2 xl:order-1" }>
+				<!-- Preview: components + typography -->
 				<div class="card card-border bg-base-100">
 					<div class="card-body gap-3 p-4">
 						<div class="flex flex-wrap items-center justify-between gap-2">
-							<h2 class="card-title text-base">Live preview</h2>
+							<div>
+								<h2 class="card-title text-base">Preview</h2>
+								<p class="text-xs text-faint">Components and type, live under the edited theme</p>
+							</div>
 							<div class={ ui.Row }>
 								<template x-for="p in presets" x-bind:key="p">
 									<button
@@ -56,44 +59,292 @@ templ ThemeStudio() {
 								></button>
 							</div>
 						</div>
+
 						<div
+							id="studio-preview"
 							data-theme="gd-preview"
-							class="rounded-box border border-base-300 bg-base-100 p-4"
+							class="rounded-box border border-base-300 bg-base-200 p-3 sm:p-4"
 						>
-							<div class="flex flex-wrap items-center gap-2">
-								<button type="button" class="btn btn-primary btn-sm">Primary</button>
-								<button type="button" class="btn btn-secondary btn-sm">Secondary</button>
-								<button type="button" class="btn btn-accent btn-sm">Accent</button>
-								<button type="button" class="btn btn-neutral btn-sm">Neutral</button>
-								<span class="badge badge-info">info</span>
-								<span class="badge badge-success">success</span>
-								<span class="badge badge-warning">warning</span>
-								<span class="badge badge-error">error</span>
-							</div>
-							<div class="mt-4 grid gap-3 sm:grid-cols-2">
-								<div class="rounded-box border border-base-300 bg-base-200 p-3">
-									<p class="eyebrow text-xs">Base 200</p>
-									<p class="mt-1 text-sm text-body">Body copy on the secondary surface.</p>
-									<p class="text-xs text-faint">Faint metadata · 2 min ago</p>
-								</div>
-								<div class="rounded-box border border-base-300 bg-base-100 p-3">
-									<label class="mb-1 block text-sm text-label" for="studio-demo-input">Label</label>
-									<input id="studio-demo-input" class="input input-sm input-bordered w-full" placeholder="Input"/>
-									<div class="mt-2 flex items-center gap-2">
-										<span class="inline-block size-4 rounded-selector bg-primary"></span>
-										<span class="inline-block size-4 rounded-selector bg-secondary"></span>
-										<span class="inline-block size-4 rounded-selector bg-accent"></span>
-										<span class="inline-block size-4 rounded-selector bg-info"></span>
-										<span class="inline-block size-4 rounded-selector bg-success"></span>
-										<span class="inline-block size-4 rounded-selector bg-warning"></span>
-										<span class="inline-block size-4 rounded-selector bg-error"></span>
+							<div class="grid items-start gap-3 sm:grid-cols-2">
+								<!-- Surfaces + semantic palette -->
+								<div class="sm:col-span-2">
+									<p class="eyebrow text-xs mb-2">Palette</p>
+									<div class="grid grid-cols-3 gap-2">
+										<div class="rounded-box border border-base-300 bg-base-100 p-2">
+											<p class="font-mono text-[11px] text-body">base-100</p>
+										</div>
+										<div class="rounded-box border border-base-300 bg-base-200 p-2">
+											<p class="font-mono text-[11px] text-body">base-200</p>
+										</div>
+										<div class="rounded-box border border-base-300 bg-base-300 p-2">
+											<p class="font-mono text-[11px] text-body">base-300</p>
+										</div>
 									</div>
+									<div class="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-8">
+										<div class="rounded-selector bg-primary px-2 py-1 text-center text-[11px] font-medium text-primary-content">primary</div>
+										<div class="rounded-selector bg-secondary px-2 py-1 text-center text-[11px] font-medium text-secondary-content">secondary</div>
+										<div class="rounded-selector bg-accent px-2 py-1 text-center text-[11px] font-medium text-accent-content">accent</div>
+										<div class="rounded-selector bg-neutral px-2 py-1 text-center text-[11px] font-medium text-neutral-content">neutral</div>
+										<div class="rounded-selector bg-info px-2 py-1 text-center text-[11px] font-medium text-info-content">info</div>
+										<div class="rounded-selector bg-success px-2 py-1 text-center text-[11px] font-medium text-success-content">success</div>
+										<div class="rounded-selector bg-warning px-2 py-1 text-center text-[11px] font-medium text-warning-content">warning</div>
+										<div class="rounded-selector bg-error px-2 py-1 text-center text-[11px] font-medium text-error-content">error</div>
+									</div>
+								</div>
+
+								@studioSpecimen("Actions", "") {
+									<div class="flex flex-wrap gap-1.5">
+										<button type="button" class="btn btn-primary btn-xs">primary</button>
+										<button type="button" class="btn btn-secondary btn-xs">secondary</button>
+										<button type="button" class="btn btn-accent btn-xs">accent</button>
+										<button type="button" class="btn btn-neutral btn-xs">neutral</button>
+										<button type="button" class="btn btn-info btn-xs">info</button>
+										<button type="button" class="btn btn-success btn-xs">success</button>
+										<button type="button" class="btn btn-warning btn-xs">warning</button>
+										<button type="button" class="btn btn-error btn-xs">error</button>
+									</div>
+									<div class="mt-2 flex flex-wrap items-center gap-1.5">
+										<button type="button" class="btn btn-outline btn-xs">outline</button>
+										<button type="button" class="btn btn-ghost btn-xs">ghost</button>
+										<button type="button" class="btn btn-soft btn-xs">soft</button>
+										<button type="button" class="btn btn-dash btn-xs">dash</button>
+										<button type="button" class="btn btn-link btn-xs">link</button>
+										<button type="button" class="btn btn-xs" disabled>disabled</button>
+										<button type="button" class="btn btn-xs">
+											<span class="loading loading-spinner loading-xs"></span>
+											loading
+										</button>
+									</div>
+									<div class="mt-2 flex flex-wrap items-center gap-1.5">
+										<button type="button" class="btn btn-xs">xs</button>
+										<button type="button" class="btn btn-sm">sm</button>
+										<button type="button" class="btn">md</button>
+										<button type="button" class="btn btn-lg">lg</button>
+										<button type="button" class="btn btn-square btn-sm" aria-label="Add">
+											@ui.IconSpan("lucide--plus", "size-4")
+										</button>
+									</div>
+									<div class="join mt-2 w-full">
+										<input class="input input-sm join-item w-full" placeholder="Search components"/>
+										<button type="button" class="btn btn-primary btn-sm join-item">Search</button>
+									</div>
+								}
+
+								@studioSpecimen("Form controls", "") {
+									<div class="flex flex-col gap-2">
+										<input class="input input-sm w-full" placeholder="Input"/>
+										<input class="input input-sm input-error w-full" placeholder="Invalid input" value="not-an-email"/>
+										<input class="input input-sm w-full" placeholder="Disabled input" disabled/>
+										<select class="select select-sm w-full">
+											<option>Select an option</option>
+											<option>Second option</option>
+										</select>
+										<textarea class="textarea textarea-sm w-full" rows="2" placeholder="Textarea"></textarea>
+										<div class="flex flex-wrap items-center gap-3 pt-1 text-xs">
+											<label class="flex items-center gap-1.5">
+												<input type="checkbox" class="checkbox checkbox-primary checkbox-sm" checked/>
+												<span>Checkbox</span>
+											</label>
+											<label class="flex items-center gap-1.5">
+												<input type="radio" name="studio-radio" class="radio radio-primary radio-sm" checked/>
+												<span>Radio</span>
+											</label>
+											<label class="flex items-center gap-1.5">
+												<input type="checkbox" class="toggle toggle-primary toggle-sm" checked/>
+												<span>Toggle</span>
+											</label>
+										</div>
+										<input type="range" class="range range-primary range-sm" value="60" aria-label="Range"/>
+										<div class="rating rating-sm">
+											<input type="radio" name="studio-rating" class="mask mask-star-2 bg-warning" aria-label="1 star"/>
+											<input type="radio" name="studio-rating" class="mask mask-star-2 bg-warning" aria-label="2 stars"/>
+											<input type="radio" name="studio-rating" class="mask mask-star-2 bg-warning" aria-label="3 stars" checked/>
+											<input type="radio" name="studio-rating" class="mask mask-star-2 bg-warning" aria-label="4 stars"/>
+											<input type="radio" name="studio-rating" class="mask mask-star-2 bg-warning" aria-label="5 stars"/>
+										</div>
+									</div>
+								}
+
+								@studioSpecimen("Feedback", "") {
+									<div class="flex flex-col gap-2">
+										<div class="alert alert-info">
+											@ui.IconSpan("lucide--info", "size-4")
+											<span class="text-xs">Info alert</span>
+										</div>
+										<div class="alert alert-success">
+											@ui.IconSpan("lucide--circle-check", "size-4")
+											<span class="text-xs">Success alert</span>
+										</div>
+										<div class="alert alert-warning">
+											@ui.IconSpan("lucide--triangle-alert", "size-4")
+											<span class="text-xs">Warning alert</span>
+										</div>
+										<div class="alert alert-error">
+											@ui.IconSpan("lucide--circle-alert", "size-4")
+											<span class="text-xs">Error alert</span>
+										</div>
+									</div>
+									<div class="mt-2 flex flex-wrap gap-1.5">
+										<span class="badge badge-primary badge-sm">primary</span>
+										<span class="badge badge-secondary badge-sm">secondary</span>
+										<span class="badge badge-accent badge-sm">accent</span>
+										<span class="badge badge-neutral badge-sm">neutral</span>
+										<span class="badge badge-soft badge-info badge-sm">soft</span>
+										<span class="badge badge-outline badge-success badge-sm">outline</span>
+									</div>
+									<div class="mt-3 flex items-center gap-2">
+										<progress class="progress progress-primary w-full" value="55" max="100"></progress>
+										<span class="text-[11px] text-faint">55%</span>
+									</div>
+									<div class="mt-3 flex flex-wrap items-center gap-3">
+										<div class="radial-progress text-[10px] text-primary" style="--value:70; --size:2.5rem; --thickness:3px;" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">70%</div>
+										<span class="loading loading-dots loading-sm"></span>
+										<span class="status status-success"></span>
+										<span class="status status-warning"></span>
+										<span class="status status-error"></span>
+										<div class="tooltip" data-tip="Tooltip">
+											<button type="button" class="btn btn-outline btn-xs">Tooltip</button>
+										</div>
+									</div>
+								}
+
+								@studioSpecimen("Navigation", "") {
+									<div role="tablist" class="tabs tabs-box tabs-sm">
+										<button type="button" role="tab" class="tab tab-active" aria-selected="true">Tab 1</button>
+										<button type="button" role="tab" class="tab" aria-selected="false">Tab 2</button>
+										<button type="button" role="tab" class="tab" aria-selected="false">Tab 3</button>
+									</div>
+									<div class="mt-2 rounded-box border border-base-300 bg-base-100 p-2 text-xs text-muted">Tab content</div>
+									<ul class="menu menu-sm mt-2 w-full rounded-box border border-base-300 bg-base-100 p-2">
+										<li class="menu-title">Menu</li>
+										<li><a class="menu-active">Dashboard</a></li>
+										<li><a>Components</a></li>
+										<li><a>Settings</a></li>
+									</ul>
+									<div class="breadcrumbs mt-2 text-xs">
+										<ul>
+											<li><a>Home</a></li>
+											<li><a>Components</a></li>
+											<li>Button</li>
+										</ul>
+									</div>
+									<div class="join mt-2">
+										<button type="button" class="join-item btn btn-xs">1</button>
+										<button type="button" class="join-item btn btn-xs btn-active">2</button>
+										<button type="button" class="join-item btn btn-xs">3</button>
+									</div>
+								}
+
+								@studioSpecimen("Data display", "sm:col-span-2") {
+									<div class="flex items-start gap-2">
+										<div class="grid size-12 shrink-0 place-items-center rounded-field bg-base-200 text-faint">
+											@ui.IconSpan("lucide--package", "size-5")
+										</div>
+										<div class="min-w-0">
+											<p class="truncate text-sm font-medium">Aurora chair</p>
+											<div class="rating rating-xs mt-0.5">
+												<input type="radio" name="studio-product-rating" class="mask mask-star-2 bg-warning" aria-label="1 star"/>
+												<input type="radio" name="studio-product-rating" class="mask mask-star-2 bg-warning" aria-label="2 stars"/>
+												<input type="radio" name="studio-product-rating" class="mask mask-star-2 bg-warning" aria-label="3 stars"/>
+												<input type="radio" name="studio-product-rating" class="mask mask-star-2 bg-warning" aria-label="4 stars" checked/>
+												<input type="radio" name="studio-product-rating" class="mask mask-star-2 bg-warning" aria-label="5 stars"/>
+											</div>
+											<p class="mt-0.5 text-sm">
+												<span class="font-semibold">$120</span>
+												<span class="line-through text-xs text-faint">$150</span>
+											</p>
+										</div>
+										<button type="button" class="btn btn-primary btn-xs ms-auto">Add</button>
+									</div>
+									<div class="stats stats-vertical mt-3 w-full border border-base-300 sm:stats-horizontal">
+										<div class="stat p-3">
+											<div class="stat-title text-xs">Revenue</div>
+											<div class="stat-value text-lg">$32,400</div>
+											<div class="stat-desc text-success">+21% this week</div>
+										</div>
+										<div class="stat p-3">
+											<div class="stat-title text-xs">Orders</div>
+											<div class="stat-value text-lg">184</div>
+											<div class="stat-desc">12 pending</div>
+										</div>
+									</div>
+									<div class="mt-3 overflow-x-auto">
+										<table class="table table-xs">
+											<thead>
+												<tr>
+													<th>Customer</th>
+													<th>Status</th>
+													<th class="text-right">Amount</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Charlie Chapman</td>
+													<td><span class="badge badge-success badge-xs">Completed</span></td>
+													<td class="text-right">$240</td>
+												</tr>
+												<tr>
+													<td>Howard Hudson</td>
+													<td><span class="badge badge-error badge-xs">Failed</span></td>
+													<td class="text-right">$96</td>
+												</tr>
+												<tr>
+													<td>Fiona Fisher</td>
+													<td><span class="badge badge-warning badge-xs">Pending</span></td>
+													<td class="text-right">$1,120</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="chat chat-start mt-3">
+										<div class="chat-image avatar avatar-placeholder">
+											<div class="w-6 rounded-full bg-base-300">
+												<span class="text-[9px]">CC</span>
+											</div>
+										</div>
+										<div class="chat-bubble chat-bubble-primary text-xs">Looks good — ship it.</div>
+									</div>
+									<div class="chat chat-end">
+										<div class="chat-bubble chat-bubble-neutral text-xs">Shipping today.</div>
+									</div>
+								}
+
+								<!-- Typography role sample -->
+								<div class="sm:col-span-2">
+									<section class="rounded-box border border-base-300 bg-base-100 p-4">
+										<p class="eyebrow text-xs">Typography</p>
+										<h1 class="mt-1 text-2xl">Interfaces with a voice</h1>
+										<p class="mt-1 text-lg text-body">
+											A lead paragraph sets the pace: comfortable measure, generous leading and a
+											heading family that carries the hierarchy.
+										</p>
+										<h2 class="mt-4 text-lg">Section heading</h2>
+										<p class="mt-1 text-sm text-muted">
+											Body copy uses the body role. Descriptions, captions and supporting text follow it
+											at a smaller step. <span class="link link-primary">Inline links</span>,
+											<strong>strong emphasis</strong>, <em>italics</em> and
+											<code class="rounded-field bg-base-200 px-1 py-0.5 text-xs">code</code> share the rhythm.
+										</p>
+										<h3 class="mt-3 text-base">Subsection heading</h3>
+										<blockquote class="mt-2 border-s-2 border-primary ps-3 text-sm italic text-muted">
+											“Typography is the craft of endowing human language with a durable visual form.”
+										</blockquote>
+										<ul class="mt-3 list-disc space-y-1 ps-5 text-sm text-body">
+											<li>Headings use the heading family, weight and tracking.</li>
+											<li>Descriptions inherit the body family and line height.</li>
+											<li>Metadata stays legible at the faint tone.</li>
+										</ul>
+										<p class="mt-3 text-xs text-faint">Updated 2 min ago · 4 min read</p>
+									</section>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+			</div>
 
+			<!-- Right: settings -->
+			<div id="studio-settings" class={ ui.ColStackLoose + " order-1 xl:order-2" }>
 				<!-- Typography -->
 				<div class="card card-border bg-base-100">
 					<div class="card-body gap-3 p-4">
@@ -165,48 +416,6 @@ templ ThemeStudio() {
 					</div>
 				</div>
 
-				<!-- Typography preview -->
-				<div class="card card-border bg-base-100">
-					<div class="card-body gap-3 p-4">
-						<div class="flex flex-wrap items-center justify-between gap-2">
-							<h2 class="card-title text-base">Type preview</h2>
-							<span class="text-xs text-faint">Headings, prose, metadata, controls</span>
-						</div>
-						<div data-theme="gd-preview" class="rounded-box border border-base-300 bg-base-100 p-4">
-							<p class="eyebrow text-xs">Design system</p>
-							<h1 class="mt-1 text-2xl">Interfaces with a voice</h1>
-							<p class="mt-2 text-base text-body">
-								Body copy uses the body role. It should stay comfortable at length, with a line height
-								tuned for reading rather than display.
-							</p>
-							<h2 class="mt-4 text-lg">Section heading</h2>
-							<p class="mt-1 text-sm text-muted">
-								Descriptions, captions and supporting text follow the body role at a smaller step.
-								<a class="link link-primary" href="#">Inline links</a>, <strong>strong emphasis</strong>,
-								<em>italics</em> and
-								<code class="rounded-field bg-base-200 px-1 py-0.5 text-xs">code</code> sit in the same rhythm.
-							</p>
-							<blockquote class="mt-3 border-s-2 border-primary ps-3 text-sm italic text-muted">
-								“Typography is the craft of endowing human language with a durable visual form.”
-							</blockquote>
-							<ul class="mt-3 list-disc space-y-1 ps-5 text-sm text-body">
-								<li>Headings use the heading family and weight.</li>
-								<li>Descriptions use the body family.</li>
-								<li>Metadata stays legible at the faint tone.</li>
-							</ul>
-							<div class="mt-4 flex flex-wrap items-end gap-3">
-								<label class="flex flex-col gap-1">
-									<span class="text-sm text-label">Label</span>
-									<input class="input input-sm input-bordered" placeholder="Form control"/>
-								</label>
-								<button type="button" class="btn btn-sm btn-primary">Primary action</button>
-								<span class="badge badge-soft">badge</span>
-							</div>
-							<p class="mt-3 text-xs text-faint">Updated 2 min ago · 4 min read</p>
-						</div>
-					</div>
-				</div>
-
 				<!-- Colors -->
 				<div class="card card-border bg-base-100">
 					<div class="card-body gap-3 p-4">
@@ -217,43 +426,33 @@ templ ThemeStudio() {
 						<template x-for="group in colorGroups" x-bind:key="group.label">
 							<div>
 								<p class="eyebrow text-xs mb-2" x-text="group.label"></p>
-								<div class="grid gap-2 md:grid-cols-2">
+								<div class="grid gap-2">
 									<template x-for="key in group.keys" x-bind:key="key">
-										<label class="flex flex-col gap-1">
-											<span class="flex items-center gap-2">
-												<span
-													class="relative size-5 shrink-0 rounded-selector focus-within:ring-2 focus-within:ring-primary"
-												>
-													<input
-														type="color"
-														class="absolute inset-0 z-10 size-full cursor-pointer opacity-0"
-														x-bind:value="pickerHex(key)"
-														x-on:input="pickColor(key, $event.target.value)"
-														x-bind:aria-label="'Pick ' + key + ' color'"
-													/>
-													<span
-														class="pointer-events-none block size-5 rounded-selector border border-base-300"
-														x-bind:style="'background:' + (colors[key] || 'transparent')"
-													></span>
-												</span>
-												<span class="font-mono text-[11px] text-subtle" x-text="key"></span>
-											</span>
-											<input
-												type="text"
-												class="input input-xs input-bordered w-full font-mono"
-												x-model="colors[key]"
-											/>
-										</label>
+										<div class="flex flex-col gap-1">
+											<span class="font-mono text-[11px] text-label" x-text="key"></span>
+											<div class="flex items-center gap-2">
+												<input
+													type="color"
+													class="size-8 shrink-0 cursor-pointer rounded-field border border-base-300 bg-base-100 p-1 transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 [&::-moz-color-swatch]:rounded-selector [&::-moz-color-swatch]:border-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-selector [&::-webkit-color-swatch]:border-0"
+													x-bind:value="pickerHex(key)"
+													x-on:input="pickColor(key, $event.target.value)"
+													x-bind:aria-label="'Pick ' + key + ' color'"
+													x-bind:title="'Pick ' + key + ' color'"
+												/>
+												<input
+													type="text"
+													class="input input-sm w-full font-mono"
+													x-bind:aria-label="key + ' value'"
+													x-model="colors[key]"
+												/>
+											</div>
+										</div>
 									</template>
 								</div>
 							</div>
 						</template>
 					</div>
 				</div>
-			</div>
-
-			<!-- Right: settings, contrast, export -->
-			<div class={ ui.ColStackLoose }>
 				<!-- Shape & size -->
 				<div class="card card-border bg-base-100">
 					<div class="card-body gap-3 p-4">
@@ -810,4 +1009,13 @@ templ themeStudioScript() {
 			};
 		}
 	</script>
+}
+
+// studioSpecimen wraps one labelled group of components inside the theme
+// studio preview board.
+templ studioSpecimen(title string, class string) {
+	<section class={ "rounded-box border border-base-300 bg-base-100 p-3", class }>
+		<p class="eyebrow text-xs mb-2">{ title }</p>
+		{ children... }
+	</section>
 }

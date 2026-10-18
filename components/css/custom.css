@@ -121,11 +121,40 @@
   }
 }
 
-/* ── Layout: Sidebar ─────────────────────────────────────────── */
-
+/* ── Layout metrics ────────────────────────────────────────────────────────
+ *
+ * Structural sizes shared by layout/table/form components. Derived from
+ * daisyUI's `--size-field` so a theme can rescale the whole chrome by changing
+ * one primitive instead of every component. The `, 0.25rem` fallback keeps the
+ * old pixel values if a consumer's theme omits `--size-field`.
+ *
+ *   token                     default  consumers
+ *   --layout-sidebar-width      16rem  sidebar, admin shell
+ *   --layout-topbar-height       4rem  topbar, admin shell
+ *   --layout-content-pad       1.5rem  #layout-content
+ *   --control-height-sm          2rem  btn-sm/input-sm, sidebar rows
+ *   --control-height-md         2.5rem  default controls
+ *   --table-row-height         2.75rem  table/datatable rows
+ *
+ * These are sizes only. Colour/radius/border stay on daisyUI's own tokens
+ * (--color-*, --radius-box, --radius-field, --border) and the line ladder
+ * above. A difference in *structure* (toolbar slot, density mode, icon
+ * position) is a component variant/prop, not another token.
+ *
+ * Declared in `:root`, not `@theme`: Tailwind prunes `@theme` variables it
+ * cannot see used in scanned sources, and many sizes are consumed from Go
+ * strings or inline `style` attributes that a consumer's scanner does not
+ * read. A plain custom property is always emitted. */
 :root {
-  --layout-sidebar-width: 256px;
+  --layout-sidebar-width: calc(var(--size-field, 0.25rem) * 64);
+  --layout-topbar-height: calc(var(--size-field, 0.25rem) * 16);
+  --layout-content-pad: calc(var(--size-field, 0.25rem) * 6);
+  --control-height-sm: calc(var(--size-field, 0.25rem) * 8);
+  --control-height-md: calc(var(--size-field, 0.25rem) * 10);
+  --table-row-height: calc(var(--size-field, 0.25rem) * 11);
 }
+
+/* ── Layout: Sidebar ─────────────────────────────────────────── */
 
 .sidebar-menu {
   .menu-label {
@@ -141,7 +170,8 @@
   }
 
   .menu-item {
-    @apply rounded-box flex h-8 items-center gap-2 px-2.5 text-sm;
+    @apply rounded-box flex items-center gap-2 px-2.5 text-sm;
+    height: var(--control-height-sm);
   }
 
   a.menu-item,
@@ -193,7 +223,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    height: 32px;
+    height: var(--control-height-sm);
     padding: 0 12px;
     font-size: 14px;
     color: color-mix(in oklab, var(--color-base-content) 80%, transparent);
@@ -208,7 +238,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      min-height: 32px;
+      min-height: var(--control-height-sm);
       padding: 6px 12px;
       font-size: 14px;
       border-radius: var(--radius-box);
@@ -250,11 +280,14 @@
 }
 
 #_layout-topbar {
-  @apply sticky top-0 z-10 max-h-16 min-h-16;
+  @apply sticky top-0 z-10;
+  min-height: var(--layout-topbar-height);
+  max-height: var(--layout-topbar-height);
 }
 
 #layout-content {
-  @apply grow p-6;
+  @apply grow;
+  padding: var(--layout-content-pad);
 }
 
 /* Desktop: sidebar hidden when checkbox checked */
@@ -563,4 +596,21 @@ html[data-gd-resizing] iframe {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
+}
+
+/* ── Compact table rows ───────────────────────────────────────────────────
+ *
+ * `table.TableWithProps` stamps `data-table-density="compact"` on the <table>
+ * when `TableProps.Density == DensityCompact`. This rule collapses the row
+ * height to the theme token `--table-row-height` and removes vertical cell
+ * padding, so compact density follows the theme instead of a hard-coded px.
+ *
+ * Consumers that want a different compact height declare their own
+ * `--table-row-height` in a later `@theme` block; the later declaration wins,
+ * as with any theme variable. When no token is defined the property falls back
+ * to the browser default (auto), leaving padding-block: 0 to tighten the row.
+ */
+[data-table-density="compact"] > :where(thead, tbody) > tr > :where(th, td) {
+  height: var(--table-row-height, 2.75rem);
+  padding-block: 0;
 }

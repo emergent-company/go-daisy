@@ -1,0 +1,572 @@
+package pages
+
+import (
+	"strings"
+
+	ui "github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/shared"
+)
+
+// LandingNavLink is a single navigation link used by LandingTopbar and LandingFooterColumn.
+type LandingNavLink struct {
+	Label  string
+	Href   string
+	Active bool
+}
+
+// LandingTopbarProps configures the floating pill topbar.
+type LandingTopbarProps struct {
+	Brand     string // default "go-daisy"
+	BrandHref string // default "#"
+	Links     []LandingNavLink
+	CTAHref   string // optional CTA, default href "#"
+	CTALabel  string // optional CTA, default label "Get Started"
+	ShowTheme bool
+	Class     string
+	Attrs     templ.Attributes
+}
+
+// LandingHeroProps configures the centered hero section.
+type LandingHeroProps struct {
+	Badge     string
+	BadgeHref string
+	Title     string // plain prefix text
+	Highlight string // gradient-highlighted text appended after Title
+	Subtitle  string
+	PrimaryHref, PrimaryLabel     string
+	SecondaryHref, SecondaryLabel string
+	Visual                        templ.Component // optional; nil renders a decorative gradient mock
+	Class                         string
+	Attrs                         templ.Attributes
+}
+
+// LandingFeature is a single feature-card entry.
+type LandingFeature struct {
+	Icon        string
+	Title       string
+	Description string
+	Href        string
+}
+
+// LandingFeatureGridProps configures the feature grid section.
+type LandingFeatureGridProps struct {
+	ID       string
+	Title    string
+	Subtitle string
+	Features []LandingFeature
+	Columns  int // 2, 3 or 4; default 3
+	Class    string
+	Attrs    templ.Attributes
+}
+
+// LandingTestimonial is a single testimonial entry.
+type LandingTestimonial struct {
+	Quote     string
+	Author    string
+	Role      string
+	AvatarSrc string
+	Rating    int
+}
+
+// LandingTestimonialsProps configures the testimonials section.
+type LandingTestimonialsProps struct {
+	ID    string
+	Title string
+	Items []LandingTestimonial
+	Class string
+	Attrs templ.Attributes
+}
+
+// LandingPricingTier is a single pricing-tier entry.
+type LandingPricingTier struct {
+	Name        string
+	Price       string
+	Period      string
+	Description string
+	Features    []string
+	CTAHref     string
+	CTALabel    string
+	Highlighted bool
+}
+
+// LandingPricingProps configures the pricing section.
+type LandingPricingProps struct {
+	ID       string
+	Title    string
+	Subtitle string
+	Tiers    []LandingPricingTier
+	Class    string
+	Attrs    templ.Attributes
+}
+
+// LandingFAQItem is a single FAQ entry. Answer is a templ.Component.
+type LandingFAQItem struct {
+	Question string
+	Answer   templ.Component
+}
+
+// LandingFAQProps configures the FAQ section.
+type LandingFAQProps struct {
+	ID       string
+	Title    string
+	Subtitle string
+	Items    []LandingFAQItem
+	Class    string
+	Attrs    templ.Attributes
+}
+
+// LandingFooterColumn is a single link column in the footer.
+type LandingFooterColumn struct {
+	Title string
+	Links []LandingNavLink
+}
+
+// LandingFooterProps configures the footer section.
+type LandingFooterProps struct {
+	Brand     string // default "go-daisy"
+	Tagline   string
+	Copyright string // default "© 2026 <brand>."
+	Columns   []LandingFooterColumn
+	Class     string
+	Attrs     templ.Attributes
+}
+
+// landingHref returns s or the "#" default when empty.
+func landingHref(s string) string {
+	if s == "" {
+		return "#"
+	}
+	return s
+}
+
+// landingCTALabel returns s or "Get Started" when empty.
+func landingCTALabel(s string) string {
+	if s == "" {
+		return "Get Started"
+	}
+	return s
+}
+
+// landingFeatureIcon returns s or a default icon when empty.
+func landingFeatureIcon(s string) string {
+	if s == "" {
+		return "lucide--sparkles"
+	}
+	return s
+}
+
+// featureGridCols maps a clamped column count (2..4, default 3) to its
+// responsive grid class.
+func featureGridCols(columns int) string {
+	switch columns {
+	case 2:
+		return "lg:grid-cols-2"
+	case 4:
+		return "lg:grid-cols-4"
+	default:
+		return "lg:grid-cols-3"
+	}
+}
+
+// landingInitials derives up to two uppercase initials from a name.
+func landingInitials(name string) string {
+	parts := strings.Fields(name)
+	if len(parts) == 0 {
+		return ""
+	}
+	var b strings.Builder
+	for i := 0; i < len(parts) && i < 2; i++ {
+		r := []rune(parts[i])
+		if len(r) > 0 {
+			b.WriteString(strings.ToUpper(string(r[0])))
+		}
+	}
+	return b.String()
+}
+
+// landingFAQGroup scopes the radio group to the section id so two FAQ
+// components on one page do not close each other's items.
+func landingFAQGroup(id string) string {
+	if id == "" {
+		return "landing-faq"
+	}
+	return "landing-faq-" + id
+}
+
+// landingCopyright returns the given copyright or a brand-derived default.
+func landingCopyright(copyright, brand string) string {
+	if copyright != "" {
+		return copyright
+	}
+	return "© 2026 " + landingBrand(brand) + "."
+}
+
+// LandingTopbar renders a floating centered pill topbar with a mobile drawer.
+templ LandingTopbar(props LandingTopbarProps) {
+	<div id="landing-topbar" class={ "group fixed inset-x-0 top-4 z-[60] flex justify-center transition-all duration-500 data-[scrolled]:top-0 data-[scrolled]:max-w-screen data-[scrolled]:rounded-none data-[scrolled]:translate-y-0", props.Class }
+		{ devmode.Attrs(ctx, "pages/LandingTopbar")... }
+		{ props.Attrs... }>
+		<div class="border-line bg-base-100/80 backdrop-blur-sm flex w-full max-w-[800px] items-center justify-between rounded-box border px-4 h-16 transition-all duration-500 group-data-[scrolled]:max-w-full group-data-[scrolled]:rounded-none data-[scrolled]:border-0 group-data-[scrolled]:border-b data-[scrolled]:border-line">
+			<div class="flex items-center gap-4">
+				<div class="drawer lg:hidden">
+					<input id="landing-mobile-drawer" type="checkbox" class="drawer-toggle"/>
+					<div class="drawer-content">
+						<label for="landing-mobile-drawer" class="btn btn-square btn-ghost btn-sm">
+							@ui.IconSpan("lucide--menu", "size-5")
+						</label>
+					</div>
+					<div class="drawer-side z-[60]">
+						<label for="landing-mobile-drawer" class="drawer-overlay"></label>
+						<div class="bg-base-100 h-full w-72 p-4">
+							<ul class="menu w-full">
+								for _, l := range props.Links {
+									<li><a href={ templ.URL(landingHref(l.Href)) }>{ l.Label }</a></li>
+								}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<a href={ templ.URL(landingHref(props.BrandHref)) } class="text-xl font-bold text-base-content">{ landingBrand(props.Brand) }</a>
+				<div class="hidden lg:flex items-center gap-6 text-sm">
+					for _, l := range props.Links {
+						<a href={ templ.URL(landingHref(l.Href)) } class={ "link link-hover text-muted hover:text-base-content", templ.KV("text-base-content", l.Active) }>{ l.Label }</a>
+					}
+				</div>
+			</div>
+			<div class="flex items-center gap-3">
+				if props.ShowTheme {
+					@ui.ThemeSwitcher()
+				}
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: landingHref(props.CTAHref), Variant: ui.ButtonPrimary, Size: ui.ButtonSM}) {
+					{ landingCTALabel(props.CTALabel) }
+				}
+			</div>
+		</div>
+	</div>
+	@landingTopbarScript()
+}
+
+// landingTopbarScript wires the data-scrolled state onto #landing-topbar.
+templ landingTopbarScript() {
+	<script { shared.NonceAttrs(ctx)... }>
+	if (!window._gdLandingTopbar) {
+		window._gdLandingTopbar = true;
+		function gdLandingTopbarUpdate() {
+			var el = document.getElementById("landing-topbar");
+			if (!el) return;
+			if (window.scrollY > 8) {
+				el.setAttribute("data-scrolled", "");
+			} else {
+				el.removeAttribute("data-scrolled");
+			}
+		}
+		function gdLandingTopbarInit() {
+			window.addEventListener("scroll", gdLandingTopbarUpdate, { passive: true });
+			document.addEventListener("htmx:after:settle", gdLandingTopbarUpdate);
+			gdLandingTopbarUpdate();
+		}
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", gdLandingTopbarInit);
+		} else {
+			gdLandingTopbarInit();
+		}
+	}
+	</script>
+}
+
+// LandingHero renders a centered hero section with badge, title, CTAs and visual.
+templ LandingHero(props LandingHeroProps) {
+	<section class={ "relative overflow-hidden", props.Class }
+		{ devmode.Attrs(ctx, "pages/LandingHero")... }
+		{ props.Attrs... }>
+		<div class="border-line bg-base-100/25 relative mx-auto max-w-[1000px] rounded-box border backdrop-blur-sm mt-28 mb-12 px-4 sm:px-8 py-12 sm:py-20 text-center">
+			if props.Badge != "" {
+				<a href={ templ.URL(landingHref(props.BadgeHref)) } class="btn btn-sm badge-secondary rounded-full mb-6">{ props.Badge }</a>
+			}
+			<h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-base-content">
+				{ props.Title }{" "}
+				if props.Highlight != "" {
+					@ui.GradientText(ui.GradientTextProps{Text: props.Highlight, FromColor: "from-primary", ToColor: "to-secondary"})
+				}
+			</h1>
+			if props.Subtitle != "" {
+				<p class="text-muted mt-6 text-lg max-w-2xl mx-auto">{ props.Subtitle }</p>
+			}
+			<div class="mt-8 flex items-center justify-center gap-4">
+				if props.PrimaryLabel != "" {
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: landingHref(props.PrimaryHref), Variant: ui.ButtonPrimary, Size: ui.ButtonLG, Glow: true}) {
+						{ props.PrimaryLabel }
+					}
+				}
+				if props.SecondaryLabel != "" {
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: landingHref(props.SecondaryHref), Variant: ui.ButtonOutline, Size: ui.ButtonLG}) {
+						{ props.SecondaryLabel }
+					}
+				}
+			</div>
+			<div class="mt-12 flex justify-center">
+				if props.Visual != nil {
+					@props.Visual
+				} else {
+					@landingHeroVisualMock()
+				}
+			</div>
+		</div>
+	</section>
+}
+
+// landingHeroVisualMock renders a decorative gradient dashboard placeholder.
+templ landingHeroVisualMock() {
+	<div class="w-full max-w-2xl mx-auto rounded-box border border-line bg-base-100 shadow-lg p-4">
+		<div class="rounded-lg bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 h-40 flex items-center justify-center">
+			<div class="text-center">
+				<div class="inline-flex items-center gap-2 rounded-full bg-base-100/70 px-3 py-1 text-xs text-label">
+					@ui.IconSpan("lucide--zap", "size-3.5", "text-primary")
+					Preview
+				</div>
+				<div class="mt-4 space-y-2">
+					<div class="mx-auto h-2 w-40 rounded bg-base-100/70"></div>
+					<div class="mx-auto h-2 w-56 rounded bg-base-100/50"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+// LandingFeatureGrid renders a responsive feature-card grid.
+templ LandingFeatureGrid(props LandingFeatureGridProps) {
+	<section class={ "container mx-auto px-4 py-16", props.Class }
+		if props.ID != "" {
+			id={ props.ID }
+		}
+		{ devmode.Attrs(ctx, "pages/LandingFeatureGrid")... }
+		{ props.Attrs... }>
+		if props.Title != "" || props.Subtitle != "" {
+			<div class="text-center mb-12">
+				if props.Title != "" {
+					<h2 class="text-3xl font-bold text-base-content">{ props.Title }</h2>
+				}
+				if props.Subtitle != "" {
+					<p class="text-muted mt-3">{ props.Subtitle }</p>
+				}
+			</div>
+		}
+		<div class={ "grid grid-cols-1 sm:grid-cols-2 gap-6", featureGridCols(props.Columns) }>
+			for _, f := range props.Features {
+				@landingFeatureCard(f)
+			}
+		</div>
+	</section>
+}
+
+// landingFeatureCard renders one feature card, wrapping it in a link when Href is set.
+templ landingFeatureCard(f LandingFeature) {
+	if f.Href != "" {
+		<a href={ templ.URL(f.Href) } class="card bg-base-100 shadow-sm border border-line hover:border-line-strong transition-all">
+			@landingFeatureCardBody(f)
+		</a>
+	} else {
+		<div class="card bg-base-100 shadow-sm border border-line hover:border-line-strong transition-all">
+			@landingFeatureCardBody(f)
+		</div>
+	}
+}
+
+templ landingFeatureCardBody(f LandingFeature) {
+	<div class="card-body p-6">
+		@ui.IconSpan(landingFeatureIcon(f.Icon), "size-8", "text-primary mb-2")
+		<h3 class="text-lg font-semibold text-base-content">{ f.Title }</h3>
+		<p class="text-sm text-muted">{ f.Description }</p>
+	</div>
+}
+
+// LandingTestimonials renders a grid of testimonial cards.
+templ LandingTestimonials(props LandingTestimonialsProps) {
+	<section class={ "container mx-auto py-16 px-4", props.Class }
+		if props.ID != "" {
+			id={ props.ID }
+		}
+		{ devmode.Attrs(ctx, "pages/LandingTestimonials")... }
+		{ props.Attrs... }>
+		if props.Title != "" {
+			<div class="text-center mb-12">
+				<h2 class="text-3xl font-bold text-base-content">{ props.Title }</h2>
+			</div>
+		}
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+			for _, t := range props.Items {
+				@landingTestimonialCard(t)
+			}
+		</div>
+	</section>
+}
+
+templ landingTestimonialCard(t LandingTestimonial) {
+	<div class="card bg-base-100 shadow-sm border border-line">
+		<div class="card-body text-center">
+			<div class="avatar">
+				<div class="mask mask-squircle w-16 bg-base-200">
+					if t.AvatarSrc != "" {
+						<img src={ templ.URL(t.AvatarSrc) } alt={ t.Author }/>
+					} else {
+						<div class="bg-primary text-primary-content flex size-full items-center justify-center font-bold text-xl">{ landingInitials(t.Author) }</div>
+					}
+				</div>
+			</div>
+			if t.Rating > 0 {
+				<div class="flex justify-center gap-0.5 mt-3">
+					@landingStars(t.Rating)
+				</div>
+			}
+			<p class="text-muted mt-2 text-sm">{ t.Quote }</p>
+			if t.Author != "" {
+				<p class="font-medium mt-3 text-base-content">{ t.Author }</p>
+			}
+			if t.Role != "" {
+				<p class="text-xs text-faint">{ t.Role }</p>
+			}
+		</div>
+	</div>
+}
+
+// landingStars renders up to five star icons, filling rating of them.
+templ landingStars(rating int) {
+	for i := 1; i <= 5; i++ {
+		if i <= rating {
+			@ui.IconSpan("lucide--star", "size-4", "text-warning")
+		} else {
+			@ui.IconSpan("lucide--star", "size-4", "text-faint")
+		}
+	}
+}
+
+// LandingPricing renders a tier card grid.
+templ LandingPricing(props LandingPricingProps) {
+	<section class={ "bg-base-200 py-16", props.Class }
+		if props.ID != "" {
+			id={ props.ID }
+		}
+		{ devmode.Attrs(ctx, "pages/LandingPricing")... }
+		{ props.Attrs... }>
+		<div class="container mx-auto px-4">
+			if props.Title != "" || props.Subtitle != "" {
+				<div class="text-center mb-12">
+					if props.Title != "" {
+						<h2 class="text-3xl font-bold text-base-content">{ props.Title }</h2>
+					}
+					if props.Subtitle != "" {
+						<p class="text-muted mt-3">{ props.Subtitle }</p>
+					}
+				</div>
+			}
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+				for _, tier := range props.Tiers {
+					@landingPricingTier(tier)
+				}
+			</div>
+		</div>
+	</section>
+}
+
+templ landingPricingTier(tier LandingPricingTier) {
+	<div class={ "card bg-base-100 shadow-sm border border-line", templ.KV("shadow-lg border-primary", tier.Highlighted) }>
+		<div class="card-body text-center">
+			if tier.Highlighted {
+				<div class="badge badge-primary mx-auto">Popular</div>
+			}
+			<h3 class="text-xl font-bold mt-3 text-base-content">{ tier.Name }</h3>
+			<p class="text-4xl font-extrabold mt-2 text-base-content">{ tier.Price }</p>
+			if tier.Period != "" {
+				<p class="text-sm text-muted mt-1">{ tier.Period }</p>
+			}
+			if tier.Description != "" {
+				<p class="text-sm text-muted mt-1">{ tier.Description }</p>
+			}
+			<ul class="mt-6 space-y-2 text-left">
+				for _, f := range tier.Features {
+					<li class="flex items-center gap-2 text-sm text-label">
+						@ui.IconSpan("lucide--check", "size-4", "text-success")
+						<span>{ f }</span>
+					</li>
+				}
+			</ul>
+			if tier.CTALabel != "" {
+				<div class="mt-6">
+					@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: landingHref(tier.CTAHref), Variant: ui.ButtonPrimary, Size: ui.ButtonMD, Block: true}) {
+						{ tier.CTALabel }
+					}
+				</div>
+			}
+		</div>
+	</div>
+}
+
+// LandingFAQ renders a DaisyUI collapse-plus accordion of question/answer items.
+templ LandingFAQ(props LandingFAQProps) {
+	<section class={ "container mx-auto py-16 px-4 max-w-3xl", props.Class }
+		if props.ID != "" {
+			id={ props.ID }
+		}
+		{ devmode.Attrs(ctx, "pages/LandingFAQ")... }
+		{ props.Attrs... }>
+		if props.Title != "" || props.Subtitle != "" {
+			<div class="text-center mb-12">
+				if props.Title != "" {
+					<h2 class="text-3xl font-bold text-base-content">{ props.Title }</h2>
+				}
+				if props.Subtitle != "" {
+					<p class="text-muted mt-3">{ props.Subtitle }</p>
+				}
+			</div>
+		}
+		<div class="space-y-2">
+			for _, item := range props.Items {
+				<div class="collapse collapse-plus border border-line bg-base-100 rounded-box">
+					<input type="radio" name={ landingFAQGroup(props.ID) }/>
+					<div class="collapse-title font-medium text-base-content">{ item.Question }</div>
+					<div class="collapse-content">
+						<div class="text-sm text-muted">
+							if item.Answer != nil {
+								@item.Answer
+							}
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</section>
+}
+
+// LandingFooter renders brand/tagline, link columns, divider and copyright line.
+templ LandingFooter(props LandingFooterProps) {
+	<footer class={ "bg-base-200 border-t border-line-strong", props.Class }
+		{ devmode.Attrs(ctx, "pages/LandingFooter")... }
+		{ props.Attrs... }>
+		<div class="container mx-auto px-4 py-12">
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+				<div>
+					<h4 class="font-bold text-lg text-base-content">{ landingBrand(props.Brand) }</h4>
+					if props.Tagline != "" {
+						<p class="text-sm text-muted mt-2">{ props.Tagline }</p>
+					}
+				</div>
+				for _, col := range props.Columns {
+					<div>
+						if col.Title != "" {
+							<h4 class="font-semibold mb-3 text-base-content">{ col.Title }</h4>
+						}
+						<ul class="space-y-1 text-sm text-muted">
+							for _, l := range col.Links {
+								<li><a href={ templ.URL(landingHref(l.Href)) } class="link link-hover hover:text-base-content">{ l.Label }</a></li>
+							}
+						</ul>
+					</div>
+				}
+			</div>
+			<div class="text-center text-sm text-faint mt-8 pt-8 border-t border-line">
+				<p>{ landingCopyright(props.Copyright, props.Brand) }</p>
+			</div>
+		</div>
+	</footer>
+}

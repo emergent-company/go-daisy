@@ -136,6 +136,18 @@ func SearchModalWithBoundary(style string, opts SearchModalOpts) templ.Component
 	})
 }
 
+// SearchTriggerWithBoundary wraps SearchTrigger with a dev-mode component boundary annotation.
+// gallery:token dialogID,placeholder
+// gallery:hint dialogID:default(search-modal)
+// gallery:hint placeholder:default(Search)
+func SearchTriggerWithBoundary(dialogID, placeholder string) templ.Component {
+	props := SearchTriggerProps{DialogID: dialogID, Placeholder: placeholder}
+	return devmode.ComponentBoundary("SearchTrigger", SearchTrigger(props), map[string]any{
+		"dialogId":    dialogID,
+		"placeholder": placeholder,
+	})
+}
+
 // ProfileMenuVariantWithBoundary wraps ProfileMenuVariant with a dev-mode boundary.
 func ProfileMenuVariantWithBoundary(style string, opts ProfileMenuVariantOpts) templ.Component {
 	return devmode.ComponentBoundary("ProfileMenuVariant", ProfileMenuVariant(style, opts), map[string]any{

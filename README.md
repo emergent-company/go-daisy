@@ -279,7 +279,12 @@ contrast for every content pair, and can:
   `[data-theme="custom"]` rule, so no CSS rebuild is needed.
 - **Edit typography** — body and heading font families (local stacks only,
   nothing is downloaded), weights, heading letter-spacing and body line-height,
-  previewed against a prose sample.
+  previewed against a prose sample in the same board.
+- **Preview a component sheet** — palette surfaces and semantic colours,
+  actions, form controls, feedback, navigation, data display (card, stats,
+  table, chat) and a typography sample, all resolved from the edited tokens
+  inside one full-height `[data-theme="gd-preview"]` scope that sits in the left
+  column beside the settings panels.
 - **Export** a `@plugin "daisyui/theme"` block for `assets/app.css`, plus a
   `[data-theme="…"]` rule for the typography roles (font stacks contain
   commas, which Tailwind's plugin parser would otherwise split into fallback
@@ -287,11 +292,13 @@ contrast for every content pair, and can:
 - **Share** a link (base64 payload in the URL fragment) or import an existing
   theme block.
 
-Colour swatches open the native colour picker. Pickers only speak `#rrggbb`,
-so a token stored as `oklch(...)` is converted back to Oklch (linear-sRGB →
-Oklab → LCh); hex-authored tokens stay hex. Picking is always opaque — alpha
-must be typed in the text field, which accepts any CSS colour including alpha
-and `var()`.
+Each colour field pairs a native colour input, styled like the rest of the
+form controls (bordered chip, hover/focus ring), with a monospace value field.
+The picker popup itself is OS chrome and cannot be themed. Pickers only speak
+`#rrggbb`, so a token stored as `oklch(...)` is converted back to Oklch
+(linear-sRGB → Oklab → LCh); hex-authored tokens stay hex. Picking is always
+opaque — alpha must be typed in the text field, which accepts any CSS colour
+including alpha and `var()`.
 
 The studio is client-side only and never writes to the repository.
 

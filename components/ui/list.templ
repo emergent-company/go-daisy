@@ -2,6 +2,33 @@ package ui
 
 import "github.com/emergent-company/go-daisy/devmode"
 
+// ListRowVariant selects a visual treatment for a ListRow.
+type ListRowVariant string
+
+const (
+	ListRowDefault ListRowVariant = ""       // current look, no extra classes
+	ListRowOutline ListRowVariant = "outline"
+	ListRowMuted   ListRowVariant = "muted"
+)
+
+// ListRowSize tightens the vertical padding and title size of a ListRow.
+type ListRowSize string
+
+const (
+	ListRowSizeDefault ListRowSize = ""
+	ListRowSizeSM      ListRowSize = "sm"
+	ListRowSizeXS      ListRowSize = "xs"
+)
+
+// ListMediaVariant styles the Leading slot of a ListRow.
+type ListMediaVariant string
+
+const (
+	ListMediaDefault ListMediaVariant = ""
+	ListMediaIcon    ListMediaVariant = "icon"
+	ListMediaImage   ListMediaVariant = "image"
+)
+
 // ListRowProps holds data for a single list row.
 //
 // Layout patterns:
@@ -37,6 +64,28 @@ type ListRowProps struct {
 	Trailing []templ.Component
 	// Attrs are optional extra HTML attributes on the <li> element, e.g. {"data-testid": "user-row-42"}.
 	Attrs templ.Attributes
+
+	// Variant selects a visual treatment for the row.
+	Variant ListRowVariant
+	// Size tightens the vertical padding and title size of the row.
+	Size ListRowSize
+	// MediaVariant styles the Leading slot: "icon" wraps it in a 9×9 rounded
+	// bg-base-200 centred box with text-muted; "image" wraps it in a 9×9
+	// rounded overflow-hidden bg-base-200 box with [&_img]:size-full
+	// [&_img]:object-cover; "" leaves Leading unwrapped. Ignored when
+	// LeadingGrow is set, because the growing slot must stay unwrapped.
+	MediaVariant ListMediaVariant
+	// Href, when non-empty, wraps the row contents in an <a> filling the row.
+	Href string
+	// Target is the anchor target; emitted only when non-empty. Set "_blank"
+	// to also emit rel="noopener noreferrer".
+	Target string
+	// Header is an optional component rendered above the title inside the
+	// growing content column (not as a wrapped grid row).
+	Header templ.Component
+	// Footer is an optional component rendered below the description inside
+	// the same wrapped grid cell.
+	Footer templ.Component
 }
 
 // ListProps holds options for the List container.
@@ -58,38 +107,94 @@ templ List(p ListProps) {
 	</ul>
 }
 
+// ItemGroup is a List container for item rows (templui ItemGroup parity).
+templ ItemGroup(p ListProps) {
+	@List(p) {
+		{ children... }
+	}
+}
+
+// ItemSeparator is a non-interactive separator row inside a list.
+templ ItemSeparator() {
+	<li role="separator" class="my-1 h-px bg-base-300" { devmode.Attrs(ctx, "ui/ItemSeparator")... }></li>
+}
+
 // ListRow renders a single row inside a List.
 templ ListRow(p ListRowProps) {
-	<li class="list-row" { devmode.Attrs(ctx, "ui/ListRow")... } { p.Attrs... }>
-		if p.Leading != nil {
-			if p.LeadingGrow {
-				<div class="list-col-grow">
-					@p.Leading
-				</div>
-			} else {
-				@p.Leading
-			}
-		}
-		if !p.LeadingGrow {
-			<div class="list-col-grow">
-				<div class="font-medium text-sm">{ p.Title }</div>
-				if p.Subtitle != "" {
-					<div class="text-xs text-subtle">{ p.Subtitle }</div>
+	if p.Href != "" {
+		<li { devmode.Attrs(ctx, "ui/ListRow")... } { p.Attrs... }>
+			<a class={ listRowClass(p) } href={ templ.URL(p.Href) }
+				if p.Target != "" {
+					target={ p.Target }
 				}
+				if p.Target == "_blank" {
+					rel="noopener noreferrer"
+				}
+			>
+				@listRowContent(p)
+			</a>
+		</li>
+	} else {
+		<li class={ listRowClass(p) } { devmode.Attrs(ctx, "ui/ListRow")... } { p.Attrs... }>
+			@listRowContent(p)
+		</li>
+	}
+}
+
+// listRowContent renders the shared inner content of a ListRow, used by both
+// the plain and anchor branches.
+//
+// Header sits inside the growing content column (above the title), so the
+// DaisyUI list grid keeps exactly one growing column. Description and Footer
+// share a single list-col-wrap block, which keeps the wrapped row to one cell.
+templ listRowContent(p ListRowProps) {
+	if p.Leading != nil {
+		if p.MediaVariant == ListMediaIcon && !p.LeadingGrow {
+			<div class="size-9 shrink-0 rounded-box bg-base-200 text-muted flex items-center justify-center">@p.Leading</div>
+		} else if p.MediaVariant == ListMediaImage && !p.LeadingGrow {
+			<div class="size-9 shrink-0 rounded-box overflow-hidden bg-base-200 [&_img]:size-full [&_img]:object-cover">@p.Leading</div>
+		} else if p.LeadingGrow {
+			<div class="list-col-grow">
+				@p.Leading
 			</div>
 		} else {
-			<div>
-				<div class="font-medium text-sm">{ p.Title }</div>
-				if p.Subtitle != "" {
-					<div class="text-xs text-subtle">{ p.Subtitle }</div>
-				}
-			</div>
+			@p.Leading
 		}
-		for _, t := range p.Trailing {
-			@t
-		}
+	}
+	if !p.LeadingGrow {
+		<div class="list-col-grow">
+			if p.Header != nil {
+				<div class="text-xs font-semibold text-label">@p.Header</div>
+			}
+			<div class={ "font-medium", templ.KV("text-xs", p.Size == ListRowSizeXS), templ.KV("text-sm", p.Size != ListRowSizeXS) }>{ p.Title }</div>
+			if p.Subtitle != "" {
+				<div class="text-xs text-subtle">{ p.Subtitle }</div>
+			}
+		</div>
+	} else {
+		<div>
+			if p.Header != nil {
+				<div class="text-xs font-semibold text-label">@p.Header</div>
+			}
+			<div class={ "font-medium", templ.KV("text-xs", p.Size == ListRowSizeXS), templ.KV("text-sm", p.Size != ListRowSizeXS) }>{ p.Title }</div>
+			if p.Subtitle != "" {
+				<div class="text-xs text-subtle">{ p.Subtitle }</div>
+			}
+		</div>
+	}
+	for _, t := range p.Trailing {
+		@t
+	}
+	if p.Footer == nil {
 		if p.Description != "" {
 			<div class="list-col-wrap text-xs text-muted mt-1">{ p.Description }</div>
 		}
-	</li>
+	} else {
+		<div class="list-col-wrap text-xs mt-1">
+			if p.Description != "" {
+				<div class="text-muted">{ p.Description }</div>
+			}
+			<div class="text-subtle">@p.Footer</div>
+		</div>
+	}
 }

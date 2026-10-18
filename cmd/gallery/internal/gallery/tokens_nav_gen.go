@@ -237,6 +237,26 @@ func LinkTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// SearchTriggerTokens returns the DesignToken slice for SearchTriggerWithBoundary.
+func SearchTriggerTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Dialog ID",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "search-modal",
+			QueryParam: "dialogID",
+		},
+		{
+			Label:      "Placeholder",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Search",
+			QueryParam: "placeholder",
+		},
+	}
+}
+
 // MenuSectionTokens returns the DesignToken slice for MenuSectionWithBoundary.
 func MenuSectionTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
