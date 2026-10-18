@@ -116,15 +116,15 @@ templ ChatLayout(props ChatLayoutProps) {
 	if communityLabel == "" {
 		communityLabel = "Join a Community"
 	} }}
-	<div class={ "grid grid-cols-1 gap-4 lg:grid-cols-12", props.Class } { devmode.Attrs(ctx, "pages/ChatLayout")... } { props.Attrs... }>
-		<div class="lg:col-span-4 2xl:col-span-3">
-			<div class="card bg-base-100 shadow">
-				<div class="card-body">
+	<div class={ "grid grid-cols-1 gap-6 lg:grid-cols-12", props.Class } { devmode.Attrs(ctx, "pages/ChatLayout")... } { props.Attrs... }>
+		<div class="flex lg:col-span-5 xl:col-span-4 2xl:col-span-3">
+			<div class="card bg-base-100 shadow h-full w-full">
+				<div class="card-body flex min-h-0 flex-col">
 					<div class="flex items-center gap-3">
 						@form.SearchInput("chat-search", "", searchPh, "", "", "")
 						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: newContactHref, Variant: ui.ButtonOutline, Shape: ui.ButtonShapeSquare, Size: ui.ButtonSM, AriaLabel: "New Contact", Icon: "lucide--plus"})
 					</div>
-					<div class="mt-4 max-h-96 overflow-y-auto">
+					<div class="mt-4 min-h-0 max-lg:max-h-96 flex-1 overflow-y-auto">
 						for _, c := range convs {
 							{{ c.Active = c.Name == activeName }}
 							@ChatContactItem(c)
@@ -139,7 +139,7 @@ templ ChatLayout(props ChatLayoutProps) {
 			</div>
 		</div>
 
-		<div class="lg:col-span-8 2xl:col-span-9">
+		<div class="lg:col-span-7 xl:col-span-8 2xl:col-span-9">
 			<div class="card bg-base-100 shadow flex flex-col">
 				<div class="flex items-center gap-3 px-4 py-3 border-b border-line">
 					@ui.AvatarFull(ui.AvatarProps{Name: peer.Name, Src: peer.AvatarSrc})
