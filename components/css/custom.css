@@ -597,3 +597,20 @@ html[data-gd-resizing] iframe {
   opacity: 0;
   pointer-events: none;
 }
+
+/* ── Compact table rows ───────────────────────────────────────────────────
+ *
+ * `table.TableWithProps` stamps `data-table-density="compact"` on the <table>
+ * when `TableProps.Density == DensityCompact`. This rule collapses the row
+ * height to the theme token `--table-row-height` and removes vertical cell
+ * padding, so compact density follows the theme instead of a hard-coded px.
+ *
+ * Consumers that want a different compact height declare their own
+ * `--table-row-height` in a later `@theme` block; the later declaration wins,
+ * as with any theme variable. When no token is defined the property falls back
+ * to the browser default (auto), leaving padding-block: 0 to tighten the row.
+ */
+[data-table-density="compact"] > :where(thead, tbody) > tr > :where(th, td) {
+  height: var(--table-row-height, 2.75rem);
+  padding-block: 0;
+}

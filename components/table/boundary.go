@@ -53,6 +53,20 @@ func TableCellWithBoundary(class string) templ.Component {
 	return devmode.ElementBoundary("TableCell", TableCell(class, nil), map[string]any{"class": class})
 }
 
+// TableSelectAllWithBoundary wraps TableSelectAll with a dev-mode element boundary annotation.
+// gallery:token label
+// gallery:hint label:default(Select all)
+func TableSelectAllWithBoundary(label string) templ.Component {
+	return devmode.ElementBoundary("TableSelectAll", TableSelectAll(label), map[string]any{"label": label})
+}
+
+// TableSelectRowWithBoundary wraps TableSelectRow with a dev-mode element boundary annotation.
+// gallery:token name,checked
+// gallery:hint name:default(row)
+func TableSelectRowWithBoundary(name string, checked bool) templ.Component {
+	return devmode.ElementBoundary("TableSelectRow", TableSelectRow(name, checked), map[string]any{"name": name, "checked": checked})
+}
+
 // ListAreaWithBoundary wraps ListArea with a dev-mode component boundary annotation.
 func ListAreaWithBoundary(props ListAreaProps) templ.Component {
 	return devmode.ComponentBoundary("ListArea", ListArea(props), props)
@@ -61,6 +75,16 @@ func ListAreaWithBoundary(props ListAreaProps) templ.Component {
 // TableEmptyWithBoundary wraps TableEmpty with a dev-mode element boundary annotation.
 func TableEmptyWithBoundary(colspan int, message string) templ.Component {
 	return devmode.ElementBoundary("TableEmpty", TableEmpty(colspan, message), map[string]any{"colspan": colspan, "message": message})
+}
+
+// TableCardWithBoundary wraps TableCard with a dev-mode component boundary annotation.
+// Toolbar and Footer are templ.Component slots, so there is no gallery token
+// surface to expose.
+func TableCardWithBoundary(props TableCardProps) templ.Component {
+	return devmode.ComponentBoundary("TableCard", TableCard(props), map[string]any{
+		"toolbar": props.Toolbar != nil,
+		"footer":  props.Footer != nil,
+	})
 }
 
 // TableCardWrapperWithBoundary wraps TableCardWrapper with a dev-mode component boundary annotation.
