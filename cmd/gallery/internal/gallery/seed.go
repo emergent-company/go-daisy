@@ -6224,6 +6224,48 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					},
 				},
 				{
+					Name:        "Card with slots",
+					Description: "TableCard puts an optional toolbar above and a pagination footer below a TableWithProps composition.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						toolbar := withChildren(table.TableCardHeaderWithBoundary(), seq(
+							table.TableSearchWithBoundary("table-search", "", "Search users", "", ""),
+							ui.ButtonWithBoundary("#", ui.ButtonPrimary, ui.ButtonSM, ui.ButtonStyleDefault, ui.ButtonTypeButton, ui.ButtonShapeDefault, "lucide--plus", false, false, false),
+						))
+						tbl := withChildren(table.TableWithPropsWithBoundary(table.TableProps{Size: table.TableSizeSM}), seq(
+							withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
+								table.TableSelectAllWithBoundary("Select all"),
+								table.TableHeadCellWithBoundary("Name"),
+								table.TableHeadCellWithBoundary("Status"),
+								table.TableHeadCellWithBoundary("Role"),
+							))),
+							withChildren(table.TableBodyWithBoundary(), seq(
+								withChildren(table.TableRowWithBoundary("", true), seq(
+									table.TableSelectRowWithBoundary("row-1", true),
+									withChildren(table.TableCellWithBoundary(""), rawHTML("Alice Johnson")),
+									withChildren(table.TableCellWithBoundary(""), ui.StatusBadgeWithBoundary("active")),
+									withChildren(table.TableCellWithBoundary(""), rawHTML("Admin")),
+								)),
+								withChildren(table.TableRowWithBoundary("", true), seq(
+									table.TableSelectRowWithBoundary("row-2", false),
+									withChildren(table.TableCellWithBoundary(""), rawHTML("Bob Smith")),
+									withChildren(table.TableCellWithBoundary(""), ui.StatusBadgeWithBoundary("pending")),
+									withChildren(table.TableCellWithBoundary(""), rawHTML("Employee")),
+								)),
+							)),
+						))
+						return withChildren(
+							table.TableCardWithBoundary(table.TableCardProps{
+								Toolbar: toolbar,
+								Footer: table.TableCardFooterWithBoundary(table.TableCardFooterProps{
+									CurrentPage: 1, TotalPages: 3, TotalItems: 24, PageSize: 10, BaseURL: "#", TargetID: "main-content",
+								}),
+							}),
+							tbl,
+						)
+					},
+					FrameHeight: "520px",
+				},
+				{
 					Name:        "Examples",
 					Description: "Cell type variations: text, status badge, avatar+name, action menu, empty state, and styling variants.",
 					SubExamples: []galleryruntime.GallerySubExample{
@@ -9492,6 +9534,53 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Tokens: []galleryruntime.DesignToken{
 						{Label: "Brand", Group: "Content", Type: galleryruntime.TokenTypeText, Default: "go-daisy", QueryParam: "brandName"},
 					},
+				},
+				{
+					Name:        "Composable sections",
+					Description: "The same page assembled from LandingTopbar/Hero/FeatureGrid/Testimonials/Pricing/FAQ/Footer, the way an app builds a marketing page.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return shared.Compose(
+							pages.LandingTopbarWithBoundary("go-daisy", "Get Started", true, []pages.LandingNavLink{
+								{Label: "Features", Href: "#features"},
+								{Label: "Testimonials", Href: "#testimonials"},
+								{Label: "Pricing", Href: "#pricing"},
+								{Label: "FAQ", Href: "#faq"},
+							}),
+							pages.LandingHeroWithBoundary(
+								"v2.0 is here",
+								"Build interfaces that",
+								"stay in sync",
+								"Type-safe Templ components, DaisyUI styling, and HTMX wiring — without the markup drift.",
+								"Get started free",
+								"View on GitHub",
+							),
+							pages.LandingFeatureGridWithBoundary("features", "Everything you need", "Primitives, patterns and pages that already fit together.", 3, []pages.LandingFeature{
+								{Icon: "lucide--blocks", Title: "Composable primitives", Description: "Every component returns a templ.Component with Props structs and boundary wrappers."},
+								{Icon: "lucide--palette", Title: "Theme-derived tokens", Description: "Measurements come from --size-field, so one theme block rescales the chrome."},
+								{Icon: "lucide--zap", Title: "HTMX first", Description: "Render helpers pick page, fragment or triple response from request headers."},
+							}),
+							pages.LandingTestimonialsWithBoundary("testimonials", "Loved by developers", []pages.LandingTestimonial{
+								{Quote: "We deleted half our template layer.", Author: "Ada Lovelace", Role: "Platform lead", Rating: 5},
+								{Quote: "Tokens meant our density switch actually worked.", Author: "Grace Hopper", Role: "Staff engineer", Rating: 5},
+								{Quote: "The gallery is the documentation.", Author: "Alan Turing", Role: "Founding engineer", Rating: 4},
+							}),
+							pages.LandingPricingWithBoundary("pricing", "Simple pricing", "Start free, scale when you ship.", []pages.LandingPricingTier{
+								{Name: "Hobby", Price: "$0", Period: "/forever", Description: "For side projects", Features: []string{"All components", "Gallery source"}, CTALabel: "Start free"},
+								{Name: "Team", Price: "$19", Period: "/month", Description: "For product teams", Features: []string{"Everything in Hobby", "Priority fixes", "Theme reviews"}, CTALabel: "Choose Team", Highlighted: true},
+								{Name: "Enterprise", Price: "Custom", Period: "", Description: "For platforms", Features: []string{"Everything in Team", "Onboarding", "SLA"}, CTALabel: "Talk to us"},
+							}),
+							pages.LandingFAQWithBoundary("faq", "Frequently asked questions", "Short answers to the things that come up first.", []pages.LandingFAQItem{
+								{Question: "Does it work without HTMX?", Answer: shared.StrComp("Yes. Components render plain HTML; HTMX helpers are optional.")},
+								{Question: "Can I override the tokens?", Answer: shared.StrComp("Yes. Set any token in your theme's <code>:root</code> block.")},
+								{Question: "Is Alpine or Stimulus required?", Answer: shared.StrComp("Neither. Interactive components ship vanilla, Alpine and Stimulus variants where it matters.")},
+							}),
+							pages.LandingFooterWithBoundary("go-daisy", "Type-safe Templ components for DaisyUI.", "", []pages.LandingFooterColumn{
+								{Title: "Product", Links: []pages.LandingNavLink{{Label: "Components", Href: "/gallery"}, {Label: "Docs", Href: "/gallery/docs"}}},
+								{Title: "Community", Links: []pages.LandingNavLink{{Label: "GitHub", Href: "#"}, {Label: "Discussions", Href: "#"}}},
+							}),
+						)
+					},
+					FrameHeight: "1400px",
 				},
 			},
 		},

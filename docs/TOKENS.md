@@ -25,9 +25,9 @@ Declared in `components/css/custom.css`.
 | `--layout-sidebar-width` | 16rem (256px) | `layout.Sidebar`, admin shell |
 | `--layout-topbar-height` | 4rem (64px) | topbar, admin shell |
 | `--layout-content-pad` | 1.5rem (24px) | `#layout-content` |
-| `--control-height-sm` | 2rem (32px) | small buttons/inputs, sidebar rows |
-| `--control-height-md` | 2.5rem (40px) | default controls |
-| `--table-row-height` | 2.75rem (44px) | table/datatable rows |
+| `--control-height-sm` | 2rem (32px) | sidebar menu rows, sidebar items, collapse titles |
+| `--control-height-md` | 2.5rem (40px) | reserved (no consumer yet) |
+| `--table-row-height` | 2.75rem (44px) | `Table{Density: DensityCompact}` rows |
 
 A theme overrides any of them in its own `:root`/`[data-theme]` block:
 
@@ -37,6 +37,11 @@ A theme overrides any of them in its own `:root`/`[data-theme]` block:
   --table-row-height: 2.5rem;
 }
 ```
+
+Tokens are only declared when a real consumer exists or is landing in the same
+change. `--control-height-md` is deliberately listed as reserved: default
+button/input heights still come from daisyUI, and forcing a height would break
+textareas and outlined fields.
 
 ## Pairing with variants
 
