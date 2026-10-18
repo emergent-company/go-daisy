@@ -847,7 +847,6 @@ func TestNavigationMenuContract(t *testing.T) {
 		"data-gd-navigation-menu",
 		"data-gd-nav-item",
 		"data-gd-nav-trigger",
-		`aria-expanded="false"`,
 		`aria-controls="nav-x-content"`,
 		`id="nav-x-content"`,
 		"data-gd-nav-content",
@@ -858,6 +857,12 @@ func TestNavigationMenuContract(t *testing.T) {
 		if !strings.Contains(got, want) {
 			t.Errorf("navigation menu missing %q in:\n%s", want, got)
 		}
+	}
+
+	// aria-expanded is runtime-owned: without JavaScript the panels are visible,
+	// so a server-rendered "false" would be a false claim.
+	if strings.Contains(got, "aria-expanded") {
+		t.Errorf("trigger must not render aria-expanded before the runtime runs:\n%s", got)
 	}
 
 	// A navigation panel is a list of links, not a menu: menu semantics here

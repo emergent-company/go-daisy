@@ -131,10 +131,12 @@ func NavigationMenuScript() templ.Component {
 //   - no focus trap and no shared viewport: each panel is absolutely positioned
 //     under its own item
 //
-// Progressive enhancement: the server renders every panel VISIBLE in flow and
-// the runtime adds data-gd-nav-ready to the root. Only a rule scoped to
-// [data-gd-nav-ready] hides the panels, so a no-JS visitor gets a readable list
-// of links (no flash, no permanently hidden content).
+// Progressive enhancement: the server renders every panel visible (positioned
+// under its trigger) and the runtime adds data-gd-nav-ready to the root plus
+// aria-expanded="false" to each trigger. Only rules scoped to
+// [data-gd-nav-ready] hide the panels, so a no-JS visitor still sees the links
+// and disclosure semantics only appear once they are true (no flash of hidden
+// content, and no aria-expanded claim without JavaScript).
 func NavigationMenu(props NavigationMenuProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -345,10 +347,12 @@ func NavigationMenuItem(props NavigationMenuItemProps) templ.Component {
 	})
 }
 
-// NavigationMenuTrigger renders the disclosure button. aria-expanded is set to
-// "false" statically (the honest no-JS state) and the runtime owns it from then
-// on. aria-controls is omitted when no enclosing NavigationMenuItem supplies an
-// id, rather than emitting an empty one.
+// NavigationMenuTrigger renders the disclosure button. aria-expanded is NOT
+// rendered server-side: without JavaScript the panels are visible, so a static
+// "false" would be a false claim. The runtime stamps "false" together with
+// data-gd-nav-ready and owns the attribute from then on. aria-controls is
+// omitted when no enclosing NavigationMenuItem supplies an id, rather than
+// emitting an empty one.
 func NavigationMenuTrigger(props NavigationMenuTriggerProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -376,7 +380,7 @@ func NavigationMenuTrigger(props NavigationMenuTriggerProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<button type=\"button\" data-gd-nav-trigger aria-expanded=\"false\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<button type=\"button\" data-gd-nav-trigger")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -388,7 +392,7 @@ func NavigationMenuTrigger(props NavigationMenuTriggerProps) templ.Component {
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(id + "-content")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/navigation-menu.templ`, Line: 138, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/navigation-menu.templ`, Line: 141, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 			if templ_7745c5c3_Err != nil {
@@ -446,8 +450,9 @@ func NavigationMenuTrigger(props NavigationMenuTriggerProps) templ.Component {
 
 // NavigationMenuContent renders the panel of links. It carries id="<id>-content"
 // (matching the trigger's aria-controls) and data-gd-nav-content, and is
-// rendered WITHOUT the hidden attribute: the no-JS contract keeps it visible in
-// flow until the runtime stamps data-gd-nav-ready on the root.
+// rendered WITHOUT the hidden attribute: the no-JS contract keeps it visible
+// (absolutely positioned under its trigger) until the runtime stamps
+// data-gd-nav-ready on the root.
 func NavigationMenuContent(props NavigationMenuContentProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -487,7 +492,7 @@ func NavigationMenuContent(props NavigationMenuContentProps) templ.Component {
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue(id + "-content")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/navigation-menu.templ`, Line: 158, Col: 23}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/navigation-menu.templ`, Line: 162, Col: 23}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
 			if templ_7745c5c3_Err != nil {
@@ -573,7 +578,7 @@ func NavigationMenuLink(props NavigationMenuLinkProps) templ.Component {
 		var templ_7745c5c3_Var22 templ.SafeURL
 		templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(props.Href))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/navigation-menu.templ`, Line: 172, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/navigation-menu.templ`, Line: 176, Col: 30}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 		if templ_7745c5c3_Err != nil {

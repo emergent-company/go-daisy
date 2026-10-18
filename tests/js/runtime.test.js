@@ -971,14 +971,14 @@ const NAVIGATION_MENU = `
 <nav data-gd-navigation-menu id="nav">
   <ul id="nav-list">
     <li data-gd-nav-item id="item-products">
-      <button type="button" data-gd-nav-trigger aria-expanded="false" aria-controls="products-content" id="products-trigger">Products</button>
+      <button type="button" data-gd-nav-trigger aria-controls="products-content" id="products-trigger">Products</button>
       <div data-gd-nav-content id="products-content">
         <a data-gd-nav-link id="analytics" href="#">Analytics</a>
         <a data-gd-nav-link id="automation" href="#">Automation</a>
       </div>
     </li>
     <li data-gd-nav-item id="item-solutions">
-      <button type="button" data-gd-nav-trigger aria-expanded="false" aria-controls="solutions-content" id="solutions-trigger">Solutions</button>
+      <button type="button" data-gd-nav-trigger aria-controls="solutions-content" id="solutions-trigger">Solutions</button>
       <div data-gd-nav-content id="solutions-content">
         <a data-gd-nav-link id="startups" href="#">Startups</a>
       </div>
@@ -987,10 +987,12 @@ const NAVIGATION_MENU = `
 </nav>
 <button type="button" id="nav-outside">outside</button>`;
 
-test('navigation menu: runtime marks the root ready', () => {
+test('navigation menu: runtime marks the root ready and stamps aria-expanded', () => {
   const { window } = setup(NAVIGATION_MENU);
-  const nav = window.document.getElementById('nav');
-  assert.equal(nav.getAttribute('data-gd-nav-ready'), 'true');
+  const doc = window.document;
+  assert.equal(doc.getElementById('nav').getAttribute('data-gd-nav-ready'), 'true');
+  assert.equal(doc.getElementById('products-trigger').getAttribute('aria-expanded'), 'false');
+  assert.equal(doc.getElementById('solutions-trigger').getAttribute('aria-expanded'), 'false');
 });
 
 test('navigation menu: click toggles an item and closes the others', () => {

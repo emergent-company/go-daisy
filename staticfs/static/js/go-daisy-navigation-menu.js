@@ -12,9 +12,11 @@
  *   - no focus trap and no shared viewport: each panel is absolutely
  *     positioned under its own item
  *
- * Progressive enhancement: the server renders every panel VISIBLE in flow, and
- * this runtime stamps data-gd-nav-ready on the root. Only a rule scoped to
- * [data-gd-nav-ready] hides the panels, so a no-JS visitor reads the links.
+ * Progressive enhancement: the server renders every panel visible (positioned
+ * under its trigger), and this runtime stamps data-gd-nav-ready on the root and
+ * aria-expanded="false" on every trigger. Only a rule scoped to
+ * [data-gd-nav-ready] hides the panels, so a no-JS visitor reads the links and
+ * no aria-expanded claim exists without JavaScript.
  *
  * Contract:
  *   [data-gd-navigation-menu]  root <nav>
@@ -33,7 +35,9 @@
 
   // Hover intent is opt-in for hover-capable pointers only. jsdom and old
   // browsers lack matchMedia entirely, so guard its absence rather than assume
-  // it exists.
+  // it exists. The capability is sampled once per document: a user switching
+  // between a mouse and a touch screen mid-session keeps the initial answer
+  // (hover-intent is a nicety; click and keyboard always work).
   var canHover = typeof window.matchMedia === 'function' &&
     window.matchMedia('(hover: hover)').matches;
 
@@ -286,6 +290,13 @@
   function init() {
     roots().forEach(function (root) {
       root.setAttribute('data-gd-nav-ready', 'true');
+      triggersOf(root).forEach(function (trigger) {
+        // Disclosure semantics only exist once the runtime can honour them; the
+        // no-JS markup deliberately carries no aria-expanded claim.
+        if (!trigger.hasAttribute('aria-expanded')) {
+          trigger.setAttribute('aria-expanded', 'false');
+        }
+      });
     });
   }
 
@@ -306,6 +317,9 @@
     document.addEventListener('focusout', handleFocusOut);
     document.addEventListener('pointerover', handlePointerOver);
     document.addEventListener('pointerout', handlePointerOut);
+    // The script is emitted by the first NavigationMenu on the page, so a second
+    // instance parsed later would otherwise stay unstamped until an htmx settle.
+    document.addEventListener('DOMContentLoaded', init);
   }
 
   window.gdNavigationMenu = {

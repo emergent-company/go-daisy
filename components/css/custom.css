@@ -644,10 +644,15 @@ html[data-gd-resizing] iframe {
   }
 
   /* Navigation menu panels. Progressive enhancement: the server renders every
-     panel visible in flow, and the runtime stamps data-gd-nav-ready on the root
-     before taking over. Scoping the hiding rules to [data-gd-nav-ready] means a
-     no-JS visitor reads the links instead of losing them, and there is no
-     visible flash of open panels on first paint. */
+     panel visible (absolute, under its trigger), and the runtime stamps
+     data-gd-nav-ready on the root before taking over. Scoping the hiding rules
+     to [data-gd-nav-ready] means a no-JS visitor still sees the links instead of
+     losing them, and there is no visible flash of open panels on first paint.
+
+     The open state is a hardcoded `display:block` on purpose (a vertical link
+     list); multi-column panels need an inner grid/flex wrapper. The `>`
+     combinator also requires NavigationMenuContent to stay a direct child of
+     NavigationMenuItem. */
   [data-gd-nav-ready] [data-gd-nav-content] {
     display: none;
   }

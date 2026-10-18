@@ -82,10 +82,12 @@ templ NavigationMenuScript() {
 //   - no focus trap and no shared viewport: each panel is absolutely positioned
 //     under its own item
 //
-// Progressive enhancement: the server renders every panel VISIBLE in flow and
-// the runtime adds data-gd-nav-ready to the root. Only a rule scoped to
-// [data-gd-nav-ready] hides the panels, so a no-JS visitor gets a readable list
-// of links (no flash, no permanently hidden content).
+// Progressive enhancement: the server renders every panel visible (positioned
+// under its trigger) and the runtime adds data-gd-nav-ready to the root plus
+// aria-expanded="false" to each trigger. Only rules scoped to
+// [data-gd-nav-ready] hide the panels, so a no-JS visitor still sees the links
+// and disclosure semantics only appear once they are true (no flash of hidden
+// content, and no aria-expanded claim without JavaScript).
 templ NavigationMenu(props NavigationMenuProps) {
 	<nav
 		data-gd-navigation-menu
@@ -124,16 +126,17 @@ templ NavigationMenuItem(props NavigationMenuItemProps) {
 	</li>
 }
 
-// NavigationMenuTrigger renders the disclosure button. aria-expanded is set to
-// "false" statically (the honest no-JS state) and the runtime owns it from then
-// on. aria-controls is omitted when no enclosing NavigationMenuItem supplies an
-// id, rather than emitting an empty one.
+// NavigationMenuTrigger renders the disclosure button. aria-expanded is NOT
+// rendered server-side: without JavaScript the panels are visible, so a static
+// "false" would be a false claim. The runtime stamps "false" together with
+// data-gd-nav-ready and owns the attribute from then on. aria-controls is
+// omitted when no enclosing NavigationMenuItem supplies an id, rather than
+// emitting an empty one.
 templ NavigationMenuTrigger(props NavigationMenuTriggerProps) {
 	{{ id, _ := navigationMenuItemIDFromCtx(ctx) }}
 	<button
 		type="button"
 		data-gd-nav-trigger
-		aria-expanded="false"
 		if id != "" {
 			aria-controls={ id + "-content" }
 		}
@@ -148,8 +151,9 @@ templ NavigationMenuTrigger(props NavigationMenuTriggerProps) {
 
 // NavigationMenuContent renders the panel of links. It carries id="<id>-content"
 // (matching the trigger's aria-controls) and data-gd-nav-content, and is
-// rendered WITHOUT the hidden attribute: the no-JS contract keeps it visible in
-// flow until the runtime stamps data-gd-nav-ready on the root.
+// rendered WITHOUT the hidden attribute: the no-JS contract keeps it visible
+// (absolutely positioned under its trigger) until the runtime stamps
+// data-gd-nav-ready on the root.
 templ NavigationMenuContent(props NavigationMenuContentProps) {
 	{{ id, _ := navigationMenuItemIDFromCtx(ctx) }}
 	<div
