@@ -54,7 +54,7 @@ func gallerySearchIndex(categories []CategoryGroup) string {
 // GalleryPage renders the full gallery shell with sidebar and content area.
 // Use for direct browser navigation (non-HTMX requests).
 templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, logo templ.Component, content templ.Component) {
-	@layout.PageFull(layout.PageProps{Title: title + " · Gallery", ThemeAttr: ""}) {
+	@layout.PageFull(layout.PageProps{Title: title + " · Gallery", Alpine: true}) {
 		@templ.Raw(customThemeStyleScript())
 		<style>@media all { .hidden { display: none !important; } }</style>
 		@layout.AppShell(title) {
@@ -148,6 +148,18 @@ templ GalleryPage(title string, activeSlug string, categories []CategoryGroup, l
 						>
 							@ui.IconSpan("lucide--book-open", "size-4 mr-2")
 							SDK Reference
+						</a>
+						<a
+							href="/gallery/theme-studio"
+							hx-get="/gallery/theme-studio"
+							hx-target="#gallery-content"
+							hx-swap="innerHTML"
+							hx-push-url="true"
+							class={ "menu-item text-sm",
+								templ.KV("active", activeSlug == "theme-studio") }
+						>
+							@ui.IconSpan("lucide--palette", "size-4 mr-2")
+							Theme studio
 						</a>
 					</div>
 				</div>

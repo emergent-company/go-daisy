@@ -1,0 +1,580 @@
+package galleryruntime
+
+import "github.com/emergent-company/go-daisy/components/ui"
+
+// ThemeStudio is the DaisyUI theme generator: it reads the DaisyUI custom
+// properties of the active theme, edits them live on a scoped preview board,
+// measures contrast, and can apply the result to the gallery through the
+// custom-theme seam (localStorage only — nothing is written to the repo).
+templ ThemeStudio() {
+	<div
+		class="p-4 sm:p-6"
+		x-data="themeStudio()"
+		x-on:input.debounce.400ms="saveDraft()"
+		x-on:change="saveDraft()"
+	>
+		<style x-text="previewCSS()"></style>
+
+		<!-- Header -->
+		<div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+			<div>
+				<h1 class="text-xl font-bold">Theme studio</h1>
+				<p class="mt-1 max-w-2xl text-sm text-muted">
+					Tune the DaisyUI theme tokens, check contrast, then apply the result to the gallery or export it as a
+					<code class="text-xs">&#64;plugin "daisyui/theme"</code> block.
+				</p>
+			</div>
+			<div class={ ui.RowLoose }>
+				<button type="button" class="btn btn-sm" x-on:click="reset()">Reset</button>
+				<button type="button" class="btn btn-sm btn-primary" x-on:click="applyToGallery()">Apply to gallery</button>
+			</div>
+		</div>
+
+		<div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
+			<!-- Left: preview + colors -->
+			<div class={ ui.ColStackLoose }>
+				<!-- Preview board -->
+				<div class="card card-border bg-base-100">
+					<div class="card-body gap-3 p-4">
+						<div class="flex flex-wrap items-center justify-between gap-2">
+							<h2 class="card-title text-base">Live preview</h2>
+							<div class={ ui.Row }>
+								<template x-for="p in presets" x-bind:key="p">
+									<button
+										type="button"
+										class="btn btn-xs"
+										x-bind:class="preset === p ? 'btn-primary' : 'btn-ghost'"
+										x-on:click="loadPreset(p)"
+										x-text="p"
+									></button>
+								</template>
+								<button
+									type="button"
+									class="btn btn-xs btn-ghost"
+									x-on:click="scheme = scheme === 'dark' ? 'light' : 'dark'"
+									x-text="scheme === 'dark' ? 'Dark' : 'Light'"
+								></button>
+							</div>
+						</div>
+						<div
+							data-theme="gd-preview"
+							class="rounded-box border border-base-300 bg-base-100 p-4"
+						>
+							<div class="flex flex-wrap items-center gap-2">
+								<button type="button" class="btn btn-primary btn-sm">Primary</button>
+								<button type="button" class="btn btn-secondary btn-sm">Secondary</button>
+								<button type="button" class="btn btn-accent btn-sm">Accent</button>
+								<button type="button" class="btn btn-neutral btn-sm">Neutral</button>
+								<span class="badge badge-info">info</span>
+								<span class="badge badge-success">success</span>
+								<span class="badge badge-warning">warning</span>
+								<span class="badge badge-error">error</span>
+							</div>
+							<div class="mt-4 grid gap-3 sm:grid-cols-2">
+								<div class="rounded-box border border-base-300 bg-base-200 p-3">
+									<p class="eyebrow">Base 200</p>
+									<p class="mt-1 text-sm text-body">Body copy on the secondary surface.</p>
+									<p class="text-xs text-faint">Faint metadata · 2 min ago</p>
+								</div>
+								<div class="rounded-box border border-base-300 bg-base-100 p-3">
+									<label class="mb-1 block text-sm text-label" for="studio-demo-input">Label</label>
+									<input id="studio-demo-input" class="input input-sm input-bordered w-full" placeholder="Input"/>
+									<div class="mt-2 flex items-center gap-2">
+										<span class="inline-block size-4 rounded-selector bg-primary"></span>
+										<span class="inline-block size-4 rounded-selector bg-secondary"></span>
+										<span class="inline-block size-4 rounded-selector bg-accent"></span>
+										<span class="inline-block size-4 rounded-selector bg-info"></span>
+										<span class="inline-block size-4 rounded-selector bg-success"></span>
+										<span class="inline-block size-4 rounded-selector bg-warning"></span>
+										<span class="inline-block size-4 rounded-selector bg-error"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Colors -->
+				<div class="card card-border bg-base-100">
+					<div class="card-body gap-3 p-4">
+						<div class="flex items-center justify-between">
+							<h2 class="card-title text-base">Colors</h2>
+							<span class="text-xs text-faint">Any CSS color value (oklch, hex, …)</span>
+						</div>
+						<template x-for="group in colorGroups" x-bind:key="group.label">
+							<div>
+								<p class="eyebrow mb-2" x-text="group.label"></p>
+								<div class="grid gap-2 md:grid-cols-2">
+									<template x-for="key in group.keys" x-bind:key="key">
+										<label class="flex flex-col gap-1">
+											<span class="flex items-center gap-2">
+												<span
+													class="size-5 shrink-0 rounded-selector border border-base-300"
+													x-bind:style="'background:' + (colors[key] || 'transparent')"
+												></span>
+												<span class="font-mono text-[11px] text-subtle" x-text="key"></span>
+											</span>
+											<input
+												type="text"
+												class="input input-xs input-bordered w-full font-mono"
+												x-model="colors[key]"
+											/>
+										</label>
+									</template>
+								</div>
+							</div>
+						</template>
+					</div>
+				</div>
+			</div>
+
+			<!-- Right: settings, contrast, export -->
+			<div class={ ui.ColStackLoose }>
+				<!-- Shape & size -->
+				<div class="card card-border bg-base-100">
+					<div class="card-body gap-3 p-4">
+						<h2 class="card-title text-base">Shape &amp; size</h2>
+						<template x-for="field in settingFields" x-bind:key="field.key">
+							<label class="flex items-center justify-between gap-3">
+								<span class="text-sm text-label" x-text="field.label"></span>
+								<template x-if="field.kind === 'select'">
+									<select class="select select-xs select-bordered" x-model="settings[field.key]">
+										<template x-for="opt in field.options" x-bind:key="opt">
+											<option x-bind:value="opt" x-text="opt"></option>
+										</template>
+									</select>
+								</template>
+								<template x-if="field.kind === 'range'">
+									<span class={ ui.Row }>
+										<input
+											type="range"
+											class="range range-xs w-28"
+											x-bind:min="field.min"
+											x-bind:max="field.max"
+											x-bind:step="field.step"
+											x-model="settings[field.key]"
+										/>
+										<span class="w-10 text-right font-mono text-[11px] text-subtle" x-text="settings[field.key]"></span>
+									</span>
+								</template>
+								<template x-if="field.kind === 'toggle'">
+									<input
+										type="checkbox"
+										class="toggle toggle-xs"
+										x-bind:checked="settings[field.key] === '1'"
+										x-on:change="settings[field.key] = $event.target.checked ? '1' : '0'"
+									/>
+								</template>
+							</label>
+						</template>
+					</div>
+				</div>
+
+				<!-- Contrast -->
+				<div class="card card-border bg-base-100">
+					<div class="card-body gap-2 p-4">
+						<h2 class="card-title text-base">Contrast</h2>
+						<p class="text-xs text-faint">WCAG AA needs 4.5:1 for body text and 3:1 for large text.</p>
+						<template x-for="row in contrastRows" x-bind:key="row.label">
+							<div class="flex items-center justify-between gap-2 text-xs">
+								<span class="text-muted" x-text="row.label"></span>
+								<span class={ ui.Row }>
+									<span class="font-mono" x-text="row.ratio.toFixed(2) + ':1'"></span>
+									<span
+										class="badge badge-xs"
+										x-bind:class="row.ratio >= 4.5 ? 'badge-success' : row.ratio >= 3 ? 'badge-warning' : 'badge-error'"
+										x-text="row.ratio >= 4.5 ? 'AA' : row.ratio >= 3 ? 'AA large' : 'fail'"
+									></span>
+								</span>
+							</div>
+						</template>
+					</div>
+				</div>
+
+				<!-- Export / import -->
+				<div class="card card-border bg-base-100">
+					<div class="card-body gap-3 p-4">
+						<div class="flex items-center justify-between">
+							<h2 class="card-title text-base">Export</h2>
+							<div class={ ui.Row }>
+								<button type="button" class="btn btn-xs" x-on:click="copyExport()" x-text="copied ? 'Copied' : 'Copy CSS'"></button>
+								<button type="button" class="btn btn-xs btn-ghost" x-on:click="share()" x-text="shared ? 'Link copied' : 'Share link'"></button>
+							</div>
+						</div>
+						<label class="flex items-center gap-2">
+							<span class="text-xs text-subtle">Name</span>
+							<input type="text" class="input input-xs input-bordered w-full font-mono" x-model="name"/>
+						</label>
+						<textarea class="textarea textarea-xs w-full font-mono h-56" readonly x-bind:value="exportCSS()"></textarea>
+						<details class="collapse collapse-arrow border border-base-300">
+							<summary class="collapse-title min-h-0 py-2 text-sm">Import CSS</summary>
+							<div class="collapse-content">
+								<textarea
+									class="textarea textarea-xs h-28 w-full font-mono"
+									placeholder='@plugin "daisyui/theme" { … }'
+									x-model="importText"
+								></textarea>
+								<div class="mt-2 flex items-center gap-2">
+									<button type="button" class="btn btn-xs" x-on:click="importCSS()">Load</button>
+									<span class="text-xs text-error" x-text="importError"></span>
+								</div>
+							</div>
+						</details>
+						<p class="text-xs text-faint" x-text="shareURL"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	@themeStudioScript()
+}
+
+// themeStudioScript holds the studio's Alpine component. It is inline (rather
+// than a global JS file) so the page works both as a full document and as an
+// HTMX-swapped fragment.
+templ themeStudioScript() {
+	<script>
+		function themeStudio() {
+			var COLOR_KEYS = [
+				'base-100', 'base-200', 'base-300', 'base-content',
+				'primary', 'primary-content', 'secondary', 'secondary-content',
+				'accent', 'accent-content', 'neutral', 'neutral-content',
+				'info', 'info-content', 'success', 'success-content',
+				'warning', 'warning-content', 'error', 'error-content'
+			];
+			var SETTING_KEYS = [
+				'radius-selector', 'radius-field', 'radius-box',
+				'size-selector', 'size-field', 'border', 'depth', 'noise'
+			];
+			var DRAFT_KEY = 'gallery-theme-studio';
+
+			function sanitize(v) {
+				return String(v == null ? '' : v).replace(/[{};]/g, '').trim();
+			}
+
+			// Size/border tokens carry CSS units in the theme but are edited as
+			// plain numbers so range inputs and number fields behave.
+			function normalizeValue(key, v) {
+				v = sanitize(v);
+				if (key === 'size-selector' || key === 'size-field') return v.replace(/rem$/, '');
+				if (key === 'border') return v.replace(/px$/, '');
+				return v;
+			}
+
+			function cssValue(key, v) {
+				v = sanitize(v);
+				if (!v) return '';
+				if ((key === 'size-selector' || key === 'size-field') && /^[0-9.]+$/.test(v)) return v + 'rem';
+				if (key === 'border' && /^[0-9.]+$/.test(v)) return v + 'px';
+				return v;
+			}
+
+			return {
+				name: 'my-theme',
+				scheme: 'light',
+				preset: 'nord',
+				presets: ['nord', 'dracula', 'flow'],
+				colors: {},
+				settings: {},
+				importText: '',
+				importError: '',
+				copied: false,
+				shared: false,
+				shareURL: '',
+				colorGroups: [
+					{ label: 'Base', keys: ['base-100', 'base-200', 'base-300', 'base-content'] },
+					{ label: 'Primary', keys: ['primary', 'primary-content'] },
+					{ label: 'Secondary', keys: ['secondary', 'secondary-content'] },
+					{ label: 'Accent', keys: ['accent', 'accent-content'] },
+					{ label: 'Neutral', keys: ['neutral', 'neutral-content'] },
+					{ label: 'Status', keys: ['info', 'info-content', 'success', 'success-content', 'warning', 'warning-content', 'error', 'error-content'] }
+				],
+				settingFields: [
+					{ key: 'radius-selector', label: 'Radius · selector', kind: 'select', options: ['0rem', '0.25rem', '0.5rem', '1rem', '2rem'] },
+					{ key: 'radius-field', label: 'Radius · field', kind: 'select', options: ['0rem', '0.25rem', '0.5rem', '1rem', '2rem'] },
+					{ key: 'radius-box', label: 'Radius · box', kind: 'select', options: ['0rem', '0.25rem', '0.5rem', '1rem', '2rem'] },
+					{ key: 'size-selector', label: 'Size · selector', kind: 'range', min: 0.1875, max: 0.3125, step: 0.0625 },
+					{ key: 'size-field', label: 'Size · field', kind: 'range', min: 0.1875, max: 0.3125, step: 0.0625 },
+					{ key: 'border', label: 'Border width', kind: 'range', min: 0.5, max: 2, step: 0.5 },
+					{ key: 'depth', label: 'Depth', kind: 'toggle' },
+					{ key: 'noise', label: 'Noise', kind: 'toggle' }
+				],
+
+				init: function() {
+					var state = this.readHash() || this.readDraft() || this.readTheme(document.documentElement);
+					this.applyState(state);
+				},
+
+				readTheme: function(el) {
+					var colors = {};
+					var settings = {};
+					var cs = null;
+					try { cs = getComputedStyle(el); } catch (e) {}
+					for (var i = 0; i < COLOR_KEYS.length; i++) {
+						var k = COLOR_KEYS[i];
+						colors[k] = cs ? cs.getPropertyValue('--color-' + k).trim() : '';
+					}
+					for (var j = 0; j < SETTING_KEYS.length; j++) {
+						var s = SETTING_KEYS[j];
+						settings[s] = normalizeValue(s, cs ? cs.getPropertyValue('--' + s) : '');
+					}
+					return { name: 'my-theme', scheme: 'light', colors: colors, settings: settings };
+				},
+
+				applyState: function(state) {
+					if (!state) return;
+					this.name = state.name || 'my-theme';
+					this.scheme = state.scheme === 'dark' ? 'dark' : 'light';
+					var colors = {};
+					for (var i = 0; i < COLOR_KEYS.length; i++) {
+						var k = COLOR_KEYS[i];
+						colors[k] = (state.colors && state.colors[k]) || '';
+					}
+					this.colors = colors;
+					var settings = {};
+					for (var j = 0; j < SETTING_KEYS.length; j++) {
+						var s = SETTING_KEYS[j];
+						settings[s] = (state.settings && state.settings[s]) || '';
+					}
+					this.settings = settings;
+				},
+
+				loadPreset: function(p) {
+					var el = document.createElement('div');
+					el.setAttribute('data-theme', p);
+					el.style.cssText = 'position:absolute;left:-9999px;top:0;width:0;height:0;overflow:hidden';
+					document.body.appendChild(el);
+					var state = this.readTheme(el);
+					el.remove();
+					state.name = p + '-copy';
+					state.scheme = p === 'dracula' ? 'dark' : state.scheme;
+					this.preset = p;
+					this.applyState(state);
+					this.saveDraft();
+				},
+
+				previewCSS: function() {
+					var css = '[data-theme="gd-preview"]{color-scheme:' + (this.scheme === 'dark' ? 'dark' : 'light') + ';';
+					for (var i = 0; i < COLOR_KEYS.length; i++) {
+						var k = COLOR_KEYS[i];
+						var v = sanitize(this.colors[k]);
+						if (v) css += '--color-' + k + ':' + v + ';';
+					}
+					for (var j = 0; j < SETTING_KEYS.length; j++) {
+						var s = SETTING_KEYS[j];
+						var sv = cssValue(s, this.settings[s]);
+						if (sv) css += '--' + s + ':' + sv + ';';
+					}
+					return css + '}';
+				},
+
+				exportCSS: function() {
+					var slug = sanitize(this.name).toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') || 'my-theme';
+					var out = '@plugin "daisyui/theme" {\n';
+					out += '  name: "' + slug + '";\n';
+					out += '  default: false;\n';
+					out += '  prefersdark: ' + (this.scheme === 'dark' ? 'true' : 'false') + ';\n';
+					out += '  color-scheme: ' + (this.scheme === 'dark' ? 'dark' : 'light') + ';\n';
+					for (var i = 0; i < COLOR_KEYS.length; i++) {
+						var k = COLOR_KEYS[i];
+						var v = sanitize(this.colors[k]);
+						if (v) out += '  --color-' + k + ': ' + v + ';\n';
+					}
+					for (var j = 0; j < SETTING_KEYS.length; j++) {
+						var s = SETTING_KEYS[j];
+						var sv = cssValue(s, this.settings[s]);
+						if (sv) out += '  --' + s + ': ' + sv + ';\n';
+					}
+					return out + '}';
+				},
+
+				importCSS: function() {
+					// Strip comments first: `--name: value` inside a comment is not
+					// a declaration and must not be imported.
+					var src = (this.importText || '').replace(/\/\*[\s\S]*?\*\//g, '');
+					this.importError = '';
+					var found = 0;
+					var re = /--([a-z0-9-]+)\s*:\s*([^;}\n]+)/gi;
+					var m;
+					while ((m = re.exec(src)) !== null) {
+						var key = m[1];
+						var value = m[2].trim();
+						if (key.indexOf('color-') === 0) {
+							var ck = key.slice(6);
+							if (COLOR_KEYS.indexOf(ck) !== -1) { this.colors[ck] = value; found++; }
+						} else if (SETTING_KEYS.indexOf(key) !== -1) {
+							this.settings[key] = normalizeValue(key, value);
+							found++;
+						}
+					}
+					var nameMatch = /name\s*:\s*"([^"]+)"/i.exec(src);
+					if (nameMatch) this.name = nameMatch[1];
+					var schemeMatch = /color-scheme\s*:\s*(light|dark)/i.exec(src);
+					if (schemeMatch) this.scheme = schemeMatch[1].toLowerCase();
+					if (!found) this.importError = 'No DaisyUI custom properties found';
+					else this.saveDraft();
+				},
+
+				reset: function() {
+					this.applyState(this.readTheme(document.documentElement));
+					this.saveDraft();
+				},
+
+				saveDraft: function() {
+					try {
+						localStorage.setItem(DRAFT_KEY, JSON.stringify({
+							name: this.name, scheme: this.scheme, colors: this.colors, settings: this.settings
+						}));
+					} catch (e) {}
+				},
+
+				readDraft: function() {
+					try {
+						var raw = localStorage.getItem(DRAFT_KEY);
+						return raw ? JSON.parse(raw) : null;
+					} catch (e) { return null; }
+				},
+
+				readHash: function() {
+					try {
+						var parts = (location.hash || '').replace(/^#/, '').split('&');
+						for (var i = 0; i < parts.length; i++) {
+							if (parts[i].indexOf('t=') === 0) {
+								return JSON.parse(decodeURIComponent(atob(parts[i].slice(2))));
+							}
+						}
+						return null;
+					} catch (e) { return null; }
+				},
+
+				buildTheme: function() {
+					var vars = {};
+					for (var i = 0; i < COLOR_KEYS.length; i++) {
+						var k = COLOR_KEYS[i];
+						var v = sanitize(this.colors[k]);
+						if (v) vars['--color-' + k] = v;
+					}
+					for (var j = 0; j < SETTING_KEYS.length; j++) {
+						var s = SETTING_KEYS[j];
+						var sv = cssValue(s, this.settings[s]);
+						if (sv) vars['--' + s] = sv;
+					}
+					return { name: this.name || 'custom', scheme: this.scheme, vars: vars };
+				},
+
+				applyToGallery: function() {
+					var theme = this.buildTheme();
+					// Never activate custom mode without a usable rule: the
+					// boot script would skip injection and the gallery would
+					// render unthemed with no way back except clearing storage.
+					if (!theme.vars || !Object.keys(theme.vars).length) {
+						this.importError = 'Nothing to apply — set at least one token.';
+						return;
+					}
+					try {
+						localStorage.setItem('gallery-custom-theme', JSON.stringify(theme));
+						localStorage.setItem('gallery-ui-theme', 'custom');
+					} catch (e) {}
+					location.reload();
+				},
+
+				share: function() {
+					try {
+						var payload = { name: this.name, scheme: this.scheme, colors: this.colors, settings: this.settings };
+						var encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+						var url = location.origin + location.pathname + '#t=' + encoded;
+						this.shareURL = url;
+						this.shared = true;
+						location.hash = 't=' + encoded;
+						if (navigator.clipboard) navigator.clipboard.writeText(url).catch(function() {});
+					} catch (e) {}
+				},
+
+				copyExport: function() {
+					var css = this.exportCSS();
+					try {
+						if (navigator.clipboard) navigator.clipboard.writeText(css).catch(function() {});
+						this.copied = true;
+					} catch (e) {}
+				},
+
+				_rgbCache: {},
+				toRGB: function(value) {
+					var key = String(value == null ? '' : value);
+					if (Object.prototype.hasOwnProperty.call(this._rgbCache, key)) return this._rgbCache[key];
+					var out = null;
+					// DaisyUI theme values are oklch(); getComputedStyle resolves
+					// them to rgb() in every browser that supports them.
+					try {
+						var probe = document.createElement('span');
+						probe.style.color = key;
+						probe.style.display = 'none';
+						document.body.appendChild(probe);
+						var resolved = window.getComputedStyle(probe).color;
+						document.body.removeChild(probe);
+						var m = /rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/.exec(resolved || '');
+						if (m) out = [parseFloat(m[1]), parseFloat(m[2]), parseFloat(m[3])];
+					} catch (e) { out = null; }
+					if (!out) {
+						try {
+							var canvas = document.createElement('canvas');
+							canvas.width = 1;
+							canvas.height = 1;
+							var ctx = canvas.getContext('2d');
+							ctx.fillStyle = '#010203';
+							ctx.fillStyle = key;
+							if (ctx.fillStyle === '#010203' && key.trim().toLowerCase() !== '#010203') out = null;
+							else {
+								ctx.fillRect(0, 0, 1, 1);
+								var d = ctx.getImageData(0, 0, 1, 1).data;
+								out = [d[0], d[1], d[2]];
+							}
+						} catch (e) { out = null; }
+					}
+					this._rgbCache[key] = out;
+					return out;
+				},
+
+				luminance: function(rgb) {
+					function channel(c) {
+						c = c / 255;
+						return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+					}
+					return 0.2126 * channel(rgb[0]) + 0.7152 * channel(rgb[1]) + 0.0722 * channel(rgb[2]);
+				},
+
+				ratio: function(fg, bg) {
+					var a = this.toRGB(fg);
+					var b = this.toRGB(bg);
+					if (!a || !b) return 0;
+					var l1 = this.luminance(a);
+					var l2 = this.luminance(b);
+					var hi = Math.max(l1, l2);
+					var lo = Math.min(l1, l2);
+					return (hi + 0.05) / (lo + 0.05);
+				},
+
+				get contrastRows() {
+					var pairs = [
+						['base-content', 'base-100'],
+						['primary-content', 'primary'],
+						['secondary-content', 'secondary'],
+						['accent-content', 'accent'],
+						['neutral-content', 'neutral'],
+						['info-content', 'info'],
+						['success-content', 'success'],
+						['warning-content', 'warning'],
+						['error-content', 'error']
+					];
+					var self = this;
+					return pairs.map(function(pair) {
+						return {
+							label: pair[0].replace('-content', '') + ' on ' + pair[1].replace('-content', ''),
+							ratio: self.ratio(self.colors[pair[0]], self.colors[pair[1]])
+						};
+					});
+				}
+			};
+		}
+	</script>
+}

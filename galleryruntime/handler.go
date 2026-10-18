@@ -42,6 +42,7 @@ func (h *galleryHandler) register(e *echo.Echo) {
 	e.GET("/gallery/docs", h.handleDocs)
 	e.GET("/gallery/docs/:slug.md", h.handleComponentMarkdown)
 	e.GET("/llms.txt", h.handleLLMs)
+	e.GET("/gallery/theme-studio", h.handleThemeStudio)
 	e.GET("/gallery/render/:slug", h.handleRender)
 	e.GET("/gallery/render/:slug/examples", h.handleRenderSubExample)
 	e.GET("/gallery/render/:slug/:variant", h.handleRenderVariant)
@@ -366,9 +367,9 @@ func renderSnippetPage(baseURL string, staticPrefixes []string, snippet string, 
       var custom = null;
       try { saved = localStorage.getItem('gallery-preview-theme'); } catch (e) {}
       try { palette = localStorage.getItem('gallery-ui-palette'); } catch (e) {}
-      try { custom = localStorage.getItem('gallery-custom-theme'); } catch (e) {}
+      try { var rawCustom = localStorage.getItem('gallery-custom-theme'); custom = rawCustom ? JSON.parse(rawCustom) : null; } catch (e) { custom = null; }
       if (!rt.palettes[palette]) palette = rt.defaultPalette;
-      if (saved === 'custom' && custom) {
+      if (saved === 'custom' && custom && custom.vars && Object.keys(custom.vars).length) {
         document.documentElement.setAttribute('data-theme', 'custom');
       } else {
         var mode;

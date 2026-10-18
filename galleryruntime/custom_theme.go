@@ -74,10 +74,15 @@ func customThemeBootScript(apply bool) string {
     var raw = localStorage.getItem('` + CustomThemeStorageKey + `');
     if (!raw) return;
     var theme = JSON.parse(raw);
-    if (!theme || !theme.vars) return;
+    if (!theme || !theme.vars || !Object.keys(theme.vars).length) return;
     if (!document.getElementById('gallery-custom-theme')) {
       var css = '[data-theme="` + CustomThemeName + `"]{color-scheme:' + (theme.scheme || 'light') + ';';
-      for (var k in theme.vars) { if (Object.prototype.hasOwnProperty.call(theme.vars, k)) css += k + ':' + theme.vars[k] + ';'; }
+      for (var k in theme.vars) {
+        if (!Object.prototype.hasOwnProperty.call(theme.vars, k)) continue;
+        if (!/^--[a-z0-9-]+$/i.test(k)) continue;
+        var v = String(theme.vars[k] == null ? '' : theme.vars[k]).replace(/[;{}<>]/g, '').trim();
+        if (v) css += k + ':' + v + ';';
+      }
       css += '}';
       var style = document.createElement('style');
       style.id = 'gallery-custom-theme';

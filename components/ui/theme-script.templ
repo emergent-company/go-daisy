@@ -86,8 +86,11 @@ templ ThemeScript() {
 			// A user-generated theme (gallery theme studio) wins over the
 			// palette x mode mapping when the user selected it and one is stored.
 			var custom = null;
-			try { custom = localStorage.getItem('gallery-custom-theme'); } catch (e) {}
-			var isCustom = mode === 'custom' && !!custom;
+			try {
+				var raw = localStorage.getItem('gallery-custom-theme');
+				custom = raw ? JSON.parse(raw) : null;
+			} catch (e) { custom = null; }
+			var isCustom = mode === 'custom' && !!(custom && custom.vars && Object.keys(custom.vars).length);
 
 			var effective = isCustom ? 'custom' : rt.effectiveMode(mode);
 			var theme = isCustom ? 'custom' : rt.resolve(mode, palette);

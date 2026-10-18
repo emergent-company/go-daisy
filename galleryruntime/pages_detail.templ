@@ -305,7 +305,13 @@ templ ComponentDetail(c GalleryComponent) {
 			} catch(e) { return window.__goDaisyTheme.defaultPalette; }
 		}
 		function isCustomMode() {
-			try { return localStorage.getItem('gallery-ui-theme') === 'custom' && !!localStorage.getItem('gallery-custom-theme'); } catch(e) { return false; }
+			try {
+				if (localStorage.getItem('gallery-ui-theme') !== 'custom') return false;
+				var raw = localStorage.getItem('gallery-custom-theme');
+				if (!raw) return false;
+				var t = JSON.parse(raw);
+				return !!(t && t.vars && Object.keys(t.vars).length);
+			} catch(e) { return false; }
 		}
 		function toDaisyTheme(m) {
 			if (m === 'custom' && isCustomMode()) return 'custom';
@@ -1110,7 +1116,13 @@ templ ComponentExamples(c GalleryComponent) {
 			} catch(e) { return window.__goDaisyTheme.defaultPalette; }
 		}
 		function isCustomMode() {
-			try { return localStorage.getItem('gallery-ui-theme') === 'custom' && !!localStorage.getItem('gallery-custom-theme'); } catch(e) { return false; }
+			try {
+				if (localStorage.getItem('gallery-ui-theme') !== 'custom') return false;
+				var raw = localStorage.getItem('gallery-custom-theme');
+				if (!raw) return false;
+				var t = JSON.parse(raw);
+				return !!(t && t.vars && Object.keys(t.vars).length);
+			} catch(e) { return false; }
 		}
 		function toDaisyTheme(m) {
 			if (m === 'custom' && isCustomMode()) return 'custom';

@@ -54,7 +54,12 @@ templ ThemeSwitcher() {
 			// and is injected as a scoped [data-theme="custom"] rule by the shell
 			// and by each preview document.
 			function hasCustomTheme() {
-				try { return !!localStorage.getItem('gallery-custom-theme'); } catch(e) { return false; }
+				try {
+					var raw = localStorage.getItem('gallery-custom-theme');
+					if (!raw) return false;
+					var t = JSON.parse(raw);
+					return !!(t && t.vars && Object.keys(t.vars).length);
+				} catch(e) { return false; }
 			}
 			var STORAGE_KEY = 'gallery-ui-theme';
 			var PALETTE_KEY = 'gallery-ui-palette';
