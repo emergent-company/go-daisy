@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html"
 	"io"
 
 	"github.com/a-h/templ"
@@ -152,7 +153,7 @@ func ComponentSlugsScript() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
 		nonce := ""
 		if n := templ.GetNonce(ctx); n != "" {
-			nonce = ` nonce="` + n + `"`
+			nonce = ` nonce="` + html.EscapeString(n) + `"`
 		}
 		_, err := fmt.Fprintf(w, "<script%s>var COMPONENT_SLUGS=%s;</script>", nonce, ComponentSlugsJSON())
 		return err
