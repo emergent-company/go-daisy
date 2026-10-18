@@ -584,17 +584,60 @@ test('command palette: close() releases the trap after a silent uncheck', () => 
 test('command palette: an Open palette inserted by an HTMX settle is trapped', () => {
   const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
   const doc = window.document;
+
+  // Simulate a swap inserting a palette rendered with Open=true. Dispatch on
+  // the inserted node so the event has to bubble to the document listener.
+  const host = doc.createElement('div');
+  host.innerHTML = `
+<input type="checkbox" id="late-toggle" class="modal-toggle" data-command-palette="true" checked>
+<div class="modal" role="dialog" aria-modal="true" aria-label="Late">
+  <div class="modal-box"><input type="text" id="late-input"></div>
+</div>`;
+  doc.body.appendChild(host);
+  host.dispatchEvent(new window.Event('htmx:after:settle', { bubbles: true }));
+
+  assert.equal(doc.activeElement, doc.getElementById('late-input'), 'colon-separated settle traps the inserted palette');
+
+  window.gdCommandPalette.close('late');
+  doc.getElementById('late-toggle').checked = true;
+  doc.dispatchEvent(new window.Event('htmx:afterSettle', { bubbles: true }));
+  assert.equal(doc.activeElement, doc.getElementById('late-input'), 'camelCase settle traps too');
+});
+
+test('command palette: reopening after a silent uncheck focuses the input', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const opener = doc.getElementById('opener');
   const toggle = doc.getElementById('spotlight-toggle');
   const input = doc.getElementById('spotlight-input');
 
-  toggle.checked = true; // simulated swapped-in markup rendered with Open
-  doc.dispatchEvent(new window.Event('htmx:after:settle', { bubbles: true }));
-  assert.equal(doc.activeElement, input, 'colon-separated settle activates the trap');
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
+  toggle.checked = false; // silent close: no change event, no close()
+  input.blur(); // a hidden dialog drops focus in a real browser
+  opener.focus();
+  window.gdCommandPalette.open('spotlight');
 
-  window.gdCommandPalette.close('spotlight');
-  toggle.checked = true;
-  doc.dispatchEvent(new window.Event('htmx:afterSettle', { bubbles: true }));
-  assert.equal(doc.activeElement, input, 'camelCase settle activates the trap');
+  assert.equal(doc.activeElement, input, 'a stale trap must not make the reopen skip the input');
+});
+
+test('command palette: Cmd+K closes the open palette, not the first', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+
+  const host = doc.createElement('div');
+  host.innerHTML = `
+<input type="checkbox" id="second-toggle" class="modal-toggle" data-command-palette="true">
+<div class="modal" role="dialog" aria-modal="true" aria-label="Second">
+  <div class="modal-box"><input type="text" id="second-input"></div>
+</div>`;
+  doc.body.appendChild(host);
+
+  window.gdCommandPalette.open('second');
+  press(window, doc.body, 'k', { metaKey: true });
+
+  assert.equal(doc.getElementById('second-toggle').checked, false, 'the open palette closes');
+  assert.equal(doc.getElementById('spotlight-toggle').checked, false, 'the first palette is not opened');
 });
 
 test('command palette: Escape still closes a palette opened without a trap', () => {

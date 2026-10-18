@@ -63,8 +63,24 @@ func TestCommandPaletteLoadsKeyboardRuntime(t *testing.T) {
 // gdFocus.trap. autofocus on a server-rendered Open palette would make the
 // hidden input the element that release() "restores" to after close.
 func TestCommandPaletteDoesNotAutofocus(t *testing.T) {
-	got := renderCommandPalette(t, CommandPaletteProps{ID: "spotlight", Open: true})
-	if strings.Contains(got, "autofocus") {
-		t.Errorf("CommandPalette must not render autofocus; the trap owns initial focus:\n%s", got)
+	for _, open := range []bool{false, true} {
+		got := renderCommandPalette(t, CommandPaletteProps{ID: "spotlight", Open: open})
+		if strings.Contains(got, "autofocus") {
+			t.Errorf("Open=%v: CommandPalette must not render autofocus; the trap owns initial focus:\n%s", open, got)
+		}
+	}
+}
+
+// TestCommandPaletteSearchInputIsNamed gives the first control in the dialog an
+// accessible name instead of relying on the placeholder alone.
+func TestCommandPaletteSearchInputIsNamed(t *testing.T) {
+	got := renderCommandPalette(t, CommandPaletteProps{ID: "spotlight", Placeholder: "Search pages"})
+	if !strings.Contains(got, `aria-label="Search pages"`) {
+		t.Errorf("search input must use the placeholder as its accessible name:\n%s", got)
+	}
+
+	got = renderCommandPalette(t, CommandPaletteProps{ID: "spotlight"})
+	if !strings.Contains(got, `aria-label="Search"`) {
+		t.Errorf("search input must have a default accessible name:\n%s", got)
 	}
 }

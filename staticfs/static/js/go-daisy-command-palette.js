@@ -49,9 +49,16 @@
   }
 
   function activate(cb) {
-    if (releases.has(cb)) return;
     var modal = modalFor(cb);
     if (!modal) return;
+    // A trap can survive a silent uncheck (`toggle.checked = false` emits no
+    // change event). It still points at the old open state, so a reopen would
+    // otherwise skip the input and keep the stale `previous`. Replace it.
+    var stale = releases.get(cb);
+    if (stale) {
+      releases.delete(cb);
+      stale();
+    }
     var input = inputFor(modal);
     if (window.gdFocus && window.gdFocus.trap) {
       releases.set(cb, window.gdFocus.trap(modal, {
@@ -106,10 +113,14 @@
     deactivate(cb);
   }
 
-  function initOpen() {
+  // Reconcile every palette with its trap: install one for open palettes and
+  // release one left behind by a silent uncheck (`checked = false` emits no
+  // change event). Runs at load and after an HTMX settle.
+  function syncPalettes() {
     var toggles = document.querySelectorAll('input.modal-toggle[data-command-palette]');
     for (var i = 0; i < toggles.length; i++) {
       if (toggles[i].checked) activate(toggles[i]);
+      else deactivate(toggles[i]);
     }
   }
 
@@ -123,7 +134,10 @@
   document.addEventListener('keydown', function (e) {
     if (!e.key) return;
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-      var cb = document.querySelector('input.modal-toggle[data-command-palette]');
+      // Prefer the palette that is already open: opening the first palette
+      // while a second one is up would leave two aria-modal dialogs on screen.
+      var cb = document.querySelector('input.modal-toggle[data-command-palette]:checked') ||
+        document.querySelector('input.modal-toggle[data-command-palette]');
       if (!cb) return;
       e.preventDefault();
       if (cb.checked) close(cb);
@@ -154,8 +168,8 @@
 
   // htmx 4 emits colon-separated names (htmx:after:settle); htmx 3 used
   // camelCase (htmx:afterSettle). Listen for both, as the other runtimes do.
-  document.addEventListener('htmx:after:settle', initOpen);
-  document.addEventListener('htmx:afterSettle', initOpen);
+  document.addEventListener('htmx:after:settle', syncPalettes);
+  document.addEventListener('htmx:afterSettle', syncPalettes);
 
   window.gdCommandPalette = {
     open: function (id) {
@@ -251,8 +265,8 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initOpen);
+    document.addEventListener('DOMContentLoaded', syncPalettes);
   } else {
-    initOpen();
+    syncPalettes();
   }
 })();

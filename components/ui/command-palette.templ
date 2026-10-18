@@ -16,8 +16,9 @@ type CommandPaletteItem struct {
 	Shortcut    string
 	Href        string
 	Group       string
-	// Attrs are optional extra HTML attributes on the item's <a>, e.g.
-	// htmx navigation attributes or an onclick to close the palette.
+	// Attrs are optional extra HTML attributes on the item's <a>, e.g. htmx
+	// navigation attributes. Activating an item closes the palette; set
+	// data-command-palette-keep-open to keep it open after the action.
 	Attrs templ.Attributes
 }
 
@@ -43,6 +44,8 @@ type CommandPaletteProps struct {
 templ CommandPalette(props CommandPaletteProps) {
 	{{ label := props.AriaLabel
 	if label == "" { label = "Command palette" } }}
+	{{ searchLabel := props.Placeholder
+	if searchLabel == "" { searchLabel = "Search" } }}
 	<input type="checkbox" id={ props.ID + "-toggle" } data-command-palette="true" class="modal-toggle" checked?={ props.Open } />
 	<div class="modal" role="dialog" aria-modal="true" aria-label={ label } { devmode.Attrs(ctx, "ui/CommandPalette")... } { props.Attrs... }>
 		<div class="modal-box p-0 max-w-lg">
@@ -57,6 +60,7 @@ templ CommandPalette(props CommandPaletteProps) {
 				} else {
 					placeholder="Type a command or search..."
 				}
+					aria-label={ searchLabel }
 					oninput="filterPaletteItems(this)"
 				/>
 				<label for={ props.ID + "-toggle" } class="btn btn-ghost btn-xs">Esc</label>
