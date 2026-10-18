@@ -31,7 +31,7 @@ go-daisy/
 │   ├── nav/              # Page headers, tab menus, breadcrumbs, footer (~16 components)
 │   ├── schemaform/       # JSON-Schema-driven form field generation
 │   ├── search/           # Server-side search/filter helpers (no .templ files)
-│   ├── table/            # Data tables, list areas, scroll rows (~6 components)
+│   ├── table/            # Data tables, list areas, scroll rows (~7 components)
 │   └── ui/               # Primitives: button, badge, card, avatar, toast, alert, chart, etc. (~73 components)
 ├── pages/                # Pre-built page templates (auth, chat, dashboard, landing, settings)
 ├── render/               # HTMX-aware rendering helpers
@@ -155,7 +155,7 @@ Page headers, tab menus, breadcrumbs, footer (~16 components). `PageHeader`, `Ta
 Form inputs, field wrappers, validators, editors (~26 components). `FormField`, `TextInput`, `TextareaInput`, `SelectInput`, `EnhancedSelect`, `SearchInput`, `FilterSelect`, `CheckboxInput`, `Toggle`, `RadioGroup`, `RangeInput`, `FileInput`, `FileUpload`, `Rating`, `OTP`, `PasswordField`, `PasswordMeter`, `DatePicker`, `Clipboard`, `RichTextEditor`, `CalendarWrapper`, `ColorInput`, `Spinner`, `Wizard`.
 
 ### `components/table`
-`Table`, `DataTable`, `DataGrid`, `SortableTableHeader`, `TableCard`, `ListArea` (infinite-scroll container), `ScrollRows` (6 components). `SortableTableHeader` is the server-side column-sorting primitive: it renders an accessible header link, preserves query filters, and pairs with `SortContext`/`ParseSort` helpers.
+`Table`, `DataTable`, `DataGrid`, `SortableTableHeader`, `TableCard`, `ListArea` (infinite-scroll container), `ScrollRows` (7 components). `SortableTableHeader` is the server-side column-sorting primitive: it renders an accessible header link, preserves query filters, and pairs with `SortContext`/`ParseSort` helpers.
 
 ### `components/modal`
 Modal dialogs (3 components): `Modal`, `FormModal`, `AlpineFormModal`, `ConfirmPopup`, `LoaderModal`, `OpenModalButton`.

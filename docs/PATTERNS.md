@@ -341,7 +341,8 @@ query strings or render a clickable `<th>` without `aria-sort`.
 
 ```go
 sc := table.NewSortContext(r, "", "", table.SortNone)
-// later, after collecting rows:
+// later, after collecting rows, apply the parsed params with your own
+// stable comparator map (for example sort.SliceStable):
 rows = sortRows(rows, sc.Params)
 ```
 

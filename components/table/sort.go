@@ -64,6 +64,8 @@ func (c SortContext) AriaSort(column string) string {
 // Href returns the path and query for the next sort state of column. The
 // current query is cloned, so filters are preserved and the caller's query is
 // never mutated. first is the direction used when column is not active.
+// Other params, including page, are preserved; handlers that paginate should
+// clear page when applying a new sort.
 func (c SortContext) Href(column string, first SortDir) string {
 	if c.BasePath == "" || column == "" {
 		return ""

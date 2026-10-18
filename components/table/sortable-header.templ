@@ -2,7 +2,6 @@ package table
 
 import (
 	ui "github.com/emergent-company/go-daisy/components/ui"
-	"github.com/emergent-company/go-daisy/devmode"
 )
 
 // SortableTableHeaderProps configures a sortable <th> cell.
@@ -36,13 +35,12 @@ templ SortableTableHeader(props SortableTableHeaderProps) {
 			if aria := props.Sort.AriaSort(props.Column); aria != "" {
 				aria-sort={ aria }
 			}
-			{ devmode.Attrs(ctx, "table/SortableTableHeader")... }
 			{ props.Attrs... }
 		>
 			@sortableHeaderLink(props, href)
 		</th>
 	} else {
-		<th scope="col" class={ props.Class } { devmode.Attrs(ctx, "table/SortableTableHeader")... } { props.Attrs... }>
+		<th scope="col" class={ props.Class } { props.Attrs... }>
 			{ props.Label }
 		</th>
 	}

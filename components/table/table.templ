@@ -183,9 +183,14 @@ templ TableActionCell() {
 
 // TableHeader renders a <th> cell that is optionally sortable.
 //
-// Deprecated: use SortableTableHeader with SortContext. This component uses the
-// legacy sort/dir query parameters, does not preserve existing query filters,
-// and does not emit aria-sort.
+// Deprecated: use SortableTableHeader with SortContext, for example:
+//
+//	table.SortableTableHeader(table.SortableTableHeaderProps{
+//	    Label: "CPU", Column: "cpu", Sort: sc, FirstDir: table.SortDesc,
+//	})
+//
+// This component uses the legacy sort/dir query parameters, does not preserve
+// existing query filters, and does not emit aria-sort.
 templ TableHeader(label string, sortKey string, currentSortKey string, currentDir SortDir, baseURL string) {
 	if sortKey == "" {
 		<th class="text-xs font-semibold text-muted uppercase">{ label }</th>
