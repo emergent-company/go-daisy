@@ -1,0 +1,59 @@
+package ui
+
+import "github.com/emergent-company/go-daisy/devmode"
+
+// DirectionProps configures a writing-direction scope.
+type DirectionProps struct {
+	// Dir is "ltr", "rtl", or "auto". Empty means "ltr".
+	Dir   string
+	Class string
+	Attrs templ.Attributes
+}
+
+// Dir returns the normalised direction value, defaulting to "ltr".
+func (p DirectionProps) DirValue() string {
+	if p.Dir == "" {
+		return "ltr"
+	}
+	return p.Dir
+}
+
+// IsRTL reports whether the scope is right-to-left.
+func (p DirectionProps) IsRTL() bool {
+	return p.Dir == "rtl"
+}
+
+// Direction scopes its children to a writing direction.
+//
+// daisyUI/Tailwind logical properties (ms-*, me-*, ps-*, pe-*, start-*, end-*)
+// follow the nearest dir attribute, so wrapping a region is enough to mirror
+// it. Use it for a single RTL island inside an LTR app (or the reverse)
+// instead of duplicating markup.
+templ Direction(props ...DirectionProps) {
+	{{ var p DirectionProps
+	if len(props) > 0 { p = props[0] } }}
+	<div
+		dir={ p.DirValue() }
+		class={ p.Class }
+		{ devmode.Attrs(ctx, "ui/Direction")... }
+		{ p.Attrs... }
+	>
+		{ children... }
+	</div>
+}
+
+// DocumentDirectionScript sets <html dir> once per document, for apps whose
+// direction is chosen at runtime (locale switch) rather than at build time.
+//
+// Render it in the page <head> or at the end of <body>; it is idempotent and
+// skips work when the document already has the requested direction.
+templ DocumentDirectionScript(dir string) {
+	<script nonce={ templ.GetNonce(ctx) }>
+		(function () {
+			var target = "{ dir }" || 'ltr';
+			if (document.documentElement.getAttribute('dir') !== target) {
+				document.documentElement.setAttribute('dir', target);
+			}
+		})();
+	</script>
+}

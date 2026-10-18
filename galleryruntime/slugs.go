@@ -125,6 +125,14 @@ var ComponentSlugs = map[string]string{
 	"PromptBarPicker": "prompt-bar-picker",
 	"InputSpinner":    "input-spinner",
 	"WizardStepper":   "wizard-stepper",
+	"InputGroup":      "input-group",
+
+	// Containers, direction, and file chips
+	"ScrollArea":  "scroll-area",
+	"Direction":   "direction",
+	"ContextMenu": "context-menu",
+	"Resizable":   "resizable",
+	"Attachment":  "attachment",
 }
 
 // ComponentSlugsJSON returns ComponentSlugs as a JSON string for embedding in <script> tags.

@@ -526,3 +526,16 @@ func TagListWithBoundary(props TagListProps) templ.Component {
 		"values": len(props.Values),
 	})
 }
+
+// InputGroupWithBoundary wraps InputGroup with a dev-mode component boundary annotation.
+// gallery:token prefix,suffix
+// gallery:hint prefix:default(https://)
+// gallery:hint suffix:default(.com)
+func InputGroupWithBoundary(prefix string, suffix string, children ...templ.Component) templ.Component {
+	props := InputGroupProps{Prefix: prefix, Suffix: suffix}
+	inner := shared.RenderInto(InputGroup(props), shared.Compose(children...))
+	return devmode.ComponentBoundary("InputGroup", inner, map[string]any{
+		"prefix": prefix,
+		"suffix": suffix,
+	})
+}

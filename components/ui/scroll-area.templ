@@ -1,0 +1,38 @@
+package ui
+
+import "github.com/emergent-company/go-daisy/devmode"
+
+// ScrollAreaProps configures a scroll container with a slim, themed scrollbar.
+type ScrollAreaProps struct {
+	// Orientation is "" / "y" for vertical scrolling, "x" for horizontal, or
+	// "both". Vertical is the default because it is by far the common case.
+	Orientation string
+	// MaxHeight is an optional CSS length (e.g. "24rem", "60vh"). Empty lets the
+	// container take the height its parent gives it.
+	MaxHeight string
+	// Class is appended to the root classes.
+	Class string
+	Attrs templ.Attributes
+}
+
+// ScrollArea renders a scroll container whose scrollbar is slim, themed, and
+// inset instead of the browser default. Pure CSS — no JS, no layout wrapper,
+// works under HTMX swaps.
+//
+// Use it for side panels, long menus, log panes, and code blocks. For infinite
+// scroll feeds use table.ListArea instead; that component owns its own paging
+// triggers.
+templ ScrollArea(props ...ScrollAreaProps) {
+	{{ var p ScrollAreaProps
+	if len(props) > 0 { p = props[0] } }}
+	<div
+		class={ "gd-scrollarea", templ.KV("gd-scrollarea-x", p.Orientation == "x"), templ.KV("gd-scrollarea-both", p.Orientation == "both"), p.Class }
+		if p.MaxHeight != "" {
+			style={ "max-height:" + p.MaxHeight }
+		}
+		{ devmode.Attrs(ctx, "ui/ScrollArea")... }
+		{ p.Attrs... }
+	>
+		{ children... }
+	</div>
+}

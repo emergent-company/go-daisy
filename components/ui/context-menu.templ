@@ -1,0 +1,110 @@
+package ui
+
+import (
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/staticfs"
+)
+
+// ContextMenuItem is one entry in a context menu.
+type ContextMenuItem struct {
+	Label     string
+	Icon      string // lucide icon prefix, e.g. "lucide--pencil"
+	Href      string // renders <a role="menuitem" href=...>
+	HXGet     string // renders hx-get; target/push-url applied from HXTarget/HXPushURL
+	HXTarget  string
+	HXPushURL bool
+	Danger    bool // error colouring
+	Disabled  bool
+	Divider   bool // renders a rule instead of an item (Label ignored)
+}
+
+// ContextMenuProps configures a right-click menu over a region.
+type ContextMenuProps struct {
+	// ID is the menu element id (also stamped on the menu for tests).
+	ID string
+	// Items are the menu entries.
+	Items []ContextMenuItem
+	// Class is appended to the region wrapper.
+	Class string
+	Attrs templ.Attributes
+}
+
+var contextMenuOnce = templ.NewOnceHandle()
+
+// ContextMenuScript loads the context-menu runtime once per page.
+templ ContextMenuScript() {
+	@contextMenuOnce.Once() {
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-context-menu.js", templ.GetNonce(ctx)))
+	}
+}
+
+// contextMenuItem renders a single entry; internal so the <a> attribute set
+// stays in one place.
+templ contextMenuItem(item ContextMenuItem) {
+	<a
+		role="menuitem"
+		data-gd-menu-item
+		if item.Href != "" {
+			href={ item.Href }
+		}
+		class={ "flex items-center gap-2 rounded-box px-3 py-2 text-sm", templ.KV("text-error", item.Danger), templ.KV("opacity-50 pointer-events-none", item.Disabled) }
+		if item.HXGet != "" {
+			hx-get={ item.HXGet }
+		}
+		if item.HXTarget != "" {
+			hx-target={ item.HXTarget }
+		}
+		if item.HXPushURL {
+			hx-push-url="true"
+		}
+		if item.Disabled {
+			aria-disabled="true"
+		}
+	>
+		if item.Icon != "" {
+			@IconSpan(item.Icon, "size-4")
+		}
+		{ item.Label }
+	</a>
+}
+
+// ContextMenu turns its children into a right-click target and renders a menu
+// positioned at the pointer.
+//
+// Keyboard and pointer behaviour comes from go-daisy-a11y.js + the context-menu
+// runtime: Arrow/Home/End roving focus, Escape closes, click-outside closes,
+// Shift+F10 and the ContextMenu key open at the focused element, and the menu
+// is clamped to the viewport so it never opens past an edge.
+templ ContextMenu(props ContextMenuProps) {
+	<div
+		class={ "relative", props.Class }
+		data-gd-context-root
+		if props.ID != "" {
+			data-gd-context-id={ props.ID }
+		}
+		{ devmode.Attrs(ctx, "ui/ContextMenu")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+		<ul
+			role="menu"
+			data-gd-context-menu
+			tabindex="-1"
+			if props.ID != "" {
+				id={ props.ID }
+			}
+			class="fixed z-50 hidden min-w-44 max-w-[calc(100vw-1rem)] rounded-box border border-line bg-base-100 p-1 shadow-lg"
+		>
+			for _, item := range props.Items {
+				if item.Divider {
+					<li role="separator" class="my-1 h-px bg-base-300"></li>
+				} else {
+					<li role="none">
+						@contextMenuItem(item)
+					</li>
+				}
+			}
+		</ul>
+		@ContextMenuScript()
+	</div>
+}
