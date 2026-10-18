@@ -117,6 +117,9 @@ templ PageFull(props PageProps) {
 				</script>
 			}
 		}
+		if props.BodyEnd != nil {
+			@props.BodyEnd
+		}
 	</body>
 	</html>
 }

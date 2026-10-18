@@ -12,7 +12,8 @@ import (
 // TestFeedbackOverlayScript pins the emergent.feedback install snippet. The
 // service renamed its bundle from feedback-overlay.js to emergent-feedback.js;
 // the old path now answers 401, which the browser blocks as an opaque response,
-// so the overlay silently never mounts.
+// so the overlay silently never mounts. The label is the repo label a report
+// lands under; gallery reports belong to the plain "feedback" label.
 func TestFeedbackOverlayScript(t *testing.T) {
 	var buf bytes.Buffer
 	if err := feedbackOverlayScript().Render(context.Background(), &buf); err != nil {
@@ -24,7 +25,7 @@ func TestFeedbackOverlayScript(t *testing.T) {
 		`src="https://feedback.emergent-company.ai/emergent-feedback.js"`,
 		`data-api="https://feedback.emergent-company.ai"`,
 		`data-repo="emergent-company/go-daisy"`,
-		`data-label="gallery-feedback"`,
+		`data-label="feedback"`,
 		`async`,
 	} {
 		if !strings.Contains(html, want) {

@@ -1,31 +1,32 @@
 package handler
 
 import (
+	"github.com/emergent-company/go-daisy/cmd/nexus/internal/shell"
 	"github.com/emergent-company/go-daisy/components/layout"
 	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
 templ LoginPageFull() {
-	@layout.PageFull(layout.PageProps{Title: "Login - Nexus", ThemeAttr: ""}) {
+	@layout.PageFull(layout.PageProps{Title: "Login - Nexus", ThemeAttr: "", BodyEnd: shell.FeedbackOverlay()}) {
 		@LoginPage()
 	}
 }
 
 templ RegisterPageFull() {
-	@layout.PageFull(layout.PageProps{Title: "Register - Nexus", ThemeAttr: ""}) {
+	@layout.PageFull(layout.PageProps{Title: "Register - Nexus", ThemeAttr: "", BodyEnd: shell.FeedbackOverlay()}) {
 		@RegisterPage()
 	}
 }
 
 templ ForgotPasswordPageFull() {
-	@layout.PageFull(layout.PageProps{Title: "Forgot Password - Nexus", ThemeAttr: ""}) {
+	@layout.PageFull(layout.PageProps{Title: "Forgot Password - Nexus", ThemeAttr: "", BodyEnd: shell.FeedbackOverlay()}) {
 		@ForgotPasswordPage()
 	}
 }
 
 templ ResetPasswordPageFull() {
-	@layout.PageFull(layout.PageProps{Title: "Reset Password - Nexus", ThemeAttr: ""}) {
+	@layout.PageFull(layout.PageProps{Title: "Reset Password - Nexus", ThemeAttr: "", BodyEnd: shell.FeedbackOverlay()}) {
 		@ResetPasswordPage()
 	}
 }

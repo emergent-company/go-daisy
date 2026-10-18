@@ -3,8 +3,10 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/emergent-company/go-daisy/cmd/nexus/internal/handler"
+	"github.com/emergent-company/go-daisy/devmode"
 	"github.com/emergent-company/go-daisy/staticfs"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -15,6 +17,19 @@ func main() {
 	e.HideBanner = true
 	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Recover())
+
+	// Dev mode annotates every component root with data-component="<pkg/Name>"
+	// (<- devmode.Attrs in components) so DevTools shows the component tree.
+	// On by default for this reference app; set NEXUS_DEV=0 to disable.
+	if os.Getenv("NEXUS_DEV") != "0" {
+		e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+			return func(c echo.Context) error {
+				r := c.Request()
+				c.SetRequest(r.WithContext(devmode.WithDevMode(r.Context())))
+				return next(c)
+			}
+		})
+	}
 
 	e.GET("/static/*", echo.WrapHandler(staticfs.Handler("/static/")))
 	e.Static("/images", "/root/nexus-html/html/images")

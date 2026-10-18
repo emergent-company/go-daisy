@@ -1,13 +1,14 @@
 package handler
 
 import (
+	"github.com/emergent-company/go-daisy/cmd/nexus/internal/shell"
 	"github.com/emergent-company/go-daisy/components/layout"
 	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
 templ LandingPageFull() {
-	@layout.PageFull(layout.PageProps{Title: "Nexus - Premium Admin Dashboard", ThemeAttr: ""}) {
+	@layout.PageFull(layout.PageProps{Title: "Nexus - Premium Admin Dashboard", ThemeAttr: "", BodyEnd: shell.FeedbackOverlay()}) {
 		@LandingPage()
 	}
 }
