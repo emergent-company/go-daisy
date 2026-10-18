@@ -1,0 +1,18 @@
+package shell
+
+// FeedbackOverlay installs emergent.feedback: hold Alt+Shift to enter element
+// selection mode, click any element to leave a comment, export straight to a
+// GitHub issue. When dev mode is on, the overlay reads the nearest
+// data-component attribute and uses the component name as the issue title.
+//
+// Always on for this reference app — it is a test surface, not production.
+templ FeedbackOverlay() {
+	<script
+		src="https://feedback.emergent-company.ai/emergent-feedback.js"
+		data-api="https://feedback.emergent-company.ai"
+		data-repo="emergent-company/go-daisy"
+		data-label="feedback"
+		data-theme="auto"
+		async
+	></script>
+}

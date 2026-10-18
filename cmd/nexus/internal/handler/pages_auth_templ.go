@@ -9,6 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"github.com/emergent-company/go-daisy/cmd/nexus/internal/shell"
 	"github.com/emergent-company/go-daisy/components/layout"
 	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
@@ -53,7 +54,7 @@ func LoginPageFull() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layout.PageFull(layout.PageProps{Title: "Login - Nexus", ThemeAttr: ""}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layout.PageFull(layout.PageProps{Title: "Login - Nexus", ThemeAttr: "", BodyEnd: shell.FeedbackOverlay()}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -100,7 +101,7 @@ func RegisterPageFull() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layout.PageFull(layout.PageProps{Title: "Register - Nexus", ThemeAttr: ""}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layout.PageFull(layout.PageProps{Title: "Register - Nexus", ThemeAttr: "", BodyEnd: shell.FeedbackOverlay()}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -147,7 +148,7 @@ func ForgotPasswordPageFull() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layout.PageFull(layout.PageProps{Title: "Forgot Password - Nexus", ThemeAttr: ""}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var6), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layout.PageFull(layout.PageProps{Title: "Forgot Password - Nexus", ThemeAttr: "", BodyEnd: shell.FeedbackOverlay()}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var6), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -194,7 +195,7 @@ func ResetPasswordPageFull() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layout.PageFull(layout.PageProps{Title: "Reset Password - Nexus", ThemeAttr: ""}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layout.PageFull(layout.PageProps{Title: "Reset Password - Nexus", ThemeAttr: "", BodyEnd: shell.FeedbackOverlay()}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

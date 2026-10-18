@@ -583,7 +583,7 @@ func GalleryPage(title string, activeSlug string, categories []CategoryGroup, lo
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, " <!-- feedback-overlay: element-level feedback tool --> <script src=\"https://feedback.emergent-company.ai/feedback-overlay.js\" data-api=\"https://feedback.emergent-company.ai\" data-repo=\"emergent-company/go-daisy\" data-label=\"gallery-feedback\" async></script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, " <!-- feedback-overlay: element-level feedback tool --> <script src=\"https://feedback.emergent-company.ai/emergent-feedback.js\" data-api=\"https://feedback.emergent-company.ai\" data-repo=\"emergent-company/go-daisy\" data-label=\"feedback\" async></script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
