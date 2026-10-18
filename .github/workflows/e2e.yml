@@ -22,7 +22,6 @@ on:
       - 'go.sum'
       - 'package.json'
       - 'package-lock.json'
-      - 'tailwind.config.js'
 
 jobs:
   e2e:
