@@ -14,7 +14,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { JSDOM } = require('jsdom');
+const { JSDOM, VirtualConsole } = require('jsdom');
 
 const JS_DIR = path.resolve(__dirname, '..', '..', 'staticfs', 'static');
 
@@ -52,7 +52,7 @@ const TOGGLE_GROUP = `
   <button type="button" data-gd-toggle-value="right" aria-pressed="false">Right</button>
 </div>`;
 
-const JS_FILES = ['go-daisy-a11y.js', 'go-daisy-context-menu.js', 'go-daisy-resizable.js', 'go-daisy-toggle.js', 'go-daisy-messagescroller.js', 'go-daisy-alert-dialog.js'];
+const JS_FILES = ['go-daisy-a11y.js', 'go-daisy-context-menu.js', 'go-daisy-resizable.js', 'go-daisy-toggle.js', 'go-daisy-messagescroller.js', 'go-daisy-alert-dialog.js', 'go-daisy-menubar.js'];
 
 const MESSAGE_SCROLLER = `
 <div data-gd-messagescroller id="scroller">
@@ -67,10 +67,16 @@ function loadScripts(dom, extraScripts = []) {
   }
 }
 
-function setup(body, extraScripts = []) {
+function setup(body, extraScripts = [], { onError } = {}) {
+  // jsdom reports exceptions thrown inside event listeners to the virtual
+  // console instead of rethrowing them, so a test that needs to prove "this
+  // listener did not throw" must collect them here.
+  const virtualConsole = onError ? new VirtualConsole() : undefined;
+  if (virtualConsole) virtualConsole.on('jsdomError', onError);
   const dom = new JSDOM(`<!DOCTYPE html><html><body>${body}</body></html>`, {
     pretendToBeVisual: true,
     url: 'http://localhost/',
+    virtualConsole,
   });
   loadScripts(dom, extraScripts);
   return dom;
@@ -727,4 +733,236 @@ test('alert-dialog: close event triggers gd-alert-dialog-close with returnValue'
 
   assert.ok(closedDetail, 'gd-alert-dialog-close must fire on the native close event');
   assert.equal(closedDetail.value, 'confirm', 'detail.value must carry the returnValue');
+});
+
+const MENUBAR = `
+<div role="menubar" data-gd-menubar id="bar">
+  <div data-gd-menubar-menu data-gd-menu-root id="menu-file">
+    <button type="button" data-gd-menu-trigger data-gd-menubar-trigger tabindex="0" aria-haspopup="menu" id="file-trigger">File</button>
+    <ul role="menu" data-gd-menu data-gd-menubar-content id="file-content">
+      <li role="none"><a role="menuitem" data-gd-menu-item id="new" href="#">New</a></li>
+      <li role="none"><a role="menuitem" data-gd-menu-item id="open" href="#">Open</a></li>
+    </ul>
+  </div>
+  <div data-gd-menubar-menu data-gd-menu-root id="menu-edit">
+    <button type="button" data-gd-menu-trigger data-gd-menubar-trigger tabindex="0" aria-haspopup="menu" id="edit-trigger">Edit</button>
+    <ul role="menu" data-gd-menu data-gd-menubar-content id="edit-content">
+      <li role="none"><a role="menuitem" data-gd-menu-item id="undo" href="#">Undo</a></li>
+      <li role="none"><a role="menuitem" data-gd-menu-item id="redo" href="#">Redo</a></li>
+    </ul>
+  </div>
+  <div data-gd-menubar-menu data-gd-menu-root id="menu-view">
+    <button type="button" data-gd-menu-trigger data-gd-menubar-trigger tabindex="0" aria-haspopup="menu" id="view-trigger">View</button>
+    <ul role="menu" data-gd-menu data-gd-menubar-content id="view-content">
+      <li role="none"><a role="menuitem" data-gd-menu-item id="zoom" href="#">Zoom</a></li>
+    </ul>
+  </div>
+</div>
+<button type="button" id="outside">outside</button>`;
+
+const MENUBAR_DISABLED_TRIGGER = `
+<div role="menubar" data-gd-menubar id="bar">
+  <div data-gd-menubar-menu data-gd-menu-root id="menu-a">
+    <button type="button" role="menuitem" data-gd-menu-trigger data-gd-menubar-trigger tabindex="0" aria-haspopup="menu" id="a-trigger">A</button>
+    <ul role="menu" data-gd-menu id="a-content">
+      <li role="none"><a role="menuitem" data-gd-menu-item id="a-item" href="#">A item</a></li>
+    </ul>
+  </div>
+  <div data-gd-menubar-menu data-gd-menu-root id="menu-b">
+    <button type="button" role="menuitem" data-gd-menu-trigger data-gd-menubar-trigger tabindex="0" aria-haspopup="menu" id="b-trigger" disabled>B</button>
+    <ul role="menu" data-gd-menu id="b-content">
+      <li role="none"><a role="menuitem" data-gd-menu-item id="b-item" href="#">B item</a></li>
+    </ul>
+  </div>
+  <div data-gd-menubar-menu data-gd-menu-root id="menu-c">
+    <button type="button" role="menuitem" data-gd-menu-trigger data-gd-menubar-trigger tabindex="0" aria-haspopup="menu" id="c-trigger">C</button>
+    <ul role="menu" data-gd-menu id="c-content">
+      <li role="none"><a role="menuitem" data-gd-menu-item id="c-item" href="#">C item</a></li>
+    </ul>
+  </div>
+</div>`;
+
+test('menubar: tabbing out and back in does not auto-open a menu', () => {
+  // gdMenu's own focusout clears data-gd-menu-closed whenever focus leaves a
+  // root; the menubar runtime must re-stamp every closed menu so a returning
+  // Tab does not reopen whatever had focus last.
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+  const outside = doc.getElementById('outside');
+
+  file.focus();
+  outside.focus();
+  file.focus();
+
+  assert.ok(!doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'), 'bar stays closed');
+  assert.ok(doc.getElementById('menu-file').hasAttribute('data-gd-menu-closed'), 'closed marker is re-stamped');
+});
+
+// clickTrigger mimics the browser order for a real pointer click: jsdom's
+// element.click() neither moves focus nor fires pointerdown, and gdMenu opens
+// on focusin, so a bare .click() would prove nothing.
+function clickTrigger(window, trigger) {
+  trigger.dispatchEvent(new window.MouseEvent('pointerdown', { bubbles: true }));
+  trigger.focus();
+  trigger.click();
+}
+
+test('menubar: clicking a different trigger leaves exactly one menu open', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+  const edit = doc.getElementById('edit-trigger');
+
+  clickTrigger(window, file);
+  clickTrigger(window, edit);
+
+  assert.ok(!doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'), 'previous menu closes');
+  assert.ok(doc.getElementById('menu-edit').hasAttribute('data-gd-menu-open'), 'clicked menu opens');
+  assert.equal(doc.querySelectorAll('[data-gd-menu-open]').length, 1, 'never two open menus');
+});
+
+test('menubar: Home and End jump to the first and last top-level item', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const edit = doc.getElementById('edit-trigger');
+
+  edit.focus();
+  press(window, edit, 'End');
+  assert.equal(doc.activeElement.id, 'view-trigger');
+
+  press(window, doc.activeElement, 'Home');
+  assert.equal(doc.activeElement.id, 'file-trigger');
+});
+
+test('menubar: ArrowUp opens the menu at its last item', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+
+  file.focus();
+  press(window, file, 'ArrowUp');
+
+  assert.equal(doc.activeElement.id, 'open', 'last item is focused');
+  assert.ok(doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'));
+});
+
+test('menubar: arrow movement skips a disabled top-level item', () => {
+  const { window } = setup(MENUBAR_DISABLED_TRIGGER);
+  const doc = window.document;
+  const a = doc.getElementById('a-trigger');
+
+  a.focus();
+  press(window, a, 'ArrowRight');
+  assert.equal(doc.activeElement.id, 'c-trigger', 'disabled B is skipped');
+
+  press(window, doc.activeElement, 'ArrowRight');
+  assert.equal(doc.activeElement.id, 'a-trigger', 'wraps past the disabled item');
+});
+
+test('menubar: clicking a trigger does not throw in the deferred aria-expanded sync', () => {
+  // gdMenu's click handler reflects aria-expanded in a setTimeout. Run deferred
+  // callbacks synchronously so a wrong isOpen() call site fails here instead of
+  // surfacing as an uncaught page error in the browser.
+  const errors = [];
+  const { window } = setup(MENUBAR, [], { onError: (err) => errors.push(err) });
+  const doc = window.document;
+  const realSetTimeout = window.setTimeout;
+  window.setTimeout = (fn) => {
+    fn();
+    return 0;
+  };
+  try {
+    doc.getElementById('file-trigger').click();
+    doc.getElementById('edit-trigger').click();
+  } finally {
+    window.setTimeout = realSetTimeout;
+  }
+  assert.deepEqual(errors.map((e) => e.message), [], 'trigger clicks must not throw');
+});
+
+test('menubar: exactly one trigger is tabbable (roving tabindex)', () => {
+  const { window } = setup(MENUBAR);
+  const triggers = [...window.document.querySelectorAll('[data-gd-menubar-trigger]')];
+  assert.equal(triggers.filter((el) => el.getAttribute('tabindex') === '0').length, 1);
+  assert.equal(triggers.filter((el) => el.getAttribute('tabindex') === '-1').length, 2);
+});
+
+test('menubar: ArrowRight moves focus without opening a menu', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+  const edit = doc.getElementById('edit-trigger');
+
+  file.focus();
+  press(window, file, 'ArrowRight');
+
+  assert.equal(doc.activeElement, edit, 'focus moves to the next trigger');
+  assert.equal(doc.querySelector('[data-gd-menu-open]'), null, 'no menu opens on arrow movement');
+});
+
+test('menubar: ArrowDown opens the menu and focuses the first item', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+
+  file.focus();
+  press(window, file, 'ArrowDown');
+
+  assert.equal(doc.activeElement.id, 'new', 'first item is focused');
+  assert.ok(doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'), 'menu is open');
+  assert.equal(file.getAttribute('aria-expanded'), 'true');
+});
+
+test('menubar: ArrowRight inside an open menu opens the adjacent menu', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+
+  file.focus();
+  press(window, file, 'ArrowDown');
+  press(window, doc.activeElement, 'ArrowRight');
+
+  assert.equal(doc.activeElement.id, 'undo', 'first item of the next menu is focused');
+  assert.ok(doc.getElementById('menu-edit').hasAttribute('data-gd-menu-open'), 'next menu is open');
+  assert.ok(!doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'), 'previous menu is closed');
+});
+
+test('menubar: ArrowLeft wraps from the first menu to the last', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+
+  file.focus();
+  press(window, file, 'ArrowLeft');
+
+  assert.equal(doc.activeElement.id, 'view-trigger', 'wraps to the last trigger');
+  assert.equal(doc.querySelector('[data-gd-menu-open]'), null, 'still closed after wrap');
+});
+
+test('menubar: Escape closes and restores focus to the trigger', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+
+  file.focus();
+  press(window, file, 'ArrowDown');
+  press(window, doc.activeElement, 'Escape');
+
+  assert.equal(doc.activeElement, file, 'focus returns to the trigger');
+  assert.ok(!doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'), 'menu is closed');
+});
+
+test('menubar: hovering another trigger while a menu is open follows', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+  const edit = doc.getElementById('edit-trigger');
+
+  file.focus();
+  press(window, file, 'ArrowDown');
+  edit.dispatchEvent(new window.MouseEvent('pointerover', { bubbles: true }));
+
+  assert.ok(doc.getElementById('menu-edit').hasAttribute('data-gd-menu-open'), 'hovered menu opens');
+  assert.ok(!doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'), 'previous menu closes');
 });

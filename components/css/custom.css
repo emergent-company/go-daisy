@@ -119,7 +119,9 @@
   .edge-line-strong {
     border: var(--border, 1px) solid var(--color-line-strong);
   }
+
 }
+
 
 /* ── Layout metrics ────────────────────────────────────────────────────────
  *
@@ -613,4 +615,31 @@ html[data-gd-resizing] iframe {
 [data-table-density="compact"] > :where(thead, tbody) > tr > :where(th, td) {
   height: var(--table-row-height, 2.75rem);
   padding-block: 0;
+}
+
+/* ── Menubar menu visibility ───────────────────────────────────────────────
+ *
+ * Hide each menu surface until the shared a11y runtime stamps data-gd-menu-open
+ * on its [data-gd-menu-root] (the [data-gd-menubar-menu]). This keeps the
+ * close/open state entirely attribute-driven rather than CSS :focus-within, so
+ * arrow-key focus movement between top-level triggers never auto-opens a menu.
+ *
+ * These rules MUST live in `utilities`, not `components`: daisyUI 5 emits
+ * `.menu { display: flex }` inside the nested sublayers of `@layer utilities`
+ * (`utilities.daisyui.l1.l2.l3`). Declarations made directly in a layer are
+ * ordered after that layer's sublayers, so an unqualified `utilities` rule wins
+ * over daisyUI's `.menu` without `!important` and without relying on
+ * specificity (ours is 0-2-0 vs `.menu`'s 0-1-0 either way). A rule in
+ * `components` loses the cascade no matter how specific it is, because the
+ * `utilities` layer is declared after `components`. Verified against the
+ * compiled bundle and in the browser (closed menus compute `display:none`,
+ * open ones `display:block`). */
+@layer utilities {
+  [data-gd-menubar-menu] > [data-gd-menu] {
+    display: none;
+  }
+
+  [data-gd-menubar-menu][data-gd-menu-open] > [data-gd-menu] {
+    display: block;
+  }
 }

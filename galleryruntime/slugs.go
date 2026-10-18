@@ -127,6 +127,15 @@ var ComponentSlugs = map[string]string{
 	"AlertDialogFooter":      "alert-dialog",
 	"AlertDialogAction":      "alert-dialog",
 	"AlertDialogCancel":      "alert-dialog",
+	// Menubar
+	"Menubar":          "menubar",
+	"MenubarMenu":      "menubar",
+	"MenubarTrigger":   "menubar",
+	"MenubarContent":   "menubar",
+	"MenubarItem":      "menubar",
+	"MenubarSeparator": "menubar",
+	"MenubarLabel":     "menubar",
+	"MenubarShortcut":  "menubar",
 	// Person
 	"PersonCell": "person-cell",
 	// Forms

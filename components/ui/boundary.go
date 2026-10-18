@@ -1680,3 +1680,65 @@ func AlertDialogWithBoundary(dialogID string, title string, description string, 
 		"cancelLabel":  cancelLabel,
 	})
 }
+
+// menubarItem renders a MenubarItem with plain text content.
+func menubarItem(label string, href string, danger bool, disabled bool) templ.Component {
+	return shared.RenderInto(
+		MenubarItem(MenubarItemProps{Href: href, Danger: danger, Disabled: disabled}),
+		shared.StrComp(label),
+	)
+}
+
+// menubarItemShortcut renders a MenubarItem whose content is a label plus a
+// right-aligned shortcut hint.
+func menubarItemShortcut(label string, shortcut string, disabled bool) templ.Component {
+	return shared.RenderInto(
+		MenubarItem(MenubarItemProps{Disabled: disabled}),
+		shared.Compose(
+			shared.StrComp(label),
+			shared.RenderInto(MenubarShortcut(MenubarShortcutProps{}), shared.StrComp(shortcut)),
+		),
+	)
+}
+
+// menubarMenu renders a MenubarMenu: a trigger labelled `trigger` followed by
+// its content.
+func menubarMenu(trigger string, content templ.Component) templ.Component {
+	return shared.RenderInto(MenubarMenu(MenubarMenuProps{}), shared.Compose(
+		shared.RenderInto(MenubarTrigger(MenubarTriggerProps{}), shared.StrComp(trigger)),
+		shared.RenderInto(MenubarContent(MenubarContentProps{}), content),
+	))
+}
+
+// MenubarWithBoundary wraps Menubar with a dev-mode component boundary
+// annotation, rendering a File/Edit/View composition that exercises labels,
+// separators, shortcuts and a disabled item. Zero-arg: the composition is fixed
+// so the gallery story needs no parameters.
+func MenubarWithBoundary() templ.Component {
+	file := menubarMenu("File", shared.Compose(
+		menubarItemShortcut("New", "⌘N", false),
+		menubarItemShortcut("Open", "⌘O", false),
+		MenubarSeparator(MenubarSeparatorProps{}),
+		menubarItemShortcut("Save", "⌘S", false),
+		MenubarSeparator(MenubarSeparatorProps{}),
+		menubarItem("Exit", "", false, false),
+	))
+	edit := menubarMenu("Edit", shared.Compose(
+		menubarItemShortcut("Undo", "⌘Z", false),
+		menubarItemShortcut("Redo", "⇧⌘Z", false),
+		MenubarSeparator(MenubarSeparatorProps{}),
+		shared.RenderInto(MenubarLabel(MenubarLabelProps{}), shared.StrComp("Advanced")),
+		menubarItemShortcut("Cut", "⌘X", false),
+		menubarItemShortcut("Copy", "⌘C", false),
+		menubarItemShortcut("Paste", "⌘V", true),
+	))
+	view := menubarMenu("View", shared.Compose(
+		shared.RenderInto(MenubarLabel(MenubarLabelProps{}), shared.StrComp("Zoom")),
+		menubarItemShortcut("Zoom In", "⌘+", false),
+		menubarItemShortcut("Zoom Out", "⌘-", false),
+		MenubarSeparator(MenubarSeparatorProps{}),
+		menubarItemShortcut("Fullscreen", "⌃⌘F", false),
+	))
+	inner := shared.RenderInto(Menubar(MenubarProps{}), shared.Compose(file, edit, view))
+	return devmode.ComponentBoundary("Menubar", inner, MenubarProps{})
+}

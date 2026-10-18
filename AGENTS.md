@@ -105,7 +105,7 @@ Embedded static assets with cache-busting content hashes.
 | `Hash()` | 12-char content hash for cache busting |
 | `FS()` | Embedded `fs.FS` rooted at `static/` |
 
-**Bundled JS (19 files):** `htmx.js`, `morph.js`, `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js` (behaviour-init runtime — see `components/behaviors`), `go-daisy-a11y.js` (keyboard/focus primitives: `gdFocus` + `gdMenu`), `go-daisy-command-palette.js` (⌘K palette: focus trap, dismissal and filtering), `go-daisy-context-menu.js`, `go-daisy-resizable.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `go-daisy-toggle.js`, `go-daisy-messagescroller.js`, `go-daisy-alert-dialog.js`, `frappe-gantt.js`.
+**Bundled JS (20 files):** `htmx.js`, `morph.js`, `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js` (behaviour-init runtime — see `components/behaviors`), `go-daisy-a11y.js` (keyboard/focus primitives: `gdFocus` + `gdMenu`), `go-daisy-command-palette.js` (⌘K palette: focus trap, dismissal and filtering), `go-daisy-context-menu.js`, `go-daisy-resizable.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `go-daisy-toggle.js`, `go-daisy-messagescroller.js`, `go-daisy-alert-dialog.js`, `go-daisy-menubar.js`, `frappe-gantt.js`.
 
 **Bundled CSS:** `app.css` (compiled Tailwind + DaisyUI), `frappe-gantt.css`.
 
@@ -289,7 +289,7 @@ Both need `*WithBoundary` wrappers. The demo variant is only for gallery registr
 
 CSS is compiled from `assets/app.css` → `staticfs/static/css/app.css` and served at `/static/css/app.css`. The `staticfs` package embeds this file into the binary. Do not edit the output file directly; edit `assets/app.css` and re-run `task build:ui`.
 
-**Bundled JavaScript** lives in `staticfs/static/js/` — 19 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js`, `go-daisy-a11y.js`, `go-daisy-command-palette.js`, `go-daisy-context-menu.js`, `go-daisy-resizable.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `go-daisy-toggle.js`, `go-daisy-messagescroller.js`, `go-daisy-alert-dialog.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
+**Bundled JavaScript** lives in `staticfs/static/js/` — 20 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js`, `go-daisy-a11y.js`, `go-daisy-command-palette.js`, `go-daisy-context-menu.js`, `go-daisy-resizable.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `go-daisy-toggle.js`, `go-daisy-messagescroller.js`, `go-daisy-alert-dialog.js`, `go-daisy-menubar.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
 
 **Cache busting**: `staticfs.Hash()` returns a 12-char content hash updated via `go generate`. `Stylesheet()` and `Script()` helpers append `?v={hash}` query params automatically. Use `data-asset-track="reload"` on tags to trigger full reload on version mismatch.
 

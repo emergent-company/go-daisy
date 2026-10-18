@@ -1,0 +1,229 @@
+package ui
+
+import (
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/staticfs"
+)
+
+// MenubarAlign controls which edge of the trigger a MenubarContent aligns to.
+type MenubarAlign string
+
+const (
+	// MenubarAlignStart aligns the content to the trigger's inline-start edge
+	// (the default).
+	MenubarAlignStart MenubarAlign = ""
+	// MenubarAlignEnd aligns the content to the trigger's inline-end edge.
+	MenubarAlignEnd MenubarAlign = "right-0"
+)
+
+// MenubarProps configures a Menubar.
+type MenubarProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// MenubarMenuProps configures a MenubarMenu (one top-level item + its content).
+type MenubarMenuProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// MenubarTriggerProps configures a MenubarTrigger.
+type MenubarTriggerProps struct {
+	// Disabled renders a non-focusable top-level item. The roving helpers skip
+	// it, so arrow movement jumps over it.
+	Disabled bool
+	Class    string
+	Attrs    templ.Attributes
+}
+
+// MenubarContentProps configures a MenubarContent (the dropdown menu surface).
+type MenubarContentProps struct {
+	Align MenubarAlign
+	Class string
+	Attrs templ.Attributes
+}
+
+// MenubarItemProps configures a MenubarItem.
+type MenubarItemProps struct {
+	// Href renders the item as a link; empty renders a button.
+	Href     string
+	Danger   bool
+	Disabled bool
+	Class    string
+	Attrs    templ.Attributes
+}
+
+// MenubarSeparatorProps configures a MenubarSeparator.
+type MenubarSeparatorProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// MenubarLabelProps configures a MenubarLabel.
+type MenubarLabelProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// MenubarShortcutProps configures a MenubarShortcut.
+type MenubarShortcutProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+var menubarScriptOnce = templ.NewOnceHandle()
+
+// MenubarScript loads the menubar runtime once per page. It emits the shared
+// a11y runtime (roving focus, menu semantics) followed by the menubar-specific
+// runtime (roving trigger tabindex, open-if-any-open arrow movement,
+// hover-follow and focus-leave close).
+templ MenubarScript() {
+	@menubarScriptOnce.Once() {
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-a11y.js", templ.GetNonce(ctx)))
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-menubar.js", templ.GetNonce(ctx)))
+	}
+}
+
+// Menubar renders a horizontal menu bar. Each top-level item is a MenubarMenu
+// (trigger + content); the menubar runtime gives the triggers a roving tabindex,
+// moves focus with ArrowLeft/Right without opening, and follows the
+// open-if-any-open rule so arrow movement into an open bar opens the adjacent
+// menu.
+templ Menubar(props MenubarProps) {
+	<div
+		role="menubar"
+		data-gd-menubar
+		class={ "flex items-center gap-0.5 border-b border-line bg-base-100 px-1 py-0.5", props.Class }
+		{ devmode.Attrs(ctx, "ui/Menubar")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+	@MenubarScript()
+}
+
+// MenubarMenu renders one top-level menubar item: a trigger followed by its
+// content. It is annotated with data-gd-menu-root so the shared a11y runtime
+// upgrades it, and data-gd-menubar-menu so the menubar runtime and the CSS can
+// hide/reveal the content by the data-gd-menu-open marker.
+templ MenubarMenu(props MenubarMenuProps) {
+	<div
+		data-gd-menubar-menu
+		data-gd-menu-root
+		class={ "relative inline-block text-start", props.Class }
+		{ devmode.Attrs(ctx, "ui/MenubarMenu")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+}
+
+// MenubarTrigger renders a top-level trigger with role="menuitem" (the only
+// role a menubar may own). aria-expanded is deliberately omitted — the shared
+// a11y runtime owns it — and aria-haspopup is set statically. The static tabindex="0" is re-written by the menubar runtime's
+// roving pass so exactly one trigger is tabbable.
+templ MenubarTrigger(props MenubarTriggerProps) {
+	<button
+		type="button"
+		role="menuitem"
+		data-gd-menu-trigger
+		data-gd-menubar-trigger
+		tabindex="0"
+		aria-haspopup="menu"
+		if props.Disabled {
+			disabled
+		}
+		class={ "btn btn-ghost btn-sm", props.Class }
+		{ devmode.Attrs(ctx, "ui/MenubarTrigger")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</button>
+}
+
+// MenubarContent renders the menu surface. It is a direct child of its
+// MenubarMenu so the CSS rule `[data-gd-menubar-menu] > [data-gd-menu]` can
+// hide it until the shared a11y runtime stamps data-gd-menu-open on the root.
+templ MenubarContent(props MenubarContentProps) {
+	{{ align := string(props.Align)
+	if align == "" {
+		align = "left-0"
+	} }}
+	<ul
+		role="menu"
+		data-gd-menu
+		data-gd-menubar-content
+		class={ "menu menu-sm absolute top-full z-50 mt-1 min-w-52 rounded-box bg-base-100 p-1 edge-line shadow-lg", align, props.Class }
+		{ devmode.Attrs(ctx, "ui/MenubarContent")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</ul>
+}
+
+// MenubarItem renders a single menu item. With Href set it renders an anchor;
+// otherwise a button. Disabled anchors get aria-disabled plus pointer-events
+// off; disabled buttons get the native disabled attribute.
+templ MenubarItem(props MenubarItemProps) {
+	<li role="none">
+		if props.Href != "" {
+			<a
+				role="menuitem"
+				data-gd-menu-item
+				href={ templ.URL(props.Href) }
+				if props.Disabled {
+					aria-disabled="true"
+				}
+				class={ "min-w-0 break-words", templ.KV("text-error", props.Danger), templ.KV("pointer-events-none opacity-50", props.Disabled), props.Class }
+				{ devmode.Attrs(ctx, "ui/MenubarItem")... }
+				{ props.Attrs... }
+			>{ children... }</a>
+		} else {
+			<button
+				type="button"
+				role="menuitem"
+				data-gd-menu-item
+				if props.Disabled {
+					disabled
+				}
+				class={ "min-w-0 break-words", templ.KV("text-error", props.Danger), props.Class }
+				{ devmode.Attrs(ctx, "ui/MenubarItem")... }
+				{ props.Attrs... }
+			>{ children... }</button>
+		}
+	</li>
+}
+
+// MenubarSeparator renders a horizontal rule between menu items.
+templ MenubarSeparator(props MenubarSeparatorProps) {
+	<li
+		role="separator"
+		class={ "my-1 h-px w-full bg-base-200", props.Class }
+		{ devmode.Attrs(ctx, "ui/MenubarSeparator")... }
+		{ props.Attrs... }
+	></li>
+}
+
+// MenubarLabel renders a non-interactive group label inside a menu.
+templ MenubarLabel(props MenubarLabelProps) {
+	<li
+		role="none"
+		class={ "menu-label px-2 py-1.5 text-xs text-label", props.Class }
+		{ devmode.Attrs(ctx, "ui/MenubarLabel")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</li>
+}
+
+// MenubarShortcut renders a right-aligned keyboard hint inside a MenubarItem.
+templ MenubarShortcut(props MenubarShortcutProps) {
+	<span
+		class={ "ml-auto text-xs tracking-widest text-faint", props.Class }
+		{ devmode.Attrs(ctx, "ui/MenubarShortcut")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</span>
+}

@@ -12,12 +12,18 @@
  *   gdFocus.typeahead()                             -> match(items, labelOf, ch)
  *   gdMenu.init(root)                               -> wires one menu root
  *   gdMenu.rescan()                                 -> wires every unwired [data-gd-menu-root]
+ *   gdMenu.open(root, toFirst)                      -> opens (focus trigger, optionally first item)
+ *   gdMenu.close(root, restoreFocus)                -> closes (optionally restore focus to trigger)
+ *   gdMenu.isOpen(root)                             -> true when open (:focus-within or marker)
  *
  * Menu contract (attribute driven):
  *   [data-gd-menu-root]                 container; may be any element
  *   [data-gd-menu-trigger]              button/role=button that toggles
  *   [data-gd-menu]                      the menu surface (role=menu)
  *   [data-gd-menu-item] or role=menuitem
+ *   [data-gd-menu-keep-closed]          optional: never clear the closed marker
+ *                                       on focus-leave (composed owners such as
+ *                                       the menubar own when a menu may open)
  *
  * Behaviour: ArrowDown/Up/Home/End roving focus, Enter/Space activation,
  * Escape closes and restores focus, Tab closes and leaves, printable-key
@@ -188,6 +194,7 @@
   }
 
   function close(root, restoreFocus) {
+    if (!root) return;
     var trigger = triggerOf(root);
     // daisyUI opens on :focus-within, so restoring focus to the trigger would
     // immediately re-open the menu. The attribute suppresses that one case and
@@ -202,6 +209,7 @@
   }
 
   function open(root, toFirst) {
+    if (!root) return;
     var trigger = triggerOf(root);
     root.removeAttribute('data-gd-menu-closed');
     if (trigger) {
@@ -212,6 +220,22 @@
       var menu = menuOf(root);
       if (menu) gdFocus.roving(menu).first();
     }
+  }
+
+  // A menu counts as open when its explicit open marker is set, when focus is
+  // anywhere inside it, or when it matches :focus-within (the CSS-driven state
+  // daisyUI uses). The explicit closed marker wins over all of them: close()
+  // stamps it before restoring focus to the trigger, and without this check the
+  // focus-based clauses would immediately report the just-closed menu as open
+  // again (that is what re-opened a menubar menu on a second trigger click).
+  // The menubar runtime deliberately does NOT use this predicate for "is any
+  // menu open": it reads data-gd-menu-open directly, because a closed menu may
+  // legitimately hold the trigger's focus.
+  function isOpen(root) {
+    if (!root || root.hasAttribute('data-gd-menu-closed')) return false;
+    return root.hasAttribute('data-gd-menu-open') ||
+      root.matches(':focus-within') ||
+      root.contains(document.activeElement);
   }
 
   function wire(root) {
@@ -230,12 +254,6 @@
     function items() { return roving.items(); }
     function labelOf(el) { return el.getAttribute('data-gd-menu-label') || el.textContent; }
 
-    function isOpen() {
-      return root.hasAttribute('data-gd-menu-open') ||
-        root.matches(':focus-within') ||
-        root.contains(document.activeElement);
-    }
-
     trigger.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -253,7 +271,7 @@
 
     trigger.addEventListener('click', function () {
       // The trigger owns focus on click; reflect it in aria-expanded.
-      window.setTimeout(function () { setExpanded(root, isOpen()); }, 0);
+      window.setTimeout(function () { setExpanded(root, isOpen(root)); }, 0);
     });
 
     menu.addEventListener('keydown', function (e) {
@@ -299,7 +317,12 @@
       if (!next || !root.contains(next)) {
         window.setTimeout(function () {
           if (!root.contains(document.activeElement)) {
-            root.removeAttribute('data-gd-menu-closed');
+            // A composed owner (menubar) that must stay closed until asked can
+            // opt out of clearing the marker on focus-leave; otherwise the next
+            // focus would auto-open the menu again.
+            if (!root.hasAttribute('data-gd-menu-keep-closed')) {
+              root.removeAttribute('data-gd-menu-closed');
+            }
             setExpanded(root, false);
           }
         }, 0);
@@ -315,7 +338,9 @@
         wire
       );
     },
-    close: function (root) { close(root, false); },
+    open: function (root, toFirst) { open(root, toFirst); },
+    close: function (root, restoreFocus) { close(root, restoreFocus === true); },
+    isOpen: function (root) { return isOpen(root); },
   };
 
   window.gdMenu = gdMenu;

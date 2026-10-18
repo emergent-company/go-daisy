@@ -2149,6 +2149,41 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// ── Navigation / Menubar ─────────────────────────────────────────────
+		{
+			Slug:        "menubar",
+			Name:        "Menubar",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Navigation",
+			Description: "A horizontal ARIA menubar: roving tabindex across triggers, ArrowLeft/Right moves between top-level items without opening, the open-if-any-open rule, hover-follow and Escape-to-close.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "A File/Edit/View bar with separators, labels, shortcuts and a disabled item.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.MenubarWithBoundary()
+					},
+					FrameHeight: "260px",
+				},
+				{
+					Name:        "With labels and shortcuts",
+					Description: "Group labels and right-aligned keyboard hints inside an Edit menu.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return menubarLabelsDemo()
+					},
+					FrameHeight: "260px",
+				},
+				{
+					Name:        "Disabled items",
+					Description: "Both link and button items disabled, plus a danger item.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return menubarDisabledDemo()
+					},
+					FrameHeight: "220px",
+				},
+			},
+		},
 	}
 }
 
@@ -2257,4 +2292,72 @@ func alertDialogDemo(dialogID, title, description, triggerLabel, actionLabel, ca
 	content := shared.RenderInto(ui.AlertDialogContent(ui.AlertDialogContentProps{}), shared.Compose(header, footer))
 	dialog := shared.RenderInto(ui.AlertDialog(ui.AlertDialogProps{ID: dialogID}), content)
 	return shared.Compose(trigger, dialog)
+}
+
+// menubarTriggerLabel renders a labelled MenubarTrigger.
+func menubarTriggerLabel(label string) templ.Component {
+	return shared.RenderInto(ui.MenubarTrigger(ui.MenubarTriggerProps{}), shared.StrComp(label))
+}
+
+// menubarItemLabel renders a MenubarItem with plain text content.
+func menubarItemLabel(label string, href string, danger bool, disabled bool) templ.Component {
+	return shared.RenderInto(
+		ui.MenubarItem(ui.MenubarItemProps{Href: href, Danger: danger, Disabled: disabled}),
+		shared.StrComp(label),
+	)
+}
+
+// menubarItemShortcutLabel renders a MenubarItem with a label plus a
+// right-aligned shortcut hint.
+func menubarItemShortcutLabel(label string, shortcut string, disabled bool) templ.Component {
+	return shared.RenderInto(
+		ui.MenubarItem(ui.MenubarItemProps{Disabled: disabled}),
+		shared.Compose(
+			shared.StrComp(label),
+			shared.RenderInto(ui.MenubarShortcut(ui.MenubarShortcutProps{}), shared.StrComp(shortcut)),
+		),
+	)
+}
+
+// menubarMenuComposition renders a MenubarMenu: a labelled trigger plus content.
+func menubarMenuComposition(trigger string, content templ.Component) templ.Component {
+	return shared.RenderInto(ui.MenubarMenu(ui.MenubarMenuProps{}), shared.Compose(
+		menubarTriggerLabel(trigger),
+		shared.RenderInto(ui.MenubarContent(ui.MenubarContentProps{}), content),
+	))
+}
+
+// menubarLabelsDemo builds a focused Edit menubar exercising group labels and
+// shortcut hints.
+func menubarLabelsDemo() templ.Component {
+	edit := menubarMenuComposition("Edit", shared.Compose(
+		shared.RenderInto(ui.MenubarLabel(ui.MenubarLabelProps{}), shared.StrComp("History")),
+		menubarItemShortcutLabel("Undo", "⌘Z", false),
+		menubarItemShortcutLabel("Redo", "⇧⌘Z", false),
+		ui.MenubarSeparator(ui.MenubarSeparatorProps{}),
+		shared.RenderInto(ui.MenubarLabel(ui.MenubarLabelProps{}), shared.StrComp("Clipboard")),
+		menubarItemShortcutLabel("Cut", "⌘X", false),
+		menubarItemShortcutLabel("Copy", "⌘C", false),
+		menubarItemShortcutLabel("Paste", "⌘V", false),
+	))
+	file := menubarMenuComposition("File", shared.Compose(
+		menubarItemShortcutLabel("New", "⌘N", false),
+		menubarItemShortcutLabel("Open", "⌘O", false),
+	))
+	return shared.RenderInto(ui.Menubar(ui.MenubarProps{}), shared.Compose(file, edit))
+}
+
+// menubarDisabledDemo builds a View menubar exercising disabled link/button
+// items and a danger item.
+func menubarDisabledDemo() templ.Component {
+	view := menubarMenuComposition("View", shared.Compose(
+		menubarItemLabel("Refresh", "#", false, false),
+		menubarItemLabel("Stop", "#", false, true),
+		ui.MenubarSeparator(ui.MenubarSeparatorProps{}),
+		menubarItemLabel("Zoom In", "", false, true),
+		menubarItemLabel("Zoom Out", "", false, true),
+		ui.MenubarSeparator(ui.MenubarSeparatorProps{}),
+		menubarItemLabel("Remove", "", true, false),
+	))
+	return shared.RenderInto(ui.Menubar(ui.MenubarProps{}), shared.Compose(view))
 }

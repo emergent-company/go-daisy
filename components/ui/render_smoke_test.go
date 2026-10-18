@@ -756,3 +756,75 @@ func TestAlertDialogTitleFallsBackWithoutContext(t *testing.T) {
 		t.Errorf("description outside a dialog must not emit an empty id:\n%s", desc)
 	}
 }
+
+// TestMenubarContract locks the data attributes the a11y + menubar runtimes
+// depend on, plus the honest-ARIA rule (no static aria-expanded) and the
+// disabled/shortcut/tone conventions.
+func TestMenubarContract(t *testing.T) {
+	file := shared.RenderInto(MenubarMenu(MenubarMenuProps{}), shared.Compose(
+		shared.RenderInto(MenubarTrigger(MenubarTriggerProps{}), uiStr("File")),
+		shared.RenderInto(MenubarContent(MenubarContentProps{}), shared.Compose(
+			shared.RenderInto(MenubarItem(MenubarItemProps{Href: "#"}), uiStr("New")),
+			MenubarSeparator(MenubarSeparatorProps{}),
+			shared.RenderInto(MenubarLabel(MenubarLabelProps{}), uiStr("Zoom")),
+			shared.RenderInto(MenubarItem(MenubarItemProps{Disabled: true}), uiStr("Paste")),
+		)),
+	))
+	got := renderUI(t, shared.RenderInto(Menubar(MenubarProps{}), file))
+
+	for _, want := range []string{
+		`role="menubar"`,
+		"data-gd-menubar",
+		"data-gd-menubar-menu",
+		"data-gd-menu-root",
+		"data-gd-menu-trigger",
+		"data-gd-menubar-trigger",
+		`aria-haspopup="menu"`,
+		`role="menu"`,
+		"data-gd-menubar-content",
+		`role="menuitem"`,
+		"data-gd-menu-item",
+		`role="separator"`,
+		"menu-label",
+		"go-daisy-menubar.js",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("menubar missing %q in:\n%s", want, got)
+		}
+	}
+	if strings.Contains(got, "aria-expanded") {
+		t.Errorf("trigger must not hardcode aria-expanded before the runtime runs:\n%s", got)
+	}
+
+	// Href items neutralise unsafe schemes.
+	unsafe := renderUI(t, shared.RenderInto(MenubarItem(MenubarItemProps{Href: "javascript:alert(1)"}), uiStr("x")))
+	if strings.Contains(unsafe, "javascript:") {
+		t.Errorf("unsafe href not neutralised:\n%s", unsafe)
+	}
+
+	// Disabled button items use the native attribute.
+	btn := renderUI(t, shared.RenderInto(MenubarItem(MenubarItemProps{Disabled: true}), uiStr("x")))
+	if !strings.Contains(btn, " disabled") {
+		t.Errorf("disabled button item missing disabled:\n%s", btn)
+	}
+
+	// Disabled link items use aria-disabled plus pointer-events off.
+	link := renderUI(t, shared.RenderInto(MenubarItem(MenubarItemProps{Href: "#", Disabled: true}), uiStr("x")))
+	for _, want := range []string{`aria-disabled="true"`, "pointer-events-none", "opacity-50"} {
+		if !strings.Contains(link, want) {
+			t.Errorf("disabled link item missing %q:\n%s", want, link)
+		}
+	}
+
+	// Danger items tint text-error.
+	danger := renderUI(t, shared.RenderInto(MenubarItem(MenubarItemProps{Danger: true}), uiStr("x")))
+	if !strings.Contains(danger, "text-error") {
+		t.Errorf("danger item missing text-error:\n%s", danger)
+	}
+
+	// Shortcuts use the faint tone.
+	short := renderUI(t, shared.RenderInto(MenubarShortcut(MenubarShortcutProps{}), uiStr("⌘N")))
+	if !strings.Contains(short, "text-faint") {
+		t.Errorf("shortcut missing faint tone:\n%s", short)
+	}
+}
