@@ -100,7 +100,7 @@ func InputGroup(props ...InputGroupProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if p.Prefix != "" || p.PrefixIcon != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<span class=\"join-item flex select-none items-center gap-1.5 border border-base-300 bg-base-200 px-3 text-sm text-base-content/70\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<span class=\"join-item flex select-none items-center gap-1.5 border border-base-300 bg-base-200 px-3 text-sm text-label\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -130,7 +130,7 @@ func InputGroup(props ...InputGroupProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if p.Suffix != "" || p.SuffixIcon != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<span class=\"join-item flex select-none items-center gap-1.5 border border-base-300 bg-base-200 px-3 text-sm text-base-content/70\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<span class=\"join-item flex select-none items-center gap-1.5 border border-base-300 bg-base-200 px-3 text-sm text-label\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

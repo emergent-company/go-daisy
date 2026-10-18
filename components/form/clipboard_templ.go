@@ -78,14 +78,14 @@ func ClipboardCopy(items []ClipboardCopyItem) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if item.Label != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<p class=\"text-xs text-base-content/60 mb-2 font-semibold uppercase\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<p class=\"text-xs text-muted mb-2 font-semibold uppercase\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 39, Col: 86}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 39, Col: 76}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
@@ -96,61 +96,79 @@ func ClipboardCopy(items []ClipboardCopyItem) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"flex items-center gap-2\">")
+			var templ_7745c5c3_Var3 = []any{ui.Row}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var3).String())
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 1, Col: 0}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if item.Mono {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<code class=\"bg-base-200 text-base-content px-3 py-1.5 rounded text-sm font-mono flex-1\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(item.Value)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 43, Col: 107}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</code>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<input id=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var4 string
-				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.ID)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 46, Col: 19}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" type=\"text\" value=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<code class=\"bg-base-200 text-base-content px-3 py-1.5 rounded text-sm font-mono flex-1\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var5 string
-				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.Value)
+				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(item.Value)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 48, Col: 25}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 43, Col: 107}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" readonly class=\"input input-sm flex-1 font-mono text-sm\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</code>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<input id=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var6 string
+				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.ID)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 46, Col: 19}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" type=\"text\" value=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var7 string
+				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(item.Value)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 48, Col: 25}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" readonly class=\"input input-sm flex-1 font-mono text-sm\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Var6 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_Var8 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 				if !templ_7745c5c3_IsBuffer {
@@ -166,38 +184,38 @@ func ClipboardCopy(items []ClipboardCopyItem) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, " ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, " ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				if item.ButtonLabel != "" {
-					var templ_7745c5c3_Var7 string
-					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(item.ButtonLabel)
+					var templ_7745c5c3_Var9 string
+					templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(item.ButtonLabel)
 					if templ_7745c5c3_Err != nil {
 						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/clipboard.templ`, Line: 56, Col: 25}
 					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "Copy")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "Copy")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: item.ButtonClass, OnClick: clipboardOnClick(item.ID, item.Value, item.Mono)}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var6), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Style: ui.ButtonStyleOutline, Size: ui.ButtonSM, ExtraClass: item.ButtonClass, OnClick: clipboardOnClick(item.ID, item.Value, item.Mono)}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -235,12 +253,12 @@ func clipboardScript() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var8 == nil {
-			templ_7745c5c3_Var8 = templ.NopComponent
+		templ_7745c5c3_Var10 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var10 == nil {
+			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Var9 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Var11 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 			if !templ_7745c5c3_IsBuffer {
@@ -252,7 +270,7 @@ func clipboardScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<script")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<script")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -260,13 +278,13 @@ func clipboardScript() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, ">\n\tgdOnce('clipboardInit', function () {\n\t  function clipboardFlash(btn, html) {\n\t    var orig = btn.innerHTML;\n\t    btn.innerHTML = html;\n\t    btn.disabled = true;\n\t    setTimeout(function() { btn.innerHTML = orig; btn.disabled = false; }, 2000);\n\t  }\n\t  function clipboardFail(btn) {\n\t    var orig = btn.innerHTML;\n\t    btn.innerHTML = '✗ Copy failed';\n\t    btn.classList.add('btn-error');\n\t    btn.disabled = true;\n\t    setTimeout(function() {\n\t      btn.innerHTML = orig;\n\t      btn.disabled = false;\n\t      btn.classList.remove('btn-error');\n\t    }, 2000);\n\t  }\n\t  function clipboardFallback(text) {\n\t    var ta = document.createElement('textarea');\n\t    ta.value = text;\n\t    ta.setAttribute('readonly', '');\n\t    ta.style.position = 'fixed';\n\t    ta.style.left = '-9999px';\n\t    document.body.appendChild(ta);\n\t    ta.select();\n\t    var ok = false;\n\t    try { ok = document.execCommand('copy'); } catch (e) {}\n\t    document.body.removeChild(ta);\n\t    return ok;\n\t  }\n\t  function clipboardWrite(text, btn, successHtml) {\n\t    if (navigator.clipboard && navigator.clipboard.writeText) {\n\t      navigator.clipboard.writeText(text).then(function() {\n\t        clipboardFlash(btn, successHtml);\n\t      }).catch(function() {\n\t        clipboardFail(btn);\n\t      });\n\t    } else if (clipboardFallback(text)) {\n\t      clipboardFlash(btn, successHtml);\n\t    } else {\n\t      clipboardFail(btn);\n\t    }\n\t  }\n\t  window.clipboardCopyInput = function(inputId, btn) {\n\t    var el = document.getElementById(inputId);\n\t    if (!el || !btn) return;\n\t    clipboardWrite(el.value, btn, '✓ Copied!');\n\t  };\n\t  window.clipboardCopyText = function(text, btn) {\n\t    if (!btn) return;\n\t    clipboardWrite(text, btn, '✓');\n\t  };\n\t});\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, ">\n\tgdOnce('clipboardInit', function () {\n\t  function clipboardFlash(btn, html) {\n\t    var orig = btn.innerHTML;\n\t    btn.innerHTML = html;\n\t    btn.disabled = true;\n\t    setTimeout(function() { btn.innerHTML = orig; btn.disabled = false; }, 2000);\n\t  }\n\t  function clipboardFail(btn) {\n\t    var orig = btn.innerHTML;\n\t    btn.innerHTML = '✗ Copy failed';\n\t    btn.classList.add('btn-error');\n\t    btn.disabled = true;\n\t    setTimeout(function() {\n\t      btn.innerHTML = orig;\n\t      btn.disabled = false;\n\t      btn.classList.remove('btn-error');\n\t    }, 2000);\n\t  }\n\t  function clipboardFallback(text) {\n\t    var ta = document.createElement('textarea');\n\t    ta.value = text;\n\t    ta.setAttribute('readonly', '');\n\t    ta.style.position = 'fixed';\n\t    ta.style.left = '-9999px';\n\t    document.body.appendChild(ta);\n\t    ta.select();\n\t    var ok = false;\n\t    try { ok = document.execCommand('copy'); } catch (e) {}\n\t    document.body.removeChild(ta);\n\t    return ok;\n\t  }\n\t  function clipboardWrite(text, btn, successHtml) {\n\t    if (navigator.clipboard && navigator.clipboard.writeText) {\n\t      navigator.clipboard.writeText(text).then(function() {\n\t        clipboardFlash(btn, successHtml);\n\t      }).catch(function() {\n\t        clipboardFail(btn);\n\t      });\n\t    } else if (clipboardFallback(text)) {\n\t      clipboardFlash(btn, successHtml);\n\t    } else {\n\t      clipboardFail(btn);\n\t    }\n\t  }\n\t  window.clipboardCopyInput = function(inputId, btn) {\n\t    var el = document.getElementById(inputId);\n\t    if (!el || !btn) return;\n\t    clipboardWrite(el.value, btn, '✓ Copied!');\n\t  };\n\t  window.clipboardCopyText = function(text, btn) {\n\t    if (!btn) return;\n\t    clipboardWrite(text, btn, '✓');\n\t  };\n\t});\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = clipboardScriptOnce.Once().Render(templ.WithChildren(ctx, templ_7745c5c3_Var9), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = clipboardScriptOnce.Once().Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

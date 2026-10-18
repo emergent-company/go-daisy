@@ -90,7 +90,7 @@ func passwordToggleButton() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<button type=\"button\" class=\"absolute inset-y-0 end-0 z-10 grid w-9 cursor-pointer place-items-center text-base-content/40 transition-colors hover:text-base-content focus-visible:text-base-content\" onclick=\"togglePasswordVisibility(this)\" aria-label=\"Toggle password visibility\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<button type=\"button\" class=\"absolute inset-y-0 end-0 z-10 grid w-9 cursor-pointer place-items-center text-faint transition-colors hover:text-base-content focus-visible:text-base-content\" onclick=\"togglePasswordVisibility(this)\" aria-label=\"Toggle password visibility\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

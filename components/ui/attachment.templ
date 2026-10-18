@@ -64,7 +64,7 @@ templ Attachment(props ...AttachmentProps) {
 		<div class="min-w-0 flex-1">
 			<p class="truncate text-sm font-medium">{ p.Name }</p>
 			if p.Size != "" {
-				<p class="text-xs text-base-content/60">{ p.Size }</p>
+				<p class="text-xs text-muted">{ p.Size }</p>
 			}
 		</div>
 		if p.Href != "" {
