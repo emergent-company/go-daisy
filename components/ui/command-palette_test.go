@@ -58,3 +58,13 @@ func TestCommandPaletteLoadsKeyboardRuntime(t *testing.T) {
 		t.Errorf("toggle must stay discoverable by the runtime:\n%s", got)
 	}
 }
+
+// TestCommandPaletteDoesNotAutofocus pins that opening focus comes from
+// gdFocus.trap. autofocus on a server-rendered Open palette would make the
+// hidden input the element that release() "restores" to after close.
+func TestCommandPaletteDoesNotAutofocus(t *testing.T) {
+	got := renderCommandPalette(t, CommandPaletteProps{ID: "spotlight", Open: true})
+	if strings.Contains(got, "autofocus") {
+		t.Errorf("CommandPalette must not render autofocus; the trap owns initial focus:\n%s", got)
+	}
+}

@@ -57,7 +57,6 @@ templ CommandPalette(props CommandPaletteProps) {
 				} else {
 					placeholder="Type a command or search..."
 				}
-					autofocus
 					oninput="filterPaletteItems(this)"
 				/>
 				<label for={ props.ID + "-toggle" } class="btn btn-ghost btn-xs">Esc</label>
@@ -127,7 +126,6 @@ templ paletteGroup(paletteID, group string, items []CommandPaletteItem) {
 		}
 	</div>
 }
-
 
 // commandPaletteScript loads the palette runtime once per page. The runtime
 // handles Cmd/Ctrl+K, initial focus, the focus trap and filterPaletteItems;

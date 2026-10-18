@@ -73,8 +73,10 @@
   }
 
   // A checkbox toggled from script does not emit `change`. Dispatch one so the
-  // change listener below is the single place that handles every open/close
-  // route (button, Cmd/Ctrl+K, Escape, backdrop, result click).
+  // change listener below handles every open/close route (button, Cmd/Ctrl+K,
+  // Escape, backdrop, result click). Code that dismisses by assigning
+  // `toggle.checked = false` directly must call gdCommandPalette.close(id) so
+  // the trap is released and focus comes back.
   function sync(cb) {
     cb.dispatchEvent(new window.Event('change', { bubbles: true }));
   }
@@ -98,8 +100,9 @@
       sync(cb);
       return;
     }
-    // Apps commonly close with `toggle.checked = false` and no change event.
-    // Release the trap (and restore focus) even when the box is already off.
+    // Apps can dismiss with `toggle.checked = false` and no change event, then
+    // call gdCommandPalette.close(id): release the trap and restore focus even
+    // though the box is already off.
     deactivate(cb);
   }
 
@@ -125,6 +128,14 @@
       e.preventDefault();
       if (cb.checked) close(cb);
       else open(cb);
+    } else if (e.key === 'Escape') {
+      // The trap handles Escape while it is installed (and stops propagation).
+      // This keeps palettes opened by setting .checked directly, before the
+      // trap existed, dismissable like the old inline runtime was.
+      var toggles = document.querySelectorAll('input.modal-toggle[data-command-palette]');
+      for (var i = 0; i < toggles.length; i++) {
+        if (toggles[i].checked) close(toggles[i]);
+      }
     }
   });
 
@@ -141,7 +152,10 @@
     if (cb) close(cb);
   });
 
-  document.addEventListener('htmx:afterSwap', initOpen);
+  // htmx 4 emits colon-separated names (htmx:after:settle); htmx 3 used
+  // camelCase (htmx:afterSettle). Listen for both, as the other runtimes do.
+  document.addEventListener('htmx:after:settle', initOpen);
+  document.addEventListener('htmx:afterSettle', initOpen);
 
   window.gdCommandPalette = {
     open: function (id) {

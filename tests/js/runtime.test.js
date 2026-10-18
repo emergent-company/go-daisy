@@ -563,20 +563,47 @@ test('command palette: opening an already-checked box installs the trap', () => 
   assert.equal(doc.activeElement, input, 'open() traps even without a change event');
 });
 
-test('command palette: closing an already-unchecked box still releases the trap', () => {
+test('command palette: close() releases the trap after a silent uncheck', () => {
   const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
   const doc = window.document;
   const opener = doc.getElementById('opener');
   const toggle = doc.getElementById('spotlight-toggle');
-  const item = doc.getElementById('item-one');
 
   opener.focus();
   window.gdCommandPalette.open('spotlight');
 
   // Apps such as the infra panel's dashboard.js dismiss with
-  // `toggle.checked = false`, which emits no change event.
+  // `toggle.checked = false`, which emits no change event; they must then
+  // call close() so the trap is released.
   toggle.checked = false;
-  item.dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true }));
+  window.gdCommandPalette.close('spotlight');
 
-  assert.equal(doc.activeElement, opener, 'a result click after a silent close still restores focus');
+  assert.equal(doc.activeElement, opener, 'close() releases the trap and restores focus');
+});
+
+test('command palette: an Open palette inserted by an HTMX settle is trapped', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const toggle = doc.getElementById('spotlight-toggle');
+  const input = doc.getElementById('spotlight-input');
+
+  toggle.checked = true; // simulated swapped-in markup rendered with Open
+  doc.dispatchEvent(new window.Event('htmx:after:settle', { bubbles: true }));
+  assert.equal(doc.activeElement, input, 'colon-separated settle activates the trap');
+
+  window.gdCommandPalette.close('spotlight');
+  toggle.checked = true;
+  doc.dispatchEvent(new window.Event('htmx:afterSettle', { bubbles: true }));
+  assert.equal(doc.activeElement, input, 'camelCase settle activates the trap');
+});
+
+test('command palette: Escape still closes a palette opened without a trap', () => {
+  const { window } = setup(COMMAND_PALETTE, ['go-daisy-command-palette.js']);
+  const doc = window.document;
+  const toggle = doc.getElementById('spotlight-toggle');
+
+  toggle.checked = true; // legacy path: set directly, no change event, no trap
+  press(window, doc.body, 'Escape');
+
+  assert.equal(toggle.checked, false, 'document-level Escape fallback still dismisses');
 });
