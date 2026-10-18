@@ -90,8 +90,14 @@ func (c SortContext) Href(column string, first SortDir) string {
 // params. Defaults to defaultBy and defaultDir when the params are absent. An
 // empty sort column always results in SortNone, so callers can treat "no sort"
 // as "keep the natural row order".
+//
+// A sort_by supplied in the query without a usable sort_dir is treated as
+// ascending. A handler-supplied defaultBy with defaultDir SortNone keeps
+// SortNone, so the handler's natural row order is preserved until a click.
+// An invalid defaultDir is treated as SortNone.
 func ParseSortPrefixed(q url.Values, prefix string, defaultBy string, defaultDir SortDir) SortParams {
-	by := strings.TrimSpace(q.Get(prefix + "sort_by"))
+	requestedBy := strings.TrimSpace(q.Get(prefix + "sort_by"))
+	by := requestedBy
 	if by == "" {
 		by = defaultBy
 	}
@@ -108,9 +114,10 @@ func ParseSortPrefixed(q url.Values, prefix string, defaultBy string, defaultDir
 	}
 	if by == "" {
 		dir = SortNone
-	} else if dir == SortNone {
-		// A sort column without a usable direction means ascending, not an
-		// active column with no order.
+	} else if requestedBy != "" && dir == SortNone {
+		// A user-requested column without a usable direction means ascending,
+		// not an active column with no order. A handler-supplied defaultBy with
+		// SortNone keeps the natural row order.
 		dir = SortAsc
 	}
 	return SortParams{By: by, Dir: dir}

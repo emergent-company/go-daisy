@@ -34,6 +34,13 @@ func TestParseSortPrefixedUsesDefaults(t *testing.T) {
 	}
 }
 
+func TestParseSortPrefixedDefaultByWithSortNoneKeepsNaturalOrder(t *testing.T) {
+	got := ParseSortPrefixed(url.Values{}, "", "host", SortNone)
+	if got.By != "host" || got.Dir != SortNone {
+		t.Fatalf("expected default host with no sort, got %#v", got)
+	}
+}
+
 func TestParseSortPrefixedInvalidDirectionFallsBackToDefault(t *testing.T) {
 	q := url.Values{"sort_by": {"cpu"}, "sort_dir": {"sideways"}}
 	got := ParseSortPrefixed(q, "", "", SortDesc)

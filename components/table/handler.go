@@ -16,6 +16,11 @@ type SortParams struct {
 // ParseSort extracts sort_by and sort_dir from query params.
 // Defaults to defaultBy and defaultDir when params are absent.
 //
+// An empty sort_by yields SortNone. A query sort_by without a usable sort_dir
+// is treated as ascending. A handler-supplied defaultBy with defaultDir SortNone
+// stays SortNone (natural row order). An invalid defaultDir is treated as
+// SortNone.
+//
 // ParseSort is the unprefixed alias for ParseSortPrefixed, so the two parsers
 // cannot drift.
 func ParseSort(q url.Values, defaultBy string, defaultDir SortDir) SortParams {
@@ -28,6 +33,9 @@ func ParseSortFromRequest(r *http.Request, defaultBy string, defaultDir SortDir)
 }
 
 // NextSortDir cycles: none → asc → desc → none. Returns "asc" when current is empty.
+//
+// This is the legacy cycle without a per-column first direction. Prefer
+// NextSortDirFrom with SortParams when building a SortableTableHeader.
 func NextSortDir(current SortDir, column string, sortBy string) SortDir {
 	if column != sortBy {
 		return SortAsc
@@ -54,6 +62,10 @@ func SortIcon(col string, sp SortParams) string {
 }
 
 // SortLink builds a query string for sorting a specific column.
+//
+// This is the legacy link builder: it does not know the request path and uses
+// the legacy NextSortDir cycle. Prefer SortContext.Href with
+// SortableTableHeader.
 func SortLink(q url.Values, column string, sp SortParams) string {
 	dir := NextSortDir(sp.Dir, column, sp.By)
 	params := cloneValues(q)
