@@ -10,7 +10,7 @@ import (
 
 // TableCardWrapper renders a card container for table compositions.
 templ TableCardWrapper() {
-	<div class="card bg-base-100 shadow-sm border border-line" { devmode.Attrs(ctx, "table/TableCardWrapper")... }>
+	<div class="card bg-base-100 shadow-sm edge-line" { devmode.Attrs(ctx, "table/TableCardWrapper")... }>
 		<div class="card-body p-0">
 			{ children... }
 		</div>

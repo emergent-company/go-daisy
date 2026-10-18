@@ -31,7 +31,7 @@ templ ProfileMenu(name, email, initials string, items []ProfileMenuItem, signOut
 		<div tabindex="0" class="cursor-pointer">
 			@ui.AvatarFull(ui.AvatarProps{Initials: initials, Size: ui.AvatarSize12, TextClass: "text-lg"})
 		</div>
-		<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-line">
+		<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg edge-line">
 			<div class="px-4 py-3 border-b border-line">
 				<p class="font-semibold text-sm">{ name }</p>
 				<p class="text-base-content/60 text-xs mt-0.5">{ email }</p>
@@ -96,7 +96,7 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 			<div tabindex="0" class="cursor-pointer">
 				@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarSize12, TextClass: "text-lg"})
 			</div>
-			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-64 shadow-lg border border-line">
+			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-64 shadow-lg edge-line">
 				<div class="border-line border-b p-4">
 					<div class="flex items-center justify-between">
 						<div class="flex items-center gap-3">
@@ -151,7 +151,7 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 				</div>
 				@ui.IconSpan("lucide--chevron-down", "size-3.5 text-base-content/40 max-md:hidden")
 			</div>
-			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-line">
+			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg edge-line">
 				<div class="p-4 text-center">
 					@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarSize16, TextClass: "text-2xl"})
 					<div class="mt-2">
@@ -178,7 +178,7 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 			<div tabindex="0" class="cursor-pointer">
 				@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarSize12, TextClass: "text-lg"})
 			</div>
-			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg border border-line">
+			<div tabindex="0" class="dropdown-content bg-base-100 rounded-box mt-2 w-56 shadow-lg edge-line">
 				<div class="border-line border-b p-4">
 					<div class="flex items-center gap-3">
 						@ui.AvatarFull(ui.AvatarProps{Initials: opts.Initials, Size: ui.AvatarMD})

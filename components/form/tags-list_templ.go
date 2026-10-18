@@ -164,7 +164,7 @@ func TagList(props TagListProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if len(props.Suggestions) > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"absolute z-50 mt-1 w-full bg-base-100 border border-line rounded-box shadow-lg max-h-60 overflow-auto p-1\" role=\"listbox\" x-show=\"open && filteredSuggestions.length > 0\" style=\"display:none\"><template x-for=\"(s, i) in filteredSuggestions\" :key=\"s\"><div role=\"option\" class=\"px-3 py-2 text-sm cursor-pointer hover:bg-base-200\" :class=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"absolute z-50 mt-1 w-full bg-base-100 edge-line rounded-box shadow-lg max-h-60 overflow-auto p-1\" role=\"listbox\" x-show=\"open && filteredSuggestions.length > 0\" style=\"display:none\"><template x-for=\"(s, i) in filteredSuggestions\" :key=\"s\"><div role=\"option\" class=\"px-3 py-2 text-sm cursor-pointer hover:bg-base-200\" :class=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

@@ -203,7 +203,7 @@ func DropdownMenu(attrs templ.Attributes) templ.Component {
 			extraClass = s
 			delete(attrs, "class")
 		}
-		var templ_7745c5c3_Var9 = []any{twmerge("dropdown-content z-[1] menu menu-sm p-1 bg-base-100 border border-line rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1", extraClass)}
+		var templ_7745c5c3_Var9 = []any{twmerge("dropdown-content z-[1] menu menu-sm p-1 bg-base-100 edge-line rounded-box shadow-lg w-max min-w-40 max-w-[calc(100vw-2rem)] mt-1", extraClass)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var9...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

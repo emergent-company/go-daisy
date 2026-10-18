@@ -10,7 +10,7 @@ import (
 // PageTitleMinimal renders a compact title bar with an inline breadcrumb trail
 // on the right and a primary title on the left.
 templ PageTitleMinimal(title string, steps []BreadcrumbItem) {
-	<div class="bg-base-100 rounded-lg border border-line px-4 py-3" { devmode.Attrs(ctx, "nav/PageTitleMinimal")... }>
+	<div class="bg-base-100 rounded-lg edge-line px-4 py-3" { devmode.Attrs(ctx, "nav/PageTitleMinimal")... }>
 		<div class="flex w-full items-center justify-between gap-3">
 			<p class="font-semibold text-base-content">{ title }</p>
 			@Breadcrumbs(steps, BreadcrumbsDividerSlash)
@@ -44,7 +44,7 @@ func pageTitleActionAttrs(ariaLabel string) templ.Attributes {
 // PageTitleEditor renders a full page title with DaisyUI breadcrumbs,
 // a subtitle meta line, and a row of action buttons.
 templ PageTitleEditor(steps []BreadcrumbItem, title, subtitle string, actions []PageTitleEditorAction) {
-	<div class="bg-base-100 rounded-lg border border-line px-4 py-3" { devmode.Attrs(ctx, "nav/PageTitleEditor")... }>
+	<div class="bg-base-100 rounded-lg edge-line px-4 py-3" { devmode.Attrs(ctx, "nav/PageTitleEditor")... }>
 		<div class="mb-1">
 			@Breadcrumbs(steps, BreadcrumbsDividerDefault)
 		</div>
@@ -96,7 +96,7 @@ type PageTitleVariantOpts struct {
 templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 	switch style {
 	case "minimal":
-		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg edge-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="flex w-full items-center justify-between gap-3">
 				<p class="font-medium">{ opts.Title }</p>
 				@Breadcrumbs(opts.Steps, BreadcrumbsDividerSlash)
@@ -104,7 +104,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 		</div>
 
 	case "ecommerce":
-		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg edge-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="flex w-full items-center justify-between">
 				<div>
 					<p class="font-medium">{ opts.Title }</p>
@@ -140,7 +140,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 		</div>
 
 	case "editor":
-		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg edge-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="w-full">
 				@Breadcrumbs(opts.Steps, BreadcrumbsDividerDefault)
 				<div class="mt-1 flex items-end justify-between gap-3">
@@ -176,7 +176,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 		</div>
 
 	case "task":
-		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg edge-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="flex w-full items-center justify-between gap-3">
 				<div>
 					<p class="text-lg font-medium">{ opts.Title }</p>
@@ -200,7 +200,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 		</div>
 
 	case "stepper":
-		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg edge-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="flex w-full items-center justify-between gap-3">
 				<p class="font-medium sm:text-lg">{ opts.Title }</p>
 				@ui.Button(ui.ButtonProps{Variant: ui.ButtonOutline, Size: ui.ButtonSM, ExtraClass: "border-line-strong gap-2"}){
@@ -216,7 +216,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 		</div>
 
 	case "analytics":
-		<div class="bg-base-100 rounded-lg border border-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
+		<div class="bg-base-100 rounded-lg edge-line px-4 py-3 shadow" { devmode.Attrs(ctx, "nav/PageTitleVariant")... }>
 			<div class="flex w-full items-center justify-between gap-3">
 				<div>
 					<p class="font-medium sm:text-lg">{ opts.Title }</p>
@@ -228,7 +228,7 @@ templ PageTitleVariant(style string, opts PageTitleVariantOpts) {
 							@ui.IconSpan("lucide--filter", "size-4")
 							<span class="max-md:hidden">Filter</span>
 						</label>
-						<ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-40 p-1 border border-line mt-1">
+						<ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 rounded-box shadow-lg z-50 w-40 p-1 edge-line mt-1">
 							<li><a>This Week</a></li>
 							<li><a>This Month</a></li>
 							<li><a>This Year</a></li>

@@ -208,7 +208,7 @@ func PersonCellCompact(p PersonCellProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span><div class=\"person-card absolute left-[-8px] top-full z-50 w-64 rounded-2xl border border-line bg-base-100 shadow-xl overflow-hidden\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span><div class=\"person-card absolute left-[-8px] top-full z-50 w-64 rounded-2xl edge-line bg-base-100 shadow-xl overflow-hidden\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

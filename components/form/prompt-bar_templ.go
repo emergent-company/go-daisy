@@ -1656,7 +1656,7 @@ func PromptBarAutocomplete(props PromptBarAutocompleteProps) templ.Component {
 		if emptyText == "" {
 			emptyText = "No results"
 		}
-		var templ_7745c5c3_Var60 = []any{"absolute inset-x-0 bottom-full z-20 mb-2 max-h-56 overflow-auto rounded-box border border-line bg-base-100 p-1 shadow-lg", templ.KV(props.Class, props.Class != "")}
+		var templ_7745c5c3_Var60 = []any{"absolute inset-x-0 bottom-full z-20 mb-2 max-h-56 overflow-auto rounded-box edge-line bg-base-100 p-1 shadow-lg", templ.KV(props.Class, props.Class != "")}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var60...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

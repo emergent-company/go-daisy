@@ -45,7 +45,7 @@ templ WizardStepper(id string, steps []WizardStep, panels []WizardStepPanel) {
 			}
 		</div>
 		<!-- Step panels -->
-		<div class="bg-base-100 border border-line rounded-box p-5 min-h-40">
+		<div class="bg-base-100 edge-line rounded-box p-5 min-h-40">
 			for i, panel := range panels {
 				<div id={ id + "-panel-" + strconv.Itoa(i+1) } class={ templ.KV("hidden", i != 0) }>
 					<h3 class="font-semibold mb-3">{ panel.Title }</h3>

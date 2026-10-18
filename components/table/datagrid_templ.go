@@ -92,7 +92,7 @@ func DataGrid(props DataGridProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{"card bg-base-100 shadow-sm border border-line", props.Class}
+		var templ_7745c5c3_Var2 = []any{"card bg-base-100 shadow-sm edge-line", props.Class}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

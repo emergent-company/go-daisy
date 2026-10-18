@@ -88,7 +88,7 @@ func DashboardPage(props DashboardProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-4\"><div class=\"card bg-base-100 shadow-sm border border-line\"><div class=\"card-body p-4\"><h3 class=\"text-sm font-semibold text-base-content mb-2\">Monthly Revenue</h3>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-4\"><div class=\"card bg-base-100 shadow-sm edge-line\"><div class=\"card-body p-4\"><h3 class=\"text-sm font-semibold text-base-content mb-2\">Monthly Revenue</h3>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -100,7 +100,7 @@ func DashboardPage(props DashboardProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div></div><div class=\"card bg-base-100 shadow-sm border border-line\"><div class=\"card-body p-4\"><h3 class=\"text-sm font-semibold text-base-content mb-2\">Sales by Category</h3>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div></div><div class=\"card bg-base-100 shadow-sm edge-line\"><div class=\"card-body p-4\"><h3 class=\"text-sm font-semibold text-base-content mb-2\">Sales by Category</h3>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -112,7 +112,7 @@ func DashboardPage(props DashboardProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></div></div><div class=\"card bg-base-100 shadow-sm border border-line\"><div class=\"card-body p-0\"><div class=\"flex items-center justify-between px-5 pt-5\"><h3 class=\"text-sm font-semibold text-base-content\">Recent Orders</h3><div class=\"flex items-center gap-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></div></div><div class=\"card bg-base-100 shadow-sm edge-line\"><div class=\"card-body p-0\"><div class=\"flex items-center justify-between px-5 pt-5\"><h3 class=\"text-sm font-semibold text-base-content\">Recent Orders</h3><div class=\"flex items-center gap-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
