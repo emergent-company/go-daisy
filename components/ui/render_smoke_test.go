@@ -25,6 +25,8 @@ func renderUI(t *testing.T, c templ.Component, opts ...func(context.Context) con
 
 func uiStr(s string) templ.Component { return shared.StrComp(s) }
 
+func intPtr(n int) *int { return &n }
+
 // TestDropdownEmitsMenuContract locks the data attributes the a11y runtime
 // depends on. If these disappear the CSS-only dropdown silently loses keyboard
 // support, so they are part of the component contract, not styling.
@@ -441,5 +443,132 @@ func TestListRowVariants(t *testing.T) {
 	sep := renderUI(t, ItemSeparator())
 	if !strings.Contains(sep, `role="separator"`) {
 		t.Errorf("separator missing role:\n%s", sep)
+	}
+}
+
+// TestToggleButtonContract locks the aria-pressed toggle contract: the zero value
+// renders an unpressed button with no variant/active/label classes, and each
+// prop maps to exactly one emitted attribute or class.
+func TestToggleButtonContract(t *testing.T) {
+	def := renderUI(t, ToggleButton(ToggleButtonProps{}))
+	for _, want := range []string{`type="button"`, `data-slot="toggle"`, `aria-pressed="false"`} {
+		if !strings.Contains(def, want) {
+			t.Errorf("ToggleButton missing %q:\n%s", want, def)
+		}
+	}
+	for _, unwanted := range []string{"btn-outline", "btn-active", "btn-sm", "btn-lg", "aria-label="} {
+		if strings.Contains(def, unwanted) {
+			t.Errorf("ToggleButton zero value must not emit %q:\n%s", unwanted, def)
+		}
+	}
+
+	pressed := renderUI(t, ToggleButton(ToggleButtonProps{Pressed: true}))
+	if !strings.Contains(pressed, `aria-pressed="true"`) || !strings.Contains(pressed, "btn-active") {
+		t.Errorf("pressed ToggleButton missing pressed state:\n%s", pressed)
+	}
+
+	outline := renderUI(t, ToggleButton(ToggleButtonProps{Variant: ToggleOutline}))
+	if !strings.Contains(outline, "btn-outline") {
+		t.Errorf("outline ToggleButton missing btn-outline:\n%s", outline)
+	}
+
+	sm := renderUI(t, ToggleButton(ToggleButtonProps{Size: ToggleSizeSM}))
+	if !strings.Contains(sm, "btn-sm") {
+		t.Errorf("sm ToggleButton missing btn-sm:\n%s", sm)
+	}
+	lg := renderUI(t, ToggleButton(ToggleButtonProps{Size: ToggleSizeLG}))
+	if !strings.Contains(lg, "btn-lg") {
+		t.Errorf("lg ToggleButton missing btn-lg:\n%s", lg)
+	}
+
+	disabled := renderUI(t, ToggleButton(ToggleButtonProps{Disabled: true}))
+	if !strings.Contains(disabled, " disabled") {
+		t.Errorf("disabled ToggleButton missing disabled attribute:\n%s", disabled)
+	}
+
+	valued := renderUI(t, ToggleButton(ToggleButtonProps{Value: "center"}))
+	if !strings.Contains(valued, `data-gd-toggle-value="center"`) {
+		t.Errorf("ToggleButton missing data-gd-toggle-value:\n%s", valued)
+	}
+	if strings.Contains(def, "data-gd-toggle-value") {
+		t.Errorf("ToggleButton without Value must not emit an empty data-gd-toggle-value:\n%s", def)
+	}
+
+	labelled := renderUI(t, ToggleButton(ToggleButtonProps{AriaLabel: "Bold", Icon: "lucide--bold"}))
+	if !strings.Contains(labelled, `aria-label="Bold"`) {
+		t.Errorf("ToggleButton missing aria-label:\n%s", labelled)
+	}
+	if !strings.Contains(labelled, "lucide--bold") {
+		t.Errorf("ToggleButton missing icon:\n%s", labelled)
+	}
+}
+
+// TestToggleGroupContract locks the container classes and conditional data
+// attributes the toggle runtime depends on.
+func TestToggleGroupContract(t *testing.T) {
+	joined := renderUI(t, shared.RenderInto(ToggleGroup(ToggleGroupProps{Spacing: intPtr(0)}), uiStr("x")))
+	for _, want := range []string{`role="group"`, `data-gd-toggle-group`, "join"} {
+		if !strings.Contains(joined, want) {
+			t.Errorf("joined group missing %q:\n%s", want, joined)
+		}
+	}
+	if strings.Contains(joined, "gap-") || strings.Contains(joined, "join-vertical") {
+		t.Errorf("horizontal joined group must not add gap or join-vertical:\n%s", joined)
+	}
+
+	vJoined := renderUI(t, shared.RenderInto(ToggleGroup(ToggleGroupProps{Orientation: ToggleGroupVertical, Spacing: intPtr(0)}), uiStr("x")))
+	if !strings.Contains(vJoined, "join-vertical") {
+		t.Errorf("vertical joined group missing join-vertical:\n%s", vJoined)
+	}
+
+	spaced := renderUI(t, shared.RenderInto(ToggleGroup(ToggleGroupProps{}), uiStr("x")))
+	if !strings.Contains(spaced, "gap-2") {
+		t.Errorf("default-spaced group missing gap-2:\n%s", spaced)
+	}
+	if strings.Contains(spaced, "join") {
+		t.Errorf("spaced group must not add join:\n%s", spaced)
+	}
+
+	plain := renderUI(t, shared.RenderInto(ToggleGroup(ToggleGroupProps{}), uiStr("x")))
+	if strings.Contains(plain, "data-multiple") || strings.Contains(plain, "data-controlled") {
+		t.Errorf("plain group must not emit data-multiple/data-controlled:\n%s", plain)
+	}
+
+	multi := renderUI(t, shared.RenderInto(ToggleGroup(ToggleGroupProps{Multiple: true}), uiStr("x")))
+	if !strings.Contains(multi, "data-multiple") || strings.Contains(multi, "data-controlled") {
+		t.Errorf("multiple group must emit only data-multiple:\n%s", multi)
+	}
+
+	controlled := renderUI(t, shared.RenderInto(ToggleGroup(ToggleGroupProps{Value: []string{"a"}}), uiStr("x")))
+	if !strings.Contains(controlled, "data-controlled") {
+		t.Errorf("controlled group missing data-controlled:\n%s", controlled)
+	}
+}
+
+// TestToggleGroupChildrenInheritDefaults proves the group's variant/size/disabled
+// propagate to child ToggleButtons via the render context, and that a child only
+// carries data-gd-toggle-value when it has an explicit Value.
+func TestToggleGroupChildrenInheritDefaults(t *testing.T) {
+	got := renderUI(t, shared.RenderInto(ToggleGroup(ToggleGroupProps{
+		Variant:  ToggleOutline,
+		Size:     ToggleSizeSM,
+		Disabled: true,
+		Value:    []string{"a"},
+	}), ToggleButton(ToggleButtonProps{Value: "a"})))
+
+	for _, want := range []string{"btn-outline", "btn-sm", " disabled", `data-gd-toggle-value="a"`, `data-gd-toggle-values="[&#34;a&#34;]"`, "data-controlled"} {
+		if !strings.Contains(got, want) {
+			t.Errorf("child must inherit/carry %q from group:\n%s", want, got)
+		}
+	}
+
+	// An inherited group must not invent an empty value for a child that has
+	// none: every item in a group needs a distinct value.
+	valueless := renderUI(t, shared.RenderInto(ToggleGroup(ToggleGroupProps{}), ToggleButton(ToggleButtonProps{})))
+	if strings.Contains(valueless, `data-gd-toggle-value=""`) {
+		t.Errorf("valueless child must not emit an empty data-gd-toggle-value:\n%s", valueless)
+	}
+	if !strings.Contains(valueless, `data-gd-toggle-values="[]"`) {
+		t.Errorf("group with no values must emit an empty JSON array:\n%s", valueless)
 	}
 }

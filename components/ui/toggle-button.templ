@@ -1,0 +1,95 @@
+package ui
+
+import (
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/staticfs"
+)
+
+// ToggleVariant controls the visual style of a toggle button.
+type ToggleVariant string
+
+const (
+	ToggleDefault ToggleVariant = ""       // no variant class
+	ToggleOutline ToggleVariant = "outline"
+)
+
+// ToggleSize controls the size of a toggle button.
+type ToggleSize string
+
+const (
+	ToggleSizeDefault ToggleSize = ""
+	ToggleSizeSM      ToggleSize = "sm"
+	ToggleSizeLG      ToggleSize = "lg"
+)
+
+// ToggleButtonProps configures a ToggleButton component.
+type ToggleButtonProps struct {
+	Variant  ToggleVariant
+	Size     ToggleSize
+	Pressed  bool
+	Disabled bool
+	// Value is the item's value inside a ToggleGroup. It is emitted as
+	// data-gd-toggle-value and reported by the group runtime. Leave empty for
+	// a standalone toggle.
+	Value     string
+	AriaLabel string
+	Icon      string // optional iconify class, e.g. "lucide--bold"
+	Class     string
+	Attrs     templ.Attributes
+}
+
+var toggleScriptOnce = templ.NewOnceHandle()
+
+// ToggleScript loads the toggle-group runtime once per page. It provides the
+// shared roving-tabindex keyboard behaviour and aria-pressed state management
+// used by ToggleButton and ToggleGroup.
+templ ToggleScript() {
+	@toggleScriptOnce.Once() {
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-toggle.js", templ.GetNonce(ctx)))
+	}
+}
+
+// ToggleButton renders a DaisyUI button in an aria-pressed toggle state. When
+// rendered inside a ToggleGroup it inherits the group's variant/size/disabled
+// defaults; set Value so the group runtime can track the item.
+templ ToggleButton(props ToggleButtonProps) {
+	{{ variant := props.Variant
+	size := props.Size
+	disabled := props.Disabled
+	if v, s, d, ok := toggleGroupDefaultsFromCtx(ctx); ok {
+		if props.Variant == ToggleDefault {
+			variant = v
+		}
+		if props.Size == ToggleSizeDefault {
+			size = s
+		}
+		disabled = disabled || d
+	} }}
+	<button
+		type="button"
+		data-slot="toggle"
+		data-variant={ string(variant) }
+		aria-pressed={ ternary(props.Pressed, "true", "false") }
+		disabled?={ disabled }
+		class={ "btn",
+			templ.KV("btn-outline", variant == ToggleOutline),
+			templ.KV("btn-sm", size == ToggleSizeSM),
+			templ.KV("btn-lg", size == ToggleSizeLG),
+			templ.KV("btn-active", props.Pressed),
+			props.Class }
+		if props.AriaLabel != "" {
+			aria-label={ props.AriaLabel }
+		}
+		{ devmode.Attrs(ctx, "ui/ToggleButton")... }
+		if props.Value != "" {
+			data-gd-toggle-value={ props.Value }
+		}
+		{ props.Attrs... }
+	>
+		if props.Icon != "" {
+			@IconSpan(props.Icon, "size-4")
+		}
+		{ children... }
+	</button>
+	@ToggleScript()
+}

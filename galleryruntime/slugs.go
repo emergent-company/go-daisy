@@ -142,6 +142,9 @@ var ComponentSlugs = map[string]string{
 	"ContextMenu": "context-menu",
 	"Resizable":   "resizable",
 	"Attachment":  "attachment",
+	// Toggle
+	"ToggleButton": "toggle",
+	"ToggleGroup":  "toggle-group",
 }
 
 // ComponentSlugsJSON returns ComponentSlugs as a JSON string for embedding in <script> tags.

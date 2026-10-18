@@ -1520,3 +1520,70 @@ func AttachmentWithBoundary(name string, size string, kind string) templ.Compone
 		"kind": kind,
 	})
 }
+
+// ToggleButtonWithBoundary wraps ToggleButton with a dev-mode component boundary annotation.
+// gallery:token variant,size,pressed,disabled,ariaLabel,icon
+func ToggleButtonWithBoundary(variant ToggleVariant, size ToggleSize, pressed bool, disabled bool, ariaLabel string, icon string, children ...templ.Component) templ.Component {
+	props := ToggleButtonProps{
+		Variant:   variant,
+		Size:      size,
+		Pressed:   pressed,
+		Disabled:  disabled,
+		AriaLabel: ariaLabel,
+		Icon:      icon,
+	}
+	content := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		for _, c := range children {
+			if err := c.Render(ctx, w); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return ToggleButton(props).Render(templ.WithChildren(ctx, content), w)
+	})
+	return devmode.ComponentBoundary("ToggleButton", inner, map[string]any{
+		"variant":   string(variant),
+		"size":      string(size),
+		"pressed":   pressed,
+		"disabled":  disabled,
+		"ariaLabel": ariaLabel,
+		"icon":      icon,
+	})
+}
+
+// ToggleGroupWithBoundary wraps ToggleGroup with a dev-mode component boundary
+// annotation. It renders one ToggleButton per label, using the label as the
+// button's data-gd-toggle-value.
+// gallery:token orientation,multiple,disabled,spacing
+// gallery:hint spacing:default(2)
+// gallery:hint spacing:range(0,6,1)
+func ToggleGroupWithBoundary(orientation ToggleGroupOrientation, multiple bool, disabled bool, spacing int, labels []string) templ.Component {
+	sp := spacing
+	content := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		for _, label := range labels {
+			btn := ToggleButton(ToggleButtonProps{
+				Value: label,
+			})
+			if err := btn.Render(templ.WithChildren(ctx, shared.StrComp(label)), w); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	inner := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+		return ToggleGroup(ToggleGroupProps{
+			Orientation: orientation,
+			Multiple:    multiple,
+			Disabled:    disabled,
+			Spacing:     &sp,
+		}).Render(templ.WithChildren(ctx, content), w)
+	})
+	return devmode.ComponentBoundary("ToggleGroup", inner, map[string]any{
+		"orientation": string(orientation),
+		"multiple":    multiple,
+		"disabled":    disabled,
+		"spacing":     spacing,
+	})
+}

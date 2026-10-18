@@ -1780,3 +1780,117 @@ func AttachmentTokens() []galleryruntime.DesignToken {
 		},
 	}
 }
+
+// ToggleButtonTokens returns the DesignToken slice for ToggleButtonWithBoundary.
+func ToggleButtonTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Variant",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "",
+			QueryParam: "variant",
+			Options: []galleryruntime.TokenOption{
+				{Value: "", Label: "Default"},
+				{Value: "outline", Label: "Outline"},
+			},
+		},
+		{
+			Label:      "Size",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "",
+			QueryParam: "size",
+			Options: []galleryruntime.TokenOption{
+				{Value: "", Label: "Default"},
+				{Value: "lg", Label: "LG"},
+				{Value: "sm", Label: "SM"},
+			},
+		},
+		{
+			Label:      "Pressed",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "pressed",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Disabled",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "disabled",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Aria Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "ariaLabel",
+		},
+		{
+			Label:      "Icon",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "icon",
+		},
+	}
+}
+
+// ToggleGroupTokens returns the DesignToken slice for ToggleGroupWithBoundary.
+func ToggleGroupTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Orientation",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "",
+			QueryParam: "orientation",
+			Options: []galleryruntime.TokenOption{
+				{Value: "", Label: "Horizontal"},
+				{Value: "vertical", Label: "Vertical"},
+			},
+		},
+		{
+			Label:      "Multiple",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "multiple",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Disabled",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "disabled",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Spacing",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeRange,
+			Default:    "2",
+			QueryParam: "spacing",
+			Min:        0,
+			Max:        6,
+			Step:       1,
+		},
+	}
+}
