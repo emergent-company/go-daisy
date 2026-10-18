@@ -42,7 +42,7 @@ type DataGridProps struct {
 	TotalPages       int
 	TotalItems       int
 	PageSize         int
-	BaseURL          string            // base URL for sort/filter/page links
+	BaseURL          string            // base URL for sort/filter/page links; handlers return the body fragment
 	Sort             SortContext       // server-side sort state; BasePath is required for sort links
 
 	// Toolbar

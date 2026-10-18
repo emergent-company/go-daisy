@@ -64,8 +64,8 @@ func (c SortContext) AriaSort(column string) string {
 // Href returns the path and query for the next sort state of column. The
 // current query is cloned, so filters are preserved and the caller's query is
 // never mutated. first is the direction used when column is not active.
-// Other params, including page, are preserved; handlers that paginate should
-// clear page when applying a new sort.
+// Pagination is reset by removing the "page" param; other params, including
+// per_page, are preserved.
 func (c SortContext) Href(column string, first SortDir) string {
 	if c.BasePath == "" || column == "" {
 		return ""
@@ -79,6 +79,7 @@ func (c SortContext) Href(column string, first SortDir) string {
 		q.Set(c.ByParam(), column)
 		q.Set(c.DirParam(), string(dir))
 	}
+	q.Del("page")
 	if encoded := q.Encode(); encoded != "" {
 		return c.BasePath + "?" + encoded
 	}
@@ -96,6 +97,9 @@ func ParseSortPrefixed(q url.Values, prefix string, defaultBy string, defaultDir
 	}
 
 	dir := defaultDir
+	if dir != SortAsc && dir != SortDesc {
+		dir = SortNone
+	}
 	switch strings.ToLower(strings.TrimSpace(q.Get(prefix + "sort_dir"))) {
 	case "asc":
 		dir = SortAsc
@@ -104,6 +108,10 @@ func ParseSortPrefixed(q url.Values, prefix string, defaultBy string, defaultDir
 	}
 	if by == "" {
 		dir = SortNone
+	} else if dir == SortNone {
+		// A sort column without a usable direction means ascending, not an
+		// active column with no order.
+		dir = SortAsc
 	}
 	return SortParams{By: by, Dir: dir}
 }

@@ -367,3 +367,6 @@ rows = sortRows(rows, sc.Params)
   `table.NewSortContext(r, "guests_", "", table.SortNone)`.
 - The handler is responsible for applying `SortParams` to the rows. Keep
   unknown metrics, empty text and zero times last in both directions.
+- Sorting clears the `page` query param. `DataGrid` sort links target
+  `#datagrid-<id>-body`; the handler must return that body-only fragment, the
+  same contract as search and pagination.

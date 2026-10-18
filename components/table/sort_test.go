@@ -42,6 +42,31 @@ func TestParseSortPrefixedInvalidDirectionFallsBackToDefault(t *testing.T) {
 	}
 }
 
+func TestParseSortPrefixedInvalidDefaultDirBecomesAsc(t *testing.T) {
+	q := url.Values{"sort_by": {"cpu"}}
+	got := ParseSortPrefixed(q, "", "", SortDir("sideways"))
+	if got.By != "cpu" || got.Dir != SortAsc {
+		t.Fatalf("expected cpu asc, got %#v", got)
+	}
+}
+
+func TestParseSortPrefixedByWithoutDirIsAsc(t *testing.T) {
+	q := url.Values{"sort_by": {"cpu"}}
+	got := ParseSortPrefixed(q, "", "", SortNone)
+	if got.By != "cpu" || got.Dir != SortAsc {
+		t.Fatalf("expected cpu asc, got %#v", got)
+	}
+}
+
+func TestParseSortMatchesPrefixed(t *testing.T) {
+	q := url.Values{"sort_by": {"cpu"}, "sort_dir": {"desc"}, "q": {"web"}}
+	legacy := ParseSort(q, "", SortNone)
+	prefixed := ParseSortPrefixed(q, "", "", SortNone)
+	if legacy != prefixed {
+		t.Fatalf("ParseSort = %#v, ParseSortPrefixed = %#v", legacy, prefixed)
+	}
+}
+
 func TestParseSortPrefixedEmptyByForcesNone(t *testing.T) {
 	q := url.Values{"sort_dir": {"desc"}}
 	got := ParseSortPrefixed(q, "", "", SortAsc)
@@ -74,8 +99,8 @@ func TestNextSortDirFromCyclesFirstOppositeNone(t *testing.T) {
 	}
 }
 
-func TestSortContextHrefPreservesFilters(t *testing.T) {
-	q := url.Values{"q": {"web"}, "group": {"prod"}}
+func TestSortContextHrefPreservesFiltersAndResetsPagination(t *testing.T) {
+	q := url.Values{"q": {"web"}, "group": {"prod"}, "page": {"3"}}
 	sc := SortContext{
 		Params:   SortParams{By: "name", Dir: SortAsc},
 		BasePath: "/hosts",
@@ -86,7 +111,7 @@ func TestSortContextHrefPreservesFilters(t *testing.T) {
 	if got != want {
 		t.Fatalf("Href = %q, want %q", got, want)
 	}
-	if q.Get("sort_by") != "" || q.Get("sort_dir") != "" {
+	if q.Get("sort_by") != "" || q.Get("sort_dir") != "" || q.Get("page") != "3" {
 		t.Fatalf("Href mutated the input query: %#v", q)
 	}
 }
