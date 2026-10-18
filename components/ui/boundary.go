@@ -1647,3 +1647,36 @@ func ToggleGroupWithBoundary(orientation ToggleGroupOrientation, multiple bool, 
 		"spacing":     spacing,
 	})
 }
+
+// AlertDialogWithBoundary wraps AlertDialog with a dev-mode component boundary
+// annotation, rendering the full composition: a trigger button, the dialog, its
+// content (header/title/description) and a footer with cancel + primary action.
+// gallery:token dialogID,title,description,triggerLabel,actionLabel,cancelLabel
+// gallery:hint dialogID:default(confirm-dialog)
+// gallery:hint title:default(Are you absolutely sure?)
+// gallery:hint description:default(This action cannot be undone.)
+// gallery:hint triggerLabel:default(Delete account)
+// gallery:hint actionLabel:default(Delete)
+// gallery:hint cancelLabel:default(Cancel)
+func AlertDialogWithBoundary(dialogID string, title string, description string, triggerLabel string, actionLabel string, cancelLabel string) templ.Component {
+	titleEl := shared.RenderInto(AlertDialogTitle(AlertDialogTitleProps{}), shared.StrComp(title))
+	descEl := shared.RenderInto(AlertDialogDescription(AlertDialogDescriptionProps{}), shared.StrComp(description))
+	header := shared.RenderInto(AlertDialogHeader(AlertDialogHeaderProps{}), shared.Compose(titleEl, descEl))
+
+	cancelEl := shared.RenderInto(AlertDialogCancel(AlertDialogCancelProps{}), shared.StrComp(cancelLabel))
+	actionEl := shared.RenderInto(AlertDialogAction(AlertDialogActionProps{Variant: ButtonPrimary}), shared.StrComp(actionLabel))
+	footer := shared.RenderInto(AlertDialogFooter(AlertDialogFooterProps{}), shared.Compose(cancelEl, actionEl))
+
+	content := shared.RenderInto(AlertDialogContent(AlertDialogContentProps{}), shared.Compose(header, footer))
+	dialog := shared.RenderInto(AlertDialog(AlertDialogProps{ID: dialogID}), content)
+	trigger := shared.RenderInto(AlertDialogTrigger(AlertDialogTriggerProps{DialogID: dialogID}), shared.StrComp(triggerLabel))
+
+	return devmode.ComponentBoundary("AlertDialog", shared.Compose(trigger, dialog), map[string]any{
+		"dialogID":     dialogID,
+		"title":        title,
+		"description":  description,
+		"triggerLabel": triggerLabel,
+		"actionLabel":  actionLabel,
+		"cancelLabel":  cancelLabel,
+	})
+}

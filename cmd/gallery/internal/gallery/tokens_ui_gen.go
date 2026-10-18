@@ -1928,3 +1928,51 @@ func ToggleGroupTokens() []galleryruntime.DesignToken {
 		},
 	}
 }
+
+// AlertDialogTokens returns the DesignToken slice for AlertDialogWithBoundary.
+func AlertDialogTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Dialog ID",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "confirm-dialog",
+			QueryParam: "dialogID",
+		},
+		{
+			Label:      "Title",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Are you absolutely sure?",
+			QueryParam: "title",
+		},
+		{
+			Label:      "Description",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "This action cannot be undone.",
+			QueryParam: "description",
+		},
+		{
+			Label:      "Trigger Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Delete account",
+			QueryParam: "triggerLabel",
+		},
+		{
+			Label:      "Action Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Delete",
+			QueryParam: "actionLabel",
+		},
+		{
+			Label:      "Cancel Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Cancel",
+			QueryParam: "cancelLabel",
+		},
+	}
+}

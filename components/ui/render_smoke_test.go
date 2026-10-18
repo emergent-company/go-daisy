@@ -691,3 +691,68 @@ func TestChatBubbleLegacyShim(t *testing.T) {
 		t.Errorf("legacy shim output differs from props API:\nlegacy: %s\nprops:  %s", legacy, props)
 	}
 }
+
+// TestAlertDialogContract locks the native <dialog> alert contract: the dialog
+// id drives the derived title/description ids (via the render context), the
+// trigger carries the open marker, the content is a method="dialog" form, and
+// the footer/cancel/action emit their native submit values.
+func TestAlertDialogContract(t *testing.T) {
+	inner := shared.Compose(
+		shared.RenderInto(AlertDialogTrigger(AlertDialogTriggerProps{DialogID: "x"}), uiStr("Delete")),
+		shared.RenderInto(AlertDialog(AlertDialogProps{ID: "x"}), shared.Compose(
+			shared.RenderInto(AlertDialogContent(AlertDialogContentProps{}), shared.Compose(
+				shared.RenderInto(AlertDialogHeader(AlertDialogHeaderProps{}), shared.Compose(
+					shared.RenderInto(AlertDialogTitle(AlertDialogTitleProps{}), uiStr("Delete account")),
+					shared.RenderInto(AlertDialogDescription(AlertDialogDescriptionProps{}), uiStr("This cannot be undone.")),
+				)),
+				shared.RenderInto(AlertDialogFooter(AlertDialogFooterProps{}), shared.Compose(
+					shared.RenderInto(AlertDialogCancel(AlertDialogCancelProps{}), uiStr("Cancel")),
+					shared.RenderInto(AlertDialogAction(AlertDialogActionProps{Variant: ButtonError}), uiStr("Delete")),
+				)),
+			)),
+		)),
+	)
+	got := renderUI(t, inner)
+
+	for _, want := range []string{
+		`<dialog id="x"`,
+		"data-gd-alert-dialog",
+		`aria-labelledby="x-title"`,
+		`aria-describedby="x-desc"`,
+		`class="modal "`,
+		`data-gd-alert-dialog-open="x"`,
+		`<form method="dialog"`,
+		`data-slot="alert-dialog-content"`,
+		"modal-box",
+		`data-slot="alert-dialog-header"`,
+		`<h2 id="x-title"`,
+		`<p id="x-desc"`,
+		"text-muted",
+		`data-slot="alert-dialog-footer"`,
+		"modal-action",
+		`type="submit" value="cancel"`,
+		`type="submit" value="confirm"`,
+		"btn-error",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("alert dialog missing %q in:\n%s", want, got)
+		}
+	}
+}
+
+// TestAlertDialogTitleFallsBackWithoutContext proves a title/description
+// rendered outside an AlertDialog emits no empty id attribute.
+func TestAlertDialogTitleFallsBackWithoutContext(t *testing.T) {
+	title := renderUI(t, shared.RenderInto(AlertDialogTitle(AlertDialogTitleProps{}), uiStr("Loose")))
+	if strings.Contains(title, `id=""`) {
+		t.Errorf("title outside a dialog must not emit an empty id:\n%s", title)
+	}
+	if !strings.Contains(title, "text-lg font-semibold") {
+		t.Errorf("title missing base classes:\n%s", title)
+	}
+
+	desc := renderUI(t, shared.RenderInto(AlertDialogDescription(AlertDialogDescriptionProps{}), uiStr("Loose")))
+	if strings.Contains(desc, `id=""`) {
+		t.Errorf("description outside a dialog must not emit an empty id:\n%s", desc)
+	}
+}

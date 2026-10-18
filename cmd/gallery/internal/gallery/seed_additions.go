@@ -2058,6 +2058,97 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// ── Components / Alert Dialog ─────────────────────────────────────────
+		{
+			Slug:        "alert-dialog",
+			Name:        "Alert Dialog",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Modal",
+			Description: "A modal alert built on the native <dialog> element — top layer, focus trap, Escape-to-close and ::backdrop for free. Must not close on backdrop click; the user picks an action.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Trigger opens the dialog; Cancel and the primary action both close it natively.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.AlertDialogWithBoundary(
+							"alert-demo",
+							"Delete account",
+							"This will permanently delete your account and remove your data from our servers.",
+							"Delete account",
+							"Delete",
+							"Cancel",
+						)
+					},
+					FrameHeight: "220px",
+				},
+				{
+					Name:        "Danger action",
+					Description: "The primary action uses the error (danger) button variant.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return alertDialogDemo(
+							"alert-danger",
+							"Delete this agent?",
+							"The agent and every conversation it owns will be permanently removed.",
+							"Delete agent",
+							"Delete permanently",
+							"Cancel",
+							ui.ButtonError,
+						)
+					},
+					FrameHeight: "220px",
+				},
+				{
+					Name:        "Long description",
+					Description: "A wrapping description proving the box keeps its max width and scrolls when needed.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return alertDialogDemo(
+							"alert-long",
+							"Migration summary",
+							"Migrating your workspace will move every project, environment variable, secret, deployment and domain binding to the new region. This can take several minutes. Traffic is not interrupted while the migration runs, but you should not edit configuration until it completes.",
+							"Start migration",
+							"Migrate",
+							"Cancel",
+							ui.ButtonPrimary,
+						)
+					},
+					FrameHeight: "240px",
+				},
+				{
+					Name:        "Playground",
+					Description: "Title, description, trigger and action labels driven by the token panel.",
+					RenderFunc: func(params url.Values) templ.Component {
+						dialogID := params.Get("dialogID")
+						if dialogID == "" {
+							dialogID = "alert-playground"
+						}
+						title := params.Get("title")
+						if title == "" {
+							title = "Are you absolutely sure?"
+						}
+						description := params.Get("description")
+						if description == "" {
+							description = "This action cannot be undone."
+						}
+						triggerLabel := params.Get("triggerLabel")
+						if triggerLabel == "" {
+							triggerLabel = "Open dialog"
+						}
+						actionLabel := params.Get("actionLabel")
+						if actionLabel == "" {
+							actionLabel = "Continue"
+						}
+						cancelLabel := params.Get("cancelLabel")
+						if cancelLabel == "" {
+							cancelLabel = "Cancel"
+						}
+						return alertDialogDemo(dialogID, title, description, triggerLabel, actionLabel, cancelLabel, ui.ButtonPrimary)
+					},
+					Tokens:      AlertDialogTokens(),
+					FrameHeight: "240px",
+				},
+			},
+		},
 	}
 }
 
@@ -2145,4 +2236,25 @@ func selectShellDemo() templ.Component {
 		shell,
 		shared.StrComp(`</div>`),
 	)
+}
+
+// alertDialogDemo composes an AlertDialog from a trigger + dialog for gallery
+// stories that need a custom action variant or a long description (the
+// AlertDialogWithBoundary wrapper hardcodes the primary action).
+func alertDialogDemo(dialogID, title, description, triggerLabel, actionLabel, cancelLabel string, actionVariant ui.ButtonVariant) templ.Component {
+	trigger := shared.RenderInto(
+		ui.AlertDialogTrigger(ui.AlertDialogTriggerProps{DialogID: dialogID}),
+		shared.StrComp(triggerLabel),
+	)
+	header := shared.RenderInto(ui.AlertDialogHeader(ui.AlertDialogHeaderProps{}), shared.Compose(
+		shared.RenderInto(ui.AlertDialogTitle(ui.AlertDialogTitleProps{}), shared.StrComp(title)),
+		shared.RenderInto(ui.AlertDialogDescription(ui.AlertDialogDescriptionProps{}), shared.StrComp(description)),
+	))
+	footer := shared.RenderInto(ui.AlertDialogFooter(ui.AlertDialogFooterProps{}), shared.Compose(
+		shared.RenderInto(ui.AlertDialogCancel(ui.AlertDialogCancelProps{}), shared.StrComp(cancelLabel)),
+		shared.RenderInto(ui.AlertDialogAction(ui.AlertDialogActionProps{Variant: actionVariant}), shared.StrComp(actionLabel)),
+	))
+	content := shared.RenderInto(ui.AlertDialogContent(ui.AlertDialogContentProps{}), shared.Compose(header, footer))
+	dialog := shared.RenderInto(ui.AlertDialog(ui.AlertDialogProps{ID: dialogID}), content)
+	return shared.Compose(trigger, dialog)
 }

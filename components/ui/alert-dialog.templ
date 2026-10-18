@@ -1,0 +1,220 @@
+package ui
+
+import (
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/staticfs"
+)
+
+// AlertDialogProps configures an AlertDialog.
+//
+// An alert dialog is a modal built on the native <dialog> element (showModal()):
+// the top layer, focus trap, Escape-to-close and ::backdrop come for free, so
+// no hand-rolled focus trap is added. Unlike a dismissible dialog, an alert
+// dialog must NOT close on backdrop click — the user has to pick an action — so
+// the runtime wires only the explicit trigger/close paths and the native
+// Escape-to-close. Every AlertDialog should include a Title and a Description:
+// their ids are fixed as ID+"-title" and ID+"-desc" and are wired through
+// aria-labelledby/aria-describedby.
+type AlertDialogProps struct {
+	// ID is required and is the source of the derived title/description ids.
+	ID    string
+	Class string
+	Attrs templ.Attributes
+}
+
+// AlertDialogTriggerProps configures an AlertDialogTrigger.
+type AlertDialogTriggerProps struct {
+	// DialogID is the id of the <dialog> this trigger opens.
+	DialogID string
+	Class    string
+	Attrs    templ.Attributes
+}
+
+// AlertDialogContentProps configures an AlertDialogContent.
+type AlertDialogContentProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// AlertDialogHeaderProps configures an AlertDialogHeader.
+type AlertDialogHeaderProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// AlertDialogFooterProps configures an AlertDialogFooter.
+type AlertDialogFooterProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// AlertDialogTitleProps configures an AlertDialogTitle.
+type AlertDialogTitleProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// AlertDialogDescriptionProps configures an AlertDialogDescription.
+type AlertDialogDescriptionProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// AlertDialogActionProps configures an AlertDialogAction.
+type AlertDialogActionProps struct {
+	Variant ButtonVariant
+	Class   string
+	Attrs   templ.Attributes
+}
+
+// AlertDialogCancelProps configures an AlertDialogCancel.
+type AlertDialogCancelProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+var alertDialogScriptOnce = templ.NewOnceHandle()
+
+// AlertDialogScript loads the alert-dialog runtime once per page. It provides
+// the trigger-open / close / gd-alert-dialog-close behaviour used by
+// AlertDialog.
+templ AlertDialogScript() {
+	@alertDialogScriptOnce.Once() {
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-alert-dialog.js", templ.GetNonce(ctx)))
+	}
+}
+
+// AlertDialog renders a native <dialog> modal alert. It stores its id on the
+// render context so child parts (Title, Description) can derive their ids from
+// it, then renders the children and the runtime script tag.
+templ AlertDialog(props AlertDialogProps) {
+	{{ ctx = WithAlertDialogID(ctx, props.ID) }}
+	<dialog
+		id={ props.ID }
+		data-gd-alert-dialog
+		aria-labelledby={ props.ID + "-title" }
+		aria-describedby={ props.ID + "-desc" }
+		class={ "modal", props.Class }
+		{ devmode.Attrs(ctx, "ui/AlertDialog")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</dialog>
+	@AlertDialogScript()
+}
+
+// AlertDialogTrigger renders a button that opens the dialog identified by
+// DialogID. Multiple triggers may target the same dialog.
+templ AlertDialogTrigger(props AlertDialogTriggerProps) {
+	<button
+		type="button"
+		data-gd-alert-dialog-open={ props.DialogID }
+		class={ "btn", props.Class }
+		{ devmode.Attrs(ctx, "ui/AlertDialogTrigger")... }
+		{ props.Attrs... }
+	>{ children... }</button>
+}
+
+// AlertDialogContent renders the dialog's box as a method="dialog" form so the
+// cancel/action submit buttons close the dialog natively, and Enter submits too.
+templ AlertDialogContent(props AlertDialogContentProps) {
+	<form
+		method="dialog"
+		data-slot="alert-dialog-content"
+		class={ "modal-box", props.Class }
+		{ devmode.Attrs(ctx, "ui/AlertDialogContent")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</form>
+}
+
+// AlertDialogHeader renders the title/description grouping above the footer.
+templ AlertDialogHeader(props AlertDialogHeaderProps) {
+	<div
+		data-slot="alert-dialog-header"
+		class={ "flex flex-col gap-1", props.Class }
+		{ devmode.Attrs(ctx, "ui/AlertDialogHeader")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+}
+
+// AlertDialogTitle renders the labelled heading. Its id derives from the
+// enclosing AlertDialog id via the render context.
+templ AlertDialogTitle(props AlertDialogTitleProps) {
+	{{ id, _ := alertDialogIDFromCtx(ctx) }}
+	<h2
+		if id != "" {
+			id={ id + "-title" }
+		}
+		class={ "text-lg font-semibold", props.Class }
+		{ devmode.Attrs(ctx, "ui/AlertDialogTitle")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</h2>
+}
+
+// AlertDialogDescription renders the described body copy. Its id derives from
+// the enclosing AlertDialog id via the render context.
+templ AlertDialogDescription(props AlertDialogDescriptionProps) {
+	{{ id, _ := alertDialogIDFromCtx(ctx) }}
+	<p
+		if id != "" {
+			id={ id + "-desc" }
+		}
+		class={ "text-sm text-muted", props.Class }
+		{ devmode.Attrs(ctx, "ui/AlertDialogDescription")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</p>
+}
+
+// AlertDialogFooter renders the modal-action row that holds the cancel and
+// primary action buttons.
+templ AlertDialogFooter(props AlertDialogFooterProps) {
+	<div
+		data-slot="alert-dialog-footer"
+		class={ "modal-action", props.Class }
+		{ devmode.Attrs(ctx, "ui/AlertDialogFooter")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+}
+
+// AlertDialogCancel renders the dismiss submit button. Its value ("cancel")
+// becomes the dialog's returnValue when the form closes it natively.
+templ AlertDialogCancel(props AlertDialogCancelProps) {
+	<button
+		type="submit"
+		value="cancel"
+		class={ "btn", props.Class }
+		{ devmode.Attrs(ctx, "ui/AlertDialogCancel")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</button>
+}
+
+// AlertDialogAction renders the primary confirm submit button. Its value
+// ("confirm") becomes the dialog's returnValue when the form closes it natively.
+// The Variant controls the visual style (e.g. ButtonPrimary, ButtonError).
+// Callers add hx-post/hx-delete through Attrs when the action should hit the
+// server. Note that htmx prevents the native dialog submit, so the dialog stays
+// open until the response closes it (return a gd-alert-dialog-close trigger or
+// call dialog.close() from the response script).
+templ AlertDialogAction(props AlertDialogActionProps) {
+	<button
+		type="submit"
+		value="confirm"
+		class={ "btn", templ.KV(string(props.Variant), props.Variant != ""), props.Class }
+		{ devmode.Attrs(ctx, "ui/AlertDialogAction")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</button>
+}
