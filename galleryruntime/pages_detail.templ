@@ -304,16 +304,26 @@ templ ComponentDetail(c GalleryComponent) {
 				return THEMES[p] ? p : window.__goDaisyTheme.defaultPalette;
 			} catch(e) { return window.__goDaisyTheme.defaultPalette; }
 		}
-		function toDaisyTheme(m) { return window.__goDaisyTheme.resolve(m, readPalette()); }
+		function isCustomMode() {
+			try { return localStorage.getItem('gallery-ui-theme') === 'custom' && !!localStorage.getItem('gallery-custom-theme'); } catch(e) { return false; }
+		}
+		function toDaisyTheme(m) {
+			if (m === 'custom' && isCustomMode()) return 'custom';
+			return window.__goDaisyTheme.resolve(m, readPalette());
+		}
 
 			function getSavedTheme() {
-				try { return localStorage.getItem(STORAGE_KEY) || 'light'; } catch(e) { return 'light'; }
+				try {
+					if (isCustomMode()) return 'custom';
+					return localStorage.getItem(STORAGE_KEY) || 'light';
+				} catch(e) { return 'light'; }
 			}
 			function saveTheme(theme) {
 				try { localStorage.setItem(STORAGE_KEY, theme); } catch(e) {}
 			}
 
 			function applyThemeToFrame(frameId, theme) {
+				if (isCustomMode()) return;
 				var frame = document.getElementById(frameId);
 				if (!frame) return;
 				try {
@@ -326,7 +336,11 @@ templ ComponentDetail(c GalleryComponent) {
 
 			function updateThemeButton(btnId, theme) {
 				var btn = document.getElementById(btnId);
-				if (btn) btn.textContent = theme === 'dark' ? '\uD83C\uDF19 Dark' : '\u2600 Light';
+				if (btn) {
+					if (theme === 'custom') btn.textContent = 'Custom';
+					else if (theme === 'dark') btn.textContent = '\uD83C\uDF19 Dark';
+					else btn.textContent = '\u2600 Light';
+				}
 			}
 
 			function applyStoredTheme() {
@@ -1082,7 +1096,10 @@ templ ComponentExamples(c GalleryComponent) {
 		var frameThemes = {};
 
 		function getSavedTheme() {
-			try { return localStorage.getItem('gallery-preview-theme') || 'light'; } catch(e) { return 'light'; }
+			try {
+				if (isCustomMode()) return 'custom';
+				return localStorage.getItem('gallery-preview-theme') || 'light';
+			} catch(e) { return 'light'; }
 		}
 		// Palette registry + resolver: single source of truth (ui.ThemeRuntimeJS).
 		var THEMES = window.__goDaisyTheme.palettes;
@@ -1092,9 +1109,16 @@ templ ComponentExamples(c GalleryComponent) {
 				return THEMES[p] ? p : window.__goDaisyTheme.defaultPalette;
 			} catch(e) { return window.__goDaisyTheme.defaultPalette; }
 		}
-		function toDaisyTheme(m) { return window.__goDaisyTheme.resolve(m, readPalette()); }
+		function isCustomMode() {
+			try { return localStorage.getItem('gallery-ui-theme') === 'custom' && !!localStorage.getItem('gallery-custom-theme'); } catch(e) { return false; }
+		}
+		function toDaisyTheme(m) {
+			if (m === 'custom' && isCustomMode()) return 'custom';
+			return window.__goDaisyTheme.resolve(m, readPalette());
+		}
 
 		function applyThemeToFrame(frame, theme) {
+			if (isCustomMode()) return;
 			try {
 				var doc = frame.contentDocument || frame.contentWindow.document;
 				if (doc && doc.documentElement) doc.documentElement.setAttribute('data-theme', theme);
@@ -1104,13 +1128,13 @@ templ ComponentExamples(c GalleryComponent) {
 		function updateThemeBtn(idx, theme) {
 			var btn = document.querySelector('.examples-theme-btn[data-frame-idx="' + idx + '"]');
 			if (!btn) return;
-			btn.innerHTML = theme === 'dark' ? '&#9790; Dark' : '&#9728; Light';
+			btn.innerHTML = theme === 'custom' ? 'Custom' : (theme === 'dark' ? '&#9790; Dark' : '&#9728; Light');
 		}
 
 		function updateThemeBtnById(frameId, theme) {
 			var btn = document.querySelector('.examples-theme-btn[data-frame-id="' + frameId + '"]');
 			if (!btn) return;
-			btn.innerHTML = theme === 'dark' ? '&#9790; Dark' : '&#9728; Light';
+			btn.innerHTML = theme === 'custom' ? 'Custom' : (theme === 'dark' ? '&#9790; Dark' : '&#9728; Light');
 		}
 
 		window.toggleExamplesTheme = function(idx) {
@@ -1145,6 +1169,7 @@ templ ComponentExamples(c GalleryComponent) {
 				// Apply the per-frame theme to the fullscreen frame
 				if (fsFrame) {
 					var applyTheme = function() {
+						if (isCustomMode()) return;
 						try {
 							var doc = fsFrame.contentDocument || fsFrame.contentWindow.document;
 							if (doc && doc.documentElement) doc.documentElement.setAttribute('data-theme', toDaisyTheme(theme));

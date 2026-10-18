@@ -80,11 +80,17 @@ templ ThemeScript() {
 			var palette = null;
 			try { mode = localStorage.getItem(MODE_KEY); } catch (e) {}
 			try { palette = localStorage.getItem(PALETTE_KEY); } catch (e) {}
-			if (mode !== 'light' && mode !== 'dark' && mode !== 'system') { mode = 'system'; }
+			if (mode !== 'light' && mode !== 'dark' && mode !== 'system' && mode !== 'custom') { mode = 'system'; }
 			if (!rt.palettes[palette]) { palette = rt.defaultPalette; }
 
-			var effective = rt.effectiveMode(mode);
-			var theme = rt.resolve(mode, palette);
+			// A user-generated theme (gallery theme studio) wins over the
+			// palette x mode mapping when the user selected it and one is stored.
+			var custom = null;
+			try { custom = localStorage.getItem('gallery-custom-theme'); } catch (e) {}
+			var isCustom = mode === 'custom' && !!custom;
+
+			var effective = isCustom ? 'custom' : rt.effectiveMode(mode);
+			var theme = isCustom ? 'custom' : rt.resolve(mode, palette);
 
 			document.documentElement.setAttribute('data-theme', theme);
 
