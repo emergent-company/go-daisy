@@ -95,7 +95,7 @@ templ ComponentDetail(c GalleryComponent) {
 			onclick="switchToExamples(this)"
 		>Examples</button>
 	</div>
-	<script nonce={ templ.GetNonce(ctx) }>
+	<script { nonceAttrs(ctx)... }>
 	window.switchVariant = function(btn) {
 		var slug = btn.getAttribute('data-slug');
 		var variant = btn.getAttribute('data-variant-slug');
@@ -293,7 +293,7 @@ templ ComponentDetail(c GalleryComponent) {
 
 	<!-- Theme toggle + copy + fullscreen script -->
 	@templ.Raw(ui.ThemeRuntimeTag(ctx))
-	<script nonce={ templ.GetNonce(ctx) }>
+	<script { nonceAttrs(ctx)... }>
 		(function() {
 			var STORAGE_KEY = 'gallery-preview-theme';
 		// Palette registry + resolver: single source of truth (ui.ThemeRuntimeJS).
@@ -490,7 +490,7 @@ templ ComponentDetail(c GalleryComponent) {
 	</script>
 
 	<!-- Props / Parameters editor JS -->
-	<script nonce={ templ.GetNonce(ctx) }>
+	<script { nonceAttrs(ctx)... }>
 		(function() {
 			function escT(s) {
 				return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -658,7 +658,7 @@ templ ComponentDetail(c GalleryComponent) {
 @ComponentSlugsScript()
 
 <!-- Component Tree panel JS: listens for postMessage from dev overlay in iframe -->
-<script nonce={ templ.GetNonce(ctx) }>
+<script { nonceAttrs(ctx)... }>
 (function() {
 	// Depth-indexed colour palette matching devOverlayScript.
 	var DEPTH_COLORS = ['#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899'];
@@ -1096,7 +1096,7 @@ templ ComponentExamples(c GalleryComponent) {
 	</div>
 	<!-- Examples tab JS: theme per-frame, fullscreen, auto-resize -->
 	@templ.Raw(ui.ThemeRuntimeTag(ctx))
-	<script nonce={ templ.GetNonce(ctx) }>
+	<script { nonceAttrs(ctx)... }>
 	(function() {
 		// Per-frame theme state: inherits from global gallery theme on init
 		var frameThemes = {};

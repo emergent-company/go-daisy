@@ -2,6 +2,7 @@ package shared
 
 import (
 	"context"
+	"html"
 
 	"github.com/a-h/templ"
 )
@@ -24,7 +25,7 @@ func NonceAttrs(ctx context.Context) templ.Attributes {
 // concatenation (e.g. theme runtime bootstraps).
 func ScriptTag(ctx context.Context, js string) string {
 	if n := templ.GetNonce(ctx); n != "" {
-		return "<script nonce=\"" + n + "\">" + js + "</script>"
+		return `<script nonce="` + html.EscapeString(n) + `">` + js + "</script>"
 	}
 	return "<script>" + js + "</script>"
 }

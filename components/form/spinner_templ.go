@@ -228,20 +228,15 @@ func spinnerScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<script nonce=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<script")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var12 string
-			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/spinner.templ`, Line: 41, Col: 37}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, nonceAttrs(ctx))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\">\n\tgdOnce('spinnerInit', function () {\n\t  window.spinnerGet = function(id) { return document.getElementById(id); };\n\t  window.spinnerIncrement = function(id, step) {\n\t    var el = spinnerGet(id); if (!el) return;\n\t    var v = parseFloat(el.value)||0, s = step||1;\n\t    var max = el.max !== '' ? parseFloat(el.max) : Infinity;\n\t    el.value = Math.min(v + s, max);\n\t  };\n\t  window.spinnerDecrement = function(id, step) {\n\t    var el = spinnerGet(id); if (!el) return;\n\t    var v = parseFloat(el.value)||0, s = step||1;\n\t    var min = el.min !== '' ? parseFloat(el.min) : -Infinity;\n\t    el.value = Math.max(v - s, min);\n\t  };\n\t});\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, ">\n\tgdOnce('spinnerInit', function () {\n\t  window.spinnerGet = function(id) { return document.getElementById(id); };\n\t  window.spinnerIncrement = function(id, step) {\n\t    var el = spinnerGet(id); if (!el) return;\n\t    var v = parseFloat(el.value)||0, s = step||1;\n\t    var max = el.max !== '' ? parseFloat(el.max) : Infinity;\n\t    el.value = Math.min(v + s, max);\n\t  };\n\t  window.spinnerDecrement = function(id, step) {\n\t    var el = spinnerGet(id); if (!el) return;\n\t    var v = parseFloat(el.value)||0, s = step||1;\n\t    var min = el.min !== '' ? parseFloat(el.min) : -Infinity;\n\t    el.value = Math.max(v - s, min);\n\t  };\n\t});\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

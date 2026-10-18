@@ -8,7 +8,10 @@ package ui
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/emergent-company/go-daisy/devmode"
+import (
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/shared"
+)
 
 // DirectionProps configures a writing-direction scope.
 type DirectionProps struct {
@@ -74,7 +77,7 @@ func Direction(props ...DirectionProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.DirValue())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/direction.templ`, Line: 36, Col: 20}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/direction.templ`, Line: 39, Col: 20}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -126,6 +129,10 @@ func Direction(props ...DirectionProps) templ.Component {
 //
 // Render it in the page <head> or at the end of <body>; it is idempotent and
 // skips work when the document already has the requested direction.
+//
+// The JS body is assembled in Go: templ does not interpolate `{ ... }` inside
+// <script> blocks, so writing the value into the template body would ship the
+// literal text "{ dir }".
 func DocumentDirectionScript(dir string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -147,20 +154,7 @@ func DocumentDirectionScript(dir string) templ.Component {
 			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<script nonce=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/direction.templ`, Line: 51, Col: 36}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\">\n\t\t(function () {\n\t\t\tvar target = \"{ dir }\" || 'ltr';\n\t\t\tif (document.documentElement.getAttribute('dir') !== target) {\n\t\t\t\tdocument.documentElement.setAttribute('dir', target);\n\t\t\t}\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templ.Raw(shared.ScriptTag(ctx, documentDirectionJS(dir))).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

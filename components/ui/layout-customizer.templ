@@ -76,7 +76,7 @@ templ LayoutCustomizer() {
 			</div>
 		</div>
 
-		<script nonce={ templ.GetNonce(ctx) }>
+		<script { nonceAttrs(ctx)... }>
 		(function() {
 			var STORAGE_KEY = 'go-daisy-layout';
 			var DEFAULTS = { theme: 'system', sidebarTheme: 'light', dir: 'ltr' };

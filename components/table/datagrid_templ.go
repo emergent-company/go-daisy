@@ -624,20 +624,15 @@ func dataGridAlpineScript() templ.Component {
 			templ_7745c5c3_Var27 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<script type=\"text/javascript\" nonce=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<script type=\"text/javascript\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var28 string
-		templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/table/datagrid.templ`, Line: 212, Col: 59}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var28)
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, nonceAttrs(ctx))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "\">\n\t\tgdOnce('dataGridStore', function () {\n\t\t\twindow.dataGridStore = function() {\n\t\t\t\treturn {\n\t\t\t\t\tselected: [],\n\t\t\t\t\tselectAll: false,\n\n\t\t\t\t\tinit() {\n\t\t\t\t\t\t// Nothing needed on init\n\t\t\t\t\t},\n\n\t\t\t\t\tinitTree() {\n\t\t\t\t\t\tvar id = this.$el.id;\n\t\t\t\t\t\tvar body = document.getElementById(id + '-body');\n\t\t\t\t\t\tif (body && window.Alpine) {\n\t\t\t\t\t\t\twindow.Alpine.initTree(body);\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\ttoggleAll() {\n\t\t\t\t\t\tvar id = this.$el.id;\n\t\t\t\t\t\tvar body = document.getElementById(id + '-body');\n\t\t\t\t\t\tif (!body) return;\n\t\t\t\t\t\tvar checkboxes = body.querySelectorAll('input[type=\"checkbox\"][value]');\n\t\t\t\t\t\tif (this.selectAll) {\n\t\t\t\t\t\t\tthis.selected = Array.from(checkboxes).map(function(cb) { return cb.value; });\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tthis.selected = [];\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tsubmitBatchAction: function(event, confirmMsg) {\n\t\t\t\t\t\tif (confirmMsg && !confirm(confirmMsg)) {\n\t\t\t\t\t\t\tevent.preventDefault();\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t};\n\t\t});\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, ">\n\t\tgdOnce('dataGridStore', function () {\n\t\t\twindow.dataGridStore = function() {\n\t\t\t\treturn {\n\t\t\t\t\tselected: [],\n\t\t\t\t\tselectAll: false,\n\n\t\t\t\t\tinit() {\n\t\t\t\t\t\t// Nothing needed on init\n\t\t\t\t\t},\n\n\t\t\t\t\tinitTree() {\n\t\t\t\t\t\tvar id = this.$el.id;\n\t\t\t\t\t\tvar body = document.getElementById(id + '-body');\n\t\t\t\t\t\tif (body && window.Alpine) {\n\t\t\t\t\t\t\twindow.Alpine.initTree(body);\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\ttoggleAll() {\n\t\t\t\t\t\tvar id = this.$el.id;\n\t\t\t\t\t\tvar body = document.getElementById(id + '-body');\n\t\t\t\t\t\tif (!body) return;\n\t\t\t\t\t\tvar checkboxes = body.querySelectorAll('input[type=\"checkbox\"][value]');\n\t\t\t\t\t\tif (this.selectAll) {\n\t\t\t\t\t\t\tthis.selected = Array.from(checkboxes).map(function(cb) { return cb.value; });\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tthis.selected = [];\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\n\t\t\t\t\tsubmitBatchAction: function(event, confirmMsg) {\n\t\t\t\t\t\tif (confirmMsg && !confirm(confirmMsg)) {\n\t\t\t\t\t\t\tevent.preventDefault();\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t};\n\t\t});\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

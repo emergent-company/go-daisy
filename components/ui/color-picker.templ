@@ -149,7 +149,7 @@ var colorPickerScriptOnce = templ.NewOnceHandle()
 // Deduplicated via OnceHandle; safe across HTMX swaps and multiple instances.
 templ ColorPickerScript() {
 	@colorPickerScriptOnce.Once() {
-		<script nonce={ templ.GetNonce(ctx) }>
+		<script { nonceAttrs(ctx)... }>
 			gdOnce('gdColorPickerInit', function () {
 				function rootOf(node) {
 						return node && node.closest ? node.closest("[data-gd-color-picker]") : null;

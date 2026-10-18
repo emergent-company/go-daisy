@@ -47,20 +47,15 @@ func passwordToggleScript() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script nonce=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<script")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/password_shared.templ`, Line: 11, Col: 37}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, nonceAttrs(ctx))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\">\n\tgdOnce('passToggleInit', function () {\n\t\twindow.togglePasswordVisibility = function(btn) {\n\t\t\tvar input = btn.parentElement.querySelector('input');\n\t\t\tif (!input) return;\n\t\t\tif (input.type === 'password') {\n\t\t\t\tinput.type = 'text';\n\t\t\t\tbtn.querySelector('.iconify').classList.remove('lucide--eye');\n\t\t\t\tbtn.querySelector('.iconify').classList.add('lucide--eye-off');\n\t\t\t} else {\n\t\t\t\tinput.type = 'password';\n\t\t\t\tbtn.querySelector('.iconify').classList.remove('lucide--eye-off');\n\t\t\t\tbtn.querySelector('.iconify').classList.add('lucide--eye');\n\t\t\t}\n\t\t};\n\t});\n\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, ">\n\tgdOnce('passToggleInit', function () {\n\t\twindow.togglePasswordVisibility = function(btn) {\n\t\t\tvar input = btn.parentElement.querySelector('input');\n\t\t\tif (!input) return;\n\t\t\tif (input.type === 'password') {\n\t\t\t\tinput.type = 'text';\n\t\t\t\tbtn.querySelector('.iconify').classList.remove('lucide--eye');\n\t\t\t\tbtn.querySelector('.iconify').classList.add('lucide--eye-off');\n\t\t\t} else {\n\t\t\t\tinput.type = 'password';\n\t\t\t\tbtn.querySelector('.iconify').classList.remove('lucide--eye-off');\n\t\t\t\tbtn.querySelector('.iconify').classList.add('lucide--eye');\n\t\t\t}\n\t\t};\n\t});\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -90,9 +85,9 @@ func passwordToggleButton() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var4 == nil {
-			templ_7745c5c3_Var4 = templ.NopComponent
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<button type=\"button\" class=\"absolute inset-y-0 end-0 z-10 grid w-9 cursor-pointer place-items-center text-base-content/40 transition-colors hover:text-base-content focus-visible:text-base-content\" onclick=\"togglePasswordVisibility(this)\" aria-label=\"Toggle password visibility\">")

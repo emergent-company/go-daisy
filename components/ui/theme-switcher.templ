@@ -41,7 +41,7 @@ templ ThemeSwitcher() {
 	</div>
 	@themeSwitcherScriptOnce.Once() {
 		@templ.Raw(ThemeRuntimeTag(ctx))
-		<script nonce={ templ.GetNonce(ctx) }>
+		<script { nonceAttrs(ctx)... }>
 		(function() {
 			// Palette registry + resolver come from the single source of truth
 			// (ThemeRuntimeJS, injected just above); never re-declare them here.

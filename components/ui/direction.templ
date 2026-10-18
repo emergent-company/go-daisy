@@ -1,6 +1,9 @@
 package ui
 
-import "github.com/emergent-company/go-daisy/devmode"
+import (
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/shared"
+)
 
 // DirectionProps configures a writing-direction scope.
 type DirectionProps struct {
@@ -47,13 +50,10 @@ templ Direction(props ...DirectionProps) {
 //
 // Render it in the page <head> or at the end of <body>; it is idempotent and
 // skips work when the document already has the requested direction.
+//
+// The JS body is assembled in Go: templ does not interpolate `{ ... }` inside
+// <script> blocks, so writing the value into the template body would ship the
+// literal text "{ dir }".
 templ DocumentDirectionScript(dir string) {
-	<script nonce={ templ.GetNonce(ctx) }>
-		(function () {
-			var target = "{ dir }" || 'ltr';
-			if (document.documentElement.getAttribute('dir') !== target) {
-				document.documentElement.setAttribute('dir', target);
-			}
-		})();
-	</script>
+	@templ.Raw(shared.ScriptTag(ctx, documentDirectionJS(dir)))
 }

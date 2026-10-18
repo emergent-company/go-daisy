@@ -340,7 +340,7 @@ func ContextMenu(props ContextMenuProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, " class=\"fixed z-50 hidden min-w-44 max-w-[calc(100vw-1rem)] rounded-box border border-line bg-base-100 p-1 shadow-lg\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, " hidden class=\"fixed z-50 min-w-44 max-w-[calc(100vw-1rem)] rounded-box border border-line bg-base-100 p-1 shadow-lg\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

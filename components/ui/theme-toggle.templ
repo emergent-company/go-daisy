@@ -61,7 +61,7 @@ var themeToggleScriptOnce = templ.NewOnceHandle()
 
 templ themeToggleScript() {
 	@themeToggleScriptOnce.Once() {
-			<script nonce={ templ.GetNonce(ctx) }>
+			<script { nonceAttrs(ctx)... }>
 		gdOnce('themeToggleInit', function () {
 
 		  window.themeToggleAnimated = function(cb) {

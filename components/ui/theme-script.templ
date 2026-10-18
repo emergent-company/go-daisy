@@ -68,7 +68,7 @@ func ThemeRuntimeJS() string {
 // invalid inside <head>.
 templ ThemeScript() {
 	@templ.Raw(ThemeRuntimeTag(ctx))
-	<script nonce={ templ.GetNonce(ctx) }>
+	<script { nonceAttrs(ctx)... }>
 	(function() {
 		try {
 			var rt = window.__goDaisyTheme;

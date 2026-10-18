@@ -169,7 +169,7 @@ func pageSizeOptionsJSON(opts []int) string {
 
 templ dataTableAlpineScript(id string) {
 	@dataTableScriptOnce.Once() {
-		<script nonce={ templ.GetNonce(ctx) }>
+		<script { nonceAttrs(ctx)... }>
 	gdOnce('dataTableInit', function () {
 
 	  window.dataTable = function() {

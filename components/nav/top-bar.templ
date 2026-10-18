@@ -38,7 +38,7 @@ templ TopBar(props TopBarProps) {
 
 templ topbarScrollScript() {
 	@topbarScrollOnce.Once() {
-		<script nonce={ templ.GetNonce(ctx) }>
+		<script { nonceAttrs(ctx)... }>
 	gdOnce('topbarScrollInit', function () {
 
 	  var topbar = document.getElementById('_scroll-topbar');

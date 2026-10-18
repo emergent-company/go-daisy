@@ -60,7 +60,7 @@ templ Sidebar(appName string, groups []SidebarGroup, logo ...templ.Component) {
 		</div>
 	</div>
 	@sidebarScriptOnce.Once() {
-		<script nonce={ templ.GetNonce(ctx) }>
+		<script { nonceAttrs(ctx)... }>
 		gdOnce('sidebarInit', function () {
 			var sidebar = document.getElementById('_layout-sidebar');
 			if (!sidebar) return;

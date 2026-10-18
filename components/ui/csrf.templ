@@ -18,7 +18,7 @@ templ CSRFMeta(token string) {
 // once per page, typically in layout.Page.
 templ CSRFAutoInject() {
 	@csrfScriptOnce.Once() {
-		<script nonce={ templ.GetNonce(ctx) } { devmode.Attrs(ctx, "ui/CSRFAutoInject")... }>
+		<script { nonceAttrs(ctx)... } { devmode.Attrs(ctx, "ui/CSRFAutoInject")... }>
 	document.addEventListener('htmx:config:request', function(event) {
 		var token = document.querySelector('meta[name="csrf-token"]')?.content;
 		if (token && event.detail?.ctx) event.detail.ctx.request.headers['X-CSRF-TOKEN'] = token;

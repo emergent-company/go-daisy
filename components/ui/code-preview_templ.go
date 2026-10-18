@@ -227,20 +227,15 @@ func CodePreview(tabs []CodeTab) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<script nonce=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<script")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var13 string
-			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.GetNonce(ctx))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/code-preview.templ`, Line: 50, Col: 37}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
+			templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, nonceAttrs(ctx))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\">\n\t\tgdOnce('cpCopyLoaded', function () {\n\t\t\tfunction cpShowCopied(btn) {\n\t\t\t\tbtn._origTip = btn._origTip || btn.getAttribute('data-tip');\n\t\t\t\tbtn.setAttribute('data-tip', 'Copied!');\n\t\t\t\tsetTimeout(function() { btn.setAttribute('data-tip', btn._origTip || 'Copy'); }, 2000);\n\t\t\t}\n\t\t\twindow.copyCode = function(btn) {\n\t\t\t\tvar c = btn.parentElement;\n\t\t\t\tvar r = c.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\tvar el;\n\t\t\t\tif (r) {\n\t\t\t\t\tel = r.nextElementSibling && r.nextElementSibling.querySelector('code');\n\t\t\t\t} else {\n\t\t\t\t\tel = c.querySelector('code');\n\t\t\t\t}\n\t\t\t\tif (!el) return;\n\t\t\t\tvar t = el.innerText;\n\t\t\t\tif (navigator.clipboard && navigator.clipboard.writeText) {\n\t\t\t\t\tnavigator.clipboard.writeText(t).then(function() { cpShowCopied(btn); }).catch(function() {});\n\t\t\t\t} else {\n\t\t\t\t\tvar ta = document.createElement('textarea');\n\t\t\t\t\tta.value = t;\n\t\t\t\t\tta.style.position = 'fixed';\n\t\t\t\t\tta.style.left = '-9999px';\n\t\t\t\t\tdocument.body.appendChild(ta);\n\t\t\t\t\tta.select();\n\t\t\t\t\ttry { document.execCommand('copy'); cpShowCopied(btn); } catch(e) {}\n\t\t\t\t\tdocument.body.removeChild(ta);\n\t\t\t\t}\n\t\t\t};\n\t\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, ">\n\t\tgdOnce('cpCopyLoaded', function () {\n\t\t\tfunction cpShowCopied(btn) {\n\t\t\t\tbtn._origTip = btn._origTip || btn.getAttribute('data-tip');\n\t\t\t\tbtn.setAttribute('data-tip', 'Copied!');\n\t\t\t\tsetTimeout(function() { btn.setAttribute('data-tip', btn._origTip || 'Copy'); }, 2000);\n\t\t\t}\n\t\t\twindow.copyCode = function(btn) {\n\t\t\t\tvar c = btn.parentElement;\n\t\t\t\tvar r = c.querySelector('input[type=\"radio\"]:checked');\n\t\t\t\tvar el;\n\t\t\t\tif (r) {\n\t\t\t\t\tel = r.nextElementSibling && r.nextElementSibling.querySelector('code');\n\t\t\t\t} else {\n\t\t\t\t\tel = c.querySelector('code');\n\t\t\t\t}\n\t\t\t\tif (!el) return;\n\t\t\t\tvar t = el.innerText;\n\t\t\t\tif (navigator.clipboard && navigator.clipboard.writeText) {\n\t\t\t\t\tnavigator.clipboard.writeText(t).then(function() { cpShowCopied(btn); }).catch(function() {});\n\t\t\t\t} else {\n\t\t\t\t\tvar ta = document.createElement('textarea');\n\t\t\t\t\tta.value = t;\n\t\t\t\t\tta.style.position = 'fixed';\n\t\t\t\t\tta.style.left = '-9999px';\n\t\t\t\t\tdocument.body.appendChild(ta);\n\t\t\t\t\tta.select();\n\t\t\t\t\ttry { document.execCommand('copy'); cpShowCopied(btn); } catch(e) {}\n\t\t\t\t\tdocument.body.removeChild(ta);\n\t\t\t\t}\n\t\t\t};\n\t\t});\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

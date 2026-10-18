@@ -93,7 +93,8 @@ templ ContextMenu(props ContextMenuProps) {
 			if props.ID != "" {
 				id={ props.ID }
 			}
-			class="fixed z-50 hidden min-w-44 max-w-[calc(100vw-1rem)] rounded-box border border-line bg-base-100 p-1 shadow-lg"
+			hidden
+			class="fixed z-50 min-w-44 max-w-[calc(100vw-1rem)] rounded-box border border-line bg-base-100 p-1 shadow-lg"
 		>
 			for _, item := range props.Items {
 				if item.Divider {

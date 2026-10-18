@@ -70,7 +70,7 @@ templ WizardStepper(id string, steps []WizardStep, panels []WizardStepPanel) {
 
 templ wizardScript(id string, total int) {
 	@wizardScriptOnce.Once() {
-		<script nonce={ templ.GetNonce(ctx) }>
+		<script { nonceAttrs(ctx)... }>
 	(function() {
 	  var wid = { templ.JSONString(id) };
 	  var current = 1, total = { templ.JSONString(strconv.Itoa(total)) } * 1;

@@ -287,10 +287,6 @@
       }
     });
 
-    document.addEventListener('click', function (e) {
-      if (!root.contains(e.target)) close(root, false);
-    });
-
     // Reflect the CSS-driven open state (DaisyUI opens on :focus-within), but
     // never while the explicit closed marker is set — that is what makes
     // Escape-then-restore-focus actually stay closed.
@@ -328,6 +324,16 @@
     window.__gdMenuBound = true;
     document.addEventListener('htmx:after:settle', gdMenu.rescan);
     document.addEventListener('htmx:afterSettle', gdMenu.rescan);
+
+    // One delegated click listener for every menu root. Registering this per
+    // root would leak a listener (and a detached DOM reference) on every htmx
+    // swap that re-renders a dropdown.
+    document.addEventListener('click', function (event) {
+      var inside = event.target.closest && event.target.closest('[data-gd-menu-root]');
+      Array.prototype.forEach.call(document.querySelectorAll('[data-gd-menu-root]'), function (root) {
+        if (root !== inside) close(root, false);
+      });
+    });
     document.addEventListener('DOMContentLoaded', gdMenu.rescan);
     // Also wire immediately: a component script injected after DOMContentLoaded
     // (partial swap, lazy chunk) would otherwise never see its rescan run.

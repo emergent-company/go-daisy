@@ -238,3 +238,51 @@ func TestThemeRuntimeTagNonce(t *testing.T) {
 		t.Errorf("nonce missing, got: %.40s", nonced)
 	}
 }
+
+// TestContextMenuStartsHidden pins the visibility mechanism. The menu is a
+// fixed-position list that must stay out of the layout until opened; the runtime
+// toggles the `hidden` attribute, so a static Tailwind `hidden` class (which the
+// JS cannot remove) would make the menu impossible to open.
+func TestContextMenuStartsHidden(t *testing.T) {
+	got := renderUI(t, ContextMenu(ContextMenuProps{
+		Items: []ContextMenuItem{{Label: "Open", Href: "#"}},
+	}))
+	start := strings.Index(got, "<ul")
+	if start < 0 {
+		t.Fatalf("no menu list in output:\n%s", got)
+	}
+	end := strings.Index(got[start:], ">")
+	if end < 0 {
+		t.Fatalf("unterminated menu tag:\n%s", got)
+	}
+	tag := got[start : start+end]
+
+	if !strings.Contains(tag, " hidden") && !strings.Contains(tag, "\thidden") {
+		t.Errorf("menu must start with the hidden attribute: %s", tag)
+	}
+	if classStart := strings.Index(tag, "class=\""); classStart >= 0 {
+		classEnd := strings.Index(tag[classStart:], "\"")
+		class := tag[classStart : classStart+classEnd]
+		for _, token := range strings.Fields(class) {
+			if token == "hidden" {
+				t.Errorf("menu must not use the static Tailwind hidden class: %s", class)
+			}
+		}
+	}
+}
+
+// TestDocumentDirectionScriptInterpolatesDir guards against templ's rule that
+// <script> bodies are not interpolated: building the body in the template once
+// shipped the literal text "{ dir }" and silently never set the direction.
+func TestDocumentDirectionScriptInterpolatesDir(t *testing.T) {
+	got := renderUI(t, DocumentDirectionScript("rtl"))
+	if !strings.Contains(got, `var target="rtl"`) {
+		t.Errorf("direction value was not interpolated:\n%s", got)
+	}
+	if strings.Contains(got, "{ dir }") {
+		t.Errorf("template expression leaked into the script body:\n%s", got)
+	}
+	if strings.Contains(got, `nonce=""`) {
+		t.Errorf("empty nonce must be omitted, got:\n%s", got)
+	}
+}

@@ -476,7 +476,7 @@ func mergeMaps(base, overlay map[string]any) map[string]any {
 
 templ apexChartScript() {
 	@chartScriptOnce.Once() {
-		<script nonce={ templ.GetNonce(ctx) }>
+		<script { nonceAttrs(ctx)... }>
 	(function () {
 	  window.initApexChart = function(el) {
 	    if (typeof ApexCharts === 'undefined') {
