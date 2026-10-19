@@ -1,0 +1,128 @@
+package ui
+
+// RunMarkerPhase is a run boundary phase.
+type RunMarkerPhase string
+
+const (
+	RunMarkerStart RunMarkerPhase = "start"
+	RunMarkerEnd   RunMarkerPhase = "end"
+)
+
+// RunMarkerStatus is the terminal or current status of an agent run.
+type RunMarkerStatus string
+
+const (
+	RunMarkerWorking       RunMarkerStatus = "working"
+	RunMarkerCompleted     RunMarkerStatus = "completed"
+	RunMarkerFailed        RunMarkerStatus = "failed"
+	RunMarkerInputRequired RunMarkerStatus = "input-required"
+	RunMarkerCancelled     RunMarkerStatus = "cancelled"
+)
+
+// RunMarkerProps configures a run boundary marker.
+type RunMarkerProps struct {
+	Phase  RunMarkerPhase
+	Status RunMarkerStatus
+	// Model is shown as a chip on a start marker.
+	Model string
+	// Error is shown in the failed-run banner.
+	Error string
+	// Class is appended to the root class list.
+	Class string
+	// Attrs are spread last on the root element.
+	Attrs templ.Attributes
+}
+
+// RunMarker renders a typed run boundary: a faint divider for normal runs and
+// a full alert banner for failures.
+templ RunMarker(props RunMarkerProps) {
+	{{
+		phase := props.Phase
+		if phase == "" {
+			phase = RunMarkerStart
+		}
+	}}
+	if phase == RunMarkerEnd && (props.Status == RunMarkerFailed || props.Status == "error") {
+		<div
+			role="alert"
+			class={ "my-2 flex w-full items-start gap-2.5 rounded-box border border-error/40 bg-error/10 px-3.5 py-3", props.Class }
+			data-phase={ string(phase) }
+			data-status={ string(props.Status) }
+			{ agenticAttrs(ctx, "ui/RunMarker", props.Attrs)... }
+		>
+			<span class="mt-0.5 flex shrink-0">
+				@IconSpan("lucide--circle-alert", "size-4 text-error")
+			</span>
+			<div class="min-w-0">
+				<p class="text-sm font-semibold text-error">Run failed</p>
+				<p class="mt-0.5 whitespace-pre-wrap break-words text-xs leading-relaxed text-body">
+					{ runMarkerError(props.Error) }
+				</p>
+			</div>
+		</div>
+	} else {
+		<div
+			class={ "my-1 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide text-faint", props.Class }
+			data-phase={ string(phase) }
+			data-status={ string(props.Status) }
+			{ agenticAttrs(ctx, "ui/RunMarker", props.Attrs)... }
+		>
+			<span class="h-px flex-1 bg-base-content/10" aria-hidden="true"></span>
+			<span class="flex items-center gap-1.5">
+				@IconSpan(runMarkerIcon(phase, props.Status), "size-3.5")
+				<span>{ runMarkerLabel(phase, props.Status) }</span>
+			</span>
+			if phase == RunMarkerStart && props.Model != "" {
+				<span class="rounded-field bg-base-content/8 px-1.5 py-0.5 font-mono text-[11px] normal-case tracking-normal text-muted">{ props.Model }</span>
+			}
+			<span class="h-px flex-1 bg-base-content/10" aria-hidden="true"></span>
+		</div>
+	}
+}
+
+func runMarkerIcon(phase RunMarkerPhase, status RunMarkerStatus) string {
+	if phase == RunMarkerStart {
+		return "lucide--play"
+	}
+	switch status {
+	case RunMarkerFailed:
+		return "lucide--circle-alert"
+	case RunMarkerInputRequired:
+		return "lucide--pause"
+	case RunMarkerCancelled:
+		return "lucide--ban"
+	case RunMarkerCompleted:
+		return "lucide--circle-check"
+	case RunMarkerWorking:
+		return "lucide--loader-circle"
+	default:
+		return "lucide--circle-dot"
+	}
+}
+
+func runMarkerLabel(phase RunMarkerPhase, status RunMarkerStatus) string {
+	if phase == RunMarkerStart {
+		return "Run started"
+	}
+	switch status {
+	case RunMarkerFailed:
+		return "Run failed"
+	case RunMarkerInputRequired:
+		return "Waiting on you"
+	case RunMarkerCancelled:
+		return "Run cancelled"
+	case RunMarkerCompleted:
+		return "Run complete"
+	case RunMarkerWorking:
+		return "Running"
+	default:
+		return "Run ended"
+	}
+}
+
+func runMarkerError(message string) string {
+	if message == "" {
+		return "The agent run failed."
+	}
+	return message
+}

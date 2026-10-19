@@ -38,11 +38,23 @@ galleryruntime.GalleryComponent{
     Subcategory string              // Groups components under a heading within a category
     FrameHeight string              // iframe height, e.g. "300px", "100vh" (default: "400px")
     Tokens      []galleryruntime.DesignToken  // Design token controls (see below)
+    Docs        string              // Optional Markdown docs shown in a "Docs" tab (empty hides the tab)
+    HidePreview bool                // Suppress Interactive/Examples tabs for components with no visual output
 
     // Multiple named variants (Storybook-style):
     Variants    []galleryruntime.GalleryStory
 }
 ```
+
+> **Docs tab:** set `Docs` to a Markdown string (GitHub Flavored Markdown — tables,
+> strikethrough, task lists) to add a "Docs" tab to the component's detail page. It
+> is rendered server-side; raw HTML in the Markdown is escaped. Leave empty to hide
+> the tab. Use it for setup notes, emitted assets, usage snippets, and gotchas.
+>
+> **No visual preview:** set `HidePreview: true` for components that emit no rendered
+> UI (head-tag or utility emitters). This hides the Interactive and Examples tabs and
+> their iframes. If `Docs` is also set, the Docs tab is shown active by default;
+> otherwise a muted "No visual preview" placeholder is shown.
 
 ### Category constants
 

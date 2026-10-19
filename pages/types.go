@@ -36,6 +36,14 @@ type DashboardPageProps struct {
 // DashboardProps is an alias for DashboardPageProps (used in the template).
 type DashboardProps = DashboardPageProps
 
+// AgenticChatProps configures the agentic chat sample page.
+type AgenticChatProps struct {
+	AgentName    string
+	AgentRole    string
+	Model        string
+	SessionTitle string
+}
+
 // LandingPageProps configures a landing page.
 type LandingPageProps struct {
 	BrandName string

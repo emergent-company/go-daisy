@@ -45,6 +45,116 @@ func mustJSON(v any) []byte {
 // ComponentDetail renders the detail view for a single gallery component.
 // Includes the component name, description, category badge, and a sandboxed iframe preview.
 templ ComponentDetail(c GalleryComponent) {
+	<!-- Docs prose styles are scoped to .gallery-docs. Markdown HTML is rendered
+	     at runtime so Tailwind cannot scan it — use daisyUI CSS vars directly so
+	     it tracks the active theme (nord / dracula). -->
+	<style>
+		.gallery-docs {
+			color: var(--color-base-content);
+			font-size: 0.9rem;
+			line-height: 1.7;
+			max-width: 56rem;
+		}
+		.gallery-docs > :first-child { margin-top: 0; }
+		.gallery-docs > :last-child { margin-bottom: 0; }
+		.gallery-docs h1,
+		.gallery-docs h2,
+		.gallery-docs h3,
+		.gallery-docs h4 {
+			color: var(--color-base-content);
+			font-weight: 700;
+			line-height: 1.3;
+			margin: 1.5em 0 0.5em;
+		}
+		.gallery-docs h1 {
+			font-size: 1.6rem;
+			border-bottom: 1px solid var(--color-base-300);
+			padding-bottom: 0.3em;
+		}
+		.gallery-docs h2 {
+			font-size: 1.3rem;
+			border-bottom: 1px solid var(--color-base-300);
+			padding-bottom: 0.25em;
+		}
+		.gallery-docs h3 { font-size: 1.1rem; }
+		.gallery-docs h4 { font-size: 1rem; }
+		.gallery-docs p { margin: 0.75em 0; }
+		.gallery-docs a {
+			color: var(--color-primary);
+			text-decoration: underline;
+			text-underline-offset: 2px;
+		}
+		.gallery-docs a:hover { opacity: 0.8; }
+		.gallery-docs ul,
+		.gallery-docs ol {
+			margin: 0.75em 0;
+			padding-left: 1.5em;
+		}
+		.gallery-docs ul { list-style: disc; }
+		.gallery-docs ol { list-style: decimal; }
+		.gallery-docs li { margin: 0.25em 0; }
+		.gallery-docs li::marker {
+			color: color-mix(in oklab, var(--color-base-content) 60%, transparent);
+		}
+		.gallery-docs code {
+			font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+			font-size: 0.82em;
+			background: var(--color-base-200);
+			border: 1px solid var(--color-base-300);
+			padding: 0.1em 0.35em;
+			border-radius: 0.35rem;
+		}
+		.gallery-docs pre {
+			background: var(--color-base-200);
+			border: 1px solid var(--color-base-300);
+			border-radius: 0.75rem;
+			padding: 1rem;
+			overflow-x: auto;
+			margin: 1em 0;
+		}
+		.gallery-docs pre code {
+			background: transparent;
+			border: none;
+			padding: 0;
+			font-size: 0.82rem;
+		}
+		.gallery-docs blockquote {
+			border-left: 3px solid var(--color-primary);
+			background: var(--color-base-200);
+			color: color-mix(in oklab, var(--color-base-content) 75%, transparent);
+			margin: 1em 0;
+			padding: 0.5em 1em;
+			border-radius: 0 0.5rem 0.5rem 0;
+		}
+		.gallery-docs blockquote > :first-child { margin-top: 0; }
+		.gallery-docs blockquote > :last-child { margin-bottom: 0; }
+		.gallery-docs table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 1em 0;
+			font-size: 0.85rem;
+		}
+		.gallery-docs th,
+		.gallery-docs td {
+			border: 1px solid var(--color-base-300);
+			padding: 0.5em 0.75em;
+			text-align: left;
+			vertical-align: top;
+		}
+		.gallery-docs th {
+			background: var(--color-base-200);
+			font-weight: 600;
+		}
+		.gallery-docs hr {
+			border: none;
+			border-top: 1px solid var(--color-base-300);
+			margin: 2em 0;
+		}
+		.gallery-docs img {
+			max-width: 100%;
+			border-radius: 0.5rem;
+		}
+	</style>
 	<div class="flex flex-col p-4 gap-3">
 		<!-- Header -->
 		<div class="flex items-start justify-between gap-3">
@@ -72,29 +182,53 @@ templ ComponentDetail(c GalleryComponent) {
 		if len(interactiveVariants) == 0 {
 			interactiveVariants = c.EffectiveVariants()
 		}
+		// docsBodyStyle keeps the Docs body visible by default for preview-less
+		// components (HidePreview) and hidden otherwise.
+		docsBodyStyle := "display:none"
+		if c.HidePreview {
+			docsBodyStyle = ""
+		}
 	}}
-	<div class="tabs tabs-border mb-1" id="variant-tabs" role="tablist">
-		for i, v := range interactiveVariants {
-			// Determine effective tokens for this variant: story tokens take precedence over component tokens.
-			// Encode as JSON for the switchVariant JS so it can re-render the token panel client-side.
-			if tokensJSON, err := json.Marshal(func() []DesignToken { if len(v.Tokens) > 0 { return v.Tokens }; return c.Tokens }()); err == nil {
+	if c.HidePreview && c.Docs == "" {
+		<!-- No visual preview and no docs: show a muted placeholder instead of an empty tablist -->
+		<div class="rounded-xl border border-base-200 bg-base-200/40 p-4 flex items-center gap-2 text-sm text-muted">
+			<span class="iconify lucide--info size-4 shrink-0"></span>
+			<span>No visual preview — this component has no rendered UI.</span>
+		</div>
+	} else {
+		<div class="tabs tabs-border mb-1" id="variant-tabs" role="tablist">
+			if !c.HidePreview {
+				for i, v := range interactiveVariants {
+					// Determine effective tokens for this variant: story tokens take precedence over component tokens.
+					// Encode as JSON for the switchVariant JS so it can re-render the token panel client-side.
+					if tokensJSON, err := json.Marshal(func() []DesignToken { if len(v.Tokens) > 0 { return v.Tokens }; return c.Tokens }()); err == nil {
+						<button
+							role="tab"
+							class={ "tab", templ.KV("tab-active", i == 0) }
+							data-variant-slug={ SlugifyStoryName(v.Name) }
+							data-slug={ c.Slug }
+							data-tokens={ string(tokensJSON) }
+							onclick="switchVariant(this)"
+						>{ func() string { if i == 0 { return "Interactive" }; return v.Name }() }</button>
+					}
+				}
+				<!-- Always-present Examples tab: shows stacked preview of all stories -->
 				<button
 					role="tab"
-					class={ "tab", templ.KV("tab-active", i == 0) }
-					data-variant-slug={ SlugifyStoryName(v.Name) }
-					data-slug={ c.Slug }
-					data-tokens={ string(tokensJSON) }
-					onclick="switchVariant(this)"
-				>{ func() string { if i == 0 { return "Interactive" }; return v.Name }() }</button>
+					class="tab"
+					onclick="switchToExamples(this)"
+				>Examples</button>
 			}
-		}
-		<!-- Always-present Examples tab: shows stacked preview of all stories -->
-		<button
-			role="tab"
-			class="tab"
-			onclick="switchToExamples(this)"
-		>Examples</button>
-	</div>
+			if c.Docs != "" {
+				<!-- Docs tab: renders Component.Docs Markdown. Active by default for preview-less components. -->
+				<button
+					role="tab"
+					class={ "tab", templ.KV("tab-active", c.HidePreview) }
+					onclick="switchToDocs(this)"
+				>Docs</button>
+			}
+		</div>
+	}
 	<script { nonceAttrs(ctx)... }>
 	window.switchVariant = function(btn) {
 		var slug = btn.getAttribute('data-slug');
@@ -103,8 +237,10 @@ templ ComponentDetail(c GalleryComponent) {
 		// Restore interactive view if we were on Examples
 		var interactiveBody = document.getElementById('interactive-body');
 		var examplesBody = document.getElementById('examples-body');
+		var docsBody = document.getElementById('docs-body');
 		if (interactiveBody) interactiveBody.style.display = '';
 		if (examplesBody) examplesBody.style.display = 'none';
+		if (docsBody) docsBody.style.display = 'none';
 		// Update iframe src (clear any query params from previous interactive state)
 		var frame = document.getElementById('preview-frame');
 		if (frame) frame.src = baseURL;
@@ -125,8 +261,10 @@ templ ComponentDetail(c GalleryComponent) {
 	window.switchToExamples = function(btn) {
 		var interactiveBody = document.getElementById('interactive-body');
 		var examplesBody = document.getElementById('examples-body');
+		var docsBody = document.getElementById('docs-body');
 		if (interactiveBody) interactiveBody.style.display = 'none';
 		if (examplesBody) examplesBody.style.display = '';
+		if (docsBody) docsBody.style.display = 'none';
 		// Update tab active state
 		var tabs = btn.closest('[role="tablist"]').querySelectorAll('[role="tab"]');
 		tabs.forEach(function(t) { t.classList.remove('tab-active'); });
@@ -150,8 +288,21 @@ templ ComponentDetail(c GalleryComponent) {
 			});
 		});
 	};
+	window.switchToDocs = function(btn) {
+		var interactiveBody = document.getElementById('interactive-body');
+		var examplesBody = document.getElementById('examples-body');
+		var docsBody = document.getElementById('docs-body');
+		if (interactiveBody) interactiveBody.style.display = 'none';
+		if (examplesBody) examplesBody.style.display = 'none';
+		if (docsBody) docsBody.style.display = '';
+		// Update tab active state
+		var tabs = btn.closest('[role="tablist"]').querySelectorAll('[role="tab"]');
+		tabs.forEach(function(t) { t.classList.remove('tab-active'); });
+		btn.classList.add('tab-active');
+	};
 	</script>
 
+	if !c.HidePreview {
 		<!-- Interactive body: single-story preview + tokens (hidden when Examples tab active) -->
 		<div id="interactive-body">
 
@@ -244,6 +395,14 @@ templ ComponentDetail(c GalleryComponent) {
 		<div id="examples-body" style="display:none">
 			@ComponentExamples(c)
 		</div>
+	}
+
+		if c.Docs != "" {
+			<!-- Docs body: rendered Markdown (visible by default for preview-less components, hidden otherwise) -->
+			<div id="docs-body" style={ docsBodyStyle } class="gallery-docs">
+				@templ.Raw(renderMarkdown(c.Docs))
+			</div>
+		}
 
 	</div>
 
@@ -518,6 +677,19 @@ templ ComponentDetail(c GalleryComponent) {
 					panel.classList.add('hidden');
 					return;
 				}
+
+				// Skip the rebuild when the exact same token set is already rendered.
+				// Rebuilding replaces the input nodes via innerHTML, which destroys the
+				// focused element — the cause of focus loss after the first keystroke.
+				var sig = qpTokens.map(function(t) {
+					return [t.QueryParam||'', t.Type||'', t.Group||'', t.Default||'', t.Min, t.Max, t.Step].join(':');
+				}).join('|');
+				if (body.getAttribute('data-token-sig') === sig) {
+					panel.classList.remove('hidden');
+					panel.style.display = '';
+					return;
+				}
+				body.setAttribute('data-token-sig', sig);
 
 				// Group by Group field
 				var order = [], byName = {};
@@ -936,6 +1108,48 @@ templ ComponentDetail(c GalleryComponent) {
 	var isHidden = el.classList.toggle('hidden');
 };
 
+	// Preserve editor focus/caret across DOM rebuilds triggered by the preview iframe
+	// posting a fresh tree on every reload. Without this, typing in a params or prop
+	// input loses focus after the first character.
+	function captureEditorFocus() {
+		var ae = document.activeElement;
+		if (!ae || !ae.tagName) return null;
+		var paramsBody = document.getElementById('tree-params-body');
+		var treeBody   = document.getElementById('component-tree-body');
+		var row, scope, key;
+		if (paramsBody && paramsBody.contains(ae)) {
+			row = ae.closest('[data-query-param]');
+			scope = 'params'; key = row && row.getAttribute('data-query-param');
+		} else if (treeBody && treeBody.contains(ae)) {
+			row = ae.closest('[data-prop-key]');
+			scope = 'tree'; key = row && row.getAttribute('data-prop-key');
+		} else {
+			return null;
+		}
+		if (!key) return null;
+		return { scope: scope, key: key, start: ae.selectionStart, end: ae.selectionEnd };
+	}
+
+	function restoreEditorFocus(f) {
+		if (!f) return;
+		var scopeSel = f.scope === 'params' ? '#tree-params-body' : '#component-tree-body';
+		var attr = f.scope === 'params' ? 'data-query-param' : 'data-prop-key';
+		var row;
+		try {
+			row = document.querySelector(scopeSel + ' [' + attr + '="' + f.key + '"]');
+		} catch(e) { return; }
+		if (!row) return;
+		var input = row.querySelector('input, select, textarea');
+		if (!input) return;
+		input.focus();
+		try {
+			if (f.start != null && input.setSelectionRange &&
+				input.type !== 'checkbox' && input.type !== 'select-one') {
+				input.setSelectionRange(f.start, f.end);
+			}
+		} catch(e) {}
+	}
+
 	window._treeReceivedOnce = false;
 	function handleTreeMessage(e) {
 		if (!e.data || e.data.type !== '__dev_component_tree__') return;
@@ -946,6 +1160,7 @@ templ ComponentDetail(c GalleryComponent) {
 		var panel = document.getElementById('component-tree-panel');
 		var body  = document.getElementById('component-tree-body');
 		if (!panel || !body) return;
+		var focus = captureEditorFocus();
 		if (tree.length > 0) {
 			panel.classList.remove('hidden');
 			// Render the params section using the active variant's tokens.
@@ -988,6 +1203,7 @@ templ ComponentDetail(c GalleryComponent) {
 		} else {
 			body.innerHTML = renderTree(tree, {});
 		}
+		restoreEditorFocus(focus);
 	}
 
 	if (window.__treeMsgHandler) window.removeEventListener('message', window.__treeMsgHandler);

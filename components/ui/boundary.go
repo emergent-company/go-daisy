@@ -1843,3 +1843,74 @@ func NavigationMenuWithBoundary() templ.Component {
 	)
 	return devmode.ComponentBoundary("NavigationMenu", inner, NavigationMenuProps{})
 }
+
+// MarkdownWithBoundary wraps Markdown with a dev-mode component boundary annotation.
+// gallery:token source
+// gallery:hint source:default(**Hello** from go-daisy)
+func MarkdownWithBoundary(source string) templ.Component {
+	return devmode.ComponentBoundary("Markdown", Markdown(MarkdownProps{Source: source}), map[string]any{"source": source})
+}
+
+// ThinkingBlockWithBoundary wraps ThinkingBlock with a dev-mode component boundary annotation.
+// gallery:token role,open,live,text
+// gallery:hint text:default(I should search the knowledge graph, then cluster the results by root cause.)
+func ThinkingBlockWithBoundary(props ThinkingBlockProps) templ.Component {
+	return devmode.ComponentBoundary("ThinkingBlock", ThinkingBlock(props), props)
+}
+
+// ToolCallChipWithBoundary wraps ToolCallChip with a dev-mode component boundary annotation.
+// gallery:token name,status,summary,open
+// gallery:hint name:default(search-knowledge)
+// gallery:hint summary:default(12 results matched the filter.)
+func ToolCallChipWithBoundary(props ToolCallProps) templ.Component {
+	return devmode.ComponentBoundary("ToolCallChip", ToolCallChip(props), props)
+}
+
+// RunMarkerWithBoundary wraps RunMarker with a dev-mode component boundary annotation.
+// gallery:token phase,status,model,error
+// gallery:hint model:default(claude-sonnet-4.5)
+func RunMarkerWithBoundary(props RunMarkerProps) templ.Component {
+	return devmode.ComponentBoundary("RunMarker", RunMarker(props), props)
+}
+
+// ApprovalCardWithBoundary wraps ApprovalCard with a dev-mode component boundary annotation.
+// gallery:token tool,message,risk,readOnly
+// gallery:hint tool:default(run-cypher-query)
+func ApprovalCardWithBoundary(props ApprovalCardProps) templ.Component {
+	return devmode.ComponentBoundary("ApprovalCard", ApprovalCard(props), props)
+}
+
+// AgentQuestionCardWithBoundary wraps AgentQuestionCard with a dev-mode component boundary annotation.
+// gallery:token prompt,multi,allowFreeform
+// gallery:hint prompt:default(Which quarter should I compare against?)
+func AgentQuestionCardWithBoundary(props AgentQuestionCardProps) templ.Component {
+	return devmode.ComponentBoundary("AgentQuestionCard", AgentQuestionCard(props), props)
+}
+
+// AgentTodoCardWithBoundary wraps AgentTodoCard with a dev-mode component boundary annotation.
+// gallery:token title,open
+// gallery:hint title:default(Plan)
+func AgentTodoCardWithBoundary(props AgentTodoCardProps) templ.Component {
+	return devmode.ComponentBoundary("AgentTodoCard", AgentTodoCard(props), props)
+}
+
+// TurnFooterWithBoundary wraps TurnFooter with a dev-mode component boundary annotation.
+// gallery:token model,duration,timestamp,showCopy
+// gallery:hint model:default(claude-sonnet-4.5)
+func TurnFooterWithBoundary(props TurnFooterProps) templ.Component {
+	return devmode.ComponentBoundary("TurnFooter", TurnFooter(props), props)
+}
+
+// SourceListWithBoundary wraps SourceList with a dev-mode component boundary annotation.
+// gallery:token title
+// gallery:hint title:default(Sources)
+func SourceListWithBoundary(props SourceListProps) templ.Component {
+	return devmode.ComponentBoundary("SourceList", SourceList(props), props)
+}
+
+// ChatComposerWithBoundary wraps ChatComposer with a dev-mode component boundary annotation.
+// gallery:token placeholder,loading,showAttach,showVoice
+// gallery:hint placeholder:default(Ask Memory anything...)
+func ChatComposerWithBoundary(props ChatComposerProps) templ.Component {
+	return devmode.ComponentBoundary("ChatComposer", ChatComposer(props), props)
+}

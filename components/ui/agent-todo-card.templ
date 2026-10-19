@@ -1,0 +1,105 @@
+package ui
+
+import "strconv"
+
+// AgentTodoStatus is the state of one plan item.
+type AgentTodoStatus string
+
+const (
+	AgentTodoPending    AgentTodoStatus = "pending"
+	AgentTodoInProgress AgentTodoStatus = "in_progress"
+	AgentTodoCompleted  AgentTodoStatus = "completed"
+)
+
+// AgentTodoItem is one item in an agent plan.
+type AgentTodoItem struct {
+	Content string
+	Status  AgentTodoStatus
+}
+
+// AgentTodoCardProps configures a collapsible agent plan/todo card.
+type AgentTodoCardProps struct {
+	// Title is the card label. Defaults to "Plan".
+	Title string
+	// Items are the plan items in display order.
+	Items []AgentTodoItem
+	// Open expands the card by default.
+	Open bool
+	// Class is appended to the root details class list.
+	Class string
+	// Attrs are spread last on the root element.
+	Attrs templ.Attributes
+}
+
+// AgentTodoCard renders the agent's plan with per-item status, as a quiet
+// collapsible row that can sit above the transcript.
+templ AgentTodoCard(props AgentTodoCardProps) {
+	{{
+		title := props.Title
+		if title == "" {
+			title = "Plan"
+		}
+	}}
+	@agenticBadge(
+		agenticBadgeProps{
+			Open:  props.Open,
+			Icon:  "lucide--list-todo",
+			Label: title,
+			Class: props.Class,
+			Attrs: agenticAttrs(ctx, "ui/AgentTodoCard", props.Attrs),
+		},
+		Badge(BadgeProps{Label: agentTodoCountLabel(props.Items), Variant: BadgeGhost, Size: BadgeSizeXS}),
+		nil,
+		agentTodoBody(props.Items),
+	)
+}
+
+templ agentTodoBody(items []AgentTodoItem) {
+	if len(items) == 0 {
+		<p class="text-xs text-faint">No plan items yet.</p>
+	} else {
+		<ul class="flex flex-col gap-1.5">
+			for _, item := range items {
+				<li class="flex items-start gap-2 text-sm" data-status={ string(item.Status) }>
+					<span class="mt-0.5 flex shrink-0">
+						@agentTodoStatusIcon(item.Status)
+					</span>
+					<span class={ "min-w-0 grow break-words", templ.KV("text-faint line-through", item.Status == AgentTodoCompleted) }>{ item.Content }</span>
+					<span class="ml-auto shrink-0 text-[10px] font-semibold uppercase tracking-wider text-faint">{ agentTodoStatusLabel(item.Status) }</span>
+				</li>
+			}
+		</ul>
+	}
+}
+
+templ agentTodoStatusIcon(status AgentTodoStatus) {
+	switch status {
+	case AgentTodoCompleted:
+		@IconSpan("lucide--circle-check", "size-4 text-success")
+	case AgentTodoInProgress:
+		@IconSpan("lucide--loader-circle", "size-4 animate-spin text-primary")
+	default:
+		@IconSpan("lucide--circle", "size-4 text-base-content/30")
+	}
+}
+
+func agentTodoStatusLabel(status AgentTodoStatus) string {
+	switch status {
+	case AgentTodoCompleted:
+		return "Done"
+	case AgentTodoInProgress:
+		return "In progress"
+	default:
+		return "Pending"
+	}
+}
+
+func agentTodoCountLabel(items []AgentTodoItem) string {
+	done := 0
+	for _, item := range items {
+		if item.Status == AgentTodoCompleted {
+			done++
+		}
+	}
+	return strconv.Itoa(done) + "/" + strconv.Itoa(len(items)) + " done"
+}

@@ -1,0 +1,109 @@
+package ui
+
+// AgentQuestionOption is one selectable answer in an agent clarification card.
+type AgentQuestionOption struct {
+	Label       string
+	Value       string
+	Description string
+	Selected    bool
+}
+
+// AgentQuestionCardProps configures an inline ask-user question.
+type AgentQuestionCardProps struct {
+	// Prompt is the agent's question.
+	Prompt string
+	// Options are the offered answers. Ignored when empty (freeform only).
+	Options []AgentQuestionOption
+	// Multi allows selecting more than one option.
+	Multi bool
+	// AllowFreeform shows a freeform textarea under the options.
+	AllowFreeform bool
+	// FreeformPlaceholder is the textarea placeholder.
+	FreeformPlaceholder string
+	// Name is the form field name. Defaults to "agent-question".
+	Name string
+	// ReadOnly disables controls and hides the action row.
+	ReadOnly bool
+	// SubmitLabel is the primary action label. Defaults to "Submit".
+	SubmitLabel string
+	// SubmitAttrs are spread on the submit button (htmx/data-action hooks).
+	SubmitAttrs templ.Attributes
+	// SkipAttrs are spread on the skip button.
+	SkipAttrs templ.Attributes
+	// Class is appended to the root class list.
+	Class string
+	// Attrs are spread last on the root element.
+	Attrs templ.Attributes
+}
+
+// AgentQuestionCard renders an agent clarification request with selectable
+// options and an optional freeform answer.
+templ AgentQuestionCard(props AgentQuestionCardProps) {
+	{{
+		name := props.Name
+		if name == "" {
+			name = "agent-question"
+		}
+		submitLabel := props.SubmitLabel
+		if submitLabel == "" {
+			submitLabel = "Submit"
+		}
+	}}
+	<div
+		class={ "rounded-box border border-base-content/10 border-l-[3px] border-l-primary bg-base-100 p-3.5", props.Class }
+		role="group"
+		aria-label="Agent question"
+		{ agenticAttrs(ctx, "ui/AgentQuestionCard", props.Attrs)... }
+	>
+		<div class="flex flex-wrap items-center gap-2">
+			@IconSpan("lucide--message-circle-question", "size-4 text-primary")
+			<h3 class="text-sm font-semibold text-base-content">The agent has a question</h3>
+			<span class="ml-auto text-[11px] font-semibold uppercase tracking-wider text-faint">Needs your input</span>
+		</div>
+		<p class="mt-1.5 text-sm leading-relaxed text-body">{ props.Prompt }</p>
+
+		if len(props.Options) > 0 {
+			<div class="mt-3 flex flex-col gap-1.5" role="group" aria-label="Answer options">
+				for _, option := range props.Options {
+					<label class="flex cursor-pointer items-start gap-2.5 rounded-box border border-base-content/10 px-3 py-2 transition-colors hover:bg-base-200/50 has-[:checked]:border-primary/40 has-[:checked]:bg-primary/5">
+						<input
+							type={ ternary(props.Multi, "checkbox", "radio") }
+							name={ name }
+							value={ option.Value }
+							checked?={ option.Selected }
+							disabled?={ props.ReadOnly }
+							class={ ternary(props.Multi, "checkbox checkbox-sm checkbox-primary mt-0.5", "radio radio-sm radio-primary mt-0.5") }
+						/>
+						<span class="min-w-0">
+							<span class="block text-sm text-base-content">{ option.Label }</span>
+							if option.Description != "" {
+								<span class="mt-0.5 block text-xs text-subtle">{ option.Description }</span>
+							}
+						</span>
+					</label>
+				}
+			</div>
+		}
+
+		if props.AllowFreeform {
+			<textarea
+				name={ name + "-freeform" }
+				rows="2"
+				disabled?={ props.ReadOnly }
+				placeholder={ props.FreeformPlaceholder }
+				class="textarea textarea-bordered mt-3 w-full resize-none text-sm"
+			></textarea>
+		}
+
+		if !props.ReadOnly {
+			<div class="mt-3 flex flex-wrap items-center gap-2">
+				@Button(ButtonProps{Type: ButtonTypeButton, Variant: ButtonGhost, Size: ButtonSM, Attrs: props.SkipAttrs}) {
+					Skip
+				}
+				@Button(ButtonProps{Type: ButtonTypeButton, Variant: ButtonPrimary, Size: ButtonSM, Icon: "lucide--arrow-right", Attrs: props.SubmitAttrs}) {
+					{ submitLabel }
+				}
+			</div>
+		}
+	</div>
+}

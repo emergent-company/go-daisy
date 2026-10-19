@@ -1,0 +1,46 @@
+package ui
+
+// ThinkingBlockProps configures a quiet, expandable reasoning segment.
+type ThinkingBlockProps struct {
+	// Text is the raw reasoning text. It is rendered verbatim in a mono body.
+	Text string
+	// Role is an optional small chip (e.g. "reasoning"). Operator is hidden.
+	Role string
+	// Open expands the block by default.
+	Open bool
+	// Live enables the shimmer/bob "streaming" affordance.
+	Live bool
+	// Class is appended to the root details class list.
+	Class string
+	// Attrs are spread last on the root element.
+	Attrs templ.Attributes
+}
+
+// ThinkingBlock renders the agent's reasoning as a collapsed, secondary row.
+// It is visually distinct from the assistant answer bubble and interleaves with
+// tool-call chips at the point the reasoning happened.
+templ ThinkingBlock(props ThinkingBlockProps) {
+	@agenticBadge(
+		agenticBadgeProps{
+			Open:  props.Open,
+			Live:  props.Live,
+			Icon:  "lucide--brain",
+			Label: "Thinking",
+			Class: props.Class,
+			Attrs: agenticAttrs(ctx, "ui/ThinkingBlock", props.Attrs),
+		},
+		thinkingBlockRole(props.Role),
+		nil,
+		thinkingBlockBody(props),
+	)
+}
+
+templ thinkingBlockRole(role string) {
+	if role != "" && role != "operator" {
+		@Badge(BadgeProps{Label: role, Variant: BadgeGhost, Size: BadgeSizeXS})
+	}
+}
+
+templ thinkingBlockBody(props ThinkingBlockProps) {
+	<p class={ "whitespace-pre-wrap break-words font-mono text-xs leading-relaxed text-label", templ.KV("agentic-live-label", props.Live) }>{ props.Text }</p>
+}

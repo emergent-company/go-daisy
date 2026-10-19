@@ -1,0 +1,85 @@
+package ui
+
+// ApprovalCardProps configures an inline tool-approval request.
+type ApprovalCardProps struct {
+	// Title is the card heading. Defaults to "Approve tool call".
+	Title string
+	// Tool is the tool name shown in code style.
+	Tool string
+	// Message is the sentence above the arguments. Defaults to
+	// "The agent wants to run".
+	Message string
+	// Args is the tool arguments as JSON or text. Hidden when empty.
+	Args string
+	// Risk is an optional risk label (e.g. "write", "high").
+	Risk string
+	// ReadOnly hides the decision buttons and shows a read-only note.
+	ReadOnly bool
+	// ApproveAttrs are spread on the approve button (htmx/data-action hooks).
+	ApproveAttrs templ.Attributes
+	// RejectAttrs are spread on the reject button.
+	RejectAttrs templ.Attributes
+	// Class is appended to the root class list.
+	Class string
+	// Attrs are spread last on the root element.
+	Attrs templ.Attributes
+}
+
+// ApprovalCard renders the agent's pending tool-call decision inline in the
+// transcript: what it wants to run, its arguments, and approve/reject actions.
+templ ApprovalCard(props ApprovalCardProps) {
+	{{
+		title := props.Title
+		if title == "" {
+			title = "Approve tool call"
+		}
+		message := props.Message
+		if message == "" {
+			message = "The agent wants to run"
+		}
+	}}
+	<div
+		class={ "rounded-box border border-base-content/10 border-l-[3px] border-l-warning bg-base-100 p-3.5", props.Class }
+		role="group"
+		aria-label={ title }
+		{ agenticAttrs(ctx, "ui/ApprovalCard", props.Attrs)... }
+	>
+		<div class="flex flex-wrap items-center gap-2">
+			@IconSpan("lucide--shield-alert", "size-4 text-warning")
+			<h3 class="text-sm font-semibold text-base-content">{ title }</h3>
+			if props.Risk != "" {
+				@Badge(BadgeProps{Label: props.Risk, Variant: BadgeWarning, Style: BadgeStyleSoft, Size: BadgeSizeXS})
+			}
+			<span class="ml-auto text-[11px] font-semibold uppercase tracking-wider text-faint">Needs your input</span>
+		</div>
+		<p class="mt-1.5 text-xs leading-relaxed text-muted">
+			{ message }
+			if props.Tool != "" {
+				<code class="rounded-field border border-base-content/10 bg-base-200 px-1.5 py-0.5 font-mono text-xs text-base-content">{ props.Tool }</code><span>.</span>
+			} else {
+				<span>.</span>
+			}
+		</p>
+		if props.Args != "" {
+			<details class="group mt-2">
+				<summary class="flex cursor-pointer list-none items-center gap-1.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-faint hover:text-muted [&::-webkit-details-marker]:hidden">
+					@IconSpan("lucide--chevron-right", "size-3 transition-transform group-open:rotate-90")
+					Arguments
+				</summary>
+				<pre class="mt-1 max-h-40 overflow-auto whitespace-pre-wrap break-words rounded-box border border-base-content/10 bg-base-200/50 p-2.5 font-mono text-xs leading-relaxed">{ props.Args }</pre>
+			</details>
+		}
+		if props.ReadOnly {
+			<p class="mt-3 text-xs text-faint">This request is read-only; no decision is available here.</p>
+		} else {
+			<div class="mt-3 flex flex-wrap items-center gap-2">
+				@Button(ButtonProps{Type: ButtonTypeButton, Variant: ButtonGhost, Size: ButtonSM, Attrs: props.RejectAttrs}) {
+					Reject
+				}
+				@Button(ButtonProps{Type: ButtonTypeButton, Variant: ButtonPrimary, Size: ButtonSM, Icon: "lucide--check", Attrs: props.ApproveAttrs}) {
+					Approve
+				}
+			</div>
+		}
+	</div>
+}

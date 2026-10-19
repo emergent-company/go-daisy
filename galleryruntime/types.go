@@ -128,6 +128,10 @@ type GalleryComponent struct {
 	Subcategory string // optional grouping within a category (e.g. "Buttons", "Modal")
 	Description string
 
+	// Docs is optional Markdown documentation shown in a dedicated "Docs" tab
+	// on the component detail page. Empty string hides the tab.
+	Docs string
+
 	// HidePreview, when true, marks the component as having no previewable
 	// story. It is surfaced in the /api/components summary as hide_preview so
 	// downstream consumers (the panel, MCP) can skip it without rendering it.

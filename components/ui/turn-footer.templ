@@ -1,0 +1,54 @@
+package ui
+
+// TurnFooterProps configures the quiet metadata row under an assistant turn.
+type TurnFooterProps struct {
+	// Model is the model id that produced the turn.
+	Model string
+	// Duration is a preformatted wall-clock duration, e.g. "18.4s".
+	Duration string
+	// Timestamp is a preformatted clock time, e.g. "10:42 AM".
+	Timestamp string
+	// ShowCopy renders a copy-turn button.
+	ShowCopy bool
+	// CopyAttrs are spread on the copy button (clipboard/htmx hooks).
+	CopyAttrs templ.Attributes
+	// Class is appended to the root class list.
+	Class string
+	// Attrs are spread last on the root element.
+	Attrs templ.Attributes
+}
+
+// TurnFooter renders model, duration and timestamp metadata under a message,
+// plus an optional copy action.
+templ TurnFooter(props TurnFooterProps) {
+	<div
+		class={ "flex flex-wrap items-center gap-2 font-mono text-[11px] text-faint", props.Class }
+		{ agenticAttrs(ctx, "ui/TurnFooter", props.Attrs)... }
+	>
+		if props.Model != "" {
+			<span>{ props.Model }</span>
+		}
+		if props.Duration != "" {
+			<span aria-hidden="true">·</span>
+			<span>{ props.Duration }</span>
+		}
+		if props.Timestamp != "" {
+			<span aria-hidden="true">·</span>
+			<span>{ props.Timestamp }</span>
+		}
+		if props.ShowCopy {
+			<span class="ml-1 flex items-center">
+				@Button(ButtonProps{
+					Type:       ButtonTypeButton,
+					Variant:    ButtonGhost,
+					Size:       ButtonXS,
+					Shape:      ButtonShapeCircle,
+					Icon:       "lucide--copy",
+					AriaLabel:  "Copy turn",
+					ExtraClass: "text-faint hover:text-base-content",
+					Attrs:      props.CopyAttrs,
+				})
+			</span>
+		}
+	</div>
+}
