@@ -279,6 +279,12 @@
   --color-accent-content: #f3fbf6;
   --color-neutral: #1e2832;
   --color-neutral-content: #fafcff;
+
+  /* The reference app sets DM Sans as its body and heading face. Without the
+   * family installed the stack falls back to sans-serif, exactly as the
+   * reference does (it ships no @font-face either), so metrics match. */
+  --font-body: "DM Sans", sans-serif;
+  --font-heading: "DM Sans", sans-serif;
   --color-info: #14b4ff;
   --color-info-content: #fff;
   --color-success: #0bbf58;

@@ -82,22 +82,42 @@ templ SidebarCollapsible(icon string, label string, children []templ.Component, 
 	</div>
 }
 
-templ SidebarCollapsibleNexus(icon string, label string, children []templ.Component, open bool) {
+// SidebarCollapsibleNexusProps configures SidebarCollapsibleNexusWithProps.
+type SidebarCollapsibleNexusProps struct {
+	Icon     string
+	Label    string
+	Badge    string // optional pill beside the label (e.g. "New")
+	Children []templ.Component
+	Open     bool
+}
+
+// SidebarCollapsibleNexusWithProps renders a collapsible sidebar group with an
+// optional badge (the reference marks new sections with a coloured "New" pill).
+templ SidebarCollapsibleNexusWithProps(props SidebarCollapsibleNexusProps) {
 	<div class="group collapse" { devmode.Attrs(ctx, "layout/SidebarCollapsibleNexus")... }>
-		<input aria-label="Sidemenu item trigger" class="peer" type="checkbox" name="sidebar-menu-parent-item" { checkedAttr(open) }/>
+		<input aria-label="Sidemenu item trigger" class="peer" type="checkbox" name="sidebar-menu-parent-item" { checkedAttr(props.Open) }/>
 		<div class="collapse-title">
-			if icon != "" {
-				<span class={ "iconify size-4 " + icon }></span>
+			if props.Icon != "" {
+				<span class={ "iconify size-4 " + props.Icon }></span>
 			}
-			<span class="grow">{ label }</span>
+			<span class="grow">{ props.Label }</span>
+			if props.Badge != "" {
+				<div class="inline-flex gap-2">
+					<div class="border-primary/20 bg-primary/10 text-primary rounded-box border px-1.5 text-[12px]">{ props.Badge }</div>
+				</div>
+			}
 			<span class="iconify lucide--chevron-right arrow-icon size-3.5"></span>
 		</div>
 		<div class="collapse-content">
-			for _, c := range children {
+			for _, c := range props.Children {
 				@c
 			}
 		</div>
 	</div>
+}
+
+templ SidebarCollapsibleNexus(icon string, label string, children []templ.Component, open bool) {
+	@SidebarCollapsibleNexusWithProps(SidebarCollapsibleNexusProps{Icon: icon, Label: label, Children: children, Open: open})
 }
 
 templ SidebarAvatarDropdown(avatarSrc string, avatarAlt string) {

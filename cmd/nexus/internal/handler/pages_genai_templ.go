@@ -2143,7 +2143,7 @@ func GenAILibrary() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var69), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var69), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2209,7 +2209,7 @@ func genAILibraryToolbar() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = form.SearchInput("q", "", "Search along items", "", "", "input input-sm w-24 sm:w-36", templ.Attributes{"aria-label": "Search items"}).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = form.SearchInput("q", "", "Search along items", "", "", "input input-sm w-24 sm:w-48", templ.Attributes{"aria-label": "Search items"}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2373,7 +2373,7 @@ func genAILibraryRow(id, name, avatar, icon, typ, title, content, tokens string)
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 133, "<div class=\"flex items-center space-x-3 truncate\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 133, "<div class=\"flex max-w-36 items-center space-x-3 truncate\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

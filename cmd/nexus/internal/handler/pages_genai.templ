@@ -509,7 +509,7 @@ templ GenAILibrary() {
 			Footer:  genAILibraryFooter(),
 		}) {
 			<div class="mt-4 overflow-auto">
-				@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
+				@table.TableWithProps(table.TableProps{}) {
 					@table.TableHead() {
 						@table.TableHeadRow() {
 							@table.TableSelectAll("Check all")
@@ -544,7 +544,7 @@ templ GenAILibrary() {
 templ genAILibraryToolbar() {
 	@table.TableCardHeader() {
 		<div class="inline-flex items-center gap-3">
-			@form.SearchInput("q", "", "Search along items", "", "", "input input-sm w-24 sm:w-36", templ.Attributes{"aria-label": "Search items"})
+			@form.SearchInput("q", "", "Search along items", "", "", "input input-sm w-24 sm:w-48", templ.Attributes{"aria-label": "Search items"})
 		</div>
 		<div class="inline-flex items-center gap-3">
 			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/gen-ai/image", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, ExtraClass: "max-sm:btn-square", AriaLabel: "Generate image link"}) {
@@ -583,7 +583,7 @@ templ genAILibraryRow(id, name, avatar, icon, typ, title, content, tokens string
 			{ id }
 		}
 		@table.TableCell("", nil) {
-			<div class="flex items-center space-x-3 truncate">
+			<div class="flex max-w-36 items-center space-x-3 truncate">
 				@ui.AvatarFull(ui.AvatarProps{
 					Name:       name,
 					Src:        "/images/avatars/" + avatar + ".png",
