@@ -68,6 +68,25 @@ git checkout -q main
 assert_eq "$("$VERSION" --current)" "v1.2.3" "unreachable tag ignored"
 assert_eq "$("$VERSION" --bump minor)" "v1.3.0" "bump ignores unreachable tag"
 
+# --- the tag before an existing tag -----------------------------------------
+mk_repo before
+git tag v1.0.0
+git commit -q --allow-empty -m "feat: base"
+git tag v1.2.0
+assert_eq "$("$VERSION" --before v1.2.0)" "v1.0.0" "before skips the tag itself"
+assert_fail "before unknown tag" "$VERSION" --before v9.9.9
+assert_fail "before non-canonical tag" "$VERSION" --before 1.2.0
+
+git checkout -q -b side
+git commit -q --allow-empty -m "feat: side"
+git tag v1.5.0
+git checkout -q main
+assert_eq "$("$VERSION" --before v1.2.0)" "v1.0.0" "before ignores unreachable tags"
+
+mk_repo before-first
+git tag v0.1.0
+assert_fail "before the first tag" "$VERSION" --before v0.1.0
+
 # --- no semver tags ---------------------------------------------------------
 mk_repo no-tags
 assert_fail "current without tags" "$VERSION" --current

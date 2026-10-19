@@ -3,6 +3,7 @@
 #
 # Usage:
 #   scripts/release-version.sh --current
+#   scripts/release-version.sh --before vX.Y.Z
 #   scripts/release-version.sh --bump patch|minor|major
 #   scripts/release-version.sh --tag vX.Y.Z
 #
@@ -12,7 +13,7 @@
 set -euo pipefail
 
 usage() {
-  echo "usage: $0 --current | --bump patch|minor|major | --tag vX.Y.Z" >&2
+  echo "usage: $0 --current | --before vX.Y.Z | --bump patch|minor|major | --tag vX.Y.Z" >&2
   exit 2
 }
 
@@ -23,6 +24,7 @@ mode="" value=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --current) mode=current; shift ;;
+    --before) [ $# -ge 2 ] || usage; mode=before; value=$2; shift 2 ;;
     --bump) [ $# -ge 2 ] || usage; mode=bump; value=$2; shift 2 ;;
     --tag)  [ $# -ge 2 ] || usage; mode=tag;  value=$2; shift 2 ;;
     *) usage ;;
@@ -30,8 +32,28 @@ while [ $# -gt 0 ]; do
 done
 [ -n "$mode" ] || usage
 
-latest="$(git tag --merged HEAD --list 'v*' --sort=-v:refname \
-  | grep -E "$semver_re" | head -n1 || true)"
+# Highest tag reachable from the given ref, optionally excluding one exact tag.
+latest_from() {
+  local ref="$1" exclude="${2:-}"
+  {
+    git tag --merged "$ref" --list 'v*' --sort=-v:refname \
+      | grep -E "$semver_re" \
+      | { if [ -n "$exclude" ]; then grep -vx "$exclude"; else cat; fi; }
+  } | head -n1 || true
+}
+
+if [ "$mode" = before ]; then
+  [[ "$value" =~ $semver_re ]] \
+    || { echo "invalid tag: $value (expected canonical vX.Y.Z)" >&2; exit 1; }
+  git rev-parse -q --verify "${value}^{commit}" >/dev/null \
+    || { echo "unknown tag: $value" >&2; exit 1; }
+  previous="$(latest_from "${value}^{commit}" "$value")"
+  [ -n "$previous" ] || { echo "no semver tag before ${value}" >&2; exit 1; }
+  printf '%s\n' "$previous"
+  exit 0
+fi
+
+latest="$(latest_from HEAD)"
 [ -n "$latest" ] || { echo "no semver tag reachable from HEAD" >&2; exit 1; }
 
 if [ "$mode" = current ]; then
