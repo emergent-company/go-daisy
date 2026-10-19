@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -34,4 +35,21 @@ func productSKU(full string) string {
 		return full[idx+1:]
 	}
 	return ""
+}
+
+// shopRatingClass maps a numeric rating to its star tone: success for >= 4.0,
+// warning for >= 3.0 and error below.
+func shopRatingClass(rating string) string {
+	f, err := strconv.ParseFloat(rating, 64)
+	if err != nil {
+		return ""
+	}
+	switch {
+	case f >= 4.0:
+		return "text-success"
+	case f >= 3.0:
+		return "text-warning"
+	default:
+		return "text-error"
+	}
 }

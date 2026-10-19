@@ -135,6 +135,15 @@ func TestEcommerceListsUseLibraryComponents(t *testing.T) {
 		require(t, fn, row, "@table.TableCell(")
 		forbid(t, fn, row, "<tr", "<td", "<th")
 	}
+
+	// The three list handlers must resolve to the templ components, not fall
+	// back to the raw-HTML passthrough.
+	hsrc := read(t, "../handler/handler.go")
+	forbid(t, hsrc, "handler.go",
+		`nxHTMLComponent("apps-ecommerce-sellers")`,
+		`nxHTMLComponent("apps-ecommerce-customers")`,
+		`nxHTMLComponent("apps-ecommerce-shops")`,
+	)
 }
 
 // TestNexusDashboardUsesLibraryCardsAndTable pins the dashboard conversion:

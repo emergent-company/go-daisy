@@ -56,11 +56,13 @@ type TableProps struct {
 	Bordered bool
 	// Attrs are optional extra HTML attributes on the outer wrapper div, e.g. {"data-testid": "users-table"}.
 	Attrs templ.Attributes
+	// Class are additional CSS classes appended to the <table> element, e.g. "whitespace-nowrap".
+	Class string
 }
 
 // tableClasses builds the DaisyUI class string from TableProps.
 func tableClasses(props TableProps) string {
-	cls := "table w-full whitespace-nowrap"
+	cls := "table w-full"
 	switch props.Size {
 	case "xs":
 		cls += " table-xs"
@@ -79,6 +81,9 @@ func tableClasses(props TableProps) string {
 	}
 	if props.PinCols {
 		cls += " table-pin-cols"
+	}
+	if props.Class != "" {
+		cls += " " + props.Class
 	}
 	return cls
 }

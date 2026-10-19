@@ -285,7 +285,7 @@ func ProductsList() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -1098,7 +1098,7 @@ func OrdersList() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var34), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var34), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2227,7 +2227,7 @@ func SellersList() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var73), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var73), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2614,7 +2614,7 @@ func sellerRow(num, name, gender, avatar, shop, email, mobile, sales, earning, d
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = listRowActions("Edit seller link", "Dummy show seller", "Dummy delete seller", "apps_seller_delete", "./apps-ecommerce-sellers-edit.html").Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = listRowActions("Edit seller link", "Dummy show seller", "Dummy delete seller", "apps_seller_delete", "/apps/ecommerce/sellers/1").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3336,7 +3336,7 @@ func CustomersList() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var120), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var120), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3692,7 +3692,7 @@ func customerRow(num, name, gender, email, mobile, sales, earning, date string, 
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = listRowActions("Edit customer link", "Dummy show customer", "Dummy delete customer", "apps_customer_delete", "./apps-ecommerce-customers-edit.html").Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = listRowActions("Edit customer link", "Dummy show customer", "Dummy delete customer", "apps_customer_delete", "/apps/ecommerce/customers/1").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3955,7 +3955,7 @@ func ShopsList() templ.Component {
 						}()
 					}
 					ctx = templ.InitializeContext(ctx)
-					templ_7745c5c3_Err = shopRow("1", "Urban Chic Boutique", "Anthony S. Amaya", "urban.chic@yahoo.com", "402-788-1602", "20", "4.4", "124", "$350", "29 Mar 2024", "text-success", true).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = shopRow("1", "Urban Chic Boutique", "Anthony S. Amaya", "urban.chic@yahoo.com", "402-788-1602", "20", "4.4", "124", "$350", "29 Mar 2024", true).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -3963,7 +3963,7 @@ func ShopsList() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = shopRow("2", "Whimsical Wares Emporium", "Crystal R. Taylor", "whimscal_ware@hotmail.com", "469-632-2611", "24", "4.7", "241", "$360", "29 Apr 2024", "text-success", true).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = shopRow("2", "Whimsical Wares Emporium", "Crystal R. Taylor", "whimscal_ware@hotmail.com", "469-632-2611", "24", "4.7", "241", "$360", "29 Apr 2024", true).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -3971,7 +3971,7 @@ func ShopsList() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = shopRow("3", "Serene Styles Haven", "Jeremy M. Simon", "serene.styles@gmail.com", "207-538-1345", "34", "4.2", "104", "$574", "29 Nov 2023", "text-success", true).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = shopRow("3", "Serene Styles Haven", "Jeremy M. Simon", "serene.styles@gmail.com", "207-538-1345", "34", "4.2", "104", "$574", "29 Nov 2023", true).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -3979,7 +3979,7 @@ func ShopsList() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = shopRow("4", "Posh Picks Boutique", "Jane B. Bush", "posh_picks@bush.com", "612-326-9186", "54", "3.8", "261", "$487", "29 Jan 2024", "text-warning", true).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = shopRow("4", "Posh Picks Boutique", "Jane B. Bush", "posh_picks@bush.com", "612-326-9186", "54", "3.8", "261", "$487", "29 Jan 2024", true).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -3987,7 +3987,7 @@ func ShopsList() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = shopRow("5", "Blissful Finds Co.", "Francis A. Bisson", "blissful_co@outlook.com", "317-949-1232", "67", "3.4", "195", "$784", "29 Dec 2023", "text-warning", false).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = shopRow("5", "Blissful Finds Co.", "Francis A. Bisson", "blissful_co@outlook.com", "317-949-1232", "67", "3.4", "195", "$784", "29 Dec 2023", false).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -3995,7 +3995,7 @@ func ShopsList() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = shopRow("6", "Trendy Threads Emporium", "Lydia P. Barnett", "trendy_te@mail.com", "936-895-2100", "74", "4.6", "135", "$657", "29 Jun 2023", "text-success", true).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = shopRow("6", "Trendy Threads Emporium", "Lydia P. Barnett", "trendy_te@mail.com", "936-895-2100", "74", "4.6", "135", "$657", "29 Jun 2023", true).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -4003,7 +4003,7 @@ func ShopsList() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = shopRow("7", "Luxe Loft Creations", "John B. Lopez", "luxe.loft@lopez.com", "262-849-4319", "45", "4.9", "321", "$354", "29 Jul 2023", "text-success", true).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = shopRow("7", "Luxe Loft Creations", "John B. Lopez", "luxe.loft@lopez.com", "262-849-4319", "45", "4.9", "321", "$354", "29 Jul 2023", true).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -4011,7 +4011,7 @@ func ShopsList() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = shopRow("8", "Vintage Vogue Hub", "Detra M. Rogers", "vintage_hub@rogers.com", "847-452-0238", "21", "2.8", "12", "$352", "29 Dec 2023", "text-success", true).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = shopRow("8", "Vintage Vogue Hub", "Detra M. Rogers", "vintage_hub@rogers.com", "847-452-0238", "21", "2.8", "12", "$352", "29 Dec 2023", true).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -4019,7 +4019,7 @@ func ShopsList() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = shopRow("9", "Coastal Charm Marketplace", "Antonio D. Goss", "antonio_gross@ant.com", "203-250-6265", "29", "3.4", "238", "$920", "29 Apr 2023", "text-warning", false).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = shopRow("9", "Coastal Charm Marketplace", "Antonio D. Goss", "antonio_gross@ant.com", "203-250-6265", "29", "3.4", "238", "$920", "29 Apr 2023", false).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -4027,7 +4027,7 @@ func ShopsList() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = shopRow("10", "Dapper Designs Depot", "Brenda R. Holmes", "dapper.designs@mail.com", "325-480-1291", "67", "4.1", "541", "$874", "29 Mar 2023", "text-success", true).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = shopRow("10", "Dapper Designs Depot", "Brenda R. Holmes", "dapper.designs@mail.com", "325-480-1291", "67", "4.1", "541", "$874", "29 Mar 2023", true).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -4039,7 +4039,7 @@ func ShopsList() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var146), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var146), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -4064,7 +4064,7 @@ func ShopsList() templ.Component {
 	})
 }
 
-func shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earning, date, starClass string, verified bool) templ.Component {
+func shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earning, date string, verified bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -4307,7 +4307,7 @@ func shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earni
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var165 = []any{"iconify lucide--star size-4", starClass}
+				var templ_7745c5c3_Var165 = []any{"iconify lucide--star size-4", shopRatingClass(rating)}
 				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var165...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -4473,7 +4473,7 @@ func shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earni
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = listRowActions("Edit shop link", "Dummy show shop", "Dummy delete shop", "apps_shop_delete", "./apps-ecommerce-shops-edit.html").Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = listRowActions("Edit shop link", "Dummy show shop", "Dummy delete shop", "apps_shop_delete", "/apps/ecommerce/shops/1").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

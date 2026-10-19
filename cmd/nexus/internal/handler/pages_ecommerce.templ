@@ -18,7 +18,7 @@ templ ProductsList() {
 				Toolbar: productsListToolbar(),
 				Footer:  productsListFooter(),
 			}) {
-				@table.TableWithProps(table.TableProps{}) {
+				@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
 					@table.TableHead() {
 						@table.TableHeadRow() {
 							@table.TableSelectAll("Check all")
@@ -194,7 +194,7 @@ templ OrdersList() {
 				Toolbar: ordersListToolbar(),
 				Footer:  ordersListFooter(),
 			}) {
-				@table.TableWithProps(table.TableProps{}) {
+				@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
 					@table.TableHead() {
 						@table.TableHeadRow() {
 							@table.TableSelectAll("Check all")
@@ -488,7 +488,7 @@ templ SellersList() {
 			Toolbar: listToolbar("Search along sellers", "Search sellers", "Verification status", "Create seller link", "/apps/ecommerce/sellers/create", "New Seller"),
 			Footer:  listFooter(),
 		}) {
-			@table.TableWithProps(table.TableProps{}) {
+			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
 				@table.TableHead() {
 					@table.TableHeadRow() {
 						@table.TableSelectAll("Check all")
@@ -565,7 +565,7 @@ templ sellerRow(num, name, gender, avatar, shop, email, mobile, sales, earning, 
 			{ date }
 		}
 		@table.TableCell("", nil) {
-			@listRowActions("Edit seller link", "Dummy show seller", "Dummy delete seller", "apps_seller_delete", "./apps-ecommerce-sellers-edit.html")
+			@listRowActions("Edit seller link", "Dummy show seller", "Dummy delete seller", "apps_seller_delete", "/apps/ecommerce/sellers/1")
 		}
 	}
 }
@@ -686,7 +686,7 @@ templ CustomersList() {
 			Toolbar: listToolbar("Search along customers", "Search customers", "Verification", "Create customer link", "/apps/ecommerce/customers/create", "New Customer"),
 			Footer:  listFooter(),
 		}) {
-			@table.TableWithProps(table.TableProps{}) {
+			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
 				@table.TableHead() {
 					@table.TableHeadRow() {
 						@table.TableSelectAll("Check all")
@@ -759,7 +759,7 @@ templ customerRow(num, name, gender, email, mobile, sales, earning, date string,
 			{ date }
 		}
 		@table.TableCell("", nil) {
-			@listRowActions("Edit customer link", "Dummy show customer", "Dummy delete customer", "apps_customer_delete", "./apps-ecommerce-customers-edit.html")
+			@listRowActions("Edit customer link", "Dummy show customer", "Dummy delete customer", "apps_customer_delete", "/apps/ecommerce/customers/1")
 		}
 	}
 }
@@ -787,7 +787,7 @@ templ ShopsList() {
 			Toolbar: listToolbar("Search along shops", "Search shops", "Verification status", "Create shop link", "/apps/ecommerce/shops/create", "New Shop"),
 			Footer:  listFooter(),
 		}) {
-			@table.TableWithProps(table.TableProps{}) {
+			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
 				@table.TableHead() {
 					@table.TableHeadRow() {
 						@table.TableSelectAll("Check all")
@@ -805,16 +805,16 @@ templ ShopsList() {
 					}
 				}
 				@table.TableBody() {
-					@shopRow("1", "Urban Chic Boutique", "Anthony S. Amaya", "urban.chic@yahoo.com", "402-788-1602", "20", "4.4", "124", "$350", "29 Mar 2024", "text-success", true)
-					@shopRow("2", "Whimsical Wares Emporium", "Crystal R. Taylor", "whimscal_ware@hotmail.com", "469-632-2611", "24", "4.7", "241", "$360", "29 Apr 2024", "text-success", true)
-					@shopRow("3", "Serene Styles Haven", "Jeremy M. Simon", "serene.styles@gmail.com", "207-538-1345", "34", "4.2", "104", "$574", "29 Nov 2023", "text-success", true)
-					@shopRow("4", "Posh Picks Boutique", "Jane B. Bush", "posh_picks@bush.com", "612-326-9186", "54", "3.8", "261", "$487", "29 Jan 2024", "text-warning", true)
-					@shopRow("5", "Blissful Finds Co.", "Francis A. Bisson", "blissful_co@outlook.com", "317-949-1232", "67", "3.4", "195", "$784", "29 Dec 2023", "text-warning", false)
-					@shopRow("6", "Trendy Threads Emporium", "Lydia P. Barnett", "trendy_te@mail.com", "936-895-2100", "74", "4.6", "135", "$657", "29 Jun 2023", "text-success", true)
-					@shopRow("7", "Luxe Loft Creations", "John B. Lopez", "luxe.loft@lopez.com", "262-849-4319", "45", "4.9", "321", "$354", "29 Jul 2023", "text-success", true)
-					@shopRow("8", "Vintage Vogue Hub", "Detra M. Rogers", "vintage_hub@rogers.com", "847-452-0238", "21", "2.8", "12", "$352", "29 Dec 2023", "text-success", true)
-					@shopRow("9", "Coastal Charm Marketplace", "Antonio D. Goss", "antonio_gross@ant.com", "203-250-6265", "29", "3.4", "238", "$920", "29 Apr 2023", "text-warning", false)
-					@shopRow("10", "Dapper Designs Depot", "Brenda R. Holmes", "dapper.designs@mail.com", "325-480-1291", "67", "4.1", "541", "$874", "29 Mar 2023", "text-success", true)
+					@shopRow("1", "Urban Chic Boutique", "Anthony S. Amaya", "urban.chic@yahoo.com", "402-788-1602", "20", "4.4", "124", "$350", "29 Mar 2024", true)
+					@shopRow("2", "Whimsical Wares Emporium", "Crystal R. Taylor", "whimscal_ware@hotmail.com", "469-632-2611", "24", "4.7", "241", "$360", "29 Apr 2024", true)
+					@shopRow("3", "Serene Styles Haven", "Jeremy M. Simon", "serene.styles@gmail.com", "207-538-1345", "34", "4.2", "104", "$574", "29 Nov 2023", true)
+					@shopRow("4", "Posh Picks Boutique", "Jane B. Bush", "posh_picks@bush.com", "612-326-9186", "54", "3.8", "261", "$487", "29 Jan 2024", true)
+					@shopRow("5", "Blissful Finds Co.", "Francis A. Bisson", "blissful_co@outlook.com", "317-949-1232", "67", "3.4", "195", "$784", "29 Dec 2023", false)
+					@shopRow("6", "Trendy Threads Emporium", "Lydia P. Barnett", "trendy_te@mail.com", "936-895-2100", "74", "4.6", "135", "$657", "29 Jun 2023", true)
+					@shopRow("7", "Luxe Loft Creations", "John B. Lopez", "luxe.loft@lopez.com", "262-849-4319", "45", "4.9", "321", "$354", "29 Jul 2023", true)
+					@shopRow("8", "Vintage Vogue Hub", "Detra M. Rogers", "vintage_hub@rogers.com", "847-452-0238", "21", "2.8", "12", "$352", "29 Dec 2023", true)
+					@shopRow("9", "Coastal Charm Marketplace", "Antonio D. Goss", "antonio_gross@ant.com", "203-250-6265", "29", "3.4", "238", "$920", "29 Apr 2023", false)
+					@shopRow("10", "Dapper Designs Depot", "Brenda R. Holmes", "dapper.designs@mail.com", "325-480-1291", "67", "4.1", "541", "$874", "29 Mar 2023", true)
 				}
 			}
 		}
@@ -822,7 +822,7 @@ templ ShopsList() {
 	</div>
 }
 
-templ shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earning, date, starClass string, verified bool) {
+templ shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earning, date string, verified bool) {
 	@table.TableRow("", true, nil) {
 		@table.TableSelectRow("", false)
 		@table.TableCell("font-medium", nil) {
@@ -845,7 +845,7 @@ templ shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earn
 		}
 		@table.TableCell("", nil) {
 			<div class="flex items-center gap-1">
-				<span class={ "iconify lucide--star size-4", starClass }></span>
+				<span class={ "iconify lucide--star size-4", shopRatingClass(rating) }></span>
 				{ rating }
 				<span class="text-body text-xs">({ ratingCount })</span>
 			</div>
@@ -860,7 +860,7 @@ templ shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earn
 			{ date }
 		}
 		@table.TableCell("", nil) {
-			@listRowActions("Edit shop link", "Dummy show shop", "Dummy delete shop", "apps_shop_delete", "./apps-ecommerce-shops-edit.html")
+			@listRowActions("Edit shop link", "Dummy show shop", "Dummy delete shop", "apps_shop_delete", "/apps/ecommerce/shops/1")
 		}
 	}
 }
