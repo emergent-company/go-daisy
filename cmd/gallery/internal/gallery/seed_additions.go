@@ -2012,6 +2012,25 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 
+		// ── Components / Message Group ─────────────────────────────────────────
+		{
+			Slug:        "message-group",
+			Name:        "Message Group",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Chat",
+			Description: "Column layout slot that stacks consecutive Messages from the same author in one burst. Alignment still comes from each Message's own start/end marker.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Grouped messages",
+					Description: "Two consecutive incoming messages (avatar on the first only) followed by a sent reply.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.MessageGroupWithBoundary()
+					},
+					FrameHeight: "300px",
+				},
+			},
+		},
+
 		// ── Components / Message Scroller ───────────────────────────────────
 		{
 			Slug:        "message-scroller",

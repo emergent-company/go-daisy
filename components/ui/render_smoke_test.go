@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/a-h/templ"
+	"github.com/emergent-company/go-daisy/devmode"
 	"github.com/emergent-company/go-daisy/shared"
 )
 
@@ -637,6 +638,49 @@ func TestMessagePartsContract(t *testing.T) {
 		if !strings.Contains(out, "group-data-[align=end]/message:bg-primary") {
 			t.Errorf("bubble missing end alignment group variant:\n%s", out)
 		}
+	}
+}
+
+// TestMessageGroupContract locks the column layout slot contract: the
+// data-slot marker, the flex column classes, the dev-mode component annotation,
+// in-order children, Class append, and Attrs spread-last.
+func TestMessageGroupContract(t *testing.T) {
+	children := shared.Compose(uiStr("first"), uiStr("second"))
+	got := renderUI(t, shared.RenderInto(MessageGroup(MessageGroupProps{}), children))
+
+	for _, want := range []string{
+		`data-slot="message-group"`,
+		"flex min-w-0 flex-col gap-2",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("MessageGroup missing %q in:\n%s", want, got)
+		}
+	}
+
+	// The dev-mode component annotation is emitted only under devmode.WithDevMode.
+	dev := renderUI(t, shared.RenderInto(MessageGroup(MessageGroupProps{}), uiStr("x")),
+		func(ctx context.Context) context.Context { return devmode.WithDevMode(ctx) })
+	if !strings.Contains(dev, `data-component="ui/MessageGroup"`) {
+		t.Errorf("dev-mode component annotation missing:\n%s", dev)
+	}
+
+	// Children render in order.
+	if i, j := strings.Index(got, "first"), strings.Index(got, "second"); i < 0 || j < 0 || i >= j {
+		t.Errorf("children out of order:\n%s", got)
+	}
+
+	// Class is appended to the base classes.
+	classed := renderUI(t, shared.RenderInto(MessageGroup(MessageGroupProps{Class: "gap-6"}), uiStr("x")))
+	if !strings.Contains(classed, "gap-6") {
+		t.Errorf("Class not appended:\n%s", classed)
+	}
+
+	// Attrs spread last: caller attributes appear on the root slot.
+	attributed := renderUI(t, shared.RenderInto(MessageGroup(MessageGroupProps{
+		Attrs: templ.Attributes{"data-test": "mg"},
+	}), uiStr("x")))
+	if !strings.Contains(attributed, `data-test="mg"`) {
+		t.Errorf("Attrs not spread on root:\n%s", attributed)
 	}
 }
 

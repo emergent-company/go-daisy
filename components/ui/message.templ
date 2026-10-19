@@ -17,6 +17,12 @@ type MessageProps struct {
 	Attrs templ.Attributes
 }
 
+// MessageGroupProps configures a MessageGroup.
+type MessageGroupProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
 // MessageAvatarProps configures a MessageAvatar.
 type MessageAvatarProps struct {
 	Src     string
@@ -70,6 +76,20 @@ func messageBubbleVariantClass(v MessageBubbleVariant) string {
 	default:
 		return "bg-base-100 border border-base-300"
 	}
+}
+
+// MessageGroup stacks consecutive Messages in one column (same author, same
+// burst). It is a plain layout slot: alignment still comes from each Message's
+// own Align.
+templ MessageGroup(props MessageGroupProps) {
+	<div
+		data-slot="message-group"
+		class={ "flex min-w-0 flex-col gap-2", props.Class }
+		{ devmode.Attrs(ctx, "ui/MessageGroup")... }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
 }
 
 // Message renders a single message stack row. Alignment is driven by the
