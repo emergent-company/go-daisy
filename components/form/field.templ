@@ -3,6 +3,7 @@ package form
 import (
 	"strconv"
 
+	ui "github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
@@ -36,6 +37,9 @@ type FormFieldProps struct {
 	Rows        int
 	Class       string
 	Attrs       templ.Attributes // optional extra HTML attributes on the input element, e.g. {"data-testid": "email-input"}
+	PrefixIcon  string           // lucide icon name rendered on the input's leading edge, e.g. "lucide--dollar-sign"
+	SuffixIcon  string           // lucide icon name rendered on the input's trailing edge, e.g. "lucide--percent"
+	Suffix      string           // plain-text suffix rendered on the input's trailing edge, e.g. "gm" or "In"
 }
 
 // Field wraps a label + input + error message into a form group.
@@ -97,6 +101,9 @@ templ FormField(props FormFieldProps) {
 					templ.KV(props.Class, props.Class != "") }
 				{ props.Attrs... }
 			>
+				if props.Placeholder != "" {
+					<option value="" disabled selected>{ props.Placeholder }</option>
+				}
 				for _, opt := range props.Options {
 					<option value={ opt.Value } selected?={ opt.Value == props.Value }>{ opt.Label }</option>
 				}
@@ -105,20 +112,49 @@ templ FormField(props FormFieldProps) {
 	} else {
 		{{ inputType := string(props.Type) }}
 		{{ if inputType == "" { inputType = "text" } }}
-		@Field(props.Label, props.Name, props.Error) {
-			<input
-				id={ props.Name }
-				name={ props.Name }
-				type={ inputType }
-				value={ props.Value }
-				placeholder={ props.Placeholder }
-				required?={ props.Required }
-				disabled?={ props.Disabled }
-				class={ "input w-full",
+		if props.PrefixIcon != "" || props.SuffixIcon != "" || props.Suffix != "" {
+			@Field(props.Label, props.Name, props.Error) {
+				<label class={ "input w-full",
 					templ.KV("input-error", props.Error != ""),
-					templ.KV(props.Class, props.Class != "") }
-				{ props.Attrs... }
-			/>
+					templ.KV(props.Class, props.Class != "") }>
+					if props.PrefixIcon != "" {
+						@ui.IconSpan(props.PrefixIcon, "size-4", "text-muted")
+					}
+					<input
+						id={ props.Name }
+						name={ props.Name }
+						type={ inputType }
+						value={ props.Value }
+						placeholder={ props.Placeholder }
+						required?={ props.Required }
+						disabled?={ props.Disabled }
+						class="grow"
+						{ props.Attrs... }
+					/>
+					if props.SuffixIcon != "" {
+						@ui.IconSpan(props.SuffixIcon, "size-4", "text-muted")
+					}
+					if props.Suffix != "" {
+						<span class="text-muted">{ props.Suffix }</span>
+					}
+				</label>
+			}
+		} else {
+			@Field(props.Label, props.Name, props.Error) {
+				<input
+					id={ props.Name }
+					name={ props.Name }
+					type={ inputType }
+					value={ props.Value }
+					placeholder={ props.Placeholder }
+					required?={ props.Required }
+					disabled?={ props.Disabled }
+					class={ "input w-full",
+						templ.KV("input-error", props.Error != ""),
+						templ.KV(props.Class, props.Class != "") }
+					{ props.Attrs... }
+				/>
+			}
 		}
 	}
 }
