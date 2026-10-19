@@ -5,6 +5,7 @@ set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VERSION="$HERE/release-version.sh"
 NOTES="$HERE/release-notes.sh"
+BASE="$HERE/release-base.sh"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
@@ -67,6 +68,60 @@ git tag v9.0.0
 git checkout -q main
 assert_eq "$("$VERSION" --current)" "v1.2.3" "unreachable tag ignored"
 assert_eq "$("$VERSION" --bump minor)" "v1.3.0" "bump ignores unreachable tag"
+
+# --- the tag before an existing tag -----------------------------------------
+mk_repo before
+git tag v1.0.0
+git commit -q --allow-empty -m "feat: base"
+git tag v1.2.0
+assert_eq "$("$VERSION" --before v1.2.0)" "v1.0.0" "before skips the tag itself"
+assert_fail "before unknown tag" "$VERSION" --before v9.9.9
+assert_fail "before non-canonical tag" "$VERSION" --before 1.2.0
+
+git checkout -q -b side
+git commit -q --allow-empty -m "feat: side lower"
+git tag v1.1.0
+git commit -q --allow-empty -m "feat: side higher"
+git tag v1.5.0
+git checkout -q main
+assert_eq "$("$VERSION" --before v1.2.0)" "v1.0.0" "before ignores unreachable tags"
+
+mk_repo before-first
+git tag v0.1.0
+assert_fail "before the first tag" "$VERSION" --before v0.1.0
+
+# Version order, not topology: a higher version on an older commit wins.
+mk_repo nonlinear
+git tag v1.5.0
+git commit -q --allow-empty -m "fix: middle"
+git tag v1.2.0
+git commit -q --allow-empty -m "feat: head"
+git tag v1.9.0
+assert_eq "$("$VERSION" --before v1.9.0)" "v1.5.0" "before is version-ordered"
+
+# A reachable tag that is not older must never become the base.
+mk_repo lower-newer
+git tag v2.0.0
+git commit -q --allow-empty -m "fix: later lower"
+git tag v1.0.0
+assert_fail "before rejects a higher reachable tag" "$VERSION" --before v1.0.0
+
+# --- release base selection -------------------------------------------------
+mk_repo release-base
+git tag v1.0.0
+git commit -q --allow-empty -m "feat: middle"
+git tag v1.2.0
+git checkout -q -b side
+git commit -q --allow-empty -m "feat: side"
+git tag v1.5.0
+git checkout -q main
+git commit -q --allow-empty -m "feat: head"
+git tag v1.9.0
+assert_eq "$("$BASE" v1.9.0 v1.5.0 v1.2.0 v1.0.0)" "v1.2.0" "base skips an existing non-ancestor"
+assert_eq "$("$BASE" v1.9.0 v1.2.0 v1.0.0)" "v1.2.0" "base picks newest reachable"
+assert_eq "$("$BASE" v1.9.0 v9.9.9 v1.0.0)" "v1.0.0" "base skips missing candidates"
+assert_fail "base without a reachable candidate" "$BASE" v1.9.0 v9.9.9
+assert_fail "base only target" "$BASE" v1.9.0 v1.9.0
 
 # --- no semver tags ---------------------------------------------------------
 mk_repo no-tags

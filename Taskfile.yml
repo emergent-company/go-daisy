@@ -316,7 +316,7 @@ tasks:
       - node --test tests/js/runtime.test.js
 
   "test:release":
-    desc: Test the release version and notes scripts
+    desc: Test the release version, base and notes scripts
     cmds:
       - bash scripts/release-test.sh
 

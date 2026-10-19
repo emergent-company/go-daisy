@@ -16,11 +16,12 @@ on:
         required: false
         default: ""
       confirm:
-        description: dry-run previews only; release tags and publishes
+        description: dry-run previews; release tags and publishes; backfill publishes an existing tag
         type: choice
         options:
           - dry-run
           - release
+          - backfill
         default: dry-run
 
 permissions:
@@ -47,49 +48,94 @@ jobs:
           CONFIRM: ${{ inputs.confirm }}
           BUMP: ${{ inputs.bump }}
           TAG: ${{ inputs.tag }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           [ "$GITHUB_REF" = "refs/heads/master" ] \
             || { echo "::error::release must be dispatched from master"; exit 1; }
-          [ "$CONFIRM" = "dry-run" ] || [ "$CONFIRM" = "release" ] \
-            || { echo "::error::confirm must be dry-run or release"; exit 1; }
+          case "$CONFIRM" in
+            dry-run|release|backfill) ;;
+            *) echo "::error::confirm must be dry-run, release or backfill"; exit 1 ;;
+          esac
           [ -z "$(git status --porcelain)" ] \
             || { echo "::error::working tree is dirty"; exit 1; }
           git fetch origin master --quiet
           [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/master)" ] \
             || { echo "::error::HEAD is not origin/master"; exit 1; }
 
-          if [ -n "$TAG" ]; then
-            version="$(scripts/release-version.sh --tag "$TAG")"
+          notes_head="HEAD"
+          if [ "$CONFIRM" = "backfill" ]; then
+            [ -n "$TAG" ] || { echo "::error::backfill requires tag=vX.Y.Z"; exit 1; }
+            version="$TAG"
+            git rev-parse -q --verify "refs/tags/${version}^{commit}" >/dev/null \
+              || { echo "::error::tag ${version} does not exist; push it first"; exit 1; }
+            notes_head="$version"
+            previous="$(scripts/release-version.sh --before "$version")"
+            # Prefer the newest published release reachable from the tag:
+            # version order does not follow history here (v0.16.5 is a higher
+            # version on an older commit than v0.16.4).
+            if ! release_candidates="$(gh release list --repo "$GITHUB_REPOSITORY" \
+                --limit 100 --exclude-drafts --json tagName \
+                --jq '.[] | .tagName' 2>/dev/null)"; then
+              echo "::warning::could not list releases; using version order for the notes base"
+              release_candidates=""
+            fi
+            # Candidates are one tag per line; tag names cannot contain spaces.
+            if base="$(scripts/release-base.sh "$version" $release_candidates)"; then
+              previous="$base"
+            elif [ -z "$release_candidates" ]; then
+              echo "::warning::no published releases found; using version order for the notes base"
+            else
+              echo "::warning::no published release is reachable from ${version}; using version order for the notes base"
+            fi
           else
-            version="$(scripts/release-version.sh --bump "$BUMP")"
+            if [ -n "$TAG" ]; then
+              version="$(scripts/release-version.sh --tag "$TAG")"
+            else
+              version="$(scripts/release-version.sh --bump "$BUMP")"
+            fi
+            previous="$(scripts/release-version.sh --current)"
           fi
-          previous="$(scripts/release-version.sh --current)"
 
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "previous=$previous" >> "$GITHUB_OUTPUT"
-          echo "resolved $version (previous $previous)"
+          echo "notes_head=$notes_head" >> "$GITHUB_OUTPUT"
+          echo "resolved $version (previous $previous, head $notes_head)"
 
       - name: Render release notes
         env:
           PREVIOUS: ${{ steps.version.outputs.previous }}
           VERSION: ${{ steps.version.outputs.version }}
+          HEAD_REF: ${{ steps.version.outputs.notes_head }}
         run: |
           set -euo pipefail
-          if [ "$(git rev-list --count "${PREVIOUS}..HEAD")" -eq 0 ]; then
+          if [ "$(git rev-list --count "${PREVIOUS}..${HEAD_REF}")" -eq 0 ]; then
             echo "::error::no commits since ${PREVIOUS}; nothing to release"
             exit 1
           fi
-          scripts/release-notes.sh "$PREVIOUS" HEAD "$VERSION" > release-notes.md
+          scripts/release-notes.sh "$PREVIOUS" "$HEAD_REF" "$VERSION" > release-notes.md
           cat release-notes.md
 
       - name: Tag and publish
-        if: inputs.confirm == 'release'
+        if: inputs.confirm == 'release' || inputs.confirm == 'backfill'
         env:
           GH_TOKEN: ${{ github.token }}
+          CONFIRM: ${{ inputs.confirm }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
+          if [ "$CONFIRM" = "backfill" ]; then
+            if gh release view "$VERSION" >/dev/null 2>&1; then
+              echo "::error::release ${VERSION} already exists"
+              exit 1
+            fi
+            gh release create "$VERSION" \
+              --title "$VERSION" \
+              --notes-file release-notes.md \
+              --verify-tag
+            exit 0
+          fi
+
           if git rev-parse -q --verify "refs/tags/${VERSION}" >/dev/null; then
             echo "::error::tag ${VERSION} already exists"
             exit 1
@@ -145,8 +191,10 @@ jobs:
             else
               echo "notes were not generated"
             fi
-            if [ "$CONFIRM" = "dry-run" ]; then
-              echo
-              echo "_Dry run: no tag was created._"
+            if [ "$STATUS" = "success" ]; then
+              case "$CONFIRM" in
+                dry-run) echo; echo "_Dry run: no tag was created._" ;;
+                backfill) echo; echo "_Backfill: no tag was created; only the release was published._" ;;
+              esac
             fi
           } >> "$GITHUB_STEP_SUMMARY"
