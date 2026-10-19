@@ -36,7 +36,7 @@ templ TableCardWrapper() {
 
 // TableCardHeader renders the header bar inside a table card.
 templ TableCardHeader() {
-	<div class="flex items-center justify-between px-5 pt-5" { devmode.Attrs(ctx, "table/TableCardHeader")... }>
+	<div class="flex items-center justify-between gap-3 px-5 pt-5" { devmode.Attrs(ctx, "table/TableCardHeader")... }>
 		{ children... }
 	</div>
 }
