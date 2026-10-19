@@ -63,31 +63,54 @@ jobs:
           [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/master)" ] \
             || { echo "::error::HEAD is not origin/master"; exit 1; }
 
-          notes_head="HEAD"
-          if [ "$CONFIRM" = "backfill" ]; then
-            [ -n "$TAG" ] || { echo "::error::backfill requires tag=vX.Y.Z"; exit 1; }
-            version="$TAG"
-            git rev-parse -q --verify "refs/tags/${version}^{commit}" >/dev/null \
-              || { echo "::error::tag ${version} does not exist; push it first"; exit 1; }
-            notes_head="$version"
-            previous="$(scripts/release-version.sh --before "$version")"
-            # Prefer the newest published release reachable from the tag:
-            # version order does not follow history here (v0.16.5 is a higher
-            # version on an older commit than v0.16.4).
+          # Prefer the newest published release reachable from the tag:
+          # version order does not follow history here (v0.16.5 is a higher
+          # version on an older commit than v0.16.4). Sets `previous`.
+          choose_base() {
+            local version="$1" base listing_ok=true
             if ! release_candidates="$(gh release list --repo "$GITHUB_REPOSITORY" \
                 --limit 100 --exclude-drafts --json tagName \
                 --jq '.[] | .tagName' 2>/dev/null)"; then
-              echo "::warning::could not list releases; using version order for the notes base"
+              listing_ok=false
               release_candidates=""
+              echo "::warning::could not list releases; using version order for the notes base"
             fi
             # Candidates are one tag per line; tag names cannot contain spaces.
             if base="$(scripts/release-base.sh "$version" $release_candidates)"; then
               previous="$base"
+            elif [ "$listing_ok" = false ]; then
+              : # the listing failure already warned
             elif [ -z "$release_candidates" ]; then
               echo "::warning::no published releases found; using version order for the notes base"
             else
               echo "::warning::no published release is reachable from ${version}; using version order for the notes base"
             fi
+          }
+
+          tag_exists=false
+          if [ -n "$TAG" ] && git rev-parse -q --verify "refs/tags/${TAG}^{commit}" >/dev/null; then
+            tag_exists=true
+          fi
+
+          notes_head="HEAD"
+          previous=""
+          if [ "$CONFIRM" = "backfill" ]; then
+            [ -n "$TAG" ] || { echo "::error::backfill requires tag=vX.Y.Z"; exit 1; }
+            [ "$tag_exists" = true ] \
+              || { echo "::error::tag ${TAG} does not exist; push it first"; exit 1; }
+            version="$TAG"
+            notes_head="$version"
+            previous="$(scripts/release-version.sh --before "$version")"
+            choose_base "$version"
+          elif [ "$tag_exists" = true ]; then
+            # A dry run with an existing tag previews the backfill it would
+            # publish; anything else must go through confirm=backfill.
+            [ "$CONFIRM" = "dry-run" ] \
+              || { echo "::error::tag ${TAG} already exists; use confirm=backfill to publish it"; exit 1; }
+            version="$TAG"
+            notes_head="$version"
+            previous="$(scripts/release-version.sh --before "$version")"
+            choose_base "$version"
           else
             if [ -n "$TAG" ]; then
               version="$(scripts/release-version.sh --tag "$TAG")"
@@ -193,7 +216,7 @@ jobs:
             fi
             if [ "$STATUS" = "success" ]; then
               case "$CONFIRM" in
-                dry-run) echo; echo "_Dry run: no tag was created._" ;;
+                dry-run) echo; echo "_Dry run: nothing was published._" ;;
                 backfill) echo; echo "_Backfill: no tag was created; only the release was published._" ;;
               esac
             fi
