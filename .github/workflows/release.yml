@@ -77,14 +77,16 @@ jobs:
             if ! release_candidates="$(gh release list --repo "$GITHUB_REPOSITORY" \
                 --limit 100 --exclude-drafts --json tagName \
                 --jq '.[] | .tagName' 2>/dev/null)"; then
-              echo "::warning::could not list releases; using tag order for the notes base"
+              echo "::warning::could not list releases; using version order for the notes base"
               release_candidates=""
             fi
             # Candidates are one tag per line; tag names cannot contain spaces.
             if base="$(scripts/release-base.sh "$version" $release_candidates)"; then
               previous="$base"
-            elif [ -n "$release_candidates" ]; then
-              echo "::warning::no published release is reachable from ${version}; using tag order for the notes base"
+            elif [ -z "$release_candidates" ]; then
+              echo "::warning::no published releases found; using version order for the notes base"
+            else
+              echo "::warning::no published release is reachable from ${version}; using version order for the notes base"
             fi
           else
             if [ -n "$TAG" ]; then

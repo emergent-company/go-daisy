@@ -213,12 +213,14 @@ semver tags, which is pushed by hand once.
   run can be retried; if the workflow cannot confirm, it keeps the tag and fails
   for a human to reconcile. It never deletes a release.
 - `confirm=backfill` requires `tag=vX.Y.Z` and an existing tag, and only creates
-  the release. It uses the newest published release (publication order) that is
-  reachable from the tag as the notes base, refuses a tag that does not exist or
-  a release that already exists, and never creates or moves a tag.
+  the release. It uses the newest release in `gh release list` order (creation
+  time, drafts excluded) that is reachable from the tag as the notes base,
+  refuses a tag that does not exist or a release that already exists, and never
+  creates or moves a tag.
 - The workflow refuses a non-`master` ref, a dirty tree, a HEAD that differs
-  from `origin/master`, an existing tag unless `confirm=backfill`, a version that
-  is not newer than the current tag, or a range with no commits.
+  from `origin/master`, an existing tag when it would create one (`release`, or
+  an explicit `tag` in `dry-run`), a version that is not newer than the current
+  tag, or a range with no commits.
 - It never deploys. Deploys are dispatched from `templ.components.infra`.
 - Run `task test:release` after changing the release scripts. The scripts must
   stay bash 3.2-compatible (macOS `/bin/bash`). Notes group by subject type; a

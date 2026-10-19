@@ -79,7 +79,9 @@ assert_fail "before unknown tag" "$VERSION" --before v9.9.9
 assert_fail "before non-canonical tag" "$VERSION" --before 1.2.0
 
 git checkout -q -b side
-git commit -q --allow-empty -m "feat: side"
+git commit -q --allow-empty -m "feat: side lower"
+git tag v1.1.0
+git commit -q --allow-empty -m "feat: side higher"
 git tag v1.5.0
 git checkout -q main
 assert_eq "$("$VERSION" --before v1.2.0)" "v1.0.0" "before ignores unreachable tags"
@@ -109,10 +111,15 @@ mk_repo release-base
 git tag v1.0.0
 git commit -q --allow-empty -m "feat: middle"
 git tag v1.2.0
+git checkout -q -b side
+git commit -q --allow-empty -m "feat: side"
+git tag v1.5.0
+git checkout -q main
 git commit -q --allow-empty -m "feat: head"
 git tag v1.9.0
+assert_eq "$("$BASE" v1.9.0 v1.5.0 v1.2.0 v1.0.0)" "v1.2.0" "base skips an existing non-ancestor"
 assert_eq "$("$BASE" v1.9.0 v1.2.0 v1.0.0)" "v1.2.0" "base picks newest reachable"
-assert_eq "$("$BASE" v1.9.0 v9.9.9 v1.0.0)" "v1.0.0" "base skips unreachable candidates"
+assert_eq "$("$BASE" v1.9.0 v9.9.9 v1.0.0)" "v1.0.0" "base skips missing candidates"
 assert_fail "base without a reachable candidate" "$BASE" v1.9.0 v9.9.9
 assert_fail "base only target" "$BASE" v1.9.0 v1.9.0
 
