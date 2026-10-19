@@ -5,8 +5,11 @@
 package parity
 
 import (
+	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -376,4 +379,49 @@ func splitPath(p string) []string {
 		return nil
 	}
 	return strings.Split(p, "/")
+}
+
+// TestTemplComponentChildrenArePlainText guards a subtle templ parsing rule:
+// inside a component children block, a quoted Go string literal is emitted as
+// literal text including its quotes, so `@ui.Button(props){ "Save" }` renders
+// `"Save"` on the page. Children must be written as plain text. This is easy
+// to reintroduce by copying an existing call, and it renders acceptably enough
+// that screenshots alone do not catch it.
+func TestTemplComponentChildrenArePlainText(t *testing.T) {
+	root := filepath.Join("..", "..", "..", "..")
+	// @Component(...){ "Text" } — the closing paren and the children block on
+	// one line, which is exactly the broken shape.
+	inline := regexp.MustCompile(`@[\w.]+\s*\([^\n]*\)\s*\{\s*"`)
+	var offenders []string
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			switch d.Name() {
+			case ".git", "node_modules", "vendor":
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		if !strings.HasSuffix(path, ".templ") {
+			return nil
+		}
+		src, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		for i, line := range strings.Split(string(src), "\n") {
+			if inline.MatchString(line) {
+				offenders = append(offenders, fmt.Sprintf("%s:%d: %s", path, i+1, strings.TrimSpace(line)))
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walk templ sources: %v", err)
+	}
+	if len(offenders) > 0 {
+		t.Fatalf("quote-wrapped component children render the quotes; use plain text:\n%s", strings.Join(offenders, "\n"))
+	}
 }
