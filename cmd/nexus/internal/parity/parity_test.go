@@ -146,6 +146,42 @@ func TestEcommerceListsUseLibraryComponents(t *testing.T) {
 	)
 }
 
+// TestEcommerceEntityFormsUseLibraryComponents pins the sellers/customers/shops
+// create/edit form migrations: each form composes its header through
+// nav.PageHeading and its fields through form.FormField (plus CardRaw card
+// shells), with no hand-rolled input/select/textarea/table markup left behind.
+func TestEcommerceEntityFormsUseLibraryComponents(t *testing.T) {
+	src := read(t, "../handler/pages_ecommerce.templ")
+
+	for _, name := range []string{"SellerForm", "CustomerForm", "ShopForm"} {
+		fn := templFunc(t, src, name)
+		require(t, fn, name, "@nav.PageHeading(")
+		require(t, fn, name, "@form.FormField(")
+		require(t, fn, name, "@ui.CardRaw(")
+		forbid(t, fn, name,
+			"<input",
+			"<select",
+			"<textarea",
+			"<table",
+			"<tr",
+			"<td",
+			"<th",
+		)
+	}
+
+	// The six create/edit handlers must resolve to the templ components, not
+	// fall back to the raw-HTML passthrough.
+	hsrc := read(t, "../handler/handler.go")
+	forbid(t, hsrc, "handler.go",
+		`nxHTMLComponent("apps-ecommerce-sellers-create")`,
+		`nxHTMLComponent("apps-ecommerce-sellers-edit")`,
+		`nxHTMLComponent("apps-ecommerce-customers-create")`,
+		`nxHTMLComponent("apps-ecommerce-customers-edit")`,
+		`nxHTMLComponent("apps-ecommerce-shops-create")`,
+		`nxHTMLComponent("apps-ecommerce-shops-edit")`,
+	)
+}
+
 // TestNexusDashboardUsesLibraryCardsAndTable pins the dashboard conversion:
 // stat cards go through ui.StatCardFeatured and Recent Orders through the table
 // primitives, so the dashboard stops maintaining its own copies.
