@@ -384,6 +384,16 @@ func CardTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// CardToolbarTokens returns the DesignToken slice for CardToolbarWithBoundary.
+func CardToolbarTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{}
+}
+
+// ChartCardTokens returns the DesignToken slice for ChartCardWithBoundary.
+func ChartCardTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{}
+}
+
 // AlertTokens returns the DesignToken slice for AlertWithBoundary.
 func AlertTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{

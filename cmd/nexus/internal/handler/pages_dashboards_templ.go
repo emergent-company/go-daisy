@@ -9,6 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"github.com/emergent-company/go-daisy/components/nav"
 	"github.com/emergent-company/go-daisy/components/table"
 	"github.com/emergent-company/go-daisy/components/ui"
 )
@@ -34,7 +35,20 @@ func EcommerceDashboard() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex items-center justify-between\"><h3 class=\"text-lg font-medium\">Business Overview</h3><div class=\"breadcrumbs hidden p-0 text-sm sm:inline\"><ul><li><a href=\"/dashboards/ecommerce\">Nexus</a></li><li>Dashboards</li><li class=\"opacity-80\">Ecommerce</li></ul></div></div><div class=\"mt-6\"><div class=\"grid gap-5 lg:grid-cols-2 xl:grid-cols-4\">")
+		templ_7745c5c3_Err = nav.PageHeading(nav.PageHeadingProps{
+			Title:  "Business Overview",
+			Size:   nav.PageHeadingSizeSM,
+			Layout: nav.PageHeadingLayoutSplit,
+			Breadcrumbs: []nav.BreadcrumbItem{
+				{Label: "Nexus", Href: "/dashboards/ecommerce"},
+				{Label: "Dashboards"},
+				{Label: "Ecommerce"},
+			},
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"mt-6\"><div class=\"grid gap-5 lg:grid-cols-2 xl:grid-cols-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -54,7 +68,18 @@ func EcommerceDashboard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><div class=\"mt-6 grid grid-cols-1 gap-6 xl:grid-cols-12\"><div class=\"xl:col-span-7\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body px-0 pb-0\"><div class=\"px-6\"><div class=\"flex items-start justify-between gap-2 text-sm\"><span class=\"font-medium\">Revenue Statistics</span><div class=\"tabs tabs-box tabs-xs hidden sm:block\"><div class=\"tab false px-3\">Day</div><div class=\"tab false px-3\">Month</div><div class=\"tab tab-active px-3\">Year</div></div></div><div class=\"mt-3\"><div class=\"flex items-center gap-3\"><span class=\"text-4xl font-semibold\">$184.78K</span> <span class=\"text-success font-medium\">+3.24%</span></div><span class=\"text-base-content/60 text-sm\">Total income in this year</span></div></div><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><div class=\"mt-6 grid grid-cols-1 gap-6 xl:grid-cols-12\"><div class=\"xl:col-span-7\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body px-0 pb-0\"><div class=\"px-6\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = ui.CardToolbar(ui.CardToolbarProps{
+			Title:   "Revenue Statistics",
+			Actions: revenueTabs(),
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"mt-3\"><div class=\"flex items-center gap-3\"><span class=\"text-4xl font-semibold\">$184.78K</span> <span class=\"text-success font-medium\">+3.24%</span></div><span class=\"text-base-content/60 text-sm\">Total income in this year</span></div></div><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -62,7 +87,19 @@ func EcommerceDashboard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></div></div></div><div class=\"xl:col-span-5\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-0\"><div class=\"flex items-center justify-between px-5 pt-5\"><span class=\"font-medium\">Customer Acquisition</span><div class=\"inline-flex items-center gap-2\"><div class=\"text-base-content/60 w-6 border border-dashed\"></div><span class=\"text-base-content/80 text-xs\">Prediction</span></div></div><div class=\"mt-4 py-3\"><div class=\"divide-base-300 grid grid-cols-2 gap-5 px-5 sm:grid-cols-3 sm:divide-x\"><div class=\"text-center\"><p>Advertise</p><p class=\"mt-0.5 text-xl font-medium\">$148</p><div class=\"text-success mt-0.5 inline-flex items-center gap-1\"><span class=\"iconify lucide--arrow-up size-3\"></span><p class=\"text-xs\">4.78%</p></div></div><div class=\"hidden text-center sm:block\"><p>Customers</p><p class=\"mt-0.5 text-xl font-medium\">427</p><div class=\"text-success mt-0.5 inline-flex items-center gap-1\"><span class=\"iconify lucide--arrow-up size-3\"></span><p class=\"text-xs\">3.15%</p></div></div></div></div><div class=\"-mt-25 sm:mx-5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div></div></div><div class=\"xl:col-span-5\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-0\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = ui.CardToolbar(ui.CardToolbarProps{
+			Title:   "Customer Acquisition",
+			Actions: predictionLegend(),
+			Class:   "px-5 pt-5",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"mt-4 py-3\"><div class=\"divide-base-300 grid grid-cols-2 gap-5 px-5 sm:grid-cols-3 sm:divide-x\"><div class=\"text-center\"><p>Advertise</p><p class=\"mt-0.5 text-xl font-medium\">$148</p><div class=\"text-success mt-0.5 inline-flex items-center gap-1\"><span class=\"iconify lucide--arrow-up size-3\"></span><p class=\"text-xs\">4.78%</p></div></div><div class=\"hidden text-center sm:block\"><p>Customers</p><p class=\"mt-0.5 text-xl font-medium\">427</p><div class=\"text-success mt-0.5 inline-flex items-center gap-1\"><span class=\"iconify lucide--arrow-up size-3\"></span><p class=\"text-xs\">3.15%</p></div></div></div></div><div class=\"-mt-25 sm:mx-5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -70,7 +107,7 @@ func EcommerceDashboard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div></div></div></div><div class=\"mt-6 grid grid-cols-1 gap-6 xl:grid-cols-5 2xl:grid-cols-12\"><div class=\"xl:col-span-3 2xl:col-span-5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></div></div></div></div><div class=\"mt-6 grid grid-cols-1 gap-6 xl:grid-cols-5 2xl:grid-cols-12\"><div class=\"xl:col-span-3 2xl:col-span-5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -126,7 +163,7 @@ func EcommerceDashboard() templ.Component {
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " ")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, " ")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
@@ -134,7 +171,7 @@ func EcommerceDashboard() templ.Component {
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, " ")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " ")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
@@ -142,7 +179,7 @@ func EcommerceDashboard() templ.Component {
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, " ")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, " ")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
@@ -150,7 +187,7 @@ func EcommerceDashboard() templ.Component {
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " ")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, " ")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
@@ -158,7 +195,7 @@ func EcommerceDashboard() templ.Component {
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, " ")
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " ")
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
@@ -178,7 +215,7 @@ func EcommerceDashboard() templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, " ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, " ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -198,7 +235,7 @@ func EcommerceDashboard() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, " ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -206,7 +243,7 @@ func EcommerceDashboard() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, " ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, " ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -214,7 +251,7 @@ func EcommerceDashboard() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, " ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, " ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -222,7 +259,7 @@ func EcommerceDashboard() templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, " ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, " ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -248,7 +285,7 @@ func EcommerceDashboard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div><div class=\"xl:col-span-2 2xl:col-span-3\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body pb-3\"><div class=\"flex items-center gap-3\"><span class=\"iconify lucide--messages-square size-4.5\"></span> <span class=\"font-medium\">Quick Chat</span> <a href=\"/apps/chat\" class=\"btn btn-outline btn-sm border-line-strong ms-auto\">Go To Chat</a></div><div class=\"-mx-2 mt-2 space-y-0.5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div><div class=\"xl:col-span-2 2xl:col-span-3\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body pb-3\"><div class=\"flex items-center gap-3\"><span class=\"iconify lucide--messages-square size-4.5\"></span> <span class=\"font-medium\">Quick Chat</span> <a href=\"/apps/chat\" class=\"btn btn-outline btn-sm border-line-strong ms-auto\">Go To Chat</a></div><div class=\"-mx-2 mt-2 space-y-0.5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -272,15 +309,20 @@ func EcommerceDashboard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div></div></div></div><div class=\"xl:col-span-3 2xl:col-span-4\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body gap-0 p-0\"><div class=\"flex items-center gap-3 px-5 pt-5\"><span class=\"iconify lucide--globe-2 size-4.5\"></span> <span class=\"font-medium\">Global Sales (%)</span> <button class=\"btn btn-ghost btn-outline border-line-strong btn-sm z-1 ms-auto\"><span class=\"iconify lucide--eye size-4\"></span> Overview</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div></div></div></div><div class=\"xl:col-span-3 2xl:col-span-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ui.Chart(ui.ChartProps{ID: "global-sales-chart", Type: ui.ChartBar, Horizontal: true, RawConfigJSON: nxGlobalSalesConfig}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ui.ChartCard(ui.ChartCardProps{
+			Title:   "Global Sales (%)",
+			Icon:    "lucide--globe-2",
+			Actions: globalSalesOverviewButton(),
+			Chart:   ui.Chart(ui.ChartProps{ID: "global-sales-chart", Type: ui.ChartBar, Horizontal: true, RawConfigJSON: nxGlobalSalesConfig}),
+		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -321,7 +363,7 @@ func recentOrdersToolbar() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<span class=\"iconify lucide--shopping-bag size-4.5\"></span> <span class=\"font-medium\">Recent Orders</span> <button class=\"btn btn-outline border-line-strong btn-sm ms-auto\"><span class=\"iconify lucide--download size-3.5\"></span> Report</button>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<span class=\"iconify lucide--shopping-bag size-4.5\"></span> <span class=\"font-medium\">Recent Orders</span> <button class=\"btn btn-outline border-line-strong btn-sm ms-auto\"><span class=\"iconify lucide--download size-3.5\"></span> Report</button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -372,7 +414,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, " ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -388,33 +430,33 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<img alt=\"order image\" class=\"mask mask-squircle bg-base-200 size-7.5\" src=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<img alt=\"order image\" class=\"mask mask-squircle bg-base-200 size-7.5\" src=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var12 string
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue("/images/apps/ecommerce/products/" + imgNum + ".jpg")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 166, Col: 132}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 154, Col: 132}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\"><p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\"><p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(product)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 167, Col: 15}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 155, Col: 15}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -424,7 +466,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, " ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -443,7 +485,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 				var templ_7745c5c3_Var15 string
 				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(price)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 170, Col: 10}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 158, Col: 10}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 				if templ_7745c5c3_Err != nil {
@@ -455,7 +497,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, " ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -474,7 +516,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(date)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 173, Col: 9}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 161, Col: 9}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 				if templ_7745c5c3_Err != nil {
@@ -486,7 +528,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, " ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -507,7 +549,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<div class=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -520,20 +562,20 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var21 string
 				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(statusLabel)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 176, Col: 72}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 164, Col: 72}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -543,7 +585,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, " ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -559,7 +601,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div class=\"flex items-center gap-1\"><button aria-label=\"Show product\" class=\"btn btn-square btn-ghost btn-xs\"><span class=\"iconify lucide--eye text-base-content/60 size-4\"></span></button> <button aria-label=\"Show product\" class=\"btn btn-square btn-error btn-outline btn-xs border-transparent\"><span class=\"iconify lucide--trash size-4\"></span></button></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<div class=\"flex items-center gap-1\"><button aria-label=\"Show product\" class=\"btn btn-square btn-ghost btn-xs\"><span class=\"iconify lucide--eye text-base-content/60 size-4\"></span></button> <button aria-label=\"Show product\" class=\"btn btn-square btn-error btn-outline btn-xs border-transparent\"><span class=\"iconify lucide--trash size-4\"></span></button></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -600,59 +642,59 @@ func ecomChatItem(imgNum, name, time, message string) templ.Component {
 			templ_7745c5c3_Var23 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<div class=\"rounded-box hover:bg-base-200 flex cursor-pointer items-center gap-3 px-2 py-2 transition-all active:scale-[.98]\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11\" src=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"rounded-box hover:bg-base-200 flex cursor-pointer items-center gap-3 px-2 py-2 transition-all active:scale-[.98]\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11\" src=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var24 string
 		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.ResolveAttributeValue("/images/avatars/" + imgNum + ".png")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 189, Col: 107}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 177, Col: 107}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var24)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "\"><div class=\"grow\"><div class=\"flex gap-1\"><p class=\"grow\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\"><div class=\"grow\"><div class=\"flex gap-1\"><p class=\"grow\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var25 string
 		templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 192, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 180, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</p><span class=\"text-base-content/60 text-xs\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p><span class=\"text-base-content/60 text-xs\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var26 string
 		templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(time)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 193, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 181, Col: 53}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</span></div><p class=\"text-base-content/80 line-clamp-1 text-sm text-ellipsis\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</span></div><p class=\"text-base-content/80 line-clamp-1 text-sm text-ellipsis\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var27 string
 		templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 195, Col: 79}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 183, Col: 79}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</p></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -681,59 +723,59 @@ func quickChatItem(name, time, message string) templ.Component {
 			templ_7745c5c3_Var28 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<div class=\"hover:bg-base-200 rounded-btn flex items-center gap-2 px-2 py-1.5 transition\"><div class=\"avatar\"><div class=\"mask mask-squircle w-7 p-0.5\"><div class=\"bg-primary text-primary-content flex size-full items-center justify-center text-[10px] font-semibold\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<div class=\"hover:bg-base-200 rounded-btn flex items-center gap-2 px-2 py-1.5 transition\"><div class=\"avatar\"><div class=\"mask mask-squircle w-7 p-0.5\"><div class=\"bg-primary text-primary-content flex size-full items-center justify-center text-[10px] font-semibold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var29 string
 		templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(initials(name))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 202, Col: 194}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 190, Col: 194}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</div></div></div><div class=\"grow min-w-0\"><div class=\"flex items-center justify-between gap-1\"><p class=\"truncate text-sm font-medium\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</div></div></div><div class=\"grow min-w-0\"><div class=\"flex items-center justify-between gap-1\"><p class=\"truncate text-sm font-medium\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var30 string
 		templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 204, Col: 102}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 192, Col: 102}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "</p><span class=\"text-xs text-base-content/60\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</p><span class=\"text-xs text-base-content/60\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var31 string
 		templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(time)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 204, Col: 157}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 192, Col: 157}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</span></div><p class=\"truncate text-xs text-base-content/60\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</span></div><p class=\"truncate text-xs text-base-content/60\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var32 string
 		templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 205, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 193, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</p></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</p></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -741,7 +783,9 @@ func quickChatItem(name, time, message string) templ.Component {
 	})
 }
 
-func orderRow(checked bool, name, price, date, status string) templ.Component {
+// revenueTabs renders the Day/Month/Year period tabs for the Revenue Statistics
+// card toolbar.
+func revenueTabs() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -762,120 +806,160 @@ func orderRow(checked bool, name, price, date, status string) templ.Component {
 			templ_7745c5c3_Var33 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		bagClass := "badge-success"
-		bagLabel := "Delivered"
-		switch status {
-		case "on_going":
-			bagClass, bagLabel = "badge-info", "On Going"
-		case "confirmed":
-			bagClass, bagLabel = "badge-primary", "Confirmed"
-		case "canceled":
-			bagClass, bagLabel = "badge-error", "Canceled"
-		case "waiting":
-			bagClass, bagLabel = "badge-secondary", "Waiting"
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<tr><td><input aria-label=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "<div class=\"tabs tabs-box tabs-xs hidden sm:block\"><div class=\"tab false px-3\">Day</div><div class=\"tab false px-3\">Month</div><div class=\"tab tab-active px-3\">Year</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var34 string
-		templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.ResolveAttributeValue(name)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 226, Col: 30}
+		return nil
+	})
+}
+
+// predictionLegend renders the dashed-line "Prediction" legend for the Customer
+// Acquisition card toolbar.
+func predictionLegend() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var34)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "\" type=\"checkbox\" class=\"checkbox checkbox-sm\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var34 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var34 == nil {
+			templ_7745c5c3_Var34 = templ.NopComponent
 		}
-		if checked {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, " checked")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "></td><td><div class=\"flex items-center gap-3\"><div class=\"avatar\"><div class=\"mask mask-squircle w-8\"><div class=\"bg-base-300 w-full h-full flex items-center justify-center\"><span class=\"iconify lucide--package size-3\"></span></div></div></div><span class=\"text-sm\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var35 string
-		templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(name)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 227, Col: 269}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</span></div></td><td class=\"text-sm\">")
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<div class=\"inline-flex items-center gap-2\"><div class=\"text-base-content/60 w-6 border border-dashed\"></div><span class=\"text-base-content/80 text-xs\">Prediction</span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var36 string
-		templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(price)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 228, Col: 29}
+		return nil
+	})
+}
+
+// globalSalesOverviewButton renders the Overview eye button for the Global Sales
+// chart card toolbar.
+func globalSalesOverviewButton() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "</td><td class=\"text-sm\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var35 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var35 == nil {
+			templ_7745c5c3_Var35 = templ.NopComponent
 		}
-		var templ_7745c5c3_Var37 string
-		templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(date)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 229, Col: 28}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "</td><td>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var38 = []any{"badge", bagClass, "badge-sm badge-soft"}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var38...)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<div class=\"")
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "<button class=\"btn btn-ghost btn-outline border-line-strong btn-sm z-1 ms-auto\"><span class=\"iconify lucide--eye size-4\"></span> Overview</button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var39 string
-		templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var38).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 1, Col: 0}
+		return nil
+	})
+}
+
+// saleMetricsTabs renders the "2024 vs. 2025" comparison tab for the Sale
+// Metrics chart card toolbar.
+func saleMetricsTabs() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var39)
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var36 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var36 == nil {
+			templ_7745c5c3_Var36 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "<div class=\"tabs tabs-box tabs-sm gap-1 bg-base-200 rounded-box\"><a class=\"tab tab-active\">2024 vs. 2025</a></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "\">")
+		return nil
+	})
+}
+
+// makeDealButton renders the primary CTA for the Customer Deals card toolbar.
+func makeDealButton() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var37 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var37 == nil {
+			templ_7745c5c3_Var37 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<a href=\"#\" class=\"btn btn-primary btn-sm\">Make a Deal</a>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var40 string
-		templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(bagLabel)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 230, Col: 72}
+		return nil
+	})
+}
+
+// dealRow renders a single row of the CRM Customer Deals table.
+func dealRow(img, name, value, statusLabel, statusClass, date string) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</div></td><td><div class=\"flex items-center gap-1\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var38 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var38 == nil {
+			templ_7745c5c3_Var38 = templ.NopComponent
 		}
-		templ_7745c5c3_Var41 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Var39 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 			if !templ_7745c5c3_IsBuffer {
@@ -887,39 +971,215 @@ func orderRow(checked bool, name, price, date, status string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = ui.IconSpan("lucide--eye", "size-4").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Var40 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<img class=\"mask mask-squircle bg-base-200 size-7\" src=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var41 string
+				templ_7745c5c3_Var41, templ_7745c5c3_Err = templ.ResolveAttributeValue("/images/avatars/" + img + ".png")
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 241, Col: 93}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var41)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "\" alt=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var42 string
+				templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.ResolveAttributeValue(name)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 241, Col: 106}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var42)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "\"><p>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var43 string
+				templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.JoinStringErrs(name)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 242, Col: 12}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var43))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</p>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = table.TableCell("flex items-center space-x-3 truncate", nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var40), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, " ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var44 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				var templ_7745c5c3_Var45 string
+				templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.JoinStringErrs(value)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 245, Col: 10}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = table.TableCell("", nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var44), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, " ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var46 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				var templ_7745c5c3_Var47 = []any{"badge badge-sm badge-soft", statusClass}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var47...)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "<div class=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var48 string
+				templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var47).String())
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 1, Col: 0}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var48)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var49 string
+				templ_7745c5c3_Var49, templ_7745c5c3_Err = templ.JoinStringErrs(statusLabel)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 248, Col: 72}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var49))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = table.TableCell("", nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var46), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, " ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var50 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				var templ_7745c5c3_Var51 string
+				templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.JoinStringErrs(date)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 251, Col: 9}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var51))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = table.TableCell("", nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var50), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, " ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var52 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<button class=\"btn btn-square btn-ghost btn-xs\" aria-label=\"View\"><span class=\"iconify lucide--eye text-base-content/80 size-4\"></span></button>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = table.TableCell("", nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var52), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Preview"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var41), templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Var42 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-			if !templ_7745c5c3_IsBuffer {
-				defer func() {
-					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err == nil {
-						templ_7745c5c3_Err = templ_7745c5c3_BufErr
-					}
-				}()
-			}
-			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = ui.IconSpan("lucide--trash-2", "size-4").Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			return nil
-		})
-		templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonXS, Shape: ui.ButtonShapeSquare, Attrs: templ.Attributes{"aria-label": "Delete"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var42), templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</div></td></tr>")
+		templ_7745c5c3_Err = table.TableRow("", false, nil).Render(templ.WithChildren(ctx, templ_7745c5c3_Var39), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -943,54 +1203,85 @@ func CRMDashboard() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var43 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var43 == nil {
-			templ_7745c5c3_Var43 = templ.NopComponent
+		templ_7745c5c3_Var53 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var53 == nil {
+			templ_7745c5c3_Var53 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<div class=\"flex items-center justify-between\"><h3 class=\"text-lg font-medium\">CRM Overview</h3><div class=\"breadcrumbs hidden p-0 text-sm sm:inline\"><ul><li><a href=\"/dashboards/ecommerce\">Nexus</a></li><li>Dashboards</li><li class=\"opacity-80\">CRM</li></ul></div></div><div class=\"mt-6 grid grid-cols-12 gap-5\"><div class=\"col-span-12 xl:col-span-8\"><div class=\"grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-1\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = crmStatCard("lucide--users", "Customers", "4,235", "8.04%", "badge-success", "").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = crmStatCard("lucide--dollar-sign", "Revenue", "$75,400", "15.3%", "badge-success", "active").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = crmStatCard("lucide--handshake", "Closed Deals", "574", "-2.4%", "badge-error", "").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = crmStatCard("lucide--smile", "Satisfaction", "93%", "2.3%", "badge-success", "").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</div><div class=\"mt-5\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body pb-0\"><div class=\"flex items-center justify-between\"><h5 class=\"text-base font-semibold\">Sale Metrics</h5><div class=\"tabs tabs-box tabs-sm gap-1 bg-base-200 rounded-box\"><a class=\"tab tab-active\">2024 vs. 2025</a></div></div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = ui.Chart(ui.ChartProps{ID: "sale-metrics-chart", Type: ui.ChartColumn, RawConfigJSON: nxCRMSaleMetricsConfig}).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</div></div></div><div class=\"mt-5 grid grid-cols-3 gap-5\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-base-content/60\">Realtime Sales</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">541</span></div><p class=\"text-xs text-base-content/60 mt-1\">494 last hour</p></div></div><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-base-content/60\">Revenue</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">$51,474</span></div><p class=\"text-xs text-base-content/60 mt-1\">$49,162 last month</p></div></div><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-base-content/60\">Customer Retention</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">3.14%</span></div><p class=\"text-xs text-base-content/60 mt-1\">2.16% last week</p></div></div></div><div class=\"mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5\"><div class=\"xl:col-span-2\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body\"><p class=\"font-semibold mb-2\">Customer Acquisition</p>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = ui.Chart(ui.ChartProps{
-			ID: "crm-cust-acq-chart", Type: ui.ChartLine, Height: "300",
-			Series: []ui.ChartSeries{
-				{Name: "Acquired", Data: []float64{31, 40, 28, 51, 42, 109, 100}},
+		templ_7745c5c3_Err = nav.PageHeading(nav.PageHeadingProps{
+			Title:  "CRM Overview",
+			Size:   nav.PageHeadingSizeSM,
+			Layout: nav.PageHeadingLayoutSplit,
+			Breadcrumbs: []nav.BreadcrumbItem{
+				{Label: "Nexus", Href: "/dashboards/ecommerce"},
+				{Label: "Dashboards"},
+				{Label: "CRM"},
 			},
-			Categories: []string{"2016", "2017", "2018", "2019", "2020", "2021", "2025"},
-			Colors:     []string{"#167bff"}}).Render(ctx, templ_7745c5c3_Buffer)
+		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</div></div></div><div><div class=\"card bg-base-100 shadow bg-gradient-to-tr from-primary to-primary/85 text-primary-content\"><div class=\"card-body\"><h3 class=\"font-semibold italic\">Upgrade to premium</h3><p class=\"text-sm opacity-80\">Make the better business analytics with Premium Dashboard</p><div class=\"avatar-group -space-x-3 mt-3\"><div class=\"avatar placeholder\"><div class=\"bg-neutral text-neutral-content w-8\"><span>DN</span></div></div><div class=\"avatar placeholder\"><div class=\"bg-neutral text-neutral-content w-8\"><span>JS</span></div></div><div class=\"avatar placeholder\"><div class=\"bg-neutral text-neutral-content w-8\"><span>RK</span></div></div></div><button class=\"btn btn-neutral btn-sm btn-block mt-4\">Pay Monthly $29</button></div></div></div></div><div class=\"mt-5 grid grid-cols-1 xl:grid-cols-2 gap-5\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body\"><p class=\"font-semibold\">Goal Status</p><p class=\"text-xs text-base-content/60\">(Nearly Finished)</p><div class=\"mt-3 flex items-center gap-6\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "<div class=\"mt-6 grid grid-cols-12 gap-5\"><div class=\"col-span-12 xl:col-span-8\"><div class=\"grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--users", Label: "Customers", Value: "4,235", Trend: "8.04%", TrendUp: true}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--dollar-sign", Label: "Revenue", Value: "$75,400", Trend: "15.3%", TrendUp: true}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--handshake", Label: "Closed Deals", Value: "574", Trend: "-2.4%", TrendUp: false}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--smile", Label: "Satisfaction", Value: "93%", Trend: "2.3%", TrendUp: true}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "</div><div class=\"mt-5\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = ui.ChartCard(ui.ChartCardProps{
+			Title:   "Sale Metrics",
+			Actions: saleMetricsTabs(),
+			Chart:   ui.Chart(ui.ChartProps{ID: "sale-metrics-chart", Type: ui.ChartColumn, RawConfigJSON: nxCRMSaleMetricsConfig}),
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</div><div class=\"mt-5 grid grid-cols-3 gap-5\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-base-content/60\">Realtime Sales</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">541</span></div><p class=\"text-xs text-base-content/60 mt-1\">494 last hour</p></div></div><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-base-content/60\">Revenue</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">$51,474</span></div><p class=\"text-xs text-base-content/60 mt-1\">$49,162 last month</p></div></div><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-base-content/60\">Customer Retention</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">3.14%</span></div><p class=\"text-xs text-base-content/60 mt-1\">2.16% last week</p></div></div></div><div class=\"mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5\"><div class=\"xl:col-span-2\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = ui.ChartCard(ui.ChartCardProps{
+			Title: "Customer Acquisition",
+			Chart: ui.Chart(ui.ChartProps{
+				ID: "crm-cust-acq-chart", Type: ui.ChartLine, Height: "300",
+				Series: []ui.ChartSeries{
+					{Name: "Acquired", Data: []float64{31, 40, 28, 51, 42, 109, 100}},
+				},
+				Categories: []string{"2016", "2017", "2018", "2019", "2020", "2021", "2025"},
+				Colors:     []string{"#167bff"}}),
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "</div><div><div class=\"card bg-base-100 shadow bg-gradient-to-tr from-primary to-primary/85 text-primary-content\"><div class=\"card-body\"><h3 class=\"font-semibold italic\">Upgrade to premium</h3><p class=\"text-sm opacity-80\">Make the better business analytics with Premium Dashboard</p><div class=\"avatar-group -space-x-3 mt-3\"><div class=\"avatar placeholder\"><div class=\"bg-neutral text-neutral-content w-8\"><span>DN</span></div></div><div class=\"avatar placeholder\"><div class=\"bg-neutral text-neutral-content w-8\"><span>JS</span></div></div><div class=\"avatar placeholder\"><div class=\"bg-neutral text-neutral-content w-8\"><span>RK</span></div></div></div><button class=\"btn btn-neutral btn-sm btn-block mt-4\">Pay Monthly $29</button></div></div></div></div><div class=\"mt-5 grid grid-cols-1 xl:grid-cols-2 gap-5\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = ui.CardToolbar(ui.CardToolbarProps{
+			Title:    "Goal Status",
+			Subtitle: "(Nearly Finished)",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "<div class=\"mt-3 flex items-center gap-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -998,7 +1289,7 @@ func CRMDashboard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "<div><p class=\"text-2xl font-bold\">76%</p><p class=\"text-sm text-base-content/60\">You're completed 80% of yearly goal</p></div></div><div class=\"mt-4\"><div class=\"flex items-center justify-between text-sm\"><span>Budget Spent</span><span class=\"font-semibold\">$22500<span class=\"text-base-content/60 font-normal\">/$30000</span></span></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<div><p class=\"text-2xl font-bold\">76%</p><p class=\"text-sm text-base-content/60\">You're completed 80% of yearly goal</p></div></div><div class=\"mt-4\"><div class=\"flex items-center justify-between text-sm\"><span>Budget Spent</span><span class=\"font-semibold\">$22500<span class=\"text-base-content/60 font-normal\">/$30000</span></span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1006,134 +1297,189 @@ func CRMDashboard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</div><div class=\"mt-4 text-end\"><a href=\"#\" class=\"btn btn-ghost btn-sm\">Change Goal</a></div></div></div><div class=\"card bg-base-100 shadow\"><div class=\"card-body\"><p class=\"font-semibold\">Social Acquisition</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</div><div class=\"mt-4 text-end\"><a href=\"#\" class=\"btn btn-ghost btn-sm\">Change Goal</a></div></div></div><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ui.Chart(ui.ChartProps{
-			ID: "crm-social-chart", Type: ui.ChartBar, Height: "300", Horizontal: true,
-			Series: []ui.ChartSeries{
-				{Name: "Sales", Data: []float64{48, 35, 10, 7}},
-			},
-			Categories:  []string{"Facebook", "Instagram", "Whatsapp", "LinkedIn"},
-			Colors:      []string{"#167bff", "#a855f7", "#06b6d4", "#22c55e"},
-			StrokeWidth: 0, FillOpacity: 1.0}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ui.ChartCard(ui.ChartCardProps{
+			Title: "Social Acquisition",
+			Chart: ui.Chart(ui.ChartProps{
+				ID: "crm-social-chart", Type: ui.ChartBar, Height: "300", Horizontal: true,
+				Series: []ui.ChartSeries{
+					{Name: "Sales", Data: []float64{48, 35, 10, 7}},
+				},
+				Categories:  []string{"Facebook", "Instagram", "Whatsapp", "LinkedIn"},
+				Colors:      []string{"#167bff", "#a855f7", "#06b6d4", "#22c55e"},
+				StrokeWidth: 0, FillOpacity: 1.0}),
+		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "</div></div></div><div class=\"mt-5\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body\"><div class=\"flex items-center justify-between mb-4\"><p class=\"font-semibold text-base\">Customer Deals</p><a href=\"#\" class=\"btn btn-primary btn-sm\">Make a Deal</a></div><div class=\"overflow-x-auto\"><table class=\"table\"><thead><tr><th>Customer</th><th>Value</th><th>Status</th><th>Date</th><th>Action</th></tr></thead> <tbody><tr><td class=\"flex items-center space-x-3 truncate\"><img class=\"mask mask-squircle bg-base-200 size-7\" src=\"/images/avatars/1.png\" alt=\"John Doe\"><p>John Doe</p></td><td>$50,000</td><td><div class=\"badge badge-success badge-sm badge-soft\">Completed</div></td><td>16 Dec</td><td><button class=\"btn btn-square btn-ghost btn-xs\" aria-label=\"View\"><span class=\"iconify lucide--eye text-base-content/80 size-4\"></span></button></td></tr><tr><td class=\"flex items-center space-x-3 truncate\"><img class=\"mask mask-squircle bg-base-200 size-7\" src=\"/images/avatars/2.png\" alt=\"Jane Smith\"><p>Jane Smith</p></td><td>$12,240</td><td><div class=\"badge badge-warning badge-sm badge-soft\">Pending</div></td><td>21 June</td><td><button class=\"btn btn-square btn-ghost btn-xs\" aria-label=\"View\"><span class=\"iconify lucide--eye text-base-content/80 size-4\"></span></button></td></tr><tr><td class=\"flex items-center space-x-3 truncate\"><img class=\"mask mask-squircle bg-base-200 size-7\" src=\"/images/avatars/3.png\" alt=\"Rahul Kumar\"><p>Rahul Kumar</p></td><td>$87,452</td><td><div class=\"badge badge-success badge-sm badge-soft\">Completed</div></td><td>15 Aug</td><td><button class=\"btn btn-square btn-ghost btn-xs\" aria-label=\"View\"><span class=\"iconify lucide--eye text-base-content/80 size-4\"></span></button></td></tr><tr><td class=\"flex items-center space-x-3 truncate\"><img class=\"mask mask-squircle bg-base-200 size-7\" src=\"/images/avatars/4.png\" alt=\"Emily Davis\"><p>Emily Davis</p></td><td>$65,357</td><td><div class=\"badge badge-success badge-sm badge-soft\">Completed</div></td><td>17 Nov</td><td><button class=\"btn btn-square btn-ghost btn-xs\" aria-label=\"View\"><span class=\"iconify lucide--eye text-base-content/80 size-4\"></span></button></td></tr><tr><td class=\"flex items-center space-x-3 truncate\"><img class=\"mask mask-squircle bg-base-200 size-7\" src=\"/images/avatars/5.png\" alt=\"Akash Singh\"><p>Akash Singh</p></td><td>$35,769</td><td><div class=\"badge badge-error badge-sm badge-soft\">Canceled</div></td><td>30 Jan</td><td><button class=\"btn btn-square btn-ghost btn-xs\" aria-label=\"View\"><span class=\"iconify lucide--eye text-base-content/80 size-4\"></span></button></td></tr></tbody></table></div></div></div></div><div class=\"mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5\"><div class=\"col-span-1\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body\"><div class=\"flex items-center gap-2\"><span class=\"iconify lucide--unplug text-base-content/80 size-4.5\"></span><p class=\"grow font-medium\">Quick Integration</p><button class=\"btn btn-ghost btn-sm border-line-strong\"><span class=\"iconify lucide--settings-2 size-3.5\"></span> Manage</button></div><div class=\"mt-4 space-y-3.5\"><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/salesforce.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Salesforce</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Salesforce provides customer relationship management software and application focused on sales</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Connect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/asana.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Asana</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Track, manage and connect your project across any team.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/slack.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Slack</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Slack is a new way to communicate with your team.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Connect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/notion.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Notion</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Notion is a freemium productivity and note-taking web application developed by Notion Lab Inc.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/hubspot.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Hubspot</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Hubspot is a CRM platform with all the software, integrations and resources you need to connect</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div></div></div></div></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "</div></div><div class=\"mt-5\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		return nil
-	})
-}
-
-func crmStatCard(icon, label, value, trend, trendClass, active string) templ.Component {
-	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
-			return templ_7745c5c3_CtxErr
+		templ_7745c5c3_Err = ui.CardToolbar(ui.CardToolbarProps{
+			Title:   "Customer Deals",
+			Actions: makeDealButton(),
+			Class:   "mb-4",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-		if !templ_7745c5c3_IsBuffer {
-			defer func() {
-				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err == nil {
-					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<div class=\"overflow-x-auto\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var54 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+			if !templ_7745c5c3_IsBuffer {
+				defer func() {
+					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err == nil {
+						templ_7745c5c3_Err = templ_7745c5c3_BufErr
+					}
+				}()
+			}
+			ctx = templ.InitializeContext(ctx)
+			templ_7745c5c3_Var55 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
 				}
-			}()
-		}
-		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var44 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var44 == nil {
-			templ_7745c5c3_Var44 = templ.NopComponent
-		}
-		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<div class=\"cursor-pointer\"><div class=\"card bg-base-100 false shadow\"><div class=\"card-body gap-2 p-4 2xl:p-5\"><div class=\"flex items-center gap-3\"><div class=\"bg-base-200 rounded-box false flex items-center p-1.5\">")
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Var56 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+					templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+					templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+					if !templ_7745c5c3_IsBuffer {
+						defer func() {
+							templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+							if templ_7745c5c3_Err == nil {
+								templ_7745c5c3_Err = templ_7745c5c3_BufErr
+							}
+						}()
+					}
+					ctx = templ.InitializeContext(ctx)
+					templ_7745c5c3_Err = table.TableHeadCell("Customer").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, " ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = table.TableHeadCell("Value").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, " ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = table.TableHeadCell("Status").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, " ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = table.TableHeadCell("Date").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, " ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = table.TableHeadCell("Action").Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					return nil
+				})
+				templ_7745c5c3_Err = table.TableHeadRow().Render(templ.WithChildren(ctx, templ_7745c5c3_Var56), templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = table.TableHead().Render(templ.WithChildren(ctx, templ_7745c5c3_Var55), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, " ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var57 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = dealRow("1", "John Doe", "$50,000", "Completed", "badge-success", "16 Dec").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, " ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = dealRow("2", "Jane Smith", "$12,240", "Pending", "badge-warning", "21 June").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, " ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = dealRow("3", "Rahul Kumar", "$87,452", "Completed", "badge-success", "15 Aug").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, " ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = dealRow("4", "Emily Davis", "$65,357", "Completed", "badge-success", "17 Nov").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, " ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = dealRow("5", "Akash Singh", "$35,769", "Canceled", "badge-error", "30 Jan").Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = table.TableBody().Render(templ.WithChildren(ctx, templ_7745c5c3_Var57), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			return nil
+		})
+		templ_7745c5c3_Err = table.TableWithProps(table.TableProps{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var54), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var45 = []any{"iconify", icon, "size-4.5"}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var45...)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "<span class=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var46 string
-		templ_7745c5c3_Var46, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var45).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var46)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "\"></span></div><p class=\"line-clamp-1 font-medium text-sm\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var47 string
-		templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.JoinStringErrs(label)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 401, Col: 56}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var47))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</p></div><div class=\"mt-5 mb-0.5 flex items-center gap-2 text-sm 2xl:gap-3\"><p class=\"text-lg font-medium\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var48 string
-		templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs(value)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 404, Col: 43}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "</p>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var49 = []any{"badge badge-soft", trendClass, "badge-sm gap-0.5 px-1.5"}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var49...)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "<div class=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var50 string
-		templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var49).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var50)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "\"><span class=\"iconify lucide--arrow-up size-3\"></span> ")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var51 string
-		templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.JoinStringErrs(trend)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 407, Col: 13}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var51))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</div></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "</div></div></div></div><div class=\"mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5\"><div class=\"col-span-1\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body\"><div class=\"flex items-center gap-2\"><span class=\"iconify lucide--unplug text-base-content/80 size-4.5\"></span><p class=\"grow font-medium\">Quick Integration</p><button class=\"btn btn-ghost btn-sm border-line-strong\"><span class=\"iconify lucide--settings-2 size-3.5\"></span> Manage</button></div><div class=\"mt-4 space-y-3.5\"><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/salesforce.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Salesforce</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Salesforce provides customer relationship management software and application focused on sales</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Connect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/asana.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Asana</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Track, manage and connect your project across any team.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/slack.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Slack</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Slack is a new way to communicate with your team.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Connect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/notion.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Notion</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Notion is a freemium productivity and note-taking web application developed by Notion Lab Inc.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/hubspot.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Hubspot</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Hubspot is a CRM platform with all the software, integrations and resources you need to connect</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div></div></div></div></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

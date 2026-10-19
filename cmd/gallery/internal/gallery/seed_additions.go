@@ -11,6 +11,7 @@ import (
 	"github.com/emergent-company/go-daisy/components/layout"
 	"github.com/emergent-company/go-daisy/components/nav"
 	"github.com/emergent-company/go-daisy/components/schemaform"
+	"github.com/emergent-company/go-daisy/components/table"
 	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/galleryruntime"
 	"github.com/emergent-company/go-daisy/shared"
@@ -2300,6 +2301,132 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 						return questionnaireNumbersDemo()
 					},
 					FrameHeight: "340px",
+				},
+			},
+		},
+
+		// ── Data Display / Card Toolbar ────────────────────────────────────────
+		{
+			Slug:        "card-toolbar",
+			Name:        "Card Toolbar",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Content",
+			Description: "Card header row: title + optional subtitle on the left, an action slot on the right. Sits inside card-body p-0; padding lives with the caller.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "With actions",
+					Description: "Title with subtitle and a button in the action slot.",
+					RenderFunc: func(params url.Values) templ.Component {
+						title := params.Get("title")
+						if title == "" {
+							title = "Revenue Statistics"
+						}
+						subtitle := params.Get("subtitle")
+						return ui.CardToolbarWithBoundary(ui.CardToolbarProps{
+							Title:    title,
+							Subtitle: subtitle,
+							Actions:  shared.RenderInto(ui.Button(ui.ButtonProps{}), shared.StrComp("Overview")),
+							Class:    "px-5 pt-5",
+						})
+					},
+					Tokens:      CardToolbarTokens(),
+					FrameHeight: "100px",
+				},
+			},
+		},
+
+		// ── Data Display / Chart Card ──────────────────────────────────────────
+		{
+			Slug:        "chart-card",
+			Name:        "Chart Card",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Content",
+			Description: "Card shell around a chart: toolbar header, unpadded chart region, optional bordered footer.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Column chart",
+					Description: "A chart card with a toolbar, legend and a column chart.",
+					RenderFunc: func(params url.Values) templ.Component {
+						title := params.Get("title")
+						if title == "" {
+							title = "Sale Metrics"
+						}
+						return ui.ChartCardWithBoundary(ui.ChartCardProps{
+							Title: title,
+							Chart: ui.Chart(ui.ChartProps{
+								ID:     "chart-card-demo",
+								Type:   ui.ChartColumn,
+								Height: "220",
+								Series: []ui.ChartSeries{
+									{Name: "2024", Data: []float64{30, 40, 35, 50, 49, 60}},
+									{Name: "2025", Data: []float64{35, 45, 40, 55, 52, 65}},
+								},
+								Categories: []string{"Jan", "Feb", "Mar", "Apr", "May", "Jun"},
+							}),
+						})
+					},
+					Tokens:      ChartCardTokens(),
+					FrameHeight: "320px",
+				},
+			},
+		},
+
+		// ── Navigation / Page Heading ──────────────────────────────────────────
+		{
+			Slug:        "page-heading",
+			Name:        "Page Heading",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Headers",
+			Description: "Page heading with title, optional subtitle and breadcrumbs. Stacked or split layout, MD or SM title size.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Split",
+					Description: "Single-row header: title left, compact breadcrumbs right (hidden below sm).",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return nav.PageHeadingWithBoundary(nav.PageHeadingProps{
+							Title:  "Business Overview",
+							Layout: nav.PageHeadingLayoutSplit,
+							Size:   nav.PageHeadingSizeSM,
+							Margin: "mb-4",
+							Breadcrumbs: []nav.BreadcrumbItem{
+								{Label: "Nexus", Href: "#"},
+								{Label: "Dashboards"},
+								{Label: "Ecommerce"},
+							},
+						})
+					},
+					Tokens:      PageHeadingTokens(),
+					FrameHeight: "120px",
+				},
+			},
+		},
+
+		// ── Data Display / Data Grid ───────────────────────────────────────────
+		{
+			Slug:        "data-grid",
+			Name:        "Data Grid",
+			Category:    galleryruntime.CategoryDataDisplay,
+			Subcategory: "Tables",
+			Description: "Composite card-wrapped table with search, filter, row selection, batch actions, trailing actions slot and pagination.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "With search",
+					Description: "A two-column grid with a search field.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return table.DataGridWithBoundary(table.DataGridProps{
+							ID: "demo-grid",
+							Columns: []table.DataGridColumn{
+								{Key: "name", Label: "Name"},
+								{Key: "status", Label: "Status"},
+							},
+							Rows: []table.DataGridRow{
+								{ID: "1", Cells: []templ.Component{shared.StrComp("Alpha"), shared.StrComp("Active")}},
+								{ID: "2", Cells: []templ.Component{shared.StrComp("Beta"), shared.StrComp("Paused")}},
+							},
+							SearchName: "q",
+						})
+					},
+					FrameHeight: "320px",
 				},
 			},
 		},

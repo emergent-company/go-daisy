@@ -182,6 +182,11 @@ func BreadcrumbsTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// BreadcrumbsWithPropsTokens returns the DesignToken slice for BreadcrumbsWithPropsWithBoundary.
+func BreadcrumbsWithPropsTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{}
+}
+
 // DockTokens returns the DesignToken slice for DockWithBoundary.
 func DockTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
@@ -235,6 +240,11 @@ func LinkTokens() []galleryruntime.DesignToken {
 			},
 		},
 	}
+}
+
+// PageHeadingTokens returns the DesignToken slice for PageHeadingWithBoundary.
+func PageHeadingTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{}
 }
 
 // SearchTriggerTokens returns the DesignToken slice for SearchTriggerWithBoundary.

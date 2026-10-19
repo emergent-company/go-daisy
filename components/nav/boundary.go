@@ -59,6 +59,19 @@ func BreadcrumbsWithBoundary(items []BreadcrumbItem, divider BreadcrumbsDivider)
 	return devmode.ComponentBoundary("Breadcrumbs", Breadcrumbs(items, divider), map[string]any{"itemCount": len(items), "divider": string(divider)})
 }
 
+// BreadcrumbsWithPropsWithBoundary wraps BreadcrumbsWithProps with a dev-mode
+// component boundary annotation.
+// gallery:token items,compact,hideOnMobile
+// gallery:hint items:slice(3)
+func BreadcrumbsWithPropsWithBoundary(props BreadcrumbsProps) templ.Component {
+	return devmode.ComponentBoundary("Breadcrumbs", BreadcrumbsWithProps(props), map[string]any{
+		"itemCount":    len(props.Items),
+		"divider":      string(props.Divider),
+		"compact":      props.Compact,
+		"hideOnMobile": props.HideOnMobile,
+	})
+}
+
 // DockWithBoundary wraps Dock with a dev-mode component boundary annotation.
 // gallery:token items
 // gallery:hint items:slice(4)
@@ -79,6 +92,9 @@ func LinkWithBoundary(href string, variant LinkVariant, label string) templ.Comp
 }
 
 // PageHeadingWithBoundary wraps PageHeading with a dev-mode component boundary annotation.
+// gallery:token title,subtitle,layout,size
+// gallery:hint title:default(Page Title)
+// gallery:hint subtitle:default()
 func PageHeadingWithBoundary(props PageHeadingProps) templ.Component {
 	return devmode.ComponentBoundary("PageHeading", PageHeading(props), map[string]any{
 		"title":           props.Title,
@@ -92,6 +108,8 @@ func PageHeadingWithBoundary(props PageHeadingProps) templ.Component {
 		"hideBreadcrumbs": props.HideBreadcrumbs,
 		"noTopMargin":     props.NoTopMargin,
 		"flat":            props.Flat,
+		"layout":          string(props.Layout),
+		"size":            string(props.Size),
 	})
 }
 

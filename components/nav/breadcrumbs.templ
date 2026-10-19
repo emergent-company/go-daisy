@@ -28,13 +28,44 @@ templ breadcrumbItem(item BreadcrumbItem) {
 	</li>
 }
 
+// BreadcrumbsProps configures BreadcrumbsWithProps. Compact collapses the trail
+// to `p-0 text-sm` and drops the forced full-width; HideOnMobile adds
+// `hidden sm:inline` so the trail only shows at the sm breakpoint.
+type BreadcrumbsProps struct {
+	Items        []BreadcrumbItem
+	Divider      BreadcrumbsDivider
+	Compact      bool             // p-0 text-sm, no forced width
+	HideOnMobile bool             // hidden sm:inline
+	Attrs        templ.Attributes // spread last on the root div
+}
+
 // Breadcrumbs renders a DaisyUI breadcrumb navigation trail.
 templ Breadcrumbs(items []BreadcrumbItem, divider BreadcrumbsDivider) {
-	<div class="breadcrumbs text-sm"
-		style={ templ.KV("--breadcrumbs-separator: '/'", divider == BreadcrumbsDividerSlash), "width: 100%" }
-		{ devmode.Attrs(ctx, "nav/Breadcrumbs")... }>
+	@BreadcrumbsWithProps(BreadcrumbsProps{Items: items, Divider: divider})
+}
+
+// BreadcrumbsWithProps renders a DaisyUI breadcrumb navigation trail with
+// Compact and HideOnMobile options. With zero values the output is
+// byte-identical to Breadcrumbs.
+templ BreadcrumbsWithProps(props BreadcrumbsProps) {
+	{{ style := ""
+	if props.Divider == BreadcrumbsDividerSlash {
+		style = "--breadcrumbs-separator: '/'"
+	}
+	if !props.Compact {
+		if style != "" {
+			style += "; "
+		}
+		style += "width: 100%"
+	} }}
+	<div class={ "breadcrumbs text-sm", templ.KV("p-0", props.Compact), templ.KV("hidden sm:inline", props.HideOnMobile) }
+		if style != "" {
+			style={ style }
+		}
+		{ devmode.Attrs(ctx, "nav/Breadcrumbs")... }
+		{ props.Attrs... }>
 		<ul>
-			for _, item := range items {
+			for _, item := range props.Items {
 				@devmode.ElementBoundary("BreadcrumbItem", breadcrumbItem(item), item)
 			}
 		</ul>

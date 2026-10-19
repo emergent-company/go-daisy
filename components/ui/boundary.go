@@ -97,6 +97,30 @@ func CardWithBoundary(title string) templ.Component {
 	return devmode.ComponentBoundary("Card", Card(title, nil), map[string]any{"title": title})
 }
 
+// CardToolbarWithBoundary wraps CardToolbar with a dev-mode component boundary annotation.
+// gallery:token title,subtitle
+// gallery:hint title:default(Section Title)
+// gallery:hint subtitle:default()
+func CardToolbarWithBoundary(props CardToolbarProps) templ.Component {
+	return devmode.ComponentBoundary("CardToolbar", CardToolbar(props), map[string]any{
+		"title":    props.Title,
+		"subtitle": props.Subtitle,
+		"icon":     props.Icon,
+	})
+}
+
+// ChartCardWithBoundary wraps ChartCard with a dev-mode component boundary annotation.
+// gallery:token title,subtitle
+// gallery:hint title:default(Chart Title)
+// gallery:hint subtitle:default()
+func ChartCardWithBoundary(props ChartCardProps) templ.Component {
+	return devmode.ComponentBoundary("ChartCard", ChartCard(props), map[string]any{
+		"title":    props.Title,
+		"subtitle": props.Subtitle,
+		"icon":     props.Icon,
+	})
+}
+
 // AlertWithBoundary wraps Alert with a dev-mode component boundary annotation.
 // gallery:token typ,icon,message
 // gallery:hint message:default(Operation completed successfully.)
