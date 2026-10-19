@@ -111,8 +111,8 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 						</div>
 					</div>
 					<div class="mt-3 flex gap-2">
-						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonXS, ExtraClass: "grow"}){ "Account" }
-						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonOutline, Size: ui.ButtonXS, ExtraClass: "border-line-strong grow"}){ "Sign Out" }
+						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonXS, ExtraClass: "grow"}){ Account }
+						@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonOutline, Size: ui.ButtonXS, ExtraClass: "border-line-strong grow"}){ Sign Out }
 					</div>
 				</div>
 				<div class="px-2 pt-2 pb-1">
@@ -132,7 +132,7 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 				</div>
 				<hr class="border-line mx-2" />
 				<ul class="menu w-full p-2">
-					<li><div>@ui.IconSpan("lucide--user-plus", "size-4"){ "Add New Account" }</div></li>
+					<li><div>@ui.IconSpan("lucide--user-plus", "size-4"){ Add New Account }</div></li>
 				</ul>
 				<hr class="border-line mx-2" />
 				<ul class="menu w-full p-2">
@@ -162,13 +162,13 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 				</div>
 				<hr class="border-line" />
 				<ul class="menu w-full p-2">
-					<li><a>@ui.IconSpan("lucide--settings", "size-4"){ "Preferences" }</a></li>
-					<li><a>@ui.IconSpan("lucide--files", "size-4"){ "My Files" }</a></li>
-					<li><a>@ui.IconSpan("lucide--layers", "size-4"){ "Collections" }</a></li>
+					<li><a>@ui.IconSpan("lucide--settings", "size-4"){ Preferences }</a></li>
+					<li><a>@ui.IconSpan("lucide--files", "size-4"){ My Files }</a></li>
+					<li><a>@ui.IconSpan("lucide--layers", "size-4"){ Collections }</a></li>
 				</ul>
 				<hr class="border-line" />
 				<ul class="menu w-full p-2">
-					<li><a class="text-error hover:bg-error/10">@ui.IconSpan("lucide--log-out", "size-4"){ "Log Out" }</a></li>
+					<li><a class="text-error hover:bg-error/10">@ui.IconSpan("lucide--log-out", "size-4"){ Log Out }</a></li>
 				</ul>
 			</div>
 		</div>
@@ -189,9 +189,9 @@ templ ProfileMenuVariant(style string, opts ProfileMenuVariantOpts) {
 					</div>
 				</div>
 				<ul class="menu w-full p-2">
-					<li><a>@ui.IconSpan("lucide--gift", "size-4"){ "My Referrals" }</a></li>
-					<li><a>@ui.IconSpan("lucide--award", "size-4"){ "Referral Rewards" }</a></li>
-					<li><a>@ui.IconSpan("lucide--clock", "size-4"){ "Pending Invitations" }@ui.Badge(ui.BadgeProps{Label: "3", Variant: ui.BadgeWarning, Style: ui.BadgeStyleSoft, Size: ui.BadgeSizeSM})</a></li>
+					<li><a>@ui.IconSpan("lucide--gift", "size-4"){ My Referrals }</a></li>
+					<li><a>@ui.IconSpan("lucide--award", "size-4"){ Referral Rewards }</a></li>
+					<li><a>@ui.IconSpan("lucide--clock", "size-4"){ Pending Invitations }@ui.Badge(ui.BadgeProps{Label: "3", Variant: ui.BadgeWarning, Style: ui.BadgeStyleSoft, Size: ui.BadgeSizeSM})</a></li>
 				</ul>
 				<hr class="border-line" />
 				<div class="p-3">
