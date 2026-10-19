@@ -412,3 +412,28 @@ strong {
   @apply font-medium;
 }
 
+/* Nexus app chrome. The reference overrides two daisyUI defaults: card titles
+ * are body-sized (16px/500) rather than 18px/600, and a ghost button keeps the
+ * inherited text colour instead of picking up its colour variant. These live
+ * outside `@layer base` because daisyUI's own rules are unlayered and would
+ * otherwise win regardless of specificity. */
+[data-theme="nexus"] .card-title {
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+
+[data-theme="nexus"] .btn-ghost:not(.btn-active, :hover, :active:focus, :focus-visible, input:checked:not(.filter .btn)):not(:disabled, [disabled], .btn-disabled) {
+  --btn-fg: currentColor;
+}
+
+/* daisyUI 5.5 ships 600-weight buttons, table headers, menu titles and card
+ * titles; the reference pins all four to the 500 medium weight. */
+[data-theme="nexus"] .btn,
+[data-theme="nexus"] .table th,
+[data-theme="nexus"] .menu .menu-title {
+  font-weight: 500;
+}
+
+[data-theme="nexus"] .menu .menu-title {
+  color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+}

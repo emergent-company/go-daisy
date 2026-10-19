@@ -173,7 +173,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 			emptyItem(activeSlug, "Countdown", "/ui/components/countdown"),
 			emptyItem(activeSlug, "Drawer", "/ui/components/drawer"),
 			emptyItem(activeSlug, "Dropdown", "/ui/components/dropdown"),
-			emptyItem(activeSlug, "Indicator", "/ui/components/indicator"),
+			emptyItemBadge(activeSlug, "Indicator", "/ui/components/indicator", "New"),
 			emptyItem(activeSlug, "Loading", "/ui/components/loading"),
 			emptyItem(activeSlug, "Menu", "/ui/components/menu"),
 			emptyItem(activeSlug, "Modal", "/ui/components/modal"),
@@ -181,7 +181,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 			emptyItem(activeSlug, "Progress", "/ui/components/progress"),
 			emptyItem(activeSlug, "Step", "/ui/components/step"),
 			emptyItem(activeSlug, "Tab", "/ui/components/tab"),
-			emptyItem(activeSlug, "Table", "/ui/components/table"),
+			emptyItemBadge(activeSlug, "Table", "/ui/components/table", "New"),
 			emptyItem(activeSlug, "Timeline", "/ui/components/timeline"),
 			emptyItem(activeSlug, "Toast", "/ui/components/toast"),
 			emptyItem(activeSlug, "Tooltip", "/ui/components/tooltip"),
@@ -191,27 +191,23 @@ func nexusSidebar(activeSlug string) templ.Component {
 		}
 		templ_7745c5c3_Err = sc(activeSlug, "lucide--file-text", "Forms", []templ.Component{
 			emptyItem(activeSlug, "Checkbox", "/ui/forms/checkbox"),
-			emptyItem(activeSlug, "Fieldset", "/ui/forms/fieldset"),
+			emptyItemBadge(activeSlug, "Fieldset", "/ui/forms/fieldset", "New"),
 			emptyItem(activeSlug, "File Input", "/ui/forms/file-input"),
 			emptyItem(activeSlug, "Input", "/ui/forms/input"),
-			emptyItem(activeSlug, "Label", "/ui/forms/label"),
+			emptyItemBadge(activeSlug, "Label", "/ui/forms/label", "New"),
 			emptyItem(activeSlug, "Radio", "/ui/forms/radio"),
 			emptyItem(activeSlug, "Range", "/ui/forms/range"),
 			emptyItem(activeSlug, "Rating", "/ui/forms/rating"),
 			emptyItem(activeSlug, "Select", "/ui/forms/select"),
 			emptyItem(activeSlug, "Textarea", "/ui/forms/textarea"),
 			emptyItem(activeSlug, "Toggle", "/ui/forms/toggle"),
-			emptyItem(activeSlug, "Validator", "/ui/forms/validator"),
+			emptyItemBadge(activeSlug, "Validator", "/ui/forms/validator", "New"),
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = sc(activeSlug, "lucide--bar-chart-big", "Charts", []templ.Component{
-			emptyItem(activeSlug, "Area", "/ui/charts/area"),
-			emptyItem(activeSlug, "Bar", "/ui/charts/bar"),
-			emptyItem(activeSlug, "Column", "/ui/charts/column"),
-			emptyItem(activeSlug, "Line", "/ui/charts/line"),
-			emptyItem(activeSlug, "Pie", "/ui/charts/pie"),
+			apexGroup(activeSlug),
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -264,7 +260,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("@withden")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/shell/shell.templ`, Line: 144, Col: 131}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/shell/shell.templ`, Line: 140, Col: 131}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
