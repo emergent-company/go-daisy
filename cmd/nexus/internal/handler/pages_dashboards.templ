@@ -38,7 +38,7 @@ templ EcommerceDashboard() {
 									<span class="text-4xl font-semibold">$184.78K</span>
 									<span class="text-success font-medium">+3.24%</span>
 								</div>
-								<span class="text-base-content/60 text-sm">Total income in this year</span>
+								<span class="text-muted text-sm">Total income in this year</span>
 							</div>
 						</div>
 						<div>
@@ -165,7 +165,7 @@ templ ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string
 		}
 		@table.TableCell("", nil) {
 			<div class="flex items-center gap-1">
-				<button aria-label="Show product" class="btn btn-square btn-ghost btn-xs"><span class="iconify lucide--eye text-base-content/60 size-4"></span></button>
+				<button aria-label="Show product" class="btn btn-square btn-ghost btn-xs"><span class="iconify lucide--eye text-muted size-4"></span></button>
 				<button aria-label="Show product" class="btn btn-square btn-error btn-outline btn-xs border-transparent"><span class="iconify lucide--trash size-4"></span></button>
 			</div>
 		}
@@ -178,9 +178,9 @@ templ ecomChatItem(imgNum, name, time, message string) {
 		<div class="grow">
 			<div class="flex gap-1">
 				<p class="grow">{ name }</p>
-				<span class="text-base-content/60 text-xs">{ time }</span>
+				<span class="text-muted text-xs">{ time }</span>
 			</div>
-			<p class="text-base-content/80 line-clamp-1 text-sm text-ellipsis">{ message }</p>
+			<p class="text-body line-clamp-1 text-sm text-ellipsis">{ message }</p>
 		</div>
 	</div>
 }
@@ -189,8 +189,8 @@ templ quickChatItem(name, time, message string) {
 	<div class="hover:bg-base-200 rounded-btn flex items-center gap-2 px-2 py-1.5 transition">
 		<div class="avatar"><div class="mask mask-squircle w-7 p-0.5"><div class="bg-primary text-primary-content flex size-full items-center justify-center text-[10px] font-semibold">{ initials(name) }</div></div></div>
 		<div class="grow min-w-0">
-			<div class="flex items-center justify-between gap-1"><p class="truncate text-sm font-medium">{ name }</p><span class="text-xs text-base-content/60">{ time }</span></div>
-			<p class="truncate text-xs text-base-content/60">{ message }</p>
+			<div class="flex items-center justify-between gap-1"><p class="truncate text-sm font-medium">{ name }</p><span class="text-xs text-muted">{ time }</span></div>
+			<p class="truncate text-xs text-muted">{ message }</p>
 		</div>
 	</div>
 }
@@ -209,8 +209,8 @@ templ revenueTabs() {
 // Acquisition card toolbar.
 templ predictionLegend() {
 	<div class="inline-flex items-center gap-2">
-		<div class="text-base-content/60 w-6 border border-dashed"></div>
-		<span class="text-base-content/80 text-xs">Prediction</span>
+		<div class="text-muted w-6 border border-dashed"></div>
+		<span class="text-body text-xs">Prediction</span>
 	</div>
 }
 
@@ -251,7 +251,7 @@ templ dealRow(img, name, value, statusLabel, statusClass, date string) {
 			{ date }
 		}
 		@table.TableCell("", nil) {
-			<button class="btn btn-square btn-ghost btn-xs" aria-label="View"><span class="iconify lucide--eye text-base-content/80 size-4"></span></button>
+			<button class="btn btn-square btn-ghost btn-xs" aria-label="View"><span class="iconify lucide--eye text-body size-4"></span></button>
 		}
 	}
 }
@@ -284,19 +284,19 @@ templ CRMDashboard() {
 			</div>
 			<div class="mt-5 grid grid-cols-3 gap-5">
 				<div class="card bg-base-100 shadow"><div class="card-body p-4">
-					<p class="text-sm text-base-content/60">Realtime Sales</p>
+					<p class="text-sm text-muted">Realtime Sales</p>
 					<div class="mt-2 flex items-baseline gap-2"><span class="text-2xl font-bold">541</span></div>
-					<p class="text-xs text-base-content/60 mt-1">494 last hour</p>
+					<p class="text-xs text-muted mt-1">494 last hour</p>
 				</div></div>
 				<div class="card bg-base-100 shadow"><div class="card-body p-4">
-					<p class="text-sm text-base-content/60">Revenue</p>
+					<p class="text-sm text-muted">Revenue</p>
 					<div class="mt-2 flex items-baseline gap-2"><span class="text-2xl font-bold">$51,474</span></div>
-					<p class="text-xs text-base-content/60 mt-1">$49,162 last month</p>
+					<p class="text-xs text-muted mt-1">$49,162 last month</p>
 				</div></div>
 				<div class="card bg-base-100 shadow"><div class="card-body p-4">
-					<p class="text-sm text-base-content/60">Customer Retention</p>
+					<p class="text-sm text-muted">Customer Retention</p>
 					<div class="mt-2 flex items-baseline gap-2"><span class="text-2xl font-bold">3.14%</span></div>
-					<p class="text-xs text-base-content/60 mt-1">2.16% last week</p>
+					<p class="text-xs text-muted mt-1">2.16% last week</p>
 				</div></div>
 			</div>
 			<div class="mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5">
@@ -333,10 +333,10 @@ templ CRMDashboard() {
 					})
 					<div class="mt-3 flex items-center gap-6">
 						@ui.RadialProgress(ui.ProgressColor("primary"), 76, "w-32 h-32", "10px")
-						<div><p class="text-2xl font-bold">76%</p><p class="text-sm text-base-content/60">You're completed 80% of yearly goal</p></div>
+						<div><p class="text-2xl font-bold">76%</p><p class="text-sm text-muted">You're completed 80% of yearly goal</p></div>
 					</div>
 					<div class="mt-4">
-						<div class="flex items-center justify-between text-sm"><span>Budget Spent</span><span class="font-semibold">$22500<span class="text-base-content/60 font-normal">/$30000</span></span></div>
+						<div class="flex items-center justify-between text-sm"><span>Budget Spent</span><span class="font-semibold">$22500<span class="text-muted font-normal">/$30000</span></span></div>
 						@ui.Progress(ui.ProgressColor("primary"), 75, 100, nil)
 					</div>
 					<div class="mt-4 text-end"><a href="#" class="btn btn-ghost btn-sm">Change Goal</a></div>
@@ -388,34 +388,34 @@ templ CRMDashboard() {
 				<div class="col-span-1">
 					<div class="card bg-base-100 shadow"><div class="card-body">
 						<div class="flex items-center gap-2">
-							<span class="iconify lucide--unplug text-base-content/80 size-4.5"></span>
+							<span class="iconify lucide--unplug text-body size-4.5"></span>
 							<p class="grow font-medium">Quick Integration</p>
 							<button class="btn btn-ghost btn-sm border-line-strong"><span class="iconify lucide--settings-2 size-3.5"></span> Manage</button>
 						</div>
 						<div class="mt-4 space-y-3.5">
 							<div class="flex items-center gap-3">
 								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="/images/brand-logo/salesforce.svg"/>
-								<div class="grow"><p class="leading-none font-medium">Salesforce</p><p class="text-base-content/80 line-clamp-1 text-sm">Salesforce provides customer relationship management software and application focused on sales</p></div>
+								<div class="grow"><p class="leading-none font-medium">Salesforce</p><p class="text-body line-clamp-1 text-sm">Salesforce provides customer relationship management software and application focused on sales</p></div>
 								<button class="btn btn-xs btn-soft btn-primary">Connect</button>
 							</div>
 							<div class="flex items-center gap-3">
 								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="/images/brand-logo/asana.svg"/>
-								<div class="grow"><p class="leading-none font-medium">Asana</p><p class="text-base-content/80 line-clamp-1 text-sm">Track, manage and connect your project across any team.</p></div>
+								<div class="grow"><p class="leading-none font-medium">Asana</p><p class="text-body line-clamp-1 text-sm">Track, manage and connect your project across any team.</p></div>
 								<button class="btn btn-xs btn-soft btn-primary">Disconnect</button>
 							</div>
 							<div class="flex items-center gap-3">
 								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="/images/brand-logo/slack.svg"/>
-								<div class="grow"><p class="leading-none font-medium">Slack</p><p class="text-base-content/80 line-clamp-1 text-sm">Slack is a new way to communicate with your team.</p></div>
+								<div class="grow"><p class="leading-none font-medium">Slack</p><p class="text-body line-clamp-1 text-sm">Slack is a new way to communicate with your team.</p></div>
 								<button class="btn btn-xs btn-soft btn-primary">Connect</button>
 							</div>
 							<div class="flex items-center gap-3">
 								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="/images/brand-logo/notion.svg"/>
-								<div class="grow"><p class="leading-none font-medium">Notion</p><p class="text-base-content/80 line-clamp-1 text-sm">Notion is a freemium productivity and note-taking web application developed by Notion Lab Inc.</p></div>
+								<div class="grow"><p class="leading-none font-medium">Notion</p><p class="text-body line-clamp-1 text-sm">Notion is a freemium productivity and note-taking web application developed by Notion Lab Inc.</p></div>
 								<button class="btn btn-xs btn-soft btn-primary">Disconnect</button>
 							</div>
 							<div class="flex items-center gap-3">
 								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="/images/brand-logo/hubspot.svg"/>
-								<div class="grow"><p class="leading-none font-medium">Hubspot</p><p class="text-base-content/80 line-clamp-1 text-sm">Hubspot is a CRM platform with all the software, integrations and resources you need to connect</p></div>
+								<div class="grow"><p class="leading-none font-medium">Hubspot</p><p class="text-body line-clamp-1 text-sm">Hubspot is a CRM platform with all the software, integrations and resources you need to connect</p></div>
 								<button class="btn btn-xs btn-soft btn-primary">Disconnect</button>
 							</div>
 						</div>

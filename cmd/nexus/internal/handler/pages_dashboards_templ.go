@@ -79,7 +79,7 @@ func EcommerceDashboard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"mt-3\"><div class=\"flex items-center gap-3\"><span class=\"text-4xl font-semibold\">$184.78K</span> <span class=\"text-success font-medium\">+3.24%</span></div><span class=\"text-base-content/60 text-sm\">Total income in this year</span></div></div><div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"mt-3\"><div class=\"flex items-center gap-3\"><span class=\"text-4xl font-semibold\">$184.78K</span> <span class=\"text-success font-medium\">+3.24%</span></div><span class=\"text-muted text-sm\">Total income in this year</span></div></div><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -601,7 +601,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<div class=\"flex items-center gap-1\"><button aria-label=\"Show product\" class=\"btn btn-square btn-ghost btn-xs\"><span class=\"iconify lucide--eye text-base-content/60 size-4\"></span></button> <button aria-label=\"Show product\" class=\"btn btn-square btn-error btn-outline btn-xs border-transparent\"><span class=\"iconify lucide--trash size-4\"></span></button></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<div class=\"flex items-center gap-1\"><button aria-label=\"Show product\" class=\"btn btn-square btn-ghost btn-xs\"><span class=\"iconify lucide--eye text-muted size-4\"></span></button> <button aria-label=\"Show product\" class=\"btn btn-square btn-error btn-outline btn-xs border-transparent\"><span class=\"iconify lucide--trash size-4\"></span></button></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -668,27 +668,27 @@ func ecomChatItem(imgNum, name, time, message string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p><span class=\"text-base-content/60 text-xs\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p><span class=\"text-muted text-xs\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var26 string
 		templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(time)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 181, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 181, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</span></div><p class=\"text-base-content/80 line-clamp-1 text-sm text-ellipsis\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</span></div><p class=\"text-body line-clamp-1 text-sm text-ellipsis\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var27 string
 		templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 183, Col: 79}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 183, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 		if templ_7745c5c3_Err != nil {
@@ -749,27 +749,27 @@ func quickChatItem(name, time, message string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</p><span class=\"text-xs text-base-content/60\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</p><span class=\"text-xs text-muted\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var31 string
 		templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(time)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 192, Col: 157}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 192, Col: 147}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</span></div><p class=\"truncate text-xs text-base-content/60\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</span></div><p class=\"truncate text-xs text-muted\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var32 string
 		templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 193, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 193, Col: 51}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 		if templ_7745c5c3_Err != nil {
@@ -837,7 +837,7 @@ func predictionLegend() templ.Component {
 			templ_7745c5c3_Var34 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<div class=\"inline-flex items-center gap-2\"><div class=\"text-base-content/60 w-6 border border-dashed\"></div><span class=\"text-base-content/80 text-xs\">Prediction</span></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<div class=\"inline-flex items-center gap-2\"><div class=\"text-muted w-6 border border-dashed\"></div><span class=\"text-body text-xs\">Prediction</span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1167,7 +1167,7 @@ func dealRow(img, name, value, statusLabel, statusClass, date string) templ.Comp
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<button class=\"btn btn-square btn-ghost btn-xs\" aria-label=\"View\"><span class=\"iconify lucide--eye text-base-content/80 size-4\"></span></button>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<button class=\"btn btn-square btn-ghost btn-xs\" aria-label=\"View\"><span class=\"iconify lucide--eye text-body size-4\"></span></button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -1253,7 +1253,7 @@ func CRMDashboard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</div><div class=\"mt-5 grid grid-cols-3 gap-5\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-base-content/60\">Realtime Sales</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">541</span></div><p class=\"text-xs text-base-content/60 mt-1\">494 last hour</p></div></div><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-base-content/60\">Revenue</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">$51,474</span></div><p class=\"text-xs text-base-content/60 mt-1\">$49,162 last month</p></div></div><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-base-content/60\">Customer Retention</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">3.14%</span></div><p class=\"text-xs text-base-content/60 mt-1\">2.16% last week</p></div></div></div><div class=\"mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5\"><div class=\"xl:col-span-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</div><div class=\"mt-5 grid grid-cols-3 gap-5\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-muted\">Realtime Sales</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">541</span></div><p class=\"text-xs text-muted mt-1\">494 last hour</p></div></div><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-muted\">Revenue</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">$51,474</span></div><p class=\"text-xs text-muted mt-1\">$49,162 last month</p></div></div><div class=\"card bg-base-100 shadow\"><div class=\"card-body p-4\"><p class=\"text-sm text-muted\">Customer Retention</p><div class=\"mt-2 flex items-baseline gap-2\"><span class=\"text-2xl font-bold\">3.14%</span></div><p class=\"text-xs text-muted mt-1\">2.16% last week</p></div></div></div><div class=\"mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5\"><div class=\"xl:col-span-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1289,7 +1289,7 @@ func CRMDashboard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<div><p class=\"text-2xl font-bold\">76%</p><p class=\"text-sm text-base-content/60\">You're completed 80% of yearly goal</p></div></div><div class=\"mt-4\"><div class=\"flex items-center justify-between text-sm\"><span>Budget Spent</span><span class=\"font-semibold\">$22500<span class=\"text-base-content/60 font-normal\">/$30000</span></span></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<div><p class=\"text-2xl font-bold\">76%</p><p class=\"text-sm text-muted\">You're completed 80% of yearly goal</p></div></div><div class=\"mt-4\"><div class=\"flex items-center justify-between text-sm\"><span>Budget Spent</span><span class=\"font-semibold\">$22500<span class=\"text-muted font-normal\">/$30000</span></span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1479,7 +1479,7 @@ func CRMDashboard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "</div></div></div></div><div class=\"mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5\"><div class=\"col-span-1\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body\"><div class=\"flex items-center gap-2\"><span class=\"iconify lucide--unplug text-base-content/80 size-4.5\"></span><p class=\"grow font-medium\">Quick Integration</p><button class=\"btn btn-ghost btn-sm border-line-strong\"><span class=\"iconify lucide--settings-2 size-3.5\"></span> Manage</button></div><div class=\"mt-4 space-y-3.5\"><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/salesforce.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Salesforce</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Salesforce provides customer relationship management software and application focused on sales</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Connect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/asana.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Asana</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Track, manage and connect your project across any team.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/slack.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Slack</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Slack is a new way to communicate with your team.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Connect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/notion.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Notion</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Notion is a freemium productivity and note-taking web application developed by Notion Lab Inc.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/hubspot.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Hubspot</p><p class=\"text-base-content/80 line-clamp-1 text-sm\">Hubspot is a CRM platform with all the software, integrations and resources you need to connect</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div></div></div></div></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "</div></div></div></div><div class=\"mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5\"><div class=\"col-span-1\"><div class=\"card bg-base-100 shadow\"><div class=\"card-body\"><div class=\"flex items-center gap-2\"><span class=\"iconify lucide--unplug text-body size-4.5\"></span><p class=\"grow font-medium\">Quick Integration</p><button class=\"btn btn-ghost btn-sm border-line-strong\"><span class=\"iconify lucide--settings-2 size-3.5\"></span> Manage</button></div><div class=\"mt-4 space-y-3.5\"><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/salesforce.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Salesforce</p><p class=\"text-body line-clamp-1 text-sm\">Salesforce provides customer relationship management software and application focused on sales</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Connect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/asana.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Asana</p><p class=\"text-body line-clamp-1 text-sm\">Track, manage and connect your project across any team.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/slack.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Slack</p><p class=\"text-body line-clamp-1 text-sm\">Slack is a new way to communicate with your team.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Connect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/notion.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Notion</p><p class=\"text-body line-clamp-1 text-sm\">Notion is a freemium productivity and note-taking web application developed by Notion Lab Inc.</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div><div class=\"flex items-center gap-3\"><img alt=\"chat\" class=\"bg-base-200 mask mask-squircle size-11 p-2\" src=\"/images/brand-logo/hubspot.svg\"><div class=\"grow\"><p class=\"leading-none font-medium\">Hubspot</p><p class=\"text-body line-clamp-1 text-sm\">Hubspot is a CRM platform with all the software, integrations and resources you need to connect</p></div><button class=\"btn btn-xs btn-soft btn-primary\">Disconnect</button></div></div></div></div></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

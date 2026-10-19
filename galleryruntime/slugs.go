@@ -192,6 +192,12 @@ var ComponentSlugs = map[string]string{
 	// Toggle
 	"ToggleButton": "toggle",
 	"ToggleGroup":  "toggle-group",
+	// Foundation cards, page headings and app tables
+	"CardToolbar": "card-toolbar",
+	"ChartCard":   "chart-card",
+	"PageHeading": "page-heading",
+	"DataGrid":    "data-grid",
+	"Chart":       "charts",
 }
 
 // ComponentSlugsJSON returns ComponentSlugs as a JSON string for embedding in <script> tags.
