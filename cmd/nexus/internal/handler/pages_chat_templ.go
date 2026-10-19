@@ -40,6 +40,7 @@ func ChatPage() templ.Component {
 		}
 		templ_7745c5c3_Err = pages.ChatLayout(pages.ChatLayoutProps{
 			Class:              "mt-6",
+			SearchPlaceholder:  "Search along chats",
 			ActiveConversation: "Debra C. Glen",
 			Conversations: []pages.ChatContactProps{
 				{Name: "Debra C. Glen", AvatarSrc: "/images/avatars/2.png", Time: "04:46 PM", Preview: "Great! Let me know what you think after watching.", Unread: 0, Active: true},

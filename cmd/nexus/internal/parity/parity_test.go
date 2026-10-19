@@ -6,6 +6,7 @@ package parity
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -100,5 +101,51 @@ func TestNexusCommerceTablesUseTableComponents(t *testing.T) {
 			"<td",
 			`<input class="checkbox`,
 		)
+	}
+}
+
+// TestNexusDashboardUsesLibraryCardsAndTable pins the dashboard conversion:
+// stat cards go through ui.StatCardFeatured and Recent Orders through the table
+// primitives, so the dashboard stops maintaining its own copies.
+func TestNexusDashboardUsesLibraryCardsAndTable(t *testing.T) {
+	src := read(t, "../handler/pages_dashboards.templ")
+
+	dashboard := templFunc(t, src, "EcommerceDashboard")
+	require(t, dashboard, "EcommerceDashboard", "@ui.StatCardFeatured(")
+	require(t, dashboard, "EcommerceDashboard", "@table.TableCard(")
+	require(t, dashboard, "EcommerceDashboard", "@table.TableWithProps(")
+	forbid(t, dashboard, "EcommerceDashboard",
+		"ecomStatCard(",
+		"<table",
+		"<thead",
+		"<tbody",
+		"<tr",
+		"<td",
+	)
+
+	row := templFunc(t, src, "ecomOrderRow")
+	require(t, row, "ecomOrderRow", "@table.TableRow(")
+	require(t, row, "ecomOrderRow", "@table.TableCell(")
+	forbid(t, row, "ecomOrderRow", "<tr", "<td", "<th")
+}
+
+// TestNexusTemplatesUseRootRelativeImages catches the class of 404 where a
+// template writes "./images/..." and the browser resolves it under the current
+// route (e.g. /dashboards/images/...) instead of /images/.
+func TestNexusTemplatesUseRootRelativeImages(t *testing.T) {
+	patterns := []string{"../handler/*.templ", "../shell/*.templ"}
+	for _, pattern := range patterns {
+		files, err := filepath.Glob(pattern)
+		if err != nil {
+			t.Fatalf("glob %s: %v", pattern, err)
+		}
+		for _, file := range files {
+			src := read(t, file)
+			for _, bad := range []string{`"./images`, `"./static`} {
+				if strings.Contains(src, bad) {
+					t.Errorf("%s must not contain %q: use a root-relative asset path", file, bad)
+				}
+			}
+		}
 	}
 }

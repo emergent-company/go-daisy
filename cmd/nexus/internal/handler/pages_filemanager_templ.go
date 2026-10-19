@@ -73,19 +73,19 @@ func FileManager() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = storageCard("One Drive", "34%", "85 GB", "250 GB", "85", "250", "progress-primary", "./images/apps/files/one-drive.svg").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = storageCard("One Drive", "34%", "85 GB", "250 GB", "85", "250", "progress-primary", "/images/apps/files/one-drive.svg").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = storageCard("Google Drive", "56%", "56 GB", "100 GB", "56", "100", "progress-warning", "./images/apps/files/google-drive.svg").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = storageCard("Google Drive", "56%", "56 GB", "100 GB", "56", "100", "progress-warning", "/images/apps/files/google-drive.svg").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = storageCard("Mega", "84%", "126 GB", "150 GB", "126", "150", "progress-error", "./images/apps/files/mega.svg").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = storageCard("Mega", "84%", "126 GB", "150 GB", "126", "150", "progress-error", "/images/apps/files/mega.svg").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = storageCard("Dropbox", "55%", "22 GB", "40 GB", "22", "40", "progress-info", "./images/apps/files/dropbox.svg").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = storageCard("Dropbox", "55%", "22 GB", "40 GB", "22", "40", "progress-info", "/images/apps/files/dropbox.svg").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
