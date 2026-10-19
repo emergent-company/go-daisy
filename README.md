@@ -336,9 +336,23 @@ gh workflow run release.yml -f bump=minor -f confirm=dry-run
 gh workflow run release.yml -f bump=minor -f confirm=release
 ```
 
-`bump` is `patch`, `minor` or `major`; `tag` (`vX.Y.Z`) overrides it. The
-workflow refuses a non-`master` ref, a diverged HEAD or an existing tag, and it
-never deploys. Gallery deploys stay in `templ.components.infra`.
+`bump` is `patch`, `minor` or `major`; `tag` (canonical `vX.Y.Z`, no leading
+zeros) overrides it. The workflow:
+
+- runs only from `master`, with a clean tree and a HEAD equal to `origin/master`;
+- refuses an existing tag or a version that is not newer than the current one;
+- refuses a dispatch with no commits since the previous tag;
+- prints the grouped notes in the run summary for `dry-run`;
+- creates the annotated tag and the GitHub release for `release`, and deletes
+  the tag if release creation fails so the run can be retried.
+
+It never deploys. Gallery deploys stay in `templ.components.infra`. A repository
+with no semver tag cannot release; create `v0.1.0` once by hand.
+
+Notes are grouped by commit subject (`feat`, `fix`, `perf`/`refactor`, anything
+else) and by `!` or `BREAKING CHANGE` for breaking changes. A body line starting
+with `Deprecated:` also lists the commit under Deprecations. Run
+`task test:release` after changing the scripts.
 
 ---
 

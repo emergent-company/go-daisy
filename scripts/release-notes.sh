@@ -5,6 +5,10 @@
 #
 # Sections are emitted only when non-empty, in this order:
 # Breaking, Features, Fixes, Improvements, Deprecations, Maintenance.
+#
+# A commit body line that starts with `Deprecated:` adds the commit to
+# Deprecations in addition to its type section, so a feature does not disappear
+# from Features just because it deprecates something.
 set -euo pipefail
 
 prev="${1:?usage: release-notes.sh <previous-tag> <head> [next-version]}"
@@ -23,25 +27,32 @@ breaking=(); features=(); fixes=(); improvements=(); deprecations=(); maintenanc
 
 emit_entry() {
   # $1 = subject, $2 = body
-  local subject="$1" body="$2" pr="" clean=""
+  local subject="$1" body="$2" pr="" clean="" entry="" type="" bang=""
   if [[ "$subject" =~ \(#([0-9]+)\)$ ]]; then
     pr=" (#${BASH_REMATCH[1]})"
   fi
   clean="$(printf '%s' "$subject" | sed -E 's/ \(#[0-9]+\)$//')"
+  entry="- ${clean}${pr}"
 
-  if [[ "$clean" =~ ^[A-Za-z]+(\([^\)]*\))?!:\  ]] \
-    || printf '%s' "$body" | grep -q 'BREAKING CHANGE'; then
-    breaking+=("- ${clean}${pr}")
-  elif printf '%s' "$body" | grep -q 'Deprecated:'; then
-    deprecations+=("- ${clean}${pr}")
-  elif [[ "$clean" =~ ^feat(\([^\)]*\))?:\  ]]; then
-    features+=("- ${clean}${pr}")
-  elif [[ "$clean" =~ ^fix(\([^\)]*\))?:\  ]]; then
-    fixes+=("- ${clean}${pr}")
-  elif [[ "$clean" =~ ^(perf|refactor)(\([^\)]*\))?:\  ]]; then
-    improvements+=("- ${clean}${pr}")
+  if [[ "$clean" =~ ^([A-Za-z]+)(\([^\)]*\))?(!)?: ]]; then
+    type="${BASH_REMATCH[1],,}"
+    bang="${BASH_REMATCH[3]}"
+  fi
+
+  if [ -n "$bang" ] || printf '%s' "$body" | grep -q 'BREAKING CHANGE'; then
+    breaking+=("$entry")
+  elif [ "$type" = feat ]; then
+    features+=("$entry")
+  elif [ "$type" = fix ]; then
+    fixes+=("$entry")
+  elif [ "$type" = perf ] || [ "$type" = refactor ]; then
+    improvements+=("$entry")
   else
-    maintenance+=("- ${clean}${pr}")
+    maintenance+=("$entry")
+  fi
+
+  if printf '%s' "$body" | grep -qE '^Deprecated:'; then
+    deprecations+=("$entry")
   fi
 }
 
@@ -54,7 +65,7 @@ while IFS= read -r sha; do
   count=$((count + 1))
 done < <(git log --no-merges --reverse --pretty=tformat:'%H' "${prev}..${head}")
 
-[ "$count" -gt 0 ] || { echo "no commits between ${prev} and ${head}" >&2; exit 1; }
+[ "$count" -gt 0 ] || { echo "no commits between ${prev} and ${head}; nothing to release" >&2; exit 1; }
 
 section() {
   local title="$1"; shift

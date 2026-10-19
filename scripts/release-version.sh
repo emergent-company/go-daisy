@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Compute release versions from the highest reachable semver tag.
+# Compute release versions from the highest semver tag reachable from HEAD.
 #
 # Usage:
 #   scripts/release-version.sh --current
@@ -7,13 +7,17 @@
 #   scripts/release-version.sh --tag vX.Y.Z
 #
 # The tag form validates the tag, rejects an existing tag, and rejects a version
-# that is not newer than the current one.
+# that is not newer than the current one. Tags on branches that are not merged
+# into HEAD are ignored.
 set -euo pipefail
 
 usage() {
   echo "usage: $0 --current | --bump patch|minor|major | --tag vX.Y.Z" >&2
   exit 2
 }
+
+# Canonical segments only: no leading zeros, so v01.2.3 cannot coexist with v1.2.3.
+semver_re='^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'
 
 mode="" value=""
 while [ $# -gt 0 ]; do
@@ -26,18 +30,31 @@ while [ $# -gt 0 ]; do
 done
 [ -n "$mode" ] || usage
 
-latest="$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname \
-  | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1 || true)"
-[ -n "$latest" ] || { echo "no semver tag found" >&2; exit 1; }
+latest="$(git tag --merged HEAD --list 'v*' --sort=-v:refname \
+  | grep -E "$semver_re" | head -n1 || true)"
+[ -n "$latest" ] || { echo "no semver tag reachable from HEAD" >&2; exit 1; }
 
 if [ "$mode" = current ]; then
   printf '%s\n' "$latest"
   exit 0
 fi
 
+# ver_gt A B: true when A is strictly newer than B. Same numeric comparison for
+# every caller, so tag selection and the "newer than" guard cannot disagree.
+ver_gt() {
+  local a="${1#v}" b="${2#v}" am aj ap bm bj bp
+  IFS=. read -r am aj ap <<< "$a"
+  IFS=. read -r bm bj bp <<< "$b"
+  (( am > bm )) && return 0
+  (( am < bm )) && return 1
+  (( aj > bj )) && return 0
+  (( aj < bj )) && return 1
+  (( ap > bp ))
+}
+
 if [ "$mode" = tag ]; then
-  [[ "$value" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] \
-    || { echo "invalid tag: $value (expected vX.Y.Z)" >&2; exit 1; }
+  [[ "$value" =~ $semver_re ]] \
+    || { echo "invalid tag: $value (expected canonical vX.Y.Z)" >&2; exit 1; }
   next="$value"
 else
   case "$value" in patch|minor|major) ;; *) usage ;; esac
@@ -55,7 +72,7 @@ if git rev-parse -q --verify "refs/tags/${next}" >/dev/null; then
   exit 1
 fi
 
-if [ "$(printf '%s\n%s\n' "$latest" "$next" | sort -V | tail -n1)" != "$next" ]; then
+if ! ver_gt "$next" "$latest"; then
   echo "${next} is not newer than ${latest}" >&2
   exit 1
 fi

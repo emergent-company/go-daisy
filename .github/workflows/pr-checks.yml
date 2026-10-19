@@ -47,6 +47,9 @@ jobs:
       - name: Test
         run: go test ./...
 
+      - name: Test release scripts
+        run: bash scripts/release-test.sh
+
       - name: Lint
         uses: golangci/golangci-lint-action@v7
         with:

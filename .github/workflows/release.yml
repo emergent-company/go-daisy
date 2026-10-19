@@ -53,6 +53,8 @@ jobs:
             || { echo "::error::release must be dispatched from master"; exit 1; }
           [ "$CONFIRM" = "dry-run" ] || [ "$CONFIRM" = "release" ] \
             || { echo "::error::confirm must be dry-run or release"; exit 1; }
+          [ -z "$(git status --porcelain)" ] \
+            || { echo "::error::working tree is dirty"; exit 1; }
           git fetch origin master --quiet
           [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/master)" ] \
             || { echo "::error::HEAD is not origin/master"; exit 1; }
@@ -74,6 +76,10 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
+          if [ "$(git rev-list --count "${PREVIOUS}..HEAD")" -eq 0 ]; then
+            echo "::error::no commits since ${PREVIOUS}; nothing to release"
+            exit 1
+          fi
           scripts/release-notes.sh "$PREVIOUS" HEAD "$VERSION" > release-notes.md
           cat release-notes.md
 
@@ -84,27 +90,45 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
+          if git rev-parse -q --verify "refs/tags/${VERSION}" >/dev/null; then
+            echo "::error::tag ${VERSION} already exists"
+            exit 1
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "$VERSION" -m "$VERSION"
           git push origin "$VERSION"
-          gh release create "$VERSION" \
-            --title "$VERSION" \
-            --notes-file release-notes.md \
-            --verify-tag
+
+          if ! gh release create "$VERSION" \
+              --title "$VERSION" \
+              --notes-file release-notes.md \
+              --verify-tag; then
+            if gh release view "$VERSION" >/dev/null 2>&1; then
+              echo "::error::release ${VERSION} exists despite the error; keeping the tag"
+              exit 1
+            fi
+            echo "::warning::deleting orphan tag ${VERSION} so the run can be retried"
+            git push origin ":refs/tags/${VERSION}" || true
+            exit 1
+          fi
 
       - name: Summary
         if: always() && steps.version.outputs.version != ''
         env:
           VERSION: ${{ steps.version.outputs.version }}
           CONFIRM: ${{ inputs.confirm }}
+          STATUS: ${{ job.status }}
         run: |
           {
-            echo "### Release ${VERSION} (${CONFIRM})"
+            echo "### Release ${VERSION} (${CONFIRM}) - ${STATUS}"
             echo
             if [ -f release-notes.md ]; then
               cat release-notes.md
             else
               echo "notes were not generated"
+            fi
+            if [ "$CONFIRM" = "dry-run" ]; then
+              echo
+              echo "_Dry run: no tag was created._"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
