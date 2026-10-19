@@ -71,6 +71,11 @@ test.describe('Combobox accessible trigger', () => {
     await page.keyboard.press('Enter');
     await expect(trigger).toHaveAttribute('aria-expanded', 'true');
 
+    // ArrowUp from the "nothing highlighted" sentinel wraps to the last
+    // enabled option, not the second-to-last.
+    await page.keyboard.press('ArrowUp');
+    await expect(page.locator('[role="option"].bg-base-200')).toHaveText('Retail');
+
     await page.keyboard.press('Escape');
     await expect(trigger).toHaveAttribute('aria-expanded', 'false');
 

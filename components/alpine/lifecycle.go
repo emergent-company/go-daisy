@@ -66,7 +66,7 @@ func ComboboxInit(multi bool) string {
 		// key press starts from the first option instead of stranding the index
 		// on whichever option the scan happened to end at. Disabled options are
 		// skipped, not merely dimmed.
-		`root.move=function(delta){var all=root.$el.querySelectorAll('[role=option]');if(!all.length){root.activeIndex=-1;return}for(var n=0;n<all.length;n++){root.activeIndex=(root.activeIndex+delta+all.length)%all.length;var it=all[root.activeIndex];if(it&&it.offsetParent!==null&&it.getAttribute('aria-disabled')!=='true'){it.scrollIntoView({block:'nearest'});return}}root.activeIndex=-1};` +
+		`root.move=function(delta){var all=root.$el.querySelectorAll('[role=option]');if(!all.length){root.activeIndex=-1;return}if(root.activeIndex<0&&delta<0)root.activeIndex=0;for(var n=0;n<all.length;n++){root.activeIndex=(root.activeIndex+delta+all.length)%all.length;var it=all[root.activeIndex];if(it&&it.offsetParent!==null&&it.getAttribute('aria-disabled')!=='true'){it.scrollIntoView({block:'nearest'});return}}root.activeIndex=-1};` +
 		`root.selectActive=function(){if(root.activeIndex<0)return;var all=root.$el.querySelectorAll('[role=option]');var it=all[root.activeIndex];if(it&&it.offsetParent!==null&&it.getAttribute('aria-disabled')!=='true'){it.click()}};` +
 		`root.$el.addEventListener('keydown',function(e){if(!root.open)return;if(e.key==='ArrowDown'){e.preventDefault();root.move(1)}if(e.key==='ArrowUp'){e.preventDefault();root.move(-1)}if(e.key==='Enter'||(e.key===' '&&e.target.tagName!=='INPUT')){e.preventDefault();root.selectActive()}if(e.key==='Escape'){root.open=false}});`
 }
