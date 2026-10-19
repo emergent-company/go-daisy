@@ -257,6 +257,28 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 					},
 					FrameHeight: "260px",
 				},
+				{
+					Name:        "Search",
+					Description: "Searchable combobox — filtering hides options, and the keyboard highlight still lands on the row Enter will choose.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.ComboboxWithBoundary(form.ComboboxProps{
+							ID:           "demo-combo-search",
+							Name:         "industry_search",
+							Label:        "Industry",
+							Mode:         form.ComboboxSingle,
+							EnableSearch: true,
+							Source: form.ComboboxSource{Static: []form.ComboboxOption{
+								{Value: "any", Label: "Any industry (unavailable)", Disabled: true},
+								{Value: "tech", Label: "Technology"},
+								{Value: "health", Label: "Healthcare"},
+								{Value: "finance", Label: "Finance"},
+								{Value: "retail", Label: "Retail"},
+							}},
+							Placeholder: "Select industry...",
+						})
+					},
+					FrameHeight: "280px",
+				},
 			},
 		},
 

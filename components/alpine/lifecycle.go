@@ -57,7 +57,12 @@ func ComboboxInit(multi bool) string {
 		selFn +
 		`root.clearAll=function(){root.selected=[]};` +
 		`root.isSelected=function(v){return root.selected.indexOf(v)>=0};` +
-		`root.getVisibleIndex=function(el){var all=root.$el.querySelectorAll('[role=option]');var c=0;for(var i=0;i<all.length;i++){if(all[i].offsetParent!==null){if(all[i]===el)return c;c++}}return -1};` +
+		// isActiveEl compares the option element itself rather than an index.
+		// activeIndex indexes the full option list, while search filtering hides
+		// options via x-show; comparing a compacted visible index against the
+		// absolute one highlighted the wrong row once earlier options were
+		// filtered out.
+		`root.isActiveEl=function(el){if(root.activeIndex<0)return false;var all=root.$el.querySelectorAll('[role=option]');return all[root.activeIndex]===el};` +
 		// move() is bounded by the option count: when every option is hidden
 		// (e.g. a search query matches nothing, or the popover has not been
 		// painted open yet) an unbounded do/while never terminates and freezes

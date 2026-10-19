@@ -556,7 +556,7 @@ func comboboxStaticOption(opt ComboboxOption, props ComboboxProps) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\" :class=\"{ 'bg-base-200': activeIndex >= 0 && getVisibleIndex($el) === activeIndex }\" x-show=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\" :class=\"{ 'bg-base-200': isActiveEl($el) }\" x-show=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -683,7 +683,7 @@ func comboboxStaticOption(opt ComboboxOption, props ComboboxProps) templ.Compone
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "\" :class=\"{ 'bg-base-200': activeIndex >= 0 && activeIndex === getVisibleIndex($el) }\" :aria-selected=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "\" :class=\"{ 'bg-base-200': isActiveEl($el) }\" :aria-selected=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

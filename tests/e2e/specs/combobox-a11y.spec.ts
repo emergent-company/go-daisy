@@ -87,3 +87,31 @@ test.describe('Combobox accessible trigger', () => {
     await expect(trigger).toContainText('Technology');
   });
 });
+
+test.describe('Combobox search filtering', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/gallery/render/combobox/search');
+    await expect(page.locator(TRIGGER)).toBeVisible({ timeout: 10000 });
+  });
+
+  test('highlight follows the filtered option that Enter selects', async ({ page }) => {
+    // Regression: activeIndex indexes the full option list, while search
+    // filtering hides options with x-show. Comparing it against a compacted
+    // visible index highlighted the wrong row (or none) once an earlier option
+    // was filtered out.
+    const trigger = page.locator(TRIGGER);
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+
+    const search = page.locator('.combobox-popover input[type="text"]');
+    await search.fill('fin');
+    await expect(page.locator('[role="option"]').filter({ visible: true })).toHaveCount(1);
+
+    await page.keyboard.press('ArrowDown');
+    await expect(page.locator('[role="option"].bg-base-200')).toHaveText('Finance');
+
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    await expect(trigger).toContainText('Finance');
+  });
+});

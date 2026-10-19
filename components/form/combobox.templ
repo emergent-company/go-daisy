@@ -176,7 +176,7 @@ templ comboboxStaticOption(opt ComboboxOption, props ComboboxProps) {
 			data-value={ opt.Value }
 			class={ "flex items-center justify-between px-3 py-2 text-sm cursor-pointer hover:bg-base-200",
 				templ.KV("opacity-50 cursor-not-allowed", opt.Disabled) }
-			:class="{ 'bg-base-200': activeIndex >= 0 && getVisibleIndex($el) === activeIndex }"
+			:class="{ 'bg-base-200': isActiveEl($el) }"
 			x-show={ comboboxSearchFilter(opt) }
 			:aria-selected={ "isSelected('" + opt.Value + "')" }
 			if opt.Disabled {
@@ -198,7 +198,7 @@ templ comboboxStaticOption(opt ComboboxOption, props ComboboxProps) {
 			data-value={ opt.Value }
 			class={ "flex items-center justify-between px-3 py-2 text-sm cursor-pointer hover:bg-base-200",
 				templ.KV("opacity-50 cursor-not-allowed", opt.Disabled) }
-			:class="{ 'bg-base-200': activeIndex >= 0 && activeIndex === getVisibleIndex($el) }"
+			:class="{ 'bg-base-200': isActiveEl($el) }"
 			:aria-selected={ "isSelected('" + opt.Value + "')" }
 			if opt.Disabled {
 				aria-disabled="true"
