@@ -58,7 +58,17 @@ func ComboboxInit(multi bool) string {
 		`root.clearAll=function(){root.selected=[]};` +
 		`root.isSelected=function(v){return root.selected.indexOf(v)>=0};` +
 		`root.getVisibleIndex=function(el){var all=root.$el.querySelectorAll('[role=option]');var c=0;for(var i=0;i<all.length;i++){if(all[i].offsetParent!==null){if(all[i]===el)return c;c++}}return -1};` +
-		`root.$el.addEventListener('keydown',function(e){if(!root.open)return;var all=root.$el.querySelectorAll('[role=option]');if(e.key==='ArrowDown'){e.preventDefault();do{root.activeIndex=(root.activeIndex+1)%all.length}while(all[root.activeIndex]&&all[root.activeIndex].offsetParent===null);if(all[root.activeIndex])all[root.activeIndex].scrollIntoView({block:'nearest'})}if(e.key==='ArrowUp'){e.preventDefault();do{root.activeIndex=(root.activeIndex-1+all.length)%all.length}while(all[root.activeIndex]&&all[root.activeIndex].offsetParent===null);if(all[root.activeIndex])all[root.activeIndex].scrollIntoView({block:'nearest'})}if(e.key==='Enter'&&root.activeIndex>=0){e.preventDefault();var it=all[root.activeIndex];if(it&&it.offsetParent!==null)it.click()}if(e.key==='Escape'){root.open=false}});`
+		// move() is bounded by the option count: when every option is hidden
+		// (e.g. a search query matches nothing, or the popover has not been
+		// painted open yet) an unbounded do/while never terminates and freezes
+		// the tab. One pass over the options is enough to find the next visible,
+		// enabled one; when none qualifies activeIndex resets to -1 so a later
+		// key press starts from the first option instead of stranding the index
+		// on whichever option the scan happened to end at. Disabled options are
+		// skipped, not merely dimmed.
+		`root.move=function(delta){var all=root.$el.querySelectorAll('[role=option]');if(!all.length){root.activeIndex=-1;return}if(root.activeIndex<0&&delta<0)root.activeIndex=0;for(var n=0;n<all.length;n++){root.activeIndex=(root.activeIndex+delta+all.length)%all.length;var it=all[root.activeIndex];if(it&&it.offsetParent!==null&&it.getAttribute('aria-disabled')!=='true'){it.scrollIntoView({block:'nearest'});return}}root.activeIndex=-1};` +
+		`root.selectActive=function(){if(root.activeIndex<0)return;var all=root.$el.querySelectorAll('[role=option]');var it=all[root.activeIndex];if(it&&it.offsetParent!==null&&it.getAttribute('aria-disabled')!=='true'){it.click()}};` +
+		`root.$el.addEventListener('keydown',function(e){if(!root.open)return;if(e.key==='ArrowDown'){e.preventDefault();root.move(1)}if(e.key==='ArrowUp'){e.preventDefault();root.move(-1)}if(e.key==='Enter'||(e.key===' '&&e.target.tagName!=='INPUT')){e.preventDefault();root.selectActive()}if(e.key==='Escape'){root.open=false}});`
 }
 
 // StructuredInputInit returns the x-init expression for repeatable row add/remove.

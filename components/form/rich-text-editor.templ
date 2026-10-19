@@ -25,14 +25,26 @@ type RichTextEditorProps struct {
 }
 
 // RichTextEditor renders a Quill rich text editor.
+//
+// A <label for> can only associate with a labelable element, and the editor is
+// a Quill-managed <div>, so the label additionally travels as data-label and the
+// init script applies it as aria-label on Quill's contenteditable root (the
+// element that actually receives focus). The visible label deliberately has no
+// for attribute: it cannot point at a div, and claiming otherwise is misleading.
 templ RichTextEditor(props RichTextEditorProps) {
 	<div class="w-full" { devmode.Attrs(ctx, "form/RichTextEditor")... }>
 		if props.Label != "" {
-			@Label(LabelProps{For: props.ID}) { { props.Label } }
+			// No for= here: the mount element is a div, so a label association
+			// would be a no-op. The label text is forwarded via data-label and
+			// becomes aria-label on Quill's contenteditable root instead.
+			@Label(LabelProps{}) { { props.Label } }
 		}
 		<div
 			id={ props.ID }
 			data-quill
+			if props.Label != "" {
+				data-label={ props.Label }
+			}
 			data-theme={ string(props.Theme) }
 			data-placeholder={ props.Placeholder }
 			data-readonly={ ternary(props.ReadOnly, "true", "false") }
@@ -48,7 +60,7 @@ templ RichTextEditor(props RichTextEditorProps) {
 		ScriptURL:  "https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.min.js",
 		StyleURL:   "'https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.' + (el.dataset.theme || 'snow') + '.css'",
 		Selector:   "[data-quill]",
-		InitFunc:   "var theme = el.dataset.theme || 'snow'; var placeholder = el.dataset.placeholder || 'Write something...'; var q = new Quill(el, {theme: theme, placeholder: placeholder, readOnly: el.dataset.readonly === 'true', modules: theme === 'snow' ? { toolbar: [[{ 'header': [1,2,3,false] }], ['bold','italic','underline','strike'], [{ 'list': 'ordered' }, { 'list': 'bullet' }], ['link','image','code-block'], ['clean']] } : undefined}); var val = el.dataset.value; if (val) try { q.clipboard.dangerouslyPasteHTML(val); } catch(e) {} var hidden = document.getElementById(el.id + '-hidden'); if (!hidden) { hidden = document.createElement('input'); hidden.type = 'hidden'; hidden.name = el.id; hidden.id = el.id + '-hidden'; el.parentNode.appendChild(hidden); } q.on('text-change', function() { hidden.value = q.root.innerHTML; })",
+		InitFunc:   "var theme = el.dataset.theme || 'snow'; var placeholder = el.dataset.placeholder || 'Write something...'; var q = new Quill(el, {theme: theme, placeholder: placeholder, readOnly: el.dataset.readonly === 'true', modules: theme === 'snow' ? { toolbar: [[{ 'header': [1,2,3,false] }], ['bold','italic','underline','strike'], [{ 'list': 'ordered' }, { 'list': 'bullet' }], ['link','image','code-block'], ['clean']] } : undefined}); var val = el.dataset.value; if (val) try { q.clipboard.dangerouslyPasteHTML(val); } catch(e) {} var lbl = el.dataset.label; if (lbl) q.root.setAttribute('aria-label', lbl); var hidden = document.getElementById(el.id + '-hidden'); if (!hidden) { hidden = document.createElement('input'); hidden.type = 'hidden'; hidden.name = el.id; hidden.id = el.id + '-hidden'; el.parentNode.appendChild(hidden); } q.on('text-change', function() { hidden.value = q.root.innerHTML; })",
 		FnSuffix:   "Quill",
 	})
 }
