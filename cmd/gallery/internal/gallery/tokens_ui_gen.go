@@ -2590,3 +2590,341 @@ func AlertDialogTokens() []galleryruntime.DesignToken {
 		},
 	}
 }
+
+// MarkdownTokens returns the DesignToken slice for MarkdownWithBoundary.
+func MarkdownTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Source",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "**Hello** from go-daisy",
+			QueryParam: "source",
+		},
+	}
+}
+
+// ThinkingBlockTokens returns the DesignToken slice for ThinkingBlockWithBoundary.
+func ThinkingBlockTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Role",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "role",
+		},
+		{
+			Label:      "Open",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "open",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Live",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "live",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Text",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "I should search the knowledge graph, then cluster the results by root cause.",
+			QueryParam: "text",
+		},
+	}
+}
+
+// ToolCallChipTokens returns the DesignToken slice for ToolCallChipWithBoundary.
+func ToolCallChipTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Name",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "search-knowledge",
+			QueryParam: "name",
+		},
+		{
+			Label:      "Status",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "awaiting_confirmation",
+			QueryParam: "status",
+			Options: []galleryruntime.TokenOption{
+				{Value: "awaiting_confirmation", Label: "ToolCallAwaitingConfirmation"},
+				{Value: "error", Label: "ToolCallError"},
+				{Value: "ok", Label: "ToolCallOK"},
+				{Value: "running", Label: "ToolCallRunning"},
+			},
+		},
+		{
+			Label:      "Summary",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "12 results matched the filter.",
+			QueryParam: "summary",
+		},
+		{
+			Label:      "Open",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "open",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
+}
+
+// RunMarkerTokens returns the DesignToken slice for RunMarkerWithBoundary.
+func RunMarkerTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Phase",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "end",
+			QueryParam: "phase",
+			Options: []galleryruntime.TokenOption{
+				{Value: "end", Label: "RunMarkerEnd"},
+				{Value: "start", Label: "RunMarkerStart"},
+			},
+		},
+		{
+			Label:      "Status",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "cancelled",
+			QueryParam: "status",
+			Options: []galleryruntime.TokenOption{
+				{Value: "cancelled", Label: "RunMarkerCancelled"},
+				{Value: "completed", Label: "RunMarkerCompleted"},
+				{Value: "failed", Label: "RunMarkerFailed"},
+				{Value: "input-required", Label: "RunMarkerInputRequired"},
+				{Value: "working", Label: "RunMarkerWorking"},
+			},
+		},
+		{
+			Label:      "Model",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "claude-sonnet-4.5",
+			QueryParam: "model",
+		},
+		{
+			Label:      "Error",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "error",
+		},
+	}
+}
+
+// ApprovalCardTokens returns the DesignToken slice for ApprovalCardWithBoundary.
+func ApprovalCardTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Tool",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "run-cypher-query",
+			QueryParam: "tool",
+		},
+		{
+			Label:      "Message",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "message",
+		},
+		{
+			Label:      "Risk",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "risk",
+		},
+		{
+			Label:      "Read Only",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "readOnly",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
+}
+
+// AgentQuestionCardTokens returns the DesignToken slice for AgentQuestionCardWithBoundary.
+func AgentQuestionCardTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Prompt",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Which quarter should I compare against?",
+			QueryParam: "prompt",
+		},
+		{
+			Label:      "Multi",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "multi",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Allow Freeform",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "allowFreeform",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
+}
+
+// AgentTodoCardTokens returns the DesignToken slice for AgentTodoCardWithBoundary.
+func AgentTodoCardTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Title",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Plan",
+			QueryParam: "title",
+		},
+		{
+			Label:      "Open",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "open",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
+}
+
+// TurnFooterTokens returns the DesignToken slice for TurnFooterWithBoundary.
+func TurnFooterTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Model",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "claude-sonnet-4.5",
+			QueryParam: "model",
+		},
+		{
+			Label:      "Duration",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "duration",
+		},
+		{
+			Label:      "Timestamp",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "timestamp",
+		},
+		{
+			Label:      "Show Copy",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "showCopy",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
+}
+
+// SourceListTokens returns the DesignToken slice for SourceListWithBoundary.
+func SourceListTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Title",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Sources",
+			QueryParam: "title",
+		},
+	}
+}
+
+// ChatComposerTokens returns the DesignToken slice for ChatComposerWithBoundary.
+func ChatComposerTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Placeholder",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Ask Memory anything...",
+			QueryParam: "placeholder",
+		},
+		{
+			Label:      "Loading",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "loading",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Show Attach",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "showAttach",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Show Voice",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "showVoice",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
+}

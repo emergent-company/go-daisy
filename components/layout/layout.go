@@ -5,8 +5,8 @@ import "github.com/a-h/templ"
 
 // PageProps configures the full HTML document shell.
 type PageProps struct {
-	Title           string
-	ThemeAttr       string
+	Title     string
+	ThemeAttr string
 	// PinTheme omits ui.ThemeScript() from <head> so ThemeAttr is authoritative
 	// at load time: the persisted gallery palette/mode selection cannot
 	// override it. Runtime switchers (ThemeSwitcher, ThemeController, or an

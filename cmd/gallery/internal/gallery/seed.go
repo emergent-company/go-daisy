@@ -497,8 +497,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 					Description: "Single-select question with freeform fallback.",
 					RenderFunc: func(_ url.Values) templ.Component {
 						return ui.AgentQuestionCardWithBoundary(ui.AgentQuestionCardProps{
-							Prompt:        "Which quarter should I compare against?",
-							AllowFreeform: true,
+							Prompt:              "Which quarter should I compare against?",
+							AllowFreeform:       true,
 							FreeformPlaceholder: "Or describe the comparison window…",
 							Options: []ui.AgentQuestionOption{
 								{Label: "Q2 2026", Value: "q2", Description: "Previous quarter"},
@@ -9898,9 +9898,9 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							model = "claude-sonnet-4.5"
 						}
 						return pages.AgenticChatPageWithBoundary(pages.AgenticChatProps{
-							AgentName: agentName,
-							AgentRole: "Knowledge & operations agent",
-							Model:     model,
+							AgentName:    agentName,
+							AgentRole:    "Knowledge & operations agent",
+							Model:        model,
 							SessionTitle: "Payments incidents · Q3",
 						})
 					},
