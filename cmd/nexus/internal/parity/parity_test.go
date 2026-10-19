@@ -480,6 +480,33 @@ func TestShowcaseComponentPagesUseLibraryComponents(t *testing.T) {
 	require(t, fn, "handleUIComponentDetail", "UIComponentDetailPage(name)")
 }
 
+// TestShowcaseFormPagesUseLibraryComponents pins the twelve UI form showcase
+// ports: each renderFormDemo case must exist, and every page must route through
+// UIFormDetailPage rather than the raw-HTML passthrough. The form showcases use
+// raw daisyUI variant matrices (the library's form components are opinionated
+// single-field wrappers that cannot reproduce the reference's class-level demos),
+// so — unlike the component pages — no library composition is asserted here.
+func TestShowcaseFormPagesUseLibraryComponents(t *testing.T) {
+	src := read(t, "../handler/pages_showcase.templ")
+	demo := templFunc(t, src, "renderFormDemo")
+
+	names := []string{
+		"checkbox", "fieldset", "file-input", "input", "label", "radio",
+		"range", "rating", "select", "textarea", "toggle", "validator",
+	}
+	for _, name := range names {
+		require(t, demo, "renderFormDemo", `case "`+name+`":`)
+	}
+
+	hsrc := read(t, "../handler/handler.go")
+	fn := goFunc(t, hsrc, "func (h *Handler) handleUIFormDetail")
+	for _, name := range names {
+		require(t, fn, "handleUIFormDetail", `"`+name+`"`)
+		forbid(t, hsrc, "handler.go", `nxHTMLComponent("ui-forms-`+name+`")`)
+	}
+	require(t, fn, "handleUIFormDetail", "UIFormDetailPage(name)")
+}
+
 // TestRawPassthroughIsDetectable asserts nxrender.go emits the nx-raw marker
 // so the parity comparator can distinguish raw passthroughs from real ports.
 // This is a source-grep tripwire, not a behavioural test: it guards that the

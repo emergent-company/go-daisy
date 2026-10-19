@@ -99,7 +99,8 @@ func (h *Handler) handleUIComponentDetail(c echo.Context) error {
 func (h *Handler) handleUIFormDetail(c echo.Context) error {
 	name := c.Param("name")
 	switch name {
-	case "checkbox", "input", "toggle", "select":
+	case "checkbox", "fieldset", "file-input", "input", "label", "radio",
+		"range", "rating", "select", "textarea", "toggle", "validator":
 		return adminRender(c, UIFormDetailPage(name))
 	}
 	return adminRender(c, nxHTMLComponent("ui-forms-"+name))
