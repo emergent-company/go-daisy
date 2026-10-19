@@ -280,11 +280,6 @@
   --color-neutral: #1e2832;
   --color-neutral-content: #fafcff;
 
-  /* The reference app sets DM Sans as its body and heading face. Without the
-   * family installed the stack falls back to sans-serif, exactly as the
-   * reference does (it ships no @font-face either), so metrics match. */
-  --font-body: "DM Sans", sans-serif;
-  --font-heading: "DM Sans", sans-serif;
   --color-info: #14b4ff;
   --color-info-content: #fff;
   --color-success: #0bbf58;
@@ -390,6 +385,15 @@
     --layout-background: var(--color-base-200);
     --layout-sidebar-background: var(--color-base-100);
     --layout-topbar-background: var(--color-base-100);
+  }
+
+  /* The reference app sets DM Sans as its body and heading face. It ships no
+   * @font-face, so an environment without the family falls back to sans-serif
+   * exactly as the reference does. Declared here rather than in the theme
+   * plugin: that block mangles a quoted family name down to `sans-serif`. */
+  :root[data-theme="nexus"] {
+    --font-body: "DM Sans", sans-serif;
+    --font-heading: "DM Sans", sans-serif;
   }
 }
 
