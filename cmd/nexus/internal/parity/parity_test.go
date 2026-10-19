@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/emergent-company/go-daisy/cmd/nexus/compare"
 )
 
 func read(t *testing.T, path string) string {
@@ -148,4 +150,150 @@ func TestNexusTemplatesUseRootRelativeImages(t *testing.T) {
 			}
 		}
 	}
+}
+
+// TestCompareCoversEveryReference asserts the compare.Pages() table is
+// provably complete: every reference file under nxhtml has a PageMapping
+// (skipped entries allowed), and no non-skipped mapping points at a missing
+// file.
+func TestCompareCoversEveryReference(t *testing.T) {
+	dir := "../handler/nxhtml"
+	refs, err := filepath.Glob(filepath.Join(dir, "*.html"))
+	if err != nil {
+		t.Fatalf("glob %s: %v", dir, err)
+	}
+	if len(refs) == 0 {
+		t.Fatal("no reference files found under ../handler/nxhtml")
+	}
+
+	mappings := compare.Pages()
+	mapped := make(map[string]bool, len(mappings))
+	for _, m := range mappings {
+		mapped[m.HTMLFile] = true
+		if m.Skip && m.Reason == "" {
+			t.Errorf("skipped mapping %q has no reason", m.HTMLFile)
+		}
+		if !m.Skip {
+			if _, err := os.Stat(filepath.Join(dir, m.HTMLFile)); err != nil {
+				t.Errorf("mapping %q -> %s points at a missing reference file", m.Route, m.HTMLFile)
+			}
+		}
+	}
+	for _, f := range refs {
+		base := filepath.Base(f)
+		if !mapped[base] {
+			t.Errorf("reference %s has no PageMapping (skipped entries allowed)", base)
+		}
+	}
+}
+
+// TestRawPassthroughIsDetectable asserts nxrender.go emits the nx-raw marker
+// so the parity comparator can distinguish raw passthroughs from real ports.
+// This is a source-grep tripwire, not a behavioural test: it guards that the
+// marker string stays present in nxrender.go; the actual detection is exercised
+// by the compare gate at runtime.
+func TestRawPassthroughIsDetectable(t *testing.T) {
+	src := read(t, "../handler/nxrender.go")
+	if !strings.Contains(src, "<!-- nx-raw:") {
+		t.Errorf("nxrender.go must emit the `<!-- nx-raw:<page> -->` passthrough marker")
+	}
+}
+
+// TestMappedRoutesAreRegistered asserts every non-skipped PageMapping.Route is
+// actually wired in handler.go. It parses the Register*Routes bodies for
+// `g.GET("<path>"` literals, applies the /auth prefix only to
+// RegisterAuthRoutes, and matches concrete values (e.g. /1) against `:param`
+// segments by comparing segment counts and literal segments.
+func TestMappedRoutesAreRegistered(t *testing.T) {
+	src := read(t, "../handler/handler.go")
+	registered := registeredRoutes(src)
+
+	for _, m := range compare.Pages() {
+		if m.Skip {
+			continue
+		}
+		matched := false
+		for _, r := range registered {
+			if routeMatches(r, m.Route) {
+				matched = true
+				break
+			}
+		}
+		if !matched {
+			t.Errorf("mapped route %q (%s) is not registered in handler.go", m.Route, m.HTMLFile)
+		}
+	}
+}
+
+// registeredRoutes scans handler.go for `g.GET("<path>"` literals, returning
+// the absolute route for each, with /auth prefixed only to RegisterAuthRoutes.
+func registeredRoutes(src string) []string {
+	var routes []string
+	prefix := ""
+	for _, line := range strings.Split(src, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "func (h *Handler) Register") {
+			prefix = ""
+			if strings.Contains(trimmed, "RegisterAuthRoutes") {
+				prefix = "/auth"
+			}
+			continue
+		}
+		if !strings.Contains(line, "g.GET(") {
+			continue
+		}
+		path := extractGETPath(line)
+		full := prefix + path
+		if full == "" {
+			full = "/"
+		}
+		routes = append(routes, full)
+	}
+	return routes
+}
+
+// extractGETPath returns the string literal passed as the first argument to
+// g.GET(...) on the given source line, or "" when absent.
+func extractGETPath(line string) string {
+	start := strings.Index(line, "g.GET(")
+	if start < 0 {
+		return ""
+	}
+	rest := strings.TrimSpace(line[start+len("g.GET("):])
+	if !strings.HasPrefix(rest, `"`) {
+		return ""
+	}
+	rest = rest[1:]
+	if end := strings.Index(rest, `"`); end >= 0 {
+		return rest[:end]
+	}
+	return ""
+}
+
+// routeMatches reports whether a concrete mapped route (e.g. /apps/.../1)
+// matches a registered route (e.g. /apps/.../:id): equal segment counts, equal
+// literal segments, and any `:param` segment matching any concrete value.
+func routeMatches(registered, mapped string) bool {
+	reg := splitPath(registered)
+	m := splitPath(mapped)
+	if len(reg) != len(m) {
+		return false
+	}
+	for i := range reg {
+		if strings.HasPrefix(reg[i], ":") {
+			continue
+		}
+		if reg[i] != m[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func splitPath(p string) []string {
+	p = strings.Trim(p, "/")
+	if p == "" {
+		return nil
+	}
+	return strings.Split(p, "/")
 }

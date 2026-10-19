@@ -22,6 +22,8 @@ h1 { margin-bottom: 10px; }
 .stat-ok { background: #22c55e; }
 .stat-diff { background: #f59e0b; }
 .stat-error { background: #ef4444; }
+.stat-passthrough { background: #9333ea; }
+.stat-skipped { background: #6b7280; }
 .category { margin-bottom: 30px; }
 .category h2 { border-bottom: 2px solid #d1d5db; padding-bottom: 5px; margin-bottom: 15px; }
 .page { background: #fff; border-radius: 8px; padding: 15px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -31,6 +33,8 @@ h1 { margin-bottom: 10px; }
 .badge-ok { background: #dcfce7; color: #16a34a; }
 .badge-diff { background: #fef3c7; color: #d97706; }
 .badge-error { background: #fee2e2; color: #dc2626; }
+.badge-passthrough { background: #f3e8ff; color: #7e22ce; }
+.badge-skipped { background: #e5e7eb; color: #4b5563; }
 .diff-list { font-size: 13px; max-height: 400px; overflow-y: auto; }
 .diff-item { padding: 4px 8px; border-left: 3px solid #e5e7eb; margin: 4px 0; font-family: monospace; font-size: 12px; }
 .diff-missing_element { border-left-color: #ef4444; background: #fef2f2; }
@@ -50,7 +54,7 @@ h1 { margin-bottom: 10px; }
 `)
 
 	// Summary
-	ok, diff, errCount := 0, 0, 0
+	ok, diff, errCount, passthrough, skipped := 0, 0, 0, 0, 0
 	for _, r := range results {
 		switch r.Status {
 		case "ok":
@@ -59,13 +63,19 @@ h1 { margin-bottom: 10px; }
 			diff++
 		case "error":
 			errCount++
+		case "passthrough":
+			passthrough++
+		case "skipped":
+			skipped++
 		}
 	}
 	fmt.Fprintf(&b, `<div class="summary">
 <div class="stat stat-ok">%d OK</div>
 <div class="stat stat-diff">%d DIFF</div>
+<div class="stat stat-passthrough">%d PASSTHROUGH</div>
 <div class="stat stat-error">%d ERROR</div>
-</div>`, ok, diff, errCount)
+<div class="stat stat-skipped">%d SKIPPED</div>
+</div>`, ok, diff, passthrough, errCount, skipped)
 
 	// By category
 	cats := CategoryGroups(results)
@@ -79,6 +89,10 @@ h1 { margin-bottom: 10px; }
 				badgeClass = "badge-diff"
 			case "error":
 				badgeClass = "badge-error"
+			case "passthrough":
+				badgeClass = "badge-passthrough"
+			case "skipped":
+				badgeClass = "badge-skipped"
 			}
 			fmt.Fprintf(&b, `<div class="page">
 <div class="page-header collapsible" onclick="this.nextElementSibling.classList.toggle('no-diffs')">
@@ -89,7 +103,14 @@ h1 { margin-bottom: 10px; }
 </div>
 <div class="diff-list">`, r.Page.Name, badgeClass, r.Status, len(r.Diffs), r.NexusChars, r.GoDaisyChars)
 			if len(r.Diffs) == 0 {
-				b.WriteString(`<div class="no-diffs">No structural differences</div>`)
+				switch r.Status {
+				case "passthrough":
+					fmt.Fprintf(&b, `<div class="no-diffs">raw embed %q</div>`, r.RawPage)
+				case "skipped":
+					fmt.Fprintf(&b, `<div class="no-diffs">%s</div>`, r.Page.Reason)
+				default:
+					b.WriteString(`<div class="no-diffs">No structural differences</div>`)
+				}
 			}
 			for _, d := range r.Diffs {
 				fmt.Fprintf(&b, `<div class="diff-item diff-%s">

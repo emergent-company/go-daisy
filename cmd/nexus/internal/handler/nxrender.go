@@ -45,6 +45,12 @@ func nxHTMLComponent(page string) templ.Component {
 		if end > 0 {
 			content = content[:end]
 		}
+		// Passthrough marker: zero visual/DOM impact, but lets the parity
+		// comparator detect (and fail) raw-HTML pages instead of scoring them
+		// 100% by construction.
+		if _, err = io.WriteString(w, "<!-- nx-raw:"+page+" -->"); err != nil {
+			return err
+		}
 		_, err = io.WriteString(w, strings.TrimSpace(content))
 		return err
 	})

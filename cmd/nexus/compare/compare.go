@@ -37,19 +37,27 @@ type DiffEntry struct {
 // PageResult holds the comparison result for one page.
 type PageResult struct {
 	Page         PageMapping `json:"page"`
-	Status       string      `json:"status"` // "ok", "error", "diff"
+	Status       string      `json:"status"` // "ok", "error", "diff", "passthrough", "skipped"
 	Error        string      `json:"error,omitempty"`
+	Raw          bool        `json:"raw,omitempty"`
+	RawPage      string      `json:"raw_page,omitempty"`
 	NexusChars   int         `json:"nexus_chars"`
 	GoDaisyChars int         `json:"godaisy_chars"`
 	Diffs        []DiffEntry `json:"diffs"`
 }
 
-// CompareAll fetches all pages and compares them.
+// CompareAll fetches all pages and compares them, returning results in the
+// same order as the input mappings. Skipped mappings short-circuit to a
+// "skipped" result without any network or filesystem access. A dead server is
+// tolerated: each page reports its own "error" status rather than aborting.
 func CompareAll(mappings []PageMapping) []PageResult {
-	var results []PageResult
+	results := make([]PageResult, 0, len(mappings))
 	for _, m := range mappings {
-		r := comparePage(m)
-		results = append(results, r)
+		if m.Skip {
+			results = append(results, PageResult{Page: m, Status: "skipped", Diffs: []DiffEntry{}})
+			continue
+		}
+		results = append(results, comparePage(m))
 	}
 	return results
 }
@@ -72,6 +80,11 @@ func comparePage(m PageMapping) PageResult {
 		return r
 	}
 	defer func() { _ = resp.Body.Close() }() // body fully read next; a close error here is not actionable
+	if resp.StatusCode != http.StatusOK {
+		r.Status = "error"
+		r.Error = fmt.Sprintf("fetch go-daisy: HTTP %d", resp.StatusCode)
+		return r
+	}
 	goDaisyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		r.Status = "error"
@@ -79,6 +92,15 @@ func comparePage(m PageMapping) PageResult {
 		return r
 	}
 	r.GoDaisyChars = len(goDaisyBytes)
+
+	// Passthrough pages embed the reference markup verbatim. Detect the
+	// nx-raw marker and never count such pages as ok.
+	if raw := extractRawMarker(goDaisyBytes); raw != "" {
+		r.Status = "passthrough"
+		r.Raw = true
+		r.RawPage = raw
+		return r
+	}
 
 	nexusContent := extractContentNodes(nexusHTML)
 	goDaisyContent := extractContentNodes(goDaisyBytes)
@@ -90,23 +112,36 @@ func comparePage(m PageMapping) PageResult {
 	return r
 }
 
-// extractContentNodes extracts all child nodes from inside #layout-content.
+// extractRawMarker returns the page name from a <!-- nx-raw:<page> --> comment,
+// or "" when the marker is absent.
+func extractRawMarker(body []byte) string {
+	const prefix = "<!-- nx-raw:"
+	idx := strings.Index(string(body), prefix)
+	if idx < 0 {
+		return ""
+	}
+	rest := string(body)[idx+len(prefix):]
+	if end := strings.Index(rest, "-->"); end >= 0 {
+		return strings.TrimSpace(rest[:end])
+	}
+	return ""
+}
+
+// extractContentNodes extracts the child nodes inside #layout-content, falling
+// back to <body> for pages (auth, landing) that have no layout-content.
 func extractContentNodes(raw []byte) []*html.Node {
 	doc, err := html.Parse(strings.NewReader(string(raw)))
 	if err != nil {
 		return nil
 	}
-	contentDiv := findElementByID(doc, "layout-content")
-	if contentDiv == nil {
+	root := findElementByID(doc, "layout-content")
+	if root == nil {
+		root = findElementByTag(doc, "body")
+	}
+	if root == nil {
 		return nil
 	}
-	var children []*html.Node
-	for c := contentDiv.FirstChild; c != nil; c = c.NextSibling {
-		if c.Type == html.ElementNode || (c.Type == html.TextNode && strings.TrimSpace(c.Data) != "") {
-			children = append(children, c)
-		}
-	}
-	return children
+	return elementChildren(root)
 }
 
 func findElementByID(n *html.Node, id string) *html.Node {
@@ -119,6 +154,18 @@ func findElementByID(n *html.Node, id string) *html.Node {
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		if found := findElementByID(c, id); found != nil {
+			return found
+		}
+	}
+	return nil
+}
+
+func findElementByTag(n *html.Node, tag string) *html.Node {
+	if n.Type == html.ElementNode && n.Data == tag {
+		return n
+	}
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		if found := findElementByTag(c, tag); found != nil {
 			return found
 		}
 	}
@@ -193,33 +240,126 @@ func classSet(classes []string) map[string]bool {
 	return m
 }
 
+// lookahead is the number of siblings searched forward for a re-alignment
+// match before a missing/extra element is emitted.
+const lookahead = 5
+
+// nodeSignature returns the alignment key for a node: tag + id + first class
+// token for elements, or the normalized text for text nodes.
+func nodeSignature(n *html.Node) string {
+	if n == nil {
+		return ""
+	}
+	if n.Type == html.TextNode {
+		return "text:" + normalizeText(n.Data)
+	}
+	sig := n.Data
+	if id := getAttr(n, "id"); id != "" {
+		sig += "#" + id
+	}
+	if cls := firstClassToken(n); cls != "" {
+		sig += "." + cls
+	}
+	return sig
+}
+
+func firstClassToken(n *html.Node) string {
+	cls := getAttr(n, "class")
+	if cls == "" {
+		return ""
+	}
+	parts := strings.Fields(cls)
+	if len(parts) == 0 {
+		return ""
+	}
+	return parts[0]
+}
+
+// findSignature searches nodes[from:] (bounded by lookahead) for a node whose
+// signature matches sig, returning its index or -1.
+func findSignature(nodes []*html.Node, from int, sig string) int {
+	limit := from + lookahead
+	if limit > len(nodes) {
+		limit = len(nodes)
+	}
+	for k := from; k < limit; k++ {
+		if nodeSignature(nodes[k]) == sig {
+			return k
+		}
+	}
+	return -1
+}
+
+// compareNodeLists aligns two sibling lists with a forward lookahead so a
+// single inserted sibling does not cascade into many diffs.
 func compareNodeLists(nexus, goDaisy []*html.Node, parentPath string) []DiffEntry {
 	var diffs []DiffEntry
-
-	maxLen := len(nexus)
-	if len(goDaisy) > maxLen {
-		maxLen = len(goDaisy)
-	}
-
-	for i := range maxLen {
+	i, j := 0, 0
+	for i < len(nexus) || j < len(goDaisy) {
 		path := fmt.Sprintf("%s > [%d]", parentPath, i)
+
 		if i >= len(nexus) {
-			diffs = append(diffs, DiffEntry{
-				Type:    DiffExtraElement,
-				Path:    path,
-				GoDaisy: nodeSummary(goDaisy[i]),
-			})
+			for ; j < len(goDaisy); j++ {
+				diffs = append(diffs, DiffEntry{
+					Type:    DiffExtraElement,
+					Path:    fmt.Sprintf("%s > [%d]", parentPath, i),
+					GoDaisy: nodeSummary(goDaisy[j]),
+				})
+			}
+			break
+		}
+		if j >= len(goDaisy) {
+			for ; i < len(nexus); i++ {
+				diffs = append(diffs, DiffEntry{
+					Type:     DiffMissingElement,
+					Path:     fmt.Sprintf("%s > [%d]", parentPath, i),
+					NexusVal: nodeSummary(nexus[i]),
+				})
+			}
+			break
+		}
+
+		if nodeSignature(nexus[i]) == nodeSignature(goDaisy[j]) {
+			diffs = append(diffs, compareTwoNodes(nexus[i], goDaisy[j], path)...)
+			i++
+			j++
 			continue
 		}
-		if i >= len(goDaisy) {
-			diffs = append(diffs, DiffEntry{
-				Type:     DiffMissingElement,
-				Path:     path,
-				NexusVal: nodeSummary(nexus[i]),
-			})
+
+		// Look ahead for nexus[i] among goDaisy siblings: goDaisy[j..k-1] are extras.
+		if k := findSignature(goDaisy, j+1, nodeSignature(nexus[i])); k >= 0 {
+			for ; j < k; j++ {
+				diffs = append(diffs, DiffEntry{
+					Type:    DiffExtraElement,
+					Path:    fmt.Sprintf("%s > [%d]", parentPath, i),
+					GoDaisy: nodeSummary(goDaisy[j]),
+				})
+			}
+			diffs = append(diffs, compareTwoNodes(nexus[i], goDaisy[j], path)...)
+			i++
+			j++
 			continue
 		}
-		diffs = append(diffs, compareTwoNodes(nexus[i], goDaisy[i], path)...)
+
+		// Look ahead for goDaisy[j] among nexus siblings: nexus[i..k-1] are missing.
+		if k := findSignature(nexus, i+1, nodeSignature(goDaisy[j])); k >= 0 {
+			for ; i < k; i++ {
+				diffs = append(diffs, DiffEntry{
+					Type:     DiffMissingElement,
+					Path:     fmt.Sprintf("%s > [%d]", parentPath, i),
+					NexusVal: nodeSummary(nexus[i]),
+				})
+			}
+			diffs = append(diffs, compareTwoNodes(nexus[i], goDaisy[j], path)...)
+			i++
+			j++
+			continue
+		}
+
+		// No lookahead match: compare positionally (wrong tag / class diffs).
+		diffs = append(diffs, compareTwoNodes(nexus[i], goDaisy[j], path)...)
+		i++
+		j++
 	}
 	return diffs
 }
@@ -327,28 +467,6 @@ func truncate(s string, n int) string {
 	return s[:n] + "..."
 }
 
-// Summary returns counts of each diff type.
-func (r *PageResult) Summary() string {
-	if r.Status == "error" {
-		return fmt.Sprintf("ERROR: %s", r.Error)
-	}
-	if r.Status == "ok" {
-		return "OK — no structural differences"
-	}
-	byType := make(map[DiffType]int)
-	for _, d := range r.Diffs {
-		byType[d.Type]++
-	}
-	var parts []string
-	keys := []DiffType{DiffMissingElement, DiffExtraElement, DiffWrongTag, DiffMissingClass, DiffExtraClass, DiffTextMismatch}
-	for _, k := range keys {
-		if n := byType[k]; n > 0 {
-			parts = append(parts, fmt.Sprintf("%s=%d", k, n))
-		}
-	}
-	return "DIFF: " + strings.Join(parts, " ")
-}
-
 // CategoryGroups returns results grouped by category for the report.
 func CategoryGroups(results []PageResult) []string {
 	seen := make(map[string]bool)
@@ -376,6 +494,12 @@ func pageCategory(route string) string {
 		return "Chat"
 	case strings.Contains(route, "/file-manager"):
 		return "File Manager"
+	case strings.Contains(route, "/ui/components"):
+		return "UI Components"
+	case strings.Contains(route, "/ui/forms"):
+		return "UI Forms"
+	case strings.Contains(route, "/ui/charts"):
+		return "UI Charts"
 	case strings.Contains(route, "/pages"):
 		return "Pages"
 	case strings.Contains(route, "/auth"):
