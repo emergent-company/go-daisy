@@ -222,19 +222,19 @@ func (h *Handler) handleShopEdit(c echo.Context) error {
 }
 
 func (h *Handler) handleGenAIHome(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-gen-ai-home"))
+	return adminRender(c, GenAIHome())
 }
 
 func (h *Handler) handleGenAIContent(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-gen-ai-content"))
+	return adminRender(c, GenAIContent())
 }
 
 func (h *Handler) handleGenAIImage(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-gen-ai-image"))
+	return adminRender(c, GenAIImage())
 }
 
 func (h *Handler) handleGenAILibrary(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-gen-ai-library"))
+	return adminRender(c, GenAILibrary())
 }
 
 func (h *Handler) handleFileManager(c echo.Context) error {

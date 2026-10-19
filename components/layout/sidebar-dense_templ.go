@@ -44,7 +44,7 @@ func SidebarDense(props SidebarDenseProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"_layout-sidebar-dense\" class=\"flex flex-col bg-base-100 border-e border-line transition-all duration-300\" data-sidebar-dense")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"_layout-sidebar-dense\" class=\"flex flex-col bg-[var(--layout-sidebar-background)] border-e border-line transition-all duration-300\" data-sidebar-dense")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

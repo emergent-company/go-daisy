@@ -279,6 +279,7 @@
   --color-accent-content: #f3fbf6;
   --color-neutral: #1e2832;
   --color-neutral-content: #fafcff;
+
   --color-info: #14b4ff;
   --color-info-content: #fff;
   --color-success: #0bbf58;
@@ -295,6 +296,18 @@
   --border: 1px;
   --depth: 0;
   --noise: 0;
+
+  /* Layout surfaces — the admin shell paints its page/sidebar/topbar from
+   * these. The reference pins #fafbfc for the content pane and #fff for the
+   * chrome. */
+  --layout-background: #fafbfc;
+  --layout-sidebar-background: #fff;
+  --layout-topbar-background: #fff;
+
+  /* Card metrics — the reference tightens card padding to 20px and keeps
+   * card-body copy at the base size (16px) rather than daisyUI's .875rem. */
+  --card-p: 20px;
+  --card-fs: var(--text-base);
 }
 
 /* Iconify (Lucide icons via utility classes) */
@@ -360,6 +373,28 @@
   --text-base: 16px;
   --text-lg: 18px;
   --text-xl: 20px;
+}
+
+/* Layout surface fallbacks — every theme resolves the three layout tokens even
+ * when it does not define them: the page falls back to base-200, the sidebar
+ * and topbar to base-100. Declared in a base layer so a theme's
+ * `[data-theme=…]` block (unlayered) always wins for themes that pin their own
+ * values (e.g. `nexus`). */
+@layer base {
+  :root {
+    --layout-background: var(--color-base-200);
+    --layout-sidebar-background: var(--color-base-100);
+    --layout-topbar-background: var(--color-base-100);
+  }
+
+  /* The reference app sets DM Sans as its body and heading face. It ships no
+   * @font-face, so an environment without the family falls back to sans-serif
+   * exactly as the reference does. Declared here rather than in the theme
+   * plugin: that block mangles a quoted family name down to `sans-serif`. */
+  :root[data-theme="nexus"] {
+    --font-body: "DM Sans", sans-serif;
+    --font-heading: "DM Sans", sans-serif;
+  }
 }
 
 /* Custom component CSS, co-located for consumers */

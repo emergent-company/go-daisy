@@ -164,8 +164,7 @@ templ TableRow(id string, hover bool, attrs templ.Attributes) {
 		if id != "" {
 			id={ id }
 		}
-		class={ templ.KV("hover", hover) }
-		{ attrs... }
+		{ rowAttrs(hover, attrs)... }
 	>
 		{ children... }
 	</tr>

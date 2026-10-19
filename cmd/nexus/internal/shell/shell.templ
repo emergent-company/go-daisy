@@ -10,7 +10,8 @@ import (
 templ NexusShell(content templ.Component, activeSlug string) {
 	@layout.PageFull(layout.PageProps{Title: "Nexus - Admin Dashboard", ThemeAttr: "nexus", PinTheme: true, BodyEnd: FeedbackOverlay()}) {
 		<style>
-		#sidebar-menu { margin-bottom: 16px; width: 100%; height: 100%; padding: 0 8px; display: flex; flex-direction: column; gap: 2px; }
+		#sidebar-menu { margin-bottom: 16px; width: 100%; height: 100%; padding: 0 8px; display: flex; flex-direction: column; gap: 2px; min-height: 0; overflow-y: auto; scrollbar-width: thin; }
+		#sidebar-menu > * { flex-shrink: 0; }
 		</style>
 		@layout.AdminShell(layout.AdminShellProps{
 			Sidebar:  nexusSidebar(activeSlug),
@@ -22,7 +23,7 @@ templ NexusShell(content templ.Component, activeSlug string) {
 }
 
 templ nexusSidebar(activeSlug string) {
-	<div id="_layout-sidebar" class="flex flex-col bg-base-100" { devmode.Attrs(ctx, "shell/nexusSidebar")... }>
+	<div id="_layout-sidebar" class="flex flex-col bg-[var(--layout-sidebar-background)]" { devmode.Attrs(ctx, "shell/nexusSidebar")... }>
 		<div class="flex min-h-16 items-center justify-center">
 			<img id="logo-dark" alt="Nexus" class="h-5.5" src="/images/logo/logo-dark.png" style="display:none"/>
 			<img id="logo-light" alt="Nexus" class="h-5.5" src="/images/logo/logo-light.png"/>
@@ -47,7 +48,7 @@ templ nexusSidebar(activeSlug string) {
 						emptyItem(activeSlug, "Content", "/apps/gen-ai/content"),
 						emptyItem(activeSlug, "Image", "/apps/gen-ai/image"),
 						emptyItem(activeSlug, "Library", "/apps/gen-ai/library"),
-					})
+					}, "New")
 					@mi(activeSlug, "File Manager", "/apps/file-manager", "lucide--server")
 					@mi(activeSlug, "Chat", "/apps/chat", "lucide--messages-square")
 				@layout.SidebarMenuLabelNexus("Pages")
@@ -163,7 +164,7 @@ templ nexusTopbar() {
 		ShowTheme:         false,
 		ShowSettings:      true,
 		SettingsDrawerID:  "layout-rightbar-drawer",
-		ExtraClass:        "bg-base-100",
+		ExtraClass:        "bg-[var(--layout-topbar-background)]",
 		Notifications: nav.NotificationVariant("basic", nav.NotificationVariantOpts{
 			Tabs: []nav.NotificationTab{
 				{Label: "All", Active: true, Badge: 12},

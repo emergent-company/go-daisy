@@ -87,7 +87,8 @@ templ FormActionsWithLoading(submitText string, indicatorID string) {
 // Use children slot for extra content after the input (close button, keyboard badge, etc.).
 // HTMX attrs are only emitted when both hxGet and hxTarget are non-empty.
 // Pass class to override the default wrapper classes, or empty string for default.
-templ SearchInput(name string, value string, placeholder string, hxTarget string, hxGet string, class string) {
+// Pass extra attrs (e.g. an aria-label) via the variadic final argument.
+templ SearchInput(name string, value string, placeholder string, hxTarget string, hxGet string, class string, attrs ...templ.Attributes) {
 	<label class={ templ.KV(class, class != ""), templ.KV("input input-sm w-full flex items-center gap-2", class == "") } { devmode.Attrs(ctx, "form/SearchInput")... }>
 		@ui.IconSpan("lucide--search", "size-4 opacity-50 shrink-0")
 		<input
@@ -101,6 +102,9 @@ templ SearchInput(name string, value string, placeholder string, hxTarget string
 				hx-target={ "#" + hxTarget }
 				hx-trigger="input delay:300ms, search"
 				hx-include="closest form"
+			}
+			if len(attrs) > 0 {
+				{ attrs[0]... }
 			}
 		/>
 		{ children... }

@@ -16,9 +16,13 @@ func mi(activeSlug, label, href, icon string) templ.Component {
 	return layout.SidebarMenuItemNexus(label, href, icon, active)
 }
 
-func sc(activeSlug, icon, label string, children []templ.Component) templ.Component {
+func sc(activeSlug, icon, label string, children []templ.Component, badge ...string) templ.Component {
 	open := collapsibleOpen(activeSlug, icon)
-	return layout.SidebarCollapsibleNexus(icon, label, children, open)
+	props := layout.SidebarCollapsibleNexusProps{Icon: icon, Label: label, Children: children, Open: open}
+	if len(badge) > 0 {
+		props.Badge = badge[0]
+	}
+	return layout.SidebarCollapsibleNexusWithProps(props)
 }
 
 func emptyItem(activeSlug, label, href string) templ.Component {

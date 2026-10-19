@@ -40,7 +40,7 @@ templ SidebarVariant(variant string, opts SidebarVariantOpts) {
 }
 
 templ SidebarEcommerce(opts SidebarVariantOpts) {
-	<div id="_layout-sidebar" class="flex flex-col bg-base-100">
+	<div id="_layout-sidebar" class="flex flex-col bg-[var(--layout-sidebar-background)]">
 		<div class="flex min-h-10 items-center justify-between gap-3 px-5 py-3 pb-5 shrink-0">
 			<span class="text-xl font-semibold truncate">{ opts.AppName }</span>
 			<div class={ ui.Row }>
@@ -95,7 +95,7 @@ templ SidebarEcommerce(opts SidebarVariantOpts) {
 }
 
 templ SidebarPayment(opts SidebarVariantOpts) {
-	<div id="_layout-sidebar" class="flex flex-col bg-base-100">
+	<div id="_layout-sidebar" class="flex flex-col bg-[var(--layout-sidebar-background)]">
 		<div class="flex min-h-10 items-center justify-between gap-3 px-5 py-3 pb-5 shrink-0">
 			<span class="text-xl font-semibold truncate">{ opts.AppName }</span>
 			@SidebarSimpleToggle()
@@ -128,7 +128,7 @@ templ SidebarPayment(opts SidebarVariantOpts) {
 }
 
 templ SidebarProject(opts SidebarVariantOpts) {
-	<div id="_layout-sidebar" class="flex flex-col bg-base-100">
+	<div id="_layout-sidebar" class="flex flex-col bg-[var(--layout-sidebar-background)]">
 		<div class="flex min-h-10 items-center justify-between gap-3 px-5 py-3 pb-5 shrink-0">
 			<div class={ ui.RowLoose }>
 				<div class="flex items-center gap-2">
@@ -190,7 +190,7 @@ templ SidebarProject(opts SidebarVariantOpts) {
 }
 
 templ SidebarChat(opts SidebarVariantOpts) {
-	<div id="_layout-sidebar" class="flex flex-col bg-base-100">
+	<div id="_layout-sidebar" class="flex flex-col bg-[var(--layout-sidebar-background)]">
 		<div class={ ui.Row, "px-3 pt-3 pb-1 shrink-0" }>
 			@SidebarSearchInput(opts.SearchPlaceholder, true)
 		</div>
@@ -228,7 +228,7 @@ templ SidebarChat(opts SidebarVariantOpts) {
 }
 
 templ SidebarDocs(opts SidebarVariantOpts) {
-	<div id="_layout-sidebar" class="flex flex-col bg-base-100">
+	<div id="_layout-sidebar" class="flex flex-col bg-[var(--layout-sidebar-background)]">
 		<div class="flex min-h-10 items-center justify-between gap-3 px-5 py-3 pb-5 shrink-0">
 			<span class="text-xl font-semibold truncate">{ opts.AppName }</span>
 			@SidebarSimpleToggle()

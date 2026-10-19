@@ -48,7 +48,7 @@ func NexusShell(content templ.Component, activeSlug string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n\t\t#sidebar-menu { margin-bottom: 16px; width: 100%; height: 100%; padding: 0 8px; display: flex; flex-direction: column; gap: 2px; }\n\t\t</style> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n\t\t#sidebar-menu { margin-bottom: 16px; width: 100%; height: 100%; padding: 0 8px; display: flex; flex-direction: column; gap: 2px; min-height: 0; overflow-y: auto; scrollbar-width: thin; }\n\t\t#sidebar-menu > * { flex-shrink: 0; }\n\t\t</style> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -92,7 +92,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div id=\"_layout-sidebar\" class=\"flex flex-col bg-base-100\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div id=\"_layout-sidebar\" class=\"flex flex-col bg-[var(--layout-sidebar-background)]\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -130,7 +130,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 			emptyItem(activeSlug, "Content", "/apps/gen-ai/content"),
 			emptyItem(activeSlug, "Image", "/apps/gen-ai/image"),
 			emptyItem(activeSlug, "Library", "/apps/gen-ai/library"),
-		}).Render(ctx, templ_7745c5c3_Buffer)
+		}, "New").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -264,7 +264,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("@withden")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/shell/shell.templ`, Line: 143, Col: 131}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/shell/shell.templ`, Line: 144, Col: 131}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -354,7 +354,7 @@ func nexusTopbar() templ.Component {
 			ShowTheme:         false,
 			ShowSettings:      true,
 			SettingsDrawerID:  "layout-rightbar-drawer",
-			ExtraClass:        "bg-base-100",
+			ExtraClass:        "bg-[var(--layout-topbar-background)]",
 			Notifications: nav.NotificationVariant("basic", nav.NotificationVariantOpts{
 				Tabs: []nav.NotificationTab{
 					{Label: "All", Active: true, Badge: 12},
