@@ -1,0 +1,342 @@
+package pages
+
+import (
+	"github.com/emergent-company/go-daisy/components/form"
+	ui "github.com/emergent-company/go-daisy/components/ui"
+	"github.com/emergent-company/go-daisy/devmode"
+)
+
+// agenticSessionRowProps is one conversation row in the session rail.
+type agenticSessionRowProps struct {
+	Title   string
+	Preview string
+	Time    string
+	Icon    string
+	Bucket  string // running | needs_input | failed | done
+	Active  bool
+}
+
+// AgenticChatPage renders a high-fidelity agentic chat workspace: session rail,
+// live run status, thinking segments, tool-call chips, citations, run markers,
+// plan card, pending approval and an agent composer.
+templ AgenticChatPage(props AgenticChatProps) {
+	{{
+		agent := props.AgentName
+		if agent == "" {
+			agent = "Memory"
+		}
+		role := props.AgentRole
+		if role == "" {
+			role = "Knowledge & operations agent"
+		}
+		model := props.Model
+		if model == "" {
+			model = "claude-sonnet-4.5"
+		}
+		sessionTitle := props.SessionTitle
+		if sessionTitle == "" {
+			sessionTitle = "Payments incidents · Q3"
+		}
+	}}
+	<div
+		class="bg-base-200/30 border-base-300 flex h-[calc(100vh-2rem)] min-h-[720px] overflow-hidden rounded-box border"
+		data-session-title={ sessionTitle }
+		{ devmode.Attrs(ctx, "pages/AgenticChatPage")... }
+	>
+		@agenticChatRail(sessionTitle)
+
+		<div class="bg-base-100 flex min-w-0 flex-1 flex-col">
+			@agenticChatHeader(agent, role, model)
+
+			<div class="min-h-0 flex-1 overflow-y-auto" data-testid="agentic-transcript">
+				<div class="mx-auto flex w-full max-w-4xl flex-col gap-3 px-4 py-5">
+					@ui.AgentTodoCard(ui.AgentTodoCardProps{
+						Title: "Plan",
+						Open:  true,
+						Items: []ui.AgentTodoItem{
+							{Content: "Search Q3 incidents for payments-api", Status: ui.AgentTodoCompleted},
+							{Content: "Cluster incidents by root cause", Status: ui.AgentTodoCompleted},
+							{Content: "Correlate clusters with deploy events", Status: ui.AgentTodoInProgress},
+							{Content: "Write the incident summary", Status: ui.AgentTodoPending},
+						},
+					})
+
+					@ui.RunMarker(ui.RunMarkerProps{Phase: ui.RunMarkerStart, Model: model})
+
+					@ui.ChatBubble(ui.ChatBubbleProps{Sent: true, Timestamp: "10:38 AM", BubbleClass: "chat-bubble-primary"}) {
+						<p class="whitespace-pre-wrap">Summarize the open incidents for the payments service last quarter and tell me what caused them.</p>
+					}
+
+					<div class="pl-12">
+						@ui.ThinkingBlock(ui.ThinkingBlockProps{
+							Role: "reasoning",
+							Text: "I should search the graph for Incident objects linked to the payments service between Jul 1 and Sep 30, then cluster them by root cause. I'll start with a broad search and narrow the traversal if the results are noisy.",
+						})
+					</div>
+
+					<div class="pl-12">
+						@ui.ToolCallChip(ui.ToolCallProps{
+							Name:         "search-knowledge",
+							Status:       ui.ToolCallOK,
+							Summary:      "12 incidents matched the payments service filter.",
+							Input:        "{\n  \"query\": \"payments incidents\",\n  \"quarter\": \"Q3\",\n  \"limit\": 25\n}",
+							Output:       "{\n  \"count\": 12,\n  \"ids\": [\"inc_9f2\", \"inc_a41\", \"inc_77c\", \"inc_0d8\"]\n}",
+							Duration:     "412 ms",
+							ResponseSize: "2.1 KB",
+							ID:           "tc_01",
+						})
+					</div>
+
+					<div class="pl-12">
+						@ui.ToolCallChip(ui.ToolCallProps{
+							Name:     "read-entity",
+							Status:   ui.ToolCallOK,
+							Summary:  "Loaded service entity payments-api (owner: Core Platform).",
+							Input:    "{\n  \"type\": \"Service\",\n  \"slug\": \"payments-api\"\n}",
+							Output:   "{\n  \"id\": \"svc_pay_01\",\n  \"owner\": \"Core Platform\",\n  \"tier\": \"critical\"\n}",
+							Duration: "86 ms",
+							ID:       "tc_02",
+						})
+					</div>
+
+					<div class="pl-12">
+						@ui.ToolCallChip(ui.ToolCallProps{
+							Name:     "run-cypher-query",
+							Status:   ui.ToolCallError,
+							Error:    "Query timed out after 30s while traversing deploy → incident edges.",
+							Input:    "{\n  \"query\": \"MATCH (d:Deploy)-[:TRIGGERED]->(i:Incident) RETURN d, i\",\n  \"timeoutMs\": 30000\n}",
+							Duration: "30.0 s",
+							ID:       "tc_03",
+						})
+					</div>
+
+					@ui.ChatBubble(ui.ChatBubbleProps{Sent: false, Timestamp: "10:41 AM", BotIcon: true, BubbleClass: "chat-bubble-neutral", ShowActions: true}) {
+						@ui.Markdown(ui.MarkdownProps{Source: agenticAnswerMarkdown})
+						<div class="mt-3">
+							@ui.SourceList(ui.SourceListProps{Items: []ui.SourceItem{
+								{Label: "inc_9f2", Href: "#", Type: "Incident", Icon: "lucide--triangle-alert"},
+								{Label: "d-8841", Href: "#", Type: "Deploy", Icon: "lucide--rocket"},
+								{Label: "payments-api", Href: "#", Type: "Service", Icon: "lucide--server"},
+							}})
+						</div>
+					}
+
+					<div class="pl-12">
+						@ui.TurnFooter(ui.TurnFooterProps{
+							Model:     model,
+							Duration:  "18.4s",
+							Timestamp: "10:42 AM",
+							ShowCopy:  true,
+						})
+					</div>
+
+					@ui.RunMarker(ui.RunMarkerProps{Phase: ui.RunMarkerStart, Model: model})
+
+					@ui.ChatBubble(ui.ChatBubbleProps{Sent: true, Timestamp: "10:42 AM", BubbleClass: "chat-bubble-primary"}) {
+						<p class="whitespace-pre-wrap">Now correlate them with last quarter's deploys and tell me which deploy introduced the retry storm.</p>
+					}
+
+					<div class="pl-12">
+						@ui.ThinkingBlock(ui.ThinkingBlockProps{
+							Open: true,
+							Live: true,
+							Role: "reasoning",
+							Text: "The first traversal timed out, so I'll narrow the query to deploys touching payments-api, then join forward to incidents through the TRIGGERED edge. Once the cluster is confirmed I'll link the root-cause node and summarize the trigger order.",
+						})
+					</div>
+
+					<div class="pl-12">
+						@ui.ToolCallChip(ui.ToolCallProps{
+							Name:     "run-cypher-query",
+							Label:    "Run cypher query (retry)",
+							Status:   ui.ToolCallRunning,
+							Input:    "{\n  \"query\": \"MATCH (d:Deploy {service: $svc})-[:TRIGGERED]->(i:Incident) RETURN d, i\",\n  \"params\": {\"svc\": \"payments-api\"},\n  \"maxDepth\": 2\n}",
+							Duration: "1.2 s",
+							ID:       "tc_07",
+						})
+					</div>
+
+					<div class="pl-12">
+						@ui.AIThinkingIndicator()
+					</div>
+				</div>
+			</div>
+
+			<div class="border-base-300 bg-base-200/30 border-t px-4 py-3">
+				<div class="mx-auto flex w-full max-w-4xl flex-col gap-2">
+					@ui.ApprovalCard(ui.ApprovalCardProps{
+						Tool:    "link_root_cause",
+						Risk:    "write",
+						Message: "The agent wants to run",
+						Args:    "{\n  \"incident\": \"inc_9f2\",\n  \"cause\": \"retry-storm-d8841\",\n  \"confidence\": 0.87\n}",
+						ApproveAttrs: templ.Attributes{"data-action": "approve-tool"},
+						RejectAttrs:  templ.Attributes{"data-action": "reject-tool"},
+					})
+
+					@ui.ChatComposer(ui.ChatComposerProps{
+						Placeholder:   "Ask Memory anything…",
+						Models:        []ui.ChatComposerModel{
+							{Label: "claude-sonnet-4.5", Value: "sonnet", Icon: "lucide--sparkles"},
+							{Label: "gpt-5.2", Value: "gpt", Icon: "lucide--cpu"},
+							{Label: "gemini-3-pro", Value: "gemini", Icon: "lucide--gem"},
+						},
+						SelectedModel: "claude-sonnet-4.5",
+						ShowAttach:    true,
+						ShowImage:     true,
+						ShowVoice:     true,
+						Loading:       true,
+						Hint:          "Enter to send · Shift+Enter for a new line · responses stream in live",
+						Attrs:         templ.Attributes{"onsubmit": "return false"},
+					})
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ agenticChatRail(activeTitle string) {
+	<aside class="bg-base-100 border-base-300 hidden w-64 shrink-0 flex-col border-r md:flex" aria-label="Sessions">
+		<div class="border-base-300 space-y-2 border-b p-3">
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--plus", Block: true}) {
+				New chat
+			}
+			@form.SearchInput("session-search", "", "Search sessions…", "", "", "input-sm")
+			<select class="select select-sm select-bordered w-full" aria-label="Filter sessions by agent">
+				<option>All agents</option>
+				<option>Memory</option>
+				<option>Research</option>
+			</select>
+			<select class="select select-sm select-bordered w-full" aria-label="Filter sessions by type">
+				<option>All types</option>
+				<option>Manual</option>
+				<option>Scheduled</option>
+				<option>Shared</option>
+			</select>
+		</div>
+
+		<div class="min-h-0 flex-1 space-y-0.5 overflow-y-auto p-2">
+			<p class="menu-label px-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-faint">Today</p>
+			for _, row := range agenticSessionRows() {
+				@agenticSessionRow(row, row.Title == activeTitle)
+			}
+			<p class="menu-label px-2 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-wider text-faint">Earlier</p>
+			@agenticSessionRow(agenticSessionRowProps{
+				Title:   "Churn model review",
+				Preview: "Feature drift is within tolerance",
+				Time:    "Yesterday",
+				Icon:    "lucide--chart-scatter",
+				Bucket:  "done",
+			}, false)
+			@agenticSessionRow(agenticSessionRowProps{
+				Title:   "Vendor contract analysis",
+				Preview: "Two clauses need legal review",
+				Time:    "Mon",
+				Icon:    "lucide--file-text",
+				Bucket:  "done",
+			}, false)
+		</div>
+
+		<div class="border-base-300 border-t p-3">
+			<div class="flex items-center justify-between text-xs text-subtle">
+				<span>Token budget</span>
+				<span class="font-mono">18.2k / 200k</span>
+			</div>
+			<progress class="progress progress-primary mt-1.5 h-1.5" value="18.2" max="200"></progress>
+		</div>
+	</aside>
+}
+
+func agenticSessionRows() []agenticSessionRowProps {
+	return []agenticSessionRowProps{
+		{
+			Title:   "Payments incidents · Q3",
+			Preview: "Correlating 12 incidents with deploys…",
+			Time:    "now",
+			Icon:    "lucide--triangle-alert",
+			Bucket:  "running",
+		},
+		{
+			Title:   "Q3 revenue analysis",
+			Preview: "Which region should we compare?",
+			Time:    "12m",
+			Icon:    "lucide--chart-column",
+			Bucket:  "needs_input",
+		},
+		{
+			Title:   "Kubernetes upgrade plan",
+			Preview: "Run failed: cluster unreachable",
+			Time:    "1h",
+			Icon:    "lucide--boxes",
+			Bucket:  "failed",
+		},
+		{
+			Title:   "Customer escalation digest",
+			Preview: "Digest sent to #support-leads",
+			Time:    "3h",
+			Icon:    "lucide--inbox",
+			Bucket:  "done",
+		},
+	}
+}
+
+templ agenticSessionRow(row agenticSessionRowProps, active bool) {
+	<div
+		class={ "flex cursor-pointer items-start gap-2.5 rounded-box px-2 py-2 transition-colors",
+			templ.KV("bg-primary/10 text-primary", active),
+			templ.KV("hover:bg-base-200/70", !active) }
+		data-bucket={ row.Bucket }
+	>
+		<span class="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-field bg-base-200/70 text-muted">
+			@ui.IconSpan(row.Icon, "size-4")
+		</span>
+		<div class="min-w-0 flex-1">
+			<div class="flex items-center gap-2">
+				<p class={ "truncate text-xs font-medium", templ.KV("text-primary", active) }>{ row.Title }</p>
+				<span class="ml-auto shrink-0 text-[10px] text-faint">{ row.Time }</span>
+			</div>
+			<p class="mt-0.5 truncate text-[11px] text-subtle">{ row.Preview }</p>
+			<div class="mt-1">
+				@agenticSessionBadge(row.Bucket)
+			</div>
+		</div>
+	</div>
+}
+
+templ agenticSessionBadge(bucket string) {
+	switch bucket {
+	case "running":
+		@ui.Badge(ui.BadgeProps{Label: "Running", Variant: ui.BadgePrimary, Style: ui.BadgeStyleSoft, Size: ui.BadgeSizeXS, Dot: true, Animate: true})
+	case "needs_input":
+		@ui.Badge(ui.BadgeProps{Label: "Needs input", Variant: ui.BadgeWarning, Style: ui.BadgeStyleSoft, Size: ui.BadgeSizeXS, Dot: true})
+	case "failed":
+		@ui.Badge(ui.BadgeProps{Label: "Failed", Variant: ui.BadgeError, Style: ui.BadgeStyleSoft, Size: ui.BadgeSizeXS, Dot: true})
+	default:
+		@ui.Badge(ui.BadgeProps{Label: "Done", Variant: ui.BadgeGhost, Style: ui.BadgeStyleSoft, Size: ui.BadgeSizeXS, Dot: true})
+	}
+}
+
+templ agenticChatHeader(agent string, role string, model string) {
+	<header class="border-base-300 bg-base-100 flex flex-wrap items-center gap-3 border-b px-4 py-2.5">
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Icon: "lucide--panel-left", AriaLabel: "Toggle session list", ExtraClass: "md:hidden"})
+		@ui.IconTile("lucide--brain", ui.IconTileProps{Tone: "primary", Size: "size-9"})
+		<div class="min-w-0 flex-1">
+			<div class="flex items-center gap-2">
+				<h1 class="truncate text-sm font-semibold text-base-content">{ agent }</h1>
+				@ui.Badge(ui.BadgeProps{Label: "Working", Variant: ui.BadgePrimary, Style: ui.BadgeStyleSoft, Size: ui.BadgeSizeXS, Dot: true, Animate: true})
+			</div>
+			<p class="truncate text-xs text-subtle">{ role } · { model }</p>
+		</div>
+		<div class="flex items-center gap-1">
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Icon: "lucide--share-2", AriaLabel: "Share session"})
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeButton, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Shape: ui.ButtonShapeSquare, Icon: "lucide--ellipsis", AriaLabel: "Session menu"})
+		</div>
+	</header>
+}
+
+const agenticAnswerMarkdown = `I found **12 incidents** affecting ` + "`payments-api`" + ` in Q3. Three root causes account for 9 of them:
+
+- **Retry storm after deploy ` + "`d-8841`" + `** — 4 incidents. A retry-policy change shipped without a matching circuit breaker.
+- **Connection-pool exhaustion** — 3 incidents. Pool limits stayed at the pre-migration value after the service split.
+- **Upstream timeout from fraud-scoring** — 2 incidents. A downstream p99 regression pushed the payment path past its deadline.
+
+The remaining 3 were single-event configuration errors. I'm now correlating the clustered incidents with deploy timestamps to confirm the trigger order.`

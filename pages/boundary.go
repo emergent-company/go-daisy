@@ -40,6 +40,16 @@ func ChatContactItemWithBoundary(props ChatContactProps) templ.Component {
 	return devmode.ComponentBoundary("ChatContactItem", ChatContactItem(props), props)
 }
 
+// AgenticChatPageWithBoundary wraps AgenticChatPage with a dev-mode component boundary annotation.
+// gallery:token agentName,agentRole,model,sessionTitle
+// gallery:hint agentName:default(Memory)
+// gallery:hint agentRole:default(Knowledge & operations agent)
+// gallery:hint model:default(claude-sonnet-4.5)
+// gallery:hint sessionTitle:default(Payments incidents · Q3)
+func AgenticChatPageWithBoundary(props AgenticChatProps) templ.Component {
+	return devmode.ComponentBoundary("AgenticChatPage", AgenticChatPage(props), props)
+}
+
 // SettingsPageWithBoundary wraps SettingsPage with a dev-mode component boundary annotation.
 func SettingsPageWithBoundary() templ.Component {
 	return devmode.ComponentBoundary("SettingsPage", SettingsPage())

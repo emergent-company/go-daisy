@@ -4,10 +4,13 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"html"
 	"net/http"
 	"strings"
 
 	"github.com/labstack/echo/v4"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
 )
 
 // mimeLLMsText is the Content-Type for the machine-readable /llms.txt index.
@@ -169,4 +172,28 @@ func escapeCell(s string) string {
 	s = strings.ReplaceAll(s, "|", `\|`)
 	s = strings.ReplaceAll(s, "\n", " ")
 	return s
+}
+
+// markdown is the shared renderer for GalleryComponent.Docs. GFM enables
+// tables, strikethrough, task lists, and autolinks. Raw HTML is intentionally
+// NOT enabled (no html.WithUnsafe), so inline HTML in Markdown sources is
+// escaped instead of being passed through.
+var markdown = goldmark.New(
+	goldmark.WithExtensions(extension.GFM),
+)
+
+// renderMarkdown converts Markdown source to an HTML string using GitHub
+// Flavored Markdown. Raw HTML is escaped.
+//
+// Empty (or whitespace-only) input returns "". On render error it returns an
+// escaped <pre> fallback, which is safe to embed with templ.Raw.
+func renderMarkdown(src string) string {
+	if strings.TrimSpace(src) == "" {
+		return ""
+	}
+	var buf bytes.Buffer
+	if err := markdown.Convert([]byte(src), &buf); err != nil {
+		return "<pre>" + html.EscapeString(src) + "</pre>"
+	}
+	return buf.String()
 }

@@ -1,0 +1,26 @@
+package ui
+
+import "github.com/emergent-company/go-daisy/devmode"
+
+// MarkdownProps configures safe GitHub-Flavored Markdown rendering.
+type MarkdownProps struct {
+	// Source is the Markdown document. Raw HTML is escaped.
+	Source string
+	// Class is appended to the wrapper class list.
+	Class string
+	// Attrs are spread last on the wrapper element.
+	Attrs templ.Attributes
+}
+
+// Markdown renders a GFM document (tables, task lists, strikethrough and
+// autolinks) into themed HTML. Raw HTML in the source is escaped, never
+// injected, so it is safe for model-authored answers.
+templ Markdown(props MarkdownProps) {
+	<div
+		class={ "agentic-markdown", props.Class }
+		{ devmode.Attrs(ctx, "ui/Markdown")... }
+		{ props.Attrs... }
+	>
+		@templ.Raw(renderMarkdown(props.Source))
+	</div>
+}

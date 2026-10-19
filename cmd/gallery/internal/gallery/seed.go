@@ -321,6 +321,297 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 
+		// ── Agentic chat ──────────────────────────────────────────────────────────
+		{
+			Slug:        "markdown",
+			Name:        "Markdown",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Agentic",
+			Description: "Safe GitHub-Flavored Markdown renderer for agent answers, docs, and descriptions.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "GFM with headings, lists, inline code, and a table.",
+					RenderFunc: func(params url.Values) templ.Component {
+						source := params.Get("source")
+						if source == "" {
+							source = "## Root causes\n\nThree causes account for **9 of 12** incidents:\n\n- Retry storm after deploy `d-8841`\n- Connection-pool exhaustion\n- Upstream timeout from fraud-scoring\n\n| Cause | Incidents |\n| --- | ---: |\n| Retry storm | 4 |\n| Pool exhaustion | 3 |\n| Upstream timeout | 2 |"
+						}
+						return ui.MarkdownWithBoundary(source)
+					},
+				},
+			},
+		},
+		{
+			Slug:        "thinking-block",
+			Name:        "Thinking Block",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Agentic",
+			Description: "Collapsible reasoning segment with live shimmer and optional role chip.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Expanded reasoning segment.",
+					RenderFunc: func(params url.Values) templ.Component {
+						text := params.Get("text")
+						if text == "" {
+							text = "I should search the graph for Incident objects linked to the payments service, then cluster them by root cause."
+						}
+						return ui.ThinkingBlockWithBoundary(ui.ThinkingBlockProps{
+							Text: text,
+							Role: "reasoning",
+							Open: true,
+						})
+					},
+				},
+				{
+					Name:        "Live",
+					Description: "Streaming reasoning segment with shimmer and animated leading icon.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ThinkingBlockWithBoundary(ui.ThinkingBlockProps{
+							Text: "Narrowing the traversal to deploys touching payments-api, then joining forward to incidents through the TRIGGERED edge…",
+							Role: "reasoning",
+							Open: true,
+							Live: true,
+						})
+					},
+				},
+			},
+		},
+		{
+			Slug:        "tool-call",
+			Name:        "Tool Call",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Agentic",
+			Description: "Expandable tool-call chip with running, success, error, and awaiting-confirmation states.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Statuses",
+					Description: "All four lifecycle states.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="mx-auto flex w-full max-w-2xl flex-col gap-1 p-4">`); err != nil {
+								return err
+							}
+							calls := []ui.ToolCallProps{
+								{Name: "search-knowledge", Status: ui.ToolCallOK, Summary: "12 incidents matched the payments service filter.", Duration: "412 ms", ResponseSize: "2.1 KB", ID: "tc_01"},
+								{Name: "run-cypher-query", Status: ui.ToolCallRunning, Input: "{\n  \"query\": \"MATCH (d:Deploy)-[:TRIGGERED]->(i:Incident) RETURN d, i\"\n}", Duration: "1.2 s", ID: "tc_07"},
+								{Name: "read-entity", Status: ui.ToolCallError, Error: "Query timed out after 30s while traversing deploy → incident edges.", Input: "{\n  \"type\": \"Service\"\n}", Duration: "30.0 s", ID: "tc_03"},
+								{Name: "link-root-cause", Status: ui.ToolCallAwaitingConfirmation, Input: "{\n  \"incident\": \"inc_9f2\",\n  \"cause\": \"retry-storm-d8841\"\n}", ID: "tc_09"},
+							}
+							for _, call := range calls {
+								if err := ui.ToolCallChip(call).Render(ctx, w); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
+				{
+					Name:        "Expanded",
+					Description: "A successful call with result, input, and output sections.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.ToolCallChipWithBoundary(ui.ToolCallProps{
+							Name:         "search-knowledge",
+							Status:       ui.ToolCallOK,
+							Open:         true,
+							Summary:      "12 incidents matched the payments service filter.",
+							Input:        "{\n  \"query\": \"payments incidents\",\n  \"quarter\": \"Q3\",\n  \"limit\": 25\n}",
+							Output:       "{\n  \"count\": 12,\n  \"ids\": [\"inc_9f2\", \"inc_a41\", \"inc_77c\"]\n}",
+							Duration:     "412 ms",
+							ResponseSize: "2.1 KB",
+							ID:           "tc_01",
+						})
+					},
+				},
+			},
+		},
+		{
+			Slug:        "run-marker",
+			Name:        "Run Marker",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Agentic",
+			Description: "Typed run boundary with start/end states and a full failure banner.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "States",
+					Description: "Start, complete, waiting-on-you, and failed.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+							if _, err := io.WriteString(w, `<div class="mx-auto flex w-full max-w-2xl flex-col gap-2 p-4">`); err != nil {
+								return err
+							}
+							markers := []ui.RunMarkerProps{
+								{Phase: ui.RunMarkerStart, Model: "claude-sonnet-4.5"},
+								{Phase: ui.RunMarkerEnd, Status: ui.RunMarkerCompleted},
+								{Phase: ui.RunMarkerEnd, Status: ui.RunMarkerInputRequired},
+								{Phase: ui.RunMarkerEnd, Status: ui.RunMarkerFailed, Error: "The model provider returned 529 after 3 retries."},
+							}
+							for _, marker := range markers {
+								if err := ui.RunMarker(marker).Render(ctx, w); err != nil {
+									return err
+								}
+							}
+							_, err := io.WriteString(w, `</div>`)
+							return err
+						})
+					},
+				},
+			},
+		},
+		{
+			Slug:        "approval-card",
+			Name:        "Approval Card",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Agentic",
+			Description: "Inline tool-approval request with arguments, risk label, and approve/reject actions.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Pending write approval.",
+					RenderFunc: func(params url.Values) templ.Component {
+						tool := params.Get("tool")
+						if tool == "" {
+							tool = "link_root_cause"
+						}
+						return ui.ApprovalCardWithBoundary(ui.ApprovalCardProps{
+							Tool: tool,
+							Risk: "write",
+							Args: "{\n  \"incident\": \"inc_9f2\",\n  \"cause\": \"retry-storm-d8841\",\n  \"confidence\": 0.87\n}",
+						})
+					},
+				},
+			},
+		},
+		{
+			Slug:        "agent-question",
+			Name:        "Agent Question",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Agentic",
+			Description: "Ask-user clarification card with options and an optional freeform answer.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Single-select question with freeform fallback.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.AgentQuestionCardWithBoundary(ui.AgentQuestionCardProps{
+							Prompt:        "Which quarter should I compare against?",
+							AllowFreeform: true,
+							FreeformPlaceholder: "Or describe the comparison window…",
+							Options: []ui.AgentQuestionOption{
+								{Label: "Q2 2026", Value: "q2", Description: "Previous quarter"},
+								{Label: "Q3 2025", Value: "q3-2025", Description: "Same quarter last year"},
+								{Label: "Both", Value: "both", Description: "Compare against both windows", Selected: true},
+							},
+						})
+					},
+				},
+			},
+		},
+		{
+			Slug:        "agent-todo",
+			Name:        "Agent Plan",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Agentic",
+			Description: "Collapsible agent plan with pending, in-progress, and completed items.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Expanded plan card.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.AgentTodoCardWithBoundary(ui.AgentTodoCardProps{
+							Title: "Plan",
+							Open:  true,
+							Items: []ui.AgentTodoItem{
+								{Content: "Search Q3 incidents for payments-api", Status: ui.AgentTodoCompleted},
+								{Content: "Cluster incidents by root cause", Status: ui.AgentTodoCompleted},
+								{Content: "Correlate clusters with deploy events", Status: ui.AgentTodoInProgress},
+								{Content: "Write the incident summary", Status: ui.AgentTodoPending},
+							},
+						})
+					},
+				},
+			},
+		},
+		{
+			Slug:        "turn-footer",
+			Name:        "Turn Footer",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Agentic",
+			Description: "Model, duration, timestamp, and copy action under an assistant turn.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Completed turn metadata.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.TurnFooterWithBoundary(ui.TurnFooterProps{
+							Model:     "claude-sonnet-4.5",
+							Duration:  "18.4s",
+							Timestamp: "10:42 AM",
+							ShowCopy:  true,
+						})
+					},
+				},
+			},
+		},
+		{
+			Slug:        "source-list",
+			Name:        "Source List",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Agentic",
+			Description: "Typed citation chips for the sources behind an agent answer.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Incident, deploy, and service citations.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.SourceListWithBoundary(ui.SourceListProps{
+							Items: []ui.SourceItem{
+								{Label: "inc_9f2", Href: "#", Type: "Incident", Icon: "lucide--triangle-alert"},
+								{Label: "d-8841", Href: "#", Type: "Deploy", Icon: "lucide--rocket"},
+								{Label: "payments-api", Href: "#", Type: "Service", Icon: "lucide--server"},
+							},
+						})
+					},
+				},
+			},
+		},
+		{
+			Slug:        "chat-composer",
+			Name:        "Chat Composer",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Agentic",
+			Description: "Agent composer with attachments, model selector, stop-generating, and send controls.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Running composer with stop and send.",
+					RenderFunc: func(params url.Values) templ.Component {
+						placeholder := params.Get("placeholder")
+						if placeholder == "" {
+							placeholder = "Ask Memory anything…"
+						}
+						return ui.ChatComposerWithBoundary(ui.ChatComposerProps{
+							Placeholder: placeholder,
+							Models: []ui.ChatComposerModel{
+								{Label: "claude-sonnet-4.5", Value: "sonnet", Icon: "lucide--sparkles"},
+								{Label: "gpt-5.2", Value: "gpt", Icon: "lucide--cpu"},
+							},
+							SelectedModel: "claude-sonnet-4.5",
+							ShowAttach:    true,
+							ShowImage:     true,
+							ShowVoice:     true,
+							Loading:       true,
+							Hint:          "Enter to send · Shift+Enter for a new line · responses stream in live",
+							Attrs:         templ.Attributes{"onsubmit": "return false"},
+						})
+					},
+				},
+			},
+		},
+
 		// ── Data Display / Mockups ────────────────────────────────────────────────
 		{
 			Slug:        "mockup-code",
@@ -9582,6 +9873,38 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						})
 					},
 					FrameHeight: "600px",
+				},
+			},
+		},
+
+		// ── Layout / Pages — Agentic Chat ──────────────────────────────────────
+		{
+			Slug:        "page-agentic-chat",
+			Name:        "Agentic Chat",
+			Category:    galleryruntime.CategoryPageTemplates,
+			Subcategory: "Pages",
+			Description: "Full agentic chat workspace with session rail, thinking segments, tool calls, plan card, citations, run markers, pending approval, and agent composer.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Interactive",
+					Description: "Live agent run with thinking, tool calls, approval, and composer.",
+					RenderFunc: func(params url.Values) templ.Component {
+						agentName := params.Get("agentName")
+						if agentName == "" {
+							agentName = "Memory"
+						}
+						model := params.Get("model")
+						if model == "" {
+							model = "claude-sonnet-4.5"
+						}
+						return pages.AgenticChatPageWithBoundary(pages.AgenticChatProps{
+							AgentName: agentName,
+							AgentRole: "Knowledge & operations agent",
+							Model:     model,
+							SessionTitle: "Payments incidents · Q3",
+						})
+					},
+					FrameHeight: "860px",
 				},
 			},
 		},

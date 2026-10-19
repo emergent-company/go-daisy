@@ -767,3 +767,144 @@ html[data-gd-resizing] iframe {
     border-right-color: var(--chart-tooltip-border) !important;
   }
 }
+
+/* ── Agentic chat ─────────────────────────────────────────────── */
+
+.agentic-live-label {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-base-content) 40%,
+    color-mix(in oklab, var(--color-base-content) 30%, white) 50%,
+    var(--color-base-content) 60%
+  );
+  background-size: 200% 100%;
+  background-position: -100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: agentic-shimmer 1.6s linear infinite;
+}
+
+@keyframes agentic-shimmer {
+  0% { background-position: -100% 0; }
+  100% { background-position: 0 0; }
+}
+
+.agentic-live .agentic-leading {
+  animation: agentic-badge-bob 2.4s ease-in-out infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes agentic-badge-bob {
+  0%, 100% { opacity: 0.5; transform: translateY(0) scale(1); }
+  50% { opacity: 1; transform: translateY(-1px) scale(1.05); }
+}
+
+.agentic-markdown {
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: break-word;
+  line-height: 1.65;
+}
+
+.agentic-markdown > :first-child { margin-top: 0; }
+.agentic-markdown > :last-child { margin-bottom: 0; }
+.agentic-markdown p { margin: 0.55em 0; }
+
+.agentic-markdown h1,
+.agentic-markdown h2,
+.agentic-markdown h3,
+.agentic-markdown h4 {
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 1.1em 0 0.45em;
+}
+.agentic-markdown h1 { font-size: 1.25rem; }
+.agentic-markdown h2 { font-size: 1.125rem; }
+.agentic-markdown h3 { font-size: 1rem; }
+.agentic-markdown h4 { font-size: 0.9375rem; }
+
+.agentic-markdown ul,
+.agentic-markdown ol {
+  margin: 0.6em 0;
+  padding-left: 1.5em;
+}
+.agentic-markdown ul { list-style: disc; }
+.agentic-markdown ol { list-style: decimal; }
+.agentic-markdown li { margin: 0.25em 0; }
+.agentic-markdown li::marker { color: var(--color-primary); }
+
+.agentic-markdown code {
+  border: 1px solid color-mix(in oklab, var(--color-primary) 22%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 12%, transparent);
+  color: color-mix(in oklab, var(--color-primary) 75%, var(--color-base-content));
+  border-radius: var(--radius-field);
+  padding: 0.1em 0.35em;
+  font-size: 0.85em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.agentic-markdown pre {
+  background: var(--color-base-200);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  border-radius: var(--radius-box);
+  margin: 0.8em 0;
+  padding: 0.8rem 1rem;
+  overflow-x: auto;
+  font-size: 0.8375rem;
+  line-height: 1.6;
+}
+.agentic-markdown pre code {
+  background: transparent;
+  border: 0;
+  color: var(--color-base-content);
+  padding: 0;
+  font-size: inherit;
+}
+
+.agentic-markdown blockquote {
+  border-left: 3px solid color-mix(in oklab, var(--color-primary) 55%, transparent);
+  border-radius: 0 var(--radius-box) var(--radius-box) 0;
+  background: color-mix(in oklab, var(--color-base-content) 4%, transparent);
+  margin: 0.9em 0;
+  padding: 0.5em 1em;
+}
+
+.agentic-markdown a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.agentic-markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.9em 0;
+  font-size: 0.875rem;
+}
+.agentic-markdown th,
+.agentic-markdown td {
+  border-bottom: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+.agentic-markdown thead th {
+  background: color-mix(in oklab, var(--color-base-content) 5%, transparent);
+  font-weight: 600;
+}
+.agentic-markdown hr {
+  border: 0;
+  border-top: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  margin: 1.2em 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agentic-live-label,
+  .agentic-live .agentic-leading {
+    animation: none;
+    color: inherit;
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+  }
+}

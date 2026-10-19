@@ -1,0 +1,65 @@
+package ui
+
+// SourceItem is one citation/source in an assistant answer.
+type SourceItem struct {
+	Label string
+	Href  string
+	// Type is an optional short type label, e.g. "Incident".
+	Type string
+	// Icon is an optional iconify slug, e.g. "lucide--file-text".
+	Icon string
+}
+
+// SourceListProps configures the source chips under an answer.
+type SourceListProps struct {
+	// Title is the list label. Defaults to "Sources".
+	Title string
+	// Items are rendered as chips in order.
+	Items []SourceItem
+	// Class is appended to the root class list.
+	Class string
+	// Attrs are spread last on the root element.
+	Attrs templ.Attributes
+}
+
+// SourceList renders typed source/citation chips under a message.
+templ SourceList(props SourceListProps) {
+	{{
+		title := props.Title
+		if title == "" {
+			title = "Sources"
+		}
+	}}
+	if len(props.Items) > 0 {
+		<div class={ "flex flex-wrap items-center gap-1.5", props.Class } { agenticAttrs(ctx, "ui/SourceList", props.Attrs)... }>
+			<span class="mr-1 text-[10px] font-semibold uppercase tracking-wider text-faint">{ title }</span>
+			for _, item := range props.Items {
+				@sourceChip(item)
+			}
+		</div>
+	}
+}
+
+templ sourceChip(item SourceItem) {
+	if item.Href != "" {
+		<a href={ templ.URL(item.Href) } class="badge badge-ghost badge-sm gap-1.5 hover:border-primary/40 hover:text-primary">
+			if item.Icon != "" {
+				@IconSpan(item.Icon, "size-3.5")
+			}
+			<span class="max-w-48 truncate">{ item.Label }</span>
+			if item.Type != "" {
+				<span class="text-[10px] uppercase tracking-wide text-faint">{ item.Type }</span>
+			}
+		</a>
+	} else {
+		<span class="badge badge-ghost badge-sm gap-1.5">
+			if item.Icon != "" {
+				@IconSpan(item.Icon, "size-3.5")
+			}
+			<span class="max-w-48 truncate">{ item.Label }</span>
+			if item.Type != "" {
+				<span class="text-[10px] uppercase tracking-wide text-faint">{ item.Type }</span>
+			}
+		</span>
+	}
+}

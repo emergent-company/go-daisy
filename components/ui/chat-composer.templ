@@ -1,0 +1,126 @@
+package ui
+
+// ChatComposerModel is one selectable model in the composer toolbar.
+type ChatComposerModel struct {
+	Label string
+	Value string
+	Icon  string
+}
+
+// ChatComposerProps configures the agent chat composer.
+type ChatComposerProps struct {
+	// Name is the textarea field name. Defaults to "message".
+	Name string
+	// Value is the initial textarea content.
+	Value string
+	// Placeholder is the textarea placeholder.
+	Placeholder string
+	// Action is the HTMX/form endpoint. Empty renders a plain form.
+	Action string
+	// Method dispatches htmx-put/patch/post when Action is set.
+	Method string
+	// Models populate the model selector. Empty hides it.
+	Models []ChatComposerModel
+	// SelectedModel is the label shown in the selector.
+	SelectedModel string
+	// ShowAttach / ShowImage / ShowVoice add toolbar buttons.
+	ShowAttach bool
+	ShowImage  bool
+	ShowVoice  bool
+	// Loading shows the stop-generating control.
+	Loading bool
+	// Hint is the keyboard hint rendered under the composer.
+	Hint string
+	// AttachAttrs are spread on the attachment button.
+	AttachAttrs templ.Attributes
+	// StopAttrs are spread on the stop button.
+	StopAttrs templ.Attributes
+	// SendAttrs are spread on the send button.
+	SendAttrs templ.Attributes
+	// Class is appended to the form class list.
+	Class string
+	// Attrs are spread last on the form element.
+	Attrs templ.Attributes
+}
+
+// ChatComposer renders the bottom composer for an agent chat: a growable
+// textarea, optional attachment/voice controls, a model selector, stop and
+// send actions, and a keyboard hint.
+templ ChatComposer(props ChatComposerProps) {
+	{{
+		name := props.Name
+		if name == "" {
+			name = "message"
+		}
+		selected := props.SelectedModel
+		if selected == "" && len(props.Models) > 0 {
+			selected = props.Models[0].Label
+		}
+	}}
+	<form
+		class={ "flex w-full flex-col gap-1.5", props.Class }
+		if props.Action != "" {
+			action={ props.Action }
+			method="post"
+			if props.Method == "put" {
+				hx-put={ props.Action }
+			} else if props.Method == "patch" {
+				hx-patch={ props.Action }
+			} else {
+				hx-post={ props.Action }
+			}
+		}
+		{ agenticAttrs(ctx, "ui/ChatComposer", props.Attrs)... }
+	>
+		<div class="rounded-box border border-base-content/10 bg-base-100 p-2 shadow-sm focus-within:border-primary/40">
+			<textarea
+				name={ name }
+				rows="2"
+				placeholder={ props.Placeholder }
+				class="max-h-40 min-h-11 w-full resize-none border-0 bg-transparent p-1 text-sm outline-none"
+				aria-label="Message"
+			>{ props.Value }</textarea>
+			<div class="mt-1 flex flex-wrap items-center gap-1">
+				if props.ShowAttach {
+					@Button(ButtonProps{Type: ButtonTypeButton, Variant: ButtonGhost, Size: ButtonSM, Shape: ButtonShapeSquare, Icon: "lucide--paperclip", AriaLabel: "Attach file", Attrs: props.AttachAttrs})
+				}
+				if props.ShowImage {
+					@Button(ButtonProps{Type: ButtonTypeButton, Variant: ButtonGhost, Size: ButtonSM, Shape: ButtonShapeSquare, Icon: "lucide--image-plus", AriaLabel: "Insert image"})
+				}
+				if props.ShowVoice {
+					@Button(ButtonProps{Type: ButtonTypeButton, Variant: ButtonGhost, Size: ButtonSM, Shape: ButtonShapeSquare, Icon: "lucide--mic", AriaLabel: "Voice input"})
+				}
+				if len(props.Models) > 0 {
+					<div class="dropdown dropdown-top">
+						<div tabindex="0" role="button" class="btn btn-sm btn-ghost gap-2 text-label" aria-label="Model selector">
+							@IconSpan("lucide--cpu", "size-4")
+							<span class="max-w-40 truncate text-xs">{ selected }</span>
+							@IconSpan("lucide--chevron-down", "size-3.5")
+						</div>
+						<ul tabindex="0" class="dropdown-content menu z-10 mb-1 w-56 rounded-box bg-base-100 p-2 shadow">
+							for _, model := range props.Models {
+								<li>
+									<a>
+										if model.Icon != "" {
+											@IconSpan(model.Icon, "size-4")
+										}
+										<span>{ model.Label }</span>
+									</a>
+								</li>
+							}
+						</ul>
+					</div>
+				}
+				<span class="ml-auto flex items-center gap-1">
+					if props.Loading {
+						@Button(ButtonProps{Type: ButtonTypeButton, Variant: ButtonNeutral, Size: ButtonSM, Shape: ButtonShapeSquare, Icon: "lucide--square", AriaLabel: "Stop generating", Attrs: props.StopAttrs})
+					}
+					@Button(ButtonProps{Type: ButtonTypeSubmit, Variant: ButtonPrimary, Size: ButtonSM, Shape: ButtonShapeSquare, Icon: "lucide--arrow-up", AriaLabel: "Send", Attrs: props.SendAttrs})
+				</span>
+			</div>
+		</div>
+		if props.Hint != "" {
+			<p class="text-center text-[11px] text-faint">{ props.Hint }</p>
+		}
+	</form>
+}

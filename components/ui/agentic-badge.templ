@@ -1,0 +1,46 @@
+package ui
+
+// agenticBadgeProps configures the shared quiet row used by thinking blocks,
+// tool calls, todo cards and agent prompt cards.
+type agenticBadgeProps struct {
+	Open    bool
+	Live    bool
+	Icon    string
+	Label   string
+	Class   string
+	Attrs   templ.Attributes
+}
+
+// agenticBadge renders a full-width, borderless-when-idle expandable row.
+// afterLabel is rendered next to the label (role chips, counts, etc.) and
+// body is revealed when the row is open.
+templ agenticBadge(props agenticBadgeProps, afterLabel templ.Component, trailing templ.Component, body templ.Component) {
+	<details
+		class={ "group rounded-lg border border-transparent transition-colors hover:bg-base-200/45 open:border-base-content/10 open:bg-base-200/30", templ.KV("agentic-live", props.Live), props.Class }
+		if props.Open {
+			open
+		}
+		{ props.Attrs... }
+	>
+		<summary class="flex w-full cursor-pointer list-none items-center gap-2 rounded-lg px-2 py-1.5 text-left select-none [&::-webkit-details-marker]:hidden">
+			if props.Icon != "" {
+				<span class="flex size-[22px] shrink-0 items-center justify-center">
+					@IconSpan(props.Icon, "size-4 text-faint agentic-leading")
+				</span>
+			}
+			<span class={ "min-w-0 truncate text-xs text-muted", templ.KV("agentic-live-label", props.Live) }>{ props.Label }</span>
+			if afterLabel != nil {
+				@afterLabel
+			}
+			<span class="ml-auto flex shrink-0 items-center gap-2">
+				if trailing != nil {
+					@trailing
+				}
+				@IconSpan("lucide--chevron-down", "size-3.5 text-faint transition-transform group-open:rotate-180")
+			</span>
+		</summary>
+		<div class="border-t border-base-content/10 px-3.5 pb-3 pt-2.5">
+			@body
+		</div>
+	</details>
+}

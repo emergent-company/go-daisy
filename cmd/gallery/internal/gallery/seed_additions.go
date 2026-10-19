@@ -17,6 +17,30 @@ import (
 	"github.com/emergent-company/go-daisy/shared"
 )
 
+// headDependenciesDocs is the Markdown documentation for the "Head Dependencies"
+// gallery entry. It renders in the detail page's Docs tab.
+var headDependenciesDocs = "# Head Dependencies\n\n" +
+	"One call emits every base `<head>` asset go-daisy needs.\n\n" +
+	"Ships the compiled Tailwind/daisyUI stylesheet and HTMX core (morphing built in), plus the optional Alpine, idiomorph, Stimulus controllers, and the htmx SSE/WS extensions. Every URL is content-hash cache-busted through `staticfs`.\n\n" +
+	"| Asset | Enabled by |\n" +
+	"| --- | --- |\n" +
+	"| `/static/css/app.css` | always |\n" +
+	"| `/static/js/htmx.js` | always |\n" +
+	"| `/static/js/alpine.js` | `Alpine` |\n" +
+	"| `/static/js/morph.js` | `Morph` |\n" +
+	"| `/static/js/stimulus.js` + `/static/js/stimulus-controllers.js` | `Stimulus` |\n" +
+	"| `/static/js/hx-sse.js` | `SSE` |\n" +
+	"| `/static/js/hx-ws.js` | `WS` |\n\n" +
+	"```go\n" +
+	"import \"github.com/emergent-company/go-daisy/components/head\"\n\n" +
+	"head.Dependencies(head.DepsProps{\n" +
+	"    Alpine:   true,\n" +
+	"    Morph:    true,\n" +
+	"    Stimulus: true,\n" +
+	"})\n" +
+	"```\n\n" +
+	"> Zero-value props emit only the core assets — `app.css` and `htmx.js`."
+
 func additionalComponents() []galleryruntime.GalleryComponent {
 	return []galleryruntime.GalleryComponent{
 		// ── Basics / Aura ──────────────────────────────────────────────────────
@@ -452,7 +476,9 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 			Name:        "Head Dependencies",
 			Category:    galleryruntime.CategoryFoundation,
 			Subcategory: "Setup",
-			Description: "Unified <head> asset tag emitter — CSS, HTMX, Alpine, Morph, SSE, WS with cache-busting.",
+			Description: "Unified <head> asset tag emitter — CSS, HTMX, Alpine, Morph, Stimulus, SSE, WS with cache-busting.",
+			Docs:        headDependenciesDocs,
+			HidePreview: true,
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "Full",

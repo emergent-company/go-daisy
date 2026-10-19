@@ -1,0 +1,158 @@
+package ui
+
+// ToolCallStatus is the lifecycle state of an agent tool call.
+type ToolCallStatus string
+
+const (
+	// ToolCallRunning means the tool is executing.
+	ToolCallRunning ToolCallStatus = "running"
+	// ToolCallOK means the tool completed successfully.
+	ToolCallOK ToolCallStatus = "ok"
+	// ToolCallError means the tool failed.
+	ToolCallError ToolCallStatus = "error"
+	// ToolCallAwaitingConfirmation means the tool is paused for user approval.
+	ToolCallAwaitingConfirmation ToolCallStatus = "awaiting_confirmation"
+)
+
+// ToolCallProps configures an expandable tool-call row.
+type ToolCallProps struct {
+	// Name is the raw tool id, e.g. "run-cypher-query". Humanized for display.
+	Name string
+	// Label overrides the humanized name.
+	Label string
+	// Status controls the trailing status affordance and row tone.
+	Status ToolCallStatus
+	// Summary is the short human-readable result shown first.
+	Summary string
+	// Input is the tool arguments as JSON or text.
+	Input string
+	// Output is the raw tool result as JSON or text.
+	Output string
+	// Error is the failure message (rendered as an error section).
+	Error string
+	// Duration is a preformatted duration, e.g. "412ms".
+	Duration string
+	// ResponseSize is a preformatted response size, e.g. "2.1 KB".
+	ResponseSize string
+	// ID is the stable tool-call id, when known.
+	ID string
+	// Open expands the row by default.
+	Open bool
+	// Class is appended to the root details class list.
+	Class string
+	// Attrs are spread last on the root element.
+	Attrs templ.Attributes
+}
+
+// ToolCallChip renders a quiet, expandable tool-call row. Collapsed it shows a
+// wrench, the humanized tool name and a status icon; expanded it reveals the
+// result, error, input and output sections.
+templ ToolCallChip(props ToolCallProps) {
+	{{
+		label := props.Label
+		if label == "" {
+			label = humanizeToolName(props.Name)
+		}
+		attrs := agenticAttrs(ctx, "ui/ToolCallChip", props.Attrs)
+		attrs["data-status"] = string(props.Status)
+		if props.Name != "" {
+			attrs["data-tool"] = props.Name
+		}
+		if props.ID != "" {
+			attrs["data-call-id"] = props.ID
+		}
+	}}
+	@agenticBadge(
+		agenticBadgeProps{
+			Open:  props.Open,
+			Live:  props.Status == ToolCallRunning,
+			Icon:  "lucide--wrench",
+			Label: label,
+			Class: props.Class,
+			Attrs: attrs,
+		},
+		nil,
+		toolCallStatusIcon(props.Status),
+		toolCallBody(props),
+	)
+}
+
+templ toolCallStatusIcon(status ToolCallStatus) {
+	switch status {
+	case ToolCallRunning:
+		<span class="flex items-center" title="Running">
+			@IconSpan("lucide--loader-circle", "size-3.5 animate-spin text-subtle")
+			<span class="sr-only">Running</span>
+		</span>
+	case ToolCallOK:
+		<span class="flex items-center" title="Completed">
+			@IconSpan("lucide--circle-check", "size-3.5 text-success")
+			<span class="sr-only">Completed</span>
+		</span>
+	case ToolCallError:
+		<span class="flex items-center" title="Failed">
+			@IconSpan("lucide--alert-triangle", "size-3.5 text-error")
+			<span class="sr-only">Failed</span>
+		</span>
+	case ToolCallAwaitingConfirmation:
+		<span class="flex items-center" title="Waiting for confirmation">
+			@IconSpan("lucide--clock", "size-3.5 text-warning")
+			<span class="sr-only">Waiting for confirmation</span>
+		</span>
+	default:
+		<span class="flex items-center" title={ string(status) }>
+			@IconSpan("lucide--circle-dot", "size-3.5 text-faint")
+		</span>
+	}
+}
+
+templ toolCallBody(props ToolCallProps) {
+	if props.Duration != "" || props.ResponseSize != "" || props.ID != "" {
+		<p class="mb-3 break-all font-mono text-[11px] text-faint">
+			if props.Duration != "" {
+				<span>Duration { props.Duration }</span>
+			}
+			if props.ResponseSize != "" {
+				<span> · { props.ResponseSize } response</span>
+			}
+			if props.ID != "" {
+				<span> · #{ props.ID }</span>
+			}
+		</p>
+	}
+	if props.Summary != "" {
+		@toolCallTextSection("Result", props.Summary, "")
+	}
+	if props.Error != "" {
+		@toolCallPreSection("Error", props.Error, "error")
+	}
+	if props.Input != "" {
+		@toolCallPreSection("Input", props.Input, "")
+	}
+	if props.Output != "" {
+		@toolCallPreSection("Output", props.Output, "")
+	}
+	if props.Summary == "" && props.Error == "" && props.Input == "" && props.Output == "" {
+		if props.Status == ToolCallRunning {
+			<p class="text-xs text-faint">No details yet — the tool is still running.</p>
+		} else if props.Status == ToolCallAwaitingConfirmation {
+			<p class="text-xs text-faint">Waiting for your confirmation.</p>
+		} else {
+			<p class="text-xs text-faint">No details recorded for this call.</p>
+		}
+	}
+}
+
+templ toolCallTextSection(label string, value string, tone string) {
+	<section class="mb-4 last:mb-0">
+		<p class={ "mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-faint", tone }>{ label }</p>
+		<p class="whitespace-pre-wrap break-words text-sm leading-relaxed text-body">{ value }</p>
+	</section>
+}
+
+templ toolCallPreSection(label string, value string, tone string) {
+	<section class="mb-4 last:mb-0">
+		<p class={ "mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-faint", templ.KV("text-error", tone == "error") }>{ label }</p>
+		<pre class={ "max-h-72 overflow-auto whitespace-pre-wrap break-words rounded-box border p-3 font-mono text-xs leading-relaxed", templ.KV("border-error/20 bg-error/5", tone == "error"), templ.KV("border-base-content/10 bg-base-200/50", tone != "error") }>{ value }</pre>
+	</section>
+}

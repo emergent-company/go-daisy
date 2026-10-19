@@ -54,7 +54,7 @@ var CategoryOrder = []Category{
 // category. Subcategories not listed fall to the end in first-seen order.
 var SubcategoryOrder = map[Category][]string{
 	CategoryFoundation:    {"Typography", "Layout", "Effects"},
-	CategoryComponents:    {"Buttons", "Badges", "Tag", "Avatars", "Display", "Cards", "Chat", "Links", "FAB"},
+	CategoryComponents:    {"Buttons", "Badges", "Tag", "Avatars", "Display", "Cards", "Chat", "Agentic", "Links", "FAB"},
 	CategoryNavigation:    {"Menus", "Tabs", "Headers", "Filters", "Page Title", "Pagination", "Notifications", "Search", "Profile Menus", "Misc"},
 	CategoryLayout:        {"Sidebars", "Topbars", "Footers", "Page Titles", "Drawers", "Builder", "Hero", "Mockups"},
 	CategoryPageTemplates: {"Pages"},
