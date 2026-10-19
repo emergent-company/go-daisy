@@ -52,7 +52,7 @@ const TOGGLE_GROUP = `
   <button type="button" data-gd-toggle-value="right" aria-pressed="false">Right</button>
 </div>`;
 
-const JS_FILES = ['go-daisy-a11y.js', 'go-daisy-context-menu.js', 'go-daisy-resizable.js', 'go-daisy-toggle.js', 'go-daisy-messagescroller.js', 'go-daisy-alert-dialog.js', 'go-daisy-menubar.js', 'go-daisy-navigation-menu.js'];
+const JS_FILES = ['go-daisy-a11y.js', 'go-daisy-context-menu.js', 'go-daisy-resizable.js', 'go-daisy-toggle.js', 'go-daisy-messagescroller.js', 'go-daisy-alert-dialog.js', 'go-daisy-menubar.js', 'go-daisy-navigation-menu.js', 'go-daisy-questionnaire.js'];
 
 const MESSAGE_SCROLLER = `
 <div data-gd-messagescroller id="scroller">
@@ -1090,4 +1090,270 @@ test('navigation menu: outside pointerdown and focus leaving the nav close it', 
   assert.ok(doc.getElementById('item-products').hasAttribute('data-gd-nav-open'));
   doc.getElementById('nav-outside').focus();
   assert.ok(!doc.getElementById('item-products').hasAttribute('data-gd-nav-open'), 'focus leaving closes');
+});
+
+const QUESTIONNAIRE = `
+<form id="q" method="post" data-gd-questionnaire data-gd-questionnaire-mode="letters" class="flex flex-col gap-4">
+  <div data-gd-questionnaire-progress class="flex items-center gap-3">
+    <span data-gd-questionnaire-progress-text>Question 1 of 3</span>
+    <progress data-gd-questionnaire-progress-bar value="1" max="3"></progress>
+  </div>
+  <fieldset id="q-role" data-gd-questionnaire-item data-name="role" data-required="true">
+    <div data-gd-questionnaire-choices>
+      <label data-gd-questionnaire-choice><input type="radio" id="q-role-dev" name="role" value="dev"> <kbd data-gd-questionnaire-shortcut>a</kbd></label>
+      <label data-gd-questionnaire-choice><input type="radio" id="q-role-design" name="role" value="design"> <kbd data-gd-questionnaire-shortcut>b</kbd></label>
+    </div>
+    <p id="q-role-error" data-gd-questionnaire-error role="alert" hidden></p>
+  </fieldset>
+  <fieldset id="q-interests" data-gd-questionnaire-item data-name="interests" data-multiple="true">
+    <div data-gd-questionnaire-choices>
+      <label data-gd-questionnaire-choice><input type="checkbox" id="q-int-htmx" name="interests" value="htmx"> <kbd data-gd-questionnaire-shortcut>a</kbd></label>
+      <label data-gd-questionnaire-choice><input type="checkbox" id="q-int-alpine" name="interests" value="alpine" disabled> <kbd data-gd-questionnaire-shortcut>b</kbd></label>
+    </div>
+    <p id="q-interests-error" data-gd-questionnaire-error role="alert" hidden></p>
+  </fieldset>
+  <fieldset id="q-exp" data-gd-questionnaire-item data-name="experience" data-required="true">
+    <div data-gd-questionnaire-choices>
+      <label data-gd-questionnaire-choice><input type="radio" id="q-exp-beg" name="experience" value="beginner"> <kbd data-gd-questionnaire-shortcut>a</kbd></label>
+    </div>
+    <p id="q-exp-error" data-gd-questionnaire-error role="alert" hidden></p>
+  </fieldset>
+  <div>
+    <button type="button" data-gd-questionnaire-previous disabled hidden>Previous</button>
+    <button type="button" data-gd-questionnaire-skip hidden>Skip</button>
+    <button type="button" data-gd-questionnaire-next hidden>Next</button>
+    <button type="submit" data-gd-questionnaire-submit>Submit</button>
+  </div>
+</form>`;
+
+function questionnaireEls(doc) {
+  return {
+    form: doc.getElementById('q'),
+    role: doc.getElementById('q-role'),
+    interests: doc.getElementById('q-interests'),
+    exp: doc.getElementById('q-exp'),
+    prev: doc.querySelector('[data-gd-questionnaire-previous]'),
+    skip: doc.querySelector('[data-gd-questionnaire-skip]'),
+    next: doc.querySelector('[data-gd-questionnaire-next]'),
+    submit: doc.querySelector('[data-gd-questionnaire-submit]'),
+    text: doc.querySelector('[data-gd-questionnaire-progress-text]'),
+    bar: doc.querySelector('[data-gd-questionnaire-progress-bar]'),
+  };
+}
+
+test('questionnaire: runtime reveals nav, shows step 1, hides the rest', () => {
+  const { window } = setup(QUESTIONNAIRE);
+  const doc = window.document;
+  const els = questionnaireEls(doc);
+
+  assert.equal(els.role.hidden, false, 'step 1 visible');
+  assert.equal(els.interests.hidden, true, 'step 2 hidden');
+  assert.equal(els.exp.hidden, true, 'step 3 hidden');
+
+  assert.equal(els.prev.hidden, false, 'Previous is revealed');
+  assert.equal(els.prev.disabled, true, 'Previous is disabled on the first step');
+  assert.equal(els.next.hidden, false, 'Next is revealed');
+  assert.equal(els.submit.hidden, true, 'Submit hidden until the last step');
+
+  assert.equal(els.text.textContent, 'Question 1 of 3');
+  assert.equal(els.bar.value, 1);
+});
+
+test('questionnaire: Next advances and Previous goes back', () => {
+  const { window } = setup(QUESTIONNAIRE);
+  const doc = window.document;
+  const els = questionnaireEls(doc);
+
+  doc.getElementById('q-role-dev').click();
+  els.next.click();
+  assert.equal(els.interests.hidden, false, 'step 2 visible after Next');
+  assert.equal(els.role.hidden, true, 'step 1 hidden');
+  assert.equal(els.prev.disabled, false, 'Previous enabled on step 2');
+
+  els.prev.click();
+  assert.equal(els.role.hidden, false, 'step 1 visible after Previous');
+  assert.equal(els.interests.hidden, true);
+  assert.equal(els.prev.disabled, true, 'Previous disabled again on step 1');
+});
+
+test('questionnaire: required step blocks Next and shows inline error', () => {
+  const { window } = setup(QUESTIONNAIRE);
+  const doc = window.document;
+  const els = questionnaireEls(doc);
+
+  els.next.click();
+
+  assert.equal(els.role.hidden, false, 'still on step 1');
+  const error = els.role.querySelector('[data-gd-questionnaire-error]');
+  assert.equal(error.hidden, false, 'error is revealed');
+  assert.match(error.textContent, /Select an option to continue/);
+  // aria-invalid belongs on the inputs; a fieldset is not a widget.
+  assert.equal(doc.getElementById('q-role-dev').getAttribute('aria-invalid'), 'true');
+  assert.equal(doc.getElementById('q-role-design').getAttribute('aria-invalid'), 'true');
+  assert.equal(els.role.getAttribute('aria-invalid'), null);
+  assert.equal(els.role.getAttribute('aria-describedby'), 'q-role-error', 'error is programmatically associated');
+});
+
+test('questionnaire: selecting a choice clears the error and allows Next', () => {
+  const { window } = setup(QUESTIONNAIRE);
+  const doc = window.document;
+  const els = questionnaireEls(doc);
+
+  els.next.click();
+  assert.equal(els.role.hidden, false, 'blocked before selection');
+
+  doc.getElementById('q-role-dev').click();
+  els.next.click();
+
+  assert.equal(els.interests.hidden, false, 'advanced after selection');
+  assert.equal(doc.getElementById('q-role-dev').getAttribute('aria-invalid'), null, 'invalid marker cleared');
+  assert.equal(els.role.getAttribute('aria-describedby'), null, 'error association cleared');
+});
+
+test('questionnaire: a required step offers no Skip', () => {
+  const { window } = setup(QUESTIONNAIRE);
+  const doc = window.document;
+  const els = questionnaireEls(doc);
+
+  assert.equal(els.skip.hidden, true, 'Skip hidden on the required step');
+
+  // Even a programmatic skip must not bypass a required answer.
+  window.gdQuestionnaire.next(els.form);
+  assert.equal(els.role.hidden, false, 'stayed on the required step');
+
+  // On the optional step 2 Skip appears and advances without validation.
+  doc.getElementById('q-role-dev').click();
+  els.next.click();
+  assert.equal(els.interests.hidden, false);
+  assert.equal(els.skip.hidden, false, 'Skip revealed on an optional step');
+  els.skip.click();
+  assert.equal(els.exp.hidden, false, 'Skip advances without validating');
+});
+
+test('questionnaire: submit visible only on the last step', () => {
+  const { window } = setup(QUESTIONNAIRE);
+  const doc = window.document;
+  const els = questionnaireEls(doc);
+
+  doc.getElementById('q-role-dev').click();
+  els.next.click(); // interests (multiple, not required) -> allowed
+  els.next.click(); // experience (last step)
+  assert.equal(els.exp.hidden, false, 'on the last step');
+  assert.equal(els.next.hidden, true, 'Next hidden on the last step');
+  assert.equal(els.submit.hidden, false, 'Submit revealed on the last step');
+  assert.equal(els.text.textContent, 'Question 3 of 3');
+  assert.equal(els.bar.value, 3);
+});
+
+test('questionnaire: letter shortcut selects the matching choice', () => {
+  const { window } = setup(QUESTIONNAIRE);
+  const doc = window.document;
+  const dev = doc.getElementById('q-role-dev');
+  const design = doc.getElementById('q-role-design');
+
+  dev.focus();
+  press(window, dev, 'b');
+  assert.equal(dev.checked, false, 'badge "b" selects the second choice');
+  assert.equal(design.checked, true, 'letter shortcut checks the second radio');
+});
+
+test('questionnaire: gd-questionnaire-step fires with the new index', () => {
+  const { window } = setup(QUESTIONNAIRE);
+  const doc = window.document;
+  const els = questionnaireEls(doc);
+  const steps = [];
+  els.form.addEventListener('gd-questionnaire-step', (e) => steps.push(e.detail.index));
+
+  doc.getElementById('q-role-dev').click();
+  els.next.click();
+  els.next.click();
+
+  assert.deepEqual(steps, [1, 2], 'step events carry the zero-based index');
+});
+
+test('questionnaire: htmx settle rescan restores the persisted index', () => {
+  const { window } = setup(QUESTIONNAIRE);
+  const doc = window.document;
+  const els = questionnaireEls(doc);
+
+  doc.getElementById('q-role-dev').click();
+  els.next.click(); // step 2
+  assert.equal(els.interests.hidden, false);
+
+  // Simulate an htmx settle re-rendering the fieldsets back to their
+  // server-side all-visible state; the rescan must restore step 2.
+  els.role.hidden = false;
+  els.interests.hidden = false;
+  els.exp.hidden = false;
+  doc.dispatchEvent(new window.Event('htmx:after:settle', { bubbles: true }));
+
+  assert.equal(els.role.hidden, true, 'rescan restores step 2 (step 1 hidden)');
+  assert.equal(els.interests.hidden, false, 'step 2 stays the current step');
+});
+
+test('questionnaire: implicit submit on a non-final step advances instead of posting', () => {
+  const { window } = setup(QUESTIONNAIRE);
+  const doc = window.document;
+  const form = doc.getElementById('q');
+
+  // Choose a valid answer so Next can advance, then fire the submit event a
+  // browser produces for Enter inside the radio group.
+  doc.getElementById('q-role-dev').checked = true;
+  const evt = new window.Event('submit', { bubbles: true, cancelable: true });
+  form.dispatchEvent(evt);
+
+  assert.equal(evt.defaultPrevented, true, 'half-filled wizard must not submit');
+  assert.equal(doc.getElementById('q-role').hidden, true);
+  assert.equal(doc.getElementById('q-interests').hidden, false, 'advanced to step 2');
+  assert.equal(doc.querySelector('[data-gd-questionnaire-progress-text]').textContent, 'Question 2 of 3');
+});
+
+test('questionnaire: two wizards on one page keep independent state', () => {
+  const second = QUESTIONNAIRE.replace(/\bq-/g, 'r-').replace(/id="q"/, 'id="r"');
+  const { window } = setup(QUESTIONNAIRE + second);
+  const doc = window.document;
+
+  const q = doc.getElementById('q');
+  const r = doc.getElementById('r');
+  assert.ok(q && r, 'both forms rendered');
+
+  // Advance the first one only.
+  doc.getElementById('q-role-dev').click();
+  q.querySelector('[data-gd-questionnaire-next]').click();
+
+  assert.equal(doc.getElementById('q-role').hidden, true, 'first wizard advanced');
+  assert.equal(doc.getElementById('r-role').hidden, false, 'second wizard unchanged');
+  assert.equal(doc.getElementById('q-interests').hidden, false);
+  assert.equal(doc.getElementById('r-interests').hidden, true);
+});
+
+test('questionnaire: an invalid submit dispatches no submit event', () => {
+  const { window } = setup(QUESTIONNAIRE);
+  const doc = window.document;
+  const els = questionnaireEls(doc);
+  let fired = 0;
+  let reachedForm = 0;
+  els.form.addEventListener('gd-questionnaire-submit', () => { fired++; });
+  // htmx listens on the form itself; a blocked submit must not reach it.
+  els.form.addEventListener('submit', () => { reachedForm++; });
+
+  // Walk to the last step with choices filled, then clear the last answer so
+  // the final submit is invalid.
+  doc.getElementById('q-role-dev').click();
+  els.next.click();
+  els.next.click();
+  assert.equal(els.exp.hidden, false);
+
+  const evt = new window.Event('submit', { bubbles: true, cancelable: true });
+  els.form.dispatchEvent(evt);
+
+  assert.equal(evt.defaultPrevented, true, 'invalid submit blocked');
+  assert.equal(reachedForm, 0, 'blocked submit never reaches a form-level listener');
+  assert.equal(fired, 0, 'no submit intent event for a blocked form');
+
+  doc.getElementById('q-exp-beg').click();
+  const ok = new window.Event('submit', { bubbles: true, cancelable: true });
+  els.form.dispatchEvent(ok);
+  assert.equal(ok.defaultPrevented, false, 'valid submit proceeds');
+  assert.equal(fired, 1, 'submit event fires once after validation');
 });

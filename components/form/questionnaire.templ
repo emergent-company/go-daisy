@@ -1,0 +1,422 @@
+package form
+
+import (
+	"strconv"
+
+	"github.com/emergent-company/go-daisy/devmode"
+	"github.com/emergent-company/go-daisy/staticfs"
+)
+
+// QuestionnaireShortcutMode controls the keyboard shortcut badges shown on each
+// step's choices. The zero value ("") disables shortcuts.
+type QuestionnaireShortcutMode string
+
+const (
+	// QuestionnaireShortcutsLetters maps a..z to a step's choices in order.
+	QuestionnaireShortcutsLetters QuestionnaireShortcutMode = "letters"
+	// QuestionnaireShortcutsNumbers maps 1..9 to a step's choices in order.
+	QuestionnaireShortcutsNumbers QuestionnaireShortcutMode = "numbers"
+)
+
+// QuestionnaireOption is one selectable option inside a QuestionnaireStep.
+type QuestionnaireOption struct {
+	Value       string
+	Label       string
+	Description string
+	Disabled    bool
+}
+
+// QuestionnaireStep is one step in the wizard. Name is the input name shared by
+// every choice in the step; Choices render as radios (Multiple=false) or
+// checkboxes (Multiple=true).
+type QuestionnaireStep struct {
+	Name        string // required; the input name
+	Title       string // required; the fieldset legend
+	Description string
+	Required    bool
+	Multiple    bool // checkbox group instead of radios
+	Choices     []QuestionnaireOption
+}
+
+// QuestionnaireProps configures a Questionnaire.
+type QuestionnaireProps struct {
+	ID        string // required; ids derive from it
+	Action    string
+	Method    string // "" post, "get", "put", "patch", "delete"
+	Steps     []QuestionnaireStep
+	Shortcuts QuestionnaireShortcutMode // "" none
+	SubmitLabel string                  // default "Submit"
+	Class     string
+	Attrs     templ.Attributes
+}
+
+// QuestionnaireProgressProps configures the progress row.
+type QuestionnaireProgressProps struct {
+	Total int // number of steps, from len(Steps)
+	Class string
+	Attrs templ.Attributes
+}
+
+// QuestionnaireItemProps are the props the item part needs.
+type QuestionnaireItemProps struct {
+	ID          string
+	Name        string
+	Title       string
+	Description string
+	Required    bool
+	Multiple    bool
+	Choices     []QuestionnaireOption
+	Shortcuts   QuestionnaireShortcutMode
+	Class       string
+	Attrs       templ.Attributes
+}
+
+// QuestionnaireChoicesProps configures the choice list for one step.
+type QuestionnaireChoicesProps struct {
+	ID        string
+	Name      string
+	Multiple  bool
+	Choices   []QuestionnaireOption
+	Shortcuts QuestionnaireShortcutMode
+	Class     string
+	Attrs     templ.Attributes
+}
+
+// QuestionnaireChoiceProps configures a single labelled choice.
+type QuestionnaireChoiceProps struct {
+	ID          string
+	Name        string
+	Value       string
+	Label       string
+	Description string
+	Multiple    bool
+	Disabled    bool
+	Shortcut    string
+	Class       string
+	Attrs       templ.Attributes
+}
+
+// QuestionnaireDescriptionProps configures a step's description line.
+type QuestionnaireDescriptionProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// QuestionnaireErrorProps configures a step's inline error slot.
+type QuestionnaireErrorProps struct {
+	ID    string
+	Class string
+	Attrs templ.Attributes
+}
+
+// QuestionnairePreviousProps configures the Previous button.
+type QuestionnairePreviousProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// QuestionnaireSkipProps configures the Skip button.
+type QuestionnaireSkipProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// QuestionnaireNextProps configures the Next button.
+type QuestionnaireNextProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// QuestionnaireSubmitProps configures the Submit button.
+type QuestionnaireSubmitProps struct {
+	Label string
+	Class string
+	Attrs templ.Attributes
+}
+
+var questionnaireScriptOnce = templ.NewOnceHandle()
+
+// QuestionnaireScript loads the questionnaire runtime once per page.
+templ QuestionnaireScript() {
+	@questionnaireScriptOnce.Once() {
+		@templ.Raw(staticfs.ScriptNonce("/js/go-daisy-questionnaire.js", templ.GetNonce(ctx)))
+	}
+}
+
+// Questionnaire renders a multi-step wizard over one native <form>.
+//
+// Deviation from templui: templui's questionnaire is a JSON-driven state
+// machine (Items []ItemDefinition serialised to JSON, controlled/uncontrolled
+// active item, window.templ.questionnaire.setItem, per-choice shortcut keys).
+// This component is a DOM-derived progressive-enhancement wizard instead: every
+// item renders server-side as a <fieldset>, and the go-daisy-questionnaire.js
+// runtime shows one step at a time. With JavaScript disabled every question is
+// visible and the Submit button posts the whole form natively — there are no
+// dead Next/Previous controls, because those buttons are hidden server-side and
+// revealed by the runtime. One <form> submits the answers; there is no JSON or
+// state serialisation and no controlled-mode API.
+//
+// Method dispatch: the native `method` attribute is "post" for "", "put",
+// "patch" and "delete", and "get" for "get". Non-post verbs that a browser
+// cannot express natively dispatch through htmx (hx-put / hx-patch / hx-delete)
+// while the form keeps method="post" for the no-JS fallback, which a server must
+// then treat as the intended verb. The runtime validates in the capture phase
+// and stops propagation on a blocked submit, so the htmx request is not sent
+// before the inline error appears.
+//
+// Name and Value must be id-safe: ids derive as <ID>-<Name> for a fieldset and
+// <ID>-<Name>-<Value> for each choice, with no sanitisation.
+templ Questionnaire(props QuestionnaireProps) {
+	{{ method := props.Method
+	if method == "" {
+		method = "post"
+	}
+	formMethod := method
+	if method == "put" || method == "patch" || method == "delete" {
+		formMethod = "post"
+	} }}
+	<form
+		id={ props.ID }
+		action={ templ.URL(props.Action) }
+		method={ formMethod }
+		data-gd-questionnaire
+		data-gd-questionnaire-mode={ string(props.Shortcuts) }
+		if method == "put" {
+			hx-put={ props.Action }
+		} else if method == "patch" {
+			hx-patch={ props.Action }
+		} else if method == "delete" {
+			hx-delete={ props.Action }
+		}
+		class={ "flex flex-col gap-4", props.Class }
+		{ devmode.Attrs(ctx, "form/Questionnaire")... }
+		{ props.Attrs... }
+	>
+		@QuestionnaireProgress(QuestionnaireProgressProps{Total: len(props.Steps)})
+		for _, item := range props.Steps {
+			@QuestionnaireItem(QuestionnaireItemProps{
+				ID:          props.ID,
+				Name:        item.Name,
+				Title:       item.Title,
+				Description: item.Description,
+				Required:    item.Required,
+				Multiple:    item.Multiple,
+				Choices:     item.Choices,
+				Shortcuts:   props.Shortcuts,
+			})
+		}
+		<div class="flex flex-wrap items-center gap-2">
+			@QuestionnairePrevious(QuestionnairePreviousProps{})
+			@QuestionnaireSkip(QuestionnaireSkipProps{})
+			@QuestionnaireNext(QuestionnaireNextProps{})
+			@QuestionnaireSubmit(QuestionnaireSubmitProps{Label: props.SubmitLabel})
+		</div>
+	</form>
+	@QuestionnaireScript()
+}
+
+// QuestionnaireProgress renders the "Question X of N" label and progress bar.
+// The runtime updates the text, value and max as the user navigates.
+templ QuestionnaireProgress(props QuestionnaireProgressProps) {
+	{{ total := props.Total
+	if total < 1 {
+		total = 1
+	} }}
+	<div
+		data-gd-questionnaire-progress
+		class={ "flex items-center gap-3", props.Class }
+		{ devmode.Attrs(ctx, "form/QuestionnaireProgress")... }
+		{ props.Attrs... }
+	>
+		<span data-gd-questionnaire-progress-text class="text-xs text-label" aria-live="polite">Question 1 of { strconv.Itoa(total) }</span>
+		<progress
+			data-gd-questionnaire-progress-bar
+			aria-label="Question progress"
+			class="progress progress-primary h-1.5"
+			value="1"
+			max={ strconv.Itoa(total) }
+		></progress>
+	</div>
+}
+
+// QuestionnaireItem renders one step as a <fieldset>. It is never hidden
+// server-side: with JavaScript off every fieldset is visible and the last
+// step's Submit posts the whole form. The runtime hides all but the current
+// step and drives validation, error text, and navigation.
+templ QuestionnaireItem(props QuestionnaireItemProps) {
+	<fieldset
+		id={ props.ID + "-" + props.Name }
+		data-gd-questionnaire-item
+		data-name={ props.Name }
+		if props.Required {
+			data-required="true"
+		}
+		if props.Multiple {
+			data-multiple="true"
+		}
+		class={ "flex flex-col gap-3 rounded-box border border-line p-4", props.Class }
+		{ devmode.Attrs(ctx, "form/QuestionnaireItem")... }
+		{ props.Attrs... }
+	>
+		<legend class="text-sm font-semibold">{ props.Title }</legend>
+		if props.Description != "" {
+			@QuestionnaireDescription(QuestionnaireDescriptionProps{}) { { props.Description } }
+		}
+		@QuestionnaireChoices(QuestionnaireChoicesProps{
+			ID:        props.ID,
+			Name:      props.Name,
+			Multiple:  props.Multiple,
+			Choices:   props.Choices,
+			Shortcuts: props.Shortcuts,
+		})
+		@QuestionnaireError(QuestionnaireErrorProps{ID: props.ID + "-" + props.Name + "-error"})
+	</fieldset>
+}
+
+// QuestionnaireChoices renders the labelled radios/checkboxes for one step,
+// deriving each choice's id and shortcut badge.
+templ QuestionnaireChoices(props QuestionnaireChoicesProps) {
+	<div
+		data-gd-questionnaire-choices
+		class={ "flex flex-col gap-1", props.Class }
+		{ devmode.Attrs(ctx, "form/QuestionnaireChoices")... }
+		{ props.Attrs... }
+	>
+		for i, choice := range props.Choices {
+			{{ shortcut := ""
+			switch props.Shortcuts {
+			case QuestionnaireShortcutsLetters:
+				if i < 26 {
+					shortcut = string(rune('a' + i))
+				}
+			case QuestionnaireShortcutsNumbers:
+				if i < 9 {
+					shortcut = strconv.Itoa(i + 1)
+				}
+			} }}
+			@QuestionnaireChoice(QuestionnaireChoiceProps{
+				ID:          props.ID + "-" + props.Name + "-" + choice.Value,
+				Name:        props.Name,
+				Value:       choice.Value,
+				Label:       choice.Label,
+				Description: choice.Description,
+				Multiple:    props.Multiple,
+				Disabled:    choice.Disabled,
+				Shortcut:    shortcut,
+			})
+		}
+	</div>
+}
+
+// QuestionnaireChoice renders one labelled input row. The label wraps the input
+// (implicit association) and also carries for/id so the pairing is explicit.
+templ QuestionnaireChoice(props QuestionnaireChoiceProps) {
+	<label
+		for={ props.ID }
+		data-gd-questionnaire-choice
+		class={ "flex items-start gap-3 rounded-field px-3 py-2 text-sm", templ.KV("opacity-50 pointer-events-none", props.Disabled), props.Class }
+		{ devmode.Attrs(ctx, "form/QuestionnaireChoice")... }
+		{ props.Attrs... }
+	>
+		<input
+			type={ ternary(props.Multiple, "checkbox", "radio") }
+			id={ props.ID }
+			name={ props.Name }
+			value={ props.Value }
+			class={ ternary(props.Multiple, "checkbox checkbox-sm", "radio radio-sm") }
+			disabled?={ props.Disabled }
+		/>
+		<span class="flex flex-col">
+			<span>{ props.Label }</span>
+			if props.Description != "" {
+				<span class="text-xs text-muted">{ props.Description }</span>
+			}
+		</span>
+		if props.Shortcut != "" {
+			<kbd data-gd-questionnaire-shortcut class="ml-auto text-xs text-faint">{ props.Shortcut }</kbd>
+		}
+	</label>
+}
+
+// QuestionnaireDescription renders a step's secondary description line.
+templ QuestionnaireDescription(props QuestionnaireDescriptionProps) {
+	<p
+		class={ "text-xs text-muted", props.Class }
+		{ devmode.Attrs(ctx, "form/QuestionnaireDescription")... }
+		{ props.Attrs... }
+	>{ children... }</p>
+}
+
+// QuestionnaireError renders the inline error slot. It starts hidden and empty;
+// the runtime fills the text, removes `hidden`, and points the step's
+// aria-describedby at this element when a required step fails validation.
+templ QuestionnaireError(props QuestionnaireErrorProps) {
+	<p
+		id={ props.ID }
+		data-gd-questionnaire-error
+		role="alert"
+		class={ "text-xs text-error", props.Class }
+		hidden
+		{ devmode.Attrs(ctx, "form/QuestionnaireError")... }
+		{ props.Attrs... }
+	></p>
+}
+
+// QuestionnairePrevious renders the Previous button. It is hidden server-side
+// (no-JS keeps it hidden) and revealed by the runtime, which also disables it
+// on the first step.
+templ QuestionnairePrevious(props QuestionnairePreviousProps) {
+	<button
+		type="button"
+		data-gd-questionnaire-previous
+		class={ "btn", props.Class }
+		disabled
+		hidden
+		{ devmode.Attrs(ctx, "form/QuestionnairePrevious")... }
+		{ props.Attrs... }
+	>Previous</button>
+}
+
+// QuestionnaireSkip renders the Skip button. Hidden server-side; revealed by the
+// runtime on optional steps only - a Required step offers no Skip, because the
+// two would contradict each other.
+templ QuestionnaireSkip(props QuestionnaireSkipProps) {
+	<button
+		type="button"
+		data-gd-questionnaire-skip
+		class={ "btn btn-ghost", props.Class }
+		hidden
+		{ devmode.Attrs(ctx, "form/QuestionnaireSkip")... }
+		{ props.Attrs... }
+	>Skip</button>
+}
+
+// QuestionnaireNext renders the Next button. Hidden server-side; revealed by the
+// runtime on every step except the last.
+templ QuestionnaireNext(props QuestionnaireNextProps) {
+	<button
+		type="button"
+		data-gd-questionnaire-next
+		class={ "btn btn-primary", props.Class }
+		hidden
+		{ devmode.Attrs(ctx, "form/QuestionnaireNext")... }
+		{ props.Attrs... }
+	>Next</button>
+}
+
+// QuestionnaireSubmit renders the Submit button. Unlike the other nav controls it
+// is visible server-side — it is the only usable no-JS control, submitting the
+// whole form natively.
+templ QuestionnaireSubmit(props QuestionnaireSubmitProps) {
+	{{ label := props.Label
+	if label == "" {
+		label = "Submit"
+	} }}
+	<button
+		type="submit"
+		data-gd-questionnaire-submit
+		class={ "btn btn-primary", props.Class }
+		{ devmode.Attrs(ctx, "form/QuestionnaireSubmit")... }
+		{ props.Attrs... }
+	>{ label }</button>
+}

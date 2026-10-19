@@ -2219,7 +2219,142 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				},
 			},
 		},
+
+		// ── Components / Questionnaire ──────────────────────────────────────
+		{
+			Slug:        "questionnaire",
+			Name:        "Questionnaire",
+			Category:    galleryruntime.CategoryComponents,
+			Subcategory: "Forms",
+			Description: "A progressive-enhancement wizard over one native form: every step is a fieldset rendered server-side, the runtime reveals Previous/Skip/Next and drives step-by-step navigation, required-field validation and keyboard shortcuts. With JavaScript off every question is visible and Submit posts the whole form.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Default",
+					Description: "Three-step demo — a required single choice, a multi-choice group with a disabled option, and a final single choice, with letter shortcuts.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.QuestionnaireWithBoundary()
+					},
+					FrameHeight: "420px",
+				},
+				{
+					Name:        "Multiple",
+					Description: "A multi-select step (checkboxes) plus a single-select step, with letter shortcuts.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return questionnaireMultiDemo()
+					},
+					FrameHeight: "360px",
+				},
+				{
+					Name:        "Required",
+					Description: "Every step is required — Next is blocked until the current step has a selection.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return questionnaireRequiredDemo()
+					},
+					FrameHeight: "380px",
+				},
+				{
+					Name:        "Number shortcuts",
+					Description: "Number keyboard shortcuts (1..9) instead of letters.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return questionnaireNumbersDemo()
+					},
+					FrameHeight: "340px",
+				},
+			},
+		},
 	}
+}
+
+// questionnaireMultiDemo builds a two-step questionnaire exercising a
+// multi-select (checkbox) step followed by a single-select step, with letter
+// shortcuts.
+func questionnaireMultiDemo() templ.Component {
+	return form.Questionnaire(form.QuestionnaireProps{
+		ID:        "questionnaire-multi",
+		Shortcuts: form.QuestionnaireShortcutsLetters,
+		Steps: []form.QuestionnaireStep{
+			{
+				Name:     "features",
+				Title:    "Which features matter most?",
+				Multiple: true,
+				Choices: []form.QuestionnaireOption{
+					{Value: "dark-mode", Label: "Dark mode"},
+					{Value: "shortcuts", Label: "Keyboard shortcuts"},
+					{Value: "a11y", Label: "Accessibility"},
+					{Value: "i18n", Label: "Internationalisation"},
+				},
+			},
+			{
+				Name:  "budget",
+				Title: "What's your budget?",
+				Choices: []form.QuestionnaireOption{
+					{Value: "self-host", Label: "Self-host"},
+					{Value: "pro", Label: "Pro plan"},
+					{Value: "enterprise", Label: "Enterprise"},
+				},
+			},
+		},
+	})
+}
+
+// questionnaireRequiredDemo builds a two-step questionnaire where every step is
+// required, exercising the inline validation gate on Next.
+func questionnaireRequiredDemo() templ.Component {
+	return form.Questionnaire(form.QuestionnaireProps{
+		ID:        "questionnaire-required",
+		Shortcuts: form.QuestionnaireShortcutsLetters,
+		Steps: []form.QuestionnaireStep{
+			{
+				Name:     "size",
+				Title:    "Pick a size",
+				Required: true,
+				Choices: []form.QuestionnaireOption{
+					{Value: "s", Label: "Small"},
+					{Value: "m", Label: "Medium"},
+					{Value: "l", Label: "Large"},
+				},
+			},
+			{
+				Name:     "colour",
+				Title:    "Pick a colour",
+				Required: true,
+				Choices: []form.QuestionnaireOption{
+					{Value: "red", Label: "Red"},
+					{Value: "green", Label: "Green"},
+					{Value: "blue", Label: "Blue"},
+				},
+			},
+		},
+	})
+}
+
+// questionnaireNumbersDemo builds a two-step questionnaire using number
+// shortcuts (1..9) instead of letters.
+func questionnaireNumbersDemo() templ.Component {
+	return form.Questionnaire(form.QuestionnaireProps{
+		ID:        "questionnaire-numbers",
+		Shortcuts: form.QuestionnaireShortcutsNumbers,
+		Steps: []form.QuestionnaireStep{
+			{
+				Name:  "os",
+				Title: "Which OS do you use?",
+				Choices: []form.QuestionnaireOption{
+					{Value: "macos", Label: "macOS"},
+					{Value: "linux", Label: "Linux"},
+					{Value: "windows", Label: "Windows"},
+				},
+			},
+			{
+				Name:  "editor",
+				Title: "Which editor do you use?",
+				Choices: []form.QuestionnaireOption{
+					{Value: "vscode", Label: "VS Code"},
+					{Value: "neovim", Label: "Neovim"},
+					{Value: "goland", Label: "GoLand"},
+				},
+			},
+		},
+	})
 }
 
 // messageDemoRow builds a full Message row (avatar + content) for the gallery

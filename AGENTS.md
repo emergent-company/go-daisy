@@ -23,7 +23,7 @@ go-daisy/
 │   ├── alpine/           # Alpine.js attribute generators (no .templ files)
 │   ├── behaviors/        # Behaviour-init runtime helper (gdOnce/gdBehaviour/gdRescan)
 │   ├── css/              # Per-package CSS dependency registry (prune daisyUI, compile your own)
-│   ├── form/             # Form inputs, field wrappers, validators, editors (~26 components)
+│   ├── form/             # Form inputs, field wrappers, validators, editors (~27 components)
 │   ├── head/             # <head> asset tag emitters (CSS, HTMX, Alpine, Morph, SSE, WS)
 │   ├── layout/           # Page shell, sidebar variants, navbar, topbar (~10 components)
 │   ├── logs/             # Log stream display (~1 component)
@@ -105,7 +105,7 @@ Embedded static assets with cache-busting content hashes.
 | `Hash()` | 12-char content hash for cache busting |
 | `FS()` | Embedded `fs.FS` rooted at `static/` |
 
-**Bundled JS (21 files):** `htmx.js`, `morph.js`, `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js` (behaviour-init runtime — see `components/behaviors`), `go-daisy-a11y.js` (keyboard/focus primitives: `gdFocus` + `gdMenu`), `go-daisy-command-palette.js` (⌘K palette: focus trap, dismissal and filtering), `go-daisy-context-menu.js`, `go-daisy-resizable.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `go-daisy-toggle.js`, `go-daisy-messagescroller.js`, `go-daisy-alert-dialog.js`, `go-daisy-menubar.js`, `go-daisy-navigation-menu.js`, `frappe-gantt.js`.
+**Bundled JS (22 files):** `htmx.js`, `morph.js`, `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js` (behaviour-init runtime — see `components/behaviors`), `go-daisy-a11y.js` (keyboard/focus primitives: `gdFocus` + `gdMenu`), `go-daisy-command-palette.js` (⌘K palette: focus trap, dismissal and filtering), `go-daisy-context-menu.js`, `go-daisy-resizable.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `go-daisy-toggle.js`, `go-daisy-messagescroller.js`, `go-daisy-alert-dialog.js`, `go-daisy-menubar.js`, `go-daisy-navigation-menu.js`, `go-daisy-questionnaire.js`, `frappe-gantt.js`.
 
 **Bundled CSS:** `app.css` (compiled Tailwind + DaisyUI), `frappe-gantt.css`.
 
@@ -152,7 +152,7 @@ Full-page shell, sidebar layout, and navbar (~10 components). `AppShell`, `Sideb
 Page headers, tab menus, breadcrumbs, footer (~16 components). `PageHeader`, `TabMenu`, `SimpleTabs`, `TopBar`, `PageTitleVariant`, `SearchModal`, `NotificationPanel`, `ProfileMenuVariant`, `FooterVariant`, `Megamenu`.
 
 ### `components/form`
-Form inputs, field wrappers, validators, editors (~26 components). `FormField`, `TextInput`, `TextareaInput`, `SelectInput`, `EnhancedSelect`, `SearchInput`, `FilterSelect`, `CheckboxInput`, `Toggle`, `RadioGroup`, `RangeInput`, `FileInput`, `FileUpload`, `Rating`, `OTP`, `PasswordField`, `PasswordMeter`, `DatePicker`, `Clipboard`, `RichTextEditor`, `CalendarWrapper`, `ColorInput`, `Spinner`, `Wizard`.
+Form inputs, field wrappers, validators, editors (~27 components). `FormField`, `TextInput`, `TextareaInput`, `SelectInput`, `EnhancedSelect`, `SearchInput`, `FilterSelect`, `CheckboxInput`, `Toggle`, `RadioGroup`, `RangeInput`, `FileInput`, `FileUpload`, `Rating`, `OTP`, `PasswordField`, `PasswordMeter`, `DatePicker`, `Clipboard`, `RichTextEditor`, `CalendarWrapper`, `ColorInput`, `Spinner`, `Wizard`, `Questionnaire`.
 
 ### `components/table`
 `Table`, `DataTable`, `DataGrid`, `SortableTableHeader`, `TableCard`, `ListArea` (infinite-scroll container), `ScrollRows` (7 components). `SortableTableHeader` is the server-side column-sorting primitive: it renders an accessible header link, preserves query filters, and pairs with `SortContext`/`NewSortContext`/`ParseSortPrefixed` helpers.
@@ -289,7 +289,7 @@ Both need `*WithBoundary` wrappers. The demo variant is only for gallery registr
 
 CSS is compiled from `assets/app.css` → `staticfs/static/css/app.css` and served at `/static/css/app.css`. The `staticfs` package embeds this file into the binary. Do not edit the output file directly; edit `assets/app.css` and re-run `task build:ui`.
 
-**Bundled JavaScript** lives in `staticfs/static/js/` — 21 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js`, `go-daisy-a11y.js`, `go-daisy-command-palette.js`, `go-daisy-context-menu.js`, `go-daisy-resizable.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `go-daisy-toggle.js`, `go-daisy-messagescroller.js`, `go-daisy-alert-dialog.js`, `go-daisy-menubar.js`, `go-daisy-navigation-menu.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
+**Bundled JavaScript** lives in `staticfs/static/js/` — 22 files embedded alongside CSS: `htmx.js`, `morph.js` (idiomorph), `alpine.js`, `hx-sse.js`, `hx-ws.js`, `hx-head.js`, `go-daisy-init.js`, `go-daisy-a11y.js`, `go-daisy-command-palette.js`, `go-daisy-context-menu.js`, `go-daisy-resizable.js`, `go-daisy-popover.js`, `go-daisy-icon-picker.js`, `go-daisy-calendar.js`, `go-daisy-gantt.js`, `go-daisy-toggle.js`, `go-daisy-messagescroller.js`, `go-daisy-alert-dialog.js`, `go-daisy-menubar.js`, `go-daisy-navigation-menu.js`, `go-daisy-questionnaire.js`, `frappe-gantt.js`. Served via `staticfs.Script("/js/htmx.js")` etc.
 
 **Cache busting**: `staticfs.Hash()` returns a 12-char content hash updated via `go generate`. `Stylesheet()` and `Script()` helpers append `?v={hash}` query params automatically. Use `data-asset-track="reload"` on tags to trigger full reload on version mismatch.
 

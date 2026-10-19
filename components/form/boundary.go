@@ -561,3 +561,52 @@ func ClipboardCopyWithBoundary(items []ClipboardCopyItem) templ.Component {
 		"items": len(items),
 	})
 }
+
+// QuestionnaireWithBoundary wraps Questionnaire with a dev-mode component
+// boundary annotation. It renders a three-step demo — a required single choice,
+// a multi-choice group with one disabled option, and a final single choice —
+// with letter keyboard shortcuts enabled throughout.
+//
+// No gallery:token annotation: the boundary is zero-arg, so boundarytoken has
+// nothing to map; the gallery stories write their own controls by hand.
+func QuestionnaireWithBoundary() templ.Component {
+	items := []QuestionnaireStep{
+		{
+			Name:     "role",
+			Title:    "What's your role?",
+			Required: true,
+			Choices: []QuestionnaireOption{
+				{Value: "developer", Label: "Developer"},
+				{Value: "designer", Label: "Designer"},
+				{Value: "manager", Label: "Manager"},
+			},
+		},
+		{
+			Name:     "interests",
+			Title:    "Which technologies interest you?",
+			Multiple: true,
+			Choices: []QuestionnaireOption{
+				{Value: "htmx", Label: "HTMX", Description: "Hypermedia-driven apps"},
+				{Value: "templ", Label: "Templ", Description: "Type-safe templates"},
+				{Value: "alpine", Label: "Alpine.js", Description: "Sprinkle interactivity", Disabled: true},
+			},
+		},
+		{
+			Name:  "experience",
+			Title: "How would you rate your experience?",
+			Choices: []QuestionnaireOption{
+				{Value: "beginner", Label: "Beginner"},
+				{Value: "intermediate", Label: "Intermediate"},
+				{Value: "advanced", Label: "Advanced"},
+			},
+		},
+	}
+	return devmode.ComponentBoundary("Questionnaire", Questionnaire(QuestionnaireProps{
+		ID:          "questionnaire",
+		Steps:       items,
+		Shortcuts:   QuestionnaireShortcutsLetters,
+		SubmitLabel: "Finish",
+	}), map[string]any{
+		"itemCount": len(items),
+	})
+}
