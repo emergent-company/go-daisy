@@ -3081,7 +3081,7 @@ func SellerForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 171, "<div class=\"card-title\">Basic Information</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 171, "<div class=\"card-title text-base font-medium\">Basic Information</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3143,7 +3143,7 @@ func SellerForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 175, "<div class=\"card-title\">Address</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 175, "<div class=\"card-title text-base font-medium\">Address</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3189,7 +3189,7 @@ func SellerForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 177, "<div class=\"card-title\">Upload Image</div><div class=\"mt-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 177, "<div class=\"card-title text-base font-medium\">Upload Image</div><div class=\"mt-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3219,7 +3219,7 @@ func SellerForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 179, "<div class=\"card-title\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 179, "<div class=\"card-title text-base font-medium\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3239,7 +3239,7 @@ func SellerForm(isCreate bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if isCreate {
-				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "password", Label: "Password", Placeholder: "Password", ShowToggle: true}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "password", Label: "Password", Placeholder: "Password", ShowToggle: true, Icon: "lucide--key-round"}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3247,12 +3247,12 @@ func SellerForm(isCreate bool) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "confirm-password", Label: "Confirm Password", Placeholder: "Confirm Password", ShowToggle: true}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "confirm-password", Label: "Confirm Password", Placeholder: "Confirm Password", ShowToggle: true, Icon: "lucide--key-round"}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "old-password", Label: "Old Password", Placeholder: "Password", ShowToggle: true}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "old-password", Label: "Old Password", Placeholder: "Password", ShowToggle: true, Icon: "lucide--key-round"}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3260,7 +3260,7 @@ func SellerForm(isCreate bool) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "new-password", Label: "New Password", Placeholder: "Confirm Password", ShowToggle: true}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "new-password", Label: "New Password", Placeholder: "Confirm Password", ShowToggle: true, Icon: "lucide--key-round"}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3291,7 +3291,7 @@ func SellerForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 187, "\"Cancel\" ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 187, "Cancel ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3314,7 +3314,7 @@ func SellerForm(isCreate bool) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 188, "\"Save\" ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 188, "Save ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -3337,7 +3337,7 @@ func SellerForm(isCreate bool) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 189, "\"Update\" ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 189, "Update ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -4062,7 +4062,7 @@ func CustomerForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 226, "<div class=\"card-title\">Basic Information</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 226, "<div class=\"card-title text-base font-medium\">Basic Information</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -4124,7 +4124,7 @@ func CustomerForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 230, "<div class=\"card-title\">Address</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 230, "<div class=\"card-title text-base font-medium\">Address</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -4170,7 +4170,7 @@ func CustomerForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 232, "<div class=\"card-title\">Upload Image</div><div class=\"mt-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 232, "<div class=\"card-title text-base font-medium\">Upload Image</div><div class=\"mt-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -4200,7 +4200,7 @@ func CustomerForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 234, "<div class=\"card-title\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 234, "<div class=\"card-title text-base font-medium\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -4220,7 +4220,7 @@ func CustomerForm(isCreate bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if isCreate {
-				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "password", Label: "Password", Placeholder: "Password", ShowToggle: true}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "password", Label: "Password", Placeholder: "Password", ShowToggle: true, Icon: "lucide--key-round"}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -4228,12 +4228,12 @@ func CustomerForm(isCreate bool) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "confirm-password", Label: "Confirm Password", Placeholder: "Confirm Password", ShowToggle: true}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "confirm-password", Label: "Confirm Password", Placeholder: "Confirm Password", ShowToggle: true, Icon: "lucide--key-round"}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "old-password", Label: "Old Password", Placeholder: "Password", ShowToggle: true}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "old-password", Label: "Old Password", Placeholder: "Password", ShowToggle: true, Icon: "lucide--key-round"}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -4241,7 +4241,7 @@ func CustomerForm(isCreate bool) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "new-password", Label: "New Password", Placeholder: "Confirm Password", ShowToggle: true}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = form.PasswordField(form.PasswordFieldProps{Name: "new-password", Label: "New Password", Placeholder: "Confirm Password", ShowToggle: true, Icon: "lucide--key-round"}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -4272,7 +4272,7 @@ func CustomerForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 242, "\"Cancel\" ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 242, "Cancel ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -4295,7 +4295,7 @@ func CustomerForm(isCreate bool) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 243, "\"Save\" ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 243, "Save ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -4318,7 +4318,7 @@ func CustomerForm(isCreate bool) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 244, "\"Update\" ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 244, "Update ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -5137,7 +5137,7 @@ func ShopForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 288, "<div class=\"card-title\">Basic Information</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 288, "<div class=\"card-title text-base font-medium\">Basic Information</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -5195,7 +5195,7 @@ func ShopForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 291, "<div class=\"card-title\">Address</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 291, "<div class=\"card-title text-base font-medium\">Address</div><div class=\"fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -5245,7 +5245,7 @@ func ShopForm(isCreate bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 294, "\"Cancel\" ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 294, "Cancel ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -5268,7 +5268,7 @@ func ShopForm(isCreate bool) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 295, "\"Save\" ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 295, "Save ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -5291,7 +5291,7 @@ func ShopForm(isCreate bool) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 296, "\"Update\" ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 296, "Update ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

@@ -680,7 +680,7 @@ templ SellerForm(isCreate bool) {
 	<div class="mt-6">
 		<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
-				<div class="card-title">Basic Information</div>
+				<div class="card-title text-base font-medium">Basic Information</div>
 				<div class="fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
 					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "name", Label: "Name", Placeholder: "Name"})
 					@form.FormField(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Placeholder: "Email"})
@@ -697,7 +697,7 @@ templ SellerForm(isCreate bool) {
 				</div>
 			}
 			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
-				<div class="card-title">Address</div>
+				<div class="card-title text-base font-medium">Address</div>
 				<div class="fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
 					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "street-address", Label: "Street Address", Placeholder: "Street Address"})
 					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "city", Label: "City", Placeholder: "City"})
@@ -707,13 +707,13 @@ templ SellerForm(isCreate bool) {
 				</div>
 			}
 			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
-				<div class="card-title">Upload Image</div>
+				<div class="card-title text-base font-medium">Upload Image</div>
 				<div class="mt-4">
 					@form.FileUpload(form.FileUploadProps{Name: "image"})
 				</div>
 			}
 			@ui.CardRaw(ui.CardRawProps{Class: "h-fit shadow", Border: ui.CardBorderNone, BodyClass: "gap-0"}) {
-				<div class="card-title">
+				<div class="card-title text-base font-medium">
 					if isCreate {
 						Create Password
 					} else {
@@ -722,21 +722,21 @@ templ SellerForm(isCreate bool) {
 				</div>
 				<div class="fieldset mt-2 grid grid-cols-1 gap-x-4 lg:grid-cols-2">
 					if isCreate {
-						@form.PasswordField(form.PasswordFieldProps{Name: "password", Label: "Password", Placeholder: "Password", ShowToggle: true})
-						@form.PasswordField(form.PasswordFieldProps{Name: "confirm-password", Label: "Confirm Password", Placeholder: "Confirm Password", ShowToggle: true})
+						@form.PasswordField(form.PasswordFieldProps{Name: "password", Label: "Password", Placeholder: "Password", ShowToggle: true, Icon: "lucide--key-round"})
+						@form.PasswordField(form.PasswordFieldProps{Name: "confirm-password", Label: "Confirm Password", Placeholder: "Confirm Password", ShowToggle: true, Icon: "lucide--key-round"})
 					} else {
-						@form.PasswordField(form.PasswordFieldProps{Name: "old-password", Label: "Old Password", Placeholder: "Password", ShowToggle: true})
-						@form.PasswordField(form.PasswordFieldProps{Name: "new-password", Label: "New Password", Placeholder: "Confirm Password", ShowToggle: true})
+						@form.PasswordField(form.PasswordFieldProps{Name: "old-password", Label: "Old Password", Placeholder: "Password", ShowToggle: true, Icon: "lucide--key-round"})
+						@form.PasswordField(form.PasswordFieldProps{Name: "new-password", Label: "New Password", Placeholder: "Confirm Password", ShowToggle: true, Icon: "lucide--key-round"})
 					}
 				</div>
 			}
 		</div>
 		<div class="mt-6 flex justify-end gap-3">
-			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/sellers", Variant: ui.ButtonGhost, Size: ui.ButtonSM, Icon: "lucide--x"}){ "Cancel" }
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/sellers", Variant: ui.ButtonGhost, Size: ui.ButtonSM, Icon: "lucide--x"}){ Cancel }
 			if isCreate {
-				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/sellers", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--check"}){ "Save" }
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/sellers", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--check"}){ Save }
 			} else {
-				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/sellers", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--arrow-up-from-line"}){ "Update" }
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/sellers", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--arrow-up-from-line"}){ Update }
 			}
 		</div>
 	</div>
@@ -853,7 +853,7 @@ templ CustomerForm(isCreate bool) {
 	<div class="mt-6">
 		<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
-				<div class="card-title">Basic Information</div>
+				<div class="card-title text-base font-medium">Basic Information</div>
 				<div class="fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
 					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "name", Label: "Name", Placeholder: "Name"})
 					@form.FormField(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Placeholder: "Email"})
@@ -870,7 +870,7 @@ templ CustomerForm(isCreate bool) {
 				</div>
 			}
 			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
-				<div class="card-title">Address</div>
+				<div class="card-title text-base font-medium">Address</div>
 				<div class="fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
 					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "street-address", Label: "Street Address", Placeholder: "Street Address"})
 					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "city", Label: "City", Placeholder: "City"})
@@ -880,13 +880,13 @@ templ CustomerForm(isCreate bool) {
 				</div>
 			}
 			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
-				<div class="card-title">Upload Image</div>
+				<div class="card-title text-base font-medium">Upload Image</div>
 				<div class="mt-4">
 					@form.FileUpload(form.FileUploadProps{Name: "image"})
 				</div>
 			}
 			@ui.CardRaw(ui.CardRawProps{Class: "h-fit shadow", Border: ui.CardBorderNone, BodyClass: "gap-0"}) {
-				<div class="card-title">
+				<div class="card-title text-base font-medium">
 					if isCreate {
 						Create Password
 					} else {
@@ -895,21 +895,21 @@ templ CustomerForm(isCreate bool) {
 				</div>
 				<div class="fieldset mt-2 grid grid-cols-1 gap-x-4 lg:grid-cols-2">
 					if isCreate {
-						@form.PasswordField(form.PasswordFieldProps{Name: "password", Label: "Password", Placeholder: "Password", ShowToggle: true})
-						@form.PasswordField(form.PasswordFieldProps{Name: "confirm-password", Label: "Confirm Password", Placeholder: "Confirm Password", ShowToggle: true})
+						@form.PasswordField(form.PasswordFieldProps{Name: "password", Label: "Password", Placeholder: "Password", ShowToggle: true, Icon: "lucide--key-round"})
+						@form.PasswordField(form.PasswordFieldProps{Name: "confirm-password", Label: "Confirm Password", Placeholder: "Confirm Password", ShowToggle: true, Icon: "lucide--key-round"})
 					} else {
-						@form.PasswordField(form.PasswordFieldProps{Name: "old-password", Label: "Old Password", Placeholder: "Password", ShowToggle: true})
-						@form.PasswordField(form.PasswordFieldProps{Name: "new-password", Label: "New Password", Placeholder: "Confirm Password", ShowToggle: true})
+						@form.PasswordField(form.PasswordFieldProps{Name: "old-password", Label: "Old Password", Placeholder: "Password", ShowToggle: true, Icon: "lucide--key-round"})
+						@form.PasswordField(form.PasswordFieldProps{Name: "new-password", Label: "New Password", Placeholder: "Confirm Password", ShowToggle: true, Icon: "lucide--key-round"})
 					}
 				</div>
 			}
 		</div>
 		<div class="mt-6 flex justify-end gap-3">
-			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/customers", Variant: ui.ButtonGhost, Size: ui.ButtonSM, Icon: "lucide--x"}){ "Cancel" }
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/customers", Variant: ui.ButtonGhost, Size: ui.ButtonSM, Icon: "lucide--x"}){ Cancel }
 			if isCreate {
-				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/customers", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--check"}){ "Save" }
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/customers", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--check"}){ Save }
 			} else {
-				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/customers", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--arrow-up-from-line"}){ "Update" }
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/customers", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--arrow-up-from-line"}){ Update }
 			}
 		</div>
 	</div>
@@ -1026,7 +1026,7 @@ templ ShopForm(isCreate bool) {
 	<div class="mt-6">
 		<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
-				<div class="card-title">Basic Information</div>
+				<div class="card-title text-base font-medium">Basic Information</div>
 				<div class="fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
 					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "name", Label: "Name", Placeholder: "Name"})
 					@form.FormSelect("seller", "Seller", "", [][2]string{
@@ -1046,7 +1046,7 @@ templ ShopForm(isCreate bool) {
 				</div>
 			}
 			@ui.CardRaw(ui.CardRawProps{Class: "h-fit shadow", Border: ui.CardBorderNone}) {
-				<div class="card-title">Address</div>
+				<div class="card-title text-base font-medium">Address</div>
 				<div class="fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
 					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "street-address", Label: "Street Address", Placeholder: "Street Address"})
 					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "city", Label: "City", Placeholder: "City"})
@@ -1057,11 +1057,11 @@ templ ShopForm(isCreate bool) {
 			}
 		</div>
 		<div class="mt-6 flex justify-end gap-3">
-			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/shops", Variant: ui.ButtonGhost, Size: ui.ButtonSM, Icon: "lucide--x"}){ "Cancel" }
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/shops", Variant: ui.ButtonGhost, Size: ui.ButtonSM, Icon: "lucide--x"}){ Cancel }
 			if isCreate {
-				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/shops", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--check"}){ "Save" }
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/shops", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--check"}){ Save }
 			} else {
-				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/shops", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--arrow-up-from-line"}){ "Update" }
+				@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/ecommerce/shops", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--arrow-up-from-line"}){ Update }
 			}
 		</div>
 	</div>

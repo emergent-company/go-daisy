@@ -528,6 +528,13 @@ func PasswordFieldTokens() []galleryruntime.DesignToken {
 				{Value: "true", Label: "Yes"},
 			},
 		},
+		{
+			Label:      "Icon",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "icon",
+		},
 	}
 }
 
