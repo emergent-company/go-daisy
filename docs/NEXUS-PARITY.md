@@ -25,6 +25,8 @@ names; the supported API uses semantic names (`AdminShell`,
 | application topbar (hamburger, search pill, theme, settings, notifications, profile) | `layout.TopbarVariant("app", TopbarVariantOpts{...})` |
 | search pill + mobile search icon | `nav.SearchTrigger(SearchTriggerProps{DialogID, Placeholder})` |
 | orders / products tables inside cards | `table.TableWithProps` + `table.TableCard{Toolbar, Footer}` + `table.TableSelectAll/Row` |
+| dashboard stat cards | `ui.StatCardFeatured` |
+| dashboard Recent Orders | `table.TableCard` + `table.TableWithProps` + selection cells |
 | compact table rows | `Table{Density: table.DensityCompact}` (height from `--table-row-height`) |
 | chat page (contact card, peer header, bubbles, composer) | `pages.ChatLayout(ChatLayoutProps{...})` + `pages.ChatContactItem` |
 | marketing landing page | `pages.LandingTopbar/Hero/FeatureGrid/Testimonials/Pricing/FAQ/Footer` |
@@ -51,8 +53,12 @@ when a converted area drifts back to hand-rolled markup:
   not reintroduce the toggle checkbox, backdrop or duplicated shell CSS.
 - `pages_chat.templ` must use `pages.ChatLayout` and no raw `chat chat-*`
   bubbles or `data-simplebar` scroll containers.
-- `ProductsList` and `OrdersList` must use `TableCard`/`TableWithProps` and no
-  raw `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<td>` or checkbox inputs.
+- `ProductsList`, `OrdersList` and the dashboard's `EcommerceDashboard` /
+  `ecomOrderRow` must use `TableCard`/`TableWithProps` and no raw `<table>`,
+  `<thead>`, `<tbody>`, `<tr>`, `<td>` or checkbox inputs. The dashboard stat
+  cards must go through `ui.StatCardFeatured`.
+- Templates may not use `"./images"` or `"./static"`: relative asset paths
+  resolve under the current route and 404.
 
 The check is scoped to functions that are already converted, so the file
 manager and the rest of the dashboards can keep their markup until a component
