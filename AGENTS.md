@@ -199,6 +199,21 @@ task dev:ui
 
 > **Important:** Always run `task build:ui` (or `task build`) after editing any `.templ` file or CSS. The generated `*_templ.go` files must be committed alongside their `.templ` sources.
 
+### Releasing
+
+Tags and releases go only through `.github/workflows/release.yml`, dispatched
+from `master`. Never push a tag by hand.
+
+- `bump` is `patch` | `minor` | `major`; `tag=vX.Y.Z` overrides it.
+- `confirm=dry-run` resolves the version and prints the grouped notes.
+- `confirm=release` creates the annotated tag and the GitHub release.
+- The workflow refuses a non-`master` ref, a HEAD that differs from
+  `origin/master`, or an already existing tag.
+- It never deploys. Deploys are dispatched from `templ.components.infra`.
+
+Semver: minor for new components or API, patch for fixes, major for breaking
+removals (rare; see `docs/DEPRECATED.md`).
+
 ---
 
 ## Adding a new component

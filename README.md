@@ -324,6 +324,24 @@ task dev:ui
 
 ---
 
+## Releases
+
+Releases are dispatch-only; never push a tag by hand.
+
+```bash
+# Preview the version and grouped notes without tagging
+gh workflow run release.yml -f bump=minor -f confirm=dry-run
+
+# Tag and publish
+gh workflow run release.yml -f bump=minor -f confirm=release
+```
+
+`bump` is `patch`, `minor` or `major`; `tag` (`vX.Y.Z`) overrides it. The
+workflow refuses a non-`master` ref, a diverged HEAD or an existing tag, and it
+never deploys. Gallery deploys stay in `templ.components.infra`.
+
+---
+
 ## Design tokens
 
 `components/css/tokens.css` ships the semantic text tone ladder
