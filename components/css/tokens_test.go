@@ -153,3 +153,88 @@ func TestTypographyTokens(t *testing.T) {
 		t.Error("typography role rules must be declared in @layer base so utilities still win")
 	}
 }
+
+// chartTokens are the ApexCharts text tokens defined in tokens.css. Each must
+// be declared exactly as written so they derive from --color-base-content (not
+// a hard-coded hex) and use the intended opacity.
+var chartTokens = []string{
+	"--chart-label-color: color-mix(in oklab, var(--color-base-content) 60%, transparent)",
+	"--chart-legend-color: color-mix(in oklab, var(--color-base-content) 80%, transparent)",
+	"--chart-title-color: var(--color-base-content)",
+}
+
+// TestChartTextTokens locks the chart text contract: tokens.css defines the
+// three --chart-* variables (derived from --color-base-content, not hex), and
+// custom.css maps ApexCharts' SVG/legend classes onto them so chart labels
+// follow the active theme instead of ApexCharts' hard-coded #373d3f grey.
+func TestChartTextTokens(t *testing.T) {
+	root := filepath.Join("..", "..")
+
+	tokensPath := filepath.Join(root, "components", "css", filepath.Base(TokensCSS))
+	tokensSrc := string(readFile(t, tokensPath))
+	for _, decl := range chartTokens {
+		if !strings.Contains(tokensSrc, decl) {
+			t.Errorf("tokens.css missing/incorrect declaration %q", decl)
+		}
+	}
+
+	customPath := filepath.Join(root, "components", "css", filepath.Base(CustomCSS))
+	customSrc := string(readFile(t, customPath))
+
+	for _, sel := range []string{
+		"[data-chart] .apexcharts-xaxis-label",
+		"[data-chart] .apexcharts-yaxis-label",
+		"[data-chart] .apexcharts-xaxis-annotation-label",
+		"[data-chart] .apexcharts-yaxis-annotation-label",
+		"[data-chart] .apexcharts-legend-text",
+		"[data-chart] .apexcharts-title-text",
+		"[data-chart] .apexcharts-subtitle-text",
+	} {
+		if !strings.Contains(customSrc, sel) {
+			t.Errorf("custom.css missing chart selector %q", sel)
+		}
+	}
+	for _, ref := range []string{
+		"fill: var(--chart-label-color) !important",
+		"color: var(--chart-legend-color) !important",
+		"fill: var(--chart-title-color) !important",
+	} {
+		if !strings.Contains(customSrc, ref) {
+			t.Errorf("custom.css missing chart declaration %q", ref)
+		}
+	}
+	// Strip /* … */ comments so the datalabel guard below inspects only real
+	// rules (the block comment above mentions the class but must not count).
+	if strings.Contains(stripCSSComments(customSrc), ".apexcharts-datalabel") {
+		t.Error("custom.css must not restyle .apexcharts-datalabel* (Nexus sets white data labels deliberately)")
+	}
+}
+
+// stripCSSComments removes /* … */ block comments from a stylesheet so content
+// checks test declarations rather than prose.
+func stripCSSComments(src string) string {
+	var out strings.Builder
+	for {
+		start := strings.Index(src, "/*")
+		if start == -1 {
+			out.WriteString(src)
+			return out.String()
+		}
+		out.WriteString(src[:start])
+		end := strings.Index(src[start+2:], "*/")
+		if end == -1 {
+			return out.String()
+		}
+		src = src[start+2+end+2:]
+	}
+}
+
+// readFile reads path or fails the test.
+func readFile(t *testing.T, path string) []byte {
+	t.Helper()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("%s: %v", path, err)
+	}
+	return data
+}

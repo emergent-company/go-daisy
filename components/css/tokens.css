@@ -126,3 +126,27 @@
 @utility font-heading {
   font-family: var(--font-heading);
 }
+
+/* ── Chart text tokens ──────────────────────────────────────────
+ *
+ * ApexCharts 4 hard-codes every piece of chart text to its own fixed grey
+ * (#373d3f) and writes it as inline SVG `fill` / legend `color`, so the
+ * cascading theme colour never reaches it. These tokens bind that fixed
+ * default back to the active theme's content ink:
+ *
+ *   --chart-label-color   60%  axis tick / annotation labels (≈ text-muted)
+ *   --chart-legend-color  80%  legend series names (≈ text-body)
+ *   --chart-title-color   100% title / subtitle (full content ink)
+ *
+ * Declared in a plain `:root` block, NOT `@theme` — this file's contract test
+ * forbids a second plain `@theme` block (it would freeze the tone ladder at
+ * :root). `components/css/custom.css` maps ApexCharts' SVG/legend classes onto
+ * these tokens; because they are plain variables referencing
+ * `var(--color-base-content)`, they re-resolve when the active theme changes
+ * and the charts update without a re-render.
+ */
+:root {
+  --chart-label-color: color-mix(in oklab, var(--color-base-content) 60%, transparent);
+  --chart-legend-color: color-mix(in oklab, var(--color-base-content) 80%, transparent);
+  --chart-title-color: var(--color-base-content);
+}
