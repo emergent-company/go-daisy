@@ -253,7 +253,7 @@ func FileUpload(props FileUploadProps) templ.Component {
 			ScriptURL:  "https://cdn.jsdelivr.net/npm/filepond@4.32.6/dist/filepond.min.js",
 			StyleURL:   "'https://cdn.jsdelivr.net/npm/filepond@4.32.6/dist/filepond.min.css'",
 			Selector:   "[data-filepond]",
-			InitFunc:   "FilePond.create(el, {allowMultiple: el.hasAttribute('multiple'), maxFiles: parseInt(el.dataset.maxFiles) || null, maxFileSize: el.dataset.maxFileSize || null, labelIdle: el.dataset.style === 'avatar' ? 'Drag & drop your photo or <span class=\"filepond--label-action\">Browse</span>' : 'Drag & drop files or <span class=\"filepond--label-action\">Browse</span>', store: null})",
+			InitFunc:   "FilePond.create(el, {allowMultiple: el.hasAttribute('multiple'), maxFiles: parseInt(el.dataset.maxFiles) || null, maxFileSize: el.dataset.maxFileSize || null, labelIdle: el.dataset.style === 'avatar' ? 'Drag & Drop your photo or <span class=\"filepond--label-action\">Browse</span>' : 'Drag & Drop your files or <span class=\"filepond--label-action\">Browse</span>', credits: false, store: null})",
 			FnSuffix:   "FilePond",
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {

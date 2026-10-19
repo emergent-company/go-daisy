@@ -57,6 +57,19 @@ func forbid(t *testing.T, src, what string, needles ...string) {
 	}
 }
 
+// requireCard asserts that the source composes a library card component,
+// without pinning the specific card variant so a future port is not blocked by
+// the card choice.
+func requireCard(t *testing.T, src, what string) {
+	t.Helper()
+	for _, needle := range []string{"@ui.Card(", "@ui.CardRaw(", "@ui.CardCompact("} {
+		if strings.Contains(src, needle) {
+			return
+		}
+	}
+	t.Errorf("%s must use a library card component (@ui.Card, @ui.CardRaw, or @ui.CardCompact)", what)
+}
+
 // TestNexusShellComposesAdminShell pins the shell migration.
 func TestNexusShellComposesAdminShell(t *testing.T) {
 	src := read(t, "../shell/shell.templ")
@@ -146,6 +159,42 @@ func TestEcommerceListsUseLibraryComponents(t *testing.T) {
 		`nxHTMLComponent("apps-ecommerce-sellers")`,
 		`nxHTMLComponent("apps-ecommerce-customers")`,
 		`nxHTMLComponent("apps-ecommerce-shops")`,
+	)
+}
+
+// TestEcommerceEntityFormsUseLibraryComponents pins the sellers/customers/shops
+// create/edit form migrations: each form composes its header through
+// nav.PageHeading and its fields through form.FormField (plus a library card
+// shell), with no hand-rolled input/select/textarea/table markup left behind.
+func TestEcommerceEntityFormsUseLibraryComponents(t *testing.T) {
+	src := read(t, "../handler/pages_ecommerce.templ")
+
+	for _, name := range []string{"SellerForm", "CustomerForm", "ShopForm"} {
+		fn := templFunc(t, src, name)
+		require(t, fn, name, "@nav.PageHeading(")
+		require(t, fn, name, "@form.FormField(")
+		requireCard(t, fn, name)
+		forbid(t, fn, name,
+			"<input",
+			"<select",
+			"<textarea",
+			"<table",
+			"<tr",
+			"<td",
+			"<th",
+		)
+	}
+
+	// The six create/edit handlers must resolve to the templ components, not
+	// fall back to the raw-HTML passthrough.
+	hsrc := read(t, "../handler/handler.go")
+	forbid(t, hsrc, "handler.go",
+		`nxHTMLComponent("apps-ecommerce-sellers-create")`,
+		`nxHTMLComponent("apps-ecommerce-sellers-edit")`,
+		`nxHTMLComponent("apps-ecommerce-customers-create")`,
+		`nxHTMLComponent("apps-ecommerce-customers-edit")`,
+		`nxHTMLComponent("apps-ecommerce-shops-create")`,
+		`nxHTMLComponent("apps-ecommerce-shops-edit")`,
 	)
 }
 

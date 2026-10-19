@@ -664,9 +664,48 @@ templ listDeleteDialog(id, noun string) {
 }
 
 templ SellerForm(isCreate bool) {
-	<div { devmode.Attrs(ctx, "nexus/SellerForm")... }>
-		<div class="flex items-center justify-between"><h3 class="text-lg font-medium">Seller</h3></div>
-		<div class="card bg-base-100 shadow-sm mt-6"><div class="card-body">Seller form</div></div>
+	{{ title := "Edit Seller" }}
+	{{ crumb := "Edit" }}
+	{{ if isCreate { title = "Create Seller"; crumb = "Create" } }}
+	@nav.PageHeading(nav.PageHeadingProps{
+		Title:  title,
+		Size:   nav.PageHeadingSizeSM,
+		Layout: nav.PageHeadingLayoutSplit,
+		Breadcrumbs: []nav.BreadcrumbItem{
+			{Label: "Nexus", Href: "/dashboards/ecommerce"},
+			{Label: "Sellers", Href: "/apps/ecommerce/sellers"},
+			{Label: crumb},
+		},
+	})
+	<div class="mt-6">
+		<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
+				<div class="card-title text-base font-medium">Basic Information</div>
+				<div class="fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
+					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "name", Label: "Name", Placeholder: "Name"})
+					@form.FormField(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Placeholder: "Email"})
+					@form.FormField(form.FormFieldProps{Type: form.FieldTel, Name: "mobile", Label: "Mobile", Placeholder: "(098) 765 4321"})
+					@form.FormField(form.FormFieldProps{Type: form.FieldDate, Name: "DOB", Label: "DOB"})
+					<div class="flex items-center gap-3">
+						@form.ToggleInput(form.ToggleInputProps{Name: "verified", Class: "toggle toggle-sm", Attrs: templ.Attributes{"id": "verified"}})
+						<label class="label" for="verified">Verified</label>
+					</div>
+					<div class="flex items-center gap-3">
+						@form.RadioButton("apps-seller-gender", "male", "Male", true, "radio-sm")
+						@form.RadioButton("apps-seller-gender", "female", "Female", true, "radio-sm")
+					</div>
+				</div>
+			}
+			@entityAddressCard(false, "set-as-permanent", "Set as permanent")
+			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
+				<div class="card-title text-base font-medium">Upload Image</div>
+				<div class="mt-4">
+					@form.FileUpload(form.FileUploadProps{Name: "image"})
+				</div>
+			}
+			@entityPasswordCard(isCreate)
+		</div>
+		@entityFormActions("/apps/ecommerce/sellers", isCreate)
 	</div>
 }
 
@@ -765,9 +804,48 @@ templ customerRow(num, name, gender, email, mobile, sales, earning, date string,
 }
 
 templ CustomerForm(isCreate bool) {
-	<div { devmode.Attrs(ctx, "nexus/CustomerForm")... }>
-		<div class="flex items-center justify-between"><h3 class="text-lg font-medium">Customer</h3></div>
-		<div class="card bg-base-100 shadow-sm mt-6"><div class="card-body">Customer form</div></div>
+	{{ title := "Edit Customer" }}
+	{{ crumb := "Edit" }}
+	{{ if isCreate { title = "Create Customer"; crumb = "Create" } }}
+	@nav.PageHeading(nav.PageHeadingProps{
+		Title:  title,
+		Size:   nav.PageHeadingSizeSM,
+		Layout: nav.PageHeadingLayoutSplit,
+		Breadcrumbs: []nav.BreadcrumbItem{
+			{Label: "Nexus", Href: "/dashboards/ecommerce"},
+			{Label: "Customers", Href: "/apps/ecommerce/customers"},
+			{Label: crumb},
+		},
+	})
+	<div class="mt-6">
+		<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
+				<div class="card-title text-base font-medium">Basic Information</div>
+				<div class="fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
+					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "name", Label: "Name", Placeholder: "Name"})
+					@form.FormField(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Placeholder: "Email"})
+					@form.FormField(form.FormFieldProps{Type: form.FieldTel, Name: "mobile", Label: "Mobile", Placeholder: "(098) 765 4321"})
+					@form.FormField(form.FormFieldProps{Type: form.FieldDate, Name: "DOB", Label: "DOB"})
+					<div class="flex items-center gap-3">
+						@form.ToggleInput(form.ToggleInputProps{Name: "verified", Class: "toggle toggle-sm", Attrs: templ.Attributes{"id": "verified"}})
+						<label class="label" for="verified">Verified</label>
+					</div>
+					<div class="flex items-center gap-3">
+						@form.RadioButton("apps-seller-gender", "male", "Male", true, "radio-sm")
+						@form.RadioButton("apps-seller-gender", "female", "Female", true, "radio-sm")
+					</div>
+				</div>
+			}
+			@entityAddressCard(false, "set-as-permanent", "Set as permanent")
+			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
+				<div class="card-title text-base font-medium">Upload Image</div>
+				<div class="mt-4">
+					@form.FileUpload(form.FileUploadProps{Name: "image"})
+				</div>
+			}
+			@entityPasswordCard(isCreate)
+		</div>
+		@entityFormActions("/apps/ecommerce/customers", isCreate)
 	</div>
 }
 
@@ -866,8 +944,91 @@ templ shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earn
 }
 
 templ ShopForm(isCreate bool) {
-	<div { devmode.Attrs(ctx, "nexus/ShopForm")... }>
-		<div class="flex items-center justify-between"><h3 class="text-lg font-medium">Shop</h3></div>
-		<div class="card bg-base-100 shadow-sm mt-6"><div class="card-body">Shop form</div></div>
+	{{ title := "Edit Shop" }}
+	{{ crumb := "Edit" }}
+	{{ if isCreate { title = "Create Shop"; crumb = "Create" } }}
+	@nav.PageHeading(nav.PageHeadingProps{
+		Title:  title,
+		Size:   nav.PageHeadingSizeSM,
+		Layout: nav.PageHeadingLayoutSplit,
+		Breadcrumbs: []nav.BreadcrumbItem{
+			{Label: "Nexus", Href: "/dashboards/ecommerce"},
+			{Label: "Shops", Href: "/apps/ecommerce/shops"},
+			{Label: crumb},
+		},
+	})
+	<div class="mt-6">
+		<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+			@ui.CardRaw(ui.CardRawProps{Class: "shadow", Border: ui.CardBorderNone}) {
+				<div class="card-title text-base font-medium">Basic Information</div>
+				<div class="fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
+					@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "name", Label: "Name", Placeholder: "Name"})
+					@form.FormSelect("seller", "Seller", "", [][2]string{
+						{"Anthony S. Amaya", "Anthony S. Amaya"},
+						{"Crystal R. Taylor", "Crystal R. Taylor"},
+						{"Jeremy M. Simon", "Jeremy M. Simon"},
+						{"Jane B. Bush", "Jane B. Bush"},
+						{"Francis A. Bisson", "Francis A. Bisson"},
+						{"Lydia P. Barnett", "Lydia P. Barnett"},
+						{"John B. Lopez", "John B. Lopez"},
+					}, "Select seller", form.LabelAbove, "", "", nil)
+					@form.FormField(form.FormFieldProps{Type: form.FieldTel, Name: "mobile", Label: "Mobile", Placeholder: "(098) 765 4321"})
+					@form.FormField(form.FormFieldProps{Type: form.FieldEmail, Name: "email", Label: "Email", Placeholder: "Email"})
+					<div class="col-span-1 lg:col-span-2">
+						@form.FormField(form.FormFieldProps{Type: form.FieldTextarea, Name: "description", Label: "Description", Placeholder: "Description"})
+					</div>
+				</div>
+			}
+			@entityAddressCard(true, "set-as-active", "Set as active")
+		</div>
+		@entityFormActions("/apps/ecommerce/shops", isCreate)
 	</div>
 }
+
+templ entityAddressCard(hFit bool, checkboxName string, checkboxLabel string) {
+	{{ cardClass := "shadow" }}
+	{{ if hFit { cardClass = "h-fit shadow" } }}
+	@ui.CardRaw(ui.CardRawProps{Class: cardClass, Border: ui.CardBorderNone}) {
+		<div class="card-title text-base font-medium">Address</div>
+		<div class="fieldset mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
+			@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "street-address", Label: "Street Address", Placeholder: "Street Address"})
+			@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "city", Label: "City", Placeholder: "City"})
+			@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "state", Label: "State", Placeholder: "State"})
+			@form.FormField(form.FormFieldProps{Type: form.FieldText, Name: "postal-code", Label: "Postal Code", Placeholder: "564-879"})
+			@form.FormField(form.FormFieldProps{Type: form.FieldCheckbox, Name: checkboxName, Label: checkboxLabel})
+		</div>
+	}
+}
+
+templ entityPasswordCard(isCreate bool) {
+	@ui.CardRaw(ui.CardRawProps{Class: "h-fit shadow", Border: ui.CardBorderNone, BodyClass: "gap-0"}) {
+		<div class="card-title text-base font-medium">
+			if isCreate {
+				Create Password
+			} else {
+				Change Password
+			}
+		</div>
+		<div class="fieldset mt-2 grid grid-cols-1 gap-x-4 lg:grid-cols-2">
+			if isCreate {
+				@form.PasswordField(form.PasswordFieldProps{Name: "password", Label: "Password", Placeholder: "Password", ShowToggle: true, Icon: "lucide--key-round"})
+				@form.PasswordField(form.PasswordFieldProps{Name: "confirm-password", Label: "Confirm Password", Placeholder: "Confirm Password", ShowToggle: true, Icon: "lucide--key-round"})
+			} else {
+				@form.PasswordField(form.PasswordFieldProps{Name: "old-password", Label: "Old Password", Placeholder: "Password", ShowToggle: true, Icon: "lucide--key-round"})
+				@form.PasswordField(form.PasswordFieldProps{Name: "new-password", Label: "New Password", Placeholder: "Confirm Password", ShowToggle: true, Icon: "lucide--key-round"})
+			}
+		</div>
+	}
+}
+
+templ entityFormActions(cancelHref string, isCreate bool) {
+	<div class="mt-6 flex justify-end gap-3">
+		@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: cancelHref, Variant: ui.ButtonGhost, Size: ui.ButtonSM, Icon: "lucide--x"}){ Cancel }
+		if isCreate {
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: cancelHref, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--check"}){ Save }
+		} else {
+			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: cancelHref, Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Icon: "lucide--arrow-up-from-line"}){ Update }
+		}
+	</div>
+}
+

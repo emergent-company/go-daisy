@@ -190,11 +190,11 @@ func (h *Handler) handleSellersList(c echo.Context) error {
 }
 
 func (h *Handler) handleSellerCreate(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-ecommerce-sellers-create"))
+	return adminRender(c, SellerForm(true))
 }
 
 func (h *Handler) handleSellerEdit(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-ecommerce-sellers-edit"))
+	return adminRender(c, SellerForm(false))
 }
 
 func (h *Handler) handleCustomersList(c echo.Context) error {
@@ -202,11 +202,11 @@ func (h *Handler) handleCustomersList(c echo.Context) error {
 }
 
 func (h *Handler) handleCustomerCreate(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-ecommerce-customers-create"))
+	return adminRender(c, CustomerForm(true))
 }
 
 func (h *Handler) handleCustomerEdit(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-ecommerce-customers-edit"))
+	return adminRender(c, CustomerForm(false))
 }
 
 func (h *Handler) handleShopsList(c echo.Context) error {
@@ -214,11 +214,11 @@ func (h *Handler) handleShopsList(c echo.Context) error {
 }
 
 func (h *Handler) handleShopCreate(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-ecommerce-shops-create"))
+	return adminRender(c, ShopForm(true))
 }
 
 func (h *Handler) handleShopEdit(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-ecommerce-shops-edit"))
+	return adminRender(c, ShopForm(false))
 }
 
 func (h *Handler) handleGenAIHome(c echo.Context) error {

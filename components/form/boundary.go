@@ -335,13 +335,14 @@ func ValidatedFieldWithBoundary(labelText string, hintText string, inputName str
 }
 
 // PasswordFieldWithBoundary wraps PasswordField with a dev-mode component boundary annotation.
-// gallery:token label,required,showToggle
+// gallery:token label,required,showToggle,icon
 // gallery:hint label:default(Password)
 func PasswordFieldWithBoundary(props PasswordFieldProps) templ.Component {
 	return devmode.ComponentBoundary("PasswordField", PasswordField(props), map[string]any{
 		"label":      props.Label,
 		"required":   props.Required,
 		"showToggle": props.ShowToggle,
+		"icon":       props.Icon,
 	})
 }
 
