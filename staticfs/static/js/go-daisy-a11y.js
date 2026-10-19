@@ -262,6 +262,9 @@
         e.preventDefault();
         open(root, false);
         roving.last();
+      } else if (e.key === 'Escape' && isOpen(root)) {
+        e.preventDefault();
+        close(root, true);
       }
     });
 

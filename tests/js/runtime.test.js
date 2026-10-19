@@ -163,6 +163,43 @@ test('dropdown: clicking outside closes the open menu', () => {
   assert.equal(trigger.getAttribute('aria-expanded'), 'false');
 });
 
+test('dropdown: Escape on a focused trigger with an open menu closes it', () => {
+  const { window } = setup(DROPDOWN);
+  const doc = window.document;
+  const trigger = doc.getElementById('trigger');
+  const root = doc.getElementById('root');
+
+  // jsdom has no layout, so :focus-within never matches; drive the open state
+  // with the explicit marker (daisyUI reaches it via :focus-within in a browser).
+  root.setAttribute('data-gd-menu-open', '');
+  trigger.setAttribute('aria-expanded', 'true');
+  trigger.focus();
+
+  press(window, trigger, 'Escape');
+
+  assert.ok(!root.hasAttribute('data-gd-menu-open'), 'open marker removed');
+  assert.equal(trigger.getAttribute('aria-expanded'), 'false');
+  assert.ok(root.hasAttribute('data-gd-menu-closed'), 'closed marker set');
+  assert.equal(doc.activeElement, trigger, 'focus stays on the trigger');
+});
+
+test('dropdown: Escape on a trigger whose menu is closed is a no-op', () => {
+  const { window } = setup(DROPDOWN);
+  const doc = window.document;
+  const trigger = doc.getElementById('trigger');
+  const root = doc.getElementById('root');
+
+  // Fresh dropdown: nothing focused, no markers, aria-expanded starts false.
+  press(window, trigger, 'Escape');
+
+  assert.ok(!root.hasAttribute('data-gd-menu-closed'), 'no closed marker stamped');
+  assert.equal(trigger.getAttribute('aria-expanded'), 'false', 'aria-expanded unchanged');
+
+  press(window, trigger, 'ArrowDown');
+  assert.equal(trigger.getAttribute('aria-expanded'), 'true', 'ArrowDown still opens');
+  assert.ok(root.hasAttribute('data-gd-menu-open'), 'open marker set by ArrowDown');
+});
+
 test('context menu: opens at the pointer with the first item focused', () => {
   const { window } = setup(CONTEXT_MENU);
   const doc = window.document;
@@ -951,6 +988,36 @@ test('menubar: Escape closes and restores focus to the trigger', () => {
 
   assert.equal(doc.activeElement, file, 'focus returns to the trigger');
   assert.ok(!doc.getElementById('menu-file').hasAttribute('data-gd-menu-open'), 'menu is closed');
+});
+
+test('menubar: Escape on a focused open trigger closes it and keeps focus', () => {
+  const { window } = setup(MENUBAR);
+  const doc = window.document;
+  const file = doc.getElementById('file-trigger');
+  const menuFile = doc.getElementById('menu-file');
+
+  // Open without moving focus into the surface (the hover-follow path):
+  // focus the trigger, then gdMenu.open with toFirst=false leaves focus on it.
+  file.focus();
+  window.gdMenu.open(menuFile, false);
+
+  assert.ok(menuFile.hasAttribute('data-gd-menu-open'), 'menu is open');
+  assert.equal(doc.activeElement, file, 'focus stays on the trigger while open');
+
+  press(window, file, 'Escape');
+
+  assert.ok(!menuFile.hasAttribute('data-gd-menu-open'), 'menu closes');
+  assert.ok(menuFile.hasAttribute('data-gd-menu-closed'), 'closed marker set');
+  assert.equal(file.getAttribute('aria-expanded'), 'false', 'aria-expanded cleared');
+  assert.equal(doc.activeElement, file, 'focus stays on the trigger');
+
+  // The bar still behaves: arrows move between triggers, ArrowDown reopens.
+  press(window, file, 'ArrowRight');
+  assert.equal(doc.activeElement.id, 'edit-trigger', 'ArrowRight moves to the next trigger');
+  press(window, doc.activeElement, 'ArrowLeft');
+  assert.equal(doc.activeElement.id, 'file-trigger', 'ArrowLeft moves back');
+  press(window, file, 'ArrowDown');
+  assert.ok(menuFile.hasAttribute('data-gd-menu-open'), 'ArrowDown reopens the menu');
 });
 
 test('menubar: hovering another trigger while a menu is open follows', () => {
