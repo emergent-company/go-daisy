@@ -85,7 +85,10 @@
       err.textContent = '';
       err.hidden = true;
     }
-    item.removeAttribute('aria-invalid');
+    item.removeAttribute('aria-describedby');
+    enabledInputs(item).forEach(function (input) {
+      input.removeAttribute('aria-invalid');
+    });
   }
 
   function showError(item, message) {
@@ -94,9 +97,12 @@
       err.textContent = message;
       err.hidden = false;
     }
-    item.setAttribute('aria-invalid', 'true');
-    var first = enabledInputs(item)[0];
-    if (first) first.focus();
+    // aria-invalid is announced on the inputs themselves; a fieldset is not a
+    // widget and screen readers largely ignore the attribute there.
+    var inputs = enabledInputs(item);
+    inputs.forEach(function (input) { input.setAttribute('aria-invalid', 'true'); });
+    if (err && err.id) item.setAttribute('aria-describedby', err.id);
+    if (inputs[0]) inputs[0].focus();
   }
 
   function validate(item) {
@@ -145,7 +151,10 @@
 
     var skip = skipBtn(root);
     if (skip) {
-      if (idx < total - 1) skip.removeAttribute('hidden');
+      // A Required step offers no Skip: the two states would contradict each
+      // other, and a shortcut past a required answer is a data-integrity bug
+      // rather than a convenience.
+      if (idx < total - 1 && !isRequired(items[idx])) skip.removeAttribute('hidden');
       else skip.setAttribute('hidden', '');
     }
 
@@ -173,7 +182,13 @@
     items.forEach(function (item, i) { item.hidden = i !== index; });
     root.setAttribute(INDEX_MARKER, String(index));
     update(root);
-    if (!silent) dispatch(root, 'gd-questionnaire-step', { index: index });
+    if (!silent) {
+      // Move focus into the new step so keyboard users do not have to Tab past
+      // the nav row they just activated.
+      var first = enabledInputs(items[index])[0];
+      if (first) first.focus();
+      dispatch(root, 'gd-questionnaire-step', { index: index });
+    }
   }
 
   function goTo(root, index) { apply(root, index, false); }
@@ -198,6 +213,7 @@
     var items = itemsOf(root);
     var idx = currentIndex(root);
     if (idx >= items.length - 1) return;
+    if (isRequired(items[idx])) return;
     clearError(items[idx]);
     goTo(root, idx + 1);
   }
@@ -303,10 +319,13 @@
       return;
     }
 
-    dispatch(root, 'gd-questionnaire-submit', { index: idx });
+    // Validate first: a submit listener should never see an intent event for a
+    // form that is about to be blocked.
     if (!validate(item)) {
       event.preventDefault();
+      return;
     }
+    dispatch(root, 'gd-questionnaire-submit', { index: idx });
   }
 
   function init() {

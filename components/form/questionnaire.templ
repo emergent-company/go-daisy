@@ -104,6 +104,7 @@ type QuestionnaireDescriptionProps struct {
 
 // QuestionnaireErrorProps configures a step's inline error slot.
 type QuestionnaireErrorProps struct {
+	ID    string
 	Class string
 	Attrs templ.Attributes
 }
@@ -157,8 +158,9 @@ templ QuestionnaireScript() {
 //
 // Method dispatch: the native `method` attribute is "post" for "", "put",
 // "patch" and "delete", and "get" for "get". Non-post verbs that a browser
-// cannot express natively also emit a data-method attribute (documented) so a
-// host can read the intended verb; no HTMX wiring is invented here.
+// cannot express natively dispatch through htmx (hx-put / hx-patch / hx-delete)
+// while the form keeps method="post" for the no-JS fallback, which a server must
+// then treat as the intended verb.
 //
 // Name and Value must be id-safe: ids derive as <ID>-<Name> for a fieldset and
 // <ID>-<Name>-<Value> for each choice, with no sanitisation.
@@ -177,8 +179,12 @@ templ Questionnaire(props QuestionnaireProps) {
 		method={ formMethod }
 		data-gd-questionnaire
 		data-gd-questionnaire-mode={ string(props.Shortcuts) }
-		if method == "put" || method == "patch" || method == "delete" {
-			data-method={ method }
+		if method == "put" {
+			hx-put={ props.Action }
+		} else if method == "patch" {
+			hx-patch={ props.Action }
+		} else if method == "delete" {
+			hx-delete={ props.Action }
 		}
 		class={ "flex flex-col gap-4", props.Class }
 		{ devmode.Attrs(ctx, "form/Questionnaire")... }
@@ -221,7 +227,13 @@ templ QuestionnaireProgress(props QuestionnaireProgressProps) {
 		{ props.Attrs... }
 	>
 		<span data-gd-questionnaire-progress-text class="text-xs text-label" aria-live="polite">Question 1 of { strconv.Itoa(total) }</span>
-		<progress data-gd-questionnaire-progress-bar class="progress progress-primary h-1.5" value="1" max={ strconv.Itoa(total) }></progress>
+		<progress
+			data-gd-questionnaire-progress-bar
+			aria-label="Question progress"
+			class="progress progress-primary h-1.5"
+			value="1"
+			max={ strconv.Itoa(total) }
+		></progress>
 	</div>
 }
 
@@ -255,7 +267,7 @@ templ QuestionnaireItem(props QuestionnaireItemProps) {
 			Choices:   props.Choices,
 			Shortcuts: props.Shortcuts,
 		})
-		@QuestionnaireError(QuestionnaireErrorProps{})
+		@QuestionnaireError(QuestionnaireErrorProps{ID: props.ID + "-" + props.Name + "-error"})
 	</fieldset>
 }
 
@@ -334,10 +346,11 @@ templ QuestionnaireDescription(props QuestionnaireDescriptionProps) {
 }
 
 // QuestionnaireError renders the inline error slot. It starts hidden and empty;
-// the runtime fills the text and removes `hidden` when a required step fails
-// validation.
+// the runtime fills the text, removes `hidden`, and points the step's
+// aria-describedby at this element when a required step fails validation.
 templ QuestionnaireError(props QuestionnaireErrorProps) {
 	<p
+		id={ props.ID }
 		data-gd-questionnaire-error
 		role="alert"
 		class={ "text-xs text-error", props.Class }
@@ -363,7 +376,8 @@ templ QuestionnairePrevious(props QuestionnairePreviousProps) {
 }
 
 // QuestionnaireSkip renders the Skip button. Hidden server-side; revealed by the
-// runtime except on the last step, where it has no further step to skip to.
+// runtime on optional steps only - a Required step offers no Skip, because the
+// two would contradict each other.
 templ QuestionnaireSkip(props QuestionnaireSkipProps) {
 	<button
 		type="button"

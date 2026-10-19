@@ -110,18 +110,18 @@ func TestQuestionnaireContract(t *testing.T) {
 }
 
 // TestQuestionnaireMethodDispatch pins the native method attribute mapping and
-// the data-method emission for verbs a browser cannot express natively.
+// the htmx dispatch for verbs a browser cannot express natively.
 func TestQuestionnaireMethodDispatch(t *testing.T) {
 	cases := []struct {
 		method   string
-		wantAttr string // e.g. `method="post"`; "" when the form should not carry data-method
-		wantData string // the data-method value, "" when absent
+		wantAttr string // e.g. `method="post"`; always present
+		wantHX   string // e.g. `hx-put=`; "" when no htmx verb is emitted
 	}{
 		{"", `method="post"`, ""},
 		{"get", `method="get"`, ""},
-		{"put", `method="post"`, `data-method="put"`},
-		{"patch", `method="post"`, `data-method="patch"`},
-		{"delete", `method="post"`, `data-method="delete"`},
+		{"put", `method="post"`, "hx-put="},
+		{"patch", `method="post"`, "hx-patch="},
+		{"delete", `method="post"`, "hx-delete="},
 	}
 
 	for _, tc := range cases {
@@ -132,12 +132,15 @@ func TestQuestionnaireMethodDispatch(t *testing.T) {
 			if !strings.Contains(got, tc.wantAttr) {
 				t.Errorf("want form to contain %q, got %q", tc.wantAttr, got)
 			}
-			if tc.wantData == "" {
-				if strings.Contains(got, "data-method=") {
-					t.Errorf("want no data-method for method %q, got %q", tc.method, got)
+			if strings.Contains(got, "data-method=") {
+				t.Errorf("data-method is dead weight and must not be emitted, got %q", got)
+			}
+			if tc.wantHX == "" {
+				if strings.Contains(got, "hx-put=") || strings.Contains(got, "hx-patch=") || strings.Contains(got, "hx-delete=") {
+					t.Errorf("want no htmx verb for method %q, got %q", tc.method, got)
 				}
-			} else if !strings.Contains(got, tc.wantData) {
-				t.Errorf("want %q for method %q, got %q", tc.wantData, tc.method, got)
+			} else if !strings.Contains(got, tc.wantHX) {
+				t.Errorf("want %q for method %q, got %q", tc.wantHX, tc.method, got)
 			}
 		})
 	}
