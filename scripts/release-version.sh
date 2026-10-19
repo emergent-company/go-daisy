@@ -32,35 +32,6 @@ while [ $# -gt 0 ]; do
 done
 [ -n "$mode" ] || usage
 
-# Highest tag reachable from the given ref, optionally excluding one exact tag.
-latest_from() {
-  local ref="$1" exclude="${2:-}"
-  {
-    git tag --merged "$ref" --list 'v*' --sort=-v:refname \
-      | grep -E "$semver_re" \
-      | { if [ -n "$exclude" ]; then grep -vx "$exclude"; else cat; fi; }
-  } | head -n1 || true
-}
-
-if [ "$mode" = before ]; then
-  [[ "$value" =~ $semver_re ]] \
-    || { echo "invalid tag: $value (expected canonical vX.Y.Z)" >&2; exit 1; }
-  git rev-parse -q --verify "${value}^{commit}" >/dev/null \
-    || { echo "unknown tag: $value" >&2; exit 1; }
-  previous="$(latest_from "${value}^{commit}" "$value")"
-  [ -n "$previous" ] || { echo "no semver tag before ${value}" >&2; exit 1; }
-  printf '%s\n' "$previous"
-  exit 0
-fi
-
-latest="$(latest_from HEAD)"
-[ -n "$latest" ] || { echo "no semver tag reachable from HEAD" >&2; exit 1; }
-
-if [ "$mode" = current ]; then
-  printf '%s\n' "$latest"
-  exit 0
-fi
-
 # ver_gt A B: true when A is strictly newer than B. Same numeric comparison for
 # every caller, so tag selection and the "newer than" guard cannot disagree.
 ver_gt() {
@@ -73,6 +44,49 @@ ver_gt() {
   (( aj < bj )) && return 1
   (( ap > bp ))
 }
+
+# Highest semver tag reachable from the given ref.
+latest_from() {
+  git tag --merged "$1" --list 'v*' --sort=-v:refname \
+    | grep -E "$semver_re" | head -n1 || true
+}
+
+# Highest semver tag strictly older than the target and reachable from it.
+# Version order, not topology: this repo's v0.16.5 tag sits on an older commit
+# than v0.16.4, which is why the workflow prefers release order for backfill.
+latest_before() {
+  local ref="$1" target="$2" tag
+  while IFS= read -r tag; do
+    [ -n "$tag" ] || continue
+    [ "$tag" = "$target" ] && continue
+    if ver_gt "$target" "$tag"; then
+      printf '%s\n' "$tag"
+      return 0
+    fi
+  done < <(git tag --merged "$ref" --list 'v*' --sort=-v:refname | grep -E "$semver_re" || true)
+  return 1
+}
+
+if [ "$mode" = before ]; then
+  [[ "$value" =~ $semver_re ]] \
+    || { echo "invalid tag: $value (expected canonical vX.Y.Z)" >&2; exit 1; }
+  git rev-parse -q --verify "${value}^{commit}" >/dev/null \
+    || { echo "unknown tag: $value" >&2; exit 1; }
+  if ! previous="$(latest_before "${value}^{commit}" "$value")"; then
+    echo "no semver tag older than ${value} reachable from it" >&2
+    exit 1
+  fi
+  printf '%s\n' "$previous"
+  exit 0
+fi
+
+latest="$(latest_from HEAD)"
+[ -n "$latest" ] || { echo "no semver tag reachable from HEAD" >&2; exit 1; }
+
+if [ "$mode" = current ]; then
+  printf '%s\n' "$latest"
+  exit 0
+fi
 
 if [ "$mode" = tag ]; then
   [[ "$value" =~ $semver_re ]] \

@@ -345,18 +345,18 @@ gh workflow run release.yml -f tag=v0.17.0 -f confirm=backfill
 zeros) overrides it. The workflow:
 
 - runs only from `master`, with a clean tree and a HEAD equal to `origin/master`;
-- refuses an existing tag (for `release`) or a version that is not newer than the
-  current one;
+- refuses an existing tag unless `confirm=backfill`, and a version that is not
+  newer than the current one when tagging;
 - refuses a dispatch with no commits since the previous tag;
 - prints the grouped notes in the run summary for `dry-run`;
 - creates the annotated tag and the GitHub release for `release`. If release
   creation fails and the release is confirmed absent, it deletes the tag so the
   run can be retried; if it cannot confirm, it keeps the tag and asks for a
   human. It never deletes a release;
-- publishes only the release for `backfill`, using the last published release
-  reachable from the tag as the notes base (falling back to the newest earlier
-  tag). It refuses a tag that does not exist or a release that already exists,
-  and never creates or moves a tag.
+- publishes only the release for `backfill`, using the newest published release
+  reachable from the tag as the notes base (falling back to the highest older
+  tag reachable from it). It refuses a tag that does not exist or a release that
+  already exists, and never creates or moves a tag.
 
 It never deploys. Gallery deploys stay in `templ.components.infra`. A repository
 with no semver tag cannot release through the workflow; push `v0.1.0` once by

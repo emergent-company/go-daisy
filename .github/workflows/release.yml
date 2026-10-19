@@ -71,13 +71,20 @@ jobs:
               || { echo "::error::tag ${version} does not exist; push it first"; exit 1; }
             notes_head="$version"
             previous="$(scripts/release-version.sh --before "$version")"
-            # Prefer the last published release when it is reachable: tags can
-            # disagree with release order (v0.16.5 is not an ancestor of v0.16.4).
-            last_release="$(gh release list --repo "$GITHUB_REPOSITORY" --limit 1 \
-              --json tagName --jq '.[0].tagName // empty' 2>/dev/null || true)"
-            if [ -n "$last_release" ] && [ "$last_release" != "$version" ] \
-                && git merge-base --is-ancestor "$last_release" "$version"; then
-              previous="$last_release"
+            # Prefer the newest published release reachable from the tag:
+            # version order does not follow history here (v0.16.5 is a higher
+            # version on an older commit than v0.16.4).
+            if ! release_candidates="$(gh release list --repo "$GITHUB_REPOSITORY" \
+                --limit 100 --exclude-drafts --json tagName \
+                --jq '.[] | .tagName' 2>/dev/null)"; then
+              echo "::warning::could not list releases; using tag order for the notes base"
+              release_candidates=""
+            fi
+            # Candidates are one tag per line; tag names cannot contain spaces.
+            if base="$(scripts/release-base.sh "$version" $release_candidates)"; then
+              previous="$base"
+            elif [ -n "$release_candidates" ]; then
+              echo "::warning::no published release is reachable from ${version}; using tag order for the notes base"
             fi
           else
             if [ -n "$TAG" ]; then
