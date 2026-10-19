@@ -437,3 +437,9 @@ strong {
 [data-theme="nexus"] .menu .menu-title {
   color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
 }
+
+/* The reference zeroes the card body gap (`gap: calc(var(--spacing)*0)`) and
+ * relies on explicit margins inside demos; daisyUI keeps 0.5rem. */
+[data-theme="nexus"] .card .card-body {
+  gap: 0;
+}

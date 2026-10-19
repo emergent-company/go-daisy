@@ -40,6 +40,8 @@ const (
 
 // TableProps configures the appearance of a TableWithProps component.
 type TableProps struct {
+	// WrapperClass is appended to the scroll wrapper around the <table>.
+	WrapperClass string
 	// Size controls the DaisyUI size modifier: xs, sm, md, lg, xl or empty (default).
 	Size TableSize
 	// Density controls row density. DensityCompact emits data-table-density="compact";
@@ -100,7 +102,7 @@ templ Table() {
 // TableWithProps renders a DaisyUI table with a canonical wrapper.
 templ TableWithProps(props TableProps) {
 	if props.Bordered {
-		<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100" { devmode.Attrs(ctx, "table/TableWithProps")... } { props.Attrs... }>
+		<div class={ "overflow-x-auto rounded-box border border-base-content/5 bg-base-100", props.WrapperClass } { devmode.Attrs(ctx, "table/TableWithProps")... } { props.Attrs... }>
 			<table class={ tableClasses(props) }
 				if props.Density == DensityCompact {
 					data-table-density="compact"
@@ -110,7 +112,7 @@ templ TableWithProps(props TableProps) {
 			</table>
 		</div>
 	} else {
-		<div class="overflow-x-auto" { devmode.Attrs(ctx, "table/TableWithProps")... } { props.Attrs... }>
+		<div class={ "overflow-x-auto", props.WrapperClass } { devmode.Attrs(ctx, "table/TableWithProps")... } { props.Attrs... }>
 			<table class={ tableClasses(props) }
 				if props.Density == DensityCompact {
 					data-table-density="compact"

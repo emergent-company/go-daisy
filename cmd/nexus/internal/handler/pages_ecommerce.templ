@@ -18,7 +18,7 @@ templ ProductsList() {
 				Toolbar: productsListToolbar(),
 				Footer:  productsListFooter(),
 			}) {
-				@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
+				@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap", WrapperClass: "mt-4"}) {
 					@table.TableHead() {
 						@table.TableHeadRow() {
 							@table.TableSelectAll("Check all")
@@ -194,7 +194,7 @@ templ OrdersList() {
 				Toolbar: ordersListToolbar(),
 				Footer:  ordersListFooter(),
 			}) {
-				@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
+				@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap", WrapperClass: "mt-4"}) {
 					@table.TableHead() {
 						@table.TableHeadRow() {
 							@table.TableSelectAll("Check all")
@@ -620,7 +620,7 @@ templ SellersList() {
 			Toolbar: listToolbar("Search along sellers", "Search sellers", "Verification status", "Create seller link", "/apps/ecommerce/sellers/create", "New Seller"),
 			Footer:  listFooter(),
 		}) {
-			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
+			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap", WrapperClass: "mt-4"}) {
 				@table.TableHead() {
 					@table.TableHeadRow() {
 						@table.TableSelectAll("Check all")
@@ -857,7 +857,7 @@ templ CustomersList() {
 			Toolbar: listToolbar("Search along customers", "Search customers", "Verification", "Create customer link", "/apps/ecommerce/customers/create", "New Customer"),
 			Footer:  listFooter(),
 		}) {
-			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
+			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap", WrapperClass: "mt-4"}) {
 				@table.TableHead() {
 					@table.TableHeadRow() {
 						@table.TableSelectAll("Check all")
@@ -997,7 +997,7 @@ templ ShopsList() {
 			Toolbar: listToolbar("Search along shops", "Search shops", "Verification status", "Create shop link", "/apps/ecommerce/shops/create", "New Shop"),
 			Footer:  listFooter(),
 		}) {
-			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
+			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap", WrapperClass: "mt-4"}) {
 				@table.TableHead() {
 					@table.TableHeadRow() {
 						@table.TableSelectAll("Check all")

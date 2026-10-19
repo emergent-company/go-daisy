@@ -140,6 +140,19 @@ type ResponsiveBreakpoint struct {
 // ── Helpers ──────────────────────────────────────────────────────────────
 
 func chartHeight(s string) string { if s == "" { return "350" }; return s }
+
+// chartHeightStyle sizes the chart container. A raw Apex config carries its own
+// `chart.height`, so the container must not impose a second one — it grows to
+// the rendered canvas instead (this is what the Nexus reference does).
+func chartHeightStyle(props ChartProps) string {
+	if props.Height != "" {
+		return "height:" + props.Height + "px"
+	}
+	if props.RawConfigJSON != "" {
+		return "height:auto"
+	}
+	return "height:" + chartHeight("") + "px"
+}
 func chartWidth(s string) string  { if s == "" { return "100%" }; return s }
 
 func chartTypeToApex(t ChartType) string {
@@ -161,7 +174,7 @@ func chartTypeToApex(t ChartType) string {
 templ Chart(props ChartProps) {
 	<div
 		id={ props.ID }
-		style={ "width:" + chartWidth(props.Width) + ";height:" + chartHeight(props.Height) + "px" }
+		style={ "width:" + chartWidth(props.Width) + ";" + chartHeightStyle(props) }
 		data-chart
 		data-options={ chartOptions(props) }
 		{ devmode.Attrs(ctx, "ui/Chart")... }
