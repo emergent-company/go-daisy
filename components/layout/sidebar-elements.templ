@@ -39,13 +39,35 @@ templ SidebarMenuItem(label string, href string, icon string, active bool) {
 	</a>
 }
 
-templ SidebarMenuItemNexus(label string, href string, icon string, active bool) {
-	<a class={ "sidebar-menu-item", templ.KV("active", active) } href={ templ.SafeURL(href) } { devmode.Attrs(ctx, "layout/SidebarMenuItemNexus")... }>
-		if icon != "" {
-			<span class={ "iconify size-4 " + icon }></span>
+// SidebarMenuItemNexusProps configures SidebarMenuItemNexusWithProps.
+type SidebarMenuItemNexusProps struct {
+	Label  string
+	Href   string
+	Icon   string
+	Active bool
+	Badge  string // optional pill beside the label (e.g. "New")
+}
+
+// SidebarMenuItemNexusWithProps renders a Nexus sidebar link with an optional
+// badge, matching the reference's marked items (Fieldset, Table, …).
+templ SidebarMenuItemNexusWithProps(props SidebarMenuItemNexusProps) {
+	<a class={ "sidebar-menu-item", templ.KV("active", props.Active) } href={ templ.SafeURL(props.Href) } { devmode.Attrs(ctx, "layout/SidebarMenuItemNexus")... }>
+		if props.Icon != "" {
+			<span class={ "iconify size-4 " + props.Icon }></span>
 		}
-		{ label }
+		if props.Badge != "" {
+			<span class="grow">{ props.Label }</span>
+			<div class="inline-flex gap-2">
+				<div class="border-primary/20 bg-primary/10 text-primary rounded-box border px-1.5 text-[12px]">{ props.Badge }</div>
+			</div>
+		} else {
+			{ props.Label }
+		}
 	</a>
+}
+
+templ SidebarMenuItemNexus(label string, href string, icon string, active bool) {
+	@SidebarMenuItemNexusWithProps(SidebarMenuItemNexusProps{Label: label, Href: href, Icon: icon, Active: active})
 }
 
 templ SidebarMenuItemWithExtra(label string, href string, icon string, active bool) {

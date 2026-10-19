@@ -85,9 +85,12 @@ func (h *Handler) handleUICharts(c echo.Context) error {
 
 func (h *Handler) handleUIComponentDetail(c echo.Context) error {
 	name := c.Param("name")
-	// Pages that already match NX 100% with GD content
+	// Pages ported to library components with a faithful card grid.
 	switch name {
-	case "alert", "avatar", "badge", "button":
+	case "accordion", "alert", "avatar", "badge", "breadcrumb", "button",
+		"countdown", "drawer", "dropdown", "indicator", "loading", "menu",
+		"modal", "pagination", "progress", "step", "tab", "table", "timeline",
+		"toast", "tooltip":
 		return adminRender(c, UIComponentDetailPage(name))
 	}
 	return adminRender(c, nxHTMLComponent("ui-components-"+name))
@@ -96,7 +99,8 @@ func (h *Handler) handleUIComponentDetail(c echo.Context) error {
 func (h *Handler) handleUIFormDetail(c echo.Context) error {
 	name := c.Param("name")
 	switch name {
-	case "checkbox", "input", "toggle", "select":
+	case "checkbox", "fieldset", "file-input", "input", "label", "radio",
+		"range", "rating", "select", "textarea", "toggle", "validator":
 		return adminRender(c, UIFormDetailPage(name))
 	}
 	return adminRender(c, nxHTMLComponent("ui-forms-"+name))
@@ -104,6 +108,11 @@ func (h *Handler) handleUIFormDetail(c echo.Context) error {
 
 func (h *Handler) handleUIChartDetail(c echo.Context) error {
 	name := c.Param("name")
+	// Apex chart showcase pages ported to the library ui.Chart component.
+	switch name {
+	case "area", "bar", "column", "line", "pie":
+		return adminRender(c, UIChartDetailPage(name))
+	}
 	return adminRender(c, nxHTMLComponent("ui-charts-apex-"+name))
 }
 

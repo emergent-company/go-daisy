@@ -285,7 +285,7 @@ func ProductsList() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap", WrapperClass: "mt-4"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -1098,7 +1098,7 @@ func OrdersList() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var34), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap", WrapperClass: "mt-4"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var34), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -3299,7 +3299,7 @@ func SellersList() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var117), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap", WrapperClass: "mt-4"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var117), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -4531,7 +4531,7 @@ func CustomersList() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var166), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap", WrapperClass: "mt-4"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var166), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -5357,7 +5357,7 @@ func ShopsList() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var194), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap", WrapperClass: "mt-4"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var194), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

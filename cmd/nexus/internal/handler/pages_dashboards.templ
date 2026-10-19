@@ -113,10 +113,11 @@ templ EcommerceDashboard() {
 			</div>
 			<div class="xl:col-span-3 2xl:col-span-4">
 				@ui.ChartCard(ui.ChartCardProps{
-					Title:   "Global Sales (%)",
-					Icon:    "lucide--globe-2",
-					Actions: globalSalesOverviewButton(),
-					Chart:   ui.Chart(ui.ChartProps{ID: "global-sales-chart", Type: ui.ChartBar, Horizontal: true, RawConfigJSON: nxGlobalSalesConfig}),
+					Title:     "Global Sales (%)",
+					Icon:      "lucide--globe-2",
+					Actions:   globalSalesOverviewButton(),
+					BodyClass: "me-5 -mt-5 mb-1",
+					Chart:     ui.Chart(ui.ChartProps{ID: "global-sales-chart", Type: ui.ChartBar, Horizontal: true, RawConfigJSON: nxGlobalSalesConfig}),
 				})
 			</div>
 		</div>

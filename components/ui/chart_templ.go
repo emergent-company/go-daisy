@@ -153,6 +153,19 @@ func chartHeight(s string) string {
 	}
 	return s
 }
+
+// chartHeightStyle sizes the chart container. A raw Apex config carries its own
+// `chart.height`, so the container must not impose a second one — it grows to
+// the rendered canvas instead (this is what the Nexus reference does).
+func chartHeightStyle(props ChartProps) string {
+	if props.Height != "" {
+		return "height:" + props.Height + "px"
+	}
+	if props.RawConfigJSON != "" {
+		return "height:auto"
+	}
+	return "height:" + chartHeight("") + "px"
+}
 func chartWidth(s string) string {
 	if s == "" {
 		return "100%"
@@ -204,7 +217,7 @@ func Chart(props ChartProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chart.templ`, Line: 163, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chart.templ`, Line: 176, Col: 15}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -215,9 +228,9 @@ func Chart(props ChartProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues("width:" + chartWidth(props.Width) + ";height:" + chartHeight(props.Height) + "px")
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues("width:" + chartWidth(props.Width) + ";" + chartHeightStyle(props))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chart.templ`, Line: 164, Col: 92}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chart.templ`, Line: 177, Col: 76}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -230,7 +243,7 @@ func Chart(props ChartProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(chartOptions(props))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chart.templ`, Line: 166, Col: 36}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/ui/chart.templ`, Line: 179, Col: 36}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 		if templ_7745c5c3_Err != nil {

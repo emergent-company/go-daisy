@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
@@ -159,7 +160,7 @@ templ UIComponentDetailPage(name string) {
 
 templ UIFormDetailPage(name string) {
 	{{ title := capFirst(name) }}
-	if name == "select" {
+	if name == "select" || name == "file-input" {
 		{{ title = "File Input" }}
 	}
 	<div class="flex items-center justify-between" { devmode.Attrs(ctx, "nexus/UIFormDetail")... }>
@@ -173,33 +174,199 @@ templ UIFormDetailPage(name string) {
 
 
 templ UIChartDetailPage(name string) {
+	{{ title := capFirst(name) }}
 	<div class="flex items-center justify-between" { devmode.Attrs(ctx, "nexus/UIChartDetail")... }>
-		<h3 class="text-lg font-medium">{ capFirst(name) } Chart</h3>
+		<h3 class="text-lg font-medium">{ title } Charts</h3>
 		<div class="breadcrumbs hidden p-0 text-sm sm:inline">
-			<ul><li><a href="/dashboards/ecommerce">Nexus</a></li><li><a href="/ui/charts">Charts</a></li><li class="opacity-80">{ capFirst(name) }</li></ul>
+			<ul><li><a href="/dashboards/ecommerce">Nexus</a></li><li>Apex Charts</li><li class="opacity-80">{ title }</li></ul>
 		</div>
 	</div>
-	<div class="mt-6">
-		<div class="card bg-base-100 shadow-sm">
-			<div class="card-body">
-				<h4 class="text-base font-semibold">{ name } Chart</h4>
-				<p class="text-sm text-base-content/60 mt-1">go-daisy chart type.</p>
-				<div class="divider"></div>
-				<div class="bg-base-200 rounded-box p-4 flex items-center justify-center" style="min-height: 300px">
-					<span class="text-base-content/40">Chart demo: { name }</span>
+	@renderChartDemo(name)
+}
+
+templ renderChartDemo(name string) {
+	switch name {
+	case "area":
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Spline Area</div>
+					@ui.Chart(ui.ChartProps{ID: "spline-area-chart", Type: ui.ChartArea, Height: "380", RawConfigJSON: nxSplineAreaConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Negative Value Area</div>
+					@ui.Chart(ui.ChartProps{ID: "negative-value-area-chart", Type: ui.ChartArea, Height: "380", RawConfigJSON: nxNegativeValueAreaConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Irregular Time Series Area</div>
+					@ui.Chart(ui.ChartProps{ID: "irregular-time-area-chart", Type: ui.ChartArea, Height: "380", RawConfigJSON: nxIrregularTimeAreaConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Selection Area</div>
+					@ui.Chart(ui.ChartProps{ID: "selection-result-area-chart", Type: ui.ChartArea, Height: "190", RawConfigJSON: nxSelectionResultAreaConfig})
+					@ui.Chart(ui.ChartProps{ID: "selection-target-area-chart", Type: ui.ChartArea, Height: "190", RawConfigJSON: nxSelectionTargetAreaConfig})
 				</div>
 			</div>
 		</div>
-	</div>
+	case "bar":
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Bar With Markers</div>
+					@ui.Chart(ui.ChartProps{ID: "marker-with-bar-chart", Type: ui.ChartBar, Height: "380", RawConfigJSON: nxMarkerBarConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Grouped Bar</div>
+					@ui.Chart(ui.ChartProps{ID: "grouped-bar-chart", Type: ui.ChartBar, Height: "380", RawConfigJSON: nxGroupedBarConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Stacked Bar</div>
+					@ui.Chart(ui.ChartProps{ID: "stacked-bar-chart", Type: ui.ChartBar, Height: "380", RawConfigJSON: nxStackedBarConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Negative Value</div>
+					@ui.Chart(ui.ChartProps{ID: "negative-value-bar-chart", Type: ui.ChartBar, Height: "380", RawConfigJSON: nxNegativeValueBarConfig})
+				</div>
+			</div>
+		</div>
+	case "column":
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Stacked Column</div>
+					@ui.Chart(ui.ChartProps{ID: "stacked-column-chart", Type: ui.ChartColumn, Height: "380", RawConfigJSON: nxStackedColumnConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Dumbbell Column</div>
+					@ui.Chart(ui.ChartProps{ID: "dumbbell-column-chart", Type: ui.ChartRangeBar, Height: "380", RawConfigJSON: nxDumbbellColumnConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Range Column</div>
+					@ui.Chart(ui.ChartProps{ID: "range-column-chart", Type: ui.ChartRangeBar, Height: "380", RawConfigJSON: nxRangeColumnConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Negative Values Column</div>
+					@ui.Chart(ui.ChartProps{ID: "negative-value-column-chart", Type: ui.ChartColumn, Height: "350", RawConfigJSON: nxNegativeValueColumnConfig})
+				</div>
+			</div>
+		</div>
+	case "line":
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Label Line</div>
+					@ui.Chart(ui.ChartProps{ID: "label-line-chart", Type: ui.ChartLine, Height: "380", RawConfigJSON: nxLabelLineConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Step Line</div>
+					@ui.Chart(ui.ChartProps{ID: "step-line-chart", Type: ui.ChartLine, Height: "380", RawConfigJSON: nxStepLineConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Syncing Line</div>
+					@ui.Chart(ui.ChartProps{ID: "syncing-order-line-chart", Type: ui.ChartLine, Height: "120", RawConfigJSON: nxSyncingOrderLineConfig})
+					@ui.Chart(ui.ChartProps{ID: "syncing-revenue-line-chart", Type: ui.ChartLine, Height: "120", RawConfigJSON: nxSyncingRevenueLineConfig})
+					@ui.Chart(ui.ChartProps{ID: "syncing-average-line-chart", Type: ui.ChartLine, Height: "120", RawConfigJSON: nxSyncingAverageLineConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Annotation Line</div>
+					@ui.Chart(ui.ChartProps{ID: "annotation-line-chart", Type: ui.ChartLine, Height: "380", RawConfigJSON: nxAnnotationLineConfig})
+				</div>
+			</div>
+		</div>
+	case "pie":
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Simple Pie</div>
+					@ui.Chart(ui.ChartProps{ID: "simple-pie-chart", Type: ui.ChartPie, Height: "380", RawConfigJSON: nxSimplePieConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Monochrome Pie</div>
+					@ui.Chart(ui.ChartProps{ID: "monochrome-pie-chart", Type: ui.ChartPie, Height: "380", RawConfigJSON: nxMonochromePieConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Gradient Donut</div>
+					@ui.Chart(ui.ChartProps{ID: "gradient-donut-chart", Type: ui.ChartDonut, Height: "380", RawConfigJSON: nxGradientDonutConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Pattern Donut</div>
+					@ui.Chart(ui.ChartProps{ID: "pattern-donut-chart", Type: ui.ChartDonut, Height: "380", RawConfigJSON: nxPatternDonutConfig})
+				</div>
+			</div>
+		</div>
+	}
 }
 
 
 templ renderComponentDemo(name string) {
 	switch name {
 	case "accordion":
-		<div class="w-full">
-			<div class="collapse collapse-arrow border border-line-strong bg-base-100 rounded-box"><input type="checkbox"/><div class="collapse-title font-medium">Click to expand</div><div class="collapse-content"><p>TABINDEX / ESC to close</p></div></div>
-			<div class="collapse collapse-plus border border-line-strong bg-base-100 rounded-box mt-1"><input type="checkbox"/><div class="collapse-title font-medium">Plus icon</div><div class="collapse-content"><p>Uses collapse-plus class</p></div></div>
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default (Single)</div>
+				<div class="mt-4 space-y-1">
+					<div class="bg-base-200 rounded-box collapse"><input aria-label="Collapse trigger" type="radio" name="accordion-default" checked/><div class="collapse-title text-lg font-medium">Accordion #1</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+					<div class="bg-base-200 rounded-box collapse"><input aria-label="Collapse trigger" type="radio" name="accordion-default"/><div class="collapse-title text-lg font-medium">Accordion #2</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+					<div class="bg-base-200 rounded-box collapse"><input aria-label="Collapse trigger" type="radio" name="accordion-default"/><div class="collapse-title text-lg font-medium">Accordion #3</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Multiple</div>
+				<div class="mt-4 space-y-1">
+					<div class="bg-base-200 rounded-box collapse"><input aria-label="Collapse trigger" type="checkbox" name="accordion-multiple" checked/><div class="collapse-title text-lg font-medium">Accordion #1</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+					<div class="bg-base-200 rounded-box collapse"><input aria-label="Collapse trigger" type="checkbox" name="accordion-multiple"/><div class="collapse-title text-lg font-medium">Accordion #2</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+					<div class="bg-base-200 rounded-box collapse"><input aria-label="Collapse trigger" type="checkbox" name="accordion-multiple"/><div class="collapse-title text-lg font-medium">Accordion #3</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Icon: Arrow</div>
+				<div class="mt-4 space-y-1">
+					<div class="bg-base-200 collapse-arrow rounded-box collapse"><input aria-label="Collapse trigger" type="radio" name="accordion-arrow" checked/><div class="collapse-title text-lg font-medium">Accordion #1</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+					<div class="bg-base-200 collapse-arrow rounded-box collapse"><input aria-label="Collapse trigger" type="radio" name="accordion-arrow"/><div class="collapse-title text-lg font-medium">Accordion #2</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+					<div class="bg-base-200 collapse-arrow rounded-box collapse"><input aria-label="Collapse trigger" type="radio" name="accordion-arrow"/><div class="collapse-title text-lg font-medium">Accordion #3</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Icon: Plus/Minus</div>
+				<div class="mt-4 space-y-1">
+					<div class="bg-base-200 collapse-plus rounded-box collapse"><input aria-label="Collapse trigger" type="radio" name="accordion-plus" checked/><div class="collapse-title text-lg font-medium">Accordion #1</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+					<div class="bg-base-200 collapse-plus rounded-box collapse"><input aria-label="Collapse trigger" type="radio" name="accordion-plus"/><div class="collapse-title text-lg font-medium">Accordion #2</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+					<div class="bg-base-200 collapse-plus rounded-box collapse"><input aria-label="Collapse trigger" type="radio" name="accordion-plus"/><div class="collapse-title text-lg font-medium">Accordion #3</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Join</div>
+				<div class="join join-vertical mt-4">
+					<div class="join-item border-base-300 collapse border"><input aria-label="Collapse trigger" type="radio" name="accordion-join" checked/><div class="collapse-title text-lg font-medium">Accordion #1</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+					<div class="join-item border-base-300 collapse border"><input aria-label="Collapse trigger" type="radio" name="accordion-join"/><div class="collapse-title text-lg font-medium">Accordion #2</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+					<div class="join-item border-base-300 collapse border"><input aria-label="Collapse trigger" type="radio" name="accordion-join"/><div class="collapse-title text-lg font-medium">Accordion #3</div><div class="collapse-content">Here are some hidden content, which is now public</div></div>
+				</div>
+			</div></div>
 		</div>
 	case "alert":
 		<div class="mt-6 grid gap-6 lg:grid-cols-2">
@@ -207,20 +374,40 @@ templ renderComponentDemo(name string) {
 			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Button</div><div class="mt-4"><div class="alert" role="alert"><span class="iconify lucide--cookie text-info size-5"></span><span>12 unread messages. Tap to see.</span><div class="space-x-2"><button class="btn btn-sm">Deny</button><button class="btn btn-sm btn-primary">Accept</button></div></div></div></div></div>
 			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Description</div><div class="mt-4"><div class="alert" role="alert"><span class="iconify lucide--message-square-dashed size-5"></span><div><h3 class="font-medium">New message!</h3><div class="text-base-content/70 text-xs">You have 1 unread message</div></div><button class="btn btn-sm">See</button></div></div></div></div>
 			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Confirmation</div><div class="mt-4"><div class="alert" role="alert"><span class="iconify lucide--trash-2 text-error size-5"></span><div><h3 class="font-bold">12.7 MB Saved</h3><div class="text-xs">Some file removed</div></div><div class="space-x-2"><button class="btn btn-sm">Dismiss</button><button class="btn btn-sm btn-primary">Restore</button></div></div></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Solid</div><div class="mt-4 space-y-3"><div class="alert alert-success" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-info" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-warning" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-error" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Soft</div><div class="mt-4 space-y-3"><div class="alert alert-success alert-soft" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-soft alert-info" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-soft alert-warning" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-error alert-soft" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Outline</div><div class="mt-4 space-y-3"><div class="alert alert-success alert-outline" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-outline alert-info" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-outline alert-warning" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-outline alert-error" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Dashed</div><div class="mt-4 space-y-3"><div class="alert alert-success alert-dash" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-dash alert-info" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-dash alert-warning" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div><div class="alert alert-dash alert-error" role="alert"><span class="iconify lucide--info size-5"></span><span>New software update available.</span></div></div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Solid</div><div class="mt-4 space-y-3">
+				@ui.Alert(ui.AlertProps{Type: ui.AlertSuccess, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertInfo, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertWarning, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertError, Icon: "lucide--info", Message: "New software update available."})
+			</div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Soft</div><div class="mt-4 space-y-3">
+				@ui.Alert(ui.AlertProps{Type: ui.AlertSuccess, Style: ui.AlertStyleSoft, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertInfo, Style: ui.AlertStyleSoft, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertWarning, Style: ui.AlertStyleSoft, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertError, Style: ui.AlertStyleSoft, Icon: "lucide--info", Message: "New software update available."})
+			</div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Outline</div><div class="mt-4 space-y-3">
+				@ui.Alert(ui.AlertProps{Type: ui.AlertSuccess, Style: ui.AlertStyleOutline, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertInfo, Style: ui.AlertStyleOutline, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertWarning, Style: ui.AlertStyleOutline, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertError, Style: ui.AlertStyleOutline, Icon: "lucide--info", Message: "New software update available."})
+			</div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Dashed</div><div class="mt-4 space-y-3">
+				@ui.Alert(ui.AlertProps{Type: ui.AlertSuccess, Style: ui.AlertStyleDash, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertInfo, Style: ui.AlertStyleDash, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertWarning, Style: ui.AlertStyleDash, Icon: "lucide--info", Message: "New software update available."})
+				@ui.Alert(ui.AlertProps{Type: ui.AlertError, Style: ui.AlertStyleDash, Icon: "lucide--info", Message: "New software update available."})
+			</div></div></div>
 		</div>
 	case "avatar":
 		<div class="mt-6 grid gap-6 lg:grid-cols-2">
 			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Default</div><div class="mt-4"><div class="avatar"><div class="bg-base-200 rounded-box w-20"><img alt="Avatar" src="/images/avatars/1.png"/></div></div></div></div></div>
 			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Rounded</div><div class="mt-4 flex flex-wrap items-center gap-4"><div class="avatar"><div class="bg-base-200 w-20 rounded-xl"><img alt="Avatar" src="/images/avatars/1.png"/></div></div><div class="avatar"><div class="bg-base-200 w-20 rounded-full"><img alt="Avatar" src="/images/avatars/2.png"/></div></div></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-wrap items-center gap-4"><div class="avatar"><div class="bg-base-200 rounded-box w-24"><img alt="Avatar" src="/images/avatars/4.png"/></div></div><div class="avatar"><div class="bg-base-200 rounded-box w-20"><img alt="Avatar" src="/images/avatars/2.png"/></div></div><div class="avatar"><div class="bg-base-200 rounded-box w-16"><img alt="Avatar" src="/images/avatars/3.png"/></div></div><div class="avatar"><div class="bg-base-200 rounded-box w-12"><img alt="Avatar" src="/images/avatars/1.png"/></div></div></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Mask</div><div class="mt-4 flex flex-wrap items-center gap-4"><div class="avatar"><div class="bg-base-200 mask mask-squircle w-20"><img alt="Avatar" src="/images/avatars/4.png"/></div></div><div class="avatar"><div class="bg-base-200 mask mask-hexagon w-20"><img alt="Avatar" src="/images/avatars/2.png"/></div></div><div class="avatar"><div class="bg-base-200 mask mask-hexagon-2 w-20"><img alt="Avatar" src="/images/avatars/3.png"/></div></div><div class="avatar"><div class="bg-base-200 mask mask-diamond w-20"><img alt="Avatar" src="/images/avatars/4.png"/></div></div></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Group</div><div class="mt-4"><div class="avatar-group -space-x-5"><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/1.png"/></div></div><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/2.png"/></div></div><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/3.png"/></div></div><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/4.png"/></div></div></div></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Counter</div><div class="mt-4"><div class="avatar-group -space-x-5"><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/1.png"/></div></div><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/2.png"/></div></div><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/3.png"/></div></div><div class="avatar avatar-placeholder"><div class="bg-base-300 w-12 rounded-full">+99</div></div></div></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Ring</div><div class="mt-4"><div class="flex flex-wrap items-center gap-4"><div class="avatar"><div class="bg-primary/25 ring-primary ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/4.png"/></div></div><div class="avatar"><div class="bg-secondary/25 ring-secondary ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/1.png"/></div></div><div class="avatar"><div class="bg-accent/25 ring-accent ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/2.png"/></div></div><div class="avatar"><div class="bg-success/25 ring-success ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/3.png"/></div></div><div class="avatar"><div class="bg-info/25 ring-info ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/4.png"/></div></div><div class="avatar"><div class="bg-warning/25 ring-warning ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/1.png"/></div></div><div class="avatar"><div class="bg-error/25 ring-error ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/2.png"/></div></div><div class="avatar"><div class="bg-neutral/25 ring-neutral ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/3.png"/></div></div></div></div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-wrap items-center gap-4"><div class="avatar"><div class="bg-base-200 rounded-box w-24"><img alt="Avatar" src="/images/avatars/4.png"/></div></div><div class="avatar"><div class="bg-base-200 rounded-box w-20"><img alt="Avatar" src="/images/avatars/3.png"/></div></div><div class="avatar"><div class="bg-base-200 rounded-box w-16"><img alt="Avatar" src="/images/avatars/2.png"/></div></div><div class="avatar"><div class="bg-base-200 rounded-box w-12"><img alt="Avatar" src="/images/avatars/1.png"/></div></div></div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Mask</div><div class="mt-4 flex flex-wrap items-center gap-4"><div class="avatar"><div class="bg-base-200 mask mask-squircle w-20"><img alt="Avatar" src="/images/avatars/4.png"/></div></div><div class="avatar"><div class="bg-base-200 mask mask-hexagon w-20"><img alt="Avatar" src="/images/avatars/5.png"/></div></div><div class="avatar"><div class="bg-base-200 mask mask-hexagon-2 w-20"><img alt="Avatar" src="/images/avatars/7.png"/></div></div><div class="avatar"><div class="bg-base-200 mask mask-diamond w-20"><img alt="Avatar" src="/images/avatars/6.png"/></div></div></div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Group</div><div class="mt-4"><div class="avatar-group -space-x-5"><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/4.png"/></div></div><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/5.png"/></div></div><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/7.png"/></div></div><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/8.png"/></div></div></div></div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Counter</div><div class="mt-4"><div class="avatar-group -space-x-5"><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/4.png"/></div></div><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/5.png"/></div></div><div class="avatar"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/7.png"/></div></div><div class="avatar avatar-placeholder"><div class="bg-base-300 w-12 rounded-full">+99</div></div></div></div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Ring</div><div class="mt-4"><div class="flex flex-wrap items-center gap-4"><div class="avatar"><div class="bg-primary/25 ring-primary ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/1.png"/></div></div><div class="avatar"><div class="bg-secondary/25 ring-secondary ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/2.png"/></div></div><div class="avatar"><div class="bg-accent/25 ring-accent ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/3.png"/></div></div><div class="avatar"><div class="bg-success/25 ring-success ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/4.png"/></div></div><div class="avatar"><div class="bg-info/25 ring-info ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/5.png"/></div></div><div class="avatar"><div class="bg-warning/25 ring-warning ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/6.png"/></div></div><div class="avatar"><div class="bg-error/25 ring-error ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/7.png"/></div></div><div class="avatar"><div class="bg-neutral/25 ring-neutral ring-offset-base-100 w-12 rounded-full ring ring-offset-2"><img alt="Avatar" src="/images/avatars/8.png"/></div></div></div></div></div></div>
 			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Presence</div><div class="mt-4 flex flex-wrap items-center gap-4"><div class="avatar avatar-online"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/1.png"/></div></div><div class="avatar avatar-offline"><div class="bg-base-200 w-12 rounded-full"><img alt="Avatar" src="/images/avatars/2.png"/></div></div></div></div></div>
 			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Placeholder</div><div class="mt-4"><div class="flex flex-wrap items-center gap-4"><div class="avatar avatar-placeholder"><div class="bg-primary text-primary-content ring-primary ring-offset-base-100 w-12 rounded-full ring ring-offset-2">N</div></div><div class="avatar avatar-placeholder"><div class="bg-secondary text-secondary-content ring-secondary ring-offset-base-100 w-12 rounded-full ring ring-offset-2">E</div></div><div class="avatar avatar-placeholder"><div class="bg-success text-success-content ring-success ring-offset-base-100 w-12 rounded-full ring ring-offset-2">X</div></div><div class="avatar avatar-placeholder"><div class="bg-warning text-warning-content ring-warning ring-offset-base-100 w-12 rounded-full ring ring-offset-2">U</div></div><div class="avatar avatar-placeholder"><div class="bg-error text-error-content ring-error ring-offset-base-100 w-12 rounded-full ring ring-offset-2">S</div></div></div></div></div></div>
 		</div>
@@ -232,24 +419,81 @@ templ renderComponentDemo(name string) {
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Soft</div><div class="mt-4 flex flex-wrap gap-2"><div class="badge badge-soft badge-primary">Primary</div><div class="badge badge-soft badge-secondary">Secondary</div><div class="badge badge-soft badge-accent">Accent</div><div class="badge badge-soft badge-success">Success</div><div class="badge badge-soft badge-info">Info</div><div class="badge badge-soft badge-warning">Warning</div><div class="badge badge-soft badge-error">Error</div><div class="badge badge-soft badge-neutral">Neutral</div></div></div></div>
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Outline</div><div class="mt-4 flex flex-wrap gap-2"><div class="badge badge-outline badge-primary">Primary</div><div class="badge badge-outline badge-secondary">Secondary</div><div class="badge badge-outline badge-accent">Accent</div><div class="badge badge-outline badge-success">Success</div><div class="badge badge-outline badge-info">Info</div><div class="badge badge-outline badge-warning">Warning</div><div class="badge badge-outline badge-error">Error</div><div class="badge badge-outline badge-neutral">Neutral</div></div></div></div>
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Dash</div><div class="mt-4 flex flex-wrap gap-2"><div class="badge badge-dash badge-primary">Primary</div><div class="badge badge-dash badge-secondary">Secondary</div><div class="badge badge-dash badge-accent">Accent</div><div class="badge badge-dash badge-success">Success</div><div class="badge badge-dash badge-info">Info</div><div class="badge badge-dash badge-warning">Warning</div><div class="badge badge-dash badge-error">Error</div><div class="badge badge-dash badge-neutral">Neutral</div></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Icon</div><div class="mt-4 flex flex-wrap gap-2"><div class="badge badge-success"><span class="iconify lucide--info"></span> Approved</div><div class="badge badge-info"><span class="iconify lucide--circle-alert"></span> Info</div><div class="badge badge-warning"><span class="iconify lucide--triangle-alert"></span> Warning</div><div class="badge badge-error"><span class="iconify lucide--ban"></span> Error</div></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Icon</div><div class="mt-4 flex flex-wrap gap-2"><div class="badge badge-success"><span class="iconify lucide--info"></span>Success</div><div class="badge badge-info"><span class="iconify lucide--circle-alert"></span>Info</div><div class="badge badge-warning"><span class="iconify lucide--triangle-alert"></span>Warning</div><div class="badge badge-error"><span class="iconify lucide--ban"></span>Error</div></div></div></div>
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-wrap items-center gap-3"><div class="badge badge-xl">Extra Large</div><div class="badge badge-lg">Large</div><div class="badge badge-md">Medium</div><div class="badge badge-sm">Small</div><div class="badge badge-xs">Extra Small</div></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Button</div><div class="mt-4 flex flex-wrap items-center gap-3"><button class="btn">Inbox <span class="badge badge-sm">+99</span></button><button class="btn"><span class="badge badge-primary badge-sm">+99</span></button></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Button</div><div class="mt-4 flex flex-wrap items-center gap-3"><button class="btn">Inbox <span class="badge badge-sm">+99</span></button><button class="btn">Inbox <span class="badge badge-primary badge-sm">+99</span></button></div></div></div>
 		</div>
 	case "breadcrumb":
-		<div class="breadcrumbs text-sm"><ul><li><a href="#">Home</a></li><li><a href="#">Category</a></li><li>Current</li></ul></div>
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Default</div><div class="breadcrumbs mt-2 text-sm"><ul><li><a href="#home">Home</a></li><li><a href="#shops">Shops</a></li><li>Add Shop</li></ul></div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Icon</div><div class="breadcrumbs mt-2 text-sm"><ul><li><a href="#home"><span class="iconify lucide--home"></span>Home</a></li><li><a href="#shops"><span class="iconify lucide--store"></span>Shops</a></li><li>Add Shop</li></ul></div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Dropdown</div><div class="breadcrumbs mt-2 overflow-x-visible text-sm"><ul><li><a href="#home"><span class="iconify lucide--home"></span>Home</a></li><li><details class="dropdown dropdown-center dropdown-bottom"><summary class="btn btn-xs hover:no-undeline mx-1">•••</summary><ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-32 p-2 shadow-sm"><li><a href="#store"><span class="iconify lucide--store"></span>Stores</a></li><li><a href="#users"><span class="iconify lucide--users"></span>Users</a></li></ul></details></li><li>Add Shop</li></ul></div></div></div>
+		</div>
 	case "button":
 		<div class="mt-6 grid gap-6 lg:grid-cols-2">
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Default</div><div class="mt-4"><button class="btn btn-primary">Click me</button></div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Default</div><div class="mt-4">@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary}) { Click me }</div></div></div>
 			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Disabled</div><div class="mt-4 flex flex-wrap gap-3"><button class="btn btn-disabled">Using class</button><button class="btn" disabled>Using attribute</button></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Solid</div><div class="mt-4 flex flex-wrap gap-3"><button class="btn btn-primary">Primary</button><button class="btn btn-secondary">Secondary</button><button class="btn btn-accent">Accent</button><button class="btn btn-success">Success</button><button class="btn btn-info">Info</button><button class="btn btn-warning">Warning</button><button class="btn btn-error">Error</button><button class="btn btn-neutral">Neutral</button></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Soft</div><div class="mt-4 flex flex-wrap gap-3"><button class="btn btn-soft btn-primary">Primary</button><button class="btn btn-soft btn-secondary">Secondary</button><button class="btn btn-soft btn-accent">Accent</button><button class="btn btn-soft btn-success">Success</button><button class="btn btn-soft btn-info">Info</button><button class="btn btn-soft btn-warning">Warning</button><button class="btn btn-soft btn-error">Error</button><button class="btn btn-soft btn-neutral">Neutral</button></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Outline</div><div class="mt-4 flex flex-wrap gap-3"><button class="btn btn-outline btn-primary">Primary</button><button class="btn btn-outline btn-secondary">Secondary</button><button class="btn btn-outline btn-accent">Accent</button><button class="btn btn-outline btn-success">Success</button><button class="btn btn-outline btn-info">Info</button><button class="btn btn-outline btn-warning">Warning</button><button class="btn btn-outline btn-error">Error</button><button class="btn btn-outline btn-neutral">Neutral</button></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Dash</div><div class="mt-4 flex flex-wrap gap-3"><button class="btn btn-dash btn-primary">Primary</button><button class="btn btn-dash btn-secondary">Secondary</button><button class="btn btn-dash btn-accent">Accent</button><button class="btn btn-dash btn-success">Success</button><button class="btn btn-dash btn-info">Info</button><button class="btn btn-dash btn-warning">Warning</button><button class="btn btn-dash btn-error">Error</button><button class="btn btn-dash btn-neutral">Neutral</button></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Ghost &amp; Link</div><div class="mt-4 flex flex-wrap gap-3"><button class="btn btn-ghost">Default</button><button class="btn btn-ghost btn-primary">Primary</button><button class="btn btn-ghost btn-secondary">Secondary</button><button class="btn btn-ghost btn-accent">Accent</button><button class="btn btn-ghost btn-success">Success</button><button class="btn btn-ghost btn-info">Info</button><button class="btn btn-ghost btn-warning">Warning</button><button class="btn btn-ghost btn-error">Error</button><button class="btn btn-ghost btn-neutral">Neutral</button><button class="btn btn-link">Link</button></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Icon</div><div class="mt-4 flex flex-wrap gap-3"><button class="btn btn-square gap-2"><span class="iconify lucide--heart size-4"></span></button><button class="btn gap-2"><span class="iconify lucide--heart size-4"></span>Click</button></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Rounded</div><div class="mt-4 flex flex-wrap gap-3"><button class="btn btn-circle gap-2"><span class="iconify lucide--heart size-4"></span></button><button class="btn btn-circle gap-2"><span class="iconify lucide--settings-2 size-4"></span></button></div></div></div>
-			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Loading</div><div class="mt-4 flex flex-wrap gap-3"><button class="btn btn-square gap-2"><span class="loading loading-spinner size-5"></span></button><button class="btn gap-2"><span class="loading loading-spinner size-5"></span>Loading</button><button class="btn btn-square gap-2"><span class="loading loading-spinner size-5"></span></button><button class="btn gap-2"><span class="loading loading-spinner size-5"></span>Loading</button></div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Solid</div><div class="mt-4 flex flex-wrap gap-3">
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary}) { Primary }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonSecondary}) { Secondary }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonAccent}) { Accent }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonSuccess}) { Success }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonInfo}) { Info }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonWarning}) { Warning }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonError}) { Error }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonNeutral}) { Neutral }
+			</div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Soft</div><div class="mt-4 flex flex-wrap gap-3">
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Style: ui.ButtonStyleSoft}) { Primary }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonSecondary, Style: ui.ButtonStyleSoft}) { Secondary }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonAccent, Style: ui.ButtonStyleSoft}) { Accent }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonSuccess, Style: ui.ButtonStyleSoft}) { Success }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonInfo, Style: ui.ButtonStyleSoft}) { Info }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonWarning, Style: ui.ButtonStyleSoft}) { Warning }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonError, Style: ui.ButtonStyleSoft}) { Error }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonNeutral, Style: ui.ButtonStyleSoft}) { Neutral }
+			</div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Outline</div><div class="mt-4 flex flex-wrap gap-3">
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Style: ui.ButtonStyleOutline}) { Primary }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonSecondary, Style: ui.ButtonStyleOutline}) { Secondary }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonAccent, Style: ui.ButtonStyleOutline}) { Accent }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonSuccess, Style: ui.ButtonStyleOutline}) { Success }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonInfo, Style: ui.ButtonStyleOutline}) { Info }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonWarning, Style: ui.ButtonStyleOutline}) { Warning }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonError, Style: ui.ButtonStyleOutline}) { Error }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonNeutral, Style: ui.ButtonStyleOutline}) { Neutral }
+			</div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Dash</div><div class="mt-4 flex flex-wrap gap-3">
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Style: ui.ButtonStyleDash}) { Primary }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonSecondary, Style: ui.ButtonStyleDash}) { Secondary }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonAccent, Style: ui.ButtonStyleDash}) { Accent }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonSuccess, Style: ui.ButtonStyleDash}) { Success }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonInfo, Style: ui.ButtonStyleDash}) { Info }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonWarning, Style: ui.ButtonStyleDash}) { Warning }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonError, Style: ui.ButtonStyleDash}) { Error }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonNeutral, Style: ui.ButtonStyleDash}) { Neutral }
+			</div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Ghost &amp; Link</div><div class="mt-4 flex flex-wrap gap-3">
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost}) { Default }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-primary"}) { Primary }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-secondary"}) { Secondary }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-accent"}) { Accent }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-success"}) { Success }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-info"}) { Info }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-warning"}) { Warning }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-error"}) { Error }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-neutral"}) { Neutral }
+				@ui.Button(ui.ButtonProps{Variant: ui.ButtonLink}) { Link }
+			</div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Icon</div><div class="mt-4 flex flex-wrap gap-3">
+				@ui.Button(ui.ButtonProps{Shape: ui.ButtonShapeSquare, Icon: "lucide--heart", ExtraClass: "gap-2", AriaLabel: "Icon"})
+				@ui.Button(ui.ButtonProps{Icon: "lucide--heart", ExtraClass: "gap-2"}) { Like }
+			</div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Rounded</div><div class="mt-4 flex flex-wrap gap-3">
+				@ui.Button(ui.ButtonProps{Shape: ui.ButtonShapeCircle, Icon: "lucide--heart", ExtraClass: "gap-2", AriaLabel: "Icon"})
+				@ui.Button(ui.ButtonProps{Shape: ui.ButtonShapeCircle, Icon: "lucide--settings-2", ExtraClass: "gap-2", AriaLabel: "Icon"})
+			</div></div></div>
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Loading</div><div class="mt-4 flex flex-wrap gap-3"><button class="btn btn-square gap-2" aria-label="Icon"><span class="loading loading-spinner size-5"></span></button><button class="btn gap-2"><span class="loading loading-spinner size-5"></span>Loading</button><button class="btn btn-square gap-2" disabled aria-label="Icon"><span class="loading loading-spinner size-5"></span></button><button class="btn gap-2" disabled><span class="loading loading-spinner size-5"></span>Loading</button></div></div></div>
 		</div>
 
 	case "card":
@@ -258,11 +502,31 @@ templ renderComponentDemo(name string) {
 			<div class="card bg-base-100 w-64 shadow-sm card-border"><figure><img src="/images/avatars/1.png" alt=""/></figure><div class="card-body"><h4 class="card-title">With Image</h4><p>Image on top</p></div></div>
 		</div>
 	case "countdown":
-		<div class="flex gap-5 text-2xl font-mono">
-			<div><span class="countdown"><span style="--value:59"></span></span>d</div>
-			<div><span class="countdown"><span style="--value:23"></span></span>h</div>
-			<div><span class="countdown"><span style="--value:59"></span></span>m</div>
-			<div><span class="countdown"><span style="--value:45"></span></span>s</div>
+		<div class="mt-6">
+			<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+				<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Default</div>
+					<div class="mt-4"><span class="countdown"><span class="countdown-timer" style="--value: 59"></span></span></div>
+				</div></div>
+				<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Clock</div>
+					<div class="mt-4 flex flex-wrap items-center gap-2"><span class="countdown"><span style="--value: 10"></span></span><span>:</span><span class="countdown"><span style="--value: 24"></span></span><span>:</span><span class="countdown"><span class="countdown-timer" style="--value: 59"></span></span></div>
+				</div></div>
+				<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Label</div>
+					<div class="mt-4 flex flex-wrap gap-5 text-center">
+						<div class="flex flex-col"><span class="countdown text-xl md:text-5xl"><span style="--value: 15"></span></span>Days</div>
+						<div class="flex flex-col"><span class="countdown text-xl md:text-5xl"><span style="--value: 10"></span></span>Hours</div>
+						<div class="flex flex-col"><span class="countdown text-xl md:text-5xl"><span style="--value: 24"></span></span>Minutes</div>
+						<div class="flex flex-col"><span class="countdown text-xl md:text-5xl"><span class="countdown-timer" style="--value: 59"></span></span>Seconds</div>
+					</div>
+				</div></div>
+				<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Boxed</div>
+					<div class="mt-4 flex flex-wrap gap-3 text-center md:gap-5">
+						<div class="bg-base-200 rounded-box flex flex-col items-center gap-1 p-3 text-sm"><span class="countdown text-xl md:text-3xl"><span style="--value: 15"></span></span>Days</div>
+						<div class="bg-base-200 rounded-box flex flex-col items-center gap-1 p-3 text-sm"><span class="countdown text-xl md:text-3xl"><span style="--value: 10"></span></span>Hours</div>
+						<div class="bg-base-200 rounded-box flex flex-col items-center gap-1 p-3 text-sm"><span class="countdown text-xl md:text-3xl"><span style="--value: 24"></span></span>Minutes</div>
+						<div class="bg-base-200 rounded-box flex flex-col items-center gap-1 p-3 text-sm"><span class="countdown text-xl md:text-3xl"><span class="countdown-timer" style="--value: 59"></span></span>Seconds</div>
+					</div>
+				</div></div>
+			</div>
 		</div>
 	case "divider":
 		<div class="flex flex-col w-full">
@@ -271,17 +535,97 @@ templ renderComponentDemo(name string) {
 			<div class="flex w-full"><div class="divider divider-secondary">Secondary</div></div>
 		</div>
 	case "drawer":
-		<div class="drawer"><input id="drawerx" type="checkbox" class="drawer-toggle"/><div class="drawer-content"><label for="drawerx" class="btn btn-primary">Open</label></div><div class="drawer-side"><label for="drawerx" class="drawer-overlay"></label><ul class="menu bg-base-200 min-h-full w-80 p-4"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div></div>
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4"><div class="drawer">
+					<input id="demo-drawer" class="drawer-toggle" type="checkbox"/>
+					<div class="drawer-content"><label for="demo-drawer" class="btn drawer-button">Open</label></div>
+					<div class="drawer-side z-[50]"><label for="demo-drawer" aria-label="close sidebar" class="drawer-overlay"></label><ul class="menu bg-base-100 text-base-content min-h-full w-80 p-4"><li><a>Sidebar Item 1</a></li><li><a>Sidebar Item 2</a></li></ul></div>
+				</div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Right Drawer</div>
+				<div class="mt-4"><div class="drawer drawer-end">
+					<input id="demo-end-drawer" class="drawer-toggle" type="checkbox"/>
+					<div class="drawer-content"><label for="demo-end-drawer" class="btn drawer-button">Open</label></div>
+					<div class="drawer-side z-[50]"><label for="demo-end-drawer" aria-label="close sidebar" class="drawer-overlay"></label><ul class="menu bg-base-100 text-base-content min-h-full w-80 p-4"><li><a>Sidebar Item 1</a></li><li><a>Sidebar Item 2</a></li></ul></div>
+				</div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Close Button</div>
+				<div class="mt-4"><div class="drawer">
+					<input id="demo-drawer-close" class="drawer-toggle" type="checkbox"/>
+					<div class="drawer-content"><label for="demo-drawer-close" class="btn drawer-button">Open</label></div>
+					<div class="drawer-side z-[50]"><label for="demo-drawer-close" aria-label="close sidebar" class="drawer-overlay"></label><div class="bg-base-100 min-h-full w-80 p-4"><div class="flex items-center justify-between"><p class="text-lg font-medium">Drawer Title</p><label for="demo-drawer-close" class="btn btn-ghost btn-circle drawer-button"><span class="iconify lucide--x"></span></label></div><p class="mt-2">Contents place here</p></div></div>
+				</div></div>
+			</div></div>
+		</div>
 	case "dropdown":
-		<div class="flex gap-2">
-			<div class="dropdown"><div tabindex="0" class="btn">Click</div><ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow"><li><a>A</a></li><li><a>B</a></li></ul></div>
-			<div class="dropdown dropdown-hover"><div tabindex="0" class="btn">Hover</div><ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow"><li><a>A</a></li><li><a>B</a></li></ul></div>
+		<div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+			<div class="bg-base-100 card card-border"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4 flex flex-wrap gap-4">
+					<div class="dropdown"><div tabindex="0" role="button" class="btn">Click</div><ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 p-2 shadow-sm"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div>
+					<div class="dropdown dropdown-hover"><div tabindex="0" role="button" class="btn">Hover</div><ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 p-2 shadow-sm"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div>
+					<details class="dropdown"><summary class="btn">Stick</summary><ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-40 p-2 shadow-sm"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></details>
+					<details class="dropdown"><summary class="btn btn-disabled">Disabled</summary><ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-40 p-2 shadow-sm"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></details>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Card</div>
+				<div class="mt-4 flex flex-wrap gap-4">
+					<div class="dropdown"><div tabindex="0" role="button" class="btn">Information</div><div tabindex="0" class="dropdown-content card rounded-box bg-base-100 card-border my-2 w-60 shadow-sm"><div class="card-body p-4"><div class="card-title">Card title!</div><p>you can use any element as a dropdown</p></div></div></div>
+				</div>
+			</div></div>
+			<div class="space-y-4">
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Side</div>
+					<div class="mt-4 flex flex-wrap gap-4">
+						<div class="dropdown dropdown-top dropdown-center"><div tabindex="0" role="button" class="btn">Top</div><ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div>
+						<div class="dropdown dropdown-bottom dropdown-center"><div tabindex="0" role="button" class="btn">Bottom</div><ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div>
+						<div class="dropdown dropdown-left dropdown-center"><div tabindex="0" role="button" class="btn">Bottom</div><ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div>
+						<div class="dropdown dropdown-right dropdown-center"><div tabindex="0" role="button" class="btn">Right</div><ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div>
+					</div>
+				</div></div>
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Align</div>
+					<div class="mt-4 flex flex-wrap gap-4">
+						<div class="dropdown dropdown-top dropdown-start"><div tabindex="0" role="button" class="btn">Start</div><ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div>
+						<div class="dropdown dropdown-top dropdown-center"><div tabindex="0" role="button" class="btn">Center</div><ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div>
+						<div class="dropdown dropdown-top dropdown-end"><div tabindex="0" role="button" class="btn">Right</div><ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-36 p-2 shadow-sm"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div>
+					</div>
+				</div></div>
+			</div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Playground</div>
+				<div class="grid place-items-center py-6">
+					<div class="grid grid-cols-3 place-items-center gap-4">
+						<div class="dropdown dropdown-top dropdown-end"><div tabindex="0" aria-label="Dropdown" role="button" class="btn btn-square btn-sm"><span class="iconify lucide--arrow-up -rotate-45"></span></div><div tabindex="0" class="dropdown-content bg-base-100 card card-border z-1 m-1 w-36 p-3 text-sm shadow-xs hover:shadow-sm"><p>Side: Top</p><p>Align: End</p></div></div>
+						<div class="dropdown dropdown-top dropdown-center"><div tabindex="0" aria-label="Dropdown" role="button" class="btn btn-square btn-sm"><span class="iconify lucide--arrow-up"></span></div><div tabindex="0" class="dropdown-content bg-base-100 card card-border z-1 m-1 w-36 p-3 text-sm shadow-xs hover:shadow-sm"><p>Side: Top</p><p>Align: Center</p></div></div>
+						<div class="dropdown dropdown-top dropdown-start"><div tabindex="0" aria-label="Dropdown" role="button" class="btn btn-square btn-sm"><span class="iconify lucide--arrow-up rotate-45"></span></div><div tabindex="0" class="dropdown-content bg-base-100 card card-border z-1 m-1 w-36 p-3 text-sm shadow-xs hover:shadow-sm"><p>Side: Top</p><p>Align: Start</p></div></div>
+						<div class="dropdown dropdown-left dropdown-center"><div tabindex="0" aria-label="Dropdown" role="button" class="btn btn-square btn-sm"><span class="iconify lucide--arrow-up -rotate-90"></span></div><div tabindex="0" class="dropdown-content bg-base-100 card card-border z-1 m-1 w-36 p-3 text-sm shadow-xs hover:shadow-sm"><p>Side: Left</p><p>Align: Center</p></div></div>
+						<div class="bg-base-200 size-5 rounded-full"></div>
+						<div class="dropdown dropdown-right dropdown-center"><div tabindex="0" aria-label="Dropdown" role="button" class="btn btn-square btn-sm"><span class="iconify lucide--arrow-up rotate-90"></span></div><div tabindex="0" class="dropdown-content bg-base-100 card card-border z-1 m-1 w-36 p-3 text-sm shadow-xs hover:shadow-sm"><p>Side: Right</p><p>Align: Center</p></div></div>
+						<div class="dropdown dropdown-bottom dropdown-end"><div tabindex="0" aria-label="Dropdown" role="button" class="btn btn-square btn-sm"><span class="iconify lucide--arrow-up -rotate-135"></span></div><div tabindex="0" class="dropdown-content bg-base-100 card card-border z-1 m-1 w-36 p-3 text-sm shadow-xs hover:shadow-sm"><p>Side: Bottom</p><p>Align: End</p></div></div>
+						<div class="dropdown dropdown-bottom dropdown-center"><div tabindex="0" aria-label="Dropdown" role="button" class="btn btn-square btn-sm"><span class="iconify lucide--arrow-up rotate-180"></span></div><div tabindex="0" class="dropdown-content bg-base-100 card card-border z-1 m-1 w-36 p-3 text-sm shadow-xs hover:shadow-sm"><p>Side: Bottom</p><p>Align: Center</p></div></div>
+						<div class="dropdown dropdown-bottom dropdown-start"><div tabindex="0" aria-label="Dropdown" role="button" class="btn btn-square btn-sm"><span class="iconify lucide--arrow-up rotate-135"></span></div><div tabindex="0" class="dropdown-content bg-base-100 card card-border z-1 m-1 w-36 p-3 text-sm shadow-xs hover:shadow-sm"><p>Side: Bottom</p><p>Align: Start</p></div></div>
+					</div>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">In Text</div>
+				<div class="mt-2 flex flex-wrap items-center gap-1">
+					<span class="text-sm">A normal text and a helper dropdown</span>
+					<div class="dropdown dropdown-top dropdown-center"><div tabindex="0" role="button" class="btn btn-circle btn-xs btn-ghost" aria-label="Dropdown"><span class="iconify lucide--info text-base-content/80 size-4"></span></div><div tabindex="0" class="dropdown-content card rounded-box bg-base-100 card-border my-1 w-44 shadow-sm"><div class="card-body gap-1 p-3"><div class="card-title">Need more info?</div><p class="text-sm">Here is a description!</p></div></div></div>
+				</div>
+			</div></div>
 		</div>
 	case "indicator":
-		<div class="flex gap-6">
-			<div class="indicator"><span class="indicator-item badge badge-primary">new</span><div class="bg-base-300 grid w-16 h-16 place-items-center rounded-box">div</div></div>
-			<div class="indicator"><span class="indicator-item badge badge-secondary">99+</span><div class="bg-base-300 grid w-16 h-16 place-items-center rounded-box">div</div></div>
-			<div class="indicator"><span class="indicator-item indicator-middle badge badge-success"></span><div class="bg-base-300 grid w-16 h-16 place-items-center rounded-box">div</div></div>
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4"><div class="indicator"><div class="badge indicator-item badge-secondary"></div><div class="bg-base-200 rounded-box grid size-24 place-items-center">content</div></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Text</div>
+				<div class="mt-4"><div class="indicator"><div class="badge indicator-item badge-primary">New</div><div class="bg-base-200 rounded-box grid size-24 place-items-center">content</div></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Button</div>
+				<div class="mt-5"><div class="indicator"><div class="badge badge-sm indicator-item badge-success">+99</div><button class="btn">Inbox</button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Avatar</div>
+				<div class="mt-4"><div class="indicator"><div class="badge badge-sm indicator-item badge-ghost indicator-bottom">•••</div><div class="avatar"><div class="bg-secondary/20 mask-squircle mask w-16"><img alt="Avatar" src="/images/avatars/3.png"/></div></div></div></div>
+			</div></div>
 		</div>
 	case "join":
 		<div class="space-y-2"><div class="join"><button class="btn join-item">1</button><button class="btn join-item btn-active">2</button><button class="btn join-item">3</button></div></div>
@@ -290,27 +634,201 @@ templ renderComponentDemo(name string) {
 	case "link":
 		<div class="flex gap-4"><a class="link">Default</a><a class="link link-primary">Primary</a><a class="link link-secondary">Secondary</a><a class="link link-accent">Accent</a><a class="link link-hover">Hover</a></div>
 	case "loading":
-		<div class="flex flex-wrap gap-4">
-			<span class="loading loading-spinner text-primary"></span><span class="loading loading-spinner text-secondary"></span>
-			<span class="loading loading-dots loading-lg"></span><span class="loading loading-ring loading-lg"></span>
-			<span class="loading loading-ball loading-lg"></span><span class="loading loading-bars loading-lg"></span>
-			<span class="loading loading-infinity loading-lg"></span>
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4"><span class="loading-spinner loading"></span></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div>
+				<div class="mt-4 flex flex-wrap items-center gap-4">
+					<span class="loading-spinner loading text-primary"></span><span class="loading-spinner loading text-secondary"></span><span class="loading-spinner loading text-success"></span><span class="loading-spinner loading text-warning"></span><span class="loading-spinner loading text-error"></span><span class="loading-spinner loading text-info"></span><span class="loading-spinner loading text-accent"></span><span class="loading-spinner loading text-ghost"></span>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div>
+				<div class="mt-4 flex flex-wrap items-center gap-4">
+					<span class="loading-spinner loading loading-xs"></span><span class="loading-spinner loading loading-sm"></span><span class="loading-spinner loading"></span><span class="loading-spinner loading loading-lg"></span><span class="loading-spinner loading loading-xl"></span>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Variant</div>
+				<div class="mt-4 flex flex-wrap items-center gap-6">
+					<span class="loading-spinner loading"></span><span class="loading loading-ring"></span><span class="loading loading-ball"></span><span class="loading loading-bars"></span><span class="loading loading-infinity"></span><span class="loading loading-dots"></span>
+				</div>
+			</div></div>
 		</div>
 	case "menu":
-		<ul class="menu bg-base-200 rounded-box w-56"><li class="menu-title">Category</li><li><a>Item 1</a></li><li><a class="active">Active</a></li><li><a>Item 3</a></li><li class="menu-title">More</li><li><details open><summary>Sub</summary><ul><li><a>A</a></li><li><a>B</a></li></ul></details></li></ul>
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4"><ul class="menu bg-base-200 rounded-box w-40"><li><div>Item 1</div></li><li><div>Item 2</div></li><li><div>Item 3</div></li></ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Boxed</div>
+				<div class="mt-4"><ul class="menu rounded-box border-base-300 w-40 border"><li><div>Item 1</div></li><li><div>Item 2</div></li><li><div>Item 3</div></li></ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Icons</div>
+				<div class="mt-4"><ul class="menu rounded-box bg-base-200"><li><div><span class="iconify lucide--users size-5"></span></div></li><li><div><span class="iconify lucide--folder size-5"></span></div></li><li><div><span class="iconify lucide--hard-drive size-5"></span></div></li></ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Icon with label</div>
+				<div class="mt-4"><ul class="menu rounded-box bg-base-200 w-40"><li><div class="space-x-1"><span class="iconify lucide--users size-5"></span><span>Peoples</span></div></li><li><div class="space-x-1"><span class="iconify lucide--folder size-5"></span><span>Folders</span></div></li><li><div class="space-x-1"><span class="iconify lucide--hard-drive size-5"></span><span>Storage</span></div></li></ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Horizontal</div>
+				<div class="mt-4"><ul class="menu rounded-box bg-base-200 menu-horizontal"><li><div><span class="iconify lucide--users size-5"></span></div></li><li><div><span class="iconify lucide--folder size-5"></span></div></li><li><div><span class="iconify lucide--hard-drive size-5"></span></div></li></ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Horizontal label</div>
+				<div class="mt-4"><ul class="menu rounded-box bg-base-200 menu-horizontal"><li><div class="space-x-1"><span class="iconify lucide--users size-5"></span><span>Peoples</span></div></li><li><div class="space-x-1"><span class="iconify lucide--folder size-5"></span><span>Folders</span></div></li><li><div class="space-x-1"><span class="iconify lucide--hard-drive size-5"></span><span>Storage</span></div></li></ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Title</div>
+				<div class="mt-4"><ul class="menu bg-base-200 rounded-box w-40"><li><h2 class="menu-title">Main Item</h2><ul><li><div>Item 1</div></li><li><div>Item 2</div></li><li><div>Item 3</div></li><li><div>Item 4</div></li></ul></li></ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Separator</div>
+				<div class="bg-base-200 rounded-box mt-4 w-40 p-1"><h2 class="menu-title pb-1 font-medium">Menu 1</h2><ul class="menu w-full pt-0"><li><div>Item 1.a</div></li><li><div>Item 1.b</div></li></ul><div class="bg-base-300 -mx-1 h-px"></div><h2 class="menu-title pb-1 font-medium">Menu 2</h2><ul class="menu w-full pt-0"><li><div>Item 2.a</div></li></ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Sub Menu</div>
+				<ul class="menu bg-base-200 rounded-box mt-4 w-48"><li><div>Item 1</div></li><li><details open><summary>Parent</summary><ul><li><div>Submenu 1</div></li><li><div>Submenu 2</div></li><li><details open><summary>Parent</summary><ul><li><div>Submenu 1</div></li><li><div>Submenu 2</div></li></ul></details></li></ul></details></li><li><div>Item 3</div></li></ul>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Responsive</div>
+				<ul class="menu lg:menu-horizontal bg-base-200 rounded-box mt-4 min-w-48"><li><div>Item 1</div></li><li><details open><summary>Parent item</summary><ul class="w-40"><li><div>Submenu 1</div></li><li><div>Submenu 2</div></li><li><details open><summary>Parent</summary><ul><li><div>item 1</div></li><li><div>item 2</div></li></ul></details></li></ul></details></li><li><div>Item 3</div></li></ul>
+			</div></div>
+		</div>
 	case "modal":
-		<div><button class="btn" onclick="mod1.showModal()">Open</button></div>
-		<dialog id="mod1" class="modal"><div class="modal-box"><h3 class="text-lg font-bold">Modal</h3><p class="py-4">ESC or click outside</p><div class="modal-action"><form method="dialog"><button class="btn">Close</button></form></div></div></dialog>
+		<div class="mt-6">
+			<div class="grid gap-6 lg:grid-cols-2">
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+					<div class="mt-4"><button class="btn" onclick="demo_modal_1.showModal()">Open</button>
+						<dialog id="demo_modal_1" class="modal"><div class="modal-box"><h3 class="text-lg font-medium">Hello!</h3><p class="py-4">Press ESC key or click the button below to close</p><div class="modal-action"><form method="dialog"><button class="btn">Close</button></form></div></div></dialog>
+					</div>
+				</div></div>
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Close: Button</div>
+					<div class="mt-4"><button class="btn" onclick="demo_modal_2.showModal()">Open</button>
+						<dialog id="demo_modal_2" class="modal"><div class="modal-box"><form method="dialog"><button class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2"><span class="iconify lucide--x size-4"></span></button></form><h3 class="text-lg font-medium">Hello!</h3><p class="py-4">Press ESC key or click on x button to close</p></div></dialog>
+					</div>
+				</div></div>
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Close: Outside</div>
+					<div class="mt-4"><button class="btn" onclick="demo_modal_3.showModal()">Open</button>
+						<dialog id="demo_modal_3" class="modal"><div class="modal-box"><h3 class="text-lg font-medium">Hello!</h3><p class="py-4">Press ESC key or click the button below to close</p></div><form method="dialog" class="modal-backdrop"><button>close</button></form></dialog>
+					</div>
+				</div></div>
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Close: Button & Outside</div>
+					<div class="mt-4"><button class="btn" onclick="demo_modal_4.showModal()">Open</button>
+						<dialog id="demo_modal_4" class="modal"><div class="modal-box"><form method="dialog"><button class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2"><span class="iconify lucide--x size-4"></span></button></form><h3 class="text-lg font-medium">Hello!</h3><p class="py-4">Press ESC key or click the button below to close</p></div><form method="dialog" class="modal-backdrop"><button>close</button></form></dialog>
+					</div>
+				</div></div>
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Using: Anchor <span class="text-base-content/70 text-sm">(Legacy)</span></div>
+					<div class="mt-4"><a href="#demo-modal-anchor" class="btn">Open</a>
+						<div class="modal" role="dialog" id="demo-modal-anchor"><div class="modal-box"><h3 class="text-lg font-medium">Hello!</h3><p class="py-4">Press ESC key or click the button below to close</p><div class="modal-action"><a href="#" class="btn">Close</a></div></div><a href="#" class="modal-backdrop modal-action"></a></div>
+					</div>
+				</div></div>
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Custom width</div>
+					<div class="mt-4"><button class="btn" onclick="demo_modal_5.showModal()">Open</button>
+						<dialog id="demo_modal_5" class="modal"><div class="modal-box w-11/12 max-w-5xl"><h3 class="text-lg font-medium">Hello!</h3><p class="py-4">Press ESC key or click the button below to close</p><div class="modal-action"><form method="dialog"><button class="btn">Close</button></form></div></div></dialog>
+					</div>
+				</div></div>
+			</div>
+		</div>
 	case "pagination":
-		<div class="join"><button class="join-item btn btn-sm">«</button><button class="join-item btn btn-sm">1</button><button class="join-item btn btn-sm btn-active">2</button><button class="join-item btn btn-sm">3</button><button class="join-item btn btn-sm">»</button></div>
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4"><div class="join"><button class="btn join-item btn-square">1</button><button class="btn join-item btn-square btn-active">2</button><button class="btn join-item btn-square">3</button><button class="btn join-item btn-square">4</button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Disabled</div>
+				<div class="mt-4"><div class="join"><button class="btn join-item btn-square">1</button><button class="btn join-item btn-square">2</button><button class="btn join-item btn-square" disabled>...</button><button class="btn join-item btn-square">8</button><button class="btn join-item btn-square">9</button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Control: Arrow</div>
+				<div class="mt-4"><div class="join"><button class="btn btn-square join-item" aria-label="Pagination controls"><span class="iconify lucide--chevrons-left"></span></button><button class="btn join-item btn-square">1</button><button class="btn join-item btn-square btn-active">2</button><button class="btn join-item btn-square">3</button><button class="btn btn-square join-item" aria-label="Pagination controls"><span class="iconify lucide--chevrons-right"></span></button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Control: Button</div>
+				<div class="mt-4"><div class="join"><button class="btn join-item">Previous</button><button class="btn join-item btn-square">1</button><button class="btn join-item btn-square btn-active">2</button><button class="btn join-item btn-square">3</button><button class="btn join-item">Next</button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Variant: Ghost</div>
+				<div class="mt-4"><div class="flex gap-1"><button class="btn btn-square btn-ghost join-item" aria-label="Pagination controls"><span class="iconify lucide--chevrons-left"></span></button><button class="btn join-item btn-ghost btn-square">1</button><button class="btn join-item btn-ghost btn-square btn-active">2</button><button class="btn join-item btn-ghost btn-square">3</button><button class="btn btn-square btn-ghost join-item" aria-label="Pagination controls"><span class="iconify lucide--chevrons-right"></span></button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Variant: Soft</div>
+				<div class="mt-4"><div class="flex gap-1"><button class="btn btn-square btn-soft join-item btn-primary" aria-label="Pagination controls"><span class="iconify lucide--chevrons-left"></span></button><button class="btn join-item btn-soft btn-square btn-primary">1</button><button class="btn join-item btn-soft btn-square btn-active btn-primary">2</button><button class="btn join-item btn-soft btn-square btn-primary">3</button><button class="btn btn-square btn-soft join-item btn-primary" aria-label="Pagination controls"><span class="iconify lucide--chevrons-right"></span></button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Variant: Outline</div>
+				<div class="mt-4"><div class="join"><button class="btn btn-square btn-outline join-item btn-primary" aria-label="Pagination controls"><span class="iconify lucide--chevrons-left"></span></button><button class="btn join-item btn-outline btn-square btn-primary">1</button><button class="btn join-item btn-outline btn-square btn-active btn-primary">2</button><button class="btn join-item btn-outline btn-square btn-primary">3</button><button class="btn btn-square btn-outline join-item btn-primary" aria-label="Pagination controls"><span class="iconify lucide--chevrons-right"></span></button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Shape: Circle</div>
+				<div class="mt-4"><div class="flex gap-1"><button class="btn btn-circle btn-ghost join-item" aria-label="Pagination controls"><span class="iconify lucide--chevrons-left"></span></button><button class="btn join-item btn-ghost btn-circle">1</button><button class="btn join-item btn-ghost btn-circle btn-active">2</button><button class="btn join-item btn-ghost btn-circle">3</button><button class="btn btn-circle btn-ghost join-item" aria-label="Pagination controls"><span class="iconify lucide--chevrons-right"></span></button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Orientation: Vertical</div>
+				<div class="mt-4"><div class="join join-vertical"><button class="btn btn-square join-item" aria-label="Pagination controls"><span class="iconify lucide--chevrons-up"></span></button><button class="btn join-item btn-square">1</button><button class="btn join-item btn-square btn-active">2</button><button class="btn join-item btn-square">...</button><button class="btn join-item btn-square">8</button><button class="btn btn-square join-item" aria-label="Pagination controls"><span class="iconify lucide--chevrons-down"></span></button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div>
+				<div class="mt-4 flex flex-col items-center gap-3">
+					<div class="join"><button class="btn join-item btn-square btn-xs">1</button><button class="btn join-item btn-square btn-xs btn-active">2</button><button class="btn join-item btn-square btn-xs">3</button><button class="btn join-item btn-square btn-xs">4</button></div>
+					<div class="join"><button class="btn join-item btn-square btn-sm">1</button><button class="btn join-item btn-square btn-sm btn-active">2</button><button class="btn join-item btn-square btn-sm">3</button><button class="btn join-item btn-square btn-sm">4</button></div>
+					<div class="join"><button class="btn join-item btn-square">1</button><button class="btn join-item btn-square btn-active">2</button><button class="btn join-item btn-square">3</button><button class="btn join-item btn-square">4</button></div>
+					<div class="join"><button class="btn join-item btn-square btn-lg">1</button><button class="btn join-item btn-square btn-lg btn-active">2</button><button class="btn join-item btn-square btn-lg">3</button><button class="btn join-item btn-square btn-lg">4</button></div>
+					<div class="join"><button class="btn join-item btn-square btn-xl">1</button><button class="btn join-item btn-square btn-xl btn-active">2</button><button class="btn join-item btn-square btn-xl">3</button><button class="btn join-item btn-square btn-xl">4</button></div>
+				</div>
+			</div></div>
+		</div>
 	case "progress":
-		<div class="space-y-3 w-full max-w-xs">
-			<progress class="progress progress-primary w-full" value="70" max="100"></progress>
-			<progress class="progress progress-secondary w-full" value="50" max="100"></progress>
-			<progress class="progress progress-accent w-full" value="80" max="100"></progress>
-			<progress class="progress progress-success w-full" value="40" max="100"></progress>
-			<progress class="progress progress-warning w-full" value="60" max="100"></progress>
-			<progress class="progress progress-error w-full" value="20" max="100"></progress>
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4 flex flex-col gap-y-3">
+					<progress class="progress w-56" value="0" max="100"></progress>
+					<progress class="progress w-56" value="15" max="100"></progress>
+					<progress class="progress w-56" value="30" max="100"></progress>
+					<progress class="progress w-56" value="40" max="100"></progress>
+					<progress class="progress w-56" value="75" max="100"></progress>
+					<progress class="progress w-56" value="100" max="100"></progress>
+					<progress class="progress w-56"></progress>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div>
+				<div class="mt-4 flex flex-col gap-y-3">
+					<progress class="progress progress-primary w-56" value="20" max="100"></progress>
+					<progress class="progress progress-secondary w-56" value="30" max="100"></progress>
+					<progress class="progress progress-accent w-56" value="40" max="100"></progress>
+					<progress class="progress progress-success w-56" value="50" max="100"></progress>
+					<progress class="progress progress-info w-56" value="60" max="100"></progress>
+					<progress class="progress progress-warning w-56" value="70" max="100"></progress>
+					<progress class="progress progress-error w-56" value="80" max="100"></progress>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Radial</div>
+				<div class="mt-4 flex flex-wrap gap-4">
+					<div aria-label="Radial progress" class="radial-progress" aria-valuenow="20" role="progressbar" style="--value: 20; --thickness: 4px; --size: 4rem">20%</div>
+					<div aria-label="Radial progress" class="radial-progress" aria-valuenow="40" role="progressbar" style="--value: 40; --thickness: 4px; --size: 4rem">40%</div>
+					<div aria-label="Radial progress" class="radial-progress" aria-valuenow="60" role="progressbar" style="--value: 60; --thickness: 4px; --size: 4rem">60%</div>
+					<div aria-label="Radial progress" class="radial-progress" aria-valuenow="80" role="progressbar" style="--value: 80; --thickness: 4px; --size: 4rem">80%</div>
+					<div aria-label="Radial progress" class="radial-progress" aria-valuenow="95" role="progressbar" style="--value: 95; --thickness: 4px; --size: 4rem">95%</div>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Radial: Size</div>
+				<div class="mt-4 flex gap-4">
+					<div aria-label="Radial progress" class="radial-progress text-xs" aria-valuenow="75" role="progressbar" style="--value: 75; --thickness: 2px; --size: 2rem">75%</div>
+					<div aria-label="Radial progress" class="radial-progress text-sm" aria-valuenow="75" role="progressbar" style="--value: 75; --thickness: 3px; --size: 3rem">75%</div>
+					<div aria-label="Radial progress" class="radial-progress" aria-valuenow="75" role="progressbar" style="--value: 75; --thickness: 4px; --size: 4rem">75%</div>
+					<div aria-label="Radial progress" class="radial-progress" aria-valuenow="75" role="progressbar" style="--value: 75; --thickness: 5px; --size: 5rem">75%</div>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Radial: Color</div>
+				<div class="mt-4 flex flex-wrap gap-4">
+					<div aria-label="Radial progress" class="radial-progress text-primary" aria-valuenow="80" role="progressbar" style="--value: 80; --thickness: 4px; --size: 4rem">80%</div>
+					<div aria-label="Radial progress" class="radial-progress text-secondary" aria-valuenow="80" role="progressbar" style="--value: 80; --thickness: 4px; --size: 4rem">80%</div>
+					<div aria-label="Radial progress" class="radial-progress text-accent" aria-valuenow="80" role="progressbar" style="--value: 80; --thickness: 4px; --size: 4rem">80%</div>
+					<div aria-label="Radial progress" class="radial-progress text-success" aria-valuenow="80" role="progressbar" style="--value: 80; --thickness: 4px; --size: 4rem">80%</div>
+					<div aria-label="Radial progress" class="radial-progress text-info" aria-valuenow="80" role="progressbar" style="--value: 80; --thickness: 4px; --size: 4rem">80%</div>
+					<div aria-label="Radial progress" class="radial-progress text-warning" aria-valuenow="80" role="progressbar" style="--value: 80; --thickness: 4px; --size: 4rem">80%</div>
+					<div aria-label="Radial progress" class="radial-progress text-error" aria-valuenow="80" role="progressbar" style="--value: 80; --thickness: 4px; --size: 4rem">80%</div>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Radial: Soft</div>
+				<div class="mt-4 flex flex-wrap gap-4">
+					<div aria-label="Radial progress" class="radial-progress text-primary outline-primary/15 outline-4 -outline-offset-4" aria-valuenow="65" role="progressbar" style="--value: 65; --thickness: 4px; --size: 4rem">65%</div>
+					<div aria-label="Radial progress" class="radial-progress text-secondary outline-secondary/15 outline-4 -outline-offset-4" aria-valuenow="65" role="progressbar" style="--value: 65; --thickness: 4px; --size: 4rem">65%</div>
+					<div aria-label="Radial progress" class="radial-progress text-accent outline-accent/15 outline-4 -outline-offset-4" aria-valuenow="65" role="progressbar" style="--value: 65; --thickness: 4px; --size: 4rem">65%</div>
+					<div aria-label="Radial progress" class="radial-progress text-success outline-success/15 outline-4 -outline-offset-4" aria-valuenow="65" role="progressbar" style="--value: 65; --thickness: 4px; --size: 4rem">65%</div>
+					<div aria-label="Radial progress" class="radial-progress text-info outline-info/15 outline-4 -outline-offset-4" aria-valuenow="65" role="progressbar" style="--value: 65; --thickness: 4px; --size: 4rem">65%</div>
+					<div aria-label="Radial progress" class="radial-progress text-warning outline-warning/15 outline-4 -outline-offset-4" aria-valuenow="65" role="progressbar" style="--value: 65; --thickness: 4px; --size: 4rem">65%</div>
+					<div aria-label="Radial progress" class="radial-progress text-error outline-error/15 outline-4 -outline-offset-4" aria-valuenow="65" role="progressbar" style="--value: 65; --thickness: 4px; --size: 4rem">65%</div>
+				</div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Background</div>
+				<div class="mt-4 flex gap-4">
+					<div aria-label="Radial progress" class="radial-progress border-primary bg-primary text-primary-content border-4" aria-valuenow="75" role="progressbar" style="--value: 75; --thickness: 4px; --size: 4rem">75%</div>
+				</div>
+			</div></div>
 		</div>
 	case "radial-progress":
 		<div class="flex gap-4"><div class="radial-progress text-primary" style="--value:70">70%</div><div class="radial-progress text-secondary" style="--value:50">50%</div><div class="radial-progress text-accent" style="--value:80">80%</div></div>
@@ -323,28 +841,216 @@ templ renderComponentDemo(name string) {
 			<div class="card bg-base-100 shadow-sm"><div class="card-body gap-2"><p class="text-sm text-base-content/60">Revenue</p><p class="text-2xl font-semibold">$12,345</p><div class="badge badge-success badge-soft badge-xs">+10.8%</div></div></div>
 			<div class="card bg-base-100 shadow-sm"><div class="card-body gap-2"><p class="text-sm text-base-content/60">Users</p><p class="text-2xl font-semibold">4,562</p><div class="badge badge-success badge-soft badge-xs">+8.2%</div></div></div>
 		</div>
-	case "step", "steps":
-		<ul class="steps w-full"><li class="step step-primary">Register</li><li class="step step-primary">Choose</li><li class="step">Purchase</li><li class="step">Receive</li></ul>
+	case "step":
+		<div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100 overflow-auto"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4 overflow-auto"><ul class="steps"><li class="step step-primary">Register</li><li class="step step-primary">Choose plan</li><li class="step">Purchase</li><li class="step">Receive Product</li></ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100 overflow-auto"><div class="card-body"><div class="card-title">Responsive</div>
+				<div class="mt-4 overflow-auto"><ul class="steps steps-vertical lg:steps-horizontal"><li class="step step-primary">Register</li><li class="step step-primary">Choose plan</li><li class="step">Purchase</li><li class="step">Receive Product</li></ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100 overflow-auto"><div class="card-body"><div class="card-title">Icon</div>
+				<div class="mt-4 overflow-auto"><ul class="steps"><li data-content="?" class="step">Step 1</li><li data-content="!" class="step">Step 2</li><li data-content="✓" class="step">Step 3</li><li data-content="✕" class="step">Step 4</li><li data-content="★" class="step">Step 5</li><li data-content="" class="step">Step 6</li><li data-content="●" class="step">Step 7</li></ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100 overflow-auto"><div class="card-body"><div class="card-title">Color</div>
+				<div class="mt-4 overflow-auto"><ul class="steps"><li class="step step-info">Travel to Mars</li><li class="step step-info">Establish a base</li><li class="step step-info">Collect samples</li><li class="step step-error" data-content="?">Return safely</li></ul></div>
+			</div></div>
+		</div>
 	case "swap":
 		<label class="swap"><input type="checkbox"/><div class="swap-on">ON</div><div class="swap-off">OFF</div></label>
-	case "tab", "tabs":
-		<div class="space-y-3">
-			<div role="tablist" class="tabs tabs-lift"><input type="radio" name="t1" class="tab" aria-label="Lift 1" checked/><input type="radio" name="t1" class="tab" aria-label="Lift 2"/></div>
-			<div role="tablist" class="tabs tabs-box"><input type="radio" name="t2" class="tab" aria-label="Box 1" checked/><input type="radio" name="t2" class="tab" aria-label="Box 2"/></div>
-			<div role="tablist" class="tabs tabs-border"><input type="radio" name="t3" class="tab" aria-label="Border 1" checked/><input type="radio" name="t3" class="tab" aria-label="Border 2"/></div>
+	case "tab":
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4"><div role="tablist" class="tabs"><a role="tab" class="tab">Tab 1</a><a role="tab" class="tab tab-active">Tab 2</a><a role="tab" class="tab">Tab 3</a></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Border</div>
+				<div class="mt-4"><div role="tablist" class="tabs tabs-border"><a role="tab" class="tab">Tab 1</a><a role="tab" class="tab tab-active text-primary">Tab 2</a><a role="tab" class="tab">Tab 3</a></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Lift</div>
+				<div class="mt-4"><div role="tablist" class="tabs tabs-lift"><a role="tab" class="tab">Tab 1</a><a role="tab" class="tab tab-active">Tab 2</a><a role="tab" class="tab">Tab 3</a></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Box</div>
+				<div class="mt-4 w-fit"><div role="tablist" class="tabs tabs-box"><a role="tab" class="tab">Tab 1</a><a role="tab" class="tab tab-active">Tab 2</a><a role="tab" class="tab">Tab 3</a></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Radio Button</div>
+				<div class="mt-4"><div role="tablist" class="tabs tabs-lift"><input role="tab" class="tab" aria-label="Tab 1" type="radio" name="demo-tabs-radio"/><div class="tab-content border-base-200 bg-base-100 p-6">Tab content 1</div><input role="tab" class="tab" aria-label="Tab 2" type="radio" checked name="demo-tabs-radio"/><div class="tab-content border-base-200 bg-base-100 p-6">Tab content 2</div><input role="tab" class="tab" aria-label="Tab 3" type="radio" name="demo-tabs-radio"/><div class="tab-content border-base-200 bg-base-100 p-6">Tab content 3</div></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Bottom Tab</div>
+				<div class="mt-4"><div role="tablist" class="tabs tabs-lift tabs-bottom"><input role="tab" class="tab" aria-label="Tab 1" type="radio" name="demo-tabs-bottom-radio"/><div class="tab-content border-base-200 bg-base-100 p-6">Tab content 1</div><input role="tab" class="tab" aria-label="Tab 2" type="radio" checked name="demo-tabs-bottom-radio"/><div class="tab-content border-base-200 bg-base-100 p-6">Tab content 2</div><input role="tab" class="tab" aria-label="Tab 3" type="radio" name="demo-tabs-bottom-radio"/><div class="tab-content border-base-200 bg-base-100 p-6">Tab content 3</div></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Disabled</div>
+				<div class="mt-4"><div role="tablist" class="tabs tabs-lift"><input role="tab" class="tab" aria-label="Tab 1" type="radio" checked name="demo-tabs-disabled-radio"/><div class="tab-content border-base-200 bg-base-100 p-6">Tab content 1</div><input role="tab" class="tab" aria-label="Tab 2" disabled type="radio" name="demo-tabs-disabled-radio"/><div class="tab-content border-base-200 bg-base-100 p-6">Tab content 2</div><input role="tab" class="tab" aria-label="Tab 3" type="radio" name="demo-tabs-disabled-radio"/><div class="tab-content border-base-200 bg-base-100 p-6">Tab content 3</div></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div>
+				<div class="mt-4 flex flex-col items-center gap-2">
+					<div role="tablist" class="tabs tabs-xs"><a role="tab" class="tab">Tab 1</a><a role="tab" class="tab tab-active">Tab 2</a><a role="tab" class="tab">Tab 3</a></div>
+					<div role="tablist" class="tabs tabs-sm"><a role="tab" class="tab">Tab 1</a><a role="tab" class="tab tab-active">Tab 2</a><a role="tab" class="tab">Tab 3</a></div>
+					<div role="tablist" class="tabs"><a role="tab" class="tab">Tab 1</a><a role="tab" class="tab tab-active">Tab 2</a><a role="tab" class="tab">Tab 3</a></div>
+					<div role="tablist" class="tabs tabs-lg"><a role="tab" class="tab">Tab 1</a><a role="tab" class="tab tab-active">Tab 2</a><a role="tab" class="tab">Tab 3</a></div>
+					<div role="tablist" class="tabs tabs-xl"><a role="tab" class="tab">Tab 1</a><a role="tab" class="tab tab-active">Tab 2</a><a role="tab" class="tab">Tab 3</a></div>
+				</div>
+			</div></div>
 		</div>
 	case "table":
-		<div class="overflow-x-auto"><table class="table"><thead><tr><th>Name</th><th>Role</th><th>Status</th></tr></thead><tbody><tr><td>Alice</td><td>Admin</td><td><span class="badge badge-success badge-xs">Active</span></td></tr><tr><td>Bob</td><td>Editor</td><td><span class="badge badge-warning badge-xs">Pending</span></td></tr></tbody></table></div>
+		<div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-3"><table class="table"><thead><tr><th></th><th>Name</th><th>Job</th><th>Favorite Color</th></tr></thead><tbody><tr><td>1</td><td>Cy Ganderton</td><td>Quality Control Specialist</td><td>Blue</td></tr><tr><td>2</td><td>Hart Hagerty</td><td>Desktop Support Technician</td><td>Purple</td></tr><tr><td>3</td><td>Brice Swyre</td><td>Tax Accountant</td><td>Red</td></tr></tbody></table></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Active Row</div>
+				<div class="mt-3"><table class="table"><thead><tr><th></th><th>Name</th><th>Job</th><th>Favorite Color</th></tr></thead><tbody><tr class="bg-base-200"><td>1</td><td>Cy Ganderton</td><td>Quality Control Specialist</td><td>Blue</td></tr><tr><td>2</td><td>Hart Hagerty</td><td>Desktop Support Technician</td><td>Purple</td></tr><tr><td>3</td><td>Brice Swyre</td><td>Tax Accountant</td><td>Red</td></tr></tbody></table></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Highlight on Hover</div>
+				<div class="mt-3"><table class="table"><thead><tr><th></th><th>Name</th><th>Job</th><th>Favorite Color</th></tr></thead><tbody><tr class="hover:bg-base-200"><td>1</td><td>Cy Ganderton</td><td>Quality Control Specialist</td><td>Blue</td></tr><tr class="hover:bg-base-200"><td>2</td><td>Hart Hagerty</td><td>Desktop Support Technician</td><td>Purple</td></tr><tr class="hover:bg-base-200"><td>3</td><td>Brice Swyre</td><td>Tax Accountant</td><td>Red</td></tr></tbody></table></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Zebra</div>
+				<div class="mt-3"><table class="table-zebra table"><thead><tr><th></th><th>Name</th><th>Job</th><th>Favorite Color</th></tr></thead><tbody><tr><td>1</td><td>Cy Ganderton</td><td>Quality Control Specialist</td><td>Blue</td></tr><tr><td>2</td><td>Hart Hagerty</td><td>Desktop Support Technician</td><td>Purple</td></tr><tr><td>3</td><td>Brice Swyre</td><td>Tax Accountant</td><td>Red</td></tr></tbody></table></div>
+			</div></div>
+			<div class="card card-border bg-base-100 h-fit"><div class="card-body"><div class="card-title">Data Display</div>
+				<div class="mt-3 overflow-auto *:text-nowrap"><table class="table"><thead><tr><th><input aria-label="Check" class="checkbox checkbox-sm" type="checkbox"/></th><th>Name</th><th>Job</th><th>Favorite Color</th><th>Actions</th></tr></thead><tbody>
+					<tr><td><input aria-label="Check" class="checkbox checkbox-sm" type="checkbox"/></td><td><div class="flex items-center space-x-3 truncate"><div class="avatar"><div class="bg-primary/25 mask mask-squircle w-10"><img alt="Avatar" src="/images/avatars/1.png"/></div></div><div><div class="font-medium">Hart Hagerty</div><div class="text-base-content/80 text-sm">United States</div></div></div></td><td><div>Zemlak, Daniel and Leannon<br/><div class="badge-ghost badge badge-sm">Desktop Support Technician</div></div></td><td>Purple</td><td><button class="btn-ghost btn btn-xs">Details</button></td></tr>
+					<tr><td><input aria-label="Check" class="checkbox checkbox-sm" type="checkbox"/></td><td><div class="flex items-center space-x-3 truncate"><div class="avatar"><div class="bg-secondary/25 mask mask-squircle w-10"><img alt="Avatar" src="/images/avatars/2.png"/></div></div><div><div class="font-medium">Brice Swyre</div><div class="text-base-content/80 text-sm">China</div></div></div></td><td><div>Carrol Group<br/><div class="badge-ghost badge badge-sm">Tax Accountant</div></div></td><td>Red</td><td><button class="btn-ghost btn btn-xs">Details</button></td></tr>
+					<tr><td><input aria-label="Check" class="checkbox checkbox-sm" type="checkbox"/></td><td><div class="flex items-center space-x-3 truncate"><div class="avatar"><div class="bg-success/25 mask mask-squircle w-10"><img alt="Avatar" src="/images/avatars/3.png"/></div></div><div><div class="font-medium">Marjy Ferencz</div><div class="text-base-content/80 text-sm">Russia</div></div></div></td><td><div>Rowe-Schoen<br/><div class="badge-ghost badge badge-sm">Office Assistant I</div></div></td><td>Yellow</td><td><button class="btn-ghost btn btn-xs">Details</button></td></tr>
+					<tr><td><input aria-label="Check" class="checkbox checkbox-sm" type="checkbox"/></td><td><div class="flex items-center space-x-3 truncate"><div class="avatar"><div class="bg-error/25 mask mask-squircle w-10"><img alt="Avatar" src="/images/avatars/5.png"/></div></div><div><div class="font-medium">Yancy Tear</div><div class="text-base-content/80 text-sm">Brazil</div></div></div></td><td><div>Wyman-Ledner<br/><div class="badge-ghost badge badge-sm">Community Outreach Specialist</div></div></td><td>Indigo</td><td><button class="btn-ghost btn btn-xs">Details</button></td></tr>
+				</tbody><tfoot><tr><th></th><th>Name</th><th>Job</th><th>Favorite Color</th><th>Actions</th></tr></tfoot></table></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Pinned</div>
+				<div class="mt-3 max-h-[400px] overflow-auto"><table class="table-pin-rows table-pin-cols table [&_td]:text-nowrap"><thead><tr><th></th><td>Name</td><td>Job</td><td>Company</td><td>Location</td><td>Last Login</td><td>Favorite Color</td><th></th></tr></thead><tbody>
+					<tr><th>1</th><td>Cy Ganderton</td><td>Quality Control Specialist</td><td>Littel, Schaden and Vandervort</td><td>Canada</td><td>12/16/2020</td><td>Blue</td><th>1</th></tr>
+					<tr><th>2</th><td>Hart Hagerty</td><td>Desktop Support Technician</td><td>Zemlak, Daniel and Leannon</td><td>United States</td><td>12/5/2020</td><td>Purple</td><th>2</th></tr>
+					<tr><th>3</th><td>Brice Swyre</td><td>Tax Accountant</td><td>Carroll Group</td><td>China</td><td>8/15/2020</td><td>Red</td><th>3</th></tr>
+					<tr><th>4</th><td>Marjy Ferencz</td><td>Office Assistant I</td><td>Rowe-Schoen</td><td>Russia</td><td>3/25/2021</td><td>Crimson</td><th>4</th></tr>
+					<tr><th>5</th><td>Yancy Tear</td><td>Community Outreach Specialist</td><td>Wyman-Ledner</td><td>Brazil</td><td>5/22/2020</td><td>Indigo</td><th>5</th></tr>
+					<tr><th>6</th><td>Irma Vasilik</td><td>Editor</td><td>Wiza, Bins and Emard</td><td>Venezuela</td><td>12/8/2020</td><td>Purple</td><th>6</th></tr>
+					<tr><th>7</th><td>Meghann Durtnal</td><td>Staff Accountant IV</td><td>Schuster-Schimmel</td><td>Philippines</td><td>2/17/2021</td><td>Yellow</td><th>7</th></tr>
+					<tr><th>8</th><td>Sammy Seston</td><td>Accountant I</td><td>O'Hara, Welch and Keebler</td><td>Indonesia</td><td>5/23/2020</td><td>Crimson</td><th>8</th></tr>
+					<tr><th>9</th><td>Lesya Tinham</td><td>Safety Technician IV</td><td>Turner-Kuhlman</td><td>Philippines</td><td>2/21/2021</td><td>Maroon</td><th>9</th></tr>
+					<tr><th>10</th><td>Zaneta Tewkesbury</td><td>VP Marketing</td><td>Sauer LLC</td><td>Chad</td><td>6/23/2020</td><td>Green</td><th>10</th></tr>
+					<tr><th>11</th><td>Andy Tipple</td><td>Librarian</td><td>Hilpert Group</td><td>Poland</td><td>7/9/2020</td><td>Indigo</td><th>11</th></tr>
+					<tr><th>12</th><td>Sophi Biles</td><td>Recruiting Manager</td><td>Gutmann Inc</td><td>Indonesia</td><td>2/12/2021</td><td>Maroon</td><th>12</th></tr>
+					<tr><th>13</th><td>Florida Garces</td><td>Web Developer IV</td><td>Gaylord, Pacocha and Baumbach</td><td>Poland</td><td>5/31/2020</td><td>Purple</td><th>13</th></tr>
+					<tr><th>14</th><td>Maribeth Popping</td><td>Analyst Programmer</td><td>Deckow-Pouros</td><td>Portugal</td><td>4/27/2021</td><td>Aquamarine</td><th>14</th></tr>
+					<tr><th>15</th><td>Moritz Dryburgh</td><td>Dental Hygienist</td><td>Schiller, Cole and Hackett</td><td>Sri Lanka</td><td>8/8/2020</td><td>Crimson</td><th>15</th></tr>
+					<tr><th>16</th><td>Reid Semiras</td><td>Teacher</td><td>Sporer, Sipes and Rogahn</td><td>Poland</td><td>7/30/2020</td><td>Green</td><th>16</th></tr>
+					<tr><th>17</th><td>Alec Lethby</td><td>Teacher</td><td>Reichel, Glover and Hamill</td><td>China</td><td>2/28/2021</td><td>Khaki</td><th>17</th></tr>
+					<tr><th>18</th><td>Aland Wilber</td><td>Quality Control Specialist</td><td>Kshlerin, Rogahn and Swaniawski</td><td>Czech Republic</td><td>9/29/2020</td><td>Purple</td><th>18</th></tr>
+					<tr><th>19</th><td>Teddie Duerden</td><td>Staff Accountant III</td><td>Pouros, Ullrich and Windler</td><td>France</td><td>10/27/2020</td><td>Aquamarine</td><th>19</th></tr>
+					<tr><th>20</th><td>Lorelei Blackstone</td><td>Data Coordinator</td><td>Witting, Kutch and Greenfelder</td><td>Kazakhstan</td><td>6/3/2020</td><td>Red</td><th>20</th></tr>
+				</tbody><tfoot><tr><th></th><td>Name</td><td>Job</td><td>Company</td><td>Location</td><td>Last Login</td><td>Favorite Color</td><th></th></tr></tfoot></table></div>
+			</div></div>
+		</div>
 	case "timeline":
-		<ul class="timeline timeline-vertical"><li><div class="timeline-start">1984</div><div class="timeline-middle"><span class="iconify lucide--check size-4"></span></div><div class="timeline-end timeline-box">First Mac</div><hr/></li><li><hr/><div class="timeline-start">2007</div><div class="timeline-middle"><span class="iconify lucide--check size-4"></span></div><div class="timeline-end timeline-box">iPhone</div></li></ul>
+		<div class="mt-6 grid gap-6 xl:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4 overflow-auto"><ul class="timeline">
+					<li><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">First Macintosh computer</div><hr/></li>
+					<li><hr/><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iMac</div><hr/></li>
+					<li><hr/><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iPod</div><hr/></li>
+					<li><hr/><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iPhone</div><hr/></li>
+					<li><hr/><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">Apple Watch</div></li>
+				</ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Top side</div>
+				<div class="mt-4 overflow-auto"><ul class="timeline">
+					<li><div class="timeline-start timeline-box">First Macintosh computer</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><hr/></li>
+					<li><hr/><div class="timeline-start timeline-box">iMac</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><hr/></li>
+					<li><hr/><div class="timeline-start timeline-box">iPod</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><hr/></li>
+					<li><hr/><div class="timeline-start timeline-box">iPhone</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><hr/></li>
+					<li><hr/><div class="timeline-start timeline-box">Apple Watch</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div></li>
+				</ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Label</div>
+				<div class="mt-4 overflow-auto"><ul class="timeline">
+					<li><div class="timeline-start">1984</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">First Macintosh computer</div><hr/></li>
+					<li><hr/><div class="timeline-start">1998</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iMac</div><hr/></li>
+					<li><hr/><div class="timeline-start">2001</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iPod</div><hr/></li>
+					<li><hr/><div class="timeline-start">2007</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iPhone</div><hr/></li>
+					<li><hr/><div class="timeline-start">2015</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">Apple Watch</div></li>
+				</ul></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Different side</div>
+				<div class="mt-4 overflow-auto"><ul class="timeline">
+					<li><div class="timeline-start timeline-box">First Macintosh computer</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><hr/></li>
+					<li><hr/><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iMac</div><hr/></li>
+					<li><hr/><div class="timeline-start timeline-box">iPod</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><hr/></li>
+					<li><hr/><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iPhone</div><hr/></li>
+					<li><hr/><div class="timeline-start timeline-box">Apple Watch</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div></li>
+				</ul></div>
+			</div></div>
+			<div class="space-y-6">
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div>
+					<div class="mt-4 overflow-auto"><ul class="timeline">
+						<li><div class="timeline-start timeline-box">First Macintosh computer</div><div class="timeline-middle"><div class="text-primary-content bg-primary grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><hr class="from-primary to-secondary bg-linear-to-r"/></li>
+						<li><hr class="bg-secondary"/><div class="timeline-middle"><div class="bg-secondary text-secondary-content grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iMac</div><hr class="from-secondary to-info bg-linear-to-r"/></li>
+						<li><hr class="bg-info"/><div class="timeline-start timeline-box">iPod</div><div class="timeline-middle"><div class="bg-info text-info-content grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><hr class="from-success to-success bg-linear-to-r"/></li>
+						<li><hr class="bg-success"/><div class="timeline-middle"><div class="bg-success text-success-content grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iPhone</div><hr class="from-success to-base-300 bg-linear-to-r"/></li>
+						<li><hr/><div class="timeline-start timeline-box">Apple Watch</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div></li>
+					</ul></div>
+				</div></div>
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Without icon</div>
+					<div class="mt-4 overflow-auto"><ul class="timeline">
+						<li><div class="timeline-start timeline-box">First Macintosh computer</div><hr/></li>
+						<li><hr/><div class="timeline-end timeline-box">iMac</div><hr/></li>
+						<li><hr/><div class="timeline-start timeline-box">iPod</div><hr/></li>
+						<li><hr/><div class="timeline-end timeline-box">iPhone</div><hr/></li>
+						<li><hr/><div class="timeline-start timeline-box">Apple Watch</div></li>
+					</ul></div>
+				</div></div>
+			</div>
+			<div class="card card-border bg-base-100 h-fit"><div class="card-body"><div class="card-title">Vertical</div>
+				<div class="mt-4 overflow-auto"><ul class="timeline timeline-vertical">
+					<li><div class="timeline-start timeline-box">First Macintosh computer</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><hr/></li>
+					<li><hr/><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iMac</div><hr/></li>
+					<li><hr/><div class="timeline-start timeline-box">iPod</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><hr/></li>
+					<li><hr/><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div><div class="timeline-end timeline-box">iPhone</div><hr/></li>
+					<li><hr/><div class="timeline-start timeline-box">Apple Watch</div><div class="timeline-middle"><div class="bg-base-200 grid place-items-center rounded-full p-1"><span class="iconify lucide--check size-3.5"></span></div></div></li>
+				</ul></div>
+			</div></div>
+		</div>
 	case "toast":
-		<div class="space-y-2"><div class="alert alert-success"><span>Operation successful!</span></div><div class="alert alert-error"><span>Something went wrong</span></div></div>
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4"><input aria-label="Show" class="btn peer" type="checkbox"/><div class="opacity-0 transition-all peer-checked:opacity-100"><div class="toast"><div class="alert alert-info"><span>New message arrived.</span></div></div></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Multiple</div>
+				<div class="mt-4"><input aria-label="Show" class="btn peer" type="checkbox"/><div class="opacity-0 transition-all peer-checked:opacity-100"><div class="toast"><div class="alert alert-info"><span>New mail arrived.</span></div><div class="alert alert-success"><span>Message sent successfully.</span></div></div></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Playground</div>
+				<div class="grid place-items-center py-6"><div class="-mb-16 grid grid-cols-3 place-items-center gap-4">
+					<input aria-label="Top start" class="btn peer/top-start w-fit" type="checkbox"/>
+					<input aria-label="Top center" class="btn peer/top-center w-fit" type="checkbox"/>
+					<input aria-label="Top end" class="btn peer/top-end w-fit" type="checkbox"/>
+					<input aria-label="Middle start" class="btn peer/middle-start w-fit" type="checkbox"/>
+					<input aria-label="Middle center" class="btn peer/middle-center w-fit" type="checkbox"/>
+					<input aria-label="Middle end" class="btn peer/middle-end w-fit" type="checkbox"/>
+					<input aria-label="Bottom start" class="btn peer/bottom-start w-fit" type="checkbox"/>
+					<input aria-label="Bottom center" class="btn peer/bottom-center w-fit" type="checkbox"/>
+					<input aria-label="Bottom end" class="btn peer/bottom-end w-fit" type="checkbox"/>
+					<div class="z-[-1] opacity-0 transition-all peer-checked/top-start:z-[50] peer-checked/top-start:opacity-100"><div class="toast toast-top toast-start"><div class="alert alert-info"><span>New message arrived.</span></div></div></div>
+					<div class="z-[-1] opacity-0 transition-all peer-checked/top-center:z-[50] peer-checked/top-center:opacity-100"><div class="toast toast-top toast-center"><div class="alert alert-info"><span>New message arrived.</span></div></div></div>
+					<div class="z-[-1] opacity-0 transition-all peer-checked/top-end:z-[50] peer-checked/top-end:opacity-100"><div class="toast toast-top toast-end"><div class="alert alert-info"><span>New message arrived.</span></div></div></div>
+					<div class="z-[-1] opacity-0 transition-all peer-checked/middle-start:z-[50] peer-checked/middle-start:opacity-100"><div class="toast toast-middle toast-start"><div class="alert alert-info"><span>New message arrived.</span></div></div></div>
+					<div class="z-[-1] opacity-0 transition-all peer-checked/middle-center:z-[50] peer-checked/middle-center:opacity-100"><div class="toast toast-middle toast-center"><div class="alert alert-info"><span>New message arrived.</span></div></div></div>
+					<div class="z-[-1] opacity-0 transition-all peer-checked/middle-end:z-[50] peer-checked/middle-end:opacity-100"><div class="toast toast-middle toast-end"><div class="alert alert-info"><span>New message arrived.</span></div></div></div>
+					<div class="z-[-1] opacity-0 transition-all peer-checked/bottom-start:z-[50] peer-checked/bottom-start:opacity-100"><div class="toast toast-bottom toast-start"><div class="alert alert-info"><span>New message arrived.</span></div></div></div>
+					<div class="z-[-1] opacity-0 transition-all peer-checked/bottom-center:z-[50] peer-checked/bottom-center:opacity-100"><div class="toast toast-bottom toast-center"><div class="alert alert-info"><span>New message arrived.</span></div></div></div>
+					<div class="z-[-1] opacity-0 transition-all peer-checked/bottom-end:z-[50] peer-checked/bottom-end:opacity-100"><div class="toast toast-bottom toast-end"><div class="alert alert-info"><span>New message arrived.</span></div></div></div>
+				</div></div>
+			</div></div>
+		</div>
 	case "tooltip":
-		<div class="flex gap-4 pt-4">
-			<div class="tooltip" data-tip="Top"><button class="btn">Top</button></div>
-			<div class="tooltip tooltip-bottom" data-tip="Bottom"><button class="btn">Bot</button></div>
-			<div class="tooltip tooltip-left" data-tip="Left"><button class="btn">L</button></div>
-			<div class="tooltip tooltip-right" data-tip="Right"><button class="btn">R</button></div>
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div>
+				<div class="mt-4 flex flex-wrap gap-3"><div class="tooltip" data-tip={ "It's tooltip" }><button class="btn">Hover me</button></div><div class="tooltip tooltip-open" data-tip={ "I'm never go" }><button class="btn">Always</button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Position</div>
+				<div class="mt-4 flex flex-wrap gap-3"><div class="tooltip tooltip-left" data-tip="Left"><button class="btn">Left</button></div><div class="tooltip tooltip-top" data-tip="Top"><button class="btn">Top</button></div><div class="tooltip tooltip-right" data-tip="Right"><button class="btn">Right</button></div><div class="tooltip tooltip-bottom" data-tip="Bottom"><button class="btn">Bottom</button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div>
+				<div class="mt-4 flex flex-wrap gap-3"><div class="tooltip tooltip-primary" data-tip="Primary"><button class="btn btn-primary">Primary</button></div><div class="tooltip tooltip-secondary" data-tip="Secondary"><button class="btn btn-secondary">Secondary</button></div><div class="tooltip tooltip-accent" data-tip="Accent"><button class="btn btn-accent">Accent</button></div><div class="tooltip tooltip-success" data-tip="Success"><button class="btn btn-success">Success</button></div><div class="tooltip tooltip-info" data-tip="Info"><button class="btn btn-info">Info</button></div><div class="tooltip tooltip-warning" data-tip="Warning"><button class="btn btn-warning">Warning</button></div><div class="tooltip tooltip-error" data-tip="Error"><button class="btn btn-error">Error</button></div></div>
+			</div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Custom</div>
+				<div class="mt-4"><div class="tooltip"><div class="tooltip-content bg-transparent p-0"><div class="card card-border bg-base-100 text-base-content shadow-sm"><div class="card-body p-3"><div class="card-title">Card title</div><p>you can use any element as a tooltip</p></div></div></div><button class="btn">Information</button></div></div>
+			</div></div>
 		</div>
 	default:
 		<div class="text-center w-full py-8 text-base-content/40">Component demo: { name }</div>
@@ -355,21 +1061,21 @@ templ renderFormDemo(name string) {
 	switch name {
 	case "checkbox":
 		<div class="mt-6 grid gap-6 lg:grid-cols-2">
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4 flex flex-wrap gap-3"><input type="checkbox" class="checkbox" aria-label="Checkbox"/><input type="checkbox" class="checkbox" checked aria-label="Checkbox"/><input type="checkbox" class="checkbox" disabled aria-label="Checkbox"/><input type="checkbox" class="checkbox" checked disabled aria-label="Checkbox"/></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div><div class="mt-4 flex flex-wrap gap-3"><input type="checkbox" class="checkbox checkbox-primary" checked aria-label="Checkbox"/><input type="checkbox" class="checkbox checkbox-secondary" checked aria-label="Checkbox"/><input type="checkbox" class="checkbox checkbox-accent" checked aria-label="Checkbox"/><input type="checkbox" class="checkbox checkbox-success" checked aria-label="Checkbox"/><input type="checkbox" class="checkbox checkbox-info" checked aria-label="Checkbox"/><input type="checkbox" class="checkbox checkbox-warning" checked aria-label="Checkbox"/><input type="checkbox" class="checkbox checkbox-error" checked aria-label="Checkbox"/></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-wrap items-center gap-3"><input type="checkbox" class="checkbox checkbox-xl" checked aria-label="Checkbox"/><input type="checkbox" class="checkbox checkbox-lg" checked aria-label="Checkbox"/><input type="checkbox" class="checkbox" checked aria-label="Checkbox"/><input type="checkbox" class="checkbox checkbox-sm" checked aria-label="Checkbox"/><input type="checkbox" class="checkbox checkbox-xs" checked aria-label="Checkbox"/></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Labelled</div><label class="label flex bg-base-200 rounded-box mt-4 w-64 p-3 px-4"><span class="label-text grow cursor-pointer">Remember me</span><input type="checkbox" class="checkbox"/></label></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4 flex flex-wrap gap-3"><input type="checkbox" class="checkbox" aria-label="Checkbox example"/><input type="checkbox" class="checkbox" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox" disabled aria-label="Checkbox example"/><input type="checkbox" class="checkbox" checked disabled aria-label="Checkbox example"/></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div><div class="mt-4 flex flex-wrap gap-3"><input type="checkbox" class="checkbox checkbox-primary" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox checkbox-secondary" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox checkbox-accent" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox checkbox-success" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox checkbox-info" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox checkbox-warning" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox checkbox-error" checked aria-label="Checkbox example"/></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-wrap items-center gap-3"><input type="checkbox" class="checkbox checkbox-xl" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox checkbox-lg" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox checkbox-sm" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox checkbox-xs" checked aria-label="Checkbox example"/></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Form Control</div><form class="form-control bg-base-200 rounded-box mt-4 w-64 p-3 px-4"><label class="label flex"><span class="label-text grow cursor-pointer">Remember me</span><input class="checkbox" type="checkbox"/></label></form></div></div>
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Indeterminate</div><div class="mt-4"><div class="flex flex-wrap gap-3"><input type="checkbox" class="checkbox" id="indeterminate-checkbox" aria-label="Checkbox example"/><input type="checkbox" class="checkbox" disabled id="indeterminate-checkbox-disabled" aria-label="Checkbox example"/></div></div></div></div>
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Custom</div><div class="mt-4 flex flex-wrap gap-3"><input type="checkbox" class="checkbox border-red-300 bg-red-100 text-red-600 checked:border-red-600 checked:bg-red-200" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox border-blue-300 bg-blue-100 text-blue-600 checked:border-blue-600 checked:bg-blue-200" checked aria-label="Checkbox example"/><input type="checkbox" class="checkbox border-blue-300 bg-linear-to-br from-blue-500 to-purple-500 [background-size:inherit] text-white checked:border-blue-500" checked aria-label="Checkbox example"/></div></div></div>
 		</div>
 	case "input":
 		<div class="mt-6 grid gap-6 lg:grid-cols-2">
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4 flex flex-col gap-3"><input type="text" class="input" placeholder="Type here" aria-label="Input"/><input type="text" class="input" value="You can't touch this" aria-label="Input"/></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Disabled</div><div class="mt-4 flex flex-col gap-3"><input type="text" class="input" disabled placeholder="Can't touch this" aria-label="Input"/><input type="text" class="input" disabled value="You can't touch this" aria-label="Input"/></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4 flex flex-col gap-3"><input type="text" class="input" placeholder="Type here" aria-label="Input"/><input type="text" class="input" value="I have already written something for you" aria-label="Input"/></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Disabled</div><div class="mt-4 flex flex-col gap-3"><input type="text" class="input" disabled placeholder="Type here" aria-label="Input"/><input type="text" class="input" disabled value="I have already written something for you" aria-label="Input"/></div></div></div>
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Ghost</div><div class="mt-4 flex flex-col gap-3"><input type="text" class="input input-ghost" placeholder="Touch to write" aria-label="Input"/><input type="text" class="input" disabled aria-label="Input" value={"I'm ghost, you can't touch me 👻"}/></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Fieldset</div><div class="mt-4 flex flex-col gap-3"><fieldset class="fieldset"><legend class="fieldset-legend">What is your name?</legend><input type="text" class="input" placeholder="Shoaib Rain" aria-label="Input"/><p class="fieldset-label">* Required</p></fieldset></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Fieldset</div><div class="mt-4 flex flex-col gap-3"><fieldset class="fieldset"><legend class="fieldset-legend">What is your name?</legend><input type="text" class="input" placeholder="Type here" aria-label="Input"/><p class="fieldset-label">* Required</p></fieldset></div></div></div>
 			<div class="space-y-5">
-				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Label inside</div><div class="mt-4 flex flex-col gap-3"><label class="input"><span class="iconify lucide--search text-base-content/60 size-5"></span><input class="grow" placeholder="Search" type="search" aria-label="Input"/><kbd class="kbd kbd-sm">⌘</kbd><kbd class="kbd kbd-sm">K</kbd></label><label class="input"><span class="iconify lucide--file text-base-content/60 size-5"></span><input class="grow" placeholder="index.php" type="text" aria-label="Input"/></label><label class="input">Path<input class="grow" placeholder="src/app/" type="text" aria-label="Input"/><span class="badge badge-ghost badge-sm">.tsx</span></label></div></div></div>
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Label inside</div><div class="mt-4 flex flex-col gap-3"><label class="input"><span class="iconify lucide--search text-base-content/60 size-5"></span><input class="grow" placeholder="Search" type="search"/><kbd class="kbd kbd-sm">⌘</kbd><kbd class="kbd kbd-sm">K</kbd></label><label class="input"><span class="iconify lucide--file text-base-content/60 size-5"></span><input class="grow" placeholder="index.php" type="text"/></label><label class="input">Path<input class="grow" placeholder="src/app/" type="text"/><span class="badge badge-ghost badge-sm">.tsx</span></label></div></div></div>
 				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-col gap-3"><input type="text" class="input input-xs" placeholder="Type here" aria-label="Input"/><input type="text" class="input input-sm" placeholder="Type here" aria-label="Input"/><input type="text" class="input" placeholder="Type here" aria-label="Input"/><input type="text" class="input input-lg" placeholder="Type here" aria-label="Input"/><input type="text" class="input input-xl" placeholder="Type here" aria-label="Input"/></div></div></div>
 			</div>
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div><div class="mt-4 flex flex-col gap-3"><input type="text" class="input input-primary" placeholder="Type here" aria-label="Input"/><input type="text" class="input input-secondary" placeholder="Type here" aria-label="Input"/><input type="text" class="input input-accent" placeholder="Type here" aria-label="Input"/><input type="text" class="input input-success" placeholder="Type here" aria-label="Input"/><input type="text" class="input input-info" placeholder="Type here" aria-label="Input"/><input type="text" class="input input-warning" placeholder="Type here" aria-label="Input"/><input type="text" class="input input-error" placeholder="Type here" aria-label="Input"/><input type="text" class="input input-neutral" placeholder="Type here" aria-label="Input"/></div></div></div>
@@ -379,26 +1085,87 @@ templ renderFormDemo(name string) {
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4 flex flex-wrap gap-4"><input type="checkbox" class="toggle" aria-label="Checkbox"/><input type="checkbox" class="toggle" checked aria-label="Checkbox"/><input type="checkbox" class="toggle" disabled aria-label="Checkbox"/><input type="checkbox" class="toggle" checked disabled aria-label="Checkbox"/></div></div></div>
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div><div class="mt-4 flex flex-wrap gap-4"><input type="checkbox" class="toggle toggle-primary" checked aria-label="Checkbox"/><input type="checkbox" class="toggle toggle-secondary" checked aria-label="Checkbox"/><input type="checkbox" class="toggle toggle-accent" checked aria-label="Checkbox"/><input type="checkbox" class="toggle toggle-success" checked aria-label="Checkbox"/><input type="checkbox" class="toggle toggle-info" checked aria-label="Checkbox"/><input type="checkbox" class="toggle toggle-warning" checked aria-label="Checkbox"/><input type="checkbox" class="toggle toggle-error" checked aria-label="Checkbox"/></div></div></div>
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-wrap items-center gap-4"><input type="checkbox" class="toggle toggle-xs" checked aria-label="Checkbox"/><input type="checkbox" class="toggle toggle-sm" checked aria-label="Checkbox"/><input type="checkbox" class="toggle" checked aria-label="Checkbox"/><input type="checkbox" class="toggle toggle-lg" checked aria-label="Checkbox"/><input type="checkbox" class="toggle toggle-xl" checked aria-label="Checkbox"/></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Icon</div><div class="mt-4 flex flex-wrap items-center gap-4"><label class="toggle text-base-content toggle-xl"><input type="checkbox" checked aria-label="Checkbox"/><span class="iconify lucide--x m-1 flex size-3.5 items-center"></span><span class="iconify lucide--check m-1 flex size-3.5 items-center"></span></label><label class="toggle text-base-content toggle-xl"><input type="checkbox" checked aria-label="Checkbox"/><span class="iconify lucide--sun m-1 flex size-3.5 items-center"></span><span class="iconify lucide--moon m-1 flex size-3.5 items-center"></span></label></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Icon</div><div class="mt-4 flex flex-wrap items-center gap-4"><label class="toggle text-base-content toggle-xl"><input type="checkbox" aria-label="Checkbox"/><span class="iconify lucide--x m-1 flex size-3.5 items-center" aria-label="disabled"></span><span class="iconify lucide--check m-1 flex size-3.5 items-center" aria-label="enabled"></span></label><label class="toggle text-base-content toggle-xl"><input type="checkbox" aria-label="Checkbox"/><span class="iconify lucide--sun m-1 flex size-3.5 items-center" aria-label="disabled"></span><span class="iconify lucide--moon m-1 flex size-3.5 items-center" aria-label="enabled"></span></label></div></div></div>
 			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Custom</div><div class="mt-4 flex flex-wrap items-center gap-4"><input type="checkbox" class="toggle border-orange-300 bg-orange-200 text-orange-600 checked:border-orange-600 checked:bg-orange-600 checked:text-white" checked aria-label="Checkbox"/><input type="checkbox" class="toggle border-blue-300 bg-linear-to-br from-blue-300 to-purple-300 text-blue-800 checked:border-blue-500 checked:from-blue-500 checked:to-purple-500 checked:text-white" checked aria-label="Checkbox"/></div></div></div>
 		</div>
 	case "select":
 		<div class="mt-6 grid gap-6 lg:grid-cols-2">
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4 flex flex-col gap-3"><select class="select" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option selected>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Disabled</div><div class="mt-4 flex flex-col gap-3"><select class="select" disabled aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select" disabled aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option selected>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Ghost</div><div class="mt-4 flex flex-col gap-3"><select class="select select-ghost" aria-label="Select"><option disabled selected>Select any ghost</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-ghost" disabled aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option selected>{"Can't touch me, I'm already selected"}</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Fieldset</div><div class="mt-4 flex flex-col gap-3"><fieldset class="fieldset"><legend class="fieldset-legend">Need any favourite simpson?</legend><select class="select" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><p class="fieldset-label">* Optional</p></fieldset></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div><div class="mt-4 flex flex-col gap-3"><select class="select select-primary" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-secondary" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-accent" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-success" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-info" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-warning" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-error" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-neutral" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div>
-			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-col gap-3"><select class="select select-xs" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-sm" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-lg" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-xl" aria-label="Select"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4 flex flex-col gap-3"><select class="select" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select" aria-label="Select"><option disabled>Pick your favorite Simpson</option><option value="homer">Homer</option><option value="marge" selected>Marge</option><option value="bart">Bart</option><option value="lisa">Lisa</option><option value="maggie">Maggie</option></select></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Disabled</div><div class="mt-4 flex flex-col gap-3"><select class="select" disabled aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select" disabled aria-label="Select"><option disabled>Pick your favorite Simpson</option><option value="homer">Homer</option><option value="marge" selected>Marge</option><option value="bart">Bart</option><option value="lisa">Lisa</option><option value="maggie">Maggie</option></select></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Ghost</div><div class="mt-4 flex flex-col gap-3"><select class="select select-ghost" aria-label="Select"><option value="" disabled selected>Select any ghost</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-ghost" disabled aria-label="Select"><option disabled>Pick your favorite Simpson</option><option value="homer">Homer</option><option value="marge" selected>{"Can't touch me, I'm already selected"}</option><option value="bart">Bart</option><option value="lisa">Lisa</option><option value="maggie">Maggie</option></select></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Fieldset</div><div class="mt-4 flex flex-col gap-3"><fieldset class="fieldset"><legend class="fieldset-legend">Need any favourite simpson?</legend><select class="select" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><p class="fieldset-label">* Optional</p></fieldset></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div><div class="mt-4 flex flex-col gap-3"><select class="select select-primary" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-secondary" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-accent" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-success" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-info" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-warning" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-error" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-neutral" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-col gap-3"><select class="select select-xs" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-sm" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-lg" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class="select select-xl" aria-label="Select"><option value="" disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div>
 		</div>
-	case "fieldset": <fieldset class="fieldset bg-base-200 border border-line-strong p-4 rounded-box w-full max-w-md"><legend class="fieldset-legend">Settings</legend><label class="fieldset-label">Name</label><input type="text" class="input w-full" placeholder="Name"/></fieldset>
-	case "file-input": <div class="space-y-2"><input type="file" class="file-input w-full max-w-xs"/><input type="file" class="file-input file-input-primary w-full max-w-xs"/></div>
-	case "label": <label class="flex w-full max-w-xs flex-col"><span class="label"><span class="label-text">Name</span><span class="label-text-alt">Required</span></span><input type="text" class="input w-full"/></label>
-	case "radio": <div class="flex gap-4"><label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="rd" class="radio" checked/><span>A</span></label><label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="rd" class="radio"/><span>B</span></label></div>
-	case "range": <div class="space-y-2 w-full max-w-xs"><input type="range" min="0" max="100" value="40" class="range range-primary w-full"/><input type="range" min="0" max="100" value="60" class="range range-secondary w-full"/></div>
-	case "rating": <div class="rating"><input type="radio" name="rt" class="mask mask-star-2 bg-orange-400"/><input type="radio" name="rt" class="mask mask-star-2 bg-orange-400" checked/><input type="radio" name="rt" class="mask mask-star-2 bg-orange-400"/></div>
-	case "textarea": <textarea class="textarea w-full max-w-md" rows="4" placeholder="Write here..."></textarea>
-	case "validator": <div class="text-center py-4"><p class="text-sm">Use <code class="badge">validator</code> class with <code class="badge">validator-hint</code> { "for" } HTML5 validation.</p></div>
+	case "fieldset":
+		<div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Legend & Label</div><div class="mt-3"><fieldset class="fieldset"><legend class="fieldset-legend">Form Title</legend><input type="text" class="input" placeholder="My awesome page" aria-label="Input"/><p class="fieldset-label">You can edit page title later on from settings</p></fieldset></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Background & Border</div><div class="mt-3"><fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-xs border p-4"><legend class="fieldset-legend bg-base-100 px-1.5 pb-0 font-medium">Form Title</legend><input type="text" class="input" aria-label="Input" placeholder="My awesome page"/><p class="fieldset-label">You can edit page title later on from settings</p></fieldset></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Multi field</div><div class="mt-3"><fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-xs border p-4"><legend class="fieldset-legend bg-base-100 px-1.5 pb-0 font-medium">Fill information</legend><label for="information-title" class="fieldset-label">Title</label><input type="text" id="information-title" class="input" placeholder="My awesome page"/><label for="information-slug" class="fieldset-label">Slug</label><input type="text" class="input" id="information-slug" placeholder="my-awesome-page"/><label for="information-author" class="fieldset-label">Author</label><input type="text" class="input" id="information-author" placeholder="Name"/></fieldset></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Login</div><div class="mt-3"><fieldset class="fieldset bg-base-200 border-base-300 rounded-box max-w-xs border p-4"><legend class="fieldset-legend bg-base-100 px-1.5 pb-0 font-medium">Write your details</legend><label class="fieldset-label" for="detail-email">Email</label><input type="email" class="input" id="detail-email" placeholder="Email"/><label for="detail-password" class="fieldset-label">Password</label><input type="password" class="input" id="detail-password" placeholder="Password"/><button class="btn btn-primary mt-4">Login</button></fieldset></div></div></div>
+		</div>
+	case "file-input":
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4 flex flex-col gap-4"><input type="file" class="file-input" aria-label="File"/><input type="file" class="file-input" disabled aria-label="File"/></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Ghost</div><div class="mt-4 flex flex-col gap-4"><input type="file" class="file-input file-input-ghost" aria-label="File"/><input type="file" class="file-input file-input-ghost" disabled aria-label="File"/></div></div></div>
+			<div class="space-y-4">
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Fieldset</div><div class="mt-1"><fieldset class="fieldset gap-1"><legend class="fieldset-legend">Pick a file</legend><input type="file" class="file-input" aria-label="File"/><span class="fieldset-label">Max size 2MB</span></fieldset></div></div></div>
+				<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-col gap-3"><input type="file" class="file-input file-input-xs" aria-label="File"/><input type="file" class="file-input file-input-sm" aria-label="File"/><input type="file" class="file-input" aria-label="File"/><input type="file" class="file-input file-input-lg" aria-label="File"/><input type="file" class="file-input file-input-xl" aria-label="File"/></div></div></div>
+			</div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div><div class="mt-4 flex flex-col gap-3"><input type="file" class="file-input file-input-primary" aria-label="File"/><input type="file" class="file-input file-input-secondary" aria-label="File"/><input type="file" class="file-input file-input-accent" aria-label="File"/><input type="file" class="file-input file-input-success" aria-label="File"/><input type="file" class="file-input file-input-info" aria-label="File"/><input type="file" class="file-input file-input-warning" aria-label="File"/><input type="file" class="file-input file-input-error" aria-label="File"/><input type="file" class="file-input file-input-neutral" aria-label="File"/></div></div></div>
+		</div>
+	case "label":
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Prefix</div><div class="mt-4"><label class="input"><span class="label">https://</span><input type="text" placeholder="URL"/></label></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Suffix</div><div class="mt-4"><label class="input"><input type="text" placeholder="domain name"/><span class="label">.com</span></label></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Select</div><div class="mt-4"><label class="select"><span class="label">Type</span><select><option>Personal</option><option>Business</option></select></label></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Date Input</div><div class="mt-4"><label class="input"><span class="label">Publish date</span><input type="date"/></label></div></div></div>
+			<div class="card card-border bg-base-100 h-fit"><div class="card-body"><div class="card-title">Floating</div><div class="mt-4"><label class="floating-label"><span>Your name</span><input type="text" placeholder="Your name" class="input input-md"/></label></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-col gap-4"><label class="floating-label"><input type="text" placeholder="" class="input input-xs"/><span>Extra Small</span></label><label class="floating-label"><input type="text" placeholder="" class="input input-sm"/><span>Small</span></label><label class="floating-label"><input type="text" placeholder="" class="input input-md"/><span>Medium</span></label><label class="floating-label"><input type="text" placeholder="" class="input input-lg"/><span>Large</span></label><label class="floating-label"><input type="text" placeholder="" class="input input-xl"/><span>Extra Large</span></label></div></div></div>
+		</div>
+	case "radio":
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4 flex flex-wrap gap-4"><input type="radio" class="radio" name="demo-radio-default" aria-label="Radio"/><input type="radio" class="radio" checked name="demo-radio-default" aria-label="Radio"/><input type="radio" class="radio" disabled name="demo-radio-disabled" aria-label="Radio"/><input type="radio" class="radio" disabled checked name="demo-radio-disabled" aria-label="Radio"/></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div><div class="mt-4 flex flex-wrap gap-4"><input type="radio" class="radio radio-primary" checked name="radio-primary" aria-label="Radio"/><input type="radio" class="radio radio-secondary" checked name="radio-secondary" aria-label="Radio"/><input type="radio" class="radio radio-accent" checked name="radio-accent" aria-label="Radio"/><input type="radio" class="radio radio-success" checked name="radio-success" aria-label="Radio"/><input type="radio" class="radio radio-info" checked name="radio-info" aria-label="Radio"/><input type="radio" class="radio radio-warning" checked name="radio-warning" aria-label="Radio"/><input type="radio" class="radio radio-error" checked name="radio-error" aria-label="Radio"/></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-wrap items-center gap-4"><input type="radio" class="radio radio-xl" checked name="radio-xl" aria-label="Radio"/><input type="radio" class="radio radio-lg" checked name="radio-lg" aria-label="Radio"/><input type="radio" class="radio" checked name="radio-md" aria-label="Radio"/><input type="radio" class="radio radio-sm" checked name="radio-sm" aria-label="Radio"/><input type="radio" class="radio radio-xs" checked name="radio-xs" aria-label="Radio"/></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Custom</div><div class="mt-4 flex flex-wrap items-center gap-4"><input type="radio" class="radio border-red-300 bg-red-100 text-red-600 checked:border-red-600 checked:bg-red-200" checked name="demo-radio-custom" aria-label="Radio"/><input type="radio" class="radio border-blue-300 bg-blue-100 text-blue-600 checked:border-blue-600 checked:bg-blue-200" name="demo-radio-custom" aria-label="Radio"/><input type="radio" class="radio border-blue-300 bg-linear-to-br from-blue-500 to-purple-500 text-white checked:border-blue-500" name="demo-radio-custom" aria-label="Radio"/></div></div></div>
+		</div>
+	case "range":
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4 flex flex-col gap-4"><input type="range" min="0" max="100" value="80" class="range" aria-label="Range"/><input type="range" min="0" max="100" value="80" class="range" disabled aria-label="Range"/></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Step</div><div class="mt-4"><div class="w-full max-w-xs"><input type="range" min="0" max="100" value="25" step="25" class="range" aria-label="Range"/><div class="mt-2 flex justify-between px-2.5 text-xs"><span>|</span><span>|</span><span>|</span><span>|</span><span>|</span></div><div class="mt-2 flex justify-between px-2.5 text-xs"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div><div class="mt-4 flex flex-col gap-3"><input type="range" min="0" max="100" value="45" class="range range-primary" aria-label="Range"/><input type="range" min="0" max="100" value="45" class="range range-secondary" aria-label="Range"/><input type="range" min="0" max="100" value="45" class="range range-accent" aria-label="Range"/><input type="range" min="0" max="100" value="45" class="range range-success" aria-label="Range"/><input type="range" min="0" max="100" value="45" class="range range-info" aria-label="Range"/><input type="range" min="0" max="100" value="45" class="range range-warning" aria-label="Range"/><input type="range" min="0" max="100" value="45" class="range range-error" aria-label="Range"/></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-col gap-4"><input type="range" min="0" max="100" value="55" class="range range-xs" aria-label="Range"/><input type="range" min="0" max="100" value="55" class="range range-sm" aria-label="Range"/><input type="range" min="0" max="100" value="55" class="range" aria-label="Range"/><input type="range" min="0" max="100" value="55" class="range range-lg" aria-label="Range"/><input type="range" min="0" max="100" value="55" class="range range-xl" aria-label="Range"/></div></div></div>
+		</div>
+	case "rating":
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4"><div class="rating"><input type="radio" name="rating-1" class="mask mask-star" aria-label="1 star"/><input type="radio" name="rating-1" class="mask mask-star" checked aria-label="2 star"/><input type="radio" name="rating-1" class="mask mask-star" aria-label="3 star"/><input type="radio" name="rating-1" class="mask mask-star" aria-label="4 star"/><input type="radio" name="rating-1" class="mask mask-star" aria-label="5 star"/></div></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div><div class="mt-4"><div class="rating"><input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" aria-label="1 star"/><input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" aria-label="2 star"/><input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" checked aria-label="3 star"/><input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" aria-label="4 star"/><input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" aria-label="5 star"/></div></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Hearts</div><div class="mt-4"><div class="rating gap-1"><input type="radio" name="rating-3" class="mask mask-heart bg-red-400" aria-label="1 star"/><input type="radio" name="rating-3" class="mask mask-heart bg-orange-400" aria-label="2 star"/><input type="radio" name="rating-3" class="mask mask-heart bg-yellow-400" checked aria-label="3 star"/><input type="radio" name="rating-3" class="mask mask-heart bg-lime-400" aria-label="4 star"/><input type="radio" name="rating-3" class="mask mask-heart bg-green-400" aria-label="5 star"/></div></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Half</div><div class="mt-4"><div class="rating rating-lg rating-half"><input type="radio" name="rating-11" class="mask mask-star-2 mask-half-1 bg-green-500" aria-label="0.5 star"/><input type="radio" name="rating-11" class="mask mask-star-2 mask-half-2 bg-green-500" aria-label="1 star"/><input type="radio" name="rating-11" class="mask mask-star-2 mask-half-1 bg-green-500" aria-label="1.5 star"/><input type="radio" name="rating-11" class="mask mask-star-2 mask-half-2 bg-green-500" aria-label="2 star"/><input type="radio" name="rating-11" class="mask mask-star-2 mask-half-1 bg-green-500" checked aria-label="2.5 star"/><input type="radio" name="rating-11" class="mask mask-star-2 mask-half-2 bg-green-500" aria-label="3 star"/><input type="radio" name="rating-11" class="mask mask-star-2 mask-half-1 bg-green-500" aria-label="3.5 star"/><input type="radio" name="rating-11" class="mask mask-star-2 mask-half-2 bg-green-500" aria-label="4 star"/><input type="radio" name="rating-11" class="mask mask-star-2 mask-half-1 bg-green-500" aria-label="4.5 star"/><input type="radio" name="rating-11" class="mask mask-star-2 mask-half-2 bg-green-500" aria-label="5 star"/></div></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Size</div><div class="mt-4 flex flex-col items-center gap-3"><div class="rating rating-xs"><input type="radio" name="rating-5" class="mask mask-star-2 bg-orange-400" aria-label="1 star"/><input type="radio" name="rating-5" class="mask mask-star-2 bg-orange-400" checked aria-label="2 star"/><input type="radio" name="rating-5" class="mask mask-star-2 bg-orange-400" aria-label="3 star"/><input type="radio" name="rating-5" class="mask mask-star-2 bg-orange-400" aria-label="4 star"/><input type="radio" name="rating-5" class="mask mask-star-2 bg-orange-400" aria-label="5 star"/></div><div class="rating rating-sm"><input type="radio" name="rating-6" class="mask mask-star-2 bg-orange-400" aria-label="1 star"/><input type="radio" name="rating-6" class="mask mask-star-2 bg-orange-400" checked aria-label="2 star"/><input type="radio" name="rating-6" class="mask mask-star-2 bg-orange-400" aria-label="3 star"/><input type="radio" name="rating-6" class="mask mask-star-2 bg-orange-400" aria-label="4 star"/><input type="radio" name="rating-6" class="mask mask-star-2 bg-orange-400" aria-label="5 star"/></div><div class="rating rating-md"><input type="radio" name="rating-7" class="mask mask-star-2 bg-orange-400" aria-label="1 star"/><input type="radio" name="rating-7" class="mask mask-star-2 bg-orange-400" checked aria-label="2 star"/><input type="radio" name="rating-7" class="mask mask-star-2 bg-orange-400" aria-label="3 star"/><input type="radio" name="rating-7" class="mask mask-star-2 bg-orange-400" aria-label="4 star"/><input type="radio" name="rating-7" class="mask mask-star-2 bg-orange-400" aria-label="5 star"/></div><div class="rating rating-lg"><input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400" aria-label="1 star"/><input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400" checked aria-label="2 star"/><input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400" aria-label="3 star"/><input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400" aria-label="4 star"/><input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400" aria-label="5 star"/></div><div class="rating rating-xl"><input type="radio" name="rating-9" class="mask mask-star-2 bg-orange-400" aria-label="1 star"/><input type="radio" name="rating-9" class="mask mask-star-2 bg-orange-400" checked aria-label="2 star"/><input type="radio" name="rating-9" class="mask mask-star-2 bg-orange-400" aria-label="3 star"/><input type="radio" name="rating-9" class="mask mask-star-2 bg-orange-400" aria-label="4 star"/><input type="radio" name="rating-9" class="mask mask-star-2 bg-orange-400" aria-label="5 star"/></div></div></div></div>
+		</div>
+	case "textarea":
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Default</div><div class="mt-4 flex flex-col gap-3"><textarea class="textarea" placeholder="Type here"></textarea><textarea class="textarea" aria-label="Textarea">I have already written something for you</textarea></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Disabled</div><div class="mt-4 flex flex-col gap-3"><textarea class="textarea" aria-label="Textarea" placeholder="Type here">disabled=""&gt;</textarea><textarea class="textarea" aria-label="Textarea" disabled>I have already written something for you</textarea></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Ghost</div><div class="mt-4 flex flex-col gap-3"><textarea class="textarea textarea-ghost" placeholder="Touch to write"></textarea><textarea class="textarea" aria-label="Textarea" disabled>{"I'm ghost, you can't touch me 👻"}</textarea></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Fieldset</div><div class="mt-4 flex flex-col gap-3"><fieldset class="fieldset"><legend class="fieldset-legend">What is your bio?</legend><textarea class="textarea" aria-label="Textarea" placeholder="Type here"></textarea><p class="fieldset-label">{"Don't worry, we never share anything with others"}</p></fieldset></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Color</div><div class="mt-4 grid gap-6 *:w-full md:grid-cols-2"><textarea class="textarea textarea-primary" placeholder="Type here" aria-label="Textarea"></textarea><textarea class="textarea textarea-secondary" placeholder="Type here" aria-label="Textarea"></textarea><textarea class="textarea textarea-accent" placeholder="Type here" aria-label="Textarea"></textarea><textarea class="textarea textarea-success" placeholder="Type here" aria-label="Textarea"></textarea><textarea class="textarea textarea-warning" placeholder="Type here" aria-label="Textarea"></textarea><textarea class="textarea textarea-info" placeholder="Type here" aria-label="Textarea"></textarea><textarea class="textarea textarea-error" placeholder="Type here" aria-label="Textarea"></textarea><textarea class="textarea textarea-neutral" placeholder="Type here" aria-label="Textarea"></textarea></div></div></div>
+		</div>
+	case "validator":
+		<div class="mt-6 grid gap-6 lg:grid-cols-2">
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Email</div><div class="mt-4"><label class="input validator"><span class="iconify lucide--mail text-base-content/60 size-5"></span><input class="" required placeholder="mail@site.com" type="email"/></label><div class="validator-hint">Enter valid email address</div></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Phone Number</div><div class="mt-4"><label class="input validator"><span class="iconify lucide--smartphone text-base-content/60 size-5"></span><input class="tabular-nums" required placeholder="Phone" pattern="[0-9]*" minlength="10" maxlength="10" title="Must be 10 digits" type="tel"/></label><p class="validator-hint">Must be 10 digits</p></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Date Validator</div><div class="mt-4"><label class="input validator"><span class="iconify lucide--calendar text-base-content/60 size-5"></span><input required placeholder="Pick a date in 2025" min="2025-01-01" max="2025-12-31" title="Must be valid date" type="date"/></label><p class="validator-hint">Must be 2025</p></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Time Validator</div><div class="mt-4"><label class="input validator"><span class="iconify lucide--clock text-base-content/60 size-5"></span><input min="09:00" max="18:00" aria-label="Input" type="time"/></label><p class="validator-hint">Use only office time (9 AM to 6 PM)</p></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Username</div><div class="mt-4"><label class="input validator"><span class="iconify lucide--user text-base-content/60 size-5"></span><input required placeholder="Username" pattern="[A-Za-z][A-Za-z0-9\-]*" minlength="3" maxlength="30" title="Only letters, numbers or dash" type="text"/></label><p class="validator-hint">Must be 3 to 30 characters<br/>containing only letters, numbers or dash</p></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">URL</div><div class="mt-4"><label class="input validator"><span class="iconify lucide--link text-base-content/60 size-4"></span><input required placeholder="https://" pattern="^(https?://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\-].*[a-zA-Z0-9])?\.)+[a-zA-Z].*$" title="Must be valid URL" type="url" value="https://"/></label><p class="validator-hint">Must be valid URL</p></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Checkbox</div><div class="mt-4"><input class="checkbox checkbox-primary validator" required title="Required" type="checkbox"/><p class="validator-hint">Required</p></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Toggle</div><div class="mt-4"><input class="toggle toggle-primary validator" required title="Required" type="checkbox"/><p class="validator-hint">Required</p></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Password</div><div class="mt-4"><label class="input validator"><span class="iconify lucide--key-round text-base-content/60 size-5"></span><input required minlength="8" pattern="(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" type="password"/></label><p class="validator-hint">Must be more than 8 characters, including<br/>At least one number<br/>At least one lowercase letter<br/>At least one uppercase letter</p></div></div></div>
+			<div class="card card-border bg-base-100"><div class="card-body"><div class="card-title">Form select</div><div class="mt-4"><form><select class="select validator w-64" required aria-label="Select"><option disabled value="" selected>Choose:</option><option>Tabs</option><option>Spaces</option></select><p class="validator-hint">Required</p><div class="mt-1 flex gap-3"><button class="btn" type="reset">Clear</button><button class="btn btn-primary" type="submit">Submit form</button></div></form></div></div></div>
+		</div>
 	default: <div class="text-center py-8 text-base-content/40">Form demo: { name }</div>
 	}
 }

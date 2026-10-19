@@ -309,10 +309,11 @@ func EcommerceDashboard() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = ui.ChartCard(ui.ChartCardProps{
-			Title:   "Global Sales (%)",
-			Icon:    "lucide--globe-2",
-			Actions: globalSalesOverviewButton(),
-			Chart:   ui.Chart(ui.ChartProps{ID: "global-sales-chart", Type: ui.ChartBar, Horizontal: true, RawConfigJSON: nxGlobalSalesConfig}),
+			Title:     "Global Sales (%)",
+			Icon:      "lucide--globe-2",
+			Actions:   globalSalesOverviewButton(),
+			BodyClass: "me-5 -mt-5 mb-1",
+			Chart:     ui.Chart(ui.ChartProps{ID: "global-sales-chart", Type: ui.ChartBar, Horizontal: true, RawConfigJSON: nxGlobalSalesConfig}),
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -461,7 +462,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue("/images/apps/ecommerce/products/" + imgNum + ".jpg")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 151, Col: 132}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 152, Col: 132}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
 				if templ_7745c5c3_Err != nil {
@@ -474,7 +475,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 				var templ_7745c5c3_Var14 string
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(product)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 152, Col: 15}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 153, Col: 15}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 				if templ_7745c5c3_Err != nil {
@@ -509,7 +510,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 				var templ_7745c5c3_Var16 string
 				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(price)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 155, Col: 10}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 156, Col: 10}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 				if templ_7745c5c3_Err != nil {
@@ -540,7 +541,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 				var templ_7745c5c3_Var18 string
 				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(date)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 158, Col: 9}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 159, Col: 9}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 				if templ_7745c5c3_Err != nil {
@@ -593,7 +594,7 @@ func ecomOrderRow(imgNum, product, price, date, statusLabel, statusClass string)
 				var templ_7745c5c3_Var22 string
 				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(statusLabel)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 161, Col: 72}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 162, Col: 72}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 				if templ_7745c5c3_Err != nil {
@@ -673,7 +674,7 @@ func ecomChatItem(imgNum, name, time, message string) templ.Component {
 		var templ_7745c5c3_Var25 string
 		templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.ResolveAttributeValue("/images/avatars/" + imgNum + ".png")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 174, Col: 107}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 175, Col: 107}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var25)
 		if templ_7745c5c3_Err != nil {
@@ -686,7 +687,7 @@ func ecomChatItem(imgNum, name, time, message string) templ.Component {
 		var templ_7745c5c3_Var26 string
 		templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 177, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 178, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 		if templ_7745c5c3_Err != nil {
@@ -699,7 +700,7 @@ func ecomChatItem(imgNum, name, time, message string) templ.Component {
 		var templ_7745c5c3_Var27 string
 		templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(time)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 178, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 179, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 		if templ_7745c5c3_Err != nil {
@@ -712,7 +713,7 @@ func ecomChatItem(imgNum, name, time, message string) templ.Component {
 		var templ_7745c5c3_Var28 string
 		templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 180, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 181, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 		if templ_7745c5c3_Err != nil {
@@ -754,7 +755,7 @@ func quickChatItem(name, time, message string) templ.Component {
 		var templ_7745c5c3_Var30 string
 		templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(initials(name))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 187, Col: 194}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 188, Col: 194}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 		if templ_7745c5c3_Err != nil {
@@ -767,7 +768,7 @@ func quickChatItem(name, time, message string) templ.Component {
 		var templ_7745c5c3_Var31 string
 		templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 189, Col: 102}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 190, Col: 102}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 		if templ_7745c5c3_Err != nil {
@@ -780,7 +781,7 @@ func quickChatItem(name, time, message string) templ.Component {
 		var templ_7745c5c3_Var32 string
 		templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(time)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 189, Col: 147}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 190, Col: 147}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 		if templ_7745c5c3_Err != nil {
@@ -793,7 +794,7 @@ func quickChatItem(name, time, message string) templ.Component {
 		var templ_7745c5c3_Var33 string
 		templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 190, Col: 51}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 191, Col: 51}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
 		if templ_7745c5c3_Err != nil {
@@ -1070,7 +1071,7 @@ func dealRow(img, name, value, statusLabel, statusClass, date string) templ.Comp
 				var templ_7745c5c3_Var43 string
 				templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.ResolveAttributeValue("/images/avatars/" + img + ".png")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 273, Col: 93}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 274, Col: 93}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var43)
 				if templ_7745c5c3_Err != nil {
@@ -1083,7 +1084,7 @@ func dealRow(img, name, value, statusLabel, statusClass, date string) templ.Comp
 				var templ_7745c5c3_Var44 string
 				templ_7745c5c3_Var44, templ_7745c5c3_Err = templ.ResolveAttributeValue(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 273, Col: 106}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 274, Col: 106}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var44)
 				if templ_7745c5c3_Err != nil {
@@ -1096,7 +1097,7 @@ func dealRow(img, name, value, statusLabel, statusClass, date string) templ.Comp
 				var templ_7745c5c3_Var45 string
 				templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 274, Col: 12}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 275, Col: 12}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
 				if templ_7745c5c3_Err != nil {
@@ -1131,7 +1132,7 @@ func dealRow(img, name, value, statusLabel, statusClass, date string) templ.Comp
 				var templ_7745c5c3_Var47 string
 				templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.JoinStringErrs(value)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 277, Col: 10}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 278, Col: 10}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var47))
 				if templ_7745c5c3_Err != nil {
@@ -1184,7 +1185,7 @@ func dealRow(img, name, value, statusLabel, statusClass, date string) templ.Comp
 				var templ_7745c5c3_Var51 string
 				templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.JoinStringErrs(statusLabel)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 280, Col: 72}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 281, Col: 72}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var51))
 				if templ_7745c5c3_Err != nil {
@@ -1219,7 +1220,7 @@ func dealRow(img, name, value, statusLabel, statusClass, date string) templ.Comp
 				var templ_7745c5c3_Var53 string
 				templ_7745c5c3_Var53, templ_7745c5c3_Err = templ.JoinStringErrs(date)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 283, Col: 9}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 284, Col: 9}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var53))
 				if templ_7745c5c3_Err != nil {
@@ -1814,7 +1815,7 @@ func quickIntegrationRow(logo, name, description, actionLabel, actionClass strin
 		var templ_7745c5c3_Var66 string
 		templ_7745c5c3_Var66, templ_7745c5c3_Err = templ.ResolveAttributeValue(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 464, Col: 17}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 465, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var66)
 		if templ_7745c5c3_Err != nil {
@@ -1827,7 +1828,7 @@ func quickIntegrationRow(logo, name, description, actionLabel, actionClass strin
 		var templ_7745c5c3_Var67 string
 		templ_7745c5c3_Var67, templ_7745c5c3_Err = templ.ResolveAttributeValue(logo)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 464, Col: 81}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 465, Col: 81}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var67)
 		if templ_7745c5c3_Err != nil {
@@ -1840,7 +1841,7 @@ func quickIntegrationRow(logo, name, description, actionLabel, actionClass strin
 		var templ_7745c5c3_Var68 string
 		templ_7745c5c3_Var68, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 465, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 466, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var68))
 		if templ_7745c5c3_Err != nil {
@@ -1853,7 +1854,7 @@ func quickIntegrationRow(logo, name, description, actionLabel, actionClass strin
 		var templ_7745c5c3_Var69 string
 		templ_7745c5c3_Var69, templ_7745c5c3_Err = templ.JoinStringErrs(description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 465, Col: 123}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 466, Col: 123}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var69))
 		if templ_7745c5c3_Err != nil {
@@ -1888,7 +1889,7 @@ func quickIntegrationRow(logo, name, description, actionLabel, actionClass strin
 		var templ_7745c5c3_Var72 string
 		templ_7745c5c3_Var72, templ_7745c5c3_Err = templ.JoinStringErrs(actionLabel)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 466, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_dashboards.templ`, Line: 467, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var72))
 		if templ_7745c5c3_Err != nil {

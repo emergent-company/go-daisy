@@ -431,6 +431,109 @@ func TestGenAIPagesUseLibraryComponents(t *testing.T) {
 	)
 }
 
+// goFunc returns the source of one top-level Go function (or method), from its
+// signature to the next top-level `func` declaration.
+func goFunc(t *testing.T, src, sig string) string {
+	t.Helper()
+	start := strings.Index(src, sig)
+	if start < 0 {
+		t.Fatalf("func %q not found", sig)
+	}
+	rest := src[start:]
+	if end := strings.Index(rest, "\nfunc "); end >= 0 {
+		rest = rest[:end]
+	}
+	return rest
+}
+
+// TestShowcaseComponentPagesUseLibraryComponents pins the UI component showcase
+// ports: each renderComponentDemo case must exist, the cleanly-expressible
+// families must compose the library, and every ported page must route through
+// UIComponentDetailPage rather than the raw-HTML passthrough.
+func TestShowcaseComponentPagesUseLibraryComponents(t *testing.T) {
+	src := read(t, "../handler/pages_showcase.templ")
+	demo := templFunc(t, src, "renderComponentDemo")
+
+	names := []string{
+		"accordion", "alert", "avatar", "badge", "breadcrumb", "button",
+		"countdown", "drawer", "dropdown", "indicator", "loading", "menu",
+		"modal", "pagination", "progress", "step", "tab", "table", "timeline",
+		"toast", "tooltip",
+	}
+	for _, name := range names {
+		require(t, demo, "renderComponentDemo", `case "`+name+`":`)
+	}
+
+	// The button and alert showcases compose the library components for the
+	// variant families the library can express; the remaining showcases use raw
+	// daisyUI markup the library cannot reproduce (its components are JS-powered
+	// or opinionated variants of the reference's raw class demos).
+	require(t, demo, "renderComponentDemo", "@ui.Button(")
+	require(t, demo, "renderComponentDemo", "@ui.Alert(")
+
+	hsrc := read(t, "../handler/handler.go")
+	fn := goFunc(t, hsrc, "func (h *Handler) handleUIComponentDetail")
+	for _, name := range names {
+		require(t, fn, "handleUIComponentDetail", `"`+name+`"`)
+		forbid(t, hsrc, "handler.go", `nxHTMLComponent("ui-components-`+name+`")`)
+	}
+	require(t, fn, "handleUIComponentDetail", "UIComponentDetailPage(name)")
+}
+
+// TestShowcaseFormPagesUseLibraryComponents pins the twelve UI form showcase
+// ports: each renderFormDemo case must exist, and every page must route through
+// UIFormDetailPage rather than the raw-HTML passthrough. The form showcases use
+// raw daisyUI variant matrices (the library's form components are opinionated
+// single-field wrappers that cannot reproduce the reference's class-level demos),
+// so — unlike the component pages — no library composition is asserted here.
+func TestShowcaseFormPagesUseLibraryComponents(t *testing.T) {
+	src := read(t, "../handler/pages_showcase.templ")
+	demo := templFunc(t, src, "renderFormDemo")
+
+	names := []string{
+		"checkbox", "fieldset", "file-input", "input", "label", "radio",
+		"range", "rating", "select", "textarea", "toggle", "validator",
+	}
+	for _, name := range names {
+		require(t, demo, "renderFormDemo", `case "`+name+`":`)
+	}
+
+	hsrc := read(t, "../handler/handler.go")
+	fn := goFunc(t, hsrc, "func (h *Handler) handleUIFormDetail")
+	for _, name := range names {
+		require(t, fn, "handleUIFormDetail", `"`+name+`"`)
+		forbid(t, hsrc, "handler.go", `nxHTMLComponent("ui-forms-`+name+`")`)
+	}
+	require(t, fn, "handleUIFormDetail", "UIFormDetailPage(name)")
+}
+
+// TestShowcaseChartPagesUseLibraryComponents pins the five Apex chart showcase
+// ports: each renderChartDemo case must exist and compose the library ui.Chart
+// component (via RawConfigJSON, the same mechanism the dashboards use), and
+// every page must route through UIChartDetailPage rather than the raw-HTML
+// passthrough.
+func TestShowcaseChartPagesUseLibraryComponents(t *testing.T) {
+	src := read(t, "../handler/pages_showcase.templ")
+	demo := templFunc(t, src, "renderChartDemo")
+
+	names := []string{"area", "bar", "column", "line", "pie"}
+	for _, name := range names {
+		require(t, demo, "renderChartDemo", `case "`+name+`":`)
+	}
+
+	require(t, demo, "renderChartDemo", "@ui.Chart(")
+	require(t, demo, "renderChartDemo", "RawConfigJSON:")
+	forbid(t, demo, "renderChartDemo", "<script", "new ApexCharts", "data-chart")
+
+	hsrc := read(t, "../handler/handler.go")
+	fn := goFunc(t, hsrc, "func (h *Handler) handleUIChartDetail")
+	for _, name := range names {
+		require(t, fn, "handleUIChartDetail", `"`+name+`"`)
+		forbid(t, hsrc, "handler.go", `nxHTMLComponent("ui-charts-apex-`+name+`")`)
+	}
+	require(t, fn, "handleUIChartDetail", "UIChartDetailPage(name)")
+}
+
 // TestRawPassthroughIsDetectable asserts nxrender.go emits the nx-raw marker
 // so the parity comparator can distinguish raw passthroughs from real ports.
 // This is a source-grep tripwire, not a behavioural test: it guards that the
