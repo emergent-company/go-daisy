@@ -65,12 +65,12 @@ func comboboxSelectExpr(value string) string {
 	return "selectItem('" + value + "')"
 }
 
-// comboboxTrigger is the visible control. A <div role="button"> rather than a
-// <button> because the clear-all control is itself a button (nested buttons are
-// invalid HTML). It is focusable, carries aria-expanded/aria-controls, and
-// opens on Enter/Space/ArrowDown so the Label's for association is real;
-// arrow navigation between options is handled by the root keydown listener once
-// the popover is open.
+// comboboxTrigger is the visible control. It is a <div role="button"> so it can
+// be focusable and label-addressable (a <div> cannot be targeted by <label
+// for>, hence aria-labelledby), and because role=button makes its descendants
+// presentational the clear-all button and the chevron live outside it in
+// comboboxAdornments. Arrow navigation between options is handled by the root
+// keydown listener once the popover is open.
 templ comboboxTrigger(props ComboboxProps) {
 	<div
 		if props.ID != "" {
@@ -91,10 +91,12 @@ templ comboboxTrigger(props ComboboxProps) {
 		}
 		@click="toggle()"
 		@keydown.enter.prevent="open || toggle()"
-		@keydown.space.prevent="toggle()"
+		@keydown.space.prevent="open || toggle()"
 		@keydown.arrow-down.prevent="open || toggle()"
 		@keydown.escape="open = false"
-		class={ "flex items-center justify-between w-full px-3 py-2 border border-line-strong bg-base-100 rounded-btn cursor-pointer",
+		class={ "flex items-center justify-between w-full py-2 ps-3 border border-line-strong bg-base-100 rounded-btn cursor-pointer",
+			templ.KV("pe-16", props.EnableClearAll && !props.Disabled),
+			templ.KV("pe-9", !props.EnableClearAll || props.Disabled),
 			templ.KV("opacity-50 pointer-events-none", props.Disabled) }
 	>
 		if props.Mode == ComboboxSingle {
@@ -108,20 +110,27 @@ templ comboboxTrigger(props ComboboxProps) {
 				x-text={ "selected.length ? selected.length + ' selected' : '" + comboboxPlaceholder(props.Placeholder) + "'" }
 			>{ comboboxPlaceholder(props.Placeholder) }</span>
 		}
-		<div class="flex items-center gap-1">
-			if props.EnableClearAll && !props.Disabled {
-				<button
-					type="button"
-					class="btn btn-ghost btn-xs btn-circle"
-					x-show="selected.length > 0"
-					@click.stop="clearAll()"
-					aria-label="Clear all"
-				>
-					<svg xmlns="http://www.w3.org/2000/svg" class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-				</button>
-			}
-			<svg xmlns="http://www.w3.org/2000/svg" class={ "size-4 transition-transform", templ.KV("rotate-180", false) } :class="{ 'rotate-180': open }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-		</div>
+	</div>
+}
+
+// comboboxAdornments renders the clear-all control and the chevron as a layer
+// above the trigger rather than as trigger children: role=button makes its
+// descendants presentational in the accessibility tree, which would hide a
+// nested <button>.
+templ comboboxAdornments(props ComboboxProps) {
+	<div class="pointer-events-none absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1">
+		if props.EnableClearAll && !props.Disabled {
+			<button
+				type="button"
+				class="btn btn-ghost btn-xs btn-circle pointer-events-auto"
+				x-show="selected.length > 0"
+				@click="clearAll()"
+				aria-label="Clear all"
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+			</button>
+		}
+		<svg xmlns="http://www.w3.org/2000/svg" class={ "size-4 transition-transform", templ.KV("rotate-180", false) } :class="{ 'rotate-180': open }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
 	</div>
 }
 
@@ -167,9 +176,14 @@ templ comboboxStaticOption(opt ComboboxOption, props ComboboxProps) {
 			data-value={ opt.Value }
 			class={ "flex items-center justify-between px-3 py-2 text-sm cursor-pointer hover:bg-base-200",
 				templ.KV("opacity-50 cursor-not-allowed", opt.Disabled) }
-			:class="{ 'bg-base-200': getVisibleIndex($el) === activeIndex }"
+			:class="{ 'bg-base-200': activeIndex >= 0 && getVisibleIndex($el) === activeIndex }"
 			x-show={ comboboxSearchFilter(opt) }
-			@click={ comboboxSelectExpr(opt.Value) }
+			:aria-selected={ "isSelected('" + opt.Value + "')" }
+			if opt.Disabled {
+				aria-disabled="true"
+			} else {
+				@click={ comboboxSelectExpr(opt.Value) }
+			}
 		>
 			<span>{ opt.Label }</span>
 			if props.Mode == ComboboxMultiple {
@@ -184,8 +198,13 @@ templ comboboxStaticOption(opt ComboboxOption, props ComboboxProps) {
 			data-value={ opt.Value }
 			class={ "flex items-center justify-between px-3 py-2 text-sm cursor-pointer hover:bg-base-200",
 				templ.KV("opacity-50 cursor-not-allowed", opt.Disabled) }
-			:class="{ 'bg-base-200': activeIndex === getVisibleIndex($el) }"
-			@click={ comboboxSelectExpr(opt.Value) }
+			:class="{ 'bg-base-200': activeIndex >= 0 && activeIndex === getVisibleIndex($el) }"
+			:aria-selected={ "isSelected('" + opt.Value + "')" }
+			if opt.Disabled {
+				aria-disabled="true"
+			} else {
+				@click={ comboboxSelectExpr(opt.Value) }
+			}
 		>
 			<span>{ opt.Label }</span>
 			if props.Mode == ComboboxMultiple {
@@ -254,6 +273,7 @@ templ Combobox(props ComboboxProps) {
 		}
 		<div class="relative w-full">
 			@comboboxTrigger(props)
+			@comboboxAdornments(props)
 			<div
 				class="combobox-popover absolute z-50 mt-1 w-full bg-base-100 edge-line rounded-box shadow-lg max-h-60 overflow-auto p-1"
 				x-show="open"

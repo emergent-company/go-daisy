@@ -29,13 +29,15 @@ type RichTextEditorProps struct {
 // A <label for> can only associate with a labelable element, and the editor is
 // a Quill-managed <div>, so the label additionally travels as data-label and the
 // init script applies it as aria-label on Quill's contenteditable root (the
-// element that actually receives focus). The visible label keeps its for
-// attribute pointing at the mount element for consistency with the other
-// inputs.
+// element that actually receives focus). The visible label deliberately has no
+// for attribute: it cannot point at a div, and claiming otherwise is misleading.
 templ RichTextEditor(props RichTextEditorProps) {
 	<div class="w-full" { devmode.Attrs(ctx, "form/RichTextEditor")... }>
 		if props.Label != "" {
-			@Label(LabelProps{For: props.ID}) { { props.Label } }
+			// No for= here: the mount element is a div, so a label association
+			// would be a no-op. The label text is forwarded via data-label and
+			// becomes aria-label on Quill's contenteditable root instead.
+			@Label(LabelProps{}) { { props.Label } }
 		}
 		<div
 			id={ props.ID }

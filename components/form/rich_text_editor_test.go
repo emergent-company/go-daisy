@@ -12,7 +12,6 @@ func TestRichTextEditorLabelAssociation(t *testing.T) {
 	got := renderForm(t, RichTextEditor(RichTextEditorProps{ID: "rte", Label: "Body"}))
 
 	for _, want := range []string{
-		`for="rte"`,
 		`id="rte"`,
 		`data-quill`,
 		`data-label="Body"`,
@@ -21,6 +20,10 @@ func TestRichTextEditorLabelAssociation(t *testing.T) {
 		if !strings.Contains(got, want) {
 			t.Errorf("rich text editor missing %q in:\n%s", want, got)
 		}
+	}
+
+	if strings.Contains(got, `for=`) {
+		t.Errorf("label must not emit for targeting a div:\n%s", got)
 	}
 
 	// Without a Label there is nothing to propagate.
