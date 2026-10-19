@@ -339,16 +339,20 @@ gh workflow run release.yml -f bump=minor -f confirm=release
 
 # Publish the release for a tag that already exists (no tag is created)
 gh workflow run release.yml -f tag=v0.17.0 -f confirm=backfill
+
+# Preview a backfill (tag already exists; nothing is published)
+gh workflow run release.yml -f tag=v0.17.0 -f confirm=dry-run
 ```
 
 `bump` is `patch`, `minor` or `major`; `tag` (canonical `vX.Y.Z`, no leading
 zeros) overrides it. The workflow:
 
 - runs only from `master`, with a clean tree and a HEAD equal to `origin/master`;
-- refuses an existing tag when it would create one (`release`, and `dry-run`
-  with an explicit `tag=`), and a version that is not newer than the current
-  tag;
-- refuses a dispatch with no commits since the previous tag;
+- `dry-run` previews a new tag's notes, or a backfill's notes when `tag=`
+  already exists; it never tags or publishes;
+- `release` refuses an existing tag or a version that is not newer than the
+  current tag;
+- refuses a dispatch with no commits since the notes base;
 - prints the grouped notes in the run summary for `dry-run`;
 - creates the annotated tag and the GitHub release for `release`. If release
   creation fails and the release is confirmed absent, it deletes the tag so the
