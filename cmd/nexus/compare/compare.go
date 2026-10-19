@@ -212,7 +212,41 @@ func collectClasses(n *html.Node) []string {
 	if cls == "" {
 		return nil
 	}
-	return strings.Fields(cls)
+	return canonicalClasses(strings.Fields(cls))
+}
+
+// classAliases maps class names that are semantically identical but rendered
+// differently by the two sides. The nexus-html reference writes raw
+// `text-base-content/<opacity>` utilities; go-daisy components use the semantic
+// tone tokens from components/css/tokens.css. Without this normalisation every
+// converted page would report a class diff for a deliberate, approved change.
+var classAliases = map[string]string{
+	"text-base-content/80": "text-body",
+	"text-base-content/70": "text-label",
+	"text-base-content/60": "text-muted",
+	"text-base-content/50": "text-subtle",
+	"text-base-content/40": "text-faint",
+}
+
+// canonicalClasses maps alias tokens to their canonical name and drops
+// duplicates that collapse onto the same canonical class, preserving order.
+func canonicalClasses(classes []string) []string {
+	if len(classes) == 0 {
+		return nil
+	}
+	seen := make(map[string]bool, len(classes))
+	out := make([]string, 0, len(classes))
+	for _, c := range classes {
+		if canonical, ok := classAliases[c]; ok {
+			c = canonical
+		}
+		if seen[c] {
+			continue
+		}
+		seen[c] = true
+		out = append(out, c)
+	}
+	return out
 }
 
 // collectAllText collects all text content recursively from a node.
@@ -268,7 +302,7 @@ func firstClassToken(n *html.Node) string {
 	if cls == "" {
 		return ""
 	}
-	parts := strings.Fields(cls)
+	parts := canonicalClasses(strings.Fields(cls))
 	if len(parts) == 0 {
 		return ""
 	}

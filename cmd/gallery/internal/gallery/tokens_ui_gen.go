@@ -384,6 +384,46 @@ func CardTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// CardToolbarTokens returns the DesignToken slice for CardToolbarWithBoundary.
+func CardToolbarTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Title",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Section Title",
+			QueryParam: "title",
+		},
+		{
+			Label:      "Subtitle",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "subtitle",
+		},
+	}
+}
+
+// ChartCardTokens returns the DesignToken slice for ChartCardWithBoundary.
+func ChartCardTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Title",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Chart Title",
+			QueryParam: "title",
+		},
+		{
+			Label:      "Subtitle",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "subtitle",
+		},
+	}
+}
+
 // AlertTokens returns the DesignToken slice for AlertWithBoundary.
 func AlertTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
@@ -472,7 +512,44 @@ func ToastTokens() []galleryruntime.DesignToken {
 
 // BannerTokens returns the DesignToken slice for BannerWithBoundary.
 func BannerTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Variant",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "",
+			QueryParam: "variant",
+			Options: []galleryruntime.TokenOption{
+				{Value: "alert-error", Label: "Danger"},
+				{Value: "", Label: "Default"},
+				{Value: "alert-info", Label: "Info"},
+				{Value: "alert-success", Label: "Success"},
+				{Value: "alert-warning", Label: "Warning"},
+			},
+		},
+		{
+			Label:      "Persistent",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "persistent",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Cookie Banner",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "cookieBanner",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // SkeletonAvatarTokens returns the DesignToken slice for SkeletonAvatarWithBoundary.
@@ -490,7 +567,22 @@ func SkeletonAvatarTokens() []galleryruntime.DesignToken {
 
 // CodeBlockTokens returns the DesignToken slice for CodeBlockWithBoundary.
 func CodeBlockTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Language",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "go",
+			QueryParam: "language",
+		},
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "main.go",
+			QueryParam: "label",
+		},
+	}
 }
 
 // PaginationTokens returns the DesignToken slice for PaginationWithBoundary.
@@ -552,7 +644,66 @@ func EmptyTokens() []galleryruntime.DesignToken {
 
 // EmptyStateTokens returns the DesignToken slice for EmptyStateWithBoundary.
 func EmptyStateTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Variant",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "hero",
+			QueryParam: "variant",
+			Options: []galleryruntime.TokenOption{
+				{Value: "", Label: "Compact"},
+				{Value: "hero", Label: "Hero"},
+			},
+		},
+		{
+			Label:      "Icon Style",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "tile",
+			QueryParam: "iconStyle",
+			Options: []galleryruntime.TokenOption{
+				{Value: "", Label: "EmptyStateIconMuted"},
+				{Value: "tile", Label: "EmptyStateIconTile"},
+			},
+		},
+		{
+			Label:      "Heading",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "h2",
+			QueryParam: "heading",
+			Options: []galleryruntime.TokenOption{
+				{Value: "h2", Label: "H2"},
+				{Value: "h3", Label: "H3"},
+			},
+		},
+		{
+			Label:      "Bordered",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "bordered",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Title",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Connect your first provider",
+			QueryParam: "title",
+		},
+		{
+			Label:      "Description",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "LLM providers power your agents — add one to get started.",
+			QueryParam: "description",
+		},
+	}
 }
 
 // LoaderTokens returns the DesignToken slice for LoaderWithBoundary.
@@ -1199,12 +1350,79 @@ func FieldsetTokens() []galleryruntime.DesignToken {
 
 // StatCardMinimalTokens returns the DesignToken slice for StatCardMinimalWithBoundary.
 func StatCardMinimalTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Total Users",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Value",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "12,430",
+			QueryParam: "value",
+		},
+		{
+			Label:      "Trend",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "down",
+			QueryParam: "trend",
+			Options: []galleryruntime.TokenOption{
+				{Value: "down", Label: "Down"},
+				{Value: "", Label: "Neutral"},
+				{Value: "up", Label: "Up"},
+			},
+		},
+		{
+			Label:      "Trend Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "trendLabel",
+		},
+	}
 }
 
 // PersonCellTokens returns the DesignToken slice for PersonCellWithBoundary.
 func PersonCellTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Name",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Alice Johnson",
+			QueryParam: "name",
+		},
+		{
+			Label:      "Subtitle",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "alice@example.com",
+			QueryParam: "subtitle",
+		},
+		{
+			Label:      "Size",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "avatar-md",
+			QueryParam: "size",
+			Options: []galleryruntime.TokenOption{
+				{Value: "avatar-lg", Label: "LG"},
+				{Value: "avatar-md", Label: "MD"},
+				{Value: "avatar-sm", Label: "SM"},
+				{Value: "size-12", Label: "12"},
+				{Value: "size-14", Label: "14"},
+				{Value: "size-16", Label: "16"},
+				{Value: "size-6", Label: "6"},
+				{Value: "size-7", Label: "7"},
+				{Value: "avatar-xs", Label: "XS"},
+			},
+		},
+	}
 }
 
 // PersonChipTokens returns the DesignToken slice for PersonChipWithBoundary.
@@ -1277,12 +1495,71 @@ func GradientTextTokens() []galleryruntime.DesignToken {
 
 // TestimonialCardTokens returns the DesignToken slice for TestimonialCardWithBoundary.
 func TestimonialCardTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Quote",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Amazing product that transformed our workflow!",
+			QueryParam: "quote",
+		},
+		{
+			Label:      "Name",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "John Doe",
+			QueryParam: "name",
+		},
+		{
+			Label:      "Role",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "CEO, Acme Corp",
+			QueryParam: "role",
+		},
+		{
+			Label:      "Rating",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeRange,
+			Default:    "0",
+			QueryParam: "rating",
+			Min:        0,
+			Max:        5,
+			Step:       1,
+		},
+	}
 }
 
 // StatCardSparklineTokens returns the DesignToken slice for StatCardSparklineWithBoundary.
 func StatCardSparklineTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Revenue",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Value",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "$48,290",
+			QueryParam: "value",
+		},
+		{
+			Label:      "Trend",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "down",
+			QueryParam: "trend",
+			Options: []galleryruntime.TokenOption{
+				{Value: "down", Label: "Down"},
+				{Value: "", Label: "Neutral"},
+				{Value: "up", Label: "Up"},
+			},
+		},
+	}
 }
 
 // ThemeToggleTokens returns the DesignToken slice for ThemeToggleWithBoundary.
@@ -1300,32 +1577,268 @@ func ThemeToggleTokens() []galleryruntime.DesignToken {
 
 // SortableListTokens returns the DesignToken slice for SortableListWithBoundary.
 func SortableListTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Animation",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeRange,
+			Default:    "0",
+			QueryParam: "animation",
+			Min:        0,
+			Max:        500,
+			Step:       10,
+		},
+		{
+			Label:      "Direction",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "direction",
+		},
+	}
 }
 
 // SwiperCarouselTokens returns the DesignToken slice for SwiperCarouselWithBoundary.
 func SwiperCarouselTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Effect",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "coverflow",
+			QueryParam: "effect",
+			Options: []galleryruntime.TokenOption{
+				{Value: "coverflow", Label: "Coverflow"},
+				{Value: "fade", Label: "Fade"},
+				{Value: "flip", Label: "Flip"},
+				{Value: "slide", Label: "Slide"},
+			},
+		},
+		{
+			Label:      "Navigation",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "navigation",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Pagination",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "pagination",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Autoplay",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "autoplay",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Loop",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "loop",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Slides Per View",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeRange,
+			Default:    "1",
+			QueryParam: "slidesPerView",
+			Min:        1,
+			Max:        6,
+			Step:       1,
+		},
+	}
 }
 
 // ChartTokens returns the DesignToken slice for ChartWithBoundary.
 func ChartTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Type",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "area",
+			QueryParam: "type",
+			Options: []galleryruntime.TokenOption{
+				{Value: "area", Label: "Area"},
+				{Value: "bar", Label: "Bar"},
+				{Value: "column", Label: "Column"},
+				{Value: "donut", Label: "Donut"},
+				{Value: "heatmap", Label: "Heatmap"},
+				{Value: "line", Label: "Line"},
+				{Value: "pie", Label: "Pie"},
+				{Value: "radar", Label: "Radar"},
+				{Value: "radial", Label: "Radial"},
+				{Value: "rangeBar", Label: "RangeBar"},
+				{Value: "scatter", Label: "Scatter"},
+			},
+		},
+		{
+			Label:      "Title",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Sales Overview",
+			QueryParam: "title",
+		},
+		{
+			Label:      "Sparkline",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "sparkline",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Stacked",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "stacked",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Fill Type",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "fillType",
+		},
+		{
+			Label:      "Monochrome",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "monochrome",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Legend Position",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "legendPosition",
+		},
+	}
 }
 
 // CommandPaletteTokens returns the DesignToken slice for CommandPaletteWithBoundary.
 func CommandPaletteTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Placeholder",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Type a command...",
+			QueryParam: "placeholder",
+		},
+	}
 }
 
 // NotificationDropdownTokens returns the DesignToken slice for NotificationDropdownWithBoundary.
 func NotificationDropdownTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Unread Count",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeRange,
+			Default:    "0",
+			QueryParam: "unreadCount",
+			Min:        0,
+			Max:        100,
+			Step:       1,
+		},
+	}
 }
 
 // TabsTokens returns the DesignToken slice for TabsWithBoundary.
 func TabsTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Style",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "lift",
+			QueryParam: "style",
+			Options: []galleryruntime.TokenOption{
+				{Value: "tabs-border", Label: "TabsBorder"},
+				{Value: "tabs-box", Label: "TabsBox"},
+				{Value: "tabs-lift", Label: "TabsLift"},
+			},
+		},
+		{
+			Label:      "Size",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "md",
+			QueryParam: "size",
+			Options: []galleryruntime.TokenOption{
+				{Value: "tabs-lg", Label: "LG"},
+				{Value: "tabs-md", Label: "MD"},
+				{Value: "tabs-sm", Label: "SM"},
+				{Value: "tabs-xl", Label: "XL"},
+				{Value: "tabs-xs", Label: "XS"},
+			},
+		},
+		{
+			Label:      "Bottom",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "bottom",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Mode",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "server",
+			QueryParam: "mode",
+			Options: []galleryruntime.TokenOption{
+				{Value: "client", Label: "ClientTab"},
+				{Value: "", Label: "ServerTab"},
+			},
+		},
+		{
+			Label:      "Driver",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "driver",
+		},
+	}
 }
 
 // CodePreviewTokens returns the DesignToken slice for CodePreviewWithBoundary.
@@ -1745,27 +2258,128 @@ func SheetTokens() []galleryruntime.DesignToken {
 
 // IconPickerTokens returns the DesignToken slice for IconPickerWithBoundary.
 func IconPickerTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Value",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "value",
+		},
+		{
+			Label:      "Search Placeholder",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Search icons",
+			QueryParam: "searchPlaceholder",
+		},
+		{
+			Label:      "Default Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Default",
+			QueryParam: "defaultLabel",
+		},
+	}
 }
 
 // ColorPickerTokens returns the DesignToken slice for ColorPickerWithBoundary.
 func ColorPickerTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Value",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "#4F46E5",
+			QueryParam: "value",
+		},
+		{
+			Label:      "Placeholder",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "#4F46E5",
+			QueryParam: "placeholder",
+		},
+		{
+			Label:      "Allow Empty",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "allowEmpty",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // DialogTokens returns the DesignToken slice for DialogWithBoundary.
 func DialogTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Id",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "demo-modal",
+			QueryParam: "id",
+		},
+		{
+			Label:      "Box Class",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "boxClass",
+		},
+	}
 }
 
 // ConfirmDialogTokens returns the DesignToken slice for ConfirmDialogWithBoundary.
 func ConfirmDialogTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Noun",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "agent",
+			QueryParam: "noun",
+		},
+		{
+			Label:      "Icon",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "icon",
+		},
+	}
 }
 
 // DisclosureTokens returns the DesignToken slice for DisclosureWithBoundary.
 func DisclosureTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Open",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "open",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Items Start",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "itemsStart",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // CommandPaletteButtonTokens returns the DesignToken slice for CommandPaletteButtonWithBoundary.

@@ -405,62 +405,419 @@ func FormToggleTokens() []galleryruntime.DesignToken {
 
 // ToggleInputTokens returns the DesignToken slice for ToggleInputWithBoundary.
 func ToggleInputTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Name",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "toggle",
+			QueryParam: "name",
+		},
+		{
+			Label:      "Checked",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "checked",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Class",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "toggle toggle-sm",
+			QueryParam: "class",
+		},
+	}
 }
 
 // PromptBarTokens returns the DesignToken slice for PromptBarWithBoundary.
 func PromptBarTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Placeholder",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Ask anything…",
+			QueryParam: "placeholder",
+		},
+		{
+			Label:      "Loading",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "loading",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // PromptBarPickerTokens returns the DesignToken slice for PromptBarPickerWithBoundary.
 func PromptBarPickerTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Agent",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Icon",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "lucide--bot",
+			QueryParam: "icon",
+		},
+		{
+			Label:      "Selected",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Research Buddy",
+			QueryParam: "selected",
+		},
+		{
+			Label:      "Disabled",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "disabled",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // PasswordFieldTokens returns the DesignToken slice for PasswordFieldWithBoundary.
 func PasswordFieldTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Password",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Required",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "required",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Show Toggle",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "showToggle",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // PasswordMeterTokens returns the DesignToken slice for PasswordMeterWithBoundary.
 func PasswordMeterTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Password",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Required",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "required",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Show Toggle",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "showToggle",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Min Length",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeRange,
+			Default:    "0",
+			QueryParam: "minLength",
+			Min:        0,
+			Max:        32,
+			Step:       1,
+		},
+	}
 }
 
 // EnhancedSelectTokens returns the DesignToken slice for EnhancedSelectWithBoundary.
 func EnhancedSelectTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Select an option",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Multiple",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "multiple",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Searchable",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "searchable",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Remove Items",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "removeItems",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Required",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "required",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // DatePickerTokens returns the DesignToken slice for DatePickerWithBoundary.
 func DatePickerTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Select date",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Mode",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "datetime",
+			QueryParam: "mode",
+			Options: []galleryruntime.TokenOption{
+				{Value: "datetime", Label: "DatePickerDateTime"},
+				{Value: "month", Label: "DatePickerMonth"},
+				{Value: "multiple", Label: "DatePickerMultiple"},
+				{Value: "range", Label: "DatePickerRange"},
+				{Value: "single", Label: "DatePickerSingle"},
+				{Value: "time", Label: "DatePickerTime"},
+				{Value: "week", Label: "DatePickerWeek"},
+			},
+		},
+		{
+			Label:      "Inline",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "inline",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Time24h",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "time24h",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // RichTextEditorTokens returns the DesignToken slice for RichTextEditorWithBoundary.
 func RichTextEditorTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Content",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Theme",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "bubble",
+			QueryParam: "theme",
+			Options: []galleryruntime.TokenOption{
+				{Value: "bubble", Label: "QuillThemeBubble"},
+				{Value: "snow", Label: "QuillThemeSnow"},
+			},
+		},
+		{
+			Label:      "Read Only",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "readOnly",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // FileUploadTokens returns the DesignToken slice for FileUploadWithBoundary.
 func FileUploadTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Upload files",
+			QueryParam: "label",
+		},
+		{
+			Label:      "Multiple",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "multiple",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Style",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "default",
+			QueryParam: "style",
+			Options: []galleryruntime.TokenOption{
+				{Value: "avatar", Label: "FileUploadAvatar"},
+				{Value: "default", Label: "FileUploadDefault"},
+				{Value: "image-preview", Label: "FileUploadImagePreview"},
+			},
+		},
+	}
 }
 
 // FormValidationTokens returns the DesignToken slice for FormValidationWithBoundary.
 func FormValidationTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Submit Text",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Submit",
+			QueryParam: "submitText",
+		},
+	}
 }
 
 // PaletteTokens returns the DesignToken slice for PaletteWithBoundary.
 func PaletteTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Show Hex",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "showHex",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Hide Neutral",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "hideNeutral",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Hide Reset",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "hideReset",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // FormFieldsetTokens returns the DesignToken slice for FormFieldsetWithBoundary.
 func FormFieldsetTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Legend",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Settings",
+			QueryParam: "legend",
+		},
+	}
 }
 
 // FormActionsWithLoadingTokens returns the DesignToken slice for FormActionsWithLoadingWithBoundary.
@@ -498,17 +855,81 @@ func DateInputTokens() []galleryruntime.DesignToken {
 
 // ComboboxTokens returns the DesignToken slice for ComboboxWithBoundary.
 func ComboboxTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Mode",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "multiple",
+			QueryParam: "mode",
+			Options: []galleryruntime.TokenOption{
+				{Value: "multiple", Label: "ComboboxMultiple"},
+				{Value: "single", Label: "ComboboxSingle"},
+			},
+		},
+		{
+			Label:      "Enable Search",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "enableSearch",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Enable Clear All",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "enableClearAll",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // StructuredInputTokens returns the DesignToken slice for StructuredInputWithBoundary.
 func StructuredInputTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Add Action Label",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Add row",
+			QueryParam: "addActionLabel",
+		},
+	}
 }
 
 // TagListTokens returns the DesignToken slice for TagListWithBoundary.
 func TagListTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Values 1",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 1",
+			QueryParam: "values1",
+		},
+		{
+			Label:      "Values 2",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 2",
+			QueryParam: "values2",
+		},
+		{
+			Label:      "Values 3",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 3",
+			QueryParam: "values3",
+		},
+	}
 }
 
 // InputGroupTokens returns the DesignToken slice for InputGroupWithBoundary.

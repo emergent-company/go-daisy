@@ -139,3 +139,16 @@ func DataTableWithBoundary(props DataTableProps) templ.Component {
 		"pageSize":   props.PageSize,
 	})
 }
+
+// DataGridWithBoundary wraps DataGrid with a dev-mode component boundary annotation.
+// gallery:token striped,bordered,compact,selectable,pageSize
+// gallery:hint pageSize:range(1,100,1)
+func DataGridWithBoundary(props DataGridProps) templ.Component {
+	return devmode.ComponentBoundary("DataGrid", DataGrid(props), map[string]any{
+		"striped":    props.Striped,
+		"bordered":   props.Bordered,
+		"compact":    props.Compact,
+		"selectable": props.Selectable,
+		"pageSize":   props.PageSize,
+	})
+}

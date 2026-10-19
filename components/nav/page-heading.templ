@@ -7,6 +7,26 @@ import (
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
+// PageHeadingLayout selects the PageHeading arrangement. The zero value renders
+// the default stacked layout (breadcrumbs above, title below); Split renders a
+// single-row header with the title on the left and the actions + breadcrumbs
+// cluster on the right.
+type PageHeadingLayout string
+
+const (
+	PageHeadingLayoutStacked PageHeadingLayout = ""      // zero value = default stacked
+	PageHeadingLayoutSplit   PageHeadingLayout = "split" // single-row title + right cluster
+)
+
+// PageHeadingSize selects the title size. The zero value is the default MD
+// (h1 text-2xl font-bold); SM renders an h3 text-lg font-medium (Nexus-style).
+type PageHeadingSize string
+
+const (
+	PageHeadingSizeMD PageHeadingSize = ""  // zero value = h1 text-2xl font-bold
+	PageHeadingSizeSM PageHeadingSize = "sm" // h3 text-lg font-medium
+)
+
 // PageHeadingProps configures a page heading with title and breadcrumbs.
 type PageHeadingProps struct {
 	Title       string
@@ -53,57 +73,116 @@ type PageHeadingProps struct {
 	// effect when Bare is true. Default false keeps today's two-div structure
 	// byte-identical.
 	Flat bool
+	// Layout selects the arrangement. Zero value is Stacked (default); Split
+	// renders a single-row header with the title left and the actions +
+	// breadcrumbs cluster right. Default false keeps today's output byte-identical.
+	Layout PageHeadingLayout
+	// Size selects the title size. Zero value is MD; SM renders the Nexus-style
+	// h3 text-lg font-medium title (split layout). Default keeps today's output.
+	Size PageHeadingSize
 }
 
 // PageHeading renders a page heading with a breadcrumb trail on top, an h1 with
 // optional kicker eyebrow, subtitle, and inline title adornment, and a
 // right-hand action slot.
 templ PageHeading(props PageHeadingProps) {
-	{{ margin := cmp.Or(props.Margin, "mb-4")
-	flex := templ.CSSClasses{
-		"flex flex-wrap",
-		templ.KV("items-end", props.Dashboard),
-		templ.KV("items-center", !props.Dashboard),
-		"justify-between gap-4",
-	} }}
-	if props.Flat {
-		<div class={ margin, templ.KV("mt-2", !props.NoTopMargin), flex } { devmode.Attrs(ctx, "nav/PageHeading")... } { props.Attrs... }>
-			if props.Leading != nil {
-				@props.Leading
-			}
-			if !props.HideBreadcrumbs {
-				@Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault)
-			}
-			@pageHeadingTitleColumn(props)
-			if props.Actions != nil {
-				@props.Actions
-			}
-		</div>
+	if props.Layout == PageHeadingLayoutSplit {
+		@pageHeadingSplit(props)
 	} else {
-		<div class={ margin } { devmode.Attrs(ctx, "nav/PageHeading")... } { props.Attrs... }>
-			if props.Leading != nil {
-				@props.Leading
-			}
-			if !props.HideBreadcrumbs {
-				@Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault)
-			}
-			if props.Bare {
-				<div class={ templ.KV("mt-2", !props.NoTopMargin) }>
-					<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
-					if props.Subtitle != "" {
-						<p class="text-subtle mt-1 text-sm">{ props.Subtitle }</p>
-					}
-				</div>
-			} else {
-				<div class={ templ.KV("mt-2", !props.NoTopMargin), flex }>
-					@pageHeadingTitleColumn(props)
-					if props.Actions != nil {
-						@props.Actions
-					}
-				</div>
-			}
-		</div>
+		{{ margin := cmp.Or(props.Margin, "mb-4")
+		flex := templ.CSSClasses{
+			"flex flex-wrap",
+			templ.KV("items-end", props.Dashboard),
+			templ.KV("items-center", !props.Dashboard),
+			"justify-between gap-4",
+		} }}
+		if props.Flat {
+			<div class={ margin, templ.KV("mt-2", !props.NoTopMargin), flex } { devmode.Attrs(ctx, "nav/PageHeading")... } { props.Attrs... }>
+				if props.Leading != nil {
+					@props.Leading
+				}
+				if !props.HideBreadcrumbs {
+					@Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault)
+				}
+				@pageHeadingTitleColumn(props)
+				if props.Actions != nil {
+					@props.Actions
+				}
+			</div>
+		} else {
+			<div class={ margin } { devmode.Attrs(ctx, "nav/PageHeading")... } { props.Attrs... }>
+				if props.Leading != nil {
+					@props.Leading
+				}
+				if !props.HideBreadcrumbs {
+					@Breadcrumbs(props.Breadcrumbs, BreadcrumbsDividerDefault)
+				}
+				if props.Bare {
+					<div class={ templ.KV("mt-2", !props.NoTopMargin) }>
+						<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
+						if props.Subtitle != "" {
+							<p class="text-subtle mt-1 text-sm">{ props.Subtitle }</p>
+						}
+					</div>
+				} else {
+					<div class={ templ.KV("mt-2", !props.NoTopMargin), flex }>
+						@pageHeadingTitleColumn(props)
+						if props.Actions != nil {
+							@props.Actions
+						}
+					</div>
+				}
+			</div>
+		}
 	}
+}
+
+// pageHeadingSplit renders the split header: a single-row flex with the title
+// (and optional subtitle) on the left and the actions + compact breadcrumbs
+// cluster on the right. The breadcrumbs are compact, right-aligned, and hidden
+// below sm. Margin defaults to empty (no margin) — the Nexus dashboard headers
+// rely on the following section's own spacing.
+templ pageHeadingSplit(props PageHeadingProps) {
+	<div class={ props.Margin, "flex items-center justify-between" }
+		{ devmode.Attrs(ctx, "nav/PageHeading")... }
+		{ props.Attrs... }>
+		if props.Subtitle != "" {
+			<div class="min-w-0">
+				if props.Size == PageHeadingSizeSM {
+					<h3 class="text-lg font-medium">{ props.Title }</h3>
+				} else {
+					<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
+				}
+				<p class="text-subtle mt-1 text-sm">{ props.Subtitle }</p>
+			</div>
+		} else {
+			if props.Size == PageHeadingSizeSM {
+				<h3 class="text-lg font-medium">{ props.Title }</h3>
+			} else {
+				<h1 class="text-2xl font-bold tracking-tight">{ props.Title }</h1>
+			}
+		}
+		if props.Actions != nil && !props.HideBreadcrumbs {
+			<div class="flex items-center gap-4">
+				@props.Actions
+				@BreadcrumbsWithProps(BreadcrumbsProps{
+					Items:        props.Breadcrumbs,
+					Divider:      BreadcrumbsDividerDefault,
+					Compact:      true,
+					HideOnMobile: true,
+				})
+			</div>
+		} else if props.Actions != nil {
+			@props.Actions
+		} else if !props.HideBreadcrumbs {
+			@BreadcrumbsWithProps(BreadcrumbsProps{
+				Items:        props.Breadcrumbs,
+				Divider:      BreadcrumbsDividerDefault,
+				Compact:      true,
+				HideOnMobile: true,
+			})
+		}
+	</div>
 }
 
 templ pageHeadingTitleColumn(props PageHeadingProps) {

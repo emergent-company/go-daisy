@@ -47,6 +47,8 @@ type DataGridProps struct {
 	SearchValue       string            // current search query
 	SearchPlaceholder string            // defaults to "Search..."
 	FilterChildren    templ.Component   // slot for additional filter controls (nil = none)
+	Actions           templ.Component   // trailing actions slot: rendered after the search/filter cluster and before the batch cluster
+	Toolbar           templ.Component   // rendered above the search row when non-nil
 
 	// Selection
 	Selectable   bool           // show checkbox column
@@ -75,6 +77,9 @@ templ DataGrid(props DataGridProps) {
 	>
 		<!-- Toolbar -->
 		<div class="px-5 pt-5">
+			if props.Toolbar != nil {
+				@props.Toolbar
+			}
 			<div class="flex items-center justify-between gap-3">
 				<div class={ ui.RowLoose, "flex-1" }>
 					if props.SearchName != "" {
@@ -102,6 +107,12 @@ templ DataGrid(props DataGridProps) {
 						@props.FilterChildren
 					}
 				</div>
+
+				if props.Actions != nil {
+					<div class={ ui.Row }>
+						@props.Actions
+					</div>
+				}
 
 				if props.Selectable && len(props.BatchActions) > 0 {
 					<div x-show="selected.length > 0" x-cloak class={ ui.Row }>

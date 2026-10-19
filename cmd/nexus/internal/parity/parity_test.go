@@ -131,6 +131,46 @@ func TestNexusDashboardUsesLibraryCardsAndTable(t *testing.T) {
 	forbid(t, row, "ecomOrderRow", "<tr", "<td", "<th")
 }
 
+// TestNexusDashboardsUseFoundationComponents pins the P1 foundation port: both
+// dashboards compose their headers through nav.PageHeading, their card headers
+// through ui.CardToolbar, their charts through ui.ChartCard, and their stat
+// cards through ui.StatCardFeatured — with no hand-rolled breadcrumb, CRM stat
+// card helper, or raw table markup left behind.
+func TestNexusDashboardsUseFoundationComponents(t *testing.T) {
+	src := stripLineComments(read(t, "../handler/pages_dashboards.templ"))
+
+	for _, name := range []string{"EcommerceDashboard", "CRMDashboard"} {
+		fn := templFunc(t, src, name)
+		require(t, fn, name, "@ui.StatCardFeatured(")
+		require(t, fn, name, "@ui.ChartCard(")
+		require(t, fn, name, "@nav.PageHeading(")
+	}
+
+	forbid(t, src, "dashboards",
+		"templ crmStatCard(",
+		`class="breadcrumbs hidden p-0`,
+		"<table",
+		"<thead",
+		"<tbody",
+		"<tr",
+		"<td",
+	)
+}
+
+// stripLineComments removes whole-line // comments so a commented-out component
+// call cannot satisfy a require() assertion.
+func stripLineComments(src string) string {
+	lines := strings.Split(src, "\n")
+	out := lines[:0]
+	for _, line := range lines {
+		if strings.HasPrefix(strings.TrimSpace(line), "//") {
+			continue
+		}
+		out = append(out, line)
+	}
+	return strings.Join(out, "\n")
+}
+
 // TestNexusTemplatesUseRootRelativeImages catches the class of 404 where a
 // template writes "./images/..." and the browser resolves it under the current
 // route (e.g. /dashboards/images/...) instead of /images/.
