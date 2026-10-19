@@ -2408,6 +2408,7 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 			Category:    galleryruntime.CategoryDataDisplay,
 			Subcategory: "Tables",
 			Description: "Composite card-wrapped table with search, filter, row selection, batch actions, trailing actions slot and pagination.",
+			Tokens:      DataGridTokens(),
 			Variants: []galleryruntime.GalleryStory{
 				{
 					Name:        "With search",

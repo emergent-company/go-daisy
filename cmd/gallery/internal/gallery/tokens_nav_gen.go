@@ -184,7 +184,51 @@ func BreadcrumbsTokens() []galleryruntime.DesignToken {
 
 // BreadcrumbsWithPropsTokens returns the DesignToken slice for BreadcrumbsWithPropsWithBoundary.
 func BreadcrumbsWithPropsTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Items 1",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 1",
+			QueryParam: "items1",
+		},
+		{
+			Label:      "Items 2",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 2",
+			QueryParam: "items2",
+		},
+		{
+			Label:      "Items 3",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Item 3",
+			QueryParam: "items3",
+		},
+		{
+			Label:      "Compact",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "compact",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Hide On Mobile",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "hideOnMobile",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+	}
 }
 
 // DockTokens returns the DesignToken slice for DockWithBoundary.
@@ -244,7 +288,44 @@ func LinkTokens() []galleryruntime.DesignToken {
 
 // PageHeadingTokens returns the DesignToken slice for PageHeadingWithBoundary.
 func PageHeadingTokens() []galleryruntime.DesignToken {
-	return []galleryruntime.DesignToken{}
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Title",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Page Title",
+			QueryParam: "title",
+		},
+		{
+			Label:      "Subtitle",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "subtitle",
+		},
+		{
+			Label:      "Layout",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "split",
+			QueryParam: "layout",
+			Options: []galleryruntime.TokenOption{
+				{Value: "split", Label: "Split"},
+				{Value: "", Label: "Stacked"},
+			},
+		},
+		{
+			Label:      "Size",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "",
+			QueryParam: "size",
+			Options: []galleryruntime.TokenOption{
+				{Value: "", Label: "MD"},
+				{Value: "sm", Label: "SM"},
+			},
+		},
+	}
 }
 
 // SearchTriggerTokens returns the DesignToken slice for SearchTriggerWithBoundary.

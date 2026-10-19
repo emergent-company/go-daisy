@@ -45,6 +45,25 @@ func ModalTokens() []galleryruntime.DesignToken {
 func FormModalTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
 		{
+			Label:      "Title",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "Edit Item",
+			QueryParam: "title",
+		},
+		{
+			Label:      "Size",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "md",
+			QueryParam: "size",
+			Options: []galleryruntime.TokenOption{
+				{Value: "modal-lg", Label: "LG"},
+				{Value: "", Label: "MD"},
+				{Value: "modal-sm", Label: "SM"},
+			},
+		},
+		{
 			Label:      "Driver",
 			Group:      "Component",
 			Type:       galleryruntime.TokenTypeSelect,

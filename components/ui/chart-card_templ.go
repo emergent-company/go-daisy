@@ -17,16 +17,18 @@ import (
 // CardToolbar header (title + optional subtitle, with Legend and Actions in the
 // action slot), an unpadded chart region, and an optional bordered footer.
 type ChartCardProps struct {
-	Title     string           // toolbar title
-	Subtitle  string           // optional toolbar subtitle
-	Icon      string           // optional leading Iconify icon beside the title
-	Legend    templ.Component  // optional legend, rendered before Actions in the toolbar
-	Actions   templ.Component  // optional actions (buttons/tabs), rendered after Legend
-	Chart     templ.Component  // the chart region (e.g. @ui.Chart(...))
-	Footer    templ.Component  // optional footer, rendered in a bordered top row
-	BodyClass string           // additional classes on the chart region wrapper
-	Class     string           // additional classes on the card root
-	Attrs     templ.Attributes // spread last on the card root
+	Title       string           // toolbar title
+	Subtitle    string           // optional toolbar subtitle
+	Icon        string           // optional leading Iconify icon beside the title
+	Legend      templ.Component  // optional legend, rendered before Actions in the toolbar
+	Actions     templ.Component  // optional actions (buttons/tabs), rendered after Legend
+	Intro       templ.Component  // optional block between the toolbar and the chart (summary numbers, sub-header)
+	Chart       templ.Component  // the chart region (e.g. @ui.Chart(...))
+	Footer      templ.Component  // optional footer, rendered in a bordered top row
+	HeaderClass string           // additional classes on the CardToolbar row (default "px-5 pt-5")
+	BodyClass   string           // additional classes on the chart region wrapper
+	Class       string           // additional classes on the card root
+	Attrs       templ.Attributes // spread last on the card root
 }
 
 // chartCardActions composes Legend then Actions into the single CardToolbar
@@ -69,6 +71,7 @@ func ChartCard(props ChartCardProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		headerClass := ternary(props.HeaderClass != "", props.HeaderClass, "px-5 pt-5")
 		var templ_7745c5c3_Var2 = []any{"card bg-base-100 shadow", props.Class}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
@@ -108,10 +111,16 @@ func ChartCard(props ChartCardProps) templ.Component {
 			Subtitle: props.Subtitle,
 			Icon:     props.Icon,
 			Actions:  chartCardActions(props.Legend, props.Actions),
-			Class:    "px-5 pt-5",
+			Class:    headerClass,
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
+		}
+		if props.Intro != nil {
+			templ_7745c5c3_Err = props.Intro.Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
 		var templ_7745c5c3_Var4 = []any{props.BodyClass}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)

@@ -24,7 +24,7 @@ func TestCanonicalClassesKeepsUnknown(t *testing.T) {
 func TestClassAliasesCoverEveryToneToken(t *testing.T) {
 	// Every opacity the token layer replaces must have an alias, otherwise a
 	// converted page reports a phantom class diff.
-	for _, raw := range []string{"80", "70", "60", "55", "50", "45", "40"} {
+	for _, raw := range []string{"80", "70", "60", "50", "40"} {
 		key := "text-base-content/" + raw
 		if _, ok := classAliases[key]; !ok {
 			t.Errorf("missing alias for %s", key)

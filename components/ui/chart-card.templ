@@ -14,8 +14,10 @@ type ChartCardProps struct {
 	Icon      string           // optional leading Iconify icon beside the title
 	Legend    templ.Component  // optional legend, rendered before Actions in the toolbar
 	Actions   templ.Component  // optional actions (buttons/tabs), rendered after Legend
+	Intro     templ.Component  // optional block between the toolbar and the chart (summary numbers, sub-header)
 	Chart     templ.Component  // the chart region (e.g. @ui.Chart(...))
 	Footer    templ.Component  // optional footer, rendered in a bordered top row
+	HeaderClass string         // additional classes on the CardToolbar row (default "px-5 pt-5")
 	BodyClass string           // additional classes on the chart region wrapper
 	Class     string           // additional classes on the card root
 	Attrs     templ.Attributes // spread last on the card root
@@ -41,6 +43,7 @@ func chartCardActions(legend, actions templ.Component) templ.Component {
 // optional bordered footer row. The chart region stays unpadded vertically so
 // apex charts can bleed edge-to-edge; callers pass padding via BodyClass.
 templ ChartCard(props ChartCardProps) {
+	{{ headerClass := ternary(props.HeaderClass != "", props.HeaderClass, "px-5 pt-5") }}
 	<div class={ "card bg-base-100 shadow", props.Class }
 		{ devmode.Attrs(ctx, "ui/ChartCard")... }
 		{ props.Attrs... }>
@@ -50,8 +53,11 @@ templ ChartCard(props ChartCardProps) {
 				Subtitle: props.Subtitle,
 				Icon:     props.Icon,
 				Actions:  chartCardActions(props.Legend, props.Actions),
-				Class:    "px-5 pt-5",
+				Class:    headerClass,
 			})
+			if props.Intro != nil {
+				@props.Intro
+			}
 			<div class={ props.BodyClass }>
 				if props.Chart != nil {
 					@props.Chart

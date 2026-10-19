@@ -141,7 +141,7 @@ func DataTableWithBoundary(props DataTableProps) templ.Component {
 }
 
 // DataGridWithBoundary wraps DataGrid with a dev-mode component boundary annotation.
-// gallery:token searchable,striped,compact,selectable,pageSize
+// gallery:token striped,bordered,compact,selectable,pageSize
 // gallery:hint pageSize:range(1,100,1)
 func DataGridWithBoundary(props DataGridProps) templ.Component {
 	return devmode.ComponentBoundary("DataGrid", DataGrid(props), map[string]any{

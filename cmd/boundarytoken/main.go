@@ -40,6 +40,7 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
+	"unicode"
 )
 
 func main() {
@@ -86,6 +87,7 @@ func main() {
 	}
 	// Collect all const values grouped by type name: map[typeName][]constEntry
 	typeConsts := collectTypeConsts(pkgFiles)
+	structs := collectStructFields(pkgFiles)
 
 	pkgName := f.Name.Name
 	if *outPkg != "" {
@@ -110,6 +112,7 @@ func main() {
 		}
 
 		params := extractParams(fn)
+		applyStructFields(params, structs)
 		entry := funcEntry{
 			FuncName:  fn.Name.Name,
 			TokenFunc: strings.TrimSuffix(fn.Name.Name, "WithBoundary") + "Tokens",
@@ -233,6 +236,74 @@ func extractParams(fn *ast.FuncDecl) map[string]paramInfo {
 		}
 	}
 	return result
+}
+
+// structFields maps a struct type name to its exported fields, keyed by the
+// lower-camel token name used in gallery:token annotations.
+type structFields map[string]map[string]string
+
+// collectStructFields gathers exported struct fields for every struct declared
+// in the package. Components whose WithBoundary signature takes a Props struct
+// (the dominant pattern) would otherwise resolve no tokens at all, because the
+// generator only matched positional parameters.
+func collectStructFields(pkgFiles []*ast.File) structFields {
+	result := structFields{}
+	for _, file := range pkgFiles {
+		for _, decl := range file.Decls {
+			gd, ok := decl.(*ast.GenDecl)
+			if !ok || gd.Tok != token.TYPE {
+				continue
+			}
+			for _, spec := range gd.Specs {
+				ts, ok := spec.(*ast.TypeSpec)
+				if !ok {
+					continue
+				}
+				st, ok := ts.Type.(*ast.StructType)
+				if !ok {
+					continue
+				}
+				fields := map[string]string{}
+				for _, f := range st.Fields.List {
+					if len(f.Names) == 0 {
+						continue // embedded field
+					}
+					typeName := exprString(f.Type)
+					for _, name := range f.Names {
+						if !ast.IsExported(name.Name) {
+							continue
+						}
+						fields[lowerFirst(name.Name)] = typeName
+					}
+				}
+				result[ts.Name.Name] = fields
+			}
+		}
+	}
+	return result
+}
+
+// applyStructFields exposes Props-struct fields as if they were positional
+// parameters, so gallery:token annotations work for both signatures. Existing
+// positional parameters always win on a name collision.
+func applyStructFields(params map[string]paramInfo, fields structFields) {
+	for _, info := range params {
+		for name, typeName := range fields[info.typeName] {
+			if _, exists := params[name]; exists {
+				continue
+			}
+			params[name] = paramInfo{name: name, typeName: typeName}
+		}
+	}
+}
+
+func lowerFirst(s string) string {
+	if s == "" {
+		return s
+	}
+	r := []rune(s)
+	r[0] = unicode.ToLower(r[0])
+	return string(r)
 }
 
 func exprString(e ast.Expr) string {

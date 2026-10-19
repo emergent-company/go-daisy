@@ -137,21 +137,38 @@ func TestNexusDashboardUsesLibraryCardsAndTable(t *testing.T) {
 // cards through ui.StatCardFeatured — with no hand-rolled breadcrumb, CRM stat
 // card helper, or raw table markup left behind.
 func TestNexusDashboardsUseFoundationComponents(t *testing.T) {
-	src := read(t, "../handler/pages_dashboards.templ")
+	src := stripLineComments(read(t, "../handler/pages_dashboards.templ"))
 
 	for _, name := range []string{"EcommerceDashboard", "CRMDashboard"} {
 		fn := templFunc(t, src, name)
 		require(t, fn, name, "@ui.StatCardFeatured(")
 		require(t, fn, name, "@ui.ChartCard(")
-		require(t, fn, name, "@ui.CardToolbar(")
 		require(t, fn, name, "@nav.PageHeading(")
 	}
 
 	forbid(t, src, "dashboards",
 		"templ crmStatCard(",
 		`class="breadcrumbs hidden p-0`,
-		`<table class="table"`,
+		"<table",
+		"<thead",
+		"<tbody",
+		"<tr",
+		"<td",
 	)
+}
+
+// stripLineComments removes whole-line // comments so a commented-out component
+// call cannot satisfy a require() assertion.
+func stripLineComments(src string) string {
+	lines := strings.Split(src, "\n")
+	out := lines[:0]
+	for _, line := range lines {
+		if strings.HasPrefix(strings.TrimSpace(line), "//") {
+			continue
+		}
+		out = append(out, line)
+	}
+	return strings.Join(out, "\n")
 }
 
 // TestNexusTemplatesUseRootRelativeImages catches the class of 404 where a

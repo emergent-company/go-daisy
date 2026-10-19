@@ -224,9 +224,7 @@ var classAliases = map[string]string{
 	"text-base-content/80": "text-body",
 	"text-base-content/70": "text-label",
 	"text-base-content/60": "text-muted",
-	"text-base-content/55": "text-subtle",
 	"text-base-content/50": "text-subtle",
-	"text-base-content/45": "text-faint",
 	"text-base-content/40": "text-faint",
 }
 

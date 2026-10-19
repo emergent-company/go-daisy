@@ -142,29 +142,36 @@ templ StatCardFeatured(p StatCardFeaturedProps) {
 	}
 }
 
-// statCardFeaturedCompact renders the icon-left CRM-style stat card: icon tile
-// + label on the top row, value + trend badge below, and a cursor-pointer
-// affordance on the root.
+// statCardFeaturedCompact renders the icon-left stat card: icon tile + label on
+// the top row, value + trend badge below. It is the compact alternative to the
+// default icon-right layout and keeps the same semantics: the badge arrow and
+// colour follow TrendUp, IconColor tints the tile, and Comparison renders under
+// the value when set.
 templ statCardFeaturedCompact(p StatCardFeaturedProps) {
-	<div class="cursor-pointer">
-		<div class="card bg-base-100 shadow" { devmode.Attrs(ctx, "ui/StatCardFeatured")... } { p.Attrs... }>
-			<div class="card-body gap-2 p-4 2xl:p-5">
-				<div class="flex items-center gap-3">
-					<div class="bg-base-200 rounded-box flex items-center p-1.5">
-						<span class={ "iconify", p.Icon, "size-4.5" }></span>
-					</div>
-					<p class="line-clamp-1 font-medium text-sm">{ p.Label }</p>
+	<div class="card bg-base-100 shadow" { devmode.Attrs(ctx, "ui/StatCardFeatured")... } { p.Attrs... }>
+		<div class="card-body gap-2 p-4 2xl:p-5">
+			<div class="flex items-center gap-3">
+				<div class={ "rounded-box flex items-center p-1.5", iconBgClass(p.IconColor) }>
+					<span class={ "iconify", p.Icon, "size-4.5", p.IconColor }></span>
 				</div>
-				<div class="mt-5 mb-0.5 flex items-center gap-2 text-sm 2xl:gap-3">
-					<p class="text-lg font-medium">{ p.Value }</p>
-					<div class={ "badge badge-soft badge-sm gap-0.5 px-1.5",
-						templ.KV("badge-success", p.TrendUp),
-						templ.KV("badge-error", !p.TrendUp) }>
+				<p class="line-clamp-1 font-medium text-sm">{ p.Label }</p>
+			</div>
+			<div class="mt-5 mb-0.5 flex items-center gap-2 text-sm 2xl:gap-3">
+				<p class="text-lg font-medium">{ p.Value }</p>
+				<div class={ "badge badge-soft badge-sm gap-0.5 px-1.5",
+					templ.KV("badge-success", p.TrendUp),
+					templ.KV("badge-error", !p.TrendUp) }>
+					if p.TrendUp {
 						<span class="iconify lucide--arrow-up size-3"></span>
-						{ p.Trend }
-					</div>
+					} else {
+						<span class="iconify lucide--arrow-down size-3"></span>
+					}
+					{ p.Trend }
 				</div>
 			</div>
+			if p.Comparison != "" {
+				<p class="text-xs text-muted">{ p.Comparison }</p>
+			}
 		</div>
 	</div>
 }
