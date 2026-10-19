@@ -45,6 +45,13 @@ func ModalTokens() []galleryruntime.DesignToken {
 func FormModalTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
 		{
+			Label:      "Id",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "form-modal-1",
+			QueryParam: "id",
+		},
+		{
 			Label:      "Title",
 			Group:      "Component",
 			Type:       galleryruntime.TokenTypeText,

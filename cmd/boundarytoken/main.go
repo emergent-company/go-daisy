@@ -112,11 +112,11 @@ func main() {
 		}
 
 		params := extractParams(fn)
-		applyStructFields(params, structs)
+		lookup := applyStructFields(params, structs)
 		entry := funcEntry{
 			FuncName:  fn.Name.Name,
 			TokenFunc: strings.TrimSuffix(fn.Name.Name, "WithBoundary") + "Tokens",
-			Tokens:    buildTokens(tokens, hints, params, typeConsts),
+			Tokens:    buildTokens(fn.Name.Name, tokens, hints, lookup, typeConsts),
 		}
 		entries = append(entries, entry)
 	}
@@ -224,15 +224,18 @@ type paramInfo struct {
 	typeName string // resolved simple name: "string","bool","int","[]ActionMenuItem","ButtonVariant"…
 }
 
-func extractParams(fn *ast.FuncDecl) map[string]paramInfo {
-	result := map[string]paramInfo{}
+// extractParams returns the function's parameters in declaration order. Order
+// matters for applyStructFields: when two struct params share a field name, the
+// parameter that appears first in the signature wins.
+func extractParams(fn *ast.FuncDecl) []paramInfo {
+	var result []paramInfo
 	if fn.Type.Params == nil {
 		return result
 	}
 	for _, field := range fn.Type.Params.List {
 		typeName := exprString(field.Type)
 		for _, ident := range field.Names {
-			result[ident.Name] = paramInfo{name: ident.Name, typeName: typeName}
+			result = append(result, paramInfo{name: ident.Name, typeName: typeName})
 		}
 	}
 	return result
@@ -246,6 +249,9 @@ type structFields map[string]map[string]string
 // in the package. Components whose WithBoundary signature takes a Props struct
 // (the dominant pattern) would otherwise resolve no tokens at all, because the
 // generator only matched positional parameters.
+//
+// Embedded (anonymous) fields are intentionally skipped: they have no field
+// name to key a gallery:token on.
 func collectStructFields(pkgFiles []*ast.File) structFields {
 	result := structFields{}
 	for _, file := range pkgFiles {
@@ -266,14 +272,14 @@ func collectStructFields(pkgFiles []*ast.File) structFields {
 				fields := map[string]string{}
 				for _, f := range st.Fields.List {
 					if len(f.Names) == 0 {
-						continue // embedded field
+						continue // embedded field — intentionally skipped, no name to key on
 					}
 					typeName := exprString(f.Type)
 					for _, name := range f.Names {
 						if !ast.IsExported(name.Name) {
 							continue
 						}
-						fields[lowerFirst(name.Name)] = typeName
+						fields[tokenName(name.Name)] = typeName
 					}
 				}
 				result[ts.Name.Name] = fields
@@ -285,25 +291,74 @@ func collectStructFields(pkgFiles []*ast.File) structFields {
 
 // applyStructFields exposes Props-struct fields as if they were positional
 // parameters, so gallery:token annotations work for both signatures. Existing
-// positional parameters always win on a name collision.
-func applyStructFields(params map[string]paramInfo, fields structFields) {
-	for _, info := range params {
-		for name, typeName := range fields[info.typeName] {
-			if _, exists := params[name]; exists {
+// positional parameters always win on a name collision, and when two struct
+// params share a field name the struct param that appears first in the
+// signature wins. Additions are collected in signature order and merged after,
+// so the result never depends on map iteration order.
+func applyStructFields(params []paramInfo, fields structFields) map[string]paramInfo {
+	lookup := map[string]paramInfo{}
+	for _, p := range params {
+		lookup[p.name] = p
+	}
+	// Merge struct-field additions in signature order. A field is only added
+	// when its token name is not already occupied (by a positional parameter
+	// or a field expanded from an earlier struct param), so the first struct
+	// param to declare a field wins.
+	for _, p := range params {
+		for name, typeName := range fields[p.typeName] {
+			if _, exists := lookup[name]; exists {
 				continue
 			}
-			params[name] = paramInfo{name: name, typeName: typeName}
+			lookup[name] = paramInfo{name: name, typeName: typeName}
 		}
 	}
+	return lookup
 }
 
-func lowerFirst(s string) string {
+// tokenName converts an exported Go field/param name to the lowerCamel token
+// name used by gallery:token annotations. A leading run of capitals is
+// lowercased, except its final capital when that capital starts the next word
+// (a Go initialism followed by a word):
+//
+//	ID         → id
+//	URL        → url
+//	HTTPClient → httpClient
+//	APIKey     → apiKey
+//	Title      → title
+//	PageSize   → pageSize
+func tokenName(s string) string {
 	if s == "" {
 		return s
 	}
 	r := []rune(s)
-	r[0] = unicode.ToLower(r[0])
-	return string(r)
+	// Length of the leading run of uppercase runes.
+	i := 0
+	for i < len(r) && unicode.IsUpper(r[i]) {
+		i++
+	}
+	switch {
+	case i == 0:
+		// Not exported — leave as-is (callers only pass exported names).
+		return s
+	case i == len(r):
+		// Whole name is an initialism (e.g. "ID", "URL") — lowercase all.
+		for j := range r {
+			r[j] = unicode.ToLower(r[j])
+		}
+		return string(r)
+	case i == 1:
+		// Single leading capital — a plain CamelCase word.
+		r[0] = unicode.ToLower(r[0])
+		return string(r)
+	default:
+		// Leading run is an initialism plus a word start (e.g. "HTTPClient"):
+		// keep the final capital (the start of the next word) and lowercase the
+		// initialism before it.
+		for j := 0; j < i-1; j++ {
+			r[j] = unicode.ToLower(r[j])
+		}
+		return string(r)
+	}
 }
 
 func exprString(e ast.Expr) string {
@@ -386,12 +441,14 @@ type optionDef struct {
 	Label string
 }
 
-func buildTokens(tokenParams []string, hints map[string]hintVal, params map[string]paramInfo, typeConsts map[string][]constEntry) []tokenDef {
+func buildTokens(funcName string, tokenParams []string, hints map[string]hintVal, params map[string]paramInfo, typeConsts map[string][]constEntry) []tokenDef {
 	var result []tokenDef
 	for _, pname := range tokenParams {
 		info, ok := params[pname]
 		if !ok {
-			// param not in signature — annotated but wrong name, skip
+			// Annotated token has no matching parameter or struct field. Warn
+			// so dropped tokens stay visible, but do not fail the build.
+			fmt.Fprintf(os.Stderr, "boundarytoken: %s: token %q not found in parameters\n", funcName, pname)
 			continue
 		}
 		hint := hints[pname]

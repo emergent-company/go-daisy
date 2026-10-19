@@ -145,8 +145,8 @@ func DataTableWithBoundary(props DataTableProps) templ.Component {
 // gallery:hint pageSize:range(1,100,1)
 func DataGridWithBoundary(props DataGridProps) templ.Component {
 	return devmode.ComponentBoundary("DataGrid", DataGrid(props), map[string]any{
-		"searchable": props.SearchName != "",
 		"striped":    props.Striped,
+		"bordered":   props.Bordered,
 		"compact":    props.Compact,
 		"selectable": props.Selectable,
 		"pageSize":   props.PageSize,

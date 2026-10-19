@@ -2318,6 +2318,13 @@ func ColorPickerTokens() []galleryruntime.DesignToken {
 func DialogTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{
 		{
+			Label:      "Id",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "demo-modal",
+			QueryParam: "id",
+		},
+		{
 			Label:      "Box Class",
 			Group:      "Component",
 			Type:       galleryruntime.TokenTypeText,

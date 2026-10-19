@@ -2413,7 +2413,11 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 				{
 					Name:        "With search",
 					Description: "A two-column grid with a search field.",
-					RenderFunc: func(_ url.Values) templ.Component {
+					RenderFunc: func(params url.Values) templ.Component {
+						pageSize := 0
+						if v, err := parseInt(params.Get("pageSize")); err == nil && v > 0 {
+							pageSize = v
+						}
 						return table.DataGridWithBoundary(table.DataGridProps{
 							ID: "demo-grid",
 							Columns: []table.DataGridColumn{
@@ -2425,6 +2429,11 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 								{ID: "2", Cells: []templ.Component{shared.StrComp("Beta"), shared.StrComp("Paused")}},
 							},
 							SearchName: "q",
+							Striped:    params.Get("striped") == "true",
+							Bordered:   params.Get("bordered") == "true",
+							Compact:    params.Get("compact") == "true",
+							Selectable: params.Get("selectable") == "true",
+							PageSize:   pageSize,
 						})
 					},
 					FrameHeight: "320px",

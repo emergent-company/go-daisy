@@ -1556,9 +1556,9 @@ func EmptyNoteWithBoundary(text string, size EmptyNoteSize, tone EmptyNoteTone, 
 
 // SoftBoxWithBoundary wraps SoftBox with a dev-mode component boundary annotation.
 //
-// No gallery:token annotation: `boundarytoken` maps per parameter and this
-// boundary takes a struct, so an annotation here yields no tokens at all — the
-// padding and surface controls are written by hand in the gallery seed.
+// No gallery:token annotation: the padding and surface controls are written by
+// hand in the gallery seed, so their option labels can be friendlier than the
+// auto-generated const labels.
 func SoftBoxWithBoundary(props SoftBoxProps, children templ.Component) templ.Component {
 	inner := shared.RenderInto(SoftBox(props), children)
 	return devmode.ComponentBoundary("SoftBox", inner, map[string]any{
@@ -1589,8 +1589,8 @@ func DirectionWithBoundary(props DirectionProps, children templ.Component) templ
 
 // ContextMenuWithBoundary wraps ContextMenu with a dev-mode component boundary annotation.
 //
-// No gallery:token annotation: the boundary takes a struct, so boundarytoken
-// maps nothing — the gallery seed writes its controls by hand.
+// No gallery:token annotation: the menu items are a composite slice (not a
+// label list), so there is no scalar design-token surface to expose.
 func ContextMenuWithBoundary(props ContextMenuProps, children templ.Component) templ.Component {
 	inner := shared.RenderInto(ContextMenu(props), children)
 	return devmode.ComponentBoundary("ContextMenu", inner, map[string]any{
@@ -1601,8 +1601,8 @@ func ContextMenuWithBoundary(props ContextMenuProps, children templ.Component) t
 
 // ResizableWithBoundary wraps Resizable with a dev-mode component boundary annotation.
 //
-// No gallery:token annotation: the boundary takes a struct, so boundarytoken
-// maps nothing — the gallery seed writes its controls by hand.
+// No gallery:token annotation: the orientation and string size bounds are
+// interaction state, so there is no design-token surface to expose.
 func ResizableWithBoundary(props ResizableProps) templ.Component {
 	return devmode.ComponentBoundary("Resizable", Resizable(props), map[string]any{
 		"id":          props.ID,
