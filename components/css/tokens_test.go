@@ -210,6 +210,101 @@ func TestChartTextTokens(t *testing.T) {
 	}
 }
 
+// chartTooltipTokens are the ApexCharts tooltip surface/ink tokens defined in
+// tokens.css. Each must be declared exactly as written so they derive from the
+// daisyUI base ramp (not a hard-coded hex) and track theme switches.
+var chartTooltipTokens = []string{
+	"--chart-tooltip-bg: color-mix(in oklab, var(--color-base-100) 96%, transparent)",
+	"--chart-tooltip-title-bg: var(--color-base-200)",
+	"--chart-tooltip-border: var(--color-base-300)",
+	"--chart-tooltip-text: var(--color-base-content)",
+}
+
+// TestChartTooltipTokens locks the chart tooltip contract: tokens.css defines
+// the four --chart-tooltip-* variables (derived from the daisyUI base ramp),
+// and custom.css maps ApexCharts' tooltip/axis-tooltip classes onto them so
+// the surface, ink, and border follow the active theme instead of ApexCharts'
+// hard-coded light default (rgba(255,255,255,.96) / #eceff1 / #90a4ae).
+func TestChartTooltipTokens(t *testing.T) {
+	root := filepath.Join("..", "..")
+
+	tokensPath := filepath.Join(root, "components", "css", filepath.Base(TokensCSS))
+	tokensSrc := string(readFile(t, tokensPath))
+	for _, decl := range chartTooltipTokens {
+		if !strings.Contains(tokensSrc, decl) {
+			t.Errorf("tokens.css missing/incorrect declaration %q", decl)
+		}
+	}
+	for _, ref := range []string{
+		"var(--color-base-100)",
+		"var(--color-base-200)",
+		"var(--color-base-300)",
+		"var(--color-base-content)",
+	} {
+		if !strings.Contains(tokensSrc, ref) {
+			t.Errorf("tooltip tokens must derive from daisyUI theme vars; missing %q", ref)
+		}
+	}
+
+	customPath := filepath.Join(root, "components", "css", filepath.Base(CustomCSS))
+	customSrc := string(readFile(t, customPath))
+
+	for _, sel := range []string{
+		"[data-chart] .apexcharts-tooltip",
+		"[data-chart] .apexcharts-tooltip.apexcharts-theme-light",
+		"[data-chart] .apexcharts-tooltip.apexcharts-theme-dark",
+		"[data-chart] .apexcharts-tooltip-title",
+		"[data-chart] .apexcharts-tooltip-text",
+		"[data-chart] .apexcharts-tooltip-text-y-label",
+		"[data-chart] .apexcharts-tooltip-text-y-value",
+		"[data-chart] .apexcharts-tooltip-text-z-label",
+		"[data-chart] .apexcharts-tooltip-text-z-value",
+		"[data-chart] .apexcharts-tooltip-text-goals-label",
+		"[data-chart] .apexcharts-tooltip-text-goals-value",
+		"[data-chart] .apexcharts-xaxistooltip",
+		"[data-chart] .apexcharts-yaxistooltip",
+		"[data-chart] .apexcharts-xaxistooltip.apexcharts-theme-dark",
+		"[data-chart] .apexcharts-yaxistooltip.apexcharts-theme-dark",
+		"[data-chart] .apexcharts-xaxistooltip-bottom:after",
+		"[data-chart] .apexcharts-xaxistooltip-top:after",
+		"[data-chart] .apexcharts-xaxistooltip-bottom:before",
+		"[data-chart] .apexcharts-xaxistooltip-top:before",
+		"[data-chart] .apexcharts-yaxistooltip-left:after",
+		"[data-chart] .apexcharts-yaxistooltip-right:after",
+		"[data-chart] .apexcharts-yaxistooltip-left:before",
+		"[data-chart] .apexcharts-yaxistooltip-right:before",
+	} {
+		if !strings.Contains(customSrc, sel) {
+			t.Errorf("custom.css missing chart tooltip selector %q", sel)
+		}
+	}
+
+	for _, ref := range []string{
+		"background: var(--chart-tooltip-bg) !important",
+		"color: var(--chart-tooltip-text) !important",
+		"border-color: var(--chart-tooltip-border) !important",
+		"background: var(--chart-tooltip-title-bg) !important",
+		"border-bottom-color: var(--chart-tooltip-border) !important",
+		"border-bottom-color: var(--chart-tooltip-title-bg) !important",
+		"border-top-color: var(--chart-tooltip-title-bg) !important",
+		"border-top-color: var(--chart-tooltip-border) !important",
+		"border-left-color: var(--chart-tooltip-title-bg) !important",
+		"border-left-color: var(--chart-tooltip-border) !important",
+		"border-right-color: var(--chart-tooltip-title-bg) !important",
+		"border-right-color: var(--chart-tooltip-border) !important",
+	} {
+		if !strings.Contains(customSrc, ref) {
+			t.Errorf("custom.css missing chart tooltip declaration %q", ref)
+		}
+	}
+
+	// Strip /* … */ comments so the datalabel guard below inspects only real
+	// rules (the block comment above mentions the class but must not count).
+	if strings.Contains(stripCSSComments(customSrc), ".apexcharts-datalabel") {
+		t.Error("custom.css must not restyle .apexcharts-datalabel* (Nexus sets white data labels deliberately)")
+	}
+}
+
 // stripCSSComments removes /* … */ block comments from a stylesheet so content
 // checks test declarations rather than prose.
 func stripCSSComments(src string) string {

@@ -693,4 +693,77 @@ html[data-gd-resizing] iframe {
   [data-chart] .apexcharts-subtitle-text {
     fill: var(--chart-title-color) !important;
   }
+
+  /* Tooltip + axis tooltip surface/ink. ApexCharts keeps a fixed light
+   * surface in every theme: `.apexcharts-tooltip.apexcharts-theme-light` is
+   * `rgba(255,255,255,.96)` with a `#e3e3e3` border and the title is
+   * `#eceff1` over `#ddd`; the axis tooltips hard-code `#eceff1` /
+   * `#90a4ae` / `#373d3f`. In `dracula` that leaves light ink on a white 96%
+   * surface. These rules bind the tooltip surface and ink to the
+   * `--chart-tooltip-*` tokens so they follow base-100/200/300/content.
+   */
+  [data-chart] .apexcharts-tooltip,
+  [data-chart] .apexcharts-tooltip.apexcharts-theme-light,
+  [data-chart] .apexcharts-tooltip.apexcharts-theme-dark {
+    background: var(--chart-tooltip-bg) !important;
+    color: var(--chart-tooltip-text) !important;
+    border-color: var(--chart-tooltip-border) !important;
+  }
+
+  [data-chart] .apexcharts-tooltip-title {
+    background: var(--chart-tooltip-title-bg) !important;
+    border-bottom-color: var(--chart-tooltip-border) !important;
+    color: var(--chart-tooltip-text) !important;
+  }
+
+  /* Defensive: the tooltip root `color` already inherits the ink, but the
+     label/value fragments are individually classed, so pin them too. */
+  [data-chart] .apexcharts-tooltip-text,
+  [data-chart] .apexcharts-tooltip-text-y-label,
+  [data-chart] .apexcharts-tooltip-text-y-value,
+  [data-chart] .apexcharts-tooltip-text-z-label,
+  [data-chart] .apexcharts-tooltip-text-z-value,
+  [data-chart] .apexcharts-tooltip-text-goals-label,
+  [data-chart] .apexcharts-tooltip-text-goals-value {
+    color: var(--chart-tooltip-text) !important;
+  }
+
+  /* Axis tooltips (x/y). Same surface/ink/border tokens as the main tooltip. */
+  [data-chart] .apexcharts-xaxistooltip,
+  [data-chart] .apexcharts-yaxistooltip,
+  [data-chart] .apexcharts-xaxistooltip.apexcharts-theme-dark,
+  [data-chart] .apexcharts-yaxistooltip.apexcharts-theme-dark {
+    background: var(--chart-tooltip-title-bg) !important;
+    color: var(--chart-tooltip-text) !important;
+    border-color: var(--chart-tooltip-border) !important;
+  }
+
+  /* Axis tooltip arrows. The `:after` triangle is the surface (title-bg);
+     the `:before` outline is the border colour. Each edge is set alone — a
+     triangle is one coloured edge over a transparent border, so only the
+     active edge changes. */
+  [data-chart] .apexcharts-xaxistooltip-bottom:after {
+    border-bottom-color: var(--chart-tooltip-title-bg) !important;
+  }
+  [data-chart] .apexcharts-xaxistooltip-top:after {
+    border-top-color: var(--chart-tooltip-title-bg) !important;
+  }
+  [data-chart] .apexcharts-xaxistooltip-bottom:before {
+    border-bottom-color: var(--chart-tooltip-border) !important;
+  }
+  [data-chart] .apexcharts-xaxistooltip-top:before {
+    border-top-color: var(--chart-tooltip-border) !important;
+  }
+  [data-chart] .apexcharts-yaxistooltip-left:after {
+    border-left-color: var(--chart-tooltip-title-bg) !important;
+  }
+  [data-chart] .apexcharts-yaxistooltip-right:after {
+    border-right-color: var(--chart-tooltip-title-bg) !important;
+  }
+  [data-chart] .apexcharts-yaxistooltip-left:before {
+    border-left-color: var(--chart-tooltip-border) !important;
+  }
+  [data-chart] .apexcharts-yaxistooltip-right:before {
+    border-right-color: var(--chart-tooltip-border) !important;
+  }
 }

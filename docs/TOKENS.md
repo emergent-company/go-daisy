@@ -66,3 +66,22 @@ tokens are plain variables referencing `--color-base-content`, a theme switch
 applies immediately without a chart re-render. Chart labels are
 theme-controlled: per-chart label overrides would need a future `ChartProps`
 field (no such field exists yet).
+
+## Chart tooltip tokens
+
+ApexCharts hard-codes a fixed light tooltip surface in every theme
+(`rgba(255,255,255,.96)` body, `#eceff1` title, `#90a4ae` axis-tooltip border),
+which leaves light ink on a white surface in dark themes. The following tokens
+(in the same plain `:root` chart block) bind the tooltip surface and ink to the
+daisyUI base ramp, so dark themes stay legible:
+
+| Token | Default | Consumer |
+|---|---|---|
+| `--chart-tooltip-bg` | `color-mix(in oklab, var(--color-base-100) 96%, transparent)` | tooltip body surface |
+| `--chart-tooltip-title-bg` | `var(--color-base-200)` | tooltip title / axis tooltip surface |
+| `--chart-tooltip-border` | `var(--color-base-300)` | tooltip + axis-tooltip border and arrows |
+| `--chart-tooltip-text` | `var(--color-base-content)` | tooltip + axis-tooltip ink |
+
+The tooltip and axis-tooltip backgrounds, borders, and ink now follow
+`base-100`/`base-200`/`base-300`/`base-content` respectively, so a theme switch
+restyles the tooltip surface (and its arrow outline) without a chart re-render.
