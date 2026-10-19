@@ -186,7 +186,7 @@ func (h *Handler) handleOrderDetail(c echo.Context) error {
 }
 
 func (h *Handler) handleSellersList(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-ecommerce-sellers"))
+	return adminRender(c, SellersList())
 }
 
 func (h *Handler) handleSellerCreate(c echo.Context) error {
@@ -198,7 +198,7 @@ func (h *Handler) handleSellerEdit(c echo.Context) error {
 }
 
 func (h *Handler) handleCustomersList(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-ecommerce-customers"))
+	return adminRender(c, CustomersList())
 }
 
 func (h *Handler) handleCustomerCreate(c echo.Context) error {
@@ -210,7 +210,7 @@ func (h *Handler) handleCustomerEdit(c echo.Context) error {
 }
 
 func (h *Handler) handleShopsList(c echo.Context) error {
-	return adminRender(c, nxHTMLComponent("apps-ecommerce-shops"))
+	return adminRender(c, ShopsList())
 }
 
 func (h *Handler) handleShopCreate(c echo.Context) error {
