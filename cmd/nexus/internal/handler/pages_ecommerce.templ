@@ -72,7 +72,7 @@ templ productsListToolbar() {
 	@table.TableCardHeader() {
 		<div class="inline-flex items-center gap-3">
 			<label class="input input-sm">
-				@ui.IconSpan("lucide--search text-base-content/80", "size-3.5")
+				@ui.IconSpan("lucide--search text-body", "size-3.5")
 				<input class="w-24 sm:w-36" placeholder="Search along products" type="search" aria-label="Search products"/>
 			</label>
 			<div class="hidden sm:block">
@@ -112,13 +112,13 @@ templ productsListToolbar() {
 
 templ productsListFooter() {
 	<div class="flex items-center justify-between p-6">
-		<div class="text-base-content/80 hover:text-base-content flex gap-2 text-sm">
+		<div class="text-body hover:text-base-content flex gap-2 text-sm">
 			<span class="hidden sm:inline">Per page</span>
 			<select class="select select-xs w-18" aria-label="Per page">
 				<option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option>
 			</select>
 		</div>
-		<span class="text-base-content/80 hidden text-sm lg:inline">Showing <span class="text-base-content font-medium">1 to 20 </span>of 457 items</span>
+		<span class="text-body hidden text-sm lg:inline">Showing <span class="text-base-content font-medium">1 to 20 </span>of 457 items</span>
 		<div class="inline-flex items-center gap-1">
 			<button class="btn btn-circle sm:btn-sm btn-xs btn-ghost" aria-label="Prev"><span class="iconify lucide--chevron-left"></span></button>
 			<button class="btn btn-primary btn-circle sm:btn-sm btn-xs">1</button>
@@ -140,7 +140,7 @@ templ productRow(num, id, name, category, price, rating, ratingCount, orders, st
 				<img class="rounded-box size-10" src={ "/images/apps/ecommerce/products/" + num + ".jpg" } alt="Product"/>
 				<div>
 					<p class="font-medium">{ productNameOnly(name) }</p>
-					<p class="text-base-content/60 text-xs">{ productSKU(name) }</p>
+					<p class="text-muted text-xs">{ productSKU(name) }</p>
 				</div>
 			</div>
 		}
@@ -154,7 +154,7 @@ templ productRow(num, id, name, category, price, rating, ratingCount, orders, st
 			<div class="flex items-center gap-2">
 				<span class="iconify lucide--star text-success size-4"></span>
 				{ rating }
-				<span class="text-base-content/60 text-xs">({ ratingCount })</span>
+				<span class="text-muted text-xs">({ ratingCount })</span>
 			</div>
 		}
 		@table.TableCell("", nil) {
@@ -168,8 +168,8 @@ templ productRow(num, id, name, category, price, rating, ratingCount, orders, st
 		}
 		@table.TableCell("", nil) {
 			<div class="inline-flex">
-				<a class="btn btn-square btn-ghost btn-sm" href="./apps-ecommerce-products-edit.html" aria-label="Edit product link"><span class="iconify lucide--pencil text-base-content/80 size-4"></span></a>
-				<button class="btn btn-square btn-ghost btn-sm" aria-label="Dummy show product"><span class="iconify lucide--eye text-base-content/80 size-4"></span></button>
+				<a class="btn btn-square btn-ghost btn-sm" href="./apps-ecommerce-products-edit.html" aria-label="Edit product link"><span class="iconify lucide--pencil text-body size-4"></span></a>
+				<button class="btn btn-square btn-ghost btn-sm" aria-label="Dummy show product"><span class="iconify lucide--eye text-body size-4"></span></button>
 				<button class="btn btn-square btn-error btn-outline btn-sm border-transparent" onclick="apps_product_delete.showModal()" aria-label="Dummy delete product"><span class="iconify lucide--trash size-4"></span></button>
 			</div>
 		}
@@ -230,7 +230,7 @@ templ ordersListToolbar() {
 	@table.TableCardHeader() {
 		<div class="inline-flex items-center gap-3">
 			<label class="input input-sm">
-				@ui.IconSpan("lucide--search text-base-content/80", "size-3.5")
+				@ui.IconSpan("lucide--search text-body", "size-3.5")
 				<input class="w-24 sm:w-36" placeholder="Search along orders" aria-label="Search orders" type="search"/>
 			</label>
 			<div class="hidden sm:block">
@@ -253,13 +253,13 @@ templ ordersListToolbar() {
 
 templ ordersListFooter() {
 	<div class="flex items-center justify-between p-6">
-		<div class="text-base-content/80 hover:text-base-content flex gap-2 text-sm">
+		<div class="text-body hover:text-base-content flex gap-2 text-sm">
 			<span class="hidden sm:inline">Per page</span>
 			<select class="select select-xs w-18" aria-label="Per page">
 				<option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option>
 			</select>
 		</div>
-		<span class="text-base-content/80 hidden text-sm lg:inline">Showing <span class="text-base-content font-medium">1 to 20 </span>of 457 items</span>
+		<span class="text-body hidden text-sm lg:inline">Showing <span class="text-base-content font-medium">1 to 20 </span>of 457 items</span>
 		<div class="inline-flex items-center gap-1">
 			<button class="btn btn-circle sm:btn-sm btn-xs btn-ghost" aria-label="Prev"><span class="iconify lucide--chevron-left"></span></button>
 			<button class="btn btn-primary btn-circle sm:btn-sm btn-xs">1</button>
@@ -295,7 +295,7 @@ templ orderTableRow(id, name, customer, price, payment, status, date string) {
 			{ date }
 		}
 		@table.TableCell("", nil) {
-			<a aria-label="View order"><button class="btn btn-square btn-ghost btn-sm"><span class="iconify lucide--eye text-base-content/80 size-4"></span></button></a>
+			<a aria-label="View order"><button class="btn btn-square btn-ghost btn-sm"><span class="iconify lucide--eye text-body size-4"></span></button></a>
 		}
 	}
 }
@@ -328,13 +328,13 @@ templ OrderDetail() {
 
 					<dl class="space-y-3 text-sm">
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Customer</dt><dd>Alice Johnson</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Customer</dt><dd>Alice Johnson</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Email</dt><dd>alice@example.com</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Email</dt><dd>alice@example.com</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Total</dt><dd>$129.99</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Total</dt><dd>$129.99</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Date</dt><dd>2025-01-15</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Date</dt><dd>2025-01-15</dd></div>
 
 					</dl>
 
@@ -374,13 +374,13 @@ templ OrderDetail() {
 
 					<dl class="space-y-3 text-sm">
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Address</dt><dd>123 Main St, NY 10001</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Address</dt><dd>123 Main St, NY 10001</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Method</dt><dd>Express (+$5.99)</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Method</dt><dd>Express (+$5.99)</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Tracking</dt><dd>1Z999AA10123456784</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Tracking</dt><dd>1Z999AA10123456784</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Status</dt><dd><span class="text-info">In transit</span></dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Status</dt><dd><span class="text-info">In transit</span></dd></div>
 
 					</dl>
 
@@ -539,7 +539,7 @@ templ sellerRow(num, name, gender, avatar, shop, email, mobile, sales, earning, 
 				})
 				<div>
 					<p class="font-medium">{ name }</p>
-					<p class="text-base-content/60 text-xs capitalize">{ gender }</p>
+					<p class="text-muted text-xs capitalize">{ gender }</p>
 				</div>
 			</div>
 		}
@@ -574,7 +574,7 @@ templ listToolbar(searchPlaceholder, searchAria, selectAria, createAria, createH
 	@table.TableCardHeader() {
 		<div class="inline-flex items-center gap-3">
 			<label class="input input-sm">
-				@ui.IconSpan("lucide--search text-base-content/80", "size-3.5")
+				@ui.IconSpan("lucide--search text-body", "size-3.5")
 				<input class="w-24 sm:w-36" placeholder={ searchPlaceholder } type="search" aria-label={ searchAria }/>
 			</label>
 			<div class="hidden sm:block">
@@ -611,13 +611,13 @@ templ listToolbar(searchPlaceholder, searchAria, selectAria, createAria, createH
 
 templ listFooter() {
 	<div class="flex items-center justify-between p-6">
-		<div class="text-base-content/80 hover:text-base-content flex gap-2 text-sm">
+		<div class="text-body hover:text-base-content flex gap-2 text-sm">
 			<span class="hidden sm:inline">Per page</span>
 			<select class="select select-xs w-18" aria-label="Per page">
 				<option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option>
 			</select>
 		</div>
-		<span class="text-base-content/80 hidden text-sm lg:inline">Showing <span class="text-base-content font-medium">1 to 20 </span>of 457 items</span>
+		<span class="text-body hidden text-sm lg:inline">Showing <span class="text-base-content font-medium">1 to 20 </span>of 457 items</span>
 		<div class="inline-flex items-center gap-1">
 			<button class="btn btn-circle sm:btn-sm btn-xs btn-ghost" aria-label="Prev"><span class="iconify lucide--chevron-left"></span></button>
 			<button class="btn btn-primary btn-circle sm:btn-sm btn-xs">1</button>
@@ -638,8 +638,8 @@ templ verifiedIcon(verified bool) {
 
 templ listRowActions(editLabel, showLabel, deleteLabel, dialogID, editHref string) {
 	<div class="inline-flex w-fit">
-		<a class="btn btn-square btn-ghost btn-sm" href={ editHref } aria-label={ editLabel }><span class="iconify lucide--pencil text-base-content/80 size-4"></span></a>
-		<button class="btn btn-square btn-ghost btn-sm" aria-label={ showLabel }><span class="iconify lucide--eye text-base-content/80 size-4"></span></button>
+		<a class="btn btn-square btn-ghost btn-sm" href={ editHref } aria-label={ editLabel }><span class="iconify lucide--pencil text-body size-4"></span></a>
+		<button class="btn btn-square btn-ghost btn-sm" aria-label={ showLabel }><span class="iconify lucide--eye text-body size-4"></span></button>
 		<button class="btn btn-square btn-error btn-outline btn-sm border-transparent" onclick={ templ.JSUnsafeFuncCall(dialogID + ".showModal()") } aria-label={ deleteLabel }><span class="iconify lucide--trash size-4"></span></button>
 	</div>
 }
@@ -736,7 +736,7 @@ templ customerRow(num, name, gender, email, mobile, sales, earning, date string,
 				})
 				<div>
 					<p class="font-medium">{ name }</p>
-					<p class="text-base-content/80 text-xs capitalize">{ gender }</p>
+					<p class="text-body text-xs capitalize">{ gender }</p>
 				</div>
 			</div>
 		}
@@ -847,7 +847,7 @@ templ shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earn
 			<div class="flex items-center gap-1">
 				<span class={ "iconify lucide--star size-4", starClass }></span>
 				{ rating }
-				<span class="text-base-content/80 text-xs">({ ratingCount })</span>
+				<span class="text-body text-xs">({ ratingCount })</span>
 			</div>
 		}
 		@table.TableCell("", nil) {

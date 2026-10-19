@@ -343,7 +343,7 @@ func productsListToolbar() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--search text-base-content/80", "size-3.5").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.IconSpan("lucide--search text-body", "size-3.5").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -422,7 +422,7 @@ func productsListFooter() templ.Component {
 			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div class=\"flex items-center justify-between p-6\"><div class=\"text-base-content/80 hover:text-base-content flex gap-2 text-sm\"><span class=\"hidden sm:inline\">Per page</span> <select class=\"select select-xs w-18\" aria-label=\"Per page\"><option value=\"10\">10</option><option value=\"20\" selected>20</option><option value=\"50\">50</option><option value=\"100\">100</option></select></div><span class=\"text-base-content/80 hidden text-sm lg:inline\">Showing <span class=\"text-base-content font-medium\">1 to 20 </span>of 457 items</span><div class=\"inline-flex items-center gap-1\"><button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Prev\"><span class=\"iconify lucide--chevron-left\"></span></button> <button class=\"btn btn-primary btn-circle sm:btn-sm btn-xs\">1</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">2</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">3</button> <button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Next\"><span class=\"iconify lucide--chevron-right\"></span></button></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div class=\"flex items-center justify-between p-6\"><div class=\"text-body hover:text-base-content flex gap-2 text-sm\"><span class=\"hidden sm:inline\">Per page</span> <select class=\"select select-xs w-18\" aria-label=\"Per page\"><option value=\"10\">10</option><option value=\"20\" selected>20</option><option value=\"50\">50</option><option value=\"100\">100</option></select></div><span class=\"text-body hidden text-sm lg:inline\">Showing <span class=\"text-base-content font-medium\">1 to 20 </span>of 457 items</span><div class=\"inline-flex items-center gap-1\"><button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Prev\"><span class=\"iconify lucide--chevron-left\"></span></button> <button class=\"btn btn-primary btn-circle sm:btn-sm btn-xs\">1</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">2</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">3</button> <button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Next\"><span class=\"iconify lucide--chevron-right\"></span></button></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -540,14 +540,14 @@ func productRow(num, id, name, category, price, rating, ratingCount, orders, sto
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p><p class=\"text-base-content/60 text-xs\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p><p class=\"text-muted text-xs\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(productSKU(name))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_ecommerce.templ`, Line: 143, Col: 63}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_ecommerce.templ`, Line: 143, Col: 53}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 				if templ_7745c5c3_Err != nil {
@@ -654,14 +654,14 @@ func productRow(num, id, name, category, price, rating, ratingCount, orders, sto
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, " <span class=\"text-base-content/60 text-xs\">(")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, " <span class=\"text-muted text-xs\">(")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var24 string
 				templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(ratingCount)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_ecommerce.templ`, Line: 157, Col: 61}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_ecommerce.templ`, Line: 157, Col: 51}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 				if templ_7745c5c3_Err != nil {
@@ -781,7 +781,7 @@ func productRow(num, id, name, category, price, rating, ratingCount, orders, sto
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<div class=\"inline-flex\"><a class=\"btn btn-square btn-ghost btn-sm\" href=\"./apps-ecommerce-products-edit.html\" aria-label=\"Edit product link\"><span class=\"iconify lucide--pencil text-base-content/80 size-4\"></span></a> <button class=\"btn btn-square btn-ghost btn-sm\" aria-label=\"Dummy show product\"><span class=\"iconify lucide--eye text-base-content/80 size-4\"></span></button> <button class=\"btn btn-square btn-error btn-outline btn-sm border-transparent\" onclick=\"apps_product_delete.showModal()\" aria-label=\"Dummy delete product\"><span class=\"iconify lucide--trash size-4\"></span></button></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<div class=\"inline-flex\"><a class=\"btn btn-square btn-ghost btn-sm\" href=\"./apps-ecommerce-products-edit.html\" aria-label=\"Edit product link\"><span class=\"iconify lucide--pencil text-body size-4\"></span></a> <button class=\"btn btn-square btn-ghost btn-sm\" aria-label=\"Dummy show product\"><span class=\"iconify lucide--eye text-body size-4\"></span></button> <button class=\"btn btn-square btn-error btn-outline btn-sm border-transparent\" onclick=\"apps_product_delete.showModal()\" aria-label=\"Dummy delete product\"><span class=\"iconify lucide--trash size-4\"></span></button></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -1157,7 +1157,7 @@ func ordersListToolbar() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--search text-base-content/80", "size-3.5").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.IconSpan("lucide--search text-body", "size-3.5").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -1204,7 +1204,7 @@ func ordersListFooter() templ.Component {
 			templ_7745c5c3_Var40 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "<div class=\"flex items-center justify-between p-6\"><div class=\"text-base-content/80 hover:text-base-content flex gap-2 text-sm\"><span class=\"hidden sm:inline\">Per page</span> <select class=\"select select-xs w-18\" aria-label=\"Per page\"><option value=\"10\">10</option><option value=\"20\" selected>20</option><option value=\"50\">50</option><option value=\"100\">100</option></select></div><span class=\"text-base-content/80 hidden text-sm lg:inline\">Showing <span class=\"text-base-content font-medium\">1 to 20 </span>of 457 items</span><div class=\"inline-flex items-center gap-1\"><button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Prev\"><span class=\"iconify lucide--chevron-left\"></span></button> <button class=\"btn btn-primary btn-circle sm:btn-sm btn-xs\">1</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">2</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">3</button> <button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Next\"><span class=\"iconify lucide--chevron-right\"></span></button></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "<div class=\"flex items-center justify-between p-6\"><div class=\"text-body hover:text-base-content flex gap-2 text-sm\"><span class=\"hidden sm:inline\">Per page</span> <select class=\"select select-xs w-18\" aria-label=\"Per page\"><option value=\"10\">10</option><option value=\"20\" selected>20</option><option value=\"50\">50</option><option value=\"100\">100</option></select></div><span class=\"text-body hidden text-sm lg:inline\">Showing <span class=\"text-base-content font-medium\">1 to 20 </span>of 457 items</span><div class=\"inline-flex items-center gap-1\"><button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Prev\"><span class=\"iconify lucide--chevron-left\"></span></button> <button class=\"btn btn-primary btn-circle sm:btn-sm btn-xs\">1</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">2</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">3</button> <button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Next\"><span class=\"iconify lucide--chevron-right\"></span></button></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1481,7 +1481,7 @@ func orderTableRow(id, name, customer, price, payment, status, date string) temp
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "<a aria-label=\"View order\"><button class=\"btn btn-square btn-ghost btn-sm\"><span class=\"iconify lucide--eye text-base-content/80 size-4\"></span></button></a>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "<a aria-label=\"View order\"><button class=\"btn btn-square btn-ghost btn-sm\"><span class=\"iconify lucide--eye text-body size-4\"></span></button></a>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -1602,7 +1602,7 @@ func OrderDetail() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "><div class=\"flex items-center justify-between\"><h3 class=\"text-lg font-medium\">Order #ORD-001</h3><div class=\"breadcrumbs hidden p-0 text-sm sm:inline\"><ul><li><a href=\"/dashboards/ecommerce\">Nexus</a></li><li>Ecommerce</li><li><a href=\"/apps/ecommerce/orders\">Orders</a></li><li class=\"opacity-80\">#ORD-001</li></ul></div></div><div class=\"mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2\"><div class=\"card bg-base-100 shadow-sm\"><div class=\"card-body\"><h4 class=\"text-base font-semibold\">Order Details</h4><div class=\"divider\"></div><dl class=\"space-y-3 text-sm\"><div class=\"flex justify-between\"><dt class=\"text-base-content/60\">Customer</dt><dd>Alice Johnson</dd></div><div class=\"flex justify-between\"><dt class=\"text-base-content/60\">Email</dt><dd>alice@example.com</dd></div><div class=\"flex justify-between\"><dt class=\"text-base-content/60\">Total</dt><dd>$129.99</dd></div><div class=\"flex justify-between\"><dt class=\"text-base-content/60\">Date</dt><dd>2025-01-15</dd></div></dl></div></div><div class=\"card bg-base-100 shadow-sm\"><div class=\"card-body\"><h4 class=\"text-base font-semibold\">Order Items</h4><div class=\"divider\"></div><ul class=\"space-y-2 text-sm\"><li class=\"flex justify-between\"><span>Running Shoes (x1)</span><span>$99.99</span></li><li class=\"flex justify-between\"><span>Workout T-Shirt (x1)</span><span>$20.99</span></li><li class=\"flex justify-between\"><span>Water Bottle (x1)</span><span>$9.01</span></li></ul></div></div><div class=\"card bg-base-100 shadow-sm\"><div class=\"card-body\"><h4 class=\"text-base font-semibold\">Shipping Information</h4><div class=\"divider\"></div><dl class=\"space-y-3 text-sm\"><div class=\"flex justify-between\"><dt class=\"text-base-content/60\">Address</dt><dd>123 Main St, NY 10001</dd></div><div class=\"flex justify-between\"><dt class=\"text-base-content/60\">Method</dt><dd>Express (+$5.99)</dd></div><div class=\"flex justify-between\"><dt class=\"text-base-content/60\">Tracking</dt><dd>1Z999AA10123456784</dd></div><div class=\"flex justify-between\"><dt class=\"text-base-content/60\">Status</dt><dd><span class=\"text-info\">In transit</span></dd></div></dl></div></div></div><div class=\"mt-6 flex gap-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "><div class=\"flex items-center justify-between\"><h3 class=\"text-lg font-medium\">Order #ORD-001</h3><div class=\"breadcrumbs hidden p-0 text-sm sm:inline\"><ul><li><a href=\"/dashboards/ecommerce\">Nexus</a></li><li>Ecommerce</li><li><a href=\"/apps/ecommerce/orders\">Orders</a></li><li class=\"opacity-80\">#ORD-001</li></ul></div></div><div class=\"mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2\"><div class=\"card bg-base-100 shadow-sm\"><div class=\"card-body\"><h4 class=\"text-base font-semibold\">Order Details</h4><div class=\"divider\"></div><dl class=\"space-y-3 text-sm\"><div class=\"flex justify-between\"><dt class=\"text-muted\">Customer</dt><dd>Alice Johnson</dd></div><div class=\"flex justify-between\"><dt class=\"text-muted\">Email</dt><dd>alice@example.com</dd></div><div class=\"flex justify-between\"><dt class=\"text-muted\">Total</dt><dd>$129.99</dd></div><div class=\"flex justify-between\"><dt class=\"text-muted\">Date</dt><dd>2025-01-15</dd></div></dl></div></div><div class=\"card bg-base-100 shadow-sm\"><div class=\"card-body\"><h4 class=\"text-base font-semibold\">Order Items</h4><div class=\"divider\"></div><ul class=\"space-y-2 text-sm\"><li class=\"flex justify-between\"><span>Running Shoes (x1)</span><span>$99.99</span></li><li class=\"flex justify-between\"><span>Workout T-Shirt (x1)</span><span>$20.99</span></li><li class=\"flex justify-between\"><span>Water Bottle (x1)</span><span>$9.01</span></li></ul></div></div><div class=\"card bg-base-100 shadow-sm\"><div class=\"card-body\"><h4 class=\"text-base font-semibold\">Shipping Information</h4><div class=\"divider\"></div><dl class=\"space-y-3 text-sm\"><div class=\"flex justify-between\"><dt class=\"text-muted\">Address</dt><dd>123 Main St, NY 10001</dd></div><div class=\"flex justify-between\"><dt class=\"text-muted\">Method</dt><dd>Express (+$5.99)</dd></div><div class=\"flex justify-between\"><dt class=\"text-muted\">Tracking</dt><dd>1Z999AA10123456784</dd></div><div class=\"flex justify-between\"><dt class=\"text-muted\">Status</dt><dd><span class=\"text-info\">In transit</span></dd></div></dl></div></div></div><div class=\"mt-6 flex gap-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -2363,14 +2363,14 @@ func sellerRow(num, name, gender, avatar, shop, email, mobile, sales, earning, d
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 136, "</p><p class=\"text-base-content/60 text-xs capitalize\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 136, "</p><p class=\"text-muted text-xs capitalize\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var83 string
 				templ_7745c5c3_Var83, templ_7745c5c3_Err = templ.JoinStringErrs(gender)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_ecommerce.templ`, Line: 542, Col: 64}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_ecommerce.templ`, Line: 542, Col: 54}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var83))
 				if templ_7745c5c3_Err != nil {
@@ -2671,7 +2671,7 @@ func listToolbar(searchPlaceholder, searchAria, selectAria, createAria, createHr
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = ui.IconSpan("lucide--search text-base-content/80", "size-3.5").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = ui.IconSpan("lucide--search text-body", "size-3.5").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2828,7 +2828,7 @@ func listFooter() templ.Component {
 			templ_7745c5c3_Var106 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 159, "<div class=\"flex items-center justify-between p-6\"><div class=\"text-base-content/80 hover:text-base-content flex gap-2 text-sm\"><span class=\"hidden sm:inline\">Per page</span> <select class=\"select select-xs w-18\" aria-label=\"Per page\"><option value=\"10\">10</option><option value=\"20\" selected>20</option><option value=\"50\">50</option><option value=\"100\">100</option></select></div><span class=\"text-base-content/80 hidden text-sm lg:inline\">Showing <span class=\"text-base-content font-medium\">1 to 20 </span>of 457 items</span><div class=\"inline-flex items-center gap-1\"><button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Prev\"><span class=\"iconify lucide--chevron-left\"></span></button> <button class=\"btn btn-primary btn-circle sm:btn-sm btn-xs\">1</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">2</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">3</button> <button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Next\"><span class=\"iconify lucide--chevron-right\"></span></button></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 159, "<div class=\"flex items-center justify-between p-6\"><div class=\"text-body hover:text-base-content flex gap-2 text-sm\"><span class=\"hidden sm:inline\">Per page</span> <select class=\"select select-xs w-18\" aria-label=\"Per page\"><option value=\"10\">10</option><option value=\"20\" selected>20</option><option value=\"50\">50</option><option value=\"100\">100</option></select></div><span class=\"text-body hidden text-sm lg:inline\">Showing <span class=\"text-base-content font-medium\">1 to 20 </span>of 457 items</span><div class=\"inline-flex items-center gap-1\"><button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Prev\"><span class=\"iconify lucide--chevron-left\"></span></button> <button class=\"btn btn-primary btn-circle sm:btn-sm btn-xs\">1</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">2</button> <button class=\"btn btn-ghost btn-circle sm:btn-sm btn-xs\">3</button> <button class=\"btn btn-circle sm:btn-sm btn-xs btn-ghost\" aria-label=\"Next\"><span class=\"iconify lucide--chevron-right\"></span></button></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -2919,7 +2919,7 @@ func listRowActions(editLabel, showLabel, deleteLabel, dialogID, editHref string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 162, "\"><span class=\"iconify lucide--pencil text-base-content/80 size-4\"></span></a> <button class=\"btn btn-square btn-ghost btn-sm\" aria-label=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 162, "\"><span class=\"iconify lucide--pencil text-body size-4\"></span></a> <button class=\"btn btn-square btn-ghost btn-sm\" aria-label=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -2932,7 +2932,7 @@ func listRowActions(editLabel, showLabel, deleteLabel, dialogID, editHref string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 163, "\"><span class=\"iconify lucide--eye text-base-content/80 size-4\"></span></button> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 163, "\"><span class=\"iconify lucide--eye text-body size-4\"></span></button> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -3472,14 +3472,14 @@ func customerRow(num, name, gender, email, mobile, sales, earning, date string, 
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 197, "</p><p class=\"text-base-content/80 text-xs capitalize\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 197, "</p><p class=\"text-body text-xs capitalize\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var130 string
 				templ_7745c5c3_Var130, templ_7745c5c3_Err = templ.JoinStringErrs(gender)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_ecommerce.templ`, Line: 739, Col: 64}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_ecommerce.templ`, Line: 739, Col: 53}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var130))
 				if templ_7745c5c3_Err != nil {
@@ -4338,14 +4338,14 @@ func shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earni
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 241, " <span class=\"text-base-content/80 text-xs\">(")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 241, " <span class=\"text-body text-xs\">(")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var168 string
 				templ_7745c5c3_Var168, templ_7745c5c3_Err = templ.JoinStringErrs(ratingCount)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_ecommerce.templ`, Line: 850, Col: 61}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_ecommerce.templ`, Line: 850, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var168))
 				if templ_7745c5c3_Err != nil {
