@@ -169,6 +169,18 @@ var ComponentSlugs = map[string]string{
 	"WizardStepper":   "wizard-stepper",
 	"InputGroup":      "input-group",
 	"ClipboardCopy":   "clipboard-copy",
+	// Questionnaire
+	"Questionnaire":            "questionnaire",
+	"QuestionnaireProgress":    "questionnaire",
+	"QuestionnaireItem":        "questionnaire",
+	"QuestionnaireChoices":     "questionnaire",
+	"QuestionnaireChoice":      "questionnaire",
+	"QuestionnaireDescription": "questionnaire",
+	"QuestionnaireError":       "questionnaire",
+	"QuestionnairePrevious":    "questionnaire",
+	"QuestionnaireSkip":        "questionnaire",
+	"QuestionnaireNext":        "questionnaire",
+	"QuestionnaireSubmit":      "questionnaire",
 
 	// Containers, direction, and file chips
 	"ScrollArea":  "scroll-area",
