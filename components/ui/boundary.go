@@ -434,6 +434,28 @@ func MessageBubbleWithBoundary(variant MessageBubbleVariant, text string) templ.
 	})
 }
 
+// MessageGroupWithBoundary wraps MessageGroup with a dev-mode component boundary
+// annotation. It composes a group of three messages: two consecutive incoming
+// messages (bot avatar on the first only) and a sent reply, so the gallery shows
+// the column layout slot stacking rows without inventing alignment state.
+func MessageGroupWithBoundary() templ.Component {
+	row := func(align MessageAlign, text string, avatar bool) templ.Component {
+		bubble := shared.RenderInto(MessageBubble(MessageBubbleProps{}), shared.StrComp(text))
+		content := shared.RenderInto(MessageContent(MessageContentProps{}), bubble)
+		parts := []templ.Component{content}
+		if avatar {
+			parts = append([]templ.Component{MessageAvatar(MessageAvatarProps{BotIcon: true, Name: "Bot"})}, parts...)
+		}
+		return shared.RenderInto(Message(MessageProps{Align: align}), shared.Compose(parts...))
+	}
+	inner := shared.RenderInto(MessageGroup(MessageGroupProps{}), shared.Compose(
+		row(MessageStart, "Sure, I can help with that.", true),
+		row(MessageStart, "Here's the first step.", false),
+		row(MessageEnd, "Great, thanks!", false),
+	))
+	return devmode.ComponentBoundary("MessageGroup", inner, map[string]any{})
+}
+
 // MessageScrollerWithBoundary wraps MessageScroller with a dev-mode component
 // boundary annotation. It renders `messages` synthetic Message rows (alternating
 // start/end using MessageBubble) so the gallery shows a scrollable stack.

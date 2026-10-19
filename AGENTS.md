@@ -144,6 +144,7 @@ Primitive DaisyUI components (~73). All are `templ.Component` values returned by
 - `ThemeToggle`, `ThemeSwitcher`, `ThemeController`
 - `Frame`, `CodePreview`, `Hover3D`, `Swap`
 - `LayoutCustomizer`, `NotificationDropdown`, `Dashboard`
+- `Message` (`MessageGroup`, `MessageAvatar`, `MessageContent`, `MessageHeader`, `MessageFooter`, `MessageBubble`), `MessageScroller`, `ChatBubble`, `ChatInput`, `ChatWindow`
 
 ### `components/layout`
 Full-page shell, sidebar layout, and navbar (~10 components). `AppShell`, `SidebarVariants`, `TopbarVariants`, `LayoutBuilder`, `SidebarDense`, `ViewMenu`.

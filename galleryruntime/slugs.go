@@ -47,6 +47,7 @@ var ComponentSlugs = map[string]string{
 	"AIThinkingIndicator":    "chat-bubble",
 	"ChatWindow":             "chat-bubble",
 	"Message":                "message",
+	"MessageGroup":           "message-group",
 	"MessageAvatar":          "message",
 	"MessageContent":         "message",
 	"MessageBubble":          "message",
