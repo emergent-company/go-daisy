@@ -431,6 +431,48 @@ func TestGenAIPagesUseLibraryComponents(t *testing.T) {
 	)
 }
 
+// goFunc returns the source of one top-level Go function (or method), from its
+// signature to the next top-level `func` declaration.
+func goFunc(t *testing.T, src, sig string) string {
+	t.Helper()
+	start := strings.Index(src, sig)
+	if start < 0 {
+		t.Fatalf("func %q not found", sig)
+	}
+	rest := src[start:]
+	if end := strings.Index(rest, "\nfunc "); end >= 0 {
+		rest = rest[:end]
+	}
+	return rest
+}
+
+// TestShowcaseComponentPagesUseLibraryComponents pins the first six UI component
+// showcase ports: each of the six renderComponentDemo cases must exist, the
+// cleanly-expressible families must compose the library, and the six pages must
+// route through UIComponentDetailPage rather than the raw-HTML passthrough.
+func TestShowcaseComponentPagesUseLibraryComponents(t *testing.T) {
+	src := read(t, "../handler/pages_showcase.templ")
+	demo := templFunc(t, src, "renderComponentDemo")
+
+	for _, name := range []string{"accordion", "alert", "avatar", "badge", "breadcrumb", "button"} {
+		require(t, demo, "renderComponentDemo", `case "`+name+`":`)
+	}
+
+	// The button and alert showcases compose the library components for the
+	// variant families the library can express; the avatar/badge/accordion/
+	// breadcrumb showcases use raw daisyUI markup the library cannot reproduce.
+	require(t, demo, "renderComponentDemo", "@ui.Button(")
+	require(t, demo, "renderComponentDemo", "@ui.Alert(")
+
+	hsrc := read(t, "../handler/handler.go")
+	fn := goFunc(t, hsrc, "func (h *Handler) handleUIComponentDetail")
+	for _, name := range []string{"accordion", "alert", "avatar", "badge", "breadcrumb", "button"} {
+		require(t, fn, "handleUIComponentDetail", `"`+name+`"`)
+		forbid(t, hsrc, "handler.go", `nxHTMLComponent("ui-components-`+name+`")`)
+	}
+	require(t, fn, "handleUIComponentDetail", "UIComponentDetailPage(name)")
+}
+
 // TestRawPassthroughIsDetectable asserts nxrender.go emits the nx-raw marker
 // so the parity comparator can distinguish raw passthroughs from real ports.
 // This is a source-grep tripwire, not a behavioural test: it guards that the

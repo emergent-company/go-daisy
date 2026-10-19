@@ -85,9 +85,9 @@ func (h *Handler) handleUICharts(c echo.Context) error {
 
 func (h *Handler) handleUIComponentDetail(c echo.Context) error {
 	name := c.Param("name")
-	// Pages that already match NX 100% with GD content
+	// Pages ported to library components with a faithful card grid.
 	switch name {
-	case "alert", "avatar", "badge", "button":
+	case "accordion", "alert", "avatar", "badge", "breadcrumb", "button":
 		return adminRender(c, UIComponentDetailPage(name))
 	}
 	return adminRender(c, nxHTMLComponent("ui-components-"+name))

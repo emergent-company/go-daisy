@@ -9,6 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
@@ -281,7 +282,7 @@ func compCard(title, desc, importPath string) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 73, Col: 44}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 74, Col: 44}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -294,7 +295,7 @@ func compCard(title, desc, importPath string) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(desc)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 74, Col: 56}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 75, Col: 56}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -307,7 +308,7 @@ func compCard(title, desc, importPath string) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(importPath)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 75, Col: 70}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 76, Col: 70}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -615,7 +616,7 @@ func UIComponentDetailPage(name string) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(capFirst(name))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 152, Col: 50}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 153, Col: 50}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -628,7 +629,7 @@ func UIComponentDetailPage(name string) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(capFirst(name))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 154, Col: 115}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 155, Col: 115}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -686,7 +687,7 @@ func UIFormDetailPage(name string) templ.Component {
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 166, Col: 41}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 167, Col: 41}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -699,7 +700,7 @@ func UIFormDetailPage(name string) templ.Component {
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 168, Col: 81}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 169, Col: 81}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
@@ -753,7 +754,7 @@ func UIChartDetailPage(name string) templ.Component {
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(capFirst(name))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 177, Col: 50}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 178, Col: 50}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
@@ -766,7 +767,7 @@ func UIChartDetailPage(name string) templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(capFirst(name))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 179, Col: 136}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 180, Col: 136}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -779,7 +780,7 @@ func UIChartDetailPage(name string) templ.Component {
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 185, Col: 46}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 186, Col: 46}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
@@ -792,7 +793,7 @@ func UIChartDetailPage(name string) templ.Component {
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 189, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 190, Col: 58}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
@@ -829,175 +830,1267 @@ func renderComponentDemo(name string) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		switch name {
 		case "accordion":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"w-full\"><div class=\"collapse collapse-arrow border border-line-strong bg-base-100 rounded-box\"><input type=\"checkbox\"><div class=\"collapse-title font-medium\">Click to expand</div><div class=\"collapse-content\"><p>TABINDEX / ESC to close</p></div></div><div class=\"collapse collapse-plus border border-line-strong bg-base-100 rounded-box mt-1\"><input type=\"checkbox\"><div class=\"collapse-title font-medium\">Plus icon</div><div class=\"collapse-content\"><p>Uses collapse-plus class</p></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Default (Single)</div><div class=\"mt-4 space-y-1\"><div class=\"bg-base-200 rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-default\" checked><div class=\"collapse-title text-lg font-medium\">Accordion #1</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div><div class=\"bg-base-200 rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-default\"><div class=\"collapse-title text-lg font-medium\">Accordion #2</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div><div class=\"bg-base-200 rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-default\"><div class=\"collapse-title text-lg font-medium\">Accordion #3</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Multiple</div><div class=\"mt-4 space-y-1\"><div class=\"bg-base-200 rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"checkbox\" name=\"accordion-multiple\" checked><div class=\"collapse-title text-lg font-medium\">Accordion #1</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div><div class=\"bg-base-200 rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"checkbox\" name=\"accordion-multiple\"><div class=\"collapse-title text-lg font-medium\">Accordion #2</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div><div class=\"bg-base-200 rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"checkbox\" name=\"accordion-multiple\"><div class=\"collapse-title text-lg font-medium\">Accordion #3</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Icon: Arrow</div><div class=\"mt-4 space-y-1\"><div class=\"bg-base-200 collapse-arrow rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-arrow\" checked><div class=\"collapse-title text-lg font-medium\">Accordion #1</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div><div class=\"bg-base-200 collapse-arrow rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-arrow\"><div class=\"collapse-title text-lg font-medium\">Accordion #2</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div><div class=\"bg-base-200 collapse-arrow rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-arrow\"><div class=\"collapse-title text-lg font-medium\">Accordion #3</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Icon: Plus/Minus</div><div class=\"mt-4 space-y-1\"><div class=\"bg-base-200 collapse-plus rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-plus\" checked><div class=\"collapse-title text-lg font-medium\">Accordion #1</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div><div class=\"bg-base-200 collapse-plus rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-plus\"><div class=\"collapse-title text-lg font-medium\">Accordion #2</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div><div class=\"bg-base-200 collapse-plus rounded-box collapse\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-plus\"><div class=\"collapse-title text-lg font-medium\">Accordion #3</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Join</div><div class=\"join join-vertical mt-4\"><div class=\"join-item border-base-300 collapse border\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-join\" checked><div class=\"collapse-title text-lg font-medium\">Accordion #1</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div><div class=\"join-item border-base-300 collapse border\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-join\"><div class=\"collapse-title text-lg font-medium\">Accordion #2</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div><div class=\"join-item border-base-300 collapse border\"><input aria-label=\"Collapse trigger\" type=\"radio\" name=\"accordion-join\"><div class=\"collapse-title text-lg font-medium\">Accordion #3</div><div class=\"collapse-content\">Here are some hidden content, which is now public</div></div></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "alert":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4\"><div class=\"alert\" role=\"alert\"><span class=\"iconify lucide--info text-info size-5\"></span><span>12 unread messages. Tap to see.</span></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Button</div><div class=\"mt-4\"><div class=\"alert\" role=\"alert\"><span class=\"iconify lucide--cookie text-info size-5\"></span><span>12 unread messages. Tap to see.</span><div class=\"space-x-2\"><button class=\"btn btn-sm\">Deny</button><button class=\"btn btn-sm btn-primary\">Accept</button></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Description</div><div class=\"mt-4\"><div class=\"alert\" role=\"alert\"><span class=\"iconify lucide--message-square-dashed size-5\"></span><div><h3 class=\"font-medium\">New message!</h3><div class=\"text-base-content/70 text-xs\">You have 1 unread message</div></div><button class=\"btn btn-sm\">See</button></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Confirmation</div><div class=\"mt-4\"><div class=\"alert\" role=\"alert\"><span class=\"iconify lucide--trash-2 text-error size-5\"></span><div><h3 class=\"font-bold\">12.7 MB Saved</h3><div class=\"text-xs\">Some file removed</div></div><div class=\"space-x-2\"><button class=\"btn btn-sm\">Dismiss</button><button class=\"btn btn-sm btn-primary\">Restore</button></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Solid</div><div class=\"mt-4 space-y-3\"><div class=\"alert alert-success\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-info\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-warning\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-error\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Soft</div><div class=\"mt-4 space-y-3\"><div class=\"alert alert-success alert-soft\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-soft alert-info\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-soft alert-warning\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-error alert-soft\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Outline</div><div class=\"mt-4 space-y-3\"><div class=\"alert alert-success alert-outline\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-outline alert-info\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-outline alert-warning\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-outline alert-error\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Dashed</div><div class=\"mt-4 space-y-3\"><div class=\"alert alert-success alert-dash\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-dash alert-info\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-dash alert-warning\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div><div class=\"alert alert-dash alert-error\" role=\"alert\"><span class=\"iconify lucide--info size-5\"></span><span>New software update available.</span></div></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4\"><div class=\"alert\" role=\"alert\"><span class=\"iconify lucide--info text-info size-5\"></span><span>12 unread messages. Tap to see.</span></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Button</div><div class=\"mt-4\"><div class=\"alert\" role=\"alert\"><span class=\"iconify lucide--cookie text-info size-5\"></span><span>12 unread messages. Tap to see.</span><div class=\"space-x-2\"><button class=\"btn btn-sm\">Deny</button><button class=\"btn btn-sm btn-primary\">Accept</button></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Description</div><div class=\"mt-4\"><div class=\"alert\" role=\"alert\"><span class=\"iconify lucide--message-square-dashed size-5\"></span><div><h3 class=\"font-medium\">New message!</h3><div class=\"text-base-content/70 text-xs\">You have 1 unread message</div></div><button class=\"btn btn-sm\">See</button></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Confirmation</div><div class=\"mt-4\"><div class=\"alert\" role=\"alert\"><span class=\"iconify lucide--trash-2 text-error size-5\"></span><div><h3 class=\"font-bold\">12.7 MB Saved</h3><div class=\"text-xs\">Some file removed</div></div><div class=\"space-x-2\"><button class=\"btn btn-sm\">Dismiss</button><button class=\"btn btn-sm btn-primary\">Restore</button></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Solid</div><div class=\"mt-4 space-y-3\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertSuccess, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertInfo, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertWarning, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertError, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Soft</div><div class=\"mt-4 space-y-3\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertSuccess, Style: ui.AlertStyleSoft, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertInfo, Style: ui.AlertStyleSoft, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertWarning, Style: ui.AlertStyleSoft, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertError, Style: ui.AlertStyleSoft, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Outline</div><div class=\"mt-4 space-y-3\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertSuccess, Style: ui.AlertStyleOutline, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertInfo, Style: ui.AlertStyleOutline, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertWarning, Style: ui.AlertStyleOutline, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertError, Style: ui.AlertStyleOutline, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "</div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Dashed</div><div class=\"mt-4 space-y-3\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertSuccess, Style: ui.AlertStyleDash, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertInfo, Style: ui.AlertStyleDash, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertWarning, Style: ui.AlertStyleDash, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Alert(ui.AlertProps{Type: ui.AlertError, Style: ui.AlertStyleDash, Icon: "lucide--info", Message: "New software update available."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "avatar":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4\"><div class=\"avatar\"><div class=\"bg-base-200 rounded-box w-20\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Rounded</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><div class=\"avatar\"><div class=\"bg-base-200 w-20 rounded-xl\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-20 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><div class=\"avatar\"><div class=\"bg-base-200 rounded-box w-24\"><img alt=\"Avatar\" src=\"/images/avatars/4.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 rounded-box w-20\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 rounded-box w-16\"><img alt=\"Avatar\" src=\"/images/avatars/3.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 rounded-box w-12\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Mask</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><div class=\"avatar\"><div class=\"bg-base-200 mask mask-squircle w-20\"><img alt=\"Avatar\" src=\"/images/avatars/4.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 mask mask-hexagon w-20\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 mask mask-hexagon-2 w-20\"><img alt=\"Avatar\" src=\"/images/avatars/3.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 mask mask-diamond w-20\"><img alt=\"Avatar\" src=\"/images/avatars/4.png\"></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Group</div><div class=\"mt-4\"><div class=\"avatar-group -space-x-5\"><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/3.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/4.png\"></div></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Counter</div><div class=\"mt-4\"><div class=\"avatar-group -space-x-5\"><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/3.png\"></div></div><div class=\"avatar avatar-placeholder\"><div class=\"bg-base-300 w-12 rounded-full\">+99</div></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Ring</div><div class=\"mt-4\"><div class=\"flex flex-wrap items-center gap-4\"><div class=\"avatar\"><div class=\"bg-primary/25 ring-primary ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/4.png\"></div></div><div class=\"avatar\"><div class=\"bg-secondary/25 ring-secondary ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div><div class=\"avatar\"><div class=\"bg-accent/25 ring-accent ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div><div class=\"avatar\"><div class=\"bg-success/25 ring-success ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/3.png\"></div></div><div class=\"avatar\"><div class=\"bg-info/25 ring-info ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/4.png\"></div></div><div class=\"avatar\"><div class=\"bg-warning/25 ring-warning ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div><div class=\"avatar\"><div class=\"bg-error/25 ring-error ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div><div class=\"avatar\"><div class=\"bg-neutral/25 ring-neutral ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/3.png\"></div></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Presence</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><div class=\"avatar avatar-online\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div><div class=\"avatar avatar-offline\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Placeholder</div><div class=\"mt-4\"><div class=\"flex flex-wrap items-center gap-4\"><div class=\"avatar avatar-placeholder\"><div class=\"bg-primary text-primary-content ring-primary ring-offset-base-100 w-12 rounded-full ring ring-offset-2\">N</div></div><div class=\"avatar avatar-placeholder\"><div class=\"bg-secondary text-secondary-content ring-secondary ring-offset-base-100 w-12 rounded-full ring ring-offset-2\">E</div></div><div class=\"avatar avatar-placeholder\"><div class=\"bg-success text-success-content ring-success ring-offset-base-100 w-12 rounded-full ring ring-offset-2\">X</div></div><div class=\"avatar avatar-placeholder\"><div class=\"bg-warning text-warning-content ring-warning ring-offset-base-100 w-12 rounded-full ring ring-offset-2\">U</div></div><div class=\"avatar avatar-placeholder\"><div class=\"bg-error text-error-content ring-error ring-offset-base-100 w-12 rounded-full ring ring-offset-2\">S</div></div></div></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4\"><div class=\"avatar\"><div class=\"bg-base-200 rounded-box w-20\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Rounded</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><div class=\"avatar\"><div class=\"bg-base-200 w-20 rounded-xl\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-20 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><div class=\"avatar\"><div class=\"bg-base-200 rounded-box w-24\"><img alt=\"Avatar\" src=\"/images/avatars/4.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 rounded-box w-20\"><img alt=\"Avatar\" src=\"/images/avatars/3.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 rounded-box w-16\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 rounded-box w-12\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Mask</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><div class=\"avatar\"><div class=\"bg-base-200 mask mask-squircle w-20\"><img alt=\"Avatar\" src=\"/images/avatars/4.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 mask mask-hexagon w-20\"><img alt=\"Avatar\" src=\"/images/avatars/5.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 mask mask-hexagon-2 w-20\"><img alt=\"Avatar\" src=\"/images/avatars/7.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 mask mask-diamond w-20\"><img alt=\"Avatar\" src=\"/images/avatars/6.png\"></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Group</div><div class=\"mt-4\"><div class=\"avatar-group -space-x-5\"><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/4.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/5.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/7.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/8.png\"></div></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Counter</div><div class=\"mt-4\"><div class=\"avatar-group -space-x-5\"><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/4.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/5.png\"></div></div><div class=\"avatar\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/7.png\"></div></div><div class=\"avatar avatar-placeholder\"><div class=\"bg-base-300 w-12 rounded-full\">+99</div></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Ring</div><div class=\"mt-4\"><div class=\"flex flex-wrap items-center gap-4\"><div class=\"avatar\"><div class=\"bg-primary/25 ring-primary ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div><div class=\"avatar\"><div class=\"bg-secondary/25 ring-secondary ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div><div class=\"avatar\"><div class=\"bg-accent/25 ring-accent ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/3.png\"></div></div><div class=\"avatar\"><div class=\"bg-success/25 ring-success ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/4.png\"></div></div><div class=\"avatar\"><div class=\"bg-info/25 ring-info ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/5.png\"></div></div><div class=\"avatar\"><div class=\"bg-warning/25 ring-warning ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/6.png\"></div></div><div class=\"avatar\"><div class=\"bg-error/25 ring-error ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/7.png\"></div></div><div class=\"avatar\"><div class=\"bg-neutral/25 ring-neutral ring-offset-base-100 w-12 rounded-full ring ring-offset-2\"><img alt=\"Avatar\" src=\"/images/avatars/8.png\"></div></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Presence</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><div class=\"avatar avatar-online\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/1.png\"></div></div><div class=\"avatar avatar-offline\"><div class=\"bg-base-200 w-12 rounded-full\"><img alt=\"Avatar\" src=\"/images/avatars/2.png\"></div></div></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Placeholder</div><div class=\"mt-4\"><div class=\"flex flex-wrap items-center gap-4\"><div class=\"avatar avatar-placeholder\"><div class=\"bg-primary text-primary-content ring-primary ring-offset-base-100 w-12 rounded-full ring ring-offset-2\">N</div></div><div class=\"avatar avatar-placeholder\"><div class=\"bg-secondary text-secondary-content ring-secondary ring-offset-base-100 w-12 rounded-full ring ring-offset-2\">E</div></div><div class=\"avatar avatar-placeholder\"><div class=\"bg-success text-success-content ring-success ring-offset-base-100 w-12 rounded-full ring ring-offset-2\">X</div></div><div class=\"avatar avatar-placeholder\"><div class=\"bg-warning text-warning-content ring-warning ring-offset-base-100 w-12 rounded-full ring ring-offset-2\">U</div></div><div class=\"avatar avatar-placeholder\"><div class=\"bg-error text-error-content ring-error ring-offset-base-100 w-12 rounded-full ring ring-offset-2\">S</div></div></div></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "badge":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge\">Badge</div><div class=\"badge badge-ghost\">Ghost</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Empty</div><div class=\"mt-4 flex flex-wrap items-center gap-3\"><div class=\"badge badge-primary badge-xl\"></div><div class=\"badge badge-primary badge-lg\"></div><div class=\"badge badge-primary badge-md\"></div><div class=\"badge badge-primary badge-sm\"></div><div class=\"badge badge-primary badge-xs\"></div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Solid</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge badge-primary\">Primary</div><div class=\"badge badge-secondary\">Secondary</div><div class=\"badge badge-accent\">Accent</div><div class=\"badge badge-success\">Success</div><div class=\"badge badge-info\">Info</div><div class=\"badge badge-warning\">Warning</div><div class=\"badge badge-error\">Error</div><div class=\"badge badge-neutral\">Neutral</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Soft</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge badge-soft badge-primary\">Primary</div><div class=\"badge badge-soft badge-secondary\">Secondary</div><div class=\"badge badge-soft badge-accent\">Accent</div><div class=\"badge badge-soft badge-success\">Success</div><div class=\"badge badge-soft badge-info\">Info</div><div class=\"badge badge-soft badge-warning\">Warning</div><div class=\"badge badge-soft badge-error\">Error</div><div class=\"badge badge-soft badge-neutral\">Neutral</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Outline</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge badge-outline badge-primary\">Primary</div><div class=\"badge badge-outline badge-secondary\">Secondary</div><div class=\"badge badge-outline badge-accent\">Accent</div><div class=\"badge badge-outline badge-success\">Success</div><div class=\"badge badge-outline badge-info\">Info</div><div class=\"badge badge-outline badge-warning\">Warning</div><div class=\"badge badge-outline badge-error\">Error</div><div class=\"badge badge-outline badge-neutral\">Neutral</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Dash</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge badge-dash badge-primary\">Primary</div><div class=\"badge badge-dash badge-secondary\">Secondary</div><div class=\"badge badge-dash badge-accent\">Accent</div><div class=\"badge badge-dash badge-success\">Success</div><div class=\"badge badge-dash badge-info\">Info</div><div class=\"badge badge-dash badge-warning\">Warning</div><div class=\"badge badge-dash badge-error\">Error</div><div class=\"badge badge-dash badge-neutral\">Neutral</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Icon</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge badge-success\"><span class=\"iconify lucide--info\"></span> Approved</div><div class=\"badge badge-info\"><span class=\"iconify lucide--circle-alert\"></span> Info</div><div class=\"badge badge-warning\"><span class=\"iconify lucide--triangle-alert\"></span> Warning</div><div class=\"badge badge-error\"><span class=\"iconify lucide--ban\"></span> Error</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-wrap items-center gap-3\"><div class=\"badge badge-xl\">Extra Large</div><div class=\"badge badge-lg\">Large</div><div class=\"badge badge-md\">Medium</div><div class=\"badge badge-sm\">Small</div><div class=\"badge badge-xs\">Extra Small</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Button</div><div class=\"mt-4 flex flex-wrap items-center gap-3\"><button class=\"btn\">Inbox <span class=\"badge badge-sm\">+99</span></button><button class=\"btn\"><span class=\"badge badge-primary badge-sm\">+99</span></button></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge\">Badge</div><div class=\"badge badge-ghost\">Ghost</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Empty</div><div class=\"mt-4 flex flex-wrap items-center gap-3\"><div class=\"badge badge-primary badge-xl\"></div><div class=\"badge badge-primary badge-lg\"></div><div class=\"badge badge-primary badge-md\"></div><div class=\"badge badge-primary badge-sm\"></div><div class=\"badge badge-primary badge-xs\"></div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Solid</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge badge-primary\">Primary</div><div class=\"badge badge-secondary\">Secondary</div><div class=\"badge badge-accent\">Accent</div><div class=\"badge badge-success\">Success</div><div class=\"badge badge-info\">Info</div><div class=\"badge badge-warning\">Warning</div><div class=\"badge badge-error\">Error</div><div class=\"badge badge-neutral\">Neutral</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Soft</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge badge-soft badge-primary\">Primary</div><div class=\"badge badge-soft badge-secondary\">Secondary</div><div class=\"badge badge-soft badge-accent\">Accent</div><div class=\"badge badge-soft badge-success\">Success</div><div class=\"badge badge-soft badge-info\">Info</div><div class=\"badge badge-soft badge-warning\">Warning</div><div class=\"badge badge-soft badge-error\">Error</div><div class=\"badge badge-soft badge-neutral\">Neutral</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Outline</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge badge-outline badge-primary\">Primary</div><div class=\"badge badge-outline badge-secondary\">Secondary</div><div class=\"badge badge-outline badge-accent\">Accent</div><div class=\"badge badge-outline badge-success\">Success</div><div class=\"badge badge-outline badge-info\">Info</div><div class=\"badge badge-outline badge-warning\">Warning</div><div class=\"badge badge-outline badge-error\">Error</div><div class=\"badge badge-outline badge-neutral\">Neutral</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Dash</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge badge-dash badge-primary\">Primary</div><div class=\"badge badge-dash badge-secondary\">Secondary</div><div class=\"badge badge-dash badge-accent\">Accent</div><div class=\"badge badge-dash badge-success\">Success</div><div class=\"badge badge-dash badge-info\">Info</div><div class=\"badge badge-dash badge-warning\">Warning</div><div class=\"badge badge-dash badge-error\">Error</div><div class=\"badge badge-dash badge-neutral\">Neutral</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Icon</div><div class=\"mt-4 flex flex-wrap gap-2\"><div class=\"badge badge-success\"><span class=\"iconify lucide--info\"></span>Success</div><div class=\"badge badge-info\"><span class=\"iconify lucide--circle-alert\"></span>Info</div><div class=\"badge badge-warning\"><span class=\"iconify lucide--triangle-alert\"></span>Warning</div><div class=\"badge badge-error\"><span class=\"iconify lucide--ban\"></span>Error</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-wrap items-center gap-3\"><div class=\"badge badge-xl\">Extra Large</div><div class=\"badge badge-lg\">Large</div><div class=\"badge badge-md\">Medium</div><div class=\"badge badge-sm\">Small</div><div class=\"badge badge-xs\">Extra Small</div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Button</div><div class=\"mt-4 flex flex-wrap items-center gap-3\"><button class=\"btn\">Inbox <span class=\"badge badge-sm\">+99</span></button><button class=\"btn\">Inbox <span class=\"badge badge-primary badge-sm\">+99</span></button></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "breadcrumb":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<div class=\"breadcrumbs text-sm\"><ul><li><a href=\"#\">Home</a></li><li><a href=\"#\">Category</a></li><li>Current</li></ul></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"breadcrumbs mt-2 text-sm\"><ul><li><a href=\"#home\">Home</a></li><li><a href=\"#shops\">Shops</a></li><li>Add Shop</li></ul></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Icon</div><div class=\"breadcrumbs mt-2 text-sm\"><ul><li><a href=\"#home\"><span class=\"iconify lucide--home\"></span>Home</a></li><li><a href=\"#shops\"><span class=\"iconify lucide--store\"></span>Shops</a></li><li>Add Shop</li></ul></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Dropdown</div><div class=\"breadcrumbs mt-2 overflow-x-visible text-sm\"><ul><li><a href=\"#home\"><span class=\"iconify lucide--home\"></span>Home</a></li><li><details class=\"dropdown dropdown-center dropdown-bottom\"><summary class=\"btn btn-xs hover:no-undeline mx-1\">•••</summary><ul class=\"menu dropdown-content bg-base-100 rounded-box z-1 w-32 p-2 shadow-sm\"><li><a href=\"#store\"><span class=\"iconify lucide--store\"></span>Stores</a></li><li><a href=\"#users\"><span class=\"iconify lucide--users\"></span>Users</a></li></ul></details></li><li>Add Shop</li></ul></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "button":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4\"><button class=\"btn btn-primary\">Click me</button></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Disabled</div><div class=\"mt-4 flex flex-wrap gap-3\"><button class=\"btn btn-disabled\">Using class</button><button class=\"btn\" disabled>Using attribute</button></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Solid</div><div class=\"mt-4 flex flex-wrap gap-3\"><button class=\"btn btn-primary\">Primary</button><button class=\"btn btn-secondary\">Secondary</button><button class=\"btn btn-accent\">Accent</button><button class=\"btn btn-success\">Success</button><button class=\"btn btn-info\">Info</button><button class=\"btn btn-warning\">Warning</button><button class=\"btn btn-error\">Error</button><button class=\"btn btn-neutral\">Neutral</button></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Soft</div><div class=\"mt-4 flex flex-wrap gap-3\"><button class=\"btn btn-soft btn-primary\">Primary</button><button class=\"btn btn-soft btn-secondary\">Secondary</button><button class=\"btn btn-soft btn-accent\">Accent</button><button class=\"btn btn-soft btn-success\">Success</button><button class=\"btn btn-soft btn-info\">Info</button><button class=\"btn btn-soft btn-warning\">Warning</button><button class=\"btn btn-soft btn-error\">Error</button><button class=\"btn btn-soft btn-neutral\">Neutral</button></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Outline</div><div class=\"mt-4 flex flex-wrap gap-3\"><button class=\"btn btn-outline btn-primary\">Primary</button><button class=\"btn btn-outline btn-secondary\">Secondary</button><button class=\"btn btn-outline btn-accent\">Accent</button><button class=\"btn btn-outline btn-success\">Success</button><button class=\"btn btn-outline btn-info\">Info</button><button class=\"btn btn-outline btn-warning\">Warning</button><button class=\"btn btn-outline btn-error\">Error</button><button class=\"btn btn-outline btn-neutral\">Neutral</button></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Dash</div><div class=\"mt-4 flex flex-wrap gap-3\"><button class=\"btn btn-dash btn-primary\">Primary</button><button class=\"btn btn-dash btn-secondary\">Secondary</button><button class=\"btn btn-dash btn-accent\">Accent</button><button class=\"btn btn-dash btn-success\">Success</button><button class=\"btn btn-dash btn-info\">Info</button><button class=\"btn btn-dash btn-warning\">Warning</button><button class=\"btn btn-dash btn-error\">Error</button><button class=\"btn btn-dash btn-neutral\">Neutral</button></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Ghost &amp; Link</div><div class=\"mt-4 flex flex-wrap gap-3\"><button class=\"btn btn-ghost\">Default</button><button class=\"btn btn-ghost btn-primary\">Primary</button><button class=\"btn btn-ghost btn-secondary\">Secondary</button><button class=\"btn btn-ghost btn-accent\">Accent</button><button class=\"btn btn-ghost btn-success\">Success</button><button class=\"btn btn-ghost btn-info\">Info</button><button class=\"btn btn-ghost btn-warning\">Warning</button><button class=\"btn btn-ghost btn-error\">Error</button><button class=\"btn btn-ghost btn-neutral\">Neutral</button><button class=\"btn btn-link\">Link</button></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Icon</div><div class=\"mt-4 flex flex-wrap gap-3\"><button class=\"btn btn-square gap-2\"><span class=\"iconify lucide--heart size-4\"></span></button><button class=\"btn gap-2\"><span class=\"iconify lucide--heart size-4\"></span>Click</button></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Rounded</div><div class=\"mt-4 flex flex-wrap gap-3\"><button class=\"btn btn-circle gap-2\"><span class=\"iconify lucide--heart size-4\"></span></button><button class=\"btn btn-circle gap-2\"><span class=\"iconify lucide--settings-2 size-4\"></span></button></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Loading</div><div class=\"mt-4 flex flex-wrap gap-3\"><button class=\"btn btn-square gap-2\"><span class=\"loading loading-spinner size-5\"></span></button><button class=\"btn gap-2\"><span class=\"loading loading-spinner size-5\"></span>Loading</button><button class=\"btn btn-square gap-2\"><span class=\"loading loading-spinner size-5\"></span></button><button class=\"btn gap-2\"><span class=\"loading loading-spinner size-5\"></span>Loading</button></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var20 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "Click me ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var20), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Disabled</div><div class=\"mt-4 flex flex-wrap gap-3\"><button class=\"btn btn-disabled\">Using class</button><button class=\"btn\" disabled>Using attribute</button></div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Solid</div><div class=\"mt-4 flex flex-wrap gap-3\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var21 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "Primary ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var21), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var22 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "Secondary ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonSecondary}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var22), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var23 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "Accent ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonAccent}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var23), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var24 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "Success ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonSuccess}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var24), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var25 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "Info ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonInfo}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var25), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var26 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "Warning ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonWarning}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var26), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var27 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "Error ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonError}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var27), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var28 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "Neutral ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonNeutral}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var28), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Soft</div><div class=\"mt-4 flex flex-wrap gap-3\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var29 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "Primary ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Style: ui.ButtonStyleSoft}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var29), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var30 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "Secondary ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonSecondary, Style: ui.ButtonStyleSoft}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var30), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var31 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "Accent ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonAccent, Style: ui.ButtonStyleSoft}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var31), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var32 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "Success ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonSuccess, Style: ui.ButtonStyleSoft}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var32), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var33 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "Info ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonInfo, Style: ui.ButtonStyleSoft}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var33), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var34 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "Warning ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonWarning, Style: ui.ButtonStyleSoft}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var34), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var35 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "Error ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonError, Style: ui.ButtonStyleSoft}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var35), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var36 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "Neutral ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonNeutral, Style: ui.ButtonStyleSoft}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var36), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Outline</div><div class=\"mt-4 flex flex-wrap gap-3\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var37 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "Primary ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Style: ui.ButtonStyleOutline}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var37), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var38 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "Secondary ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonSecondary, Style: ui.ButtonStyleOutline}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var38), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var39 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "Accent ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonAccent, Style: ui.ButtonStyleOutline}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var39), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var40 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "Success ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonSuccess, Style: ui.ButtonStyleOutline}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var40), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var41 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "Info ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonInfo, Style: ui.ButtonStyleOutline}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var41), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var42 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "Warning ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonWarning, Style: ui.ButtonStyleOutline}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var42), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var43 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "Error ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonError, Style: ui.ButtonStyleOutline}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var43), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var44 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "Neutral ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonNeutral, Style: ui.ButtonStyleOutline}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var44), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Dash</div><div class=\"mt-4 flex flex-wrap gap-3\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var45 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "Primary ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Style: ui.ButtonStyleDash}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var45), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var46 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "Secondary ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonSecondary, Style: ui.ButtonStyleDash}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var46), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var47 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "Accent ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonAccent, Style: ui.ButtonStyleDash}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var47), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var48 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "Success ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonSuccess, Style: ui.ButtonStyleDash}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var48), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var49 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "Info ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonInfo, Style: ui.ButtonStyleDash}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var49), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var50 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "Warning ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonWarning, Style: ui.ButtonStyleDash}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var50), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var51 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "Error ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonError, Style: ui.ButtonStyleDash}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var51), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var52 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "Neutral ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonNeutral, Style: ui.ButtonStyleDash}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var52), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "</div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Ghost &amp; Link</div><div class=\"mt-4 flex flex-wrap gap-3\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var53 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "Default ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var53), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var54 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "Primary ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-primary"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var54), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var55 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "Secondary ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-secondary"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var55), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var56 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "Accent ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-accent"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var56), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var57 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "Success ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-success"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var57), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var58 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "Info ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-info"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var58), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var59 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "Warning ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-warning"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var59), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var60 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "Error ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-error"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var60), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var61 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "Neutral ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, ExtraClass: "btn-neutral"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var61), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var62 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "Link ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Variant: ui.ButtonLink}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var62), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "</div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Icon</div><div class=\"mt-4 flex flex-wrap gap-3\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Shape: ui.ButtonShapeSquare, Icon: "lucide--heart", ExtraClass: "gap-2", AriaLabel: "Icon"}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var63 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "Like ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Icon: "lucide--heart", ExtraClass: "gap-2"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var63), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "</div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Rounded</div><div class=\"mt-4 flex flex-wrap gap-3\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Shape: ui.ButtonShapeCircle, Icon: "lucide--heart", ExtraClass: "gap-2", AriaLabel: "Icon"}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = ui.Button(ui.ButtonProps{Shape: ui.ButtonShapeCircle, Icon: "lucide--settings-2", ExtraClass: "gap-2", AriaLabel: "Icon"}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "</div></div></div><div class=\"bg-base-100 card card-border\"><div class=\"card-body\"><div class=\"card-title\">Loading</div><div class=\"mt-4 flex flex-wrap gap-3\"><button class=\"btn btn-square gap-2\" aria-label=\"Icon\"><span class=\"loading loading-spinner size-5\"></span></button><button class=\"btn gap-2\"><span class=\"loading loading-spinner size-5\"></span>Loading</button><button class=\"btn btn-square gap-2\" disabled aria-label=\"Icon\"><span class=\"loading loading-spinner size-5\"></span></button><button class=\"btn gap-2\" disabled><span class=\"loading loading-spinner size-5\"></span>Loading</button></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "card":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<div class=\"grid grid-cols-2 gap-4\"><div class=\"card bg-base-100 w-64 shadow-sm\"><div class=\"card-body\"><h4 class=\"card-title\">Card Title</h4><p>Card body text</p><div class=\"card-actions\"><button class=\"btn btn-primary btn-sm\">Action</button></div></div></div><div class=\"card bg-base-100 w-64 shadow-sm card-border\"><figure><img src=\"/images/avatars/1.png\" alt=\"\"></figure><div class=\"card-body\"><h4 class=\"card-title\">With Image</h4><p>Image on top</p></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "<div class=\"grid grid-cols-2 gap-4\"><div class=\"card bg-base-100 w-64 shadow-sm\"><div class=\"card-body\"><h4 class=\"card-title\">Card Title</h4><p>Card body text</p><div class=\"card-actions\"><button class=\"btn btn-primary btn-sm\">Action</button></div></div></div><div class=\"card bg-base-100 w-64 shadow-sm card-border\"><figure><img src=\"/images/avatars/1.png\" alt=\"\"></figure><div class=\"card-body\"><h4 class=\"card-title\">With Image</h4><p>Image on top</p></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "countdown":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<div class=\"flex gap-5 text-2xl font-mono\"><div><span class=\"countdown\"><span style=\"--value:59\"></span></span>d</div><div><span class=\"countdown\"><span style=\"--value:23\"></span></span>h</div><div><span class=\"countdown\"><span style=\"--value:59\"></span></span>m</div><div><span class=\"countdown\"><span style=\"--value:45\"></span></span>s</div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "<div class=\"flex gap-5 text-2xl font-mono\"><div><span class=\"countdown\"><span style=\"--value:59\"></span></span>d</div><div><span class=\"countdown\"><span style=\"--value:23\"></span></span>h</div><div><span class=\"countdown\"><span style=\"--value:59\"></span></span>m</div><div><span class=\"countdown\"><span style=\"--value:45\"></span></span>s</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "divider":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<div class=\"flex flex-col w-full\"><div class=\"divider\">OR</div><div class=\"flex w-full\"><div class=\"divider divider-primary\">Primary</div></div><div class=\"flex w-full\"><div class=\"divider divider-secondary\">Secondary</div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "<div class=\"flex flex-col w-full\"><div class=\"divider\">OR</div><div class=\"flex w-full\"><div class=\"divider divider-primary\">Primary</div></div><div class=\"flex w-full\"><div class=\"divider divider-secondary\">Secondary</div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "drawer":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<div class=\"drawer\"><input id=\"drawerx\" type=\"checkbox\" class=\"drawer-toggle\"><div class=\"drawer-content\"><label for=\"drawerx\" class=\"btn btn-primary\">Open</label></div><div class=\"drawer-side\"><label for=\"drawerx\" class=\"drawer-overlay\"></label><ul class=\"menu bg-base-200 min-h-full w-80 p-4\"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "<div class=\"drawer\"><input id=\"drawerx\" type=\"checkbox\" class=\"drawer-toggle\"><div class=\"drawer-content\"><label for=\"drawerx\" class=\"btn btn-primary\">Open</label></div><div class=\"drawer-side\"><label for=\"drawerx\" class=\"drawer-overlay\"></label><ul class=\"menu bg-base-200 min-h-full w-80 p-4\"><li><a>Item 1</a></li><li><a>Item 2</a></li></ul></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "dropdown":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<div class=\"flex gap-2\"><div class=\"dropdown\"><div tabindex=\"0\" class=\"btn\">Click</div><ul tabindex=\"0\" class=\"dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow\"><li><a>A</a></li><li><a>B</a></li></ul></div><div class=\"dropdown dropdown-hover\"><div tabindex=\"0\" class=\"btn\">Hover</div><ul tabindex=\"0\" class=\"dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow\"><li><a>A</a></li><li><a>B</a></li></ul></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "<div class=\"flex gap-2\"><div class=\"dropdown\"><div tabindex=\"0\" class=\"btn\">Click</div><ul tabindex=\"0\" class=\"dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow\"><li><a>A</a></li><li><a>B</a></li></ul></div><div class=\"dropdown dropdown-hover\"><div tabindex=\"0\" class=\"btn\">Hover</div><ul tabindex=\"0\" class=\"dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow\"><li><a>A</a></li><li><a>B</a></li></ul></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "indicator":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<div class=\"flex gap-6\"><div class=\"indicator\"><span class=\"indicator-item badge badge-primary\">new</span><div class=\"bg-base-300 grid w-16 h-16 place-items-center rounded-box\">div</div></div><div class=\"indicator\"><span class=\"indicator-item badge badge-secondary\">99+</span><div class=\"bg-base-300 grid w-16 h-16 place-items-center rounded-box\">div</div></div><div class=\"indicator\"><span class=\"indicator-item indicator-middle badge badge-success\"></span><div class=\"bg-base-300 grid w-16 h-16 place-items-center rounded-box\">div</div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "<div class=\"flex gap-6\"><div class=\"indicator\"><span class=\"indicator-item badge badge-primary\">new</span><div class=\"bg-base-300 grid w-16 h-16 place-items-center rounded-box\">div</div></div><div class=\"indicator\"><span class=\"indicator-item badge badge-secondary\">99+</span><div class=\"bg-base-300 grid w-16 h-16 place-items-center rounded-box\">div</div></div><div class=\"indicator\"><span class=\"indicator-item indicator-middle badge badge-success\"></span><div class=\"bg-base-300 grid w-16 h-16 place-items-center rounded-box\">div</div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "join":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "<div class=\"space-y-2\"><div class=\"join\"><button class=\"btn join-item\">1</button><button class=\"btn join-item btn-active\">2</button><button class=\"btn join-item\">3</button></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "<div class=\"space-y-2\"><div class=\"join\"><button class=\"btn join-item\">1</button><button class=\"btn join-item btn-active\">2</button><button class=\"btn join-item\">3</button></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "kbd":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<div class=\"flex gap-2\"><kbd class=\"kbd kbd-sm\">⌘</kbd>+<kbd class=\"kbd kbd-sm\">K</kbd></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "<div class=\"flex gap-2\"><kbd class=\"kbd kbd-sm\">⌘</kbd>+<kbd class=\"kbd kbd-sm\">K</kbd></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "link":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"flex gap-4\"><a class=\"link\">Default</a><a class=\"link link-primary\">Primary</a><a class=\"link link-secondary\">Secondary</a><a class=\"link link-accent\">Accent</a><a class=\"link link-hover\">Hover</a></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "<div class=\"flex gap-4\"><a class=\"link\">Default</a><a class=\"link link-primary\">Primary</a><a class=\"link link-secondary\">Secondary</a><a class=\"link link-accent\">Accent</a><a class=\"link link-hover\">Hover</a></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "loading":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "<div class=\"flex flex-wrap gap-4\"><span class=\"loading loading-spinner text-primary\"></span><span class=\"loading loading-spinner text-secondary\"></span> <span class=\"loading loading-dots loading-lg\"></span><span class=\"loading loading-ring loading-lg\"></span> <span class=\"loading loading-ball loading-lg\"></span><span class=\"loading loading-bars loading-lg\"></span> <span class=\"loading loading-infinity loading-lg\"></span></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "<div class=\"flex flex-wrap gap-4\"><span class=\"loading loading-spinner text-primary\"></span><span class=\"loading loading-spinner text-secondary\"></span> <span class=\"loading loading-dots loading-lg\"></span><span class=\"loading loading-ring loading-lg\"></span> <span class=\"loading loading-ball loading-lg\"></span><span class=\"loading loading-bars loading-lg\"></span> <span class=\"loading loading-infinity loading-lg\"></span></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "menu":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<ul class=\"menu bg-base-200 rounded-box w-56\"><li class=\"menu-title\">Category</li><li><a>Item 1</a></li><li><a class=\"active\">Active</a></li><li><a>Item 3</a></li><li class=\"menu-title\">More</li><li><details open><summary>Sub</summary><ul><li><a>A</a></li><li><a>B</a></li></ul></details></li></ul>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "<ul class=\"menu bg-base-200 rounded-box w-56\"><li class=\"menu-title\">Category</li><li><a>Item 1</a></li><li><a class=\"active\">Active</a></li><li><a>Item 3</a></li><li class=\"menu-title\">More</li><li><details open><summary>Sub</summary><ul><li><a>A</a></li><li><a>B</a></li></ul></details></li></ul>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "modal":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "<div><button class=\"btn\" onclick=\"mod1.showModal()\">Open</button></div><dialog id=\"mod1\" class=\"modal\"><div class=\"modal-box\"><h3 class=\"text-lg font-bold\">Modal</h3><p class=\"py-4\">ESC or click outside</p><div class=\"modal-action\"><form method=\"dialog\"><button class=\"btn\">Close</button></form></div></div></dialog>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "<div><button class=\"btn\" onclick=\"mod1.showModal()\">Open</button></div><dialog id=\"mod1\" class=\"modal\"><div class=\"modal-box\"><h3 class=\"text-lg font-bold\">Modal</h3><p class=\"py-4\">ESC or click outside</p><div class=\"modal-action\"><form method=\"dialog\"><button class=\"btn\">Close</button></form></div></div></dialog>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "pagination":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "<div class=\"join\"><button class=\"join-item btn btn-sm\">«</button><button class=\"join-item btn btn-sm\">1</button><button class=\"join-item btn btn-sm btn-active\">2</button><button class=\"join-item btn btn-sm\">3</button><button class=\"join-item btn btn-sm\">»</button></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "<div class=\"join\"><button class=\"join-item btn btn-sm\">«</button><button class=\"join-item btn btn-sm\">1</button><button class=\"join-item btn btn-sm btn-active\">2</button><button class=\"join-item btn btn-sm\">3</button><button class=\"join-item btn btn-sm\">»</button></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "progress":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<div class=\"space-y-3 w-full max-w-xs\"><progress class=\"progress progress-primary w-full\" value=\"70\" max=\"100\"></progress> <progress class=\"progress progress-secondary w-full\" value=\"50\" max=\"100\"></progress> <progress class=\"progress progress-accent w-full\" value=\"80\" max=\"100\"></progress> <progress class=\"progress progress-success w-full\" value=\"40\" max=\"100\"></progress> <progress class=\"progress progress-warning w-full\" value=\"60\" max=\"100\"></progress> <progress class=\"progress progress-error w-full\" value=\"20\" max=\"100\"></progress></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "<div class=\"space-y-3 w-full max-w-xs\"><progress class=\"progress progress-primary w-full\" value=\"70\" max=\"100\"></progress> <progress class=\"progress progress-secondary w-full\" value=\"50\" max=\"100\"></progress> <progress class=\"progress progress-accent w-full\" value=\"80\" max=\"100\"></progress> <progress class=\"progress progress-success w-full\" value=\"40\" max=\"100\"></progress> <progress class=\"progress progress-warning w-full\" value=\"60\" max=\"100\"></progress> <progress class=\"progress progress-error w-full\" value=\"20\" max=\"100\"></progress></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "radial-progress":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<div class=\"flex gap-4\"><div class=\"radial-progress text-primary\" style=\"--value:70\">70%</div><div class=\"radial-progress text-secondary\" style=\"--value:50\">50%</div><div class=\"radial-progress text-accent\" style=\"--value:80\">80%</div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "<div class=\"flex gap-4\"><div class=\"radial-progress text-primary\" style=\"--value:70\">70%</div><div class=\"radial-progress text-secondary\" style=\"--value:50\">50%</div><div class=\"radial-progress text-accent\" style=\"--value:80\">80%</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "skeleton":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "<div class=\"flex flex-col gap-3 w-64\"><div class=\"skeleton h-4 w-full\"></div><div class=\"skeleton h-4 w-3/4\"></div><div class=\"skeleton h-32 w-full\"></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "<div class=\"flex flex-col gap-3 w-64\"><div class=\"skeleton h-4 w-full\"></div><div class=\"skeleton h-4 w-3/4\"></div><div class=\"skeleton h-32 w-full\"></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "stack":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"stack\"><div class=\"card bg-primary text-primary-content w-36 h-36\"><div class=\"card-body\">1</div></div><div class=\"card bg-secondary text-secondary-content w-36 h-36\"><div class=\"card-body\">2</div></div><div class=\"card bg-accent text-accent-content w-36 h-36\"><div class=\"card-body\">3</div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, "<div class=\"stack\"><div class=\"card bg-primary text-primary-content w-36 h-36\"><div class=\"card-body\">1</div></div><div class=\"card bg-secondary text-secondary-content w-36 h-36\"><div class=\"card-body\">2</div></div><div class=\"card bg-accent text-accent-content w-36 h-36\"><div class=\"card-body\">3</div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "stat":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<div class=\"grid grid-cols-2 gap-4\"><div class=\"card bg-base-100 shadow-sm\"><div class=\"card-body gap-2\"><p class=\"text-sm text-base-content/60\">Revenue</p><p class=\"text-2xl font-semibold\">$12,345</p><div class=\"badge badge-success badge-soft badge-xs\">+10.8%</div></div></div><div class=\"card bg-base-100 shadow-sm\"><div class=\"card-body gap-2\"><p class=\"text-sm text-base-content/60\">Users</p><p class=\"text-2xl font-semibold\">4,562</p><div class=\"badge badge-success badge-soft badge-xs\">+8.2%</div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, "<div class=\"grid grid-cols-2 gap-4\"><div class=\"card bg-base-100 shadow-sm\"><div class=\"card-body gap-2\"><p class=\"text-sm text-base-content/60\">Revenue</p><p class=\"text-2xl font-semibold\">$12,345</p><div class=\"badge badge-success badge-soft badge-xs\">+10.8%</div></div></div><div class=\"card bg-base-100 shadow-sm\"><div class=\"card-body gap-2\"><p class=\"text-sm text-base-content/60\">Users</p><p class=\"text-2xl font-semibold\">4,562</p><div class=\"badge badge-success badge-soft badge-xs\">+8.2%</div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "step", "steps":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<ul class=\"steps w-full\"><li class=\"step step-primary\">Register</li><li class=\"step step-primary\">Choose</li><li class=\"step\">Purchase</li><li class=\"step\">Receive</li></ul>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "<ul class=\"steps w-full\"><li class=\"step step-primary\">Register</li><li class=\"step step-primary\">Choose</li><li class=\"step\">Purchase</li><li class=\"step\">Receive</li></ul>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "swap":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "<label class=\"swap\"><input type=\"checkbox\"><div class=\"swap-on\">ON</div><div class=\"swap-off\">OFF</div></label>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 109, "<label class=\"swap\"><input type=\"checkbox\"><div class=\"swap-on\">ON</div><div class=\"swap-off\">OFF</div></label>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "tab", "tabs":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "<div class=\"space-y-3\"><div role=\"tablist\" class=\"tabs tabs-lift\"><input type=\"radio\" name=\"t1\" class=\"tab\" aria-label=\"Lift 1\" checked><input type=\"radio\" name=\"t1\" class=\"tab\" aria-label=\"Lift 2\"></div><div role=\"tablist\" class=\"tabs tabs-box\"><input type=\"radio\" name=\"t2\" class=\"tab\" aria-label=\"Box 1\" checked><input type=\"radio\" name=\"t2\" class=\"tab\" aria-label=\"Box 2\"></div><div role=\"tablist\" class=\"tabs tabs-border\"><input type=\"radio\" name=\"t3\" class=\"tab\" aria-label=\"Border 1\" checked><input type=\"radio\" name=\"t3\" class=\"tab\" aria-label=\"Border 2\"></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 110, "<div class=\"space-y-3\"><div role=\"tablist\" class=\"tabs tabs-lift\"><input type=\"radio\" name=\"t1\" class=\"tab\" aria-label=\"Lift 1\" checked><input type=\"radio\" name=\"t1\" class=\"tab\" aria-label=\"Lift 2\"></div><div role=\"tablist\" class=\"tabs tabs-box\"><input type=\"radio\" name=\"t2\" class=\"tab\" aria-label=\"Box 1\" checked><input type=\"radio\" name=\"t2\" class=\"tab\" aria-label=\"Box 2\"></div><div role=\"tablist\" class=\"tabs tabs-border\"><input type=\"radio\" name=\"t3\" class=\"tab\" aria-label=\"Border 1\" checked><input type=\"radio\" name=\"t3\" class=\"tab\" aria-label=\"Border 2\"></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "table":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<div class=\"overflow-x-auto\"><table class=\"table\"><thead><tr><th>Name</th><th>Role</th><th>Status</th></tr></thead><tbody><tr><td>Alice</td><td>Admin</td><td><span class=\"badge badge-success badge-xs\">Active</span></td></tr><tr><td>Bob</td><td>Editor</td><td><span class=\"badge badge-warning badge-xs\">Pending</span></td></tr></tbody></table></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 111, "<div class=\"overflow-x-auto\"><table class=\"table\"><thead><tr><th>Name</th><th>Role</th><th>Status</th></tr></thead><tbody><tr><td>Alice</td><td>Admin</td><td><span class=\"badge badge-success badge-xs\">Active</span></td></tr><tr><td>Bob</td><td>Editor</td><td><span class=\"badge badge-warning badge-xs\">Pending</span></td></tr></tbody></table></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "timeline":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "<ul class=\"timeline timeline-vertical\"><li><div class=\"timeline-start\">1984</div><div class=\"timeline-middle\"><span class=\"iconify lucide--check size-4\"></span></div><div class=\"timeline-end timeline-box\">First Mac</div><hr></li><li><hr><div class=\"timeline-start\">2007</div><div class=\"timeline-middle\"><span class=\"iconify lucide--check size-4\"></span></div><div class=\"timeline-end timeline-box\">iPhone</div></li></ul>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 112, "<ul class=\"timeline timeline-vertical\"><li><div class=\"timeline-start\">1984</div><div class=\"timeline-middle\"><span class=\"iconify lucide--check size-4\"></span></div><div class=\"timeline-end timeline-box\">First Mac</div><hr></li><li><hr><div class=\"timeline-start\">2007</div><div class=\"timeline-middle\"><span class=\"iconify lucide--check size-4\"></span></div><div class=\"timeline-end timeline-box\">iPhone</div></li></ul>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "toast":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<div class=\"space-y-2\"><div class=\"alert alert-success\"><span>Operation successful!</span></div><div class=\"alert alert-error\"><span>Something went wrong</span></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 113, "<div class=\"space-y-2\"><div class=\"alert alert-success\"><span>Operation successful!</span></div><div class=\"alert alert-error\"><span>Something went wrong</span></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "tooltip":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "<div class=\"flex gap-4 pt-4\"><div class=\"tooltip\" data-tip=\"Top\"><button class=\"btn\">Top</button></div><div class=\"tooltip tooltip-bottom\" data-tip=\"Bottom\"><button class=\"btn\">Bot</button></div><div class=\"tooltip tooltip-left\" data-tip=\"Left\"><button class=\"btn\">L</button></div><div class=\"tooltip tooltip-right\" data-tip=\"Right\"><button class=\"btn\">R</button></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 114, "<div class=\"flex gap-4 pt-4\"><div class=\"tooltip\" data-tip=\"Top\"><button class=\"btn\">Top</button></div><div class=\"tooltip tooltip-bottom\" data-tip=\"Bottom\"><button class=\"btn\">Bot</button></div><div class=\"tooltip tooltip-left\" data-tip=\"Left\"><button class=\"btn\">L</button></div><div class=\"tooltip tooltip-right\" data-tip=\"Right\"><button class=\"btn\">R</button></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		default:
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<div class=\"text-center w-full py-8 text-base-content/40\">Component demo: ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, "<div class=\"text-center w-full py-8 text-base-content/40\">Component demo: ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var20 string
-			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(name)
+			var templ_7745c5c3_Var64 string
+			templ_7745c5c3_Var64, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 350, Col: 82}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 461, Col: 82}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var64))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 116, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -1022,126 +2115,126 @@ func renderFormDemo(name string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var21 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var21 == nil {
-			templ_7745c5c3_Var21 = templ.NopComponent
+		templ_7745c5c3_Var65 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var65 == nil {
+			templ_7745c5c3_Var65 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		switch name {
 		case "checkbox":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4 flex flex-wrap gap-3\"><input type=\"checkbox\" class=\"checkbox\" aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox\" disabled aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox\" checked disabled aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Color</div><div class=\"mt-4 flex flex-wrap gap-3\"><input type=\"checkbox\" class=\"checkbox checkbox-primary\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-secondary\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-accent\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-success\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-info\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-warning\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-error\" checked aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-wrap items-center gap-3\"><input type=\"checkbox\" class=\"checkbox checkbox-xl\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-lg\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-sm\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-xs\" checked aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Labelled</div><label class=\"label flex bg-base-200 rounded-box mt-4 w-64 p-3 px-4\"><span class=\"label-text grow cursor-pointer\">Remember me</span><input type=\"checkbox\" class=\"checkbox\"></label></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Indeterminate</div><div class=\"mt-4\"><div class=\"flex flex-wrap gap-3\"><input type=\"checkbox\" class=\"checkbox\" id=\"indeterminate-checkbox\" aria-label=\"Checkbox example\"><input type=\"checkbox\" class=\"checkbox\" disabled id=\"indeterminate-checkbox-disabled\" aria-label=\"Checkbox example\"></div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Custom</div><div class=\"mt-4 flex flex-wrap gap-3\"><input type=\"checkbox\" class=\"checkbox border-red-300 bg-red-100 text-red-600 checked:border-red-600 checked:bg-red-200\" checked aria-label=\"Checkbox example\"><input type=\"checkbox\" class=\"checkbox border-blue-300 bg-blue-100 text-blue-600 checked:border-blue-600 checked:bg-blue-200\" checked aria-label=\"Checkbox example\"><input type=\"checkbox\" class=\"checkbox border-blue-300 bg-linear-to-br from-blue-500 to-purple-500 [background-size:inherit] text-white checked:border-blue-500\" checked aria-label=\"Checkbox example\"></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4 flex flex-wrap gap-3\"><input type=\"checkbox\" class=\"checkbox\" aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox\" disabled aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox\" checked disabled aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Color</div><div class=\"mt-4 flex flex-wrap gap-3\"><input type=\"checkbox\" class=\"checkbox checkbox-primary\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-secondary\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-accent\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-success\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-info\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-warning\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-error\" checked aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-wrap items-center gap-3\"><input type=\"checkbox\" class=\"checkbox checkbox-xl\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-lg\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-sm\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"checkbox checkbox-xs\" checked aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Labelled</div><label class=\"label flex bg-base-200 rounded-box mt-4 w-64 p-3 px-4\"><span class=\"label-text grow cursor-pointer\">Remember me</span><input type=\"checkbox\" class=\"checkbox\"></label></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Indeterminate</div><div class=\"mt-4\"><div class=\"flex flex-wrap gap-3\"><input type=\"checkbox\" class=\"checkbox\" id=\"indeterminate-checkbox\" aria-label=\"Checkbox example\"><input type=\"checkbox\" class=\"checkbox\" disabled id=\"indeterminate-checkbox-disabled\" aria-label=\"Checkbox example\"></div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Custom</div><div class=\"mt-4 flex flex-wrap gap-3\"><input type=\"checkbox\" class=\"checkbox border-red-300 bg-red-100 text-red-600 checked:border-red-600 checked:bg-red-200\" checked aria-label=\"Checkbox example\"><input type=\"checkbox\" class=\"checkbox border-blue-300 bg-blue-100 text-blue-600 checked:border-blue-600 checked:bg-blue-200\" checked aria-label=\"Checkbox example\"><input type=\"checkbox\" class=\"checkbox border-blue-300 bg-linear-to-br from-blue-500 to-purple-500 [background-size:inherit] text-white checked:border-blue-500\" checked aria-label=\"Checkbox example\"></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "input":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4 flex flex-col gap-3\"><input type=\"text\" class=\"input\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input\" value=\"You can't touch this\" aria-label=\"Input\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Disabled</div><div class=\"mt-4 flex flex-col gap-3\"><input type=\"text\" class=\"input\" disabled placeholder=\"Can't touch this\" aria-label=\"Input\"><input type=\"text\" class=\"input\" disabled value=\"You can't touch this\" aria-label=\"Input\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Ghost</div><div class=\"mt-4 flex flex-col gap-3\"><input type=\"text\" class=\"input input-ghost\" placeholder=\"Touch to write\" aria-label=\"Input\"><input type=\"text\" class=\"input\" disabled aria-label=\"Input\" value=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4 flex flex-col gap-3\"><input type=\"text\" class=\"input\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input\" value=\"You can't touch this\" aria-label=\"Input\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Disabled</div><div class=\"mt-4 flex flex-col gap-3\"><input type=\"text\" class=\"input\" disabled placeholder=\"Can't touch this\" aria-label=\"Input\"><input type=\"text\" class=\"input\" disabled value=\"You can't touch this\" aria-label=\"Input\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Ghost</div><div class=\"mt-4 flex flex-col gap-3\"><input type=\"text\" class=\"input input-ghost\" placeholder=\"Touch to write\" aria-label=\"Input\"><input type=\"text\" class=\"input\" disabled aria-label=\"Input\" value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var22 string
-			templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.ResolveAttributeValue("I'm ghost, you can't touch me 👻")
+			var templ_7745c5c3_Var66 string
+			templ_7745c5c3_Var66, templ_7745c5c3_Err = templ.ResolveAttributeValue("I'm ghost, you can't touch me 👻")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 369, Col: 339}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 480, Col: 339}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var22)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var66)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Fieldset</div><div class=\"mt-4 flex flex-col gap-3\"><fieldset class=\"fieldset\"><legend class=\"fieldset-legend\">What is your name?</legend><input type=\"text\" class=\"input\" placeholder=\"Shoaib Rain\" aria-label=\"Input\"><p class=\"fieldset-label\">* Required</p></fieldset></div></div></div><div class=\"space-y-5\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Label inside</div><div class=\"mt-4 flex flex-col gap-3\"><label class=\"input\"><span class=\"iconify lucide--search text-base-content/60 size-5\"></span><input class=\"grow\" placeholder=\"Search\" type=\"search\" aria-label=\"Input\"><kbd class=\"kbd kbd-sm\">⌘</kbd><kbd class=\"kbd kbd-sm\">K</kbd></label><label class=\"input\"><span class=\"iconify lucide--file text-base-content/60 size-5\"></span><input class=\"grow\" placeholder=\"index.php\" type=\"text\" aria-label=\"Input\"></label><label class=\"input\">Path<input class=\"grow\" placeholder=\"src/app/\" type=\"text\" aria-label=\"Input\"><span class=\"badge badge-ghost badge-sm\">.tsx</span></label></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-col gap-3\"><input type=\"text\" class=\"input input-xs\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-sm\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-lg\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-xl\" placeholder=\"Type here\" aria-label=\"Input\"></div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Color</div><div class=\"mt-4 flex flex-col gap-3\"><input type=\"text\" class=\"input input-primary\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-secondary\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-accent\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-success\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-info\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-warning\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-error\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-neutral\" placeholder=\"Type here\" aria-label=\"Input\"></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 119, "\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Fieldset</div><div class=\"mt-4 flex flex-col gap-3\"><fieldset class=\"fieldset\"><legend class=\"fieldset-legend\">What is your name?</legend><input type=\"text\" class=\"input\" placeholder=\"Shoaib Rain\" aria-label=\"Input\"><p class=\"fieldset-label\">* Required</p></fieldset></div></div></div><div class=\"space-y-5\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Label inside</div><div class=\"mt-4 flex flex-col gap-3\"><label class=\"input\"><span class=\"iconify lucide--search text-base-content/60 size-5\"></span><input class=\"grow\" placeholder=\"Search\" type=\"search\" aria-label=\"Input\"><kbd class=\"kbd kbd-sm\">⌘</kbd><kbd class=\"kbd kbd-sm\">K</kbd></label><label class=\"input\"><span class=\"iconify lucide--file text-base-content/60 size-5\"></span><input class=\"grow\" placeholder=\"index.php\" type=\"text\" aria-label=\"Input\"></label><label class=\"input\">Path<input class=\"grow\" placeholder=\"src/app/\" type=\"text\" aria-label=\"Input\"><span class=\"badge badge-ghost badge-sm\">.tsx</span></label></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-col gap-3\"><input type=\"text\" class=\"input input-xs\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-sm\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-lg\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-xl\" placeholder=\"Type here\" aria-label=\"Input\"></div></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Color</div><div class=\"mt-4 flex flex-col gap-3\"><input type=\"text\" class=\"input input-primary\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-secondary\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-accent\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-success\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-info\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-warning\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-error\" placeholder=\"Type here\" aria-label=\"Input\"><input type=\"text\" class=\"input input-neutral\" placeholder=\"Type here\" aria-label=\"Input\"></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "toggle":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4 flex flex-wrap gap-4\"><input type=\"checkbox\" class=\"toggle\" aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle\" disabled aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle\" checked disabled aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Color</div><div class=\"mt-4 flex flex-wrap gap-4\"><input type=\"checkbox\" class=\"toggle toggle-primary\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-secondary\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-accent\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-success\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-info\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-warning\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-error\" checked aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><input type=\"checkbox\" class=\"toggle toggle-xs\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-sm\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-lg\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-xl\" checked aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Icon</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><label class=\"toggle text-base-content toggle-xl\"><input type=\"checkbox\" checked aria-label=\"Checkbox\"><span class=\"iconify lucide--x m-1 flex size-3.5 items-center\"></span><span class=\"iconify lucide--check m-1 flex size-3.5 items-center\"></span></label><label class=\"toggle text-base-content toggle-xl\"><input type=\"checkbox\" checked aria-label=\"Checkbox\"><span class=\"iconify lucide--sun m-1 flex size-3.5 items-center\"></span><span class=\"iconify lucide--moon m-1 flex size-3.5 items-center\"></span></label></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Custom</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><input type=\"checkbox\" class=\"toggle border-orange-300 bg-orange-200 text-orange-600 checked:border-orange-600 checked:bg-orange-600 checked:text-white\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle border-blue-300 bg-linear-to-br from-blue-300 to-purple-300 text-blue-800 checked:border-blue-500 checked:from-blue-500 checked:to-purple-500 checked:text-white\" checked aria-label=\"Checkbox\"></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 120, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4 flex flex-wrap gap-4\"><input type=\"checkbox\" class=\"toggle\" aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle\" disabled aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle\" checked disabled aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Color</div><div class=\"mt-4 flex flex-wrap gap-4\"><input type=\"checkbox\" class=\"toggle toggle-primary\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-secondary\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-accent\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-success\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-info\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-warning\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-error\" checked aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><input type=\"checkbox\" class=\"toggle toggle-xs\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-sm\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-lg\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle toggle-xl\" checked aria-label=\"Checkbox\"></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Icon</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><label class=\"toggle text-base-content toggle-xl\"><input type=\"checkbox\" checked aria-label=\"Checkbox\"><span class=\"iconify lucide--x m-1 flex size-3.5 items-center\"></span><span class=\"iconify lucide--check m-1 flex size-3.5 items-center\"></span></label><label class=\"toggle text-base-content toggle-xl\"><input type=\"checkbox\" checked aria-label=\"Checkbox\"><span class=\"iconify lucide--sun m-1 flex size-3.5 items-center\"></span><span class=\"iconify lucide--moon m-1 flex size-3.5 items-center\"></span></label></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Custom</div><div class=\"mt-4 flex flex-wrap items-center gap-4\"><input type=\"checkbox\" class=\"toggle border-orange-300 bg-orange-200 text-orange-600 checked:border-orange-600 checked:bg-orange-600 checked:text-white\" checked aria-label=\"Checkbox\"><input type=\"checkbox\" class=\"toggle border-blue-300 bg-linear-to-br from-blue-300 to-purple-300 text-blue-800 checked:border-blue-500 checked:from-blue-500 checked:to-purple-500 checked:text-white\" checked aria-label=\"Checkbox\"></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "select":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4 flex flex-col gap-3\"><select class=\"select\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option selected>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Disabled</div><div class=\"mt-4 flex flex-col gap-3\"><select class=\"select\" disabled aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select\" disabled aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option selected>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Ghost</div><div class=\"mt-4 flex flex-col gap-3\"><select class=\"select select-ghost\" aria-label=\"Select\"><option disabled selected>Select any ghost</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-ghost\" disabled aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option selected>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 121, "<div class=\"mt-6 grid gap-6 lg:grid-cols-2\"><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Default</div><div class=\"mt-4 flex flex-col gap-3\"><select class=\"select\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option selected>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Disabled</div><div class=\"mt-4 flex flex-col gap-3\"><select class=\"select\" disabled aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select\" disabled aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option selected>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Ghost</div><div class=\"mt-4 flex flex-col gap-3\"><select class=\"select select-ghost\" aria-label=\"Select\"><option disabled selected>Select any ghost</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-ghost\" disabled aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option selected>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var23 string
-			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs("Can't touch me, I'm already selected")
+			var templ_7745c5c3_Var67 string
+			templ_7745c5c3_Var67, templ_7745c5c3_Err = templ.JoinStringErrs("Can't touch me, I'm already selected")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 389, Col: 570}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 500, Col: 570}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var67))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Fieldset</div><div class=\"mt-4 flex flex-col gap-3\"><fieldset class=\"fieldset\"><legend class=\"fieldset-legend\">Need any favourite simpson?</legend><select class=\"select\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><p class=\"fieldset-label\">* Optional</p></fieldset></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Color</div><div class=\"mt-4 flex flex-col gap-3\"><select class=\"select select-primary\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-secondary\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-accent\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-success\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-info\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-warning\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-error\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-neutral\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-col gap-3\"><select class=\"select select-xs\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-sm\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-lg\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-xl\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 122, "</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Fieldset</div><div class=\"mt-4 flex flex-col gap-3\"><fieldset class=\"fieldset\"><legend class=\"fieldset-legend\">Need any favourite simpson?</legend><select class=\"select\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><p class=\"fieldset-label\">* Optional</p></fieldset></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Color</div><div class=\"mt-4 flex flex-col gap-3\"><select class=\"select select-primary\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-secondary\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-accent\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-success\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-info\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-warning\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-error\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-neutral\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div><div class=\"card card-border bg-base-100\"><div class=\"card-body\"><div class=\"card-title\">Size</div><div class=\"mt-4 flex flex-col gap-3\"><select class=\"select select-xs\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-sm\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-lg\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select><select class=\"select select-xl\" aria-label=\"Select\"><option disabled selected>Pick your favorite Simpson</option><option>Homer</option><option>Marge</option><option>Bart</option><option>Lisa</option><option>Maggie</option></select></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "fieldset":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "<fieldset class=\"fieldset bg-base-200 border border-line-strong p-4 rounded-box w-full max-w-md\"><legend class=\"fieldset-legend\">Settings</legend><label class=\"fieldset-label\">Name</label><input type=\"text\" class=\"input w-full\" placeholder=\"Name\"></fieldset>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 123, "<fieldset class=\"fieldset bg-base-200 border border-line-strong p-4 rounded-box w-full max-w-md\"><legend class=\"fieldset-legend\">Settings</legend><label class=\"fieldset-label\">Name</label><input type=\"text\" class=\"input w-full\" placeholder=\"Name\"></fieldset>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "file-input":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<div class=\"space-y-2\"><input type=\"file\" class=\"file-input w-full max-w-xs\"><input type=\"file\" class=\"file-input file-input-primary w-full max-w-xs\"></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "<div class=\"space-y-2\"><input type=\"file\" class=\"file-input w-full max-w-xs\"><input type=\"file\" class=\"file-input file-input-primary w-full max-w-xs\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "label":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<label class=\"flex w-full max-w-xs flex-col\"><span class=\"label\"><span class=\"label-text\">Name</span><span class=\"label-text-alt\">Required</span></span><input type=\"text\" class=\"input w-full\"></label>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 125, "<label class=\"flex w-full max-w-xs flex-col\"><span class=\"label\"><span class=\"label-text\">Name</span><span class=\"label-text-alt\">Required</span></span><input type=\"text\" class=\"input w-full\"></label>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "radio":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "<div class=\"flex gap-4\"><label class=\"flex items-center gap-2 cursor-pointer\"><input type=\"radio\" name=\"rd\" class=\"radio\" checked><span>A</span></label><label class=\"flex items-center gap-2 cursor-pointer\"><input type=\"radio\" name=\"rd\" class=\"radio\"><span>B</span></label></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 126, "<div class=\"flex gap-4\"><label class=\"flex items-center gap-2 cursor-pointer\"><input type=\"radio\" name=\"rd\" class=\"radio\" checked><span>A</span></label><label class=\"flex items-center gap-2 cursor-pointer\"><input type=\"radio\" name=\"rd\" class=\"radio\"><span>B</span></label></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "range":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "<div class=\"space-y-2 w-full max-w-xs\"><input type=\"range\" min=\"0\" max=\"100\" value=\"40\" class=\"range range-primary w-full\"><input type=\"range\" min=\"0\" max=\"100\" value=\"60\" class=\"range range-secondary w-full\"></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 127, "<div class=\"space-y-2 w-full max-w-xs\"><input type=\"range\" min=\"0\" max=\"100\" value=\"40\" class=\"range range-primary w-full\"><input type=\"range\" min=\"0\" max=\"100\" value=\"60\" class=\"range range-secondary w-full\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "rating":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "<div class=\"rating\"><input type=\"radio\" name=\"rt\" class=\"mask mask-star-2 bg-orange-400\"><input type=\"radio\" name=\"rt\" class=\"mask mask-star-2 bg-orange-400\" checked><input type=\"radio\" name=\"rt\" class=\"mask mask-star-2 bg-orange-400\"></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 128, "<div class=\"rating\"><input type=\"radio\" name=\"rt\" class=\"mask mask-star-2 bg-orange-400\"><input type=\"radio\" name=\"rt\" class=\"mask mask-star-2 bg-orange-400\" checked><input type=\"radio\" name=\"rt\" class=\"mask mask-star-2 bg-orange-400\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "textarea":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "<textarea class=\"textarea w-full max-w-md\" rows=\"4\" placeholder=\"Write here...\"></textarea>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 129, "<textarea class=\"textarea w-full max-w-md\" rows=\"4\" placeholder=\"Write here...\"></textarea>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "validator":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "<div class=\"text-center py-4\"><p class=\"text-sm\">Use <code class=\"badge\">validator</code> class with <code class=\"badge\">validator-hint</code> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 130, "<div class=\"text-center py-4\"><p class=\"text-sm\">Use <code class=\"badge\">validator</code> class with <code class=\"badge\">validator-hint</code> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var24 string
-			templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs("for")
+			var templ_7745c5c3_Var68 string
+			templ_7745c5c3_Var68, templ_7745c5c3_Err = templ.JoinStringErrs("for")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 401, Col: 169}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 512, Col: 169}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var68))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, " HTML5 validation.</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 131, " HTML5 validation.</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		default:
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "<div class=\"text-center py-8 text-base-content/40\">Form demo: ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 132, "<div class=\"text-center py-8 text-base-content/40\">Form demo: ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var25 string
-			templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(name)
+			var templ_7745c5c3_Var69 string
+			templ_7745c5c3_Var69, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 402, Col: 78}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/handler/pages_showcase.templ`, Line: 513, Col: 78}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var69))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 133, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
