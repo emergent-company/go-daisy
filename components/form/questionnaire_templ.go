@@ -209,7 +209,9 @@ func QuestionnaireScript() templ.Component {
 // "patch" and "delete", and "get" for "get". Non-post verbs that a browser
 // cannot express natively dispatch through htmx (hx-put / hx-patch / hx-delete)
 // while the form keeps method="post" for the no-JS fallback, which a server must
-// then treat as the intended verb.
+// then treat as the intended verb. The runtime validates in the capture phase
+// and stops propagation on a blocked submit, so the htmx request is not sent
+// before the inline error appears.
 //
 // Name and Value must be id-safe: ids derive as <ID>-<Name> for a fieldset and
 // <ID>-<Name>-<Value> for each choice, with no sanitisation.
@@ -254,7 +256,7 @@ func Questionnaire(props QuestionnaireProps) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 177, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 179, Col: 15}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
@@ -267,7 +269,7 @@ func Questionnaire(props QuestionnaireProps) templ.Component {
 		var templ_7745c5c3_Var6 templ.SafeURL
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(props.Action))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 178, Col: 34}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 180, Col: 34}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -280,7 +282,7 @@ func Questionnaire(props QuestionnaireProps) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(formMethod)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 179, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 181, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 		if templ_7745c5c3_Err != nil {
@@ -293,7 +295,7 @@ func Questionnaire(props QuestionnaireProps) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(string(props.Shortcuts))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 181, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 183, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
@@ -311,7 +313,7 @@ func Questionnaire(props QuestionnaireProps) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 183, Col: 24}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 185, Col: 24}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 			if templ_7745c5c3_Err != nil {
@@ -334,7 +336,7 @@ func Questionnaire(props QuestionnaireProps) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 185, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 187, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 			if templ_7745c5c3_Err != nil {
@@ -357,7 +359,7 @@ func Questionnaire(props QuestionnaireProps) templ.Component {
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Action)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 187, Col: 27}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 189, Col: 27}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 			if templ_7745c5c3_Err != nil {
@@ -512,7 +514,7 @@ func QuestionnaireProgress(props QuestionnaireProgressProps) templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(total))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 229, Col: 125}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 231, Col: 125}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -525,7 +527,7 @@ func QuestionnaireProgress(props QuestionnaireProgressProps) templ.Component {
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue(strconv.Itoa(total))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 235, Col: 28}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 237, Col: 28}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
 		if templ_7745c5c3_Err != nil {
@@ -576,7 +578,7 @@ func QuestionnaireItem(props QuestionnaireItemProps) templ.Component {
 		var templ_7745c5c3_Var20 string
 		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID + "-" + props.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 246, Col: 34}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 248, Col: 34}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var20)
 		if templ_7745c5c3_Err != nil {
@@ -589,7 +591,7 @@ func QuestionnaireItem(props QuestionnaireItemProps) templ.Component {
 		var templ_7745c5c3_Var21 string
 		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 248, Col: 24}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 250, Col: 24}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var21)
 		if templ_7745c5c3_Err != nil {
@@ -643,7 +645,7 @@ func QuestionnaireItem(props QuestionnaireItemProps) templ.Component {
 		var templ_7745c5c3_Var23 string
 		templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 259, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 261, Col: 53}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 		if templ_7745c5c3_Err != nil {
@@ -669,7 +671,7 @@ func QuestionnaireItem(props QuestionnaireItemProps) templ.Component {
 				var templ_7745c5c3_Var25 string
 				templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(props.Description)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 261, Col: 83}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 263, Col: 83}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 				if templ_7745c5c3_Err != nil {
@@ -830,7 +832,7 @@ func QuestionnaireChoice(props QuestionnaireChoiceProps) templ.Component {
 		var templ_7745c5c3_Var31 string
 		templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 313, Col: 16}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 315, Col: 16}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var31)
 		if templ_7745c5c3_Err != nil {
@@ -877,7 +879,7 @@ func QuestionnaireChoice(props QuestionnaireChoiceProps) templ.Component {
 		var templ_7745c5c3_Var34 string
 		templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.ResolveAttributeValue(ternary(props.Multiple, "checkbox", "radio"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 320, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 322, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var34)
 		if templ_7745c5c3_Err != nil {
@@ -890,7 +892,7 @@ func QuestionnaireChoice(props QuestionnaireChoiceProps) templ.Component {
 		var templ_7745c5c3_Var35 string
 		templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 321, Col: 16}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 323, Col: 16}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var35)
 		if templ_7745c5c3_Err != nil {
@@ -903,7 +905,7 @@ func QuestionnaireChoice(props QuestionnaireChoiceProps) templ.Component {
 		var templ_7745c5c3_Var36 string
 		templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 322, Col: 20}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 324, Col: 20}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var36)
 		if templ_7745c5c3_Err != nil {
@@ -916,7 +918,7 @@ func QuestionnaireChoice(props QuestionnaireChoiceProps) templ.Component {
 		var templ_7745c5c3_Var37 string
 		templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Value)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 323, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 325, Col: 22}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var37)
 		if templ_7745c5c3_Err != nil {
@@ -952,7 +954,7 @@ func QuestionnaireChoice(props QuestionnaireChoiceProps) templ.Component {
 		var templ_7745c5c3_Var39 string
 		templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 328, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 330, Col: 22}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
 		if templ_7745c5c3_Err != nil {
@@ -970,7 +972,7 @@ func QuestionnaireChoice(props QuestionnaireChoiceProps) templ.Component {
 			var templ_7745c5c3_Var40 string
 			templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(props.Description)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 330, Col: 56}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 332, Col: 56}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
 			if templ_7745c5c3_Err != nil {
@@ -993,7 +995,7 @@ func QuestionnaireChoice(props QuestionnaireChoiceProps) templ.Component {
 			var templ_7745c5c3_Var41 string
 			templ_7745c5c3_Var41, templ_7745c5c3_Err = templ.JoinStringErrs(props.Shortcut)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 334, Col: 90}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 336, Col: 90}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var41))
 			if templ_7745c5c3_Err != nil {
@@ -1116,7 +1118,7 @@ func QuestionnaireError(props QuestionnaireErrorProps) templ.Component {
 		var templ_7745c5c3_Var47 string
 		templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 353, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 355, Col: 15}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var47)
 		if templ_7745c5c3_Err != nil {
@@ -1405,7 +1407,7 @@ func QuestionnaireSubmit(props QuestionnaireSubmitProps) templ.Component {
 		var templ_7745c5c3_Var61 string
 		templ_7745c5c3_Var61, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 419, Col: 9}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/form/questionnaire.templ`, Line: 421, Col: 9}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var61))
 		if templ_7745c5c3_Err != nil {

@@ -1332,7 +1332,10 @@ test('questionnaire: an invalid submit dispatches no submit event', () => {
   const doc = window.document;
   const els = questionnaireEls(doc);
   let fired = 0;
+  let reachedForm = 0;
   els.form.addEventListener('gd-questionnaire-submit', () => { fired++; });
+  // htmx listens on the form itself; a blocked submit must not reach it.
+  els.form.addEventListener('submit', () => { reachedForm++; });
 
   // Walk to the last step with choices filled, then clear the last answer so
   // the final submit is invalid.
@@ -1345,6 +1348,7 @@ test('questionnaire: an invalid submit dispatches no submit event', () => {
   els.form.dispatchEvent(evt);
 
   assert.equal(evt.defaultPrevented, true, 'invalid submit blocked');
+  assert.equal(reachedForm, 0, 'blocked submit never reaches a form-level listener');
   assert.equal(fired, 0, 'no submit intent event for a blocked form');
 
   doc.getElementById('q-exp-beg').click();

@@ -160,7 +160,9 @@ templ QuestionnaireScript() {
 // "patch" and "delete", and "get" for "get". Non-post verbs that a browser
 // cannot express natively dispatch through htmx (hx-put / hx-patch / hx-delete)
 // while the form keeps method="post" for the no-JS fallback, which a server must
-// then treat as the intended verb.
+// then treat as the intended verb. The runtime validates in the capture phase
+// and stops propagation on a blocked submit, so the htmx request is not sent
+// before the inline error appears.
 //
 // Name and Value must be id-safe: ids derive as <ID>-<Name> for a fieldset and
 // <ID>-<Name>-<Value> for each choice, with no sanitisation.

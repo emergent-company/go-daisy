@@ -315,6 +315,7 @@
     // like Next (validate and advance) instead of posting a half-filled wizard.
     if (idx < items.length - 1) {
       event.preventDefault();
+      event.stopPropagation();
       next(root);
       return;
     }
@@ -323,6 +324,12 @@
     // form that is about to be blocked.
     if (!validate(item)) {
       event.preventDefault();
+      // htmx installs its submit listener on the form itself and does not
+      // consult defaultPrevented, so stopping propagation is the only way a
+      // blocked submit (hx-put/hx-patch/hx-delete included) does not leave the
+      // browser. The listener is registered in the capture phase for the same
+      // reason: validation must run before htmx sees the event.
+      event.stopPropagation();
       return;
     }
     dispatch(root, 'gd-questionnaire-submit', { index: idx });
@@ -353,7 +360,7 @@
     document.addEventListener('change', handleChoiceChange);
     document.addEventListener('click', handleClick);
     document.addEventListener('keydown', handleKeydown);
-    document.addEventListener('submit', handleSubmit);
+    document.addEventListener('submit', handleSubmit, true);
     document.addEventListener('DOMContentLoaded', init);
   }
 
