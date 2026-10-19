@@ -80,6 +80,11 @@ func comparePage(m PageMapping) PageResult {
 		return r
 	}
 	defer func() { _ = resp.Body.Close() }() // body fully read next; a close error here is not actionable
+	if resp.StatusCode != http.StatusOK {
+		r.Status = "error"
+		r.Error = fmt.Sprintf("fetch go-daisy: HTTP %d", resp.StatusCode)
+		return r
+	}
 	goDaisyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		r.Status = "error"
@@ -460,32 +465,6 @@ func truncate(s string, n int) string {
 		return s
 	}
 	return s[:n] + "..."
-}
-
-// Summary returns counts of each diff type.
-func (r *PageResult) Summary() string {
-	switch r.Status {
-	case "error":
-		return fmt.Sprintf("ERROR: %s", r.Error)
-	case "passthrough":
-		return fmt.Sprintf("PASSTHROUGH: raw embed %q", r.RawPage)
-	case "skipped":
-		return fmt.Sprintf("SKIPPED: %s", r.Page.Reason)
-	case "ok":
-		return "OK — no structural differences"
-	}
-	byType := make(map[DiffType]int)
-	for _, d := range r.Diffs {
-		byType[d.Type]++
-	}
-	var parts []string
-	keys := []DiffType{DiffMissingElement, DiffExtraElement, DiffWrongTag, DiffMissingClass, DiffExtraClass, DiffTextMismatch}
-	for _, k := range keys {
-		if n := byType[k]; n > 0 {
-			parts = append(parts, fmt.Sprintf("%s=%d", k, n))
-		}
-	}
-	return "DIFF: " + strings.Join(parts, " ")
 }
 
 // CategoryGroups returns results grouped by category for the report.

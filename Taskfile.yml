@@ -9,6 +9,7 @@ vars:
   NEXUS_BIN: /tmp/nexus
   NEXUS_LOG: /tmp/nexus.log
   NEXUS_PID: /tmp/nexus.pid
+  NEXUS_MAX_DIFF_PAGES: "14"
 
 tasks:
   build:ui:
@@ -270,7 +271,7 @@ tasks:
   "nexus:compare":
     desc: Run the structural parity gate against the running nexus server
     cmds:
-      - GOWORK=off go run ./cmd/nexus-compare
+      - GOWORK=off go run ./cmd/nexus-compare -max-diff-pages {{.NEXUS_MAX_DIFF_PAGES}}
 
   "gallery:restart":
     desc: Stop then start the gallery daemon

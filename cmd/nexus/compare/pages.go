@@ -107,17 +107,6 @@ func Pages() []PageMapping {
 	return pages
 }
 
-// Skipped returns only the skipped (non-comparable) mappings.
-func Skipped(mappings []PageMapping) []PageMapping {
-	var out []PageMapping
-	for _, m := range mappings {
-		if m.Skip {
-			out = append(out, m)
-		}
-	}
-	return out
-}
-
 // Compared returns only the mappings that are actually fetched and diffed.
 func Compared(mappings []PageMapping) []PageMapping {
 	var out []PageMapping
