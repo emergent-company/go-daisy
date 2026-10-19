@@ -258,8 +258,9 @@
 }
 
 /* Palette "nexus" — the Nexus admin brand palette. Light. Pinned by the Nexus
- * shell via PageProps{PinTheme:true}, so it is never overridden by the gallery
- * palette/mode selection. */
+ * shell via PageProps{PinTheme:true}, so the gallery palette/mode selection
+ * cannot override it on load. Deliberately absent from ui's themePalettePairs:
+ * it is a fixed brand theme, not a selectable gallery palette. */
 @plugin "daisyui/theme" {
   name: "nexus";
   default: false;

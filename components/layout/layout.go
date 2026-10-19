@@ -7,9 +7,10 @@ import "github.com/a-h/templ"
 type PageProps struct {
 	Title           string
 	ThemeAttr       string
-	// PinTheme omits ui.ThemeScript() from <head> so ThemeAttr is
-	// authoritative. Use it for apps that ship a fixed brand theme and want the
-	// persisted gallery palette/mode selection to never override it.
+	// PinTheme omits ui.ThemeScript() from <head> so ThemeAttr is authoritative
+	// at load time: the persisted gallery palette/mode selection cannot
+	// override it. Runtime switchers (ThemeSwitcher, ThemeController, or an
+	// app's own data-theme handler) can still change data-theme afterwards.
 	PinTheme        bool
 	Alpine          bool            // include Alpine.js <script> tag
 	Morph           bool            // include idiomorph global (HTMX morphing is core in v4, no extension needed)
