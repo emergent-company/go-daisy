@@ -661,3 +661,36 @@ html[data-gd-resizing] iframe {
     display: block;
   }
 }
+
+/* ── Chart text ─────────────────────────────────────────────────────────────
+ *
+ * ApexCharts 4 writes chart text as hard-coded greys that never go through
+ * daisyUI's `--color-base-content`: axis tick labels get `fill="#373d3f"` on
+ * the SVG <text>, legend series names get an inline `color: rgb(55, 61, 63)`,
+ * and the title/subtitle get `fill` on their own <text>. Labels therefore stay
+ * dark in dark themes. The `--chart-*` tokens in tokens.css bind those fixed
+ * defaults back to the theme; this block maps ApexCharts' classes onto them.
+ *
+ * `!important` is required because ApexCharts applies the grey as inline
+ * `style` attributes, which an ordinary rule cannot override. Scoped to
+ * `[data-chart]` (stamped by ui.Chart) so it only affects go-daisy chart
+ * output. `.apexcharts-datalabel*` is deliberately left alone: data labels on
+ * coloured bars are intentionally white and are config-driven.
+ */
+@layer components {
+  [data-chart] .apexcharts-xaxis-label,
+  [data-chart] .apexcharts-yaxis-label,
+  [data-chart] .apexcharts-xaxis-annotation-label,
+  [data-chart] .apexcharts-yaxis-annotation-label {
+    fill: var(--chart-label-color) !important;
+  }
+
+  [data-chart] .apexcharts-legend-text {
+    color: var(--chart-legend-color) !important;
+  }
+
+  [data-chart] .apexcharts-title-text,
+  [data-chart] .apexcharts-subtitle-text {
+    fill: var(--chart-title-color) !important;
+  }
+}

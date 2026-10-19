@@ -48,3 +48,21 @@ textareas and outlined fields.
 Tokens carry **measurements**; variants carry **structure**. Nexus parity work
 uses both: e.g. table density is `DataTable{Density: ...}` (structural) while
 row height comes from `--table-row-height` (themeable).
+
+## Chart text tokens
+
+Declared in `components/css/tokens.css` (plain `:root`, not `@theme`). They
+bind ApexCharts' hard-coded grey default (`#373d3f`) to the theme's content ink.
+
+| Token | Default | Consumer |
+|---|---|---|
+| `--chart-label-color` | `color-mix(in oklab, var(--color-base-content) 60%, transparent)` | axis tick / annotation labels (≈ `text-muted`) |
+| `--chart-legend-color` | `color-mix(in oklab, var(--color-base-content) 80%, transparent)` | legend series names (≈ `text-body`) |
+| `--chart-title-color` | `var(--color-base-content)` | chart title / subtitle |
+
+`components/css/custom.css` maps ApexCharts' SVG/legend classes onto these
+tokens (`[data-chart] .apexcharts-xaxis-label` → `fill`, etc.). Because the
+tokens are plain variables referencing `--color-base-content`, a theme switch
+applies immediately without a chart re-render. Chart labels are
+theme-controlled: per-chart label overrides would need a future `ChartProps`
+field (no such field exists yet).
