@@ -201,9 +201,7 @@ templ Combobox(props ComboboxProps) {
 		{ props.Attrs... }
 	>
 		if props.Label != "" {
-			<label class="label" for={ props.ID }>
-				<span class="label-text">{ props.Label }</span>
-			</label>
+			@Label(LabelProps{For: props.ID}) { { props.Label } }
 		}
 		<div class="relative w-full">
 			@comboboxTrigger(props)

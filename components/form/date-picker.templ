@@ -38,9 +38,7 @@ type DatePickerProps struct {
 templ DatePicker(props DatePickerProps) {
 	<div class="w-full" { devmode.Attrs(ctx, "form/DatePicker")... }>
 		if props.Label != "" {
-			<label class="label" for={ props.Name }>
-				<span class="label-text">{ props.Label }</span>
-			</label>
+			@Label(LabelProps{For: props.Name}) { { props.Label } }
 		}
 		<input
 			id={ props.Name }

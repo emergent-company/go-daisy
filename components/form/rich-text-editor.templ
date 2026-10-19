@@ -28,9 +28,7 @@ type RichTextEditorProps struct {
 templ RichTextEditor(props RichTextEditorProps) {
 	<div class="w-full" { devmode.Attrs(ctx, "form/RichTextEditor")... }>
 		if props.Label != "" {
-			<label class="label" for={ props.ID }>
-				<span class="label-text">{ props.Label }</span>
-			</label>
+			@Label(LabelProps{For: props.ID}) { { props.Label } }
 		}
 		<div
 			id={ props.ID }

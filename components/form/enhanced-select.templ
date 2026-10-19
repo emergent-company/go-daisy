@@ -32,9 +32,7 @@ type EnhancedSelectProps struct {
 templ EnhancedSelect(props EnhancedSelectProps) {
 	<div class="w-full" { devmode.Attrs(ctx, "form/EnhancedSelect")... }>
 		if props.Label != "" {
-			<label class="label" for={ props.Name }>
-				<span class="label-text">{ props.Label }</span>
-			</label>
+			@Label(LabelProps{For: props.Name}) { { props.Label } }
 		}
 		<select
 			id={ props.Name }

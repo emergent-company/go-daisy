@@ -33,9 +33,7 @@ type FileUploadProps struct {
 templ FileUpload(props FileUploadProps) {
 	<div class="w-full" { devmode.Attrs(ctx, "form/FileUpload")... }>
 		if props.Label != "" {
-			<label class="label" for={ props.Name }>
-				<span class="label-text">{ props.Label }</span>
-			</label>
+			@Label(LabelProps{For: props.Name}) { { props.Label } }
 		}
 		<input
 			type="file"
