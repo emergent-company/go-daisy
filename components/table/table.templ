@@ -60,7 +60,7 @@ type TableProps struct {
 
 // tableClasses builds the DaisyUI class string from TableProps.
 func tableClasses(props TableProps) string {
-	cls := "table w-full"
+	cls := "table w-full whitespace-nowrap"
 	switch props.Size {
 	case "xs":
 		cls += " table-xs"
@@ -135,7 +135,7 @@ templ TableHeadRow() {
 
 // TableHeadCell renders a plain (non-sortable) <th> column header.
 templ TableHeadCell(label string) {
-	<th class="text-xs font-semibold text-muted uppercase">{ label }</th>
+	<th class="text-sm font-medium text-muted">{ label }</th>
 }
 
 // TableBody renders a <tbody> wrapper accepting row children.
@@ -193,9 +193,9 @@ templ TableActionCell() {
 // existing query filters, and does not emit aria-sort.
 templ TableHeader(label string, sortKey string, currentSortKey string, currentDir SortDir, baseURL string) {
 	if sortKey == "" {
-		<th class="text-xs font-semibold text-muted uppercase">{ label }</th>
+		<th class="text-sm font-medium text-muted">{ label }</th>
 	} else {
-		<th class="text-xs font-semibold text-muted uppercase">
+		<th class="text-sm font-medium text-muted">
 			<a
 				class={ ui.RowTight, "hover:text-base-content cursor-pointer" }
 				href={ templ.URL(sortURL(baseURL, sortKey, currentSortKey, currentDir)) }
@@ -227,10 +227,10 @@ func sortURL(base string, key string, currentKey string, currentDir SortDir) str
 
 // TableSelectAll renders a select-all checkbox header cell.
 templ TableSelectAll(label string) {
-	<th class="w-10 px-6"><input type="checkbox" class="checkbox checkbox-sm" aria-label={ label }/></th>
+	<th class="w-10"><input type="checkbox" class="checkbox checkbox-sm" aria-label={ label }/></th>
 }
 
 // TableSelectRow renders a per-row selection checkbox cell.
 templ TableSelectRow(name string, checked bool) {
-	<td class="w-10 px-6"><input type="checkbox" class="checkbox checkbox-sm" name={ name } checked?={ checked } aria-label="Select row"/></td>
+	<td class="w-10"><input type="checkbox" class="checkbox checkbox-sm" name={ name } checked?={ checked } aria-label="Select row"/></td>
 }
