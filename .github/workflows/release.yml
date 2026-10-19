@@ -1,0 +1,152 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version bump (ignored when tag is set)
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
+      tag:
+        description: Explicit tag (vX.Y.Z); overrides bump
+        required: false
+        default: ""
+      confirm:
+        description: dry-run previews only; release tags and publishes
+        type: choice
+        options:
+          - dry-run
+          - release
+        default: dry-run
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Tag and publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Validate and resolve version
+        id: version
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+          BUMP: ${{ inputs.bump }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          [ "$GITHUB_REF" = "refs/heads/master" ] \
+            || { echo "::error::release must be dispatched from master"; exit 1; }
+          [ "$CONFIRM" = "dry-run" ] || [ "$CONFIRM" = "release" ] \
+            || { echo "::error::confirm must be dry-run or release"; exit 1; }
+          [ -z "$(git status --porcelain)" ] \
+            || { echo "::error::working tree is dirty"; exit 1; }
+          git fetch origin master --quiet
+          [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/master)" ] \
+            || { echo "::error::HEAD is not origin/master"; exit 1; }
+
+          if [ -n "$TAG" ]; then
+            version="$(scripts/release-version.sh --tag "$TAG")"
+          else
+            version="$(scripts/release-version.sh --bump "$BUMP")"
+          fi
+          previous="$(scripts/release-version.sh --current)"
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "previous=$previous" >> "$GITHUB_OUTPUT"
+          echo "resolved $version (previous $previous)"
+
+      - name: Render release notes
+        env:
+          PREVIOUS: ${{ steps.version.outputs.previous }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          if [ "$(git rev-list --count "${PREVIOUS}..HEAD")" -eq 0 ]; then
+            echo "::error::no commits since ${PREVIOUS}; nothing to release"
+            exit 1
+          fi
+          scripts/release-notes.sh "$PREVIOUS" HEAD "$VERSION" > release-notes.md
+          cat release-notes.md
+
+      - name: Tag and publish
+        if: inputs.confirm == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          if git rev-parse -q --verify "refs/tags/${VERSION}" >/dev/null; then
+            echo "::error::tag ${VERSION} already exists"
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$VERSION" -m "$VERSION"
+          git push origin "$VERSION"
+
+          if ! gh release create "$VERSION" \
+              --title "$VERSION" \
+              --notes-file release-notes.md \
+              --verify-tag; then
+            # 0 = exists, 1 = definitively absent, 2 = unknown (fail safe).
+            release_state=2
+            if output="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${VERSION}" 2>&1)"; then
+              release_state=0
+            else
+              case "$output" in
+                *"HTTP 404"*|*"Not Found"*) release_state=1 ;;
+                *) release_state=2 ;;
+              esac
+            fi
+
+            if [ "$release_state" -eq 0 ]; then
+              echo "::error::release ${VERSION} exists despite the error; keeping the tag"
+              exit 1
+            fi
+            if [ "$release_state" -eq 2 ]; then
+              echo "::error::could not confirm whether ${VERSION} was published; keeping the tag. Check the release page, then retry or delete the tag manually."
+              exit 1
+            fi
+
+            echo "::warning::deleting orphan tag ${VERSION} so the run can be retried"
+            if ! git push origin ":refs/tags/${VERSION}"; then
+              echo "::error::could not delete orphan tag ${VERSION}; delete it manually before retrying"
+            fi
+            exit 1
+          fi
+
+      - name: Summary
+        if: always() && steps.version.outputs.version != ''
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          CONFIRM: ${{ inputs.confirm }}
+          STATUS: ${{ job.status }}
+        run: |
+          {
+            echo "### Release ${VERSION} (${CONFIRM}) - ${STATUS}"
+            echo
+            if [ -f release-notes.md ]; then
+              cat release-notes.md
+            else
+              echo "notes were not generated"
+            fi
+            if [ "$CONFIRM" = "dry-run" ]; then
+              echo
+              echo "_Dry run: no tag was created._"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

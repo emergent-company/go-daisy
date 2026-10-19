@@ -324,6 +324,43 @@ task dev:ui
 
 ---
 
+## Releases
+
+Releases are dispatch-only. The only hand-pushed tag is the one-time `v0.1.0`
+bootstrap in a repository with no semver tags; every later tag comes from the
+workflow.
+
+```bash
+# Preview the version and grouped notes without tagging
+gh workflow run release.yml -f bump=minor -f confirm=dry-run
+
+# Tag and publish
+gh workflow run release.yml -f bump=minor -f confirm=release
+```
+
+`bump` is `patch`, `minor` or `major`; `tag` (canonical `vX.Y.Z`, no leading
+zeros) overrides it. The workflow:
+
+- runs only from `master`, with a clean tree and a HEAD equal to `origin/master`;
+- refuses an existing tag or a version that is not newer than the current one;
+- refuses a dispatch with no commits since the previous tag;
+- prints the grouped notes in the run summary for `dry-run`;
+- creates the annotated tag and the GitHub release for `release`. If release
+  creation fails and the release is confirmed absent, it deletes the tag so the
+  run can be retried; if it cannot confirm, it keeps the tag and asks for a
+  human. It never deletes a release.
+
+It never deploys. Gallery deploys stay in `templ.components.infra`. A repository
+with no semver tag cannot release through the workflow; push `v0.1.0` once by
+hand, then dispatch.
+
+Notes are grouped by commit subject (`feat`, `fix`, `perf`/`refactor`, anything
+else) and by `!` or `BREAKING CHANGE` for breaking changes. A body line starting
+with `Deprecated:` also lists the commit under Deprecations. Run
+`task test:release` after changing the scripts.
+
+---
+
 ## Design tokens
 
 `components/css/tokens.css` ships the semantic text tone ladder

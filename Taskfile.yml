@@ -315,6 +315,11 @@ tasks:
     cmds:
       - node --test tests/js/runtime.test.js
 
+  "test:release":
+    desc: Test the release version and notes scripts
+    cmds:
+      - bash scripts/release-test.sh
+
   "test:e2e":
     desc: Run Playwright E2E tests
     cmds:
