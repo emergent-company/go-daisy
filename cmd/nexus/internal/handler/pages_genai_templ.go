@@ -508,7 +508,7 @@ func genAIContentInfoCard() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"card-title\">Information</div><div class=\"fieldset mt-2\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"card-title text-base font-medium\">Information</div><div class=\"fieldset mt-2\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -579,7 +579,7 @@ func genAIContentLanguageCard() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<div class=\"card-title\">Language options</div><div class=\"border-success/20 bg-success/5 rounded-box my-2.5 border p-3 text-sm\"><span class=\"font-medium\">Beta:</span> This feature is currently accessible to a limited group of beta users.</div><div class=\"fieldset\"><div class=\"flex gap-4\"><div class=\"grow\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<div class=\"card-title text-base font-medium\">Language options</div><div class=\"border-success/20 bg-success/5 rounded-box my-2.5 border p-3 text-sm\"><span class=\"font-medium\">Beta:</span> This feature is currently accessible to a limited group of beta users.</div><div class=\"fieldset\"><div class=\"flex gap-4\"><div class=\"grow\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -1174,7 +1174,7 @@ func genAIImageConfigureCard() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "<div class=\"card-title\">Configure</div><div class=\"fieldset mt-2 gap-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "<div class=\"card-title text-base font-medium\">Configure</div><div class=\"fieldset mt-2 gap-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2143,7 +2143,7 @@ func GenAILibrary() templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var69), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var69), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -2209,7 +2209,7 @@ func genAILibraryToolbar() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = form.SearchInput("q", "", "Search along items", "", "", "input input-sm w-24 sm:w-36").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = form.SearchInput("q", "", "Search along items", "", "", "input input-sm w-24 sm:w-36", templ.Attributes{"aria-label": "Search items"}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -46,7 +46,7 @@ templ PageFull(props PageProps) {
 			<meta name="view-transition" content="same-origin"/>
 		}
 	</head>
-	<body class="bg-base-200 min-h-screen">
+	<body class="bg-[var(--layout-background)] min-h-screen">
 		<!-- Modal container -->
 		<div id="modal-container"></div>
 		<!-- Toast container -->
@@ -175,7 +175,7 @@ templ AppShellWithNav(appName string, groups []SidebarGroup) {
 			@Navbar(appName) {
 				{ children... }
 			}
-			<main id="main-content" class="grow overflow-auto bg-base-200">
+			<main id="main-content" class="grow overflow-auto bg-[var(--layout-background)]">
 			</main>
 		</div>
 	</div>

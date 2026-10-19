@@ -92,7 +92,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div id=\"_layout-sidebar\" class=\"flex flex-col bg-base-100\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div id=\"_layout-sidebar\" class=\"flex flex-col bg-[var(--layout-sidebar-background)]\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -354,7 +354,7 @@ func nexusTopbar() templ.Component {
 			ShowTheme:         false,
 			ShowSettings:      true,
 			SettingsDrawerID:  "layout-rightbar-drawer",
-			ExtraClass:        "bg-base-100",
+			ExtraClass:        "bg-[var(--layout-topbar-background)]",
 			Notifications: nav.NotificationVariant("basic", nav.NotificationVariantOpts{
 				Tabs: []nav.NotificationTab{
 					{Label: "All", Active: true, Badge: 12},

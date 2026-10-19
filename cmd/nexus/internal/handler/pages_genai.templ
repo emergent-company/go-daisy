@@ -118,7 +118,7 @@ templ GenAIContent() {
 
 templ genAIContentInfoCard() {
 	@ui.CardRaw(ui.CardRawProps{}) {
-		<div class="card-title">Information</div>
+		<div class="card-title text-base font-medium">Information</div>
 		<div class="fieldset mt-2">
 			@form.FormField(form.FormFieldProps{
 				Type:        form.FieldTextarea,
@@ -140,7 +140,7 @@ templ genAIContentInfoCard() {
 
 templ genAIContentLanguageCard() {
 	@ui.CardRaw(ui.CardRawProps{}) {
-		<div class="card-title">Language options</div>
+		<div class="card-title text-base font-medium">Language options</div>
 		<div class="border-success/20 bg-success/5 rounded-box my-2.5 border p-3 text-sm">
 			<span class="font-medium">Beta:</span>
 			This feature is currently accessible to a limited group of beta users.
@@ -301,7 +301,7 @@ templ GenAIImage() {
 
 templ genAIImageConfigureCard() {
 	@ui.CardRaw(ui.CardRawProps{BodyClass: "gap-0"}) {
-		<div class="card-title">Configure</div>
+		<div class="card-title text-base font-medium">Configure</div>
 		<div class="fieldset mt-2 gap-4">
 			@form.FormField(form.FormFieldProps{
 				Type:        form.FieldTextarea,
@@ -509,7 +509,7 @@ templ GenAILibrary() {
 			Footer:  genAILibraryFooter(),
 		}) {
 			<div class="mt-4 overflow-auto">
-				@table.TableWithProps(table.TableProps{}) {
+				@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
 					@table.TableHead() {
 						@table.TableHeadRow() {
 							@table.TableSelectAll("Check all")
@@ -544,7 +544,7 @@ templ GenAILibrary() {
 templ genAILibraryToolbar() {
 	@table.TableCardHeader() {
 		<div class="inline-flex items-center gap-3">
-			@form.SearchInput("q", "", "Search along items", "", "", "input input-sm w-24 sm:w-36")
+			@form.SearchInput("q", "", "Search along items", "", "", "input input-sm w-24 sm:w-36", templ.Attributes{"aria-label": "Search items"})
 		</div>
 		<div class="inline-flex items-center gap-3">
 			@ui.Button(ui.ButtonProps{Type: ui.ButtonTypeLink, Href: "/apps/gen-ai/image", Variant: ui.ButtonPrimary, Size: ui.ButtonSM, ExtraClass: "max-sm:btn-square", AriaLabel: "Generate image link"}) {

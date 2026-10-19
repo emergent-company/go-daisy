@@ -162,7 +162,7 @@ func PageFull(props PageProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</head><body class=\"bg-base-200 min-h-screen\"><!-- Modal container --><div id=\"modal-container\"></div><!-- Toast container --><div id=\"toast-container\" class=\"toast toast-top toast-end z-70\" aria-live=\"polite\"></div><!-- Main content slot -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</head><body class=\"bg-[var(--layout-background)] min-h-screen\"><!-- Modal container --><div id=\"modal-container\"></div><!-- Toast container --><div id=\"toast-container\" class=\"toast toast-top toast-end z-70\" aria-live=\"polite\"></div><!-- Main content slot -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -567,7 +567,7 @@ func AppShellWithNav(appName string, groups []SidebarGroup) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<main id=\"main-content\" class=\"grow overflow-auto bg-base-200\"></main></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<main id=\"main-content\" class=\"grow overflow-auto bg-[var(--layout-background)]\"></main></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
