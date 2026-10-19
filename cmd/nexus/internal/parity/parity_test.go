@@ -388,7 +388,7 @@ func splitPath(p string) []string {
 // to reintroduce by copying an existing call, and it renders acceptably enough
 // that screenshots alone do not catch it.
 func TestTemplComponentChildrenArePlainText(t *testing.T) {
-	root := filepath.Join("..", "..", "..")
+	root := filepath.Join("..", "..", "..", "..")
 	// @Component(...){ "Text" } — the closing paren and the children block on
 	// one line, which is exactly the broken shape.
 	inline := regexp.MustCompile(`@[\w.]+\s*\([^\n]*\)\s*\{\s*"`)
@@ -398,8 +398,8 @@ func TestTemplComponentChildrenArePlainText(t *testing.T) {
 			return err
 		}
 		if d.IsDir() {
-			name := d.Name()
-			if name == ".git" || name == "node_modules" || strings.HasPrefix(name, ".") {
+			switch d.Name() {
+			case ".git", "node_modules", "vendor":
 				return filepath.SkipDir
 			}
 			return nil
