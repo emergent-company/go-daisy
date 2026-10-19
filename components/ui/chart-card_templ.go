@@ -20,6 +20,7 @@ type ChartCardProps struct {
 	Title       string           // toolbar title
 	Subtitle    string           // optional toolbar subtitle
 	Icon        string           // optional leading Iconify icon beside the title
+	TitleClass  string           // additional classes on the toolbar title (e.g. "text-lg")
 	Legend      templ.Component  // optional legend, rendered before Actions in the toolbar
 	Actions     templ.Component  // optional actions (buttons/tabs), rendered after Legend
 	Intro       templ.Component  // optional block between the toolbar and the chart (summary numbers, sub-header)
@@ -107,11 +108,12 @@ func ChartCard(props ChartCardProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = CardToolbar(CardToolbarProps{
-			Title:    props.Title,
-			Subtitle: props.Subtitle,
-			Icon:     props.Icon,
-			Actions:  chartCardActions(props.Legend, props.Actions),
-			Class:    headerClass,
+			Title:      props.Title,
+			Subtitle:   props.Subtitle,
+			Icon:       props.Icon,
+			TitleClass: props.TitleClass,
+			Actions:    chartCardActions(props.Legend, props.Actions),
+			Class:      headerClass,
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

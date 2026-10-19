@@ -9,12 +9,13 @@ import "github.com/emergent-company/go-daisy/devmode"
 // Intended to sit inside `card-body p-0`; padding lives with the caller (e.g.
 // a `px-5 pt-5` class passed here, or applied by the surrounding card body).
 type CardToolbarProps struct {
-	Title    string           // primary heading text
-	Subtitle string           // optional muted line under the title
-	Icon     string           // optional leading Iconify icon, rendered beside the title
-	Actions  templ.Component  // right-hand slot (buttons, legend, tabs, etc.)
-	Class    string           // additional CSS classes on the root row (padding lives here)
-	Attrs    templ.Attributes // spread last on the root row
+	Title      string           // primary heading text
+	Subtitle   string           // optional muted line under the title
+	Icon       string           // optional leading Iconify icon, rendered beside the title
+	TitleClass string           // additional CSS classes on the title (e.g. "text-lg")
+	Actions    templ.Component  // right-hand slot (buttons, legend, tabs, etc.)
+	Class      string           // additional CSS classes on the root row (padding lives here)
+	Attrs      templ.Attributes // spread last on the root row
 }
 
 // CardToolbar renders a card header row: title + subtitle on the left, the
@@ -27,10 +28,10 @@ templ CardToolbar(props CardToolbarProps) {
 			if props.Icon != "" {
 				<div class="flex items-center gap-3">
 					@IconSpan(props.Icon, "size-4.5")
-					<p class="font-medium">{ props.Title }</p>
+					<p class={ "font-medium", props.TitleClass }>{ props.Title }</p>
 				</div>
 			} else {
-				<p class="font-medium">{ props.Title }</p>
+				<p class={ "font-medium", props.TitleClass }>{ props.Title }</p>
 			}
 			if props.Subtitle != "" {
 				<p class="text-xs text-muted">{ props.Subtitle }</p>

@@ -220,15 +220,50 @@ templ globalSalesOverviewButton() {
 	</button>
 }
 
-// saleMetricsTabs renders the "2024 vs. 2025" comparison tab for the Sale
-// Metrics chart card toolbar.
-templ saleMetricsTabs() {
-	<div class="tabs tabs-box tabs-sm gap-1 bg-base-200 rounded-box"><a class="tab tab-active">2024 vs. 2025</a></div>
+// saleMetricsLegend renders the "2024 vs. 2025" comparison label shown in the
+// Sale Metrics chart card header.
+templ saleMetricsLegend() {
+	<span class="text-muted text-xs">2024 vs. 2025</span>
 }
 
-// makeDealButton renders the primary CTA for the Customer Deals card toolbar.
+// saleMetricsStats renders the three realtime stat columns (Realtime Sales,
+// Revenue, Customer Retention) that sit between the Sale Metrics header and its
+// chart. The third column is hidden below the 2xl breakpoint.
+templ saleMetricsStats() {
+	<div class="mt-5 grid grid-cols-2 justify-between gap-6 px-6 2xl:grid-cols-3">
+		<div class="flex flex-col items-center">
+			<div class="flex items-center gap-2">
+				@ui.StatusDot(ui.StatusSuccess, false)
+				<span class="text-body text-sm">Realtime Sales</span>
+			</div>
+			<span class="mt-2 text-2xl font-semibold">541</span>
+			<span class="text-muted text-xs">494 last hour</span>
+		</div>
+		<div class="flex flex-col items-center">
+			<div class="flex items-center gap-2">
+				@ui.StatusDot(ui.StatusSecondary, false)
+				<span class="text-body text-sm">Revenue</span>
+			</div>
+			<span class="mt-2 text-2xl font-semibold">$51,474</span>
+			<span class="text-muted text-xs">$49,162 last month</span>
+		</div>
+		<div class="hidden flex-col items-center 2xl:flex">
+			<div class="flex items-center gap-2">
+				@ui.StatusDot(ui.StatusError, false)
+				<span class="text-body text-sm">Customer Retention</span>
+			</div>
+			<span class="mt-2 text-2xl font-semibold">3.14%</span>
+			<span class="text-muted text-xs">2.16% last week</span>
+		</div>
+	</div>
+}
+
+// makeDealButton renders the CTA for the Customer Deals card toolbar.
 templ makeDealButton() {
-	<a href="#" class="btn btn-primary btn-sm">Make a Deal</a>
+	<button class="btn btn-outline border-line-strong btn-sm">
+		<span class="iconify lucide--plus size-3.5"></span>
+		Make a Deal
+	</button>
 }
 
 // dealRow renders a single row of the CRM Customer Deals table.
@@ -264,161 +299,170 @@ templ CRMDashboard() {
 			{Label: "CRM"},
 		},
 	})
-	<div class="mt-6 grid grid-cols-12 gap-5">
-		<div class="col-span-12 xl:col-span-8">
-			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-1">
-				@ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--users", Label: "Customers", Value: "4,235", Trend: "8.04%", TrendUp: true})
-				@ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--dollar-sign", Label: "Revenue", Value: "$75,400", Trend: "15.3%", TrendUp: true})
-				@ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--handshake", Label: "Closed Deals", Value: "574", Trend: "-2.4%", TrendUp: false})
-				@ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--smile", Label: "Satisfaction", Value: "93%", Trend: "2.3%", TrendUp: true})
+	<div class="mt-6">
+		<div class="grid grid-cols-12 gap-5">
+			<div class="col-span-12 md:col-span-4 xl:col-span-3 2xl:col-span-2">
+				<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-1">
+					@ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--users", Label: "Customers", Value: "4,235", Trend: "8.04%", TrendUp: true})
+					@ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--dollar-sign", Label: "Revenue", Value: "$75,400", Trend: "15.3%", TrendUp: true})
+					@ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--handshake", Label: "Closed Deals", Value: "574", Trend: "-2.4%", TrendUp: false})
+					@ui.StatCardFeatured(ui.StatCardFeaturedProps{Layout: ui.StatCardFeaturedLayoutCompact, Icon: "lucide--smile", Label: "Satisfaction", Value: "93%", Trend: "2.3%", TrendUp: true})
+				</div>
 			</div>
-			<div class="mt-5">
+			<div class="col-span-12 md:col-span-8 xl:col-span-6 2xl:col-span-7">
 				@ui.ChartCard(ui.ChartCardProps{
-					Title:   "Sale Metrics",
-					Actions: saleMetricsTabs(),
-					Chart:   ui.Chart(ui.ChartProps{ID: "sale-metrics-chart", Type: ui.ChartColumn, RawConfigJSON: nxCRMSaleMetricsConfig}),
+					Title:       "Sale Metrics",
+					TitleClass:  "text-lg",
+					Legend:      saleMetricsLegend(),
+					Intro:       saleMetricsStats(),
+					HeaderClass: "px-6 pt-5",
+					Chart:       ui.Chart(ui.ChartProps{ID: "sale-metrics-chart", Type: ui.ChartColumn, RawConfigJSON: nxCRMSaleMetricsConfig}),
+					BodyClass:   "mt-3.5 overflow-hidden rounded-xl ps-5",
 				})
 			</div>
-			<div class="mt-5 grid grid-cols-3 gap-5">
-				<div class="card bg-base-100 shadow"><div class="card-body p-4">
-					<p class="text-sm text-muted">Realtime Sales</p>
-					<div class="mt-2 flex items-baseline gap-2"><span class="text-2xl font-bold">541</span></div>
-					<p class="text-xs text-muted mt-1">494 last hour</p>
-				</div></div>
-				<div class="card bg-base-100 shadow"><div class="card-body p-4">
-					<p class="text-sm text-muted">Revenue</p>
-					<div class="mt-2 flex items-baseline gap-2"><span class="text-2xl font-bold">$51,474</span></div>
-					<p class="text-xs text-muted mt-1">$49,162 last month</p>
-				</div></div>
-				<div class="card bg-base-100 shadow"><div class="card-body p-4">
-					<p class="text-sm text-muted">Customer Retention</p>
-					<div class="mt-2 flex items-baseline gap-2"><span class="text-2xl font-bold">3.14%</span></div>
-					<p class="text-xs text-muted mt-1">2.16% last week</p>
-				</div></div>
-			</div>
-			<div class="mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5">
-				<div class="xl:col-span-2">
-					@ui.ChartCard(ui.ChartCardProps{
-						Title: "Customer Acquisition",
-						Chart: ui.Chart(ui.ChartProps{
-							ID: "crm-cust-acq-chart", Type: ui.ChartLine, Height: "300",
-							Series: []ui.ChartSeries{
-								{Name: "Acquired", Data: []float64{31,40,28,51,42,109,100}},
-							},
-							Categories: []string{"2016","2017","2018","2019","2020","2021","2025"},
-							Colors: []string{"#167bff"}}),
-					})
-				</div>
-				<div>
-					<div class="card bg-base-100 shadow bg-gradient-to-tr from-primary to-primary/85 text-primary-content"><div class="card-body">
-						<h3 class="font-semibold italic">Upgrade to premium</h3>
-						<p class="text-sm opacity-80">Make the better business analytics with Premium Dashboard</p>
-						<div class="avatar-group -space-x-3 mt-3">
-							<div class="avatar placeholder"><div class="bg-neutral text-neutral-content w-8"><span>DN</span></div></div>
-							<div class="avatar placeholder"><div class="bg-neutral text-neutral-content w-8"><span>JS</span></div></div>
-							<div class="avatar placeholder"><div class="bg-neutral text-neutral-content w-8"><span>RK</span></div></div>
-						</div>
-						<button class="btn btn-neutral btn-sm btn-block mt-4">Pay Monthly $29</button>
-					</div></div>
-				</div>
-			</div>
-			<div class="mt-5 grid grid-cols-1 xl:grid-cols-2 gap-5">
-				<div class="card bg-base-100 shadow"><div class="card-body">
-					@ui.CardToolbar(ui.CardToolbarProps{
-						Title:    "Goal Status",
-						Subtitle: "(Nearly Finished)",
-					})
-					<div class="mt-3 flex items-center gap-6">
-						@ui.RadialProgress(ui.ProgressColor("primary"), 76, "w-32 h-32", "10px")
-						<div><p class="text-2xl font-bold">76%</p><p class="text-sm text-muted">You're completed 80% of yearly goal</p></div>
+			<div class="col-span-12 xl:col-span-3">
+				<div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-1">
+					<div class="col-span-1">
+						@premiumCard()
 					</div>
-					<div class="mt-4">
-						<div class="flex items-center justify-between text-sm"><span>Budget Spent</span><span class="font-semibold">$22500<span class="text-muted font-normal">/$30000</span></span></div>
-						@ui.Progress(ui.ProgressColor("primary"), 75, 100, nil)
+					<div class="col-span-1">
+						@goalStatusCard()
 					</div>
-					<div class="mt-4 text-end"><a href="#" class="btn btn-ghost btn-sm">Change Goal</a></div>
-				</div></div>
-				<div>
-					@ui.ChartCard(ui.ChartCardProps{
-						Title: "Social Acquisition",
-						Chart: ui.Chart(ui.ChartProps{
-							ID: "crm-social-chart", Type: ui.ChartBar, Height: "300", Horizontal: true,
-							Series: []ui.ChartSeries{
-								{Name: "Sales", Data: []float64{48,35,10,7}},
-							},
-							Categories: []string{"Facebook","Instagram","Whatsapp","LinkedIn"},
-							Colors: []string{"#167bff","#a855f7","#06b6d4","#22c55e"},
-							StrokeWidth: 0, FillOpacity: 1.0}),
-					})
-				</div>
-			</div>
-			<div class="mt-5">
-				<div class="card bg-base-100 shadow"><div class="card-body">
-					@ui.CardToolbar(ui.CardToolbarProps{
-						Title:   "Customer Deals",
-						Actions: makeDealButton(),
-						Class:   "mb-4",
-					})
-					<div class="overflow-x-auto">
-						@table.TableWithProps(table.TableProps{}) {
-							@table.TableHead() {
-								@table.TableHeadRow() {
-									@table.TableHeadCell("Customer")
-									@table.TableHeadCell("Value")
-									@table.TableHeadCell("Status")
-									@table.TableHeadCell("Date")
-									@table.TableHeadCell("Action")
-								}
-							}
-							@table.TableBody() {
-								@dealRow("1", "John Doe", "$50,000", "Completed", "badge-success", "16 Dec")
-								@dealRow("2", "Jane Smith", "$12,240", "Pending", "badge-warning", "21 June")
-								@dealRow("3", "Rahul Kumar", "$87,452", "Completed", "badge-success", "15 Aug")
-								@dealRow("4", "Emily Davis", "$65,357", "Completed", "badge-success", "17 Nov")
-								@dealRow("5", "Akash Singh", "$35,769", "Canceled", "badge-error", "30 Jan")
-							}
-						}
-					</div>
-				</div></div>
-			</div>
-			<div class="mt-5 grid grid-cols-1 xl:grid-cols-3 gap-5">
-				<div class="col-span-1">
-					<div class="card bg-base-100 shadow"><div class="card-body">
-						<div class="flex items-center gap-2">
-							<span class="iconify lucide--unplug text-body size-4.5"></span>
-							<p class="grow font-medium">Quick Integration</p>
-							<button class="btn btn-ghost btn-sm border-line-strong"><span class="iconify lucide--settings-2 size-3.5"></span> Manage</button>
-						</div>
-						<div class="mt-4 space-y-3.5">
-							<div class="flex items-center gap-3">
-								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="/images/brand-logo/salesforce.svg"/>
-								<div class="grow"><p class="leading-none font-medium">Salesforce</p><p class="text-body line-clamp-1 text-sm">Salesforce provides customer relationship management software and application focused on sales</p></div>
-								<button class="btn btn-xs btn-soft btn-primary">Connect</button>
-							</div>
-							<div class="flex items-center gap-3">
-								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="/images/brand-logo/asana.svg"/>
-								<div class="grow"><p class="leading-none font-medium">Asana</p><p class="text-body line-clamp-1 text-sm">Track, manage and connect your project across any team.</p></div>
-								<button class="btn btn-xs btn-soft btn-primary">Disconnect</button>
-							</div>
-							<div class="flex items-center gap-3">
-								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="/images/brand-logo/slack.svg"/>
-								<div class="grow"><p class="leading-none font-medium">Slack</p><p class="text-body line-clamp-1 text-sm">Slack is a new way to communicate with your team.</p></div>
-								<button class="btn btn-xs btn-soft btn-primary">Connect</button>
-							</div>
-							<div class="flex items-center gap-3">
-								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="/images/brand-logo/notion.svg"/>
-								<div class="grow"><p class="leading-none font-medium">Notion</p><p class="text-body line-clamp-1 text-sm">Notion is a freemium productivity and note-taking web application developed by Notion Lab Inc.</p></div>
-								<button class="btn btn-xs btn-soft btn-primary">Disconnect</button>
-							</div>
-							<div class="flex items-center gap-3">
-								<img alt="chat" class="bg-base-200 mask mask-squircle size-11 p-2" src="/images/brand-logo/hubspot.svg"/>
-								<div class="grow"><p class="leading-none font-medium">Hubspot</p><p class="text-body line-clamp-1 text-sm">Hubspot is a CRM platform with all the software, integrations and resources you need to connect</p></div>
-								<button class="btn btn-xs btn-soft btn-primary">Disconnect</button>
-							</div>
-						</div>
-					</div></div>
 				</div>
 			</div>
 		</div>
+		<div class="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-2 2xl:grid-cols-3">
+			<div class="col-span-1">
+				@socialAcquisitionCard()
+			</div>
+			<div class="col-span-1">
+				@customerDealsCard()
+			</div>
+			<div class="col-span-1">
+				@quickIntegrationCard()
+			</div>
+		</div>
+	</div>
+}
+
+// premiumCard renders the "Upgrade to premium" promo card in the CRM right rail.
+templ premiumCard() {
+	<div class="card bg-base-100 shadow">
+		<div class="card-body">
+			<p class="text-muted text-xs italic">Upgrade to premium</p>
+			<p class="mt-1 leading-tight">Make the better business analytics with Premium Dashboard</p>
+			<div class="mt-2 flex items-end justify-between">
+				<div class="avatar-group -space-x-3.5">
+					@ui.AvatarFull(ui.AvatarProps{Src: "/images/avatars/4.png", Name: "Avatar", Size: ui.AvatarSize7, FrameClass: "bg-base-200"})
+					@ui.AvatarFull(ui.AvatarProps{Src: "/images/avatars/5.png", Name: "Avatar", Size: ui.AvatarSize7, FrameClass: "bg-base-200"})
+					@ui.AvatarFull(ui.AvatarProps{Src: "/images/avatars/7.png", Name: "Avatar", Size: ui.AvatarSize7, FrameClass: "bg-base-200"})
+					@ui.AvatarFull(ui.AvatarProps{Src: "/images/avatars/8.png", Name: "Avatar", Size: ui.AvatarSize7, FrameClass: "bg-base-200"})
+				</div>
+				<button class="btn btn-sm btn-outline btn-neutral">Pay Monthly $29</button>
+			</div>
+		</div>
+	</div>
+}
+
+// goalStatusCard renders the Goal Status card in the CRM right rail.
+templ goalStatusCard() {
+	<div class="card bg-base-100 shadow">
+		<div class="card-body">
+			@ui.CardToolbar(ui.CardToolbarProps{
+				Title:    "Goal Status",
+				Subtitle: "(Nearly Finished)",
+			})
+			<div class="mt-3 flex items-center gap-6">
+				@ui.RadialProgress(ui.ProgressColor("primary"), 76, "w-32 h-32", "10px")
+				<div><p class="text-2xl font-bold">76%</p><p class="text-sm text-muted">You're completed 80% of yearly goal</p></div>
+			</div>
+			<div class="mt-4">
+				<div class="flex items-center justify-between text-sm"><span>Budget Spent</span><span class="font-semibold">$22500<span class="text-muted font-normal">/$30000</span></span></div>
+				@ui.Progress(ui.ProgressColor("primary"), 75, 100, nil)
+			</div>
+			<div class="mt-4 text-end"><a href="#" class="btn btn-ghost btn-sm">Change Goal</a></div>
+		</div>
+	</div>
+}
+
+// socialAcquisitionCard renders the Social Acquisition chart card in the CRM
+// bottom row.
+templ socialAcquisitionCard() {
+	@ui.ChartCard(ui.ChartCardProps{
+		Title: "Social Acquisition",
+		Icon:  "lucide--megaphone",
+		Chart: ui.Chart(ui.ChartProps{
+			ID: "crm-social-chart", Type: ui.ChartBar, Height: "300", Horizontal: true,
+			Series: []ui.ChartSeries{
+				{Name: "Sales", Data: []float64{48,35,10,7}},
+			},
+			Categories: []string{"Facebook","Instagram","Whatsapp","LinkedIn"},
+			Colors: []string{"#167bff","#a855f7","#06b6d4","#22c55e"},
+			StrokeWidth: 0, FillOpacity: 1.0}),
+	})
+}
+
+// customerDealsCard renders the Customer Deals table card in the CRM bottom row.
+templ customerDealsCard() {
+	<div class="card bg-base-100 shadow">
+		<div class="card-body p-0">
+			@ui.CardToolbar(ui.CardToolbarProps{
+				Title: "Customer Deals",
+				Icon:  "lucide--handshake",
+				Actions: makeDealButton(),
+				Class:   "px-5 pt-5",
+			})
+			<div class="mt-1 overflow-x-auto">
+				@table.TableWithProps(table.TableProps{}) {
+					@table.TableHead() {
+						@table.TableHeadRow() {
+							@table.TableHeadCell("Customer")
+							@table.TableHeadCell("Value")
+							@table.TableHeadCell("Status")
+							@table.TableHeadCell("Date")
+							@table.TableHeadCell("Action")
+						}
+					}
+					@table.TableBody() {
+						@dealRow("1", "John Doe", "$50,000", "Completed", "badge-success", "16 Dec")
+						@dealRow("2", "Jane Smith", "$12,240", "Pending", "badge-warning", "21 June")
+						@dealRow("3", "Rahul Kumar", "$87,452", "Completed", "badge-success", "15 Aug")
+						@dealRow("4", "Emily Davis", "$65,357", "Completed", "badge-success", "17 Nov")
+						@dealRow("5", "Akash Singh", "$35,769", "Canceled", "badge-error", "30 Jan")
+					}
+				}
+			</div>
+		</div>
+	</div>
+}
+
+// quickIntegrationCard renders the Quick Integration list card in the CRM
+// bottom row.
+templ quickIntegrationCard() {
+	<div class="card bg-base-100 shadow">
+		<div class="card-body">
+			<div class="flex items-center gap-2">
+				<span class="iconify lucide--unplug text-body size-4.5"></span>
+				<p class="grow font-medium">Quick Integration</p>
+				<button class="btn btn-ghost btn-sm border-line-strong"><span class="iconify lucide--settings-2 size-3.5"></span> Manage</button>
+			</div>
+			<div class="mt-4 space-y-3.5">
+				@quickIntegrationRow("/images/brand-logo/salesforce.svg", "Salesforce", "Salesforce provides customer relationship management software and application focused on sales", "Connect", "btn-error")
+				@quickIntegrationRow("/images/brand-logo/asana.svg", "Asana", "Track, manage and connect your project across any team.", "Disconnect", "btn-primary")
+				@quickIntegrationRow("/images/brand-logo/slack.svg", "Slack", "Slack is a new way to communicate with your team.", "Connect", "btn-error")
+				@quickIntegrationRow("/images/brand-logo/notion.svg", "Notion", "Notion is a freemium productivity and note-taking web application developed by Notion Lab Inc.", "Disconnect", "btn-primary")
+				@quickIntegrationRow("/images/brand-logo/hubspot.svg", "Hubspot", "Hubspot is a CRM platform with all the software, integrations and resources you need to connect", "Disconnect", "btn-primary")
+			</div>
+		</div>
+	</div>
+}
+
+// quickIntegrationRow renders a single Quick Integration entry (logo, name,
+// description, connect/disconnect action).
+templ quickIntegrationRow(logo, name, description, actionLabel, actionClass string) {
+	<div class="flex items-center gap-3">
+		<img alt={ name } class="bg-base-200 mask mask-squircle size-11 p-2" src={ logo }/>
+		<div class="grow"><p class="leading-none font-medium">{ name }</p><p class="text-body line-clamp-1 text-sm">{ description }</p></div>
+		<button class={ "btn btn-xs btn-soft", actionClass }>{ actionLabel }</button>
 	</div>
 }

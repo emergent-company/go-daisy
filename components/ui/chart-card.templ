@@ -9,18 +9,19 @@ import (
 // CardToolbar header (title + optional subtitle, with Legend and Actions in the
 // action slot), an unpadded chart region, and an optional bordered footer.
 type ChartCardProps struct {
-	Title     string           // toolbar title
-	Subtitle  string           // optional toolbar subtitle
-	Icon      string           // optional leading Iconify icon beside the title
-	Legend    templ.Component  // optional legend, rendered before Actions in the toolbar
-	Actions   templ.Component  // optional actions (buttons/tabs), rendered after Legend
-	Intro     templ.Component  // optional block between the toolbar and the chart (summary numbers, sub-header)
-	Chart     templ.Component  // the chart region (e.g. @ui.Chart(...))
-	Footer    templ.Component  // optional footer, rendered in a bordered top row
-	HeaderClass string         // additional classes on the CardToolbar row (default "px-5 pt-5")
-	BodyClass string           // additional classes on the chart region wrapper
-	Class     string           // additional classes on the card root
-	Attrs     templ.Attributes // spread last on the card root
+	Title       string           // toolbar title
+	Subtitle    string           // optional toolbar subtitle
+	Icon        string           // optional leading Iconify icon beside the title
+	TitleClass  string           // additional classes on the toolbar title (e.g. "text-lg")
+	Legend      templ.Component  // optional legend, rendered before Actions in the toolbar
+	Actions     templ.Component  // optional actions (buttons/tabs), rendered after Legend
+	Intro       templ.Component  // optional block between the toolbar and the chart (summary numbers, sub-header)
+	Chart       templ.Component  // the chart region (e.g. @ui.Chart(...))
+	Footer      templ.Component  // optional footer, rendered in a bordered top row
+	HeaderClass string           // additional classes on the CardToolbar row (default "px-5 pt-5")
+	BodyClass   string           // additional classes on the chart region wrapper
+	Class       string           // additional classes on the card root
+	Attrs       templ.Attributes // spread last on the card root
 }
 
 // chartCardActions composes Legend then Actions into the single CardToolbar
@@ -49,11 +50,12 @@ templ ChartCard(props ChartCardProps) {
 		{ props.Attrs... }>
 		<div class="card-body p-0">
 			@CardToolbar(CardToolbarProps{
-				Title:    props.Title,
-				Subtitle: props.Subtitle,
-				Icon:     props.Icon,
-				Actions:  chartCardActions(props.Legend, props.Actions),
-				Class:    headerClass,
+				Title:      props.Title,
+				Subtitle:   props.Subtitle,
+				Icon:       props.Icon,
+				TitleClass: props.TitleClass,
+				Actions:    chartCardActions(props.Legend, props.Actions),
+				Class:      headerClass,
 			})
 			if props.Intro != nil {
 				@props.Intro
