@@ -373,6 +373,64 @@ func TestCompareCoversEveryReference(t *testing.T) {
 	}
 }
 
+// TestGenAIPagesUseLibraryComponents pins the four Gen AI page ports: each page
+// composes its header (home uses the centered greeting, the rest use
+// nav.PageHeading) and its body from library components — cards via ui.CardRaw,
+// inputs via form.FormField/SearchInput/FilterSelect, the chat history via the
+// chat primitives, and the library list via the table primitives — with no
+// hand-rolled input/select/textarea/table markup left behind.
+func TestGenAIPagesUseLibraryComponents(t *testing.T) {
+	src := read(t, "../handler/pages_genai.templ")
+
+	// The file must compose from the library surface it was ported to: cards,
+	// form fields, buttons, page headings, chat primitives, and the table
+	// primitives.
+	for _, needle := range []string{
+		"@ui.CardRaw(",
+		"@form.FormField(",
+		"@ui.Button(",
+		"@nav.PageHeading(",
+		"@ui.ChatWindow(",
+		"@ui.ChatBubble(",
+		"@table.TableCard(",
+		"@table.TableWithProps(",
+		"@form.SearchInput(",
+		"@form.FilterSelect(",
+	} {
+		require(t, src, "pages_genai.templ", needle)
+	}
+
+	// No hand-rolled input/select/textarea/table markup may remain anywhere in
+	// the ported page file.
+	forbid(t, src, "pages_genai.templ",
+		"<input",
+		"<select",
+		"<textarea",
+		"<table",
+		"<thead",
+		"<tbody",
+		"<tr",
+		"<td",
+		"<th",
+	)
+
+	// The library list row helper must use the table primitives.
+	row := templFunc(t, src, "genAILibraryRow")
+	require(t, row, "genAILibraryRow", "@table.TableRow(")
+	require(t, row, "genAILibraryRow", "@table.TableCell(")
+	forbid(t, row, "genAILibraryRow", "<tr", "<td", "<th")
+
+	// The four handlers must resolve to the templ components, not fall back to
+	// the raw-HTML passthrough.
+	hsrc := read(t, "../handler/handler.go")
+	forbid(t, hsrc, "handler.go",
+		`nxHTMLComponent("apps-gen-ai-home")`,
+		`nxHTMLComponent("apps-gen-ai-content")`,
+		`nxHTMLComponent("apps-gen-ai-image")`,
+		`nxHTMLComponent("apps-gen-ai-library")`,
+	)
+}
+
 // TestRawPassthroughIsDetectable asserts nxrender.go emits the nx-raw marker
 // so the parity comparator can distinguish raw passthroughs from real ports.
 // This is a source-grep tripwire, not a behavioural test: it guards that the
