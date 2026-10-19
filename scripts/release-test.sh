@@ -19,6 +19,18 @@ assert_eq() {
 assert_contains() {
   case "$1" in *"$2"*) ok ;; *) bad "$3 (missing '$2')" ;; esac
 }
+assert_not_contains() {
+  case "$1" in *"$2"*) bad "$3 (unexpected '$2')" ;; *) ok ;; esac
+}
+# Print only the lines under "### <title>" so an entry cannot pass by landing in
+# the wrong section.
+section_body() {
+  printf '%s\n' "$1" | awk -v title="### $2" '
+    $0 == title { inside = 1; next }
+    inside && /^### / { inside = 0 }
+    inside { print }
+  '
+}
 assert_fail() {
   local desc="$1"; shift
   if "$@" >/dev/null 2>&1; then bad "$desc (expected failure)"; else ok; fi
@@ -73,16 +85,40 @@ git commit -q --allow-empty -m "feat(ui): deprecate OldThing (#5)" \
 git commit -q --allow-empty -m "feat:keep me (#6)"
 git commit -q --allow-empty -m "feat: prose (#7)" \
   -m "We mention Deprecated: in prose."
+git commit -q --allow-empty -m "fix: docs only (#8)" \
+  -m "This is not a BREAKING CHANGE, just wording."
+git commit -q --allow-empty -m "fix: real break (#9)" \
+  -m "BREAKING CHANGE: the call moved."
 notes="$("$NOTES" v0.1.0 HEAD v0.2.0)"
 
-assert_contains "$notes" "### Breaking" "breaking section"
-assert_contains "$notes" "- feat(api)!:remove the old call (#3)" "bang without space is breaking"
-assert_contains "$notes" "### Features" "features section"
-assert_contains "$notes" "- feat:keep me (#6)" "feature without space after colon"
-assert_contains "$notes" "- feat(ui): deprecate OldThing (#5)" "deprecating feature stays in Features"
-assert_contains "$notes" "### Deprecations" "deprecations section"
-assert_contains "$notes" "### Maintenance" "maintenance section"
-assert_contains "$notes" "- chore: tidy docs (#4)" "maintenance entry"
+breaking="$(section_body "$notes" Breaking)"
+features="$(section_body "$notes" Features)"
+fixes="$(section_body "$notes" Fixes)"
+deprecations="$(section_body "$notes" Deprecations)"
+maintenance="$(section_body "$notes" Maintenance)"
+
+assert_contains "$breaking" "- feat(api)!:remove the old call (#3)" "bang without space is breaking"
+assert_contains "$breaking" "- fix: real break (#9)" "BREAKING CHANGE trailer is breaking"
+assert_not_contains "$breaking" "- fix: docs only (#8)" "BREAKING CHANGE prose is not breaking"
+assert_not_contains "$breaking" "- feat(ui): deprecate OldThing (#5)" "breaking does not absorb other work"
+
+assert_contains "$features" "- feat(ui): add a thing (#1)" "feature entry"
+assert_contains "$features" "- feat:keep me (#6)" "feature without space after colon"
+assert_contains "$features" "- feat(ui): deprecate OldThing (#5)" "deprecating feature stays in Features"
+assert_contains "$features" "- feat: prose (#7)" "prose feature stays in Features"
+assert_not_contains "$features" "- fix: docs only (#8)" "fixes do not leak into Features"
+
+assert_contains "$fixes" "- fix: correct a thing (#2)" "fix entry"
+assert_contains "$fixes" "- fix: docs only (#8)" "non-breaking fix stays in Fixes"
+assert_not_contains "$fixes" "- fix: real break (#9)" "breaking fix is not in Fixes"
+
+assert_contains "$deprecations" "- feat(ui): deprecate OldThing (#5)" "deprecation trailer is listed"
+assert_not_contains "$deprecations" "- feat: prose (#7)" "Deprecated: prose is not a deprecation"
+
+assert_contains "$maintenance" "- chore: tidy docs (#4)" "maintenance entry"
+assert_not_contains "$maintenance" "- feat:keep me (#6)" "features do not leak into Maintenance"
+
+assert_not_contains "$notes" "### Improvements" "empty sections are omitted"
 assert_contains "$notes" "compare/v0.1.0...v0.2.0" "changelog link"
 
 # An empty range must fail loudly.

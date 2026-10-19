@@ -103,12 +103,30 @@ jobs:
               --title "$VERSION" \
               --notes-file release-notes.md \
               --verify-tag; then
-            if gh release view "$VERSION" >/dev/null 2>&1; then
+            # 0 = exists, 1 = definitively absent, 2 = unknown (fail safe).
+            release_state=2
+            if output="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${VERSION}" 2>&1)"; then
+              release_state=0
+            else
+              case "$output" in
+                *"HTTP 404"*|*"Not Found"*) release_state=1 ;;
+                *) release_state=2 ;;
+              esac
+            fi
+
+            if [ "$release_state" -eq 0 ]; then
               echo "::error::release ${VERSION} exists despite the error; keeping the tag"
               exit 1
             fi
+            if [ "$release_state" -eq 2 ]; then
+              echo "::error::could not confirm whether ${VERSION} was published; keeping the tag. Check the release page, then retry or delete the tag manually."
+              exit 1
+            fi
+
             echo "::warning::deleting orphan tag ${VERSION} so the run can be retried"
-            git push origin ":refs/tags/${VERSION}" || true
+            if ! git push origin ":refs/tags/${VERSION}"; then
+              echo "::error::could not delete orphan tag ${VERSION}; delete it manually before retrying"
+            fi
             exit 1
           fi
 

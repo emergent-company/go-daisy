@@ -35,11 +35,11 @@ emit_entry() {
   entry="- ${clean}${pr}"
 
   if [[ "$clean" =~ ^([A-Za-z]+)(\([^\)]*\))?(!)?: ]]; then
-    type="${BASH_REMATCH[1],,}"
+    type="$(printf '%s' "${BASH_REMATCH[1]}" | tr '[:upper:]' '[:lower:]')"
     bang="${BASH_REMATCH[3]}"
   fi
 
-  if [ -n "$bang" ] || printf '%s' "$body" | grep -q 'BREAKING CHANGE'; then
+  if [ -n "$bang" ] || printf '%s' "$body" | grep -qE '^BREAKING CHANGE:'; then
     breaking+=("$entry")
   elif [ "$type" = feat ]; then
     features+=("$entry")
@@ -74,11 +74,12 @@ section() {
   printf '%s\n' "$@"
 }
 
-section "Breaking" "${breaking[@]}"
-section "Features" "${features[@]}"
-section "Fixes" "${fixes[@]}"
-section "Improvements" "${improvements[@]}"
-section "Deprecations" "${deprecations[@]}"
-section "Maintenance" "${maintenance[@]}"
+# ${arr[@]+...} keeps empty arrays safe under `set -u` on bash 3.2 (macOS).
+section "Breaking" ${breaking[@]+"${breaking[@]}"}
+section "Features" ${features[@]+"${features[@]}"}
+section "Fixes" ${fixes[@]+"${fixes[@]}"}
+section "Improvements" ${improvements[@]+"${improvements[@]}"}
+section "Deprecations" ${deprecations[@]+"${deprecations[@]}"}
+section "Maintenance" ${maintenance[@]+"${maintenance[@]}"}
 
 printf '\n**Full changelog:** %s/%s/compare/%s...%s\n' "$server" "$repo" "$prev" "$next"

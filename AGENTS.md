@@ -202,20 +202,24 @@ task dev:ui
 ### Releasing
 
 Tags and releases go only through `.github/workflows/release.yml`, dispatched
-from `master`. Never push a tag by hand.
+from `master`. The one exception is the initial `v0.1.0` in a repository with no
+semver tags, which is pushed by hand once.
 
 - `bump` is `patch` | `minor` | `major`; `tag=vX.Y.Z` (canonical, no leading
   zeros) overrides it.
 - `confirm=dry-run` resolves the version and prints the grouped notes.
-- `confirm=release` creates the annotated tag and the GitHub release. If
-  release creation fails, the tag is deleted so the run can be retried.
+- `confirm=release` creates the annotated tag and the GitHub release. If release
+  creation fails and the release is confirmed absent, the tag is deleted so the
+  run can be retried; if the workflow cannot confirm, it keeps the tag and fails
+  for a human to reconcile. It never deletes a release.
 - The workflow refuses a non-`master` ref, a dirty tree, a HEAD that differs
   from `origin/master`, an existing tag, a version that is not newer than the
   current tag, or a range with no commits.
 - It never deploys. Deploys are dispatched from `templ.components.infra`.
-- Run `task test:release` after changing the release scripts. Notes group by
-  subject type; a body line starting with `Deprecated:` also lists the commit
-  under Deprecations.
+- Run `task test:release` after changing the release scripts. The scripts must
+  stay bash 3.2-compatible (macOS `/bin/bash`). Notes group by subject type; a
+  body line starting with `Deprecated:` also lists the commit under
+  Deprecations, and a `BREAKING CHANGE:` trailer moves it to Breaking.
 
 Semver: minor for new components or API, patch for fixes, major for breaking
 removals (rare; see `docs/DEPRECATED.md`).
