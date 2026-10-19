@@ -65,11 +65,37 @@ func comboboxSelectExpr(value string) string {
 	return "selectItem('" + value + "')"
 }
 
+// comboboxTrigger is the visible control. A <div role="button"> rather than a
+// <button> because the clear-all control is itself a button (nested buttons are
+// invalid HTML). It is focusable, carries aria-expanded/aria-controls, and
+// opens on Enter/Space/ArrowDown so the Label's for association is real;
+// arrow navigation between options is handled by the root keydown listener once
+// the popover is open.
 templ comboboxTrigger(props ComboboxProps) {
 	<div
+		if props.ID != "" {
+			id={ props.ID }
+			aria-controls={ props.ID + "-listbox" }
+			if props.Label != "" {
+				aria-labelledby={ props.ID + "-label" }
+			}
+		}
+		role="button"
+		aria-haspopup="listbox"
+		:aria-expanded={ "open ? 'true' : 'false'" }
+		if props.Disabled {
+			tabindex="-1"
+			aria-disabled="true"
+		} else {
+			tabindex="0"
+		}
+		@click="toggle()"
+		@keydown.enter.prevent="open || toggle()"
+		@keydown.space.prevent="toggle()"
+		@keydown.arrow-down.prevent="open || toggle()"
+		@keydown.escape="open = false"
 		class={ "flex items-center justify-between w-full px-3 py-2 border border-line-strong bg-base-100 rounded-btn cursor-pointer",
 			templ.KV("opacity-50 pointer-events-none", props.Disabled) }
-		@click="toggle()"
 	>
 		if props.Mode == ComboboxSingle {
 			<span
@@ -172,7 +198,16 @@ templ comboboxStaticOption(opt ComboboxOption, props ComboboxProps) {
 }
 
 templ comboboxStaticOptions(props ComboboxProps) {
-	<div class="combobox-options-inner">
+	<div
+		class="combobox-options-inner"
+		if props.ID != "" {
+			id={ props.ID + "-listbox" }
+		}
+		role="listbox"
+		if props.Mode == ComboboxMultiple {
+			aria-multiselectable="true"
+		}
+	>
 		for _, opt := range props.Source.Static {
 			@comboboxStaticOption(opt, props)
 		}
@@ -182,6 +217,13 @@ templ comboboxStaticOptions(props ComboboxProps) {
 templ comboboxLazyOptions(props ComboboxProps) {
 	<div
 		class="combobox-options-inner"
+		if props.ID != "" {
+			id={ props.ID + "-listbox" }
+		}
+		role="listbox"
+		if props.Mode == ComboboxMultiple {
+			aria-multiselectable="true"
+		}
 		hx-get={ props.Source.LazyEndpoint }
 		hx-trigger="load"
 		hx-swap="innerHTML"
@@ -201,7 +243,14 @@ templ Combobox(props ComboboxProps) {
 		{ props.Attrs... }
 	>
 		if props.Label != "" {
-			@Label(LabelProps{For: props.ID}) { { props.Label } }
+			// A <div> is not a labelable element, so <label for> cannot associate
+			// with the trigger. The label carries an id and the trigger points at
+			// it with aria-labelledby instead.
+			if props.ID != "" {
+				@Label(LabelProps{ID: props.ID + "-label"}) { { props.Label } }
+			} else {
+				@Label(LabelProps{}) { { props.Label } }
+			}
 		}
 		<div class="relative w-full">
 			@comboboxTrigger(props)

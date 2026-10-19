@@ -57,3 +57,77 @@ func TestComboboxPopoverSearchEnableSearch(t *testing.T) {
 		})
 	}
 }
+
+// TestComboboxTriggerAccessibility locks the control semantics that make the
+// visible Label's for association real: the trigger is focusable, exposes
+// aria-expanded / aria-controls / aria-haspopup, and the option container is the
+// listbox it controls.
+func TestComboboxTriggerAccessibility(t *testing.T) {
+	props := ComboboxProps{
+		ID:    "pick",
+		Name:  "pick",
+		Label: "Pick",
+		Mode:  ComboboxSingle,
+		Source: ComboboxSource{Static: []ComboboxOption{
+			{Value: "a", Label: "A"},
+		}},
+	}
+	got := renderForm(t, Combobox(props))
+
+	for _, want := range []string{
+		`id="pick-label"`,
+		`aria-labelledby="pick-label"`,
+		`id="pick"`,
+		`role="button"`,
+		`aria-haspopup="listbox"`,
+		`aria-controls="pick-listbox"`,
+		`:aria-expanded=`,
+		`tabindex="0"`,
+		`@keydown.enter.prevent="open || toggle()"`,
+		`@keydown.space.prevent="toggle()"`,
+		`@keydown.arrow-down.prevent="open || toggle()"`,
+		`id="pick-listbox"`,
+		`role="listbox"`,
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("combobox missing %q in:\n%s", want, got)
+		}
+	}
+
+	if strings.Contains(got, `aria-disabled="true"`) {
+		t.Errorf("enabled combobox must not be aria-disabled:\n%s", got)
+	}
+
+	// Disabled: removed from the tab order and announced as disabled.
+	props.Disabled = true
+	disabled := renderForm(t, Combobox(props))
+	for _, want := range []string{`tabindex="-1"`, `aria-disabled="true"`} {
+		if !strings.Contains(disabled, want) {
+			t.Errorf("disabled combobox missing %q in:\n%s", want, disabled)
+		}
+	}
+
+	// Multiple mode: the listbox announces multi-selectability.
+	props.Disabled = false
+	props.Mode = ComboboxMultiple
+	multiple := renderForm(t, Combobox(props))
+	if !strings.Contains(multiple, `aria-multiselectable="true"`) {
+		t.Errorf("multiple combobox missing aria-multiselectable:\n%s", multiple)
+	}
+
+	// ID without a label: no dangling aria-labelledby.
+	props.ID = "pick"
+	props.Label = ""
+	unlabelled := renderForm(t, Combobox(props))
+	if strings.Contains(unlabelled, "aria-labelledby") {
+		t.Errorf("combobox without a label must not emit aria-labelledby:\n%s", unlabelled)
+	}
+
+	// No ID: no orphan aria-controls/listbox id is emitted.
+	props.ID = ""
+	props.Label = ""
+	bare := renderForm(t, Combobox(props))
+	if strings.Contains(bare, "aria-controls") || strings.Contains(bare, "-listbox") || strings.Contains(bare, "aria-labelledby") {
+		t.Errorf("combobox without ID must not emit association attributes:\n%s", bare)
+	}
+}

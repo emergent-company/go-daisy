@@ -210,6 +210,26 @@ func additionalComponents() []galleryruntime.GalleryComponent {
 					},
 					FrameHeight: "250px",
 				},
+				{
+					Name:        "With Label",
+					Description: "Labelled combobox — clicking the label focuses the trigger, and the trigger is keyboard operable.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return form.ComboboxWithBoundary(form.ComboboxProps{
+							ID:    "demo-combo-labelled",
+							Name:  "industry_labelled",
+							Label: "Industry",
+							Mode:  form.ComboboxSingle,
+							Source: form.ComboboxSource{Static: []form.ComboboxOption{
+								{Value: "tech", Label: "Technology"},
+								{Value: "health", Label: "Healthcare"},
+								{Value: "finance", Label: "Finance"},
+								{Value: "retail", Label: "Retail"},
+							}},
+							Placeholder: "Select industry...",
+						})
+					},
+					FrameHeight: "260px",
+				},
 			},
 		},
 

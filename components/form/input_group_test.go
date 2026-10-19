@@ -89,6 +89,30 @@ func TestLabelRendersForAndLabelText(t *testing.T) {
 	}
 }
 
+// TestLabelIDSupport locks the id attribute used by consumers that need to
+// reference the label from aria-labelledby (e.g. Combobox's trigger, which is a
+// div and therefore cannot be targeted by label for).
+func TestLabelIDSupport(t *testing.T) {
+	got := renderFormComponent(t, shared.RenderInto(
+		Label(LabelProps{ID: "field-label"}),
+		shared.StrComp("Field"),
+	))
+	if !strings.Contains(got, `id="field-label"`) {
+		t.Errorf("missing label id in:\n%s", got)
+	}
+	if strings.Contains(got, `for=`) {
+		t.Errorf("label must not emit for when For is empty:\n%s", got)
+	}
+
+	plain := renderFormComponent(t, shared.RenderInto(
+		Label(LabelProps{}),
+		shared.StrComp("Field"),
+	))
+	if strings.Contains(plain, `id=`) {
+		t.Errorf("label must not emit id when ID is empty:\n%s", plain)
+	}
+}
+
 // TestLabelOmitsForWhenEmpty locks the contract that Label drops the for
 // attribute entirely when For is empty, instead of emitting a useless for="".
 // ValidatedField passes an empty inputName when the control is unnamed.

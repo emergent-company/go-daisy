@@ -58,7 +58,13 @@ func ComboboxInit(multi bool) string {
 		`root.clearAll=function(){root.selected=[]};` +
 		`root.isSelected=function(v){return root.selected.indexOf(v)>=0};` +
 		`root.getVisibleIndex=function(el){var all=root.$el.querySelectorAll('[role=option]');var c=0;for(var i=0;i<all.length;i++){if(all[i].offsetParent!==null){if(all[i]===el)return c;c++}}return -1};` +
-		`root.$el.addEventListener('keydown',function(e){if(!root.open)return;var all=root.$el.querySelectorAll('[role=option]');if(e.key==='ArrowDown'){e.preventDefault();do{root.activeIndex=(root.activeIndex+1)%all.length}while(all[root.activeIndex]&&all[root.activeIndex].offsetParent===null);if(all[root.activeIndex])all[root.activeIndex].scrollIntoView({block:'nearest'})}if(e.key==='ArrowUp'){e.preventDefault();do{root.activeIndex=(root.activeIndex-1+all.length)%all.length}while(all[root.activeIndex]&&all[root.activeIndex].offsetParent===null);if(all[root.activeIndex])all[root.activeIndex].scrollIntoView({block:'nearest'})}if(e.key==='Enter'&&root.activeIndex>=0){e.preventDefault();var it=all[root.activeIndex];if(it&&it.offsetParent!==null)it.click()}if(e.key==='Escape'){root.open=false}});`
+		// move() is bounded by the option count: when every option is hidden
+		// (e.g. a search query matches nothing, or the popover has not been
+		// painted open yet) an unbounded do/while never terminates and freezes
+		// the tab. One pass over the options is enough to find the next visible
+		// one, and gives up harmlessly when none is visible.
+		`root.move=function(delta){var all=root.$el.querySelectorAll('[role=option]');if(!all.length)return;for(var n=0;n<all.length;n++){root.activeIndex=(root.activeIndex+delta+all.length)%all.length;var it=all[root.activeIndex];if(it&&it.offsetParent!==null){it.scrollIntoView({block:'nearest'});return}}};` +
+		`root.$el.addEventListener('keydown',function(e){if(!root.open)return;var all=root.$el.querySelectorAll('[role=option]');if(e.key==='ArrowDown'){e.preventDefault();root.move(1)}if(e.key==='ArrowUp'){e.preventDefault();root.move(-1)}if(e.key==='Enter'&&root.activeIndex>=0){e.preventDefault();var it=all[root.activeIndex];if(it&&it.offsetParent!==null)it.click()}if(e.key==='Escape'){root.open=false}});`
 }
 
 // StructuredInputInit returns the x-init expression for repeatable row add/remove.

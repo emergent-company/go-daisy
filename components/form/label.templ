@@ -5,6 +5,7 @@ import "github.com/emergent-company/go-daisy/devmode"
 // LabelProps configures a Label component.
 type LabelProps struct {
 	For   string
+	ID    string
 	Class string
 	Attrs templ.Attributes
 }
@@ -16,6 +17,9 @@ templ Label(props LabelProps) {
 	<label
 		if props.For != "" {
 			for={ props.For }
+		}
+		if props.ID != "" {
+			id={ props.ID }
 		}
 		class={ "label pb-1", props.Class }
 		{ devmode.Attrs(ctx, "form/Label")... }
