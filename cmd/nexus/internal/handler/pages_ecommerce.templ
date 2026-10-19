@@ -392,9 +392,9 @@ templ OrderDetail() {
 
 		<div class="mt-6 flex gap-3">
 
-			@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost}){ "Back to Orders" }
+			@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost}){ Back to Orders }
 
-			@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary}){ "Update Status" }
+			@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary}){ Update Status }
 
 		</div>
 
@@ -424,8 +424,8 @@ templ CreateProductForm() {
 					@form.FormField(form.FormFieldProps{Type: "textarea", Name: "description", Label: "Description", Placeholder: "Product description...", Rows: 4})
 					@form.FileUpload(form.FileUploadProps{Name: "image", Label: "Product Image", Accept: "image/*"})
 					<div class="mt-6 flex gap-3">
-						@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost}){ "Cancel" }
-						@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Type: ui.ButtonTypeSubmit}){ "Create Product" }
+						@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost}){ Cancel }
+						@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Type: ui.ButtonTypeSubmit}){ Create Product }
 					</div>
 				</form>
 			</div>
@@ -455,8 +455,8 @@ templ EditProductForm() {
 					@form.FormField(form.FormFieldProps{Type: "textarea", Name: "description", Label: "Description", Placeholder: "Product description...", Rows: 4})
 					@form.FileUpload(form.FileUploadProps{Name: "image", Label: "Product Image", Accept: "image/*"})
 					<div class="mt-6 flex gap-3">
-						@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost}){ "Cancel" }
-						@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Type: ui.ButtonTypeSubmit}){ "Save Changes" }
+						@ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost}){ Cancel }
+						@ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Type: ui.ButtonTypeSubmit}){ Save Changes }
 					</div>
 				</form>
 			</div>
