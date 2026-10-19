@@ -88,3 +88,19 @@ func TestLabelRendersForAndLabelText(t *testing.T) {
 		}
 	}
 }
+
+// TestLabelOmitsForWhenEmpty locks the contract that Label drops the for
+// attribute entirely when For is empty, instead of emitting a useless for="".
+// ValidatedField passes an empty inputName when the control is unnamed.
+func TestLabelOmitsForWhenEmpty(t *testing.T) {
+	got := renderFormComponent(t, shared.RenderInto(
+		Label(LabelProps{}),
+		shared.StrComp("Unlabelled"),
+	))
+	if strings.Contains(got, `for=`) {
+		t.Errorf("expected no for attribute when empty, got:\n%s", got)
+	}
+	if !strings.Contains(got, ">Unlabelled</span>") {
+		t.Errorf("missing label text:\n%s", got)
+	}
+}

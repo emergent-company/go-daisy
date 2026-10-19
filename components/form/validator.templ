@@ -24,14 +24,7 @@ templ ValidatorHint(text string) {
 templ ValidatedField(labelText string, hintText string, inputName string) {
 	<div class="mb-3" { devmode.Attrs(ctx, "form/ValidatedField")... }>
 		if labelText != "" {
-			<label
-				class="label pb-1"
-				if inputName != "" {
-					for={ inputName }
-				}
-			>
-				<span class="label-text font-medium text-sm text-label">{ labelText }</span>
-			</label>
+			@Label(LabelProps{For: inputName}) { { labelText } }
 		}
 		@ValidatorInput() {
 			{ children... }

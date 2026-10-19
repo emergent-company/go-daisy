@@ -13,7 +13,14 @@ type LabelProps struct {
 // control via the For attribute. It is the label fragment shared by Field and
 // the labelled form inputs.
 templ Label(props LabelProps) {
-	<label for={ props.For } class={ "label pb-1", props.Class } { devmode.Attrs(ctx, "form/Label")... } { props.Attrs... }>
+	<label
+		if props.For != "" {
+			for={ props.For }
+		}
+		class={ "label pb-1", props.Class }
+		{ devmode.Attrs(ctx, "form/Label")... }
+		{ props.Attrs... }
+	>
 		<span class="label-text text-sm font-medium text-label">{ children... }</span>
 	</label>
 }
