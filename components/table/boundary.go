@@ -63,6 +63,13 @@ func TableCellWithBoundary(class string) templ.Component {
 	return devmode.ElementBoundary("TableCell", TableCell(class, nil), map[string]any{"class": class})
 }
 
+// TableRowHeaderCellWithBoundary wraps TableRowHeaderCell with a dev-mode element
+// boundary annotation. Uses ElementBoundary because it renders a <th> element
+// directly, which cannot be wrapped in a <div> inside a <table>.
+func TableRowHeaderCellWithBoundary(class string, attrs templ.Attributes) templ.Component {
+	return devmode.ElementBoundary("TableRowHeaderCell", TableRowHeaderCell(class, attrs), map[string]any{"class": class})
+}
+
 // TableSelectAllWithBoundary wraps TableSelectAll with a dev-mode element boundary annotation.
 // gallery:token label
 // gallery:hint label:default(Select all)

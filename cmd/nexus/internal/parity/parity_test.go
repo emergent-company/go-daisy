@@ -198,6 +198,60 @@ func TestEcommerceEntityFormsUseLibraryComponents(t *testing.T) {
 	)
 }
 
+// TestEcommerceProductAndOrderDetailUseLibraryComponents pins the last three
+// ecommerce pages: product create/edit share a single ProductForm composed of
+// nav.PageHeading + form.FormField + library cards, and order detail is
+// composed of nav.PageHeading + table primitives + library cards, with no raw
+// input/select/textarea/table markup left behind.
+func TestEcommerceProductAndOrderDetailUseLibraryComponents(t *testing.T) {
+	src := read(t, "../handler/pages_ecommerce.templ")
+
+	form := templFunc(t, src, "ProductForm")
+	require(t, form, "ProductForm", "@nav.PageHeading(")
+	require(t, form, "ProductForm", "@form.FormField(")
+	requireCard(t, form, "ProductForm")
+	forbid(t, form, "ProductForm",
+		"<input",
+		"<select",
+		"<textarea",
+		"<table",
+		"<tr",
+		"<td",
+		"<th",
+	)
+
+	detail := templFunc(t, src, "OrderDetail")
+	require(t, detail, "OrderDetail", "@nav.PageHeading(")
+	require(t, detail, "OrderDetail", "@table.TableWithProps(")
+	requireCard(t, detail, "OrderDetail")
+	forbid(t, detail, "OrderDetail",
+		"<input",
+		"<select",
+		"<textarea",
+		"<table",
+		"<tr",
+		"<td",
+		"<th",
+	)
+
+	// The line-item and totals row helpers must use the table primitives, not
+	// hand-rolled table markup.
+	for _, row := range []string{"orderLineRow", "orderTotalRow"} {
+		fn := templFunc(t, src, row)
+		require(t, fn, row, "@table.TableRow(")
+		forbid(t, fn, row, "<tr", "<td", "<th")
+	}
+
+	// The three handlers must resolve to the templ components, not fall back to
+	// the raw-HTML passthrough.
+	hsrc := read(t, "../handler/handler.go")
+	forbid(t, hsrc, "handler.go",
+		`nxHTMLComponent("apps-ecommerce-products-create")`,
+		`nxHTMLComponent("apps-ecommerce-products-edit")`,
+		`nxHTMLComponent("apps-ecommerce-order-details")`,
+	)
+}
+
 // TestNexusDashboardUsesLibraryCardsAndTable pins the dashboard conversion:
 // stat cards go through ui.StatCardFeatured and Recent Orders through the table
 // primitives, so the dashboard stops maintaining its own copies.

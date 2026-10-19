@@ -179,6 +179,16 @@ templ TableCell(class string, attrs templ.Attributes) {
 	</td>
 }
 
+// TableRowHeaderCell renders a <th> row-header cell inside a <tbody> row, e.g.
+// the ID column of a data table whose first column labels the row. Unlike
+// TableHeadCell (a column header inside <thead>), this renders in the row body.
+// attrs is optional; pass nil when not needed.
+templ TableRowHeaderCell(class string, attrs templ.Attributes) {
+	<th class={ class } { attrs... }>
+		{ children... }
+	</th>
+}
+
 // TableActionCell renders a right-aligned <td> for action menus.
 templ TableActionCell() {
 	<td class="text-right">
