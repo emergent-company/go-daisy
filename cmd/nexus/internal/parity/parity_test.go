@@ -446,27 +446,34 @@ func goFunc(t *testing.T, src, sig string) string {
 	return rest
 }
 
-// TestShowcaseComponentPagesUseLibraryComponents pins the first six UI component
-// showcase ports: each of the six renderComponentDemo cases must exist, the
-// cleanly-expressible families must compose the library, and the six pages must
-// route through UIComponentDetailPage rather than the raw-HTML passthrough.
+// TestShowcaseComponentPagesUseLibraryComponents pins the UI component showcase
+// ports: each renderComponentDemo case must exist, the cleanly-expressible
+// families must compose the library, and every ported page must route through
+// UIComponentDetailPage rather than the raw-HTML passthrough.
 func TestShowcaseComponentPagesUseLibraryComponents(t *testing.T) {
 	src := read(t, "../handler/pages_showcase.templ")
 	demo := templFunc(t, src, "renderComponentDemo")
 
-	for _, name := range []string{"accordion", "alert", "avatar", "badge", "breadcrumb", "button"} {
+	names := []string{
+		"accordion", "alert", "avatar", "badge", "breadcrumb", "button",
+		"countdown", "drawer", "dropdown", "indicator", "loading", "menu",
+		"modal", "pagination", "progress", "step", "tab", "table", "timeline",
+		"toast", "tooltip",
+	}
+	for _, name := range names {
 		require(t, demo, "renderComponentDemo", `case "`+name+`":`)
 	}
 
 	// The button and alert showcases compose the library components for the
-	// variant families the library can express; the avatar/badge/accordion/
-	// breadcrumb showcases use raw daisyUI markup the library cannot reproduce.
+	// variant families the library can express; the remaining showcases use raw
+	// daisyUI markup the library cannot reproduce (its components are JS-powered
+	// or opinionated variants of the reference's raw class demos).
 	require(t, demo, "renderComponentDemo", "@ui.Button(")
 	require(t, demo, "renderComponentDemo", "@ui.Alert(")
 
 	hsrc := read(t, "../handler/handler.go")
 	fn := goFunc(t, hsrc, "func (h *Handler) handleUIComponentDetail")
-	for _, name := range []string{"accordion", "alert", "avatar", "badge", "breadcrumb", "button"} {
+	for _, name := range names {
 		require(t, fn, "handleUIComponentDetail", `"`+name+`"`)
 		forbid(t, hsrc, "handler.go", `nxHTMLComponent("ui-components-`+name+`")`)
 	}

@@ -87,7 +87,10 @@ func (h *Handler) handleUIComponentDetail(c echo.Context) error {
 	name := c.Param("name")
 	// Pages ported to library components with a faithful card grid.
 	switch name {
-	case "accordion", "alert", "avatar", "badge", "breadcrumb", "button":
+	case "accordion", "alert", "avatar", "badge", "breadcrumb", "button",
+		"countdown", "drawer", "dropdown", "indicator", "loading", "menu",
+		"modal", "pagination", "progress", "step", "tab", "table", "timeline",
+		"toast", "tooltip":
 		return adminRender(c, UIComponentDetailPage(name))
 	}
 	return adminRender(c, nxHTMLComponent("ui-components-"+name))
