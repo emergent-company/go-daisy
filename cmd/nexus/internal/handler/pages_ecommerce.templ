@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/emergent-company/go-daisy/components/form"
+	"github.com/emergent-company/go-daisy/components/nav"
 	"github.com/emergent-company/go-daisy/components/table"
 	"github.com/emergent-company/go-daisy/components/ui"
 	"github.com/emergent-company/go-daisy/devmode"
@@ -17,7 +18,7 @@ templ ProductsList() {
 				Toolbar: productsListToolbar(),
 				Footer:  productsListFooter(),
 			}) {
-				@table.TableWithProps(table.TableProps{}) {
+				@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
 					@table.TableHead() {
 						@table.TableHeadRow() {
 							@table.TableSelectAll("Check all")
@@ -71,7 +72,7 @@ templ productsListToolbar() {
 	@table.TableCardHeader() {
 		<div class="inline-flex items-center gap-3">
 			<label class="input input-sm">
-				@ui.IconSpan("lucide--search text-base-content/80", "size-3.5")
+				@ui.IconSpan("lucide--search text-body", "size-3.5")
 				<input class="w-24 sm:w-36" placeholder="Search along products" type="search" aria-label="Search products"/>
 			</label>
 			<div class="hidden sm:block">
@@ -111,13 +112,13 @@ templ productsListToolbar() {
 
 templ productsListFooter() {
 	<div class="flex items-center justify-between p-6">
-		<div class="text-base-content/80 hover:text-base-content flex gap-2 text-sm">
+		<div class="text-body hover:text-base-content flex gap-2 text-sm">
 			<span class="hidden sm:inline">Per page</span>
 			<select class="select select-xs w-18" aria-label="Per page">
 				<option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option>
 			</select>
 		</div>
-		<span class="text-base-content/80 hidden text-sm lg:inline">Showing <span class="text-base-content font-medium">1 to 20 </span>of 457 items</span>
+		<span class="text-body hidden text-sm lg:inline">Showing <span class="text-base-content font-medium">1 to 20 </span>of 457 items</span>
 		<div class="inline-flex items-center gap-1">
 			<button class="btn btn-circle sm:btn-sm btn-xs btn-ghost" aria-label="Prev"><span class="iconify lucide--chevron-left"></span></button>
 			<button class="btn btn-primary btn-circle sm:btn-sm btn-xs">1</button>
@@ -139,7 +140,7 @@ templ productRow(num, id, name, category, price, rating, ratingCount, orders, st
 				<img class="rounded-box size-10" src={ "/images/apps/ecommerce/products/" + num + ".jpg" } alt="Product"/>
 				<div>
 					<p class="font-medium">{ productNameOnly(name) }</p>
-					<p class="text-base-content/60 text-xs">{ productSKU(name) }</p>
+					<p class="text-muted text-xs">{ productSKU(name) }</p>
 				</div>
 			</div>
 		}
@@ -153,7 +154,7 @@ templ productRow(num, id, name, category, price, rating, ratingCount, orders, st
 			<div class="flex items-center gap-2">
 				<span class="iconify lucide--star text-success size-4"></span>
 				{ rating }
-				<span class="text-base-content/60 text-xs">({ ratingCount })</span>
+				<span class="text-muted text-xs">({ ratingCount })</span>
 			</div>
 		}
 		@table.TableCell("", nil) {
@@ -167,8 +168,8 @@ templ productRow(num, id, name, category, price, rating, ratingCount, orders, st
 		}
 		@table.TableCell("", nil) {
 			<div class="inline-flex">
-				<a class="btn btn-square btn-ghost btn-sm" href="./apps-ecommerce-products-edit.html" aria-label="Edit product link"><span class="iconify lucide--pencil text-base-content/80 size-4"></span></a>
-				<button class="btn btn-square btn-ghost btn-sm" aria-label="Dummy show product"><span class="iconify lucide--eye text-base-content/80 size-4"></span></button>
+				<a class="btn btn-square btn-ghost btn-sm" href="./apps-ecommerce-products-edit.html" aria-label="Edit product link"><span class="iconify lucide--pencil text-body size-4"></span></a>
+				<button class="btn btn-square btn-ghost btn-sm" aria-label="Dummy show product"><span class="iconify lucide--eye text-body size-4"></span></button>
 				<button class="btn btn-square btn-error btn-outline btn-sm border-transparent" onclick="apps_product_delete.showModal()" aria-label="Dummy delete product"><span class="iconify lucide--trash size-4"></span></button>
 			</div>
 		}
@@ -193,7 +194,7 @@ templ OrdersList() {
 				Toolbar: ordersListToolbar(),
 				Footer:  ordersListFooter(),
 			}) {
-				@table.TableWithProps(table.TableProps{}) {
+				@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
 					@table.TableHead() {
 						@table.TableHeadRow() {
 							@table.TableSelectAll("Check all")
@@ -229,7 +230,7 @@ templ ordersListToolbar() {
 	@table.TableCardHeader() {
 		<div class="inline-flex items-center gap-3">
 			<label class="input input-sm">
-				@ui.IconSpan("lucide--search text-base-content/80", "size-3.5")
+				@ui.IconSpan("lucide--search text-body", "size-3.5")
 				<input class="w-24 sm:w-36" placeholder="Search along orders" aria-label="Search orders" type="search"/>
 			</label>
 			<div class="hidden sm:block">
@@ -252,13 +253,13 @@ templ ordersListToolbar() {
 
 templ ordersListFooter() {
 	<div class="flex items-center justify-between p-6">
-		<div class="text-base-content/80 hover:text-base-content flex gap-2 text-sm">
+		<div class="text-body hover:text-base-content flex gap-2 text-sm">
 			<span class="hidden sm:inline">Per page</span>
 			<select class="select select-xs w-18" aria-label="Per page">
 				<option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option>
 			</select>
 		</div>
-		<span class="text-base-content/80 hidden text-sm lg:inline">Showing <span class="text-base-content font-medium">1 to 20 </span>of 457 items</span>
+		<span class="text-body hidden text-sm lg:inline">Showing <span class="text-base-content font-medium">1 to 20 </span>of 457 items</span>
 		<div class="inline-flex items-center gap-1">
 			<button class="btn btn-circle sm:btn-sm btn-xs btn-ghost" aria-label="Prev"><span class="iconify lucide--chevron-left"></span></button>
 			<button class="btn btn-primary btn-circle sm:btn-sm btn-xs">1</button>
@@ -294,7 +295,7 @@ templ orderTableRow(id, name, customer, price, payment, status, date string) {
 			{ date }
 		}
 		@table.TableCell("", nil) {
-			<a aria-label="View order"><button class="btn btn-square btn-ghost btn-sm"><span class="iconify lucide--eye text-base-content/80 size-4"></span></button></a>
+			<a aria-label="View order"><button class="btn btn-square btn-ghost btn-sm"><span class="iconify lucide--eye text-body size-4"></span></button></a>
 		}
 	}
 }
@@ -327,13 +328,13 @@ templ OrderDetail() {
 
 					<dl class="space-y-3 text-sm">
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Customer</dt><dd>Alice Johnson</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Customer</dt><dd>Alice Johnson</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Email</dt><dd>alice@example.com</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Email</dt><dd>alice@example.com</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Total</dt><dd>$129.99</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Total</dt><dd>$129.99</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Date</dt><dd>2025-01-15</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Date</dt><dd>2025-01-15</dd></div>
 
 					</dl>
 
@@ -373,13 +374,13 @@ templ OrderDetail() {
 
 					<dl class="space-y-3 text-sm">
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Address</dt><dd>123 Main St, NY 10001</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Address</dt><dd>123 Main St, NY 10001</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Method</dt><dd>Express (+$5.99)</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Method</dt><dd>Express (+$5.99)</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Tracking</dt><dd>1Z999AA10123456784</dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Tracking</dt><dd>1Z999AA10123456784</dd></div>
 
-						<div class="flex justify-between"><dt class="text-base-content/60">Status</dt><dd><span class="text-info">In transit</span></dd></div>
+						<div class="flex justify-between"><dt class="text-muted">Status</dt><dd><span class="text-info">In transit</span></dd></div>
 
 					</dl>
 
@@ -472,10 +473,194 @@ templ ProductForm(isCreate bool) {
 }
 
 templ SellersList() {
-	<div { devmode.Attrs(ctx, "nexus/SellersList")... }>
-		<div class="flex items-center justify-between"><h3 class="text-lg font-medium">Sellers</h3></div>
-		<div class="card bg-base-100 shadow-sm mt-6"><div class="card-body">Sellers list</div></div>
+	@nav.PageHeading(nav.PageHeadingProps{
+		Title:  "Sellers",
+		Size:   nav.PageHeadingSizeSM,
+		Layout: nav.PageHeadingLayoutSplit,
+		Breadcrumbs: []nav.BreadcrumbItem{
+			{Label: "Nexus", Href: "/dashboards/ecommerce"},
+			{Label: "Ecommerce"},
+			{Label: "Sellers"},
+		},
+	})
+	<div class="mt-6">
+		@table.TableCard(table.TableCardProps{
+			Toolbar: listToolbar("Search along sellers", "Search sellers", "Verification status", "Create seller link", "/apps/ecommerce/sellers/create", "New Seller"),
+			Footer:  listFooter(),
+		}) {
+			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
+				@table.TableHead() {
+					@table.TableHeadRow() {
+						@table.TableSelectAll("Check all")
+						@table.TableHeadCell("ID")
+						@table.TableHeadCell("Name")
+						@table.TableHeadCell("Shop")
+						@table.TableHeadCell("Email")
+						@table.TableHeadCell("Mobile")
+						@table.TableHeadCell("Sales")
+						@table.TableHeadCell("Earning")
+						@table.TableHeadCell("Verified")
+						@table.TableHeadCell("Joined Date")
+						@table.TableHeadCell("Action")
+					}
+				}
+				@table.TableBody() {
+					@sellerRow("1", "Anthony S. Amaya", "male", "9", "Urban Chic Boutique", "antho.am@yahoo.com", "402-788-1602", "20", "$350", "29 Mar 2024", true)
+					@sellerRow("2", "Crystal R. Taylor", "female", "10", "Whimsical Wares Emporium", "crystal_taylor@hotmail.com", "469-632-2611", "24", "$360", "29 Apr 2024", false)
+					@sellerRow("3", "Jeremy M. Simon", "male", "7", "Serene Styles Haven", "jer.sim@gmail.com", "207-538-1345", "34", "$574", "29 Nov 2023", true)
+					@sellerRow("4", "Jane B. Bush", "female", "8", "Posh Picks Boutique", "jane@bush.com", "612-326-9186", "54", "$487", "29 Jan 2024", true)
+					@sellerRow("5", "Francis A. Bisson", "male", "5", "Blissful Finds Co.", "francis.biss@outlook.com", "317-949-1232", "67", "$784", "29 Dec 2023", true)
+					@sellerRow("6", "Lydia P. Barnett", "female", "6", "Trendy Threads Emporium", "lydia.p@mail.com", "936-895-2100", "74", "$657", "29 Jun 2023", false)
+					@sellerRow("7", "John B. Lopez", "male", "3", "Luxe Loft Creations", "john@lopez.com", "262-849-4319", "45", "$354", "29 Jul 2023", true)
+					@sellerRow("8", "Detra M. Rogers", "female", "4", "Vintage Vogue Hub", "detra@rogers.com", "847-452-0238", "21", "$352", "29 Dec 2023", true)
+					@sellerRow("9", "Antonio D. Goss", "male", "1", "Coastal Charm Marketplace", "goss@ant.com", "203-250-6265", "29", "$920", "29 Apr 2023", false)
+					@sellerRow("10", "Brenda R. Holmes", "female", "2", "Dapper Designs Depot", "brenda.holmes@mail.com", "325-480-1291", "67", "$874", "29 Mar 2023", true)
+				}
+			}
+		}
+		@listDeleteDialog("apps_seller_delete", "seller")
 	</div>
+}
+
+templ sellerRow(num, name, gender, avatar, shop, email, mobile, sales, earning, date string, verified bool) {
+	@table.TableRow("", true, nil) {
+		@table.TableSelectRow("", false)
+		@table.TableCell("font-medium", nil) {
+			{ num }
+		}
+		@table.TableCell("", nil) {
+			<div class="flex items-center space-x-3 truncate">
+				@ui.AvatarFull(ui.AvatarProps{
+					Name:       name,
+					Src:        "/images/avatars/" + avatar + ".png",
+					Size:       ui.AvatarMD,
+					Mask:       "mask mask-squircle",
+					FrameClass: "bg-base-200",
+				})
+				<div>
+					<p class="font-medium">{ name }</p>
+					<p class="text-muted text-xs capitalize">{ gender }</p>
+				</div>
+			</div>
+		}
+		@table.TableCell("font-medium", nil) {
+			{ shop }
+		}
+		@table.TableCell("", nil) {
+			{ email }
+		}
+		@table.TableCell("", nil) {
+			{ mobile }
+		}
+		@table.TableCell("", nil) {
+			{ sales }
+		}
+		@table.TableCell("text-sm font-medium", nil) {
+			{ earning }
+		}
+		@table.TableCell("", nil) {
+			@verifiedIcon(verified)
+		}
+		@table.TableCell("text-sm", nil) {
+			{ date }
+		}
+		@table.TableCell("", nil) {
+			@listRowActions("Edit seller link", "Dummy show seller", "Dummy delete seller", "apps_seller_delete", "/apps/ecommerce/sellers/1")
+		}
+	}
+}
+
+templ listToolbar(searchPlaceholder, searchAria, selectAria, createAria, createHref, createLabel string) {
+	@table.TableCardHeader() {
+		<div class="inline-flex items-center gap-3">
+			<label class="input input-sm">
+				@ui.IconSpan("lucide--search text-body", "size-3.5")
+				<input class="w-24 sm:w-36" placeholder={ searchPlaceholder } type="search" aria-label={ searchAria }/>
+			</label>
+			<div class="hidden sm:block">
+				<select class="select select-sm w-40" aria-label={ selectAria }>
+					<option value="" disabled selected>Verification Status</option>
+					<option>Verified</option>
+					<option>Unverified</option>
+				</select>
+			</div>
+		</div>
+		<div class="inline-flex items-center gap-3">
+			<a href={ createHref } aria-label={ createAria } class="btn btn-primary btn-sm max-sm:btn-square">
+				@ui.IconSpan("lucide--plus", "size-4")
+				<span class="hidden sm:inline">{ createLabel }</span>
+			</a>
+			<div class="dropdown dropdown-bottom dropdown-end">
+				<div tabindex="0" role="button" class="btn btn-ghost border-line-strong btn-sm btn-square" aria-label="More option">
+					@ui.IconSpan("lucide--settings-2", "size-4")
+				</div>
+				<div tabindex="0" class="dropdown-content bg-base-100 rounded-box z-1 w-52 shadow">
+					<ul class="menu w-full p-2">
+						<li><div>@ui.IconSpan("lucide--wand", "size-4") Bulk Actions</div></li>
+					</ul>
+					<hr class="border-line-strong"/>
+					<ul class="menu w-full p-2">
+						<li><div>@ui.IconSpan("lucide--download-cloud", "size-4") Import from Store</div></li>
+						<li><div>@ui.IconSpan("lucide--copy-plus", "size-4") Create from Existing</div></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+templ listFooter() {
+	<div class="flex items-center justify-between p-6">
+		<div class="text-body hover:text-base-content flex gap-2 text-sm">
+			<span class="hidden sm:inline">Per page</span>
+			<select class="select select-xs w-18" aria-label="Per page">
+				<option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option>
+			</select>
+		</div>
+		<span class="text-body hidden text-sm lg:inline">Showing <span class="text-base-content font-medium">1 to 20 </span>of 457 items</span>
+		<div class="inline-flex items-center gap-1">
+			<button class="btn btn-circle sm:btn-sm btn-xs btn-ghost" aria-label="Prev"><span class="iconify lucide--chevron-left"></span></button>
+			<button class="btn btn-primary btn-circle sm:btn-sm btn-xs">1</button>
+			<button class="btn btn-ghost btn-circle sm:btn-sm btn-xs">2</button>
+			<button class="btn btn-ghost btn-circle sm:btn-sm btn-xs">3</button>
+			<button class="btn btn-circle sm:btn-sm btn-xs btn-ghost" aria-label="Next"><span class="iconify lucide--chevron-right"></span></button>
+		</div>
+	</div>
+}
+
+templ verifiedIcon(verified bool) {
+	if verified {
+		@ui.IconSpan("lucide--badge-check", "size-4.5", "text-success")
+	} else {
+		@ui.IconSpan("lucide--badge-x", "size-4.5", "text-error")
+	}
+}
+
+templ listRowActions(editLabel, showLabel, deleteLabel, dialogID, editHref string) {
+	<div class="inline-flex w-fit">
+		<a class="btn btn-square btn-ghost btn-sm" href={ editHref } aria-label={ editLabel }><span class="iconify lucide--pencil text-body size-4"></span></a>
+		<button class="btn btn-square btn-ghost btn-sm" aria-label={ showLabel }><span class="iconify lucide--eye text-body size-4"></span></button>
+		<button class="btn btn-square btn-error btn-outline btn-sm border-transparent" onclick={ templ.JSUnsafeFuncCall(dialogID + ".showModal()") } aria-label={ deleteLabel }><span class="iconify lucide--trash size-4"></span></button>
+	</div>
+}
+
+templ listDeleteDialog(id, noun string) {
+	<dialog id={ id } class="modal">
+		<div class="modal-box">
+			<div class="flex items-center justify-between text-lg font-medium">
+				Confirm Delete
+				<form method="dialog">
+					<button class="btn btn-sm btn-ghost btn-circle" aria-label="Close modal"><span class="iconify lucide--x size-4"></span></button>
+				</form>
+			</div>
+			<p class="py-4">You are about to delete this { noun }. Would you like to proceed further ?</p>
+			<div class="modal-action">
+				<form method="dialog"><button class="btn btn-ghost btn-sm">No</button></form>
+				<form method="dialog"><button class="btn btn-sm btn-error">Yes, delete it</button></form>
+			</div>
+		</div>
+		<form method="dialog" class="modal-backdrop"><button>close</button></form>
+	</dialog>
 }
 
 templ SellerForm(isCreate bool) {
@@ -486,10 +671,97 @@ templ SellerForm(isCreate bool) {
 }
 
 templ CustomersList() {
-	<div { devmode.Attrs(ctx, "nexus/CustomersList")... }>
-		<div class="flex items-center justify-between"><h3 class="text-lg font-medium">Customers</h3></div>
-		<div class="card bg-base-100 shadow-sm mt-6"><div class="card-body">Customers list</div></div>
+	@nav.PageHeading(nav.PageHeadingProps{
+		Title:  "Customers",
+		Size:   nav.PageHeadingSizeSM,
+		Layout: nav.PageHeadingLayoutSplit,
+		Breadcrumbs: []nav.BreadcrumbItem{
+			{Label: "Nexus", Href: "/dashboards/ecommerce"},
+			{Label: "Ecommerce"},
+			{Label: "Customers"},
+		},
+	})
+	<div class="mt-6">
+		@table.TableCard(table.TableCardProps{
+			Toolbar: listToolbar("Search along customers", "Search customers", "Verification", "Create customer link", "/apps/ecommerce/customers/create", "New Customer"),
+			Footer:  listFooter(),
+		}) {
+			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
+				@table.TableHead() {
+					@table.TableHeadRow() {
+						@table.TableSelectAll("Check all")
+						@table.TableHeadCell("ID")
+						@table.TableHeadCell("Name")
+						@table.TableHeadCell("Email")
+						@table.TableHeadCell("Mobile")
+						@table.TableHeadCell("Sales")
+						@table.TableHeadCell("Earning")
+						@table.TableHeadCell("Verified")
+						@table.TableHeadCell("Joined Date")
+						@table.TableHeadCell("Action")
+					}
+				}
+				@table.TableBody() {
+					@customerRow("1", "James S. Jackson", "male", "james.jack@mail.com", "845-346-8004", "24", "$405", "29 Mar 2024", true)
+					@customerRow("2", "Nancy J. Schlueter", "female", "nancy.schlueter@mail.com", "703-776-8514", "21", "$630", "29 Apr 2024", true)
+					@customerRow("3", "Anthony J. Lew", "male", "anthony_lew@mail.com", "864-215-2686", "68", "$1241", "29 Nov 2023", false)
+					@customerRow("4", "Amanda M. Kyle", "female", "amanda_kyle@mail.com", "253-565-3114", "43", "$648", "29 Jan 2024", true)
+					@customerRow("5", "Chad J. Pipkin", "male", "chadpip007@mail.com", "562-212-5847", "17", "$357", "29 Dec 2023", false)
+					@customerRow("6", "Crystal P. Deberry", "female", "crystal_deberry@mail.com", "520-398-7428", "49", "$354", "29 Jun 2023", true)
+					@customerRow("7", "Herman K. Byard", "male", "herman_byard@mail.com", "248-376-5482", "47", "$358", "29 Jul 2023", true)
+					@customerRow("8", "Patricia T. Gandy", "female", "pat.gandy@mail.com", "707-237-9941", "78", "$1547", "29 Dec 2023", true)
+					@customerRow("9", "James J. Herron", "male", "james@mail.com", "262-726-6322", "54", "$1080", "29 Apr 2023", true)
+					@customerRow("10", "Gladys J. Tudor", "female", "tudor_jgladys@mail.com", "508-975-1756", "48", "$1280", "29 Mar 2023", true)
+				}
+			}
+		}
+		@listDeleteDialog("apps_customer_delete", "customer")
 	</div>
+}
+
+templ customerRow(num, name, gender, email, mobile, sales, earning, date string, verified bool) {
+	@table.TableRow("", true, nil) {
+		@table.TableSelectRow("", false)
+		@table.TableCell("font-medium", nil) {
+			{ num }
+		}
+		@table.TableCell("", nil) {
+			<div class="flex items-center space-x-3 truncate">
+				@ui.AvatarFull(ui.AvatarProps{
+					Name:       name,
+					Src:        "/images/avatars/" + num + ".png",
+					Size:       ui.AvatarMD,
+					Mask:       "mask mask-squircle",
+					FrameClass: "bg-base-200",
+				})
+				<div>
+					<p class="font-medium">{ name }</p>
+					<p class="text-body text-xs capitalize">{ gender }</p>
+				</div>
+			</div>
+		}
+		@table.TableCell("", nil) {
+			{ email }
+		}
+		@table.TableCell("", nil) {
+			{ mobile }
+		}
+		@table.TableCell("", nil) {
+			{ sales }
+		}
+		@table.TableCell("text-sm font-medium", nil) {
+			{ earning }
+		}
+		@table.TableCell("", nil) {
+			@verifiedIcon(verified)
+		}
+		@table.TableCell("text-sm", nil) {
+			{ date }
+		}
+		@table.TableCell("", nil) {
+			@listRowActions("Edit customer link", "Dummy show customer", "Dummy delete customer", "apps_customer_delete", "/apps/ecommerce/customers/1")
+		}
+	}
 }
 
 templ CustomerForm(isCreate bool) {
@@ -500,10 +772,97 @@ templ CustomerForm(isCreate bool) {
 }
 
 templ ShopsList() {
-	<div { devmode.Attrs(ctx, "nexus/ShopsList")... }>
-		<div class="flex items-center justify-between"><h3 class="text-lg font-medium">Shops</h3></div>
-		<div class="card bg-base-100 shadow-sm mt-6"><div class="card-body">Shops list</div></div>
+	@nav.PageHeading(nav.PageHeadingProps{
+		Title:  "Shops",
+		Size:   nav.PageHeadingSizeSM,
+		Layout: nav.PageHeadingLayoutSplit,
+		Breadcrumbs: []nav.BreadcrumbItem{
+			{Label: "Nexus", Href: "/dashboards/ecommerce"},
+			{Label: "Ecommerce"},
+			{Label: "Shops"},
+		},
+	})
+	<div class="mt-6">
+		@table.TableCard(table.TableCardProps{
+			Toolbar: listToolbar("Search along shops", "Search shops", "Verification status", "Create shop link", "/apps/ecommerce/shops/create", "New Shop"),
+			Footer:  listFooter(),
+		}) {
+			@table.TableWithProps(table.TableProps{Class: "whitespace-nowrap"}) {
+				@table.TableHead() {
+					@table.TableHeadRow() {
+						@table.TableSelectAll("Check all")
+						@table.TableHeadCell("ID")
+						@table.TableHeadCell("Name")
+						@table.TableHeadCell("Seller")
+						@table.TableHeadCell("Email")
+						@table.TableHeadCell("Mobile")
+						@table.TableHeadCell("Sales")
+						@table.TableHeadCell("Rating")
+						@table.TableHeadCell("Earning")
+						@table.TableHeadCell("Verified")
+						@table.TableHeadCell("Joined Date")
+						@table.TableHeadCell("Action")
+					}
+				}
+				@table.TableBody() {
+					@shopRow("1", "Urban Chic Boutique", "Anthony S. Amaya", "urban.chic@yahoo.com", "402-788-1602", "20", "4.4", "124", "$350", "29 Mar 2024", true)
+					@shopRow("2", "Whimsical Wares Emporium", "Crystal R. Taylor", "whimscal_ware@hotmail.com", "469-632-2611", "24", "4.7", "241", "$360", "29 Apr 2024", true)
+					@shopRow("3", "Serene Styles Haven", "Jeremy M. Simon", "serene.styles@gmail.com", "207-538-1345", "34", "4.2", "104", "$574", "29 Nov 2023", true)
+					@shopRow("4", "Posh Picks Boutique", "Jane B. Bush", "posh_picks@bush.com", "612-326-9186", "54", "3.8", "261", "$487", "29 Jan 2024", true)
+					@shopRow("5", "Blissful Finds Co.", "Francis A. Bisson", "blissful_co@outlook.com", "317-949-1232", "67", "3.4", "195", "$784", "29 Dec 2023", false)
+					@shopRow("6", "Trendy Threads Emporium", "Lydia P. Barnett", "trendy_te@mail.com", "936-895-2100", "74", "4.6", "135", "$657", "29 Jun 2023", true)
+					@shopRow("7", "Luxe Loft Creations", "John B. Lopez", "luxe.loft@lopez.com", "262-849-4319", "45", "4.9", "321", "$354", "29 Jul 2023", true)
+					@shopRow("8", "Vintage Vogue Hub", "Detra M. Rogers", "vintage_hub@rogers.com", "847-452-0238", "21", "2.8", "12", "$352", "29 Dec 2023", true)
+					@shopRow("9", "Coastal Charm Marketplace", "Antonio D. Goss", "antonio_gross@ant.com", "203-250-6265", "29", "3.4", "238", "$920", "29 Apr 2023", false)
+					@shopRow("10", "Dapper Designs Depot", "Brenda R. Holmes", "dapper.designs@mail.com", "325-480-1291", "67", "4.1", "541", "$874", "29 Mar 2023", true)
+				}
+			}
+		}
+		@listDeleteDialog("apps_shop_delete", "shop")
 	</div>
+}
+
+templ shopRow(num, name, seller, email, mobile, sales, rating, ratingCount, earning, date string, verified bool) {
+	@table.TableRow("", true, nil) {
+		@table.TableSelectRow("", false)
+		@table.TableCell("font-medium", nil) {
+			{ num }
+		}
+		@table.TableCell("font-medium", nil) {
+			{ name }
+		}
+		@table.TableCell("", nil) {
+			{ seller }
+		}
+		@table.TableCell("", nil) {
+			{ email }
+		}
+		@table.TableCell("", nil) {
+			{ mobile }
+		}
+		@table.TableCell("", nil) {
+			{ sales }
+		}
+		@table.TableCell("", nil) {
+			<div class="flex items-center gap-1">
+				<span class={ "iconify lucide--star size-4", shopRatingClass(rating) }></span>
+				{ rating }
+				<span class="text-body text-xs">({ ratingCount })</span>
+			</div>
+		}
+		@table.TableCell("", nil) {
+			<div class="text-sm font-medium">{ earning }</div>
+		}
+		@table.TableCell("", nil) {
+			@verifiedIcon(verified)
+		}
+		@table.TableCell("text-sm", nil) {
+			{ date }
+		}
+		@table.TableCell("", nil) {
+			@listRowActions("Edit shop link", "Dummy show shop", "Dummy delete shop", "apps_shop_delete", "/apps/ecommerce/shops/1")
+		}
+	}
 }
 
 templ ShopForm(isCreate bool) {

@@ -106,6 +106,46 @@ func TestNexusCommerceTablesUseTableComponents(t *testing.T) {
 	}
 }
 
+// TestEcommerceListsUseLibraryComponents pins the sellers/customers/shops list
+// migrations: each list composes its header through nav.PageHeading and its
+// table through the table primitives, with no hand-rolled table markup left
+// behind in the row helpers.
+func TestEcommerceListsUseLibraryComponents(t *testing.T) {
+	src := read(t, "../handler/pages_ecommerce.templ")
+
+	for _, name := range []string{"SellersList", "CustomersList", "ShopsList"} {
+		fn := templFunc(t, src, name)
+		require(t, fn, name, "@nav.PageHeading(")
+		require(t, fn, name, "@table.TableCard(")
+		require(t, fn, name, "@table.TableWithProps(")
+		forbid(t, fn, name,
+			"<table",
+			"<thead",
+			"<tbody",
+			"<tr",
+			"<td",
+			"<th",
+			`<input class="checkbox`,
+		)
+	}
+
+	for _, row := range []string{"sellerRow", "customerRow", "shopRow"} {
+		fn := templFunc(t, src, row)
+		require(t, fn, row, "@table.TableRow(")
+		require(t, fn, row, "@table.TableCell(")
+		forbid(t, fn, row, "<tr", "<td", "<th")
+	}
+
+	// The three list handlers must resolve to the templ components, not fall
+	// back to the raw-HTML passthrough.
+	hsrc := read(t, "../handler/handler.go")
+	forbid(t, hsrc, "handler.go",
+		`nxHTMLComponent("apps-ecommerce-sellers")`,
+		`nxHTMLComponent("apps-ecommerce-customers")`,
+		`nxHTMLComponent("apps-ecommerce-shops")`,
+	)
+}
+
 // TestNexusDashboardUsesLibraryCardsAndTable pins the dashboard conversion:
 // stat cards go through ui.StatCardFeatured and Recent Orders through the table
 // primitives, so the dashboard stops maintaining its own copies.
