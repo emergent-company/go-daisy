@@ -6,6 +6,9 @@ vars:
   TAILWIND: node_modules/.bin/tailwindcss
   GALLERY_LOG: /tmp/go-daisy-gallery.log
   GALLERY_PID: /tmp/go-daisy-gallery.pid
+  NEXUS_BIN: /tmp/nexus
+  NEXUS_LOG: /tmp/nexus.log
+  NEXUS_PID: /tmp/nexus.pid
 
 tasks:
   build:ui:
@@ -208,6 +211,66 @@ tasks:
     desc: Tail the gallery daemon log
     cmds:
       - tail -f {{.GALLERY_LOG}}
+
+  "nexus:build":
+    desc: Build UI then compile the nexus binary to /tmp/nexus
+    cmds:
+      - task: build:ui
+      - go build -o {{.NEXUS_BIN}} ./cmd/nexus
+
+  "nexus:serve":
+    desc: Build and start nexus in the background, waiting until :11001 responds
+    cmds:
+      - task: "nexus:build"
+      - task: "nexus:stop"
+      - >-
+        sh -c 'nohup {{.NEXUS_BIN}} >> {{.NEXUS_LOG}} 2>&1 &
+        echo $! > {{.NEXUS_PID}} &&
+        echo "nexus starting (pid $(cat {{.NEXUS_PID}})), log: {{.NEXUS_LOG}}"'
+      - >-
+        sh -c '
+        for i in $(seq 1 30); do
+          if curl -sf http://localhost:11001/landing >/dev/null 2>&1; then
+            echo "nexus ready on :11001";
+            exit 0;
+          fi;
+          sleep 0.5;
+        done;
+        echo "nexus failed to start within 15s; log: {{.NEXUS_LOG}}" >&2;
+        tail -n 40 {{.NEXUS_LOG}} >&2 || true;
+        exit 1'
+
+  "nexus:stop":
+    desc: Stop the background nexus daemon
+    cmds:
+      # Same port-sweep approach as gallery:stop: kill the recorded pid, then
+      # clear whatever still owns the port so a later serve gets a clean bind.
+      - >-
+        sh -c '
+        port_pids() { if command -v lsof >/dev/null 2>&1; then lsof -ti:11001 2>/dev/null || true; else ss -ltnpH "sport = :11001" 2>/dev/null | grep -oE "pid=[0-9]+" | cut -d= -f2 | sort -u; fi; };
+        if ! command -v lsof >/dev/null 2>&1 && ! command -v ss >/dev/null 2>&1; then
+          echo "nexus: cannot inspect port 11001 (neither lsof nor ss found); refusing to report a clean stop" >&2;
+          exit 1;
+        fi;
+        if [ -f {{.NEXUS_PID}} ]; then
+          kill "$(cat {{.NEXUS_PID}})" 2>/dev/null || true;
+          rm -f {{.NEXUS_PID}};
+        fi;
+        pids=$(port_pids);
+        if [ -n "$pids" ]; then
+          kill $pids 2>/dev/null || true;
+          sleep 1;
+          pids=$(port_pids);
+          if [ -n "$pids" ]; then kill -9 $pids 2>/dev/null || true; fi;
+          echo "nexus stopped (port 11001 cleared)";
+        else
+          echo "nexus was not running";
+        fi'
+
+  "nexus:compare":
+    desc: Run the structural parity gate against the running nexus server
+    cmds:
+      - GOWORK=off go run ./cmd/nexus-compare
 
   "gallery:restart":
     desc: Stop then start the gallery daemon

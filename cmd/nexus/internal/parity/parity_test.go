@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/emergent-company/go-daisy/cmd/nexus/compare"
 )
 
 func read(t *testing.T, path string) string {
@@ -147,5 +149,49 @@ func TestNexusTemplatesUseRootRelativeImages(t *testing.T) {
 				}
 			}
 		}
+	}
+}
+
+// TestCompareCoversEveryReference asserts the compare.Pages() table is
+// provably complete: every reference file under nxhtml has a PageMapping
+// (skipped entries allowed), and no non-skipped mapping points at a missing
+// file.
+func TestCompareCoversEveryReference(t *testing.T) {
+	dir := "../handler/nxhtml"
+	refs, err := filepath.Glob(filepath.Join(dir, "*.html"))
+	if err != nil {
+		t.Fatalf("glob %s: %v", dir, err)
+	}
+	if len(refs) == 0 {
+		t.Fatal("no reference files found under ../handler/nxhtml")
+	}
+
+	mappings := compare.Pages()
+	mapped := make(map[string]bool, len(mappings))
+	for _, m := range mappings {
+		mapped[m.HTMLFile] = true
+		if m.Skip && m.Reason == "" {
+			t.Errorf("skipped mapping %q has no reason", m.HTMLFile)
+		}
+		if !m.Skip {
+			if _, err := os.Stat(filepath.Join(dir, m.HTMLFile)); err != nil {
+				t.Errorf("mapping %q -> %s points at a missing reference file", m.Route, m.HTMLFile)
+			}
+		}
+	}
+	for _, f := range refs {
+		base := filepath.Base(f)
+		if !mapped[base] {
+			t.Errorf("reference %s has no PageMapping (skipped entries allowed)", base)
+		}
+	}
+}
+
+// TestRawPassthroughIsDetectable asserts nxrender.go emits the nx-raw marker
+// so the parity comparator can distinguish raw passthroughs from real ports.
+func TestRawPassthroughIsDetectable(t *testing.T) {
+	src := read(t, "../handler/nxrender.go")
+	if !strings.Contains(src, "<!-- nx-raw:") {
+		t.Errorf("nxrender.go must emit the `<!-- nx-raw:<page> -->` passthrough marker")
 	}
 }
