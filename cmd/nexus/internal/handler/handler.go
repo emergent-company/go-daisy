@@ -108,6 +108,11 @@ func (h *Handler) handleUIFormDetail(c echo.Context) error {
 
 func (h *Handler) handleUIChartDetail(c echo.Context) error {
 	name := c.Param("name")
+	// Apex chart showcase pages ported to the library ui.Chart component.
+	switch name {
+	case "area", "bar", "column", "line", "pie":
+		return adminRender(c, UIChartDetailPage(name))
+	}
 	return adminRender(c, nxHTMLComponent("ui-charts-apex-"+name))
 }
 

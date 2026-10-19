@@ -174,24 +174,157 @@ templ UIFormDetailPage(name string) {
 
 
 templ UIChartDetailPage(name string) {
+	{{ title := capFirst(name) }}
 	<div class="flex items-center justify-between" { devmode.Attrs(ctx, "nexus/UIChartDetail")... }>
-		<h3 class="text-lg font-medium">{ capFirst(name) } Chart</h3>
+		<h3 class="text-lg font-medium">{ title } Charts</h3>
 		<div class="breadcrumbs hidden p-0 text-sm sm:inline">
-			<ul><li><a href="/dashboards/ecommerce">Nexus</a></li><li><a href="/ui/charts">Charts</a></li><li class="opacity-80">{ capFirst(name) }</li></ul>
+			<ul><li><a href="/dashboards/ecommerce">Nexus</a></li><li>Apex Charts</li><li class="opacity-80">{ title }</li></ul>
 		</div>
 	</div>
-	<div class="mt-6">
-		<div class="card bg-base-100 shadow-sm">
-			<div class="card-body">
-				<h4 class="text-base font-semibold">{ name } Chart</h4>
-				<p class="text-sm text-base-content/60 mt-1">go-daisy chart type.</p>
-				<div class="divider"></div>
-				<div class="bg-base-200 rounded-box p-4 flex items-center justify-center" style="min-height: 300px">
-					<span class="text-base-content/40">Chart demo: { name }</span>
+	@renderChartDemo(name)
+}
+
+templ renderChartDemo(name string) {
+	switch name {
+	case "area":
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Spline Area</div>
+					@ui.Chart(ui.ChartProps{ID: "spline-area-chart", Type: ui.ChartArea, Height: "380", RawConfigJSON: nxSplineAreaConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Negative Value Area</div>
+					@ui.Chart(ui.ChartProps{ID: "negative-value-area-chart", Type: ui.ChartArea, Height: "380", RawConfigJSON: nxNegativeValueAreaConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Irregular Time Series Area</div>
+					@ui.Chart(ui.ChartProps{ID: "irregular-time-area-chart", Type: ui.ChartArea, Height: "380", RawConfigJSON: nxIrregularTimeAreaConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Selection Area</div>
+					@ui.Chart(ui.ChartProps{ID: "selection-result-area-chart", Type: ui.ChartArea, Height: "190", RawConfigJSON: nxSelectionResultAreaConfig})
+					@ui.Chart(ui.ChartProps{ID: "selection-target-area-chart", Type: ui.ChartArea, Height: "190", RawConfigJSON: nxSelectionTargetAreaConfig})
 				</div>
 			</div>
 		</div>
-	</div>
+	case "bar":
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Bar With Markers</div>
+					@ui.Chart(ui.ChartProps{ID: "marker-with-bar-chart", Type: ui.ChartBar, Height: "380", RawConfigJSON: nxMarkerBarConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Grouped Bar</div>
+					@ui.Chart(ui.ChartProps{ID: "grouped-bar-chart", Type: ui.ChartBar, Height: "380", RawConfigJSON: nxGroupedBarConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Stacked Bar</div>
+					@ui.Chart(ui.ChartProps{ID: "stacked-bar-chart", Type: ui.ChartBar, Height: "380", RawConfigJSON: nxStackedBarConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Negative Value</div>
+					@ui.Chart(ui.ChartProps{ID: "negative-value-bar-chart", Type: ui.ChartBar, Height: "380", RawConfigJSON: nxNegativeValueBarConfig})
+				</div>
+			</div>
+		</div>
+	case "column":
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Stacked Column</div>
+					@ui.Chart(ui.ChartProps{ID: "stacked-column-chart", Type: ui.ChartColumn, Height: "380", RawConfigJSON: nxStackedColumnConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Dumbbell Column</div>
+					@ui.Chart(ui.ChartProps{ID: "dumbbell-column-chart", Type: ui.ChartRangeBar, Height: "380", RawConfigJSON: nxDumbbellColumnConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Range Column</div>
+					@ui.Chart(ui.ChartProps{ID: "range-column-chart", Type: ui.ChartRangeBar, Height: "380", RawConfigJSON: nxRangeColumnConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Negative Values Column</div>
+					@ui.Chart(ui.ChartProps{ID: "negative-value-column-chart", Type: ui.ChartColumn, Height: "350", RawConfigJSON: nxNegativeValueColumnConfig})
+				</div>
+			</div>
+		</div>
+	case "line":
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Label Line</div>
+					@ui.Chart(ui.ChartProps{ID: "label-line-chart", Type: ui.ChartLine, Height: "380", RawConfigJSON: nxLabelLineConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Step Line</div>
+					@ui.Chart(ui.ChartProps{ID: "step-line-chart", Type: ui.ChartLine, Height: "380", RawConfigJSON: nxStepLineConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Syncing Line</div>
+					@ui.Chart(ui.ChartProps{ID: "syncing-order-line-chart", Type: ui.ChartLine, Height: "120", RawConfigJSON: nxSyncingOrderLineConfig})
+					@ui.Chart(ui.ChartProps{ID: "syncing-revenue-line-chart", Type: ui.ChartLine, Height: "120", RawConfigJSON: nxSyncingRevenueLineConfig})
+					@ui.Chart(ui.ChartProps{ID: "syncing-average-line-chart", Type: ui.ChartLine, Height: "120", RawConfigJSON: nxSyncingAverageLineConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Annotation Line</div>
+					@ui.Chart(ui.ChartProps{ID: "annotation-line-chart", Type: ui.ChartLine, Height: "380", RawConfigJSON: nxAnnotationLineConfig})
+				</div>
+			</div>
+		</div>
+	case "pie":
+		<div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Simple Pie</div>
+					@ui.Chart(ui.ChartProps{ID: "simple-pie-chart", Type: ui.ChartPie, Height: "380", RawConfigJSON: nxSimplePieConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Monochrome Pie</div>
+					@ui.Chart(ui.ChartProps{ID: "monochrome-pie-chart", Type: ui.ChartPie, Height: "380", RawConfigJSON: nxMonochromePieConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Gradient Donut</div>
+					@ui.Chart(ui.ChartProps{ID: "gradient-donut-chart", Type: ui.ChartDonut, Height: "380", RawConfigJSON: nxGradientDonutConfig})
+				</div>
+			</div>
+			<div class="card card-border bg-base-100">
+				<div class="card-body gap-3 pb-0">
+					<div class="card-title">Pattern Donut</div>
+					@ui.Chart(ui.ChartProps{ID: "pattern-donut-chart", Type: ui.ChartDonut, Height: "380", RawConfigJSON: nxPatternDonutConfig})
+				</div>
+			</div>
+		</div>
+	}
 }
 
 

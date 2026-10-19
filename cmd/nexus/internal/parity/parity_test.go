@@ -507,6 +507,33 @@ func TestShowcaseFormPagesUseLibraryComponents(t *testing.T) {
 	require(t, fn, "handleUIFormDetail", "UIFormDetailPage(name)")
 }
 
+// TestShowcaseChartPagesUseLibraryComponents pins the five Apex chart showcase
+// ports: each renderChartDemo case must exist and compose the library ui.Chart
+// component (via RawConfigJSON, the same mechanism the dashboards use), and
+// every page must route through UIChartDetailPage rather than the raw-HTML
+// passthrough.
+func TestShowcaseChartPagesUseLibraryComponents(t *testing.T) {
+	src := read(t, "../handler/pages_showcase.templ")
+	demo := templFunc(t, src, "renderChartDemo")
+
+	names := []string{"area", "bar", "column", "line", "pie"}
+	for _, name := range names {
+		require(t, demo, "renderChartDemo", `case "`+name+`":`)
+	}
+
+	require(t, demo, "renderChartDemo", "@ui.Chart(")
+	require(t, demo, "renderChartDemo", "RawConfigJSON:")
+	forbid(t, demo, "renderChartDemo", "<script", "new ApexCharts", "data-chart")
+
+	hsrc := read(t, "../handler/handler.go")
+	fn := goFunc(t, hsrc, "func (h *Handler) handleUIChartDetail")
+	for _, name := range names {
+		require(t, fn, "handleUIChartDetail", `"`+name+`"`)
+		forbid(t, hsrc, "handler.go", `nxHTMLComponent("ui-charts-apex-`+name+`")`)
+	}
+	require(t, fn, "handleUIChartDetail", "UIChartDetailPage(name)")
+}
+
 // TestRawPassthroughIsDetectable asserts nxrender.go emits the nx-raw marker
 // so the parity comparator can distinguish raw passthroughs from real ports.
 // This is a source-grep tripwire, not a behavioural test: it guards that the

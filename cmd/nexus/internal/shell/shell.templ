@@ -272,7 +272,8 @@ templ nexusRightbar() {
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.3.0/apexcharts.min.js"></script>
 	<script>
 	if(!window._apexChartInit){window._apexChartInit=true;
-	function initApexChart(el){try{var o=JSON.parse(el.dataset.options);el._chart=new ApexCharts(el,o);el._chart.render()}catch(e){console.warn('Chart init failed:',e)}}
+	function reviveFormatters(o){if(o===null||typeof o!=='object')return o;if(Array.isArray(o)){for(var i=0;i<o.length;i++)reviveFormatters(o[i]);return o}for(var k in o){var v=o[k];if(k==='formatter'&&typeof v==='string'){o[k]=new Function('val','opts','return ('+v+').call(this,val,opts)')}else if(v&&typeof v==='object'){reviveFormatters(v)}}return o}
+	function initApexChart(el){try{var o=reviveFormatters(JSON.parse(el.dataset.options));el._chart=new ApexCharts(el,o);el._chart.render()}catch(e){console.warn('Chart init failed:',e)}}
 	document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('[data-chart]').forEach(initApexChart)});
 	if(document.readyState==='complete'||document.readyState==='interactive'){document.querySelectorAll('[data-chart]').forEach(initApexChart)}
 	document.addEventListener('htmx:after:settle',function(e){e.target.querySelectorAll('[data-chart]:not(._ac-initialized)').forEach(function(el){el.classList.add('_ac-initialized');initApexChart(el)})})}
