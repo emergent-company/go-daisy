@@ -48,7 +48,7 @@ func NexusShell(content templ.Component, activeSlug string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n\t\t#sidebar-menu { margin-bottom: 16px; width: 100%; height: 100%; padding: 0 8px; display: flex; flex-direction: column; gap: 2px; min-height: 0; overflow-y: auto; scrollbar-width: thin; }\n\t\t#sidebar-menu > * { flex-shrink: 0; }\n\t\t</style> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n\t\t#sidebar-menu { margin-bottom: 16px; width: 100%; height: 100%; padding: 0 8px; display: flex; flex-direction: column; min-height: 0; overflow-y: auto; scrollbar-width: thin; }\n\t\t#sidebar-menu > .sidebar-menu-item, #sidebar-menu > .group { margin-bottom: 2px; }\n\t\t#sidebar-menu > * { flex-shrink: 0; }\n\t\t</style> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -260,7 +260,7 @@ func nexusSidebar(activeSlug string) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("@withden")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/shell/shell.templ`, Line: 140, Col: 131}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `cmd/nexus/internal/shell/shell.templ`, Line: 141, Col: 131}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
