@@ -62,7 +62,7 @@
 @source inline("bg-{slate,gray,zinc,neutral,stone,red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose}-{50,100,200,300,400,500,600,700,800,900,950}");
 
 @plugin "daisyui" {
-  themes: nord --default, dracula, flow, flow-dark, ember, ember-dark, slate, slate-dark;
+  themes: nord --default, dracula, flow, flow-dark, ember, ember-dark, slate, slate-dark, nexus;
 }
 
 /* Palette "flow" — teal. Light */
@@ -255,6 +255,45 @@
   --radius-field: 0.25rem;
   --radius-box: 0.375rem;
   --border: 1px;
+}
+
+/* Palette "nexus" — the Nexus admin brand palette. Light. Pinned by the Nexus
+ * shell via PageProps{PinTheme:true}, so it is never overridden by the gallery
+ * palette/mode selection. */
+@plugin "daisyui/theme" {
+  name: "nexus";
+  default: false;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: #fff;
+  --color-base-200: #eef0f2;
+  --color-base-300: #dcdee0;
+  --color-base-content: #1e2328;
+  --color-primary: #167bff;
+  --color-primary-content: #fff;
+  --color-secondary: #9c5de8;
+  --color-secondary-content: #fff;
+  --color-accent: #00d3bb;
+  --color-accent-content: #f3fbf6;
+  --color-neutral: #1e2832;
+  --color-neutral-content: #fafcff;
+  --color-info: #14b4ff;
+  --color-info-content: #fff;
+  --color-success: #0bbf58;
+  --color-success-content: #fff;
+  --color-warning: #f5a524;
+  --color-warning-content: #150a00;
+  --color-error: #f31260;
+  --color-error-content: #fff;
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.25rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
 }
 
 /* Iconify (Lucide icons via utility classes) */
