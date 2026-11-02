@@ -32,6 +32,15 @@ func TableHeadCellWithBoundary(label string) templ.Component {
 	return devmode.ElementBoundary("TableHeadCell", TableHeadCell(label), map[string]any{"label": label})
 }
 
+// TableHeadCellWithPropsWithBoundary wraps TableHeadCellWithProps with a dev-mode
+// element boundary annotation. It reports the same "TableHeadCell" component
+// name as the positional form, so the dev overlay and component tree treat both
+// as one component. Uses ElementBoundary because a <div> wrapper is invalid
+// inside a <table>.
+func TableHeadCellWithPropsWithBoundary(props TableHeadCellProps) templ.Component {
+	return devmode.ElementBoundary("TableHeadCell", TableHeadCellWithProps(props), props)
+}
+
 // TableHeaderWithBoundary wraps TableHeader with a dev-mode element boundary annotation.
 // Uses ElementBoundary because TableHeader renders a <th> element directly.
 //
@@ -61,6 +70,14 @@ func TableRowWithBoundary(id string, hover bool) templ.Component {
 // TableCellWithBoundary wraps TableCell with a dev-mode element boundary annotation.
 func TableCellWithBoundary(class string) templ.Component {
 	return devmode.ElementBoundary("TableCell", TableCell(class, nil), map[string]any{"class": class})
+}
+
+// TableCellWithPropsWithBoundary wraps TableCellWithProps with a dev-mode element
+// boundary annotation. It reports the same "TableCell" component name as the
+// positional form. Uses ElementBoundary because a <div> wrapper is invalid
+// inside a <table>.
+func TableCellWithPropsWithBoundary(props TableCellProps) templ.Component {
+	return devmode.ElementBoundary("TableCell", TableCellWithProps(props), props)
 }
 
 // TableRowHeaderCellWithBoundary wraps TableRowHeaderCell with a dev-mode element

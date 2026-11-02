@@ -11,11 +11,19 @@ import (
 // as plain text rather than as a broken link. Class is applied to the <th>;
 // LinkAttrs is applied to the <a>, which lets callers add HTMX attributes or
 // data-* hooks without changing the component.
+//
+// Align and Numeric match TableHeadCellProps: pass the same values to the
+// column's body cells (TableCellWithProps) so the column stays aligned. When
+// the column is end-aligned the link spans the cell and the direction icon
+// leads the label, so the indicator never sits between the text and the cell's
+// right edge.
 type SortableTableHeaderProps struct {
 	Label     string
 	Column    string
 	Sort      SortContext
 	FirstDir  SortDir
+	Align     TableAlign
+	Numeric   bool
 	Class     string
 	LinkAttrs templ.Attributes
 	Attrs     templ.Attributes
@@ -32,7 +40,7 @@ templ SortableTableHeader(props SortableTableHeaderProps) {
 	if href := props.Sort.Href(props.Column, props.FirstDir); href != "" {
 		<th
 			scope="col"
-			class={ props.Class }
+			class={ cellClasses(props.Class, alignClasses(props.Align, props.Numeric)) }
 			if aria := props.Sort.AriaSort(props.Column); aria != "" {
 				aria-sort={ aria }
 			}
@@ -41,7 +49,7 @@ templ SortableTableHeader(props SortableTableHeaderProps) {
 			@sortableHeaderLink(props, href)
 		</th>
 	} else {
-		<th scope="col" class={ props.Class } { props.Attrs... }>
+		<th scope="col" class={ cellClasses(props.Class, alignClasses(props.Align, props.Numeric)) } { props.Attrs... }>
 			{ props.Label }
 		</th>
 	}
@@ -52,18 +60,28 @@ templ sortableHeaderLink(props SortableTableHeaderProps, href string) {
 	<a
 		href={ templ.URL(href) }
 		aria-label={ props.ariaLabel() }
-		class="inline-flex items-center gap-1 rounded-sm hover:text-base-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+		class={ "inline-flex items-center gap-1 rounded-sm hover:text-base-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary", templ.KV("w-full justify-end", props.endAligned()) }
 		{ props.LinkAttrs... }
 	>
-		<span>{ props.Label }</span>
-		if props.Sort.Active(props.Column) {
-			if props.Sort.Params.Dir == SortAsc {
-				@ui.IconSpan("lucide--chevron-up", "size-3.5")
-			} else {
-				@ui.IconSpan("lucide--chevron-down", "size-3.5")
-			}
+		if props.endAligned() {
+			@sortableHeaderIcon(props)
+			<span>{ props.Label }</span>
 		} else {
-			@ui.IconSpan("lucide--chevrons-up-down", "size-3.5 opacity-30")
+			<span>{ props.Label }</span>
+			@sortableHeaderIcon(props)
 		}
 	</a>
+}
+
+// sortableHeaderIcon renders the direction indicator for the sort link.
+templ sortableHeaderIcon(props SortableTableHeaderProps) {
+	if props.Sort.Active(props.Column) {
+		if props.Sort.Params.Dir == SortAsc {
+			@ui.IconSpan("lucide--chevron-up", "size-3.5")
+		} else {
+			@ui.IconSpan("lucide--chevron-down", "size-3.5")
+		}
+	} else {
+		@ui.IconSpan("lucide--chevrons-up-down", "size-3.5 opacity-30")
+	}
 }

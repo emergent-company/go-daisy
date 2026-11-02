@@ -352,7 +352,9 @@ rows = sortRows(rows, sc.Params)
     Column:   "cpu",
     Sort:     sc,
     FirstDir: table.SortDesc,
-    Class:    "text-xs font-semibold text-muted uppercase text-right",
+    Align:    table.AlignEnd,
+    Numeric:  true,
+    Class:    "text-xs font-semibold text-muted uppercase",
 })
 ```
 
@@ -376,3 +378,22 @@ typography your table uses; the component does not impose one.
   fragment contract follow-up.
 - `SortParams.By` is user-controlled. Validate it against a known column map in
   the handler before applying it.
+
+### Right-aligned columns (numbers, dates)
+
+Alignment is a column property, expressed once and shared by the header and the
+body cells — do not hand-write `<th class="… text-right">`.
+
+- `Align: table.AlignEnd` right-aligns a column; `table.AlignStart` left-aligns
+  one in a table that inherited another alignment. The zero value emits no
+  class, so the cell inherits the table's alignment.
+- `Numeric: true` implies `AlignEnd`, and adds `tabular-nums` so digits keep
+  their column. Use it for every numeric column.
+- `TableHeadCellWithProps` and `SortableTableHeaderProps.Align` drive the
+  header; `TableCellWithProps` drives the cells. Pass the same `Align`/`Numeric`
+  to both so the column cannot drift between `<th>` and `<td>`.
+- An end-aligned sortable header spans the cell (`w-full justify-end`) and puts
+  the direction icon before the label, so the indicator never sits between the
+  text and the cell's right edge.
+- The positional `Class` still wins for one-off typography: alignment classes
+  are appended after it, never replace it.

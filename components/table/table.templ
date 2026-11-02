@@ -140,9 +140,39 @@ templ TableHeadRow() {
 	</tr>
 }
 
+// TableHeadCellProps configures a plain (non-sortable) <th> column header.
+// The zero value reproduces TableHeadCell("").
+type TableHeadCellProps struct {
+	// Label is the header text.
+	Label string
+	// Align sets the column's text alignment. AlignEnd right-aligns the header,
+	// which is the usual alignment for numeric and date columns.
+	Align TableAlign
+	// Numeric right-aligns the header and adds tabular-nums so the digits line
+	// up with the body cells. It implies AlignEnd.
+	Numeric bool
+	// Class are additional CSS classes appended to the <th>.
+	Class string
+	// Attrs are optional extra HTML attributes on the <th>.
+	Attrs templ.Attributes
+}
+
 // TableHeadCell renders a plain (non-sortable) <th> column header.
 templ TableHeadCell(label string) {
-	<th class="text-sm font-medium text-muted">{ label }</th>
+	@TableHeadCellWithProps(TableHeadCellProps{Label: label})
+}
+
+// TableHeadCellWithProps renders a plain (non-sortable) <th> column header with
+// alignment and caller attributes. Use the same Align/Numeric on the body
+// cells (TableCellWithProps) so header and cells stay aligned.
+templ TableHeadCellWithProps(props TableHeadCellProps) {
+	<th
+		scope="col"
+		class={ cellClasses("text-sm font-medium text-muted", alignClasses(props.Align, props.Numeric), props.Class) }
+		{ props.Attrs... }
+	>
+		{ props.Label }
+	</th>
 }
 
 // TableBody renders a <tbody> wrapper accepting row children.
@@ -172,10 +202,33 @@ templ TableRow(id string, hover bool, attrs templ.Attributes) {
 	</tr>
 }
 
+// TableCellProps configures a <td> body cell.
+// The zero value reproduces TableCell("", nil).
+type TableCellProps struct {
+	// Align sets the cell's text alignment. Use the column's TableHeadCell
+	// alignment so header and body agree.
+	Align TableAlign
+	// Numeric right-aligns the cell and adds tabular-nums. It implies AlignEnd.
+	Numeric bool
+	// Class are additional CSS classes appended to the <td>.
+	Class string
+	// Attrs are optional extra HTML attributes on the <td>.
+	Attrs templ.Attributes
+}
+
 // TableCell renders a <td> with an optional extra CSS class.
 // attrs is optional; pass nil when not needed.
 templ TableCell(class string, attrs templ.Attributes) {
-	<td class={ class } { attrs... }>
+	@TableCellWithProps(TableCellProps{Class: class, Attrs: attrs}) {
+		{ children... }
+	}
+}
+
+// TableCellWithProps renders a <td> with alignment and caller attributes.
+// Mirror the column's TableHeadCellProps Align/Numeric so the header and its
+// body cells cannot drift.
+templ TableCellWithProps(props TableCellProps) {
+	<td class={ cellClasses(alignClasses(props.Align, props.Numeric), props.Class) } { props.Attrs... }>
 		{ children... }
 	</td>
 }
