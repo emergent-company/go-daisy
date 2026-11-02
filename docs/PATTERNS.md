@@ -397,7 +397,8 @@ body cells — do not hand-write `<th class="… text-right">`.
   to both so the column cannot drift between `<th>` and `<td>`.
 - An end-aligned sortable header spans the cell (`w-full justify-end`) and puts
   the direction icon before the label, so the indicator never sits between the
-  text and the cell's right edge.
+  text and the cell's right edge. The link is `align-middle`, so moving the icon
+  to the front cannot drop a label a pixel below the rest of the row.
 - `Align`/`Numeric` are authoritative for alignment; `Class` stays the
   typography channel. Do not pass `text-right`/`text-left` in `Class` to
   override them — the utilities both resolve to `text-align`, so which one wins

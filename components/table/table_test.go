@@ -189,6 +189,12 @@ func TestSortableTableHeaderEndAligned(t *testing.T) {
 	if !strings.Contains(got, "w-full justify-end") {
 		t.Fatalf("end-aligned link must span the cell and pack right: %s", got)
 	}
+	// align-middle pins the icon-first link to the same line as icon-last links;
+	// without it an icon-first inline-flex sits ~1px higher (its baseline comes
+	// from the icon, which has no text baseline).
+	if !strings.Contains(got, "align-middle") {
+		t.Fatalf("sort link must keep align-middle: %s", got)
+	}
 
 	icon := strings.Index(got, "lucide--chevron-up")
 	label := strings.Index(got, "<span>Score</span>")
