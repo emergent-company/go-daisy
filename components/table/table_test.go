@@ -179,7 +179,7 @@ func TestSortableTableHeaderEndAligned(t *testing.T) {
 		Class:    "text-xs font-semibold",
 	}))
 
-	if !strings.Contains(got, `class="text-xs font-semibold text-right tabular-nums"`) {
+	if !strings.Contains(got, `class="text-right tabular-nums text-xs font-semibold"`) {
 		t.Fatalf("header cell classes: %s", got)
 	}
 	if !strings.Contains(got, `aria-sort="ascending"`) {
@@ -229,6 +229,38 @@ func TestSortableTableHeaderPlainColumnAligns(t *testing.T) {
 	}))
 	if !strings.Contains(got, `class="text-right"`) {
 		t.Fatalf("plain end-aligned header missing class: %s", got)
+	}
+	if strings.Contains(got, "<a ") {
+		t.Fatalf("plain header must not render a link: %s", got)
+	}
+
+	numeric := render(t, SortableTableHeader(SortableTableHeaderProps{
+		Label:   "Score",
+		Column:  "",
+		Sort:    SortContext{BasePath: "/items"},
+		Numeric: true,
+	}))
+	if !strings.Contains(numeric, `class="text-right tabular-nums"`) {
+		t.Fatalf("plain numeric header missing alignment: %s", numeric)
+	}
+}
+
+// TestSortableTableHeaderStartAlignedLink covers the opt-out path: AlignStart on
+// a linked header keeps the icon trailing and does not stretch the link.
+func TestSortableTableHeaderStartAlignedLink(t *testing.T) {
+	got := render(t, SortableTableHeader(SortableTableHeaderProps{
+		Label:    "Name",
+		Column:   "name",
+		Sort:     SortContext{BasePath: "/items", Query: url.Values{}},
+		FirstDir: SortAsc,
+		Align:    AlignStart,
+		Class:    "text-xs",
+	}))
+	if !strings.Contains(got, `class="text-left text-xs"`) {
+		t.Fatalf("align must precede caller class: %s", got)
+	}
+	if strings.Contains(got, "justify-end") || strings.Contains(got, "w-full") {
+		t.Fatalf("start-aligned link must not span the cell: %s", got)
 	}
 }
 

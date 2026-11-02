@@ -5,15 +5,16 @@ import "strings"
 // TableAlign controls the text alignment of a table header or body cell.
 //
 // The zero value emits no class, so a cell inherits the alignment of the table.
-// AlignStart and AlignEnd resolve to physical classes because the library has
-// no RTL story yet; both names describe the column's intent, so a future switch
-// to logical properties (`text-start`/`text-end`) stays local to alignClasses.
+// The constant values are the logical vocabulary ("start" / "end"); they resolve
+// to physical `text-left` / `text-right` utilities because the library has no
+// RTL story yet, so a future switch to logical properties stays local to
+// alignClasses.
 type TableAlign string
 
 const (
 	AlignDefault TableAlign = ""      // zero value: no alignment class
-	AlignStart   TableAlign = "left"  // text-left
-	AlignEnd     TableAlign = "right" // text-right
+	AlignStart   TableAlign = "start" // text-left
+	AlignEnd     TableAlign = "end"   // text-right
 )
 
 // alignClasses returns the Tailwind alignment utilities for a cell. Numeric

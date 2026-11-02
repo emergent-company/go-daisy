@@ -40,7 +40,7 @@ templ SortableTableHeader(props SortableTableHeaderProps) {
 	if href := props.Sort.Href(props.Column, props.FirstDir); href != "" {
 		<th
 			scope="col"
-			class={ cellClasses(props.Class, alignClasses(props.Align, props.Numeric)) }
+			class={ cellClasses(alignClasses(props.Align, props.Numeric), props.Class) }
 			if aria := props.Sort.AriaSort(props.Column); aria != "" {
 				aria-sort={ aria }
 			}
@@ -49,7 +49,7 @@ templ SortableTableHeader(props SortableTableHeaderProps) {
 			@sortableHeaderLink(props, href)
 		</th>
 	} else {
-		<th scope="col" class={ cellClasses(props.Class, alignClasses(props.Align, props.Numeric)) } { props.Attrs... }>
+		<th scope="col" class={ cellClasses(alignClasses(props.Align, props.Numeric), props.Class) } { props.Attrs... }>
 			{ props.Label }
 		</th>
 	}

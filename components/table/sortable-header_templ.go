@@ -66,7 +66,7 @@ func SortableTableHeader(props SortableTableHeaderProps) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		if href := props.Sort.Href(props.Column, props.FirstDir); href != "" {
-			var templ_7745c5c3_Var2 = []any{cellClasses(props.Class, alignClasses(props.Align, props.Numeric))}
+			var templ_7745c5c3_Var2 = []any{cellClasses(alignClasses(props.Align, props.Numeric), props.Class)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -124,7 +124,7 @@ func SortableTableHeader(props SortableTableHeaderProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			var templ_7745c5c3_Var5 = []any{cellClasses(props.Class, alignClasses(props.Align, props.Numeric))}
+			var templ_7745c5c3_Var5 = []any{cellClasses(alignClasses(props.Align, props.Numeric), props.Class)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var5...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
