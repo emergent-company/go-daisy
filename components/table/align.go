@@ -1,6 +1,10 @@
 package table
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/a-h/templ"
+)
 
 // TableAlign controls the text alignment of a table header or body cell.
 //
@@ -52,4 +56,62 @@ func cellClasses(parts ...string) string {
 // which packs the link and direction icon against the cell's right edge.
 func (p SortableTableHeaderProps) endAligned() bool {
 	return p.Numeric || p.Align == AlignEnd
+}
+
+// mergeAttrs merges a cell's default attributes with the caller's so every
+// attribute is emitted exactly once (a duplicate `class` or `scope` would be
+// resolved by the browser to the first one, silently dropping the other).
+//
+// `class` is always combined: the defaults' classes come first, any
+// caller-supplied class is appended — the same rule TableRow's rowAttrs uses.
+// Every other key, including `scope`, lets the caller override the default.
+func mergeAttrs(defaults, caller templ.Attributes) templ.Attributes {
+	out := templ.Attributes{}
+	for k, v := range defaults {
+		out[k] = v
+	}
+	for k, v := range caller {
+		if k == "class" {
+			extra, ok := v.(string)
+			if !ok || strings.TrimSpace(extra) == "" {
+				continue
+			}
+			base, _ := out["class"].(string)
+			out["class"] = cellClasses(base, extra)
+			continue
+		}
+		out[k] = v
+	}
+	return out
+}
+
+// headCellAttrs builds the <th> attributes for TableHeadCellWithProps.
+func headCellAttrs(props TableHeadCellProps) templ.Attributes {
+	return mergeAttrs(templ.Attributes{
+		"scope": "col",
+		"class": cellClasses("text-sm font-medium text-muted", alignClasses(props.Align, props.Numeric), props.Class),
+	}, props.Attrs)
+}
+
+// bodyCellAttrs builds the <td> attributes for TableCellWithProps.
+func bodyCellAttrs(props TableCellProps) templ.Attributes {
+	return mergeAttrs(templ.Attributes{
+		"class": cellClasses(alignClasses(props.Align, props.Numeric), props.Class),
+	}, props.Attrs)
+}
+
+// sortableHeaderAttrs builds the <th> attributes for SortableTableHeader. The
+// aria-sort default is only a default: callers that manage sorting themselves
+// may pass their own.
+func sortableHeaderAttrs(props SortableTableHeaderProps) templ.Attributes {
+	attrs := mergeAttrs(templ.Attributes{
+		"scope": "col",
+		"class": cellClasses(alignClasses(props.Align, props.Numeric), props.Class),
+	}, props.Attrs)
+	if aria := props.Sort.AriaSort(props.Column); aria != "" {
+		if _, overridden := props.Attrs["aria-sort"]; !overridden {
+			attrs["aria-sort"] = aria
+		}
+	}
+	return attrs
 }

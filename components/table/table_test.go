@@ -37,9 +37,10 @@ func renderWithText(t *testing.T, c templ.Component, text string) string {
 
 // TestTableHeadCellLegacyOutputIsUnchanged guards the 78 call sites of the
 // positional API: only the a11y scope attribute may differ from v0.18.0.
+// Attributes render in sorted key order (templ sorts templ.Attributes).
 func TestTableHeadCellLegacyOutputIsUnchanged(t *testing.T) {
 	got := render(t, TableHeadCell("Name"))
-	want := `<th scope="col" class="text-sm font-medium text-muted">Name</th>`
+	want := `<th class="text-sm font-medium text-muted" scope="col">Name</th>`
 	if got != want {
 		t.Fatalf("legacy header markup changed:\n got: %s\nwant: %s", got, want)
 	}
@@ -261,6 +262,81 @@ func TestSortableTableHeaderStartAlignedLink(t *testing.T) {
 	}
 	if strings.Contains(got, "justify-end") || strings.Contains(got, "w-full") {
 		t.Fatalf("start-aligned link must not span the cell: %s", got)
+	}
+}
+
+// TestAttrsMergeSingleAttributes covers the review finding: defaults (scope,
+// class) and caller Attrs must produce each attribute exactly once, with the
+// caller winning on scope and the classes combined.
+func TestAttrsMergeSingleAttributes(t *testing.T) {
+	head := render(t, TableHeadCellWithProps(TableHeadCellProps{
+		Label: "Grouped",
+		Align: AlignEnd,
+		Class: "text-xs",
+		Attrs: templ.Attributes{"scope": "colgroup", "colspan": "2", "class": "whitespace-nowrap"},
+	}))
+	if n := strings.Count(head, "scope="); n != 1 {
+		t.Fatalf("scope must be emitted once, got %d: %s", n, head)
+	}
+	if !strings.Contains(head, `scope="colgroup"`) {
+		t.Fatalf("caller scope must win: %s", head)
+	}
+	if n := strings.Count(head, "class="); n != 1 {
+		t.Fatalf("class must be emitted once, got %d: %s", n, head)
+	}
+	if !strings.Contains(head, `class="text-sm font-medium text-muted text-right text-xs whitespace-nowrap"`) {
+		t.Fatalf("classes must combine in order: %s", head)
+	}
+	if !strings.Contains(head, `colspan="2"`) {
+		t.Fatalf("extra attrs must survive: %s", head)
+	}
+
+	cell := renderWithText(t, TableCellWithProps(TableCellProps{
+		Numeric: true,
+		Attrs:   templ.Attributes{"class": "text-sm", "data-x": "1"},
+	}), "92")
+	if n := strings.Count(cell, "class="); n != 1 {
+		t.Fatalf("cell class must be emitted once, got %d: %s", n, cell)
+	}
+	if !strings.Contains(cell, `class="text-right tabular-nums text-sm"`) {
+		t.Fatalf("cell classes must combine: %s", cell)
+	}
+	if !strings.Contains(cell, `data-x="1"`) {
+		t.Fatalf("cell attrs must survive: %s", cell)
+	}
+}
+
+// TestSortableHeaderAttrsMerge keeps the same guarantee on the sortable th,
+// including an explicit aria-sort override.
+func TestSortableHeaderAttrsMerge(t *testing.T) {
+	got := render(t, SortableTableHeader(SortableTableHeaderProps{
+		Label:  "CPU",
+		Column: "cpu",
+		Sort:   SortContext{Params: SortParams{By: "cpu", Dir: SortAsc}, BasePath: "/hosts", Query: url.Values{}},
+		Class:  "text-xs",
+		Attrs:  templ.Attributes{"scope": "colgroup", "class": "uppercase"},
+	}))
+	thTag := got[:strings.Index(got, ">")+1]
+	for _, attr := range []string{"scope=", "class=", "aria-sort="} {
+		if n := strings.Count(thTag, attr); n != 1 {
+			t.Fatalf("%s must be emitted once on the <th>, got %d: %s", attr, n, thTag)
+		}
+	}
+	if !strings.Contains(got, `scope="colgroup"`) || !strings.Contains(got, `aria-sort="ascending"`) {
+		t.Fatalf("merge lost attributes: %s", got)
+	}
+	if !strings.Contains(thTag, `class="text-xs uppercase"`) {
+		t.Fatalf("sortable classes must combine: %s", thTag)
+	}
+
+	overridden := render(t, SortableTableHeader(SortableTableHeaderProps{
+		Label:  "CPU",
+		Column: "cpu",
+		Sort:   SortContext{Params: SortParams{By: "cpu", Dir: SortAsc}, BasePath: "/hosts"},
+		Attrs:  templ.Attributes{"aria-sort": "none"},
+	}))
+	if !strings.Contains(overridden, `aria-sort="none"`) || strings.Contains(overridden, `aria-sort="ascending"`) {
+		t.Fatalf("caller aria-sort must win: %s", overridden)
 	}
 }
 

@@ -166,11 +166,7 @@ templ TableHeadCell(label string) {
 // alignment and caller attributes. Use the same Align/Numeric on the body
 // cells (TableCellWithProps) so header and cells stay aligned.
 templ TableHeadCellWithProps(props TableHeadCellProps) {
-	<th
-		scope="col"
-		class={ cellClasses("text-sm font-medium text-muted", alignClasses(props.Align, props.Numeric), props.Class) }
-		{ props.Attrs... }
-	>
+	<th { headCellAttrs(props)... }>
 		{ props.Label }
 	</th>
 }
@@ -228,7 +224,7 @@ templ TableCell(class string, attrs templ.Attributes) {
 // Mirror the column's TableHeadCellProps Align/Numeric so the header and its
 // body cells cannot drift.
 templ TableCellWithProps(props TableCellProps) {
-	<td class={ cellClasses(alignClasses(props.Align, props.Numeric), props.Class) } { props.Attrs... }>
+	<td { bodyCellAttrs(props)... }>
 		{ children... }
 	</td>
 }
