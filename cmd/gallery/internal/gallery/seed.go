@@ -6463,8 +6463,8 @@ func AllComponents() []galleryruntime.GalleryComponent {
 									withChildren(table.TableCellWithBoundary(""), nameCell),
 									withChildren(table.TableCellWithBoundary(""), ui.StatusBadgeWithBoundary(r.Status)),
 									withChildren(table.TableCellWithBoundary("text-sm text-base-content/70"), rawHTML(r.Role)),
-									withChildren(table.TableCellWithBoundary("text-sm text-base-content/60"), rawHTML(r.Joined)),
-									withChildren(table.TableCellWithBoundary("text-right"), ui.ActionMenuWithBoundary(actionItems)),
+									withChildren(table.TableCellWithPropsWithBoundary(table.TableCellProps{Align: table.AlignEnd, Class: "text-sm text-muted"}), rawHTML(r.Joined)),
+									withChildren(table.TableCellWithPropsWithBoundary(table.TableCellProps{Align: table.AlignEnd}), ui.ActionMenuWithBoundary(actionItems)),
 								),
 							)
 						}
@@ -6477,7 +6477,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 										table.TableHeadCellWithBoundary("Name"),
 										table.TableHeadCellWithBoundary("Status"),
 										table.TableHeadCellWithBoundary("Role"),
-										table.TableHeadCellWithBoundary("Joined"),
+										table.TableHeadCellWithPropsWithBoundary(table.TableHeadCellProps{Label: "Joined", Align: table.AlignEnd}),
 										table.TableHeadCellWithBoundary(""),
 									)),
 								),
@@ -6590,7 +6590,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
 										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
 										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Dept)),
-										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Joined)),
+										withChildren(table.TableCellWithPropsWithBoundary(table.TableCellProps{Align: table.AlignEnd}), rawHTML(r.Joined)),
 									))
 								}
 								return withChildren(
@@ -6600,7 +6600,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 											table.TableHeadCellWithBoundary("Name"),
 											table.TableHeadCellWithBoundary("Role"),
 											table.TableHeadCellWithBoundary("Department"),
-											table.TableHeadCellWithBoundary("Joined"),
+											table.TableHeadCellWithPropsWithBoundary(table.TableHeadCellProps{Label: "Joined", Align: table.AlignEnd}),
 										))),
 										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
 									),
@@ -6663,7 +6663,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 									rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
 										withChildren(table.TableCellWithBoundary(""), nameCell),
 										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Role)),
-										withChildren(table.TableCellWithBoundary(""), rawHTML(r.Joined)),
+										withChildren(table.TableCellWithPropsWithBoundary(table.TableCellProps{Align: table.AlignEnd}), rawHTML(r.Joined)),
 									))
 								}
 								return withChildren(
@@ -6672,7 +6672,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 										withChildren(table.TableHeadWithBoundary(), withChildren(table.TableHeadRowWithBoundary(), seq(
 											table.TableHeadCellWithBoundary("Name"),
 											table.TableHeadCellWithBoundary("Role"),
-											table.TableHeadCellWithBoundary("Joined"),
+											table.TableHeadCellWithPropsWithBoundary(table.TableHeadCellProps{Label: "Joined", Align: table.AlignEnd}),
 										))),
 										withChildren(table.TableBodyWithBoundary(), seq(rowComponents...)),
 									),
@@ -7070,7 +7070,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 						for i, r := range rows {
 							rowComponents[i] = withChildren(table.TableRowWithBoundary("", false), seq(
 								withChildren(table.TableCellWithBoundary(""), rawHTML(r.Name)),
-								withChildren(table.TableCellWithBoundary("text-right tabular-nums"), rawHTML(fmt.Sprintf("%d", r.Score))),
+								withChildren(table.TableCellWithPropsWithBoundary(table.TableCellProps{Numeric: true}), rawHTML(fmt.Sprintf("%d", r.Score))),
 								withChildren(table.TableCellWithBoundary(""), ui.StatusBadgeWithBoundary(r.Status)),
 							))
 						}
@@ -7082,7 +7082,7 @@ func AllComponents() []galleryruntime.GalleryComponent {
 										Label: "Name", Column: "name", Sort: sc, FirstDir: table.SortAsc, Class: headClass,
 									}),
 									table.SortableTableHeaderWithBoundary(table.SortableTableHeaderProps{
-										Label: "Score", Column: "score", Sort: sc, FirstDir: table.SortDesc, Class: headClass + " text-right",
+										Label: "Score", Column: "score", Sort: sc, FirstDir: table.SortDesc, Align: table.AlignEnd, Numeric: true, Class: headClass,
 									}),
 									table.SortableTableHeaderWithBoundary(table.SortableTableHeaderProps{
 										Label: "Status", Column: "status", Sort: sc, FirstDir: table.SortAsc, Class: headClass,

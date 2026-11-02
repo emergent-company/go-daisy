@@ -352,12 +352,16 @@ rows = sortRows(rows, sc.Params)
     Column:   "cpu",
     Sort:     sc,
     FirstDir: table.SortDesc,
-    Class:    "text-xs font-semibold text-muted uppercase text-right",
+    Align:    table.AlignEnd,
+    Numeric:  true,
+    Class:    "text-xs font-semibold text-muted uppercase",
 })
 ```
 
-`Class` is the header cell's full class, not an add-on. Pass the same header
-typography your table uses; the component does not impose one.
+`Class` is the header cell's full typography class, not an add-on. Pass the same
+header typography your table uses; the component does not impose one. Alignment
+is separate — set `Align`/`Numeric` and let the component append the alignment
+utilities after `Class`.
 
 - `SortContext` clones the request query, so filters survive a sort click.
 - `FirstDir` chooses the useful first click per column (`desc` for metrics,
@@ -376,3 +380,26 @@ typography your table uses; the component does not impose one.
   fragment contract follow-up.
 - `SortParams.By` is user-controlled. Validate it against a known column map in
   the handler before applying it.
+
+### Right-aligned columns (numbers, dates)
+
+Alignment is a column property, expressed once and shared by the header and the
+body cells — do not hand-write `<th class="… text-right">`.
+
+- `Align: table.AlignEnd` right-aligns a column; `table.AlignStart` left-aligns
+  one in a table that inherited another alignment. The zero value emits no
+  class, so the cell inherits the table's alignment.
+- `Numeric: true` implies `AlignEnd`, and adds `tabular-nums` so digits keep
+  their column. Use it for numeric columns and for digit-shaped timestamps;
+  a plain calendar date reads fine with `AlignEnd` alone.
+- `TableHeadCellWithProps` and `SortableTableHeaderProps.Align` drive the
+  header; `TableCellWithProps` drives the cells. Pass the same `Align`/`Numeric`
+  to both so the column cannot drift between `<th>` and `<td>`.
+- An end-aligned sortable header spans the cell (`w-full justify-end`) and puts
+  the direction icon before the label, so the indicator never sits between the
+  text and the cell's right edge. The link is `align-middle`, so moving the icon
+  to the front cannot drop a label a pixel below the rest of the row.
+- `Align`/`Numeric` are authoritative for alignment; `Class` stays the
+  typography channel. Do not pass `text-right`/`text-left` in `Class` to
+  override them — the utilities both resolve to `text-align`, so which one wins
+  depends on the generated CSS order, not on the attribute.
