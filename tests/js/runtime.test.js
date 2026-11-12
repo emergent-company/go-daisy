@@ -200,6 +200,85 @@ test('dropdown: Escape on a trigger whose menu is closed is a no-op', () => {
   assert.ok(root.hasAttribute('data-gd-menu-open'), 'open marker set by ArrowDown');
 });
 
+// The product shape: ui.Dropdown wraps a plain ui.Button trigger, which has no
+// data-gd-menu-trigger, so go-daisy-a11y.js does not wire this root. It is a
+// plain CSS-only daisyUI dropdown that opens on :focus-within.
+const UNWIRED_DROPDOWN = `
+<div class="dropdown dropdown-end" data-gd-menu-root id="unwired">
+  <button type="button" tabindex="0" aria-haspopup="menu" aria-expanded="false" id="unwired-trigger">Project A</button>
+  <ul role="menu" tabindex="0" data-gd-menu class="dropdown-content" id="unwired-menu">
+    <li role="none"><a role="menuitem" data-gd-menu-item id="switch-a" href="#">Project A</a></li>
+    <li role="none"><a role="menuitem" data-gd-menu-item id="switch-b" href="#">Project B</a></li>
+  </ul>
+</div>`;
+
+function click(window, el) {
+  el.dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true }));
+}
+
+function pointerdown(window, el) {
+  el.dispatchEvent(new window.Event('pointerdown', { bubbles: true, cancelable: true }));
+}
+
+test('dropdown: an unwired root is never marked closed, so it opens every time', () => {
+  const { window } = setup(`${UNWIRED_DROPDOWN}<button id="outside">elsewhere</button>`);
+  const doc = window.document;
+  const root = doc.getElementById('unwired');
+  const trigger = doc.getElementById('unwired-trigger');
+  const outside = doc.getElementById('outside');
+
+  assert.notEqual(root.getAttribute('data-gd-menu-wired'), 'true', 'no trigger attribute, so the root is not wired');
+
+  // Open, click somewhere else, open again: the marker must never appear.
+  // daisyUI hides the panel again on focus-leave by itself; a data-gd-menu-closed
+  // marker here would outlive the click that set it and pin the dropdown shut,
+  // because only the handlers wire() installs ever clear it.
+  click(window, trigger);
+  click(window, outside);
+  assert.ok(!root.hasAttribute('data-gd-menu-closed'), 'outside click must not stamp the marker on an unwired root');
+
+  click(window, trigger);
+  click(window, outside);
+  click(window, trigger);
+  click(window, outside);
+  assert.ok(!root.hasAttribute('data-gd-menu-closed'), 'repeated open/outside cycles stay clean');
+});
+
+test('dropdown: a wired root is still closed and marked by an outside click', () => {
+  const { window } = setup(`${DROPDOWN}<button id="outside">elsewhere</button>`);
+  const doc = window.document;
+  const trigger = doc.getElementById('trigger');
+  const root = doc.getElementById('root');
+
+  press(window, trigger, 'ArrowDown');
+  assert.equal(trigger.getAttribute('aria-expanded'), 'true');
+
+  click(window, doc.getElementById('outside'));
+
+  assert.equal(trigger.getAttribute('aria-expanded'), 'false');
+  assert.ok(root.hasAttribute('data-gd-menu-closed'), 'wired roots keep the managed close path');
+});
+
+test('dropdown: pointerdown clears a stale closed marker on an unwired root', () => {
+  const { window } = setup(UNWIRED_DROPDOWN);
+  const doc = window.document;
+  const root = doc.getElementById('unwired');
+
+  // A page may close an unwired root through the public API, which stamps the
+  // marker without installing the handlers that clear it.
+  root.setAttribute('data-gd-menu-closed', '');
+  pointerdown(window, doc.getElementById('unwired-trigger'));
+  assert.ok(!root.hasAttribute('data-gd-menu-closed'), 'the next interaction inside the root clears it');
+
+  // Wired roots keep their own marker discipline: the menubar re-stamps it so a
+  // Tab into the bar cannot auto-open a menu.
+  const wired = setup(DROPDOWN).window;
+  const wiredRoot = wired.document.getElementById('root');
+  wiredRoot.setAttribute('data-gd-menu-closed', '');
+  pointerdown(wired, wired.document.getElementById('rename'));
+  assert.ok(wiredRoot.hasAttribute('data-gd-menu-closed'), 'wired roots are left alone by the recovery net');
+});
+
 test('context menu: opens at the pointer with the first item focused', () => {
   const { window } = setup(CONTEXT_MENU);
   const doc = window.document;
