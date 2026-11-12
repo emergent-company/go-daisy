@@ -25,6 +25,11 @@
  *                                       on focus-leave (composed owners such as
  *                                       the menubar own when a menu may open)
  *
+ * A root without [data-gd-menu-trigger] is not wired, and the runtime leaves it
+ * to daisyUI's CSS-only (:focus-within) behaviour: it never closes it and never
+ * stamps the closed marker on it. Use [data-gd-menu-trigger] to opt into the
+ * keyboard/focus upgrade.
+ *
  * Behaviour: ArrowDown/Up/Home/End roving focus, Enter/Space activation,
  * Escape closes and restores focus, Tab closes and leaves, printable-key
  * typeahead, click-outside closes, aria-expanded kept in sync.
@@ -356,11 +361,31 @@
     // One delegated click listener for every menu root. Registering this per
     // root would leak a listener (and a detached DOM reference) on every htmx
     // swap that re-renders a dropdown.
+    //
+    // Only roots this runtime actually wired are closed here. An unwired root
+    // (no [data-gd-menu-trigger], so wire() bailed) is a plain CSS-only daisyUI
+    // dropdown: it already closes when focus leaves it, and stamping
+    // data-gd-menu-closed on it would be permanent, because every handler that
+    // clears that marker is installed by wire(). That made such a dropdown open
+    // exactly once per page load: the first outside click hid the panel for good.
     document.addEventListener('click', function (event) {
       var inside = event.target.closest && event.target.closest('[data-gd-menu-root]');
       Array.prototype.forEach.call(document.querySelectorAll('[data-gd-menu-root]'), function (root) {
-        if (root !== inside) close(root, false);
+        if (root === inside) return;
+        if (root.getAttribute('data-gd-menu-wired') !== 'true') return;
+        close(root, false);
       });
+    });
+
+    // Recovery net for an unwired root that acquired the marker anyway (a page
+    // calling gdMenu.close(root) on it, or markup that lost its trigger between
+    // swaps). The marker means "the user just closed this"; the next interaction
+    // inside the root has to clear it or the dropdown never opens again. Wired
+    // roots keep owning their own marker (the menubar deliberately re-stamps it).
+    document.addEventListener('pointerdown', function (event) {
+      var root = event.target.closest && event.target.closest('[data-gd-menu-root]');
+      if (!root || root.getAttribute('data-gd-menu-wired') === 'true') return;
+      root.removeAttribute('data-gd-menu-closed');
     });
     document.addEventListener('DOMContentLoaded', gdMenu.rescan);
     // Also wire immediately: a component script injected after DOMContentLoaded

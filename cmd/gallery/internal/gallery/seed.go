@@ -1243,9 +1243,12 @@ func AllComponents() []galleryruntime.GalleryComponent {
 							{Label: "Duplicate"},
 							{Label: "Delete", Danger: true},
 						}
+						// A plain ui.Button trigger (no ui.DropdownTrigger) is the
+						// shape most callers use: a CSS-only daisyUI dropdown that
+						// go-daisy-a11y.js deliberately leaves unwired.
 						return row(
-							withText("Align left", ui.DropdownWithBoundary("", ui.Button(ui.ButtonProps{Variant: ui.ButtonPrimary, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault}), items)),
-							withText("Align right", ui.DropdownWithBoundary(ui.DropdownEnd, ui.Button(ui.ButtonProps{Variant: ui.ButtonGhost, Size: ui.ButtonSM, Type: ui.ButtonTypeButton, Shape: ui.ButtonShapeDefault}), items)),
+							withText("Align left", ui.DropdownWithBoundary("", ui.SimpleButton("Options", ui.ButtonPrimary, ui.ButtonSM, false, nil), items)),
+							withText("Align right", ui.DropdownWithBoundary(ui.DropdownEnd, ui.SimpleButton("Actions", ui.ButtonGhost, ui.ButtonSM, false, nil), items)),
 						)
 					},
 				},
