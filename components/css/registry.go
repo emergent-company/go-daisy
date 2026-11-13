@@ -32,6 +32,23 @@ const CustomCSS = "css/custom.css"
 //	@import "../components/css/tokens.css";
 const TokensCSS = "css/tokens.css"
 
+// MemoryThemeCSS is the Memory brand theme: the daisyUI `dark` palette plus the
+// two theme-level bridges go-daisy components need to render under it (the
+// Tailwind radius alias and the `--color-muted-*` scale).
+//
+// It is brand, not package: it belongs to no component package, so it is
+// deliberately absent from Registry and CSSFilesFor. A consumer opts in when it
+// wants the brand instead of a neutral daisyUI theme. Import order matters —
+// tokens.css declares its own `--color-muted`, so the theme must come last:
+//
+//	@import "../components/css/tokens.css";
+//	@import "../components/css/custom.css";
+//	@import "../components/css/theme-memory.css";
+//
+// A consumer whose `@plugin "daisyui"` block prunes themes must keep
+// `dark --default` so the theme this file overrides is present.
+const MemoryThemeCSS = "css/theme-memory.css"
+
 // PackageAssets describes the CSS a go-daisy component package needs.
 type PackageAssets struct {
 	// DaisyUIModules lists the daisyUI modules the package's components

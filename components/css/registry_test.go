@@ -3,6 +3,7 @@ package css
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -33,5 +34,56 @@ func TestCustomCSSExists(t *testing.T) {
 	path := filepath.Join(here, filepath.Base(CustomCSS))
 	if _, err := os.Stat(path); err != nil {
 		t.Fatalf("custom.css not found at %s: %v", path, err)
+	}
+}
+
+// TestMemoryThemeCSS pins the brand theme contract: the file ships next to the
+// registry, overrides daisyUI's `dark` theme (so consumers that prune themes
+// keep it), and carries both bridges go-daisy markup depends on. Dropping the
+// radius alias silently reverts every `rounded-lg` in the library to Tailwind's
+// literal scale, and dropping the muted scale breaks `text-muted-faint`, both
+// with no compile error.
+func TestMemoryThemeCSS(t *testing.T) {
+	here, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(here, filepath.Base(MemoryThemeCSS))
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("theme-memory.css not found at %s: %v", path, err)
+	}
+	src := string(data)
+
+	for _, want := range []struct{ name, needle string }{
+		{"daisyUI theme plugin", `@plugin "daisyui/theme"`},
+		{"overrides the dark theme", `name: "dark"`},
+		{"is the default theme", `default: true`},
+		{"declares a dark color scheme", `color-scheme: dark`},
+		{"brand primary", `--color-primary:`},
+		{"radius bridge", `--radius-lg: var(--radius-box)`},
+		{"muted-subtle step", `--color-muted-subtle:`},
+		{"muted-faint step", `--color-muted-faint:`},
+		{"muted step", `--color-muted:`},
+		{"muted-strong step", `--color-muted-strong:`},
+		{"muted-bright step", `--color-muted-bright:`},
+	} {
+		if !strings.Contains(src, want.needle) {
+			t.Errorf("theme-memory.css missing %s (%q)", want.name, want.needle)
+		}
+	}
+}
+
+// TestMemoryThemeCSSIsNotAPackageAsset pins the placement decision: the brand
+// theme belongs to no component package, so no package may claim it. If it ever
+// appears in Registry it would be pulled into every consumer that asks for
+// `ui`, and a consumer running its own brand would silently lose it.
+func TestMemoryThemeCSSIsNotAPackageAsset(t *testing.T) {
+	for pkg, assets := range Registry {
+		for _, f := range assets.CSSFiles {
+			if f == MemoryThemeCSS {
+				t.Errorf("package %q lists the brand theme in its CSS assets", pkg)
+			}
+		}
 	}
 }

@@ -20,7 +20,7 @@ Components live under `components/` and are organized by package:
 
 | Package | Contents |
 |---|---|
-| `components/ui` | Primitives: Button, Badge, Card, Avatar, Toast, Alert, PaginationWithProps, Chart, ProgressBar, Frame, Dashboard, Aura, Dialog, ConfirmDialog, etc. |
+| `components/ui` | Primitives: Button, Badge, Card, Avatar, Toast, Alert, PaginationWithProps, Chart, ProgressBar, Frame, Dashboard, Aura, Dialog, ConfirmDialog, AccountMenu, etc. |
 | `components/form` | Form field wrappers, inputs, selects, wizards, OTP, ColorInput, DatalistInput |
 | `components/layout` | Full-page shell, sidebar, navbar, LayoutCustomizer |
 | `components/nav` | PageHeader, TabMenu, TopBar, Megamenu, breadcrumbs, menus |
@@ -35,6 +35,13 @@ Two distinct modal families exist — do not confuse them:
 - **`ui.Dialog`** and **`ui.ConfirmDialog`** are the minimal native-dialog family: a bare `<dialog class="modal">` shell opened via `showModal()`/`close()`, with caller-supplied attributes and no mandatory header.
 
 All component functions return `templ.Component`. Props are passed as plain Go structs or positional arguments — no global state.
+
+`ui.AccountMenu` is the topbar account control shared by the org's apps: an
+avatar trigger whose dropdown shows the active account, the cached accounts the
+visitor can switch to, and Add another account / My Profile / Log out. It is
+passive — the hosting app passes its own paths, and an empty path omits that row
+rather than rendering a dead control. It needs go-daisy's
+`static/js/go-daisy-a11y.js`, which is what opens the dropdown.
 
 ---
 
@@ -393,6 +400,33 @@ component CSS:
 
 The tokens are declared with `@theme inline` so they resolve against the active
 `data-theme` at the point of use — required for nested theme previews.
+
+### Brand theme (opt-in)
+
+`components/css/theme-memory.css` carries the Memory brand: the daisyUI `dark`
+palette plus the two theme-level bridges every go-daisy component needs under it
+— the Tailwind radius alias (`--radius-*` onto `--radius-field`/`--radius-box`/
+`--radius-selector`) and the `--color-muted-subtle…bright` scale that
+`text-muted-*` resolves against.
+
+It is **brand, not package**: no component package lists it in
+`components/css/registry.go`, because an app with its own brand must be able to
+use `ui`/`layout` without inheriting Memory's palette. An app that wants the
+brand imports it last, and keeps `dark --default` in its daisyUI plugin block
+when it prunes themes:
+
+```css
+@import "tailwindcss";
+@plugin "daisyui" { themes: dark --default; }
+@import "../components/css/tokens.css";
+@import "../components/css/custom.css";
+@import "../components/css/theme-memory.css";
+```
+
+Import order is load-bearing: `tokens.css` declares its own `--color-muted`, so
+the theme must come after it to win. Both consumers (the Memory gateway and the
+market) import this file instead of re-declaring the palette, which is what
+stops the two apps drifting on colour, radius or the muted scale.
 
 ### Typography roles
 

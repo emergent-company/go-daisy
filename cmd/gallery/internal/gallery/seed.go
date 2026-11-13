@@ -1255,6 +1255,54 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
+			Slug:        "account-menu",
+			Name:        "Account Menu",
+			Category:    galleryruntime.CategoryOverlays,
+			Subcategory: "Display",
+			Description: "Topbar account control: avatar trigger, active account, cached accounts and the account actions. Shared by the org's apps so the two products cannot drift.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Signed in",
+					Description: "One active account plus a cached account to switch to, with every action wired.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.AccountMenu(ui.AccountMenuProps{
+							SignedIn: true,
+							Active: ui.Account{
+								Sub:     "sub-ada",
+								Name:    "Ada Lovelace",
+								Email:   "ada@example.test",
+								Picture: "https://picsum.photos/96/96",
+							},
+							Others: []ui.Account{
+								{Sub: "sub-grace", Name: "Grace Hopper", Email: "grace@example.test"},
+							},
+							SwitchPath:  "/auth/switch",
+							AddPath:     "/auth/add",
+							ProfilePath: "/profile",
+							LogoutPath:  "/auth/logout",
+						})
+					},
+				},
+				{
+					Name:        "Initials fallback",
+					Description: "An account with no picture renders initials; with no actions set, those rows are omitted rather than dead.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.AccountMenu(ui.AccountMenuProps{
+							SignedIn: true,
+							Active:   ui.Account{Name: "Grace Hopper", Email: "grace@example.test"},
+						})
+					},
+				},
+				{
+					Name:        "Signed out",
+					Description: "The public catalog's chrome: one sign-in control and no menu.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.AccountMenu(ui.AccountMenuProps{SignInPath: "/auth/login"})
+					},
+				},
+			},
+		},
+		{
 			Slug:        "swap",
 			Name:        "Swap",
 			Category:    galleryruntime.CategoryOverlays,
