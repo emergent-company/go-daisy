@@ -91,6 +91,7 @@ var ComponentSlugs = map[string]string{
 	"Breadcrumbs":      "breadcrumbs",
 	"Dock":             "dock-nav",
 	"ProfileMenu":      "profile-menu",
+	"AccountMenu":      "account-menu",
 	"PageTitleMinimal": "page-title-minimal",
 	"PageTitleEditor":  "page-title-editor",
 	"FooterMinimal":    "footer-minimal",

@@ -4097,6 +4097,54 @@ func AllComponents() []galleryruntime.GalleryComponent {
 			},
 		},
 		{
+			Slug:        "account-menu",
+			Name:        "Account Menu",
+			Category:    galleryruntime.CategoryNavigation,
+			Subcategory: "Profile Menus",
+			Description: "The wired topbar account control: avatar trigger, the active account, the cached accounts it can switch to, and the account actions. Unlike the static ProfileMenu showcase variants, every row here is a real control backed by a route the host passes in. Shared by the org's apps so two products cannot drift on labels, rows or behaviour.",
+			Variants: []galleryruntime.GalleryStory{
+				{
+					Name:        "Signed in",
+					Description: "One active account plus a cached account to switch to, with every action wired (the switch row POSTs its sub, logout is a POST form).",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.AccountMenuWithBoundary(ui.AccountMenuProps{
+							SignedIn: true,
+							Active: ui.Account{
+								Sub:     "sub-ada",
+								Name:    "Ada Lovelace",
+								Email:   "ada@example.test",
+								Picture: "https://picsum.photos/96/96",
+							},
+							Others: []ui.Account{
+								{Sub: "sub-grace", Name: "Grace Hopper", Email: "grace@example.test"},
+							},
+							SwitchPath:  "/auth/switch",
+							AddPath:     "/auth/add",
+							ProfilePath: "/profile",
+							LogoutPath:  "/auth/logout",
+						})
+					},
+				},
+				{
+					Name:        "Initials fallback",
+					Description: "An account with no picture renders initials; with no action paths set, those rows are omitted rather than rendered dead.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.AccountMenuWithBoundary(ui.AccountMenuProps{
+							SignedIn: true,
+							Active:   ui.Account{Name: "Grace Hopper", Email: "grace@example.test"},
+						})
+					},
+				},
+				{
+					Name:        "Signed out",
+					Description: "The public catalog's chrome: one sign-in control and no menu.",
+					RenderFunc: func(_ url.Values) templ.Component {
+						return ui.AccountMenuWithBoundary(ui.AccountMenuProps{SignInPath: "/auth/login"})
+					},
+				},
+			},
+		},
+		{
 			Slug:        "profile-menu",
 			Name:        "Profile Menu",
 			Category:    galleryruntime.CategoryNavigation,

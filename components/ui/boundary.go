@@ -1165,6 +1165,17 @@ func NotificationDropdownWithBoundary(props NotificationDropdownProps) templ.Com
 	})
 }
 
+// AccountMenuWithBoundary wraps AccountMenu with a dev-mode component boundary
+// annotation.
+// gallery:token signedIn,class
+func AccountMenuWithBoundary(props AccountMenuProps) templ.Component {
+	return devmode.ComponentBoundary("AccountMenu", AccountMenu(props), map[string]any{
+		"signedIn": props.SignedIn,
+		"class":    props.Class,
+		"others":   len(props.Others),
+	})
+}
+
 // HoverGalleryWithBoundary wraps HoverGallery with a dev-mode component boundary annotation.
 func HoverGalleryWithBoundary(images []HoverGalleryImage) templ.Component {
 	return devmode.ComponentBoundary("HoverGallery", HoverGallery(images), map[string]any{
