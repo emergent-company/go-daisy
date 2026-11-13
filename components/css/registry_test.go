@@ -67,9 +67,50 @@ func TestMemoryThemeCSS(t *testing.T) {
 		{"muted step", `--color-muted:`},
 		{"muted-strong step", `--color-muted-strong:`},
 		{"muted-bright step", `--color-muted-bright:`},
+		{"per-element resolution", "@theme inline {"},
+		{"direct var() consumers", "\n:root {"},
 	} {
 		if !strings.Contains(src, want.needle) {
 			t.Errorf("theme-memory.css missing %s (%q)", want.name, want.needle)
+		}
+	}
+}
+
+// TestMemoryThemeMutedScaleIsInlinedAndRooted pins the two-declaration rule: the
+// muted scale is declared `@theme inline` (so utilities resolve per element
+// under a nested theme) AND in a `:root` block (so a consumer's own
+// `var(--color-muted-*)` rules still resolve). Only one of the two silently
+// breaks a different consumer, so both must list the same five steps.
+func TestMemoryThemeMutedScaleIsInlinedAndRooted(t *testing.T) {
+	here, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	src, err := os.ReadFile(filepath.Join(here, filepath.Base(MemoryThemeCSS)))
+	if err != nil {
+		t.Fatalf("theme-memory.css: %v", err)
+	}
+
+	steps := []string{"muted-subtle", "muted-faint", "muted", "muted-strong", "muted-bright"}
+	text := string(src)
+	inlineAt := strings.Index(text, "@theme inline {")
+	if inlineAt < 0 {
+		t.Fatal("no @theme inline block")
+	}
+	rootAt := strings.Index(text, "\n:root {")
+	if rootAt < 0 {
+		t.Fatal("no :root block")
+	}
+	inlineBlock := text[inlineAt:rootAt]
+	rootBlock := text[rootAt:]
+
+	for _, step := range steps {
+		decl := "--color-" + step + ":"
+		if !strings.Contains(inlineBlock, decl) {
+			t.Errorf("@theme inline block missing %s", decl)
+		}
+		if !strings.Contains(rootBlock, decl) {
+			t.Errorf(":root block missing %s", decl)
 		}
 	}
 }

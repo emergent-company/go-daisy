@@ -116,21 +116,51 @@ func TestAccountMenuOmitsRowsForEmptyPaths(t *testing.T) {
 	if !strings.Contains(html, `data-testid="account-menu-active"`) {
 		t.Errorf("active account row must render even with no actions:\n%s", html)
 	}
+	if strings.Contains(html, `<li aria-hidden="true"></li>`) {
+		t.Errorf("no divider may render when nothing follows it:\n%s", html)
+	}
 }
 
 // TestAccountMenuSkipsAccountsWithoutSub pins the switch form contract: a row
-// with no sub would post an empty value, which can only switch to nothing.
+// with no sub would post an empty value, which can only switch to nothing. With
+// no switchable account left, the section heading goes too — a heading over an
+// empty list reads as a broken menu.
 func TestAccountMenuSkipsAccountsWithoutSub(t *testing.T) {
 	props := signedInProps()
 	props.Others = []Account{{Name: "No Id", Email: "nobody@example.test"}}
 
 	html := renderAccountMenu(t, props)
 
-	if !strings.Contains(html, ">Switch account</li>") {
-		t.Errorf("section heading still renders:\n%s", html)
-	}
 	if strings.Contains(html, "No Id") {
 		t.Errorf("account without a sub must be skipped:\n%s", html)
+	}
+	if strings.Contains(html, "Switch account") {
+		t.Errorf("heading must not render over an empty switch list:\n%s", html)
+	}
+	if strings.Contains(html, `data-testid="account-menu-switch"`) {
+		t.Errorf("no switch form may render:\n%s", html)
+	}
+}
+
+// TestAccountMenuNoSubKeepsOtherSections pins the split: skipping one unusable
+// account must not take the usable ones (or the actions) down with it.
+func TestAccountMenuNoSubKeepsOtherSections(t *testing.T) {
+	props := signedInProps()
+	props.Others = []Account{
+		{Name: "No Id", Email: "nobody@example.test"},
+		{Sub: "sub-grace", Name: "Grace Hopper"},
+	}
+
+	html := renderAccountMenu(t, props)
+
+	if !strings.Contains(html, "Switch account") {
+		t.Errorf("heading must render when a usable account remains:\n%s", html)
+	}
+	if strings.Contains(html, "No Id") {
+		t.Errorf("unusable account must be skipped:\n%s", html)
+	}
+	if !strings.Contains(html, `name="sub" value="sub-grace"`) {
+		t.Errorf("usable account must still render:\n%s", html)
 	}
 }
 
@@ -223,5 +253,44 @@ func TestAccountMenuEscapesAccountFields(t *testing.T) {
 	}
 	if !strings.Contains(html, string(templ.FailedSanitizationURL)) {
 		t.Errorf("unsafe picture must fall back to the failure URL:\n%s", html)
+	}
+}
+
+// TestAccountMenuClassIsAppended pins the standard props contract: Class is
+// appended to the root's own classes, not swapped for them (the root must stay a
+// dropdown for the menu to open at all).
+func TestAccountMenuClassIsAppended(t *testing.T) {
+	props := signedInProps()
+	props.Class = "max-w-xs"
+
+	html := renderAccountMenu(t, props)
+
+	if !strings.Contains(html, "dropdown dropdown-end max-w-xs") {
+		t.Errorf("Class must be appended to the root classes:\n%s", html)
+	}
+}
+
+// TestAccountMenuSingleMenuRoot pins the dev-mode annotation boundary: the root
+// is this component's own element, so it carries exactly one menu root and the
+// runtime can wire it. Delegating to ui.Dropdown would stamp a second
+// data-component and the overlay would attribute the menu to Dropdown.
+func TestAccountMenuSingleMenuRoot(t *testing.T) {
+	html := renderAccountMenu(t, signedInProps())
+
+	if n := strings.Count(html, "data-gd-menu-root"); n != 1 {
+		t.Errorf("want exactly one menu root, got %d:\n%s", n, html)
+	}
+	if n := strings.Count(html, `class="dropdown dropdown-end`); n != 1 {
+		t.Errorf("want exactly one dropdown root, got %d:\n%s", n, html)
+	}
+}
+
+// TestAccountMenuSignInClassIsAppended pins the same contract for the signed-out
+// branch, which is a different root element.
+func TestAccountMenuSignInClassIsAppended(t *testing.T) {
+	html := renderAccountMenu(t, AccountMenuProps{SignInPath: "/auth/login", Class: "w-full"})
+
+	if !strings.Contains(html, "btn btn-ghost btn-sm w-full") {
+		t.Errorf("Class must be appended to the sign-in link classes:\n%s", html)
 	}
 }

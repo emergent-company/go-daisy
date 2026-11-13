@@ -1783,6 +1783,30 @@ func NotificationDropdownTokens() []galleryruntime.DesignToken {
 	}
 }
 
+// AccountMenuTokens returns the DesignToken slice for AccountMenuWithBoundary.
+func AccountMenuTokens() []galleryruntime.DesignToken {
+	return []galleryruntime.DesignToken{
+		{
+			Label:      "Signed In",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeSelect,
+			Default:    "false",
+			QueryParam: "signedIn",
+			Options: []galleryruntime.TokenOption{
+				{Value: "false", Label: "No"},
+				{Value: "true", Label: "Yes"},
+			},
+		},
+		{
+			Label:      "Class",
+			Group:      "Component",
+			Type:       galleryruntime.TokenTypeText,
+			Default:    "",
+			QueryParam: "class",
+		},
+	}
+}
+
 // TabsTokens returns the DesignToken slice for TabsWithBoundary.
 func TabsTokens() []galleryruntime.DesignToken {
 	return []galleryruntime.DesignToken{

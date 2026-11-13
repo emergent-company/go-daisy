@@ -1,16 +1,17 @@
 /* Memory brand theme — the daisyUI palette and the two theme-level bridges that
  * make go-daisy's components render under it.
  *
- * This file is the single source of truth for the brand: the product gateway
- * (apps/web-ui/gateway/webui/css/app.css) and the market both @import it, so the
- * two apps cannot drift on colour, radius or the de-emphasised text scale. It is
- * NOT a component stylesheet — components live in their own packages.
+ * This file is the single source of truth for the brand. Its consumers are the
+ * Memory gateway (apps/web-ui/gateway/webui/css/app.css) and the market; both
+ * @import it instead of re-declaring the palette, so the two apps cannot drift
+ * on colour, radius or the de-emphasised text scale. It is NOT a component
+ * stylesheet — components live in their own packages.
  *
  * Import order matters. Import `tokens.css`, then `custom.css`, then this file:
  * tokens.css declares its own `--color-muted` at 60%, and this file's canonical
  * 50% step must win. Importing the theme last is what makes that true, instead
  * of a consumer re-asserting the value after the component CSS (which is what
- * the gateway did before this file existed).
+ * the gateway had to do before this file existed).
  *
  * Required in the consumer's Tailwind entry, in this order:
  *
@@ -95,8 +96,7 @@
  * opacities (20/25/30/35/40/42/45/50/55/60/65/70/75/80/85/90/92%). Each step
  * derives from the existing `--color-base-content` token, so the scale tracks
  * the theme — no new palette. Named `--color-muted-*` so Tailwind generates
- * `text-muted-*` (and `bg-/border-/fill-/stroke-*`) utilities; the `:root`
- * variables also let a consumer's stylesheet reference the same steps directly.
+ * `text-muted-*` (and `bg-/border-/fill-/stroke-*`) utilities.
  *
  * Canonical steps (the value each step replaces):
  *   muted-subtle 25%  ← 20/25/30   (placeholder, deepest de-emphasis)
@@ -105,8 +105,20 @@
  *   muted-strong 65%  ← 60/65/70    (readable caption, table header, message)
  *   muted-bright 80%  ← 75/80       (secondary content: values, names)
  * Content text that was only faintly dimmed (85/90/92%) normalises to the full
- * `--color-base-content` token — it is content, not muted emphasis. */
-@theme {
+ * `--color-base-content` token — it is content, not muted emphasis.
+ *
+ * `@theme inline` is required, not stylistic: a non-inline `@theme` computes the
+ * `color-mix()` once at `:root`, and descendants inherit that resolved colour —
+ * so a scoped `[data-theme]` element redefining `--color-base-content` would
+ * keep the root's mixed value. Inline resolves per element, which is what makes
+ * the scale follow a nested theme.
+ *
+ * The `:root` block below repeats the same five expressions deliberately. Inline
+ * theme variables are not emitted as custom properties, and the gateway's own
+ * stylesheet reads them directly (`color: var(--color-muted-strong)` in
+ * app.css). Utilities get the per-element value, direct `var()` consumers get
+ * the root one — keep the two lists in sync. */
+@theme inline {
   --color-muted-subtle: color-mix(in oklab, var(--color-base-content) 25%, transparent);
   --color-muted-faint: color-mix(in oklab, var(--color-base-content) 40%, transparent);
   --color-muted: color-mix(in oklab, var(--color-base-content) 50%, transparent);
@@ -114,13 +126,15 @@
   --color-muted-bright: color-mix(in oklab, var(--color-base-content) 80%, transparent);
 }
 
-/* Radius exception list. The "radius derives from theme variables" rule has one
- * explicit, reviewable exception: the gateway's runtime-injected badge shell in
- * webui/static/js/chat-components.js (`memory-badge-style`), whose
- * `.memory-badge` carries a `border-radius: .625rem` literal. It is JS-only — the
- * gateway stylesheet defines no `.memory-badge` rule — and no theme token maps to
- * 0.625rem, so it is documented here rather than forced onto a token.
- *
- * Pills (`border-radius:9999px` on the gateway's .memory-run-status,
- * .memory-run-status-dot, .dock-count, .memory-rail-badge, .memory-rail-count)
- * are deliberate circles and are exempt like `rounded-full`. */
+:root {
+  --color-muted-subtle: color-mix(in oklab, var(--color-base-content) 25%, transparent);
+  --color-muted-faint: color-mix(in oklab, var(--color-base-content) 40%, transparent);
+  --color-muted: color-mix(in oklab, var(--color-base-content) 50%, transparent);
+  --color-muted-strong: color-mix(in oklab, var(--color-base-content) 65%, transparent);
+  --color-muted-bright: color-mix(in oklab, var(--color-base-content) 80%, transparent);
+}
+
+/* Radius exceptions are the consuming app's business, not this file's: the rule
+ * "radius derives from theme variables" and the handful of components that must
+ * break it (a literal radius baked into runtime-injected markup, deliberate
+ * pills) are documented next to those rules in the app's own stylesheet. */

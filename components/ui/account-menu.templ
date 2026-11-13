@@ -1,8 +1,6 @@
 package ui
 
 import (
-	"context"
-
 	"github.com/emergent-company/go-daisy/devmode"
 )
 
@@ -23,6 +21,9 @@ type Account struct {
 
 // AccountMenuProps configures the topbar account menu.
 type AccountMenuProps struct {
+	// Class is appended to the root element's classes (and to the signed-out
+	// link), e.g. a scroll constraint on a narrow header.
+	Class string
 	// SignedIn renders the avatar trigger and its menu. When false the menu
 	// renders SignInPath instead (or nothing at all when that is empty too).
 	SignedIn bool
@@ -60,7 +61,12 @@ type AccountMenuProps struct {
 // and an empty path omits its row rather than rendering a dead control.
 templ AccountMenu(props AccountMenuProps) {
 	if props.SignedIn {
-		@Dropdown(DropdownEnd, accountMenuRootAttrs(ctx, props)) {
+		<div
+			class={ twmerge("dropdown dropdown-end", props.Class) }
+			data-gd-menu-root
+			{ devmode.Attrs(ctx, "ui/AccountMenu")... }
+			{ mergeAttrs(templ.Attributes{"data-testid": "account-menu"}, props.Attrs)... }
+		>
 			<div
 				tabindex="0"
 				role="button"
@@ -76,7 +82,7 @@ templ AccountMenu(props AccountMenuProps) {
 			@DropdownMenu(templ.Attributes{"aria-label": "Account", "class": "min-w-56 border-base-content/10 z-50"}) {
 				<li class="menu-title pointer-events-none px-2 pt-2 pb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase text-faint select-none">Signed in as</li>
 				@accountMenuActiveRow(props.Active)
-				if len(props.Others) > 0 && props.SwitchPath != "" {
+				if accountMenuHasSwitchRows(props) {
 					<li class="menu-title pointer-events-none px-2 pt-3 pb-0.5 text-[10px] font-medium tracking-[0.14em] uppercase text-faint select-none">Switch account</li>
 					for _, a := range props.Others {
 						if a.Sub != "" {
@@ -84,7 +90,9 @@ templ AccountMenu(props AccountMenuProps) {
 						}
 					}
 				}
-				<li aria-hidden="true"></li>
+				if accountMenuHasActions(props) {
+					<li aria-hidden="true"></li>
+				}
 				if props.AddPath != "" {
 					<li>
 						<a href={ props.AddPath } class="justify-start gap-2" data-testid="account-menu-add">
@@ -122,18 +130,37 @@ templ AccountMenu(props AccountMenuProps) {
 					</li>
 				}
 			}
-		}
+			@DropdownScript()
+		</div>
 	} else if props.SignInPath != "" {
-		<a class="btn btn-ghost btn-sm" href={ props.SignInPath } data-testid="account-menu-signin">Sign in</a>
+		<a
+			class={ twmerge("btn btn-ghost btn-sm", props.Class) }
+			href={ props.SignInPath }
+			data-testid="account-menu-signin"
+			{ props.Attrs... }
+		>Sign in</a>
 	}
 }
 
-// accountMenuRootAttrs is the root dropdown's attribute set: the dev-mode
-// annotation, the gallery/callers' testid, and then the caller's own attributes
-// last so a caller can always override.
-func accountMenuRootAttrs(ctx context.Context, props AccountMenuProps) templ.Attributes {
-	base := templ.Attributes{"data-testid": "account-menu"}
-	return mergeAttrs(mergeAttrs(devmode.Attrs(ctx, "ui/AccountMenu"), base), props.Attrs)
+// accountMenuHasSwitchRows reports whether the "Switch account" section renders
+// anything: a switch path plus at least one account that can actually be
+// switched to. A heading with no rows under it reads as a broken menu.
+func accountMenuHasSwitchRows(props AccountMenuProps) bool {
+	if props.SwitchPath == "" {
+		return false
+	}
+	for _, a := range props.Others {
+		if a.Sub != "" {
+			return true
+		}
+	}
+	return false
+}
+
+// accountMenuHasActions reports whether any action row follows the switch
+// section, which is what the divider between them separates.
+func accountMenuHasActions(props AccountMenuProps) bool {
+	return props.AddPath != "" || props.ProfilePath != "" || props.LogoutPath != ""
 }
 
 // accountMenuAvatar renders a round avatar: an <img> when a picture URL is

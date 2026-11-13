@@ -40,8 +40,21 @@ All component functions return `templ.Component`. Props are passed as plain Go s
 avatar trigger whose dropdown shows the active account, the cached accounts the
 visitor can switch to, and Add another account / My Profile / Log out. It is
 passive — the hosting app passes its own paths, and an empty path omits that row
-rather than rendering a dead control. It needs go-daisy's
-`static/js/go-daisy-a11y.js`, which is what opens the dropdown.
+rather than rendering a dead control. Switch rows POST the account's `sub`, and
+Log out is a POST form, so a session can only be swapped or ended by a request
+the server validates.
+
+The menu root is annotated `data-gd-menu-root` and the component loads
+`static/js/go-daisy-a11y.js` once per page (via `ui.DropdownScript`). The avatar
+trigger deliberately carries **no** `data-gd-menu-trigger`, so the root stays on
+daisyUI's CSS-only `:focus-within` behaviour — the same as every other dropdown
+in the Memory gateway. Adding the trigger attribute opts into the runtime's
+keyboard upgrade (roving focus, arrow keys, Escape, truthful `aria-expanded`).
+
+Unlike `nav.ProfileMenu` — a simple avatar dropdown of caller-supplied items and
+a sign-out link, whose `ProfileMenuVariant` stories are literal design mockups —
+every row here is a real control, and the multi-account switch/add flow is built
+in rather than left to the caller.
 
 ---
 
