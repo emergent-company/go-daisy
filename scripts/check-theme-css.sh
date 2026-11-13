@@ -54,9 +54,19 @@ expect() {
 # would leave daisyUI's stock dark theme in place, with no error.
 expect "brand palette not registered from the imported theme" "oklch(0.74 0.135 78)"
 
-# The radius bridge: `rounded-lg` must reference the semantic token, not the
-# literal Tailwind scale, or every go-daisy radius ignores the theme.
-expect "radius bridge missing" "var(--radius-box)"
+# The radius bridge: `rounded-lg` must resolve through the semantic token, not
+# the literal Tailwind scale, or every go-daisy radius ignores the theme. Read
+# the utility's own block — daisyUI's rules emit `var(--radius-box)` in several
+# places, so a bare grep here would pass even with the bridge deleted.
+radius_block="$(grep -A3 -F '  .rounded-lg {' "$tmp/out.css" || true)"
+if [[ -z "$radius_block" ]]; then
+  echo "error: .rounded-lg was not generated; the check cannot verify the radius bridge" >&2
+  failures=$((failures + 1))
+elif [[ "$radius_block" != *"var(--radius-box)"* ]]; then
+  echo "error: the radius bridge is missing — .rounded-lg does not resolve through the theme:" >&2
+  printf '%s\n' "$radius_block" >&2
+  failures=$((failures + 1))
+fi
 
 # Direct `var()` consumers (the gateway's own rules) read the theme's steps from
 # :root, which `@theme inline` does not emit on its own.

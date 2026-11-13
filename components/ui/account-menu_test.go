@@ -294,3 +294,21 @@ func TestAccountMenuSignInClassIsAppended(t *testing.T) {
 		t.Errorf("Class must be appended to the sign-in link classes:\n%s", html)
 	}
 }
+
+// TestAccountMenuLogoutOnlyRendersOneDivider pins the divider arithmetic: with
+// no add/profile row, the logout row is the only thing after the switch section,
+// so it must not get a divider of its own on top of the section divider.
+func TestAccountMenuLogoutOnlyRendersOneDivider(t *testing.T) {
+	html := renderAccountMenu(t, AccountMenuProps{
+		SignedIn:   true,
+		Active:     Account{Name: "Ada Lovelace"},
+		LogoutPath: "/auth/logout",
+	})
+
+	if n := strings.Count(html, `<li aria-hidden="true"></li>`); n != 1 {
+		t.Errorf("want exactly one divider for a logout-only menu, got %d:\n%s", n, html)
+	}
+	if !strings.Contains(html, `data-testid="account-menu-logout"`) {
+		t.Errorf("logout row must still render:\n%s", html)
+	}
+}

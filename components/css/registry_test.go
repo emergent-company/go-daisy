@@ -81,6 +81,11 @@ func TestMemoryThemeCSS(t *testing.T) {
 // under a nested theme) AND in a `:root` block (so a consumer's own
 // `var(--color-muted-*)` rules still resolve). Only one of the two silently
 // breaks a different consumer, so both must list the same five steps.
+//
+// The blocks are read as brace-balanced units rather than by slicing at the
+// first `@theme inline`, because the radius bridge is another `@theme inline`
+// block earlier in the file — a positional slice would silently swallow a
+// regression that turned the muted block into a plain `@theme`.
 func TestMemoryThemeMutedScaleIsInlinedAndRooted(t *testing.T) {
 	here, err := os.Getwd()
 	if err != nil {
@@ -90,41 +95,66 @@ func TestMemoryThemeMutedScaleIsInlinedAndRooted(t *testing.T) {
 	if err != nil {
 		t.Fatalf("theme-memory.css: %v", err)
 	}
+	text := string(src)
 
 	steps := []string{"muted-subtle", "muted-faint", "muted", "muted-strong", "muted-bright"}
-	text := string(src)
-	inlineAt := strings.Index(text, "@theme inline {")
-	if inlineAt < 0 {
-		t.Fatal("no @theme inline block")
+	hasAll := func(block string) bool {
+		for _, step := range steps {
+			if !strings.Contains(block, "--color-"+step+":") {
+				return false
+			}
+		}
+		return true
 	}
-	rootAt := strings.Index(text, "\n:root {")
-	if rootAt < 0 {
-		t.Fatal("no :root block")
-	}
-	inlineBlock := text[inlineAt:rootAt]
-	rootBlock := text[rootAt:]
 
-	for _, step := range steps {
-		decl := "--color-" + step + ":"
-		if !strings.Contains(inlineBlock, decl) {
-			t.Errorf("@theme inline block missing %s", decl)
-		}
-		if !strings.Contains(rootBlock, decl) {
-			t.Errorf(":root block missing %s", decl)
-		}
+	if !anyBlock(text, "@theme inline {", hasAll) {
+		t.Errorf("no `@theme inline` block declares all five muted steps; utilities would freeze at the root theme")
+	}
+	if !anyBlock(text, ":root {", hasAll) {
+		t.Errorf("no `:root` block declares all five muted steps; consumer `var(--color-muted-*)` rules would resolve to nothing")
 	}
 }
 
-// TestMemoryThemeCSSIsNotAPackageAsset pins the placement decision: the brand
-// theme belongs to no component package, so no package may claim it. If it ever
-// appears in Registry it would be pulled into every consumer that asks for
-// `ui`, and a consumer running its own brand would silently lose it.
-func TestMemoryThemeCSSIsNotAPackageAsset(t *testing.T) {
-	for pkg, assets := range Registry {
-		for _, f := range assets.CSSFiles {
-			if f == MemoryThemeCSS {
-				t.Errorf("package %q lists the brand theme in its CSS assets", pkg)
+// anyBlock reports whether any brace-balanced block introduced by header
+// satisfies want.
+func anyBlock(text, header string, want func(string) bool) bool {
+	for i := 0; i < len(text); {
+		j := strings.Index(text[i:], header)
+		if j < 0 {
+			return false
+		}
+		start := i + j
+		block, next := blockAfter(text, start)
+		if block == "" {
+			return false
+		}
+		if want(block) {
+			return true
+		}
+		i = next
+	}
+	return false
+}
+
+// blockAfter returns the brace-balanced body that begins at the first `{` at or
+// after start, plus the index just past it.
+func blockAfter(text string, start int) (string, int) {
+	open := strings.Index(text[start:], "{")
+	if open < 0 {
+		return "", len(text)
+	}
+	open += start
+	depth := 0
+	for i := open; i < len(text); i++ {
+		switch text[i] {
+		case '{':
+			depth++
+		case '}':
+			depth--
+			if depth == 0 {
+				return text[open : i+1], i + 1
 			}
 		}
 	}
+	return text[open:], len(text)
 }

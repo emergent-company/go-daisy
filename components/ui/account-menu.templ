@@ -115,7 +115,9 @@ templ AccountMenu(props AccountMenuProps) {
 					</li>
 				}
 				if props.LogoutPath != "" {
-					<li aria-hidden="true"></li>
+					if props.AddPath != "" || props.ProfilePath != "" {
+						<li aria-hidden="true"></li>
+					}
 					<li>
 						<form method="post" action={ props.LogoutPath } class="flex w-full">
 							<button
