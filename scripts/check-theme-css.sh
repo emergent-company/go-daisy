@@ -58,7 +58,7 @@ expect "brand palette not registered from the imported theme" "oklch(0.74 0.135 
 # the literal Tailwind scale, or every go-daisy radius ignores the theme. Read
 # the utility's own block — daisyUI's rules emit `var(--radius-box)` in several
 # places, so a bare grep here would pass even with the bridge deleted.
-radius_block="$(grep -A3 -F '  .rounded-lg {' "$tmp/out.css" || true)"
+radius_block="$(grep -A3 -F '.rounded-lg {' "$tmp/out.css" || true)"
 if [[ -z "$radius_block" ]]; then
   echo "error: .rounded-lg was not generated; the check cannot verify the radius bridge" >&2
   failures=$((failures + 1))
@@ -75,7 +75,7 @@ expect "muted scale missing from :root" "--color-muted-strong:"
 # Import order, read off the utility rather than the :root block: whichever
 # `@theme` block comes last owns the generated value. tokens.css would make it
 # 60%; the theme must make it 50%.
-muted_block="$(grep -A4 -F '  .text-muted {' "$tmp/out.css" || true)"
+muted_block="$(grep -A4 -F '.text-muted {' "$tmp/out.css" || true)"
 if [[ -z "$muted_block" ]]; then
   echo "error: .text-muted was not generated; the check cannot verify import order" >&2
   failures=$((failures + 1))

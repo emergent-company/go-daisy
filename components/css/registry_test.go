@@ -158,3 +158,17 @@ func blockAfter(text string, start int) (string, int) {
 	}
 	return text[open:], len(text)
 }
+
+// TestMemoryThemeCSSIsNotAPackageAsset pins the placement decision: the brand
+// theme belongs to no component package, so no package may claim it. If it ever
+// appears in Registry it would be pulled into every consumer that asks for
+// `ui`, and a consumer running its own brand would silently lose it.
+func TestMemoryThemeCSSIsNotAPackageAsset(t *testing.T) {
+	for pkg, assets := range Registry {
+		for _, f := range assets.CSSFiles {
+			if f == MemoryThemeCSS {
+				t.Errorf("package %q lists the brand theme in its CSS assets", pkg)
+			}
+		}
+	}
+}
